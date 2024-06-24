@@ -3964,6 +3964,18 @@
 			$where = "AND cond.idCondominio = $id_condominio";
         }
 		
+		if(in_array($this->session->userdata('id_rol'),array(3,6))){
+			$idUsuario = $this->session->userdata('id_rol') == 3 ? $this->session->userdata('id_usuario') : $this->session->userdata('id_lider');
+			$sqlRol = " AND cl.id_gerente=".$idUsuario;
+		}else if( $this->session->userdata('id_rol') == 2){
+			$sqlRol = " AND cl.id_subdirector = ".$this->session->userdata('id_usuario')." OR cl.id_regional = ".$this->session->userdata('id_usuario');
+		}else{
+			$sqlRol = "";
+		}
+
+
+
+
 		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
 		cl.id_sede, personalidad_juridica, cl.nacionalidad,
 		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
@@ -3995,7 +4007,7 @@
 		LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
 		LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
 		LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-		WHERE cl.status = 1 $where
+		WHERE cl.status = 1 $where $sqlRol
 		ORDER BY cl.id_cliente DESC")->result();
     }
 

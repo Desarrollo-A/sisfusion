@@ -13,6 +13,7 @@ class Comisiones extends CI_Controller
   {
     parent::__construct();
     $this->load->model('Comisiones_model');
+    $this->load->model('Contratacion_model');
     $this->load->model('asesor/Asesor_model');
     $this->load->model('Usuarios_modelo');
     $this->load->model('PagoInvoice_model');
@@ -225,10 +226,10 @@ class Comisiones extends CI_Controller
       $this->load->view("ventas/validate_region");
   }
 
-  // public function resguardos(){
-  //   $this->load->view('template/header');
-  //   $this->load->view("ventas/revision_resguardo");
-  // }
+   public function resguardos(){
+     $this->load->view('template/header');
+     $this->load->view("ventas/revision_resguardo");
+  }
 
 
   // public function retiros(){
@@ -859,6 +860,7 @@ function update_estatus(){
 
   public function acepto_comisiones_user(){
     $formaPagoInvalida = [2,3,4,5];
+    $diaActual = date('d'); 
     $id_user_Vl = $this->session->userdata('id_usuario');
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
@@ -868,8 +870,8 @@ function update_estatus(){
     if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
       $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaFinGeneral)*/ AND mes = $mesActual")->result_array();
-
+      $filtro = ($consultaTipoUsuario[0]['tipo'] == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($consultaTipoUsuario[0]['forma_pago'] == 2 && $consultaTipoUsuario[0]['tipo'] == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND mes = $mesActual  $filtro")->result_array();
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
       
       if( $consulta_comisiones->num_rows() > 0 && $consultaFechasCorte ){
@@ -1271,11 +1273,15 @@ function update_estatus(){
   } 
   
   public function getDesarrolloSelect($a = ''){
+    $diaActual = date('d'); 
     $validar_sede = $this->session->userdata('id_sede');
+    $tipoUsuario = $this->session->userdata('tipo');
+    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$this->session->userdata('id_usuario').")")->result_array();
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
     $tipo = $this->session->userdata('tipo') == 1 ? 1 : 2;
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE tipoCorte = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
-    
+    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+    $filtro = ($consultaTipoUsuario[0]['tipo'] == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($consultaTipoUsuario[0]['forma_pago'] == 2 && $consultaTipoUsuario[0]['tipo'] == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND mes = $mesActual  $filtro")->result_array();
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     
     $fecha_actual = strtotime($obtenerFechaSql);
@@ -1505,10 +1511,14 @@ if( isset( $_FILES ) && !empty($_FILES) ){
         $usuarioid = $this->session->userdata('id_usuario');
       }
       $validar_sede =  $this->session->userdata('id_sede');
-      $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
   
-      $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuarioid.")")->result_array();
-      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
+
+      $diaActual = date('d'); 
+      $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$this->session->userdata('id_usuario').")")->result_array();
+      $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+      $filtro = ($consultaTipoUsuario[0]['tipo'] == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($consultaTipoUsuario[0]['forma_pago'] == 2 && $consultaTipoUsuario[0]['tipo'] == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND mes = $mesActual  $filtro")->result_array();
+
   
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
       $fecha_actual = strtotime($obtenerFechaSql);
@@ -2875,8 +2885,13 @@ public function LiquidarLote(){
 
 
  
-    public function getDatosResguardoContraloria($user,$residencial){
-      $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,$residencial)->result_array();
+    public function getDatosResguardoContraloria(){
+      $directivo = $this->input->post('directivo');
+      $proyecto = $this -> input->post('proyecto');
+      $anio = $this ->input->post('anio');
+      $mes = $this -> input->post('mes');
+
+      $dat =  $this->Comisiones_model->getDatosResguardoContraloria($directivo,$proyecto,$anio,$mes)->result_array();
       for( $i = 0; $i < count($dat); $i++ ){
         $dat[$i]['pa'] = 0;
       }
@@ -4878,14 +4893,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         echo json_encode(array());
       }
     }
-
- 
     
-
-
-
-
- 
     public function cambiarEstatusComisiones()
     {
         $idPagos = explode(',', $this->input->post('idPagos'));
@@ -5595,6 +5603,14 @@ public function lista_usuarios($rol,$forma_pago){
     echo json_encode($result);
   }
 
+  public function getFechaCorteActual(){
+    $tipoUsuario =  $this->session->userdata('tipo');
+    $diaActual = date('d'); 
+    $data = array(
+      "fechasCorte" => $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$diaActual)
+    );
+    echo json_encode($data);
+  }
   public function getDatosFechasProyecCondm(){
     
     $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
@@ -5626,6 +5642,17 @@ public function lista_usuarios($rol,$forma_pago){
     echo json_encode($data);
   }
 
+  //---------------Consulta de datos para años, directivos y proyectos--------------
+  public function getResguardo(){
+    $data = array(
+      "catalogo" => $this->General_model->getCatalogOptions(115)->result_array(),
+      "proyecto" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
+      "directivos" => $this->Comisiones_model->getDirectivos()->result_array()
+    );
+    echo json_encode($data);
+  }
+
+
 
   public function getReporteDesc(){
 
@@ -5637,5 +5664,22 @@ public function lista_usuarios($rol,$forma_pago){
     $usuario = $this->input->post('usuario');
     echo json_encode(array("data" => $this->Comisiones_model->getReporteDesc($sede , $empresa, $puesto, $usuario, $beginDate, $endDate)));
   }
+
+  public function getComisionesDetenidas($idLote){
+      $respuesta = $this->Comisiones_model->getComisionesDetenidas($idLote)->result();
+      if(count($respuesta) > 0)
+      {
+        echo json_encode(1);
+      }else{
+        echo json_encode(0);
+      }
+  }
+
+  public function getComisionInd(){
+    $idLote = $this->input->post('idLote');
+    $idUsr = $this->input->post('idUsr');
+    
+    echo json_encode($this->Comisiones_model->getComisionInd($idLote, $idUsr)->result_array(),JSON_NUMERIC_CHECK);
+}
 
 }

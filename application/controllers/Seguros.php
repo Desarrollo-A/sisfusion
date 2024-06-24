@@ -56,6 +56,11 @@ class Seguros extends CI_Controller
       $this->load->view('template/header');
       $this->load->view("comisiones/reporteLotesPorComisionistaSeguros_view");
   }
+  public function AutSeguros()
+  {
+    $this->load->view('template/header');
+    $this->load->view("comisiones/autSeguros-view");    
+  }
     /**--------------------------------------- */
     public function getDatosComisionesAsesor($a)
     {
@@ -84,7 +89,7 @@ class Seguros extends CI_Controller
         $formaPagoUsuario = $this->session->userdata('forma_pago');
         $sol=$this->input->post('idcomision');  
         $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i FROM pago_seguro_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
-        $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 WHEN tipo=4 THEN 4 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+        $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 WHEN tipo=4 THEN 4 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
     
         if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
           $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
@@ -197,7 +202,7 @@ class Seguros extends CI_Controller
       }
     
         public function getFechaCorteActual(){
-        $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 4 ? '4' : '1' ));
+        $tipoUsuario = $this->session->userdata('tipo') == 1 ? 0 :( $this->session->userdata('tipo') == 2 ? '1' : '4' );
         $diaActual = date('d'); 
         $fechaCorte = $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$diaActual);
           echo json_encode(array("fechasCorte" => $fechaCorte),JSON_NUMERIC_CHECK);
@@ -434,5 +439,57 @@ class Seguros extends CI_Controller
           $condicionXUsuario = 'AND us.id_usuario = '.$this->session->userdata('id_usuario');
       }
       echo json_encode($this->Seguro_model->getOpcionesParaReporteComisionistas($condicionXUsuario)->result_array());
+  }
+  public function getDataPagosSeguro() {
+    $data['data'] =  !isset($_POST["estatus"]) ? $this->Seguro_model->getDataPagosSeguro()->result_array() : $this->Seguro_model->getDataPagosSeguro($_POST["estatus"])->result_array();
+    echo json_encode($data);
+  }
+  public function getDetallePlanesComisiones($idPlan)
+  {
+      $data = $this->Seguro_model->getDetallePlanesComisiones($idPlan)->result_array();
+      $info = array();
+      $info['id_plan'] = $data[0]['id_plan'];
+      $info['descripcion'] = $data[0]['descripcion'];
+      $info['comisiones'][] = array(
+          'puesto' => $data[0]['asesor'],
+          'com' => $data[0]['comAsesor']
+      );
+      $info['comisiones'][] = array(
+          'puesto' => $data[0]['gerente'],
+          'com' => $data[0]['comGerente']
+      );
+      for ($m=0; $m < count($data) ; $m++) { 
+          $info['comisiones'][] = array(
+            'puesto' => $data[$m]['nombre'],
+            'com' => $data[$m]['valorComision']
+        );
+      }
+
+      echo json_encode($info);
+  }
+  function getAbonado($idlote){
+    echo json_encode($this->Seguro_model->getAbonado($idlote)->result_array());
+  }
+  function getDatosAbonadoDispersion($idlote){
+
+    echo json_encode($this->Seguro_model->getDatosAbonadoDispersion($idlote)->result_array());
+  }
+  public function changeStatusSeguro(){
+    $idCliente = $this->input->post('idCliente');
+    $estatusAut = $this->input->post('tipoAut');
+    $observaciones = $this->input->post('observaciones');
+    $dataInsert = [
+      "estatus" => $estatusAut,
+      "idCliente" => $idCliente,
+      "idUsuario" => $this->session->userdata('id_usuario'),
+      "observaciones" => $observaciones,
+      "fechaCreacion" => date("Y-m-d H:i:s")
+    ];
+    $data = ['estatusSeguro' => $estatusAut];
+    $this->General_model->addRecord("historialSeguros", $dataInsert);
+    echo json_encode($this->General_model->updateRecord('clientes',$data,'id_cliente',$idCliente));
+  }
+  function getHistorialSeguro($idCliente){
+    echo json_encode($this->Seguro_model->getHistorialSeguro($idCliente));
   }
 }

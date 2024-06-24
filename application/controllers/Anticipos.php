@@ -93,8 +93,7 @@ class Anticipos extends CI_Controller {
             $procesoAntInternomexFinal = $this->input->post('procesoAntInternomexFinal');
 
             $numero_mensualidades = $this->input->post('numero_mensualidades');
-            $mP = intval($numero_mensualidades);
-
+            // $mP = intval($numero_mensualidades);
 
             if (empty($procesoAntInternomex) && !empty($procesoAntInternomexFinal)) {
                 $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomexFinal);
@@ -102,24 +101,37 @@ class Anticipos extends CI_Controller {
                 $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomex);
             }
 
-            if($mP==0){
-                
+            $mP=$numero_mensualidades;
+            
+            if ($mP == "null") {
+                $mP = "null";
+            }else {
+                $mP = (int)$mP;
+            }
+            
+            if ($mP == "0") {
+
                 $result = $this->Anticipos_model->updateMensualidad0($id_anticipo);
 
-            }else{
+            }else {
+            
 
-                //select
-                if($procesoAntInternomex==1){
+                if ($procesoAntInternomex == "1") {
 
-                    $res=($numero_mensualidades-1);
+                    if ($mP == "null") {
 
-                    $result = $this->Anticipos_model->updateMontoTotal($id_anticipo, $res, $procesoAntInternomex);
-
-                }else{
-
-                    $result = $this->Anticipos_model->updateMontoTotal($id_anticipo, $numero_mensualidades, $procesoAntInternomex);
+                        $res = null;
+                        $result = $this->Anticipos_model->updateMontoTotal($id_anticipo, $res, $procesoAntInternomex);
+                    } else {
+                        
+                        $res = ($mP - 1);
+                        $result = $this->Anticipos_model->updateMontoTotal($id_anticipo, $res, $procesoAntInternomex);
+                    }
+                } else {
+                    $result = $this->Anticipos_model->updateMontoTotal($id_anticipo, $mP, $procesoAntInternomex);
                 }
             }
+            
 
             $success = ($result != null); 
             

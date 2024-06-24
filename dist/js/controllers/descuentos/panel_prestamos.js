@@ -3,12 +3,26 @@ var tr;
 var valorGlobal = 3; 
 var banderaNewEvidencia = 2; 
 var datosDataTable = [];
+var banderaPermiso = 0;
 
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     $(".datepicker").datetimepicker({ locale: "es" });
     setInitialValues();
     llenado();
+    var hoy = new Date(fechaServer);
+    var dia = hoy.getDate();
+    var mes = hoy.getMonth() + 1;
+    var hora = hoy.getHours();
+    if (
+        ((mes == fechaInicioCorteGlobal[1] && dia < fechaInicioCorteGlobal[2])  
+                        &&  (mes == fechaInicioCorteGlobal[1] && dia > 5)) //VALIDACION FECHA CORTE
+        ) {
+            alert()
+    }else{
+        document.getElementById('abrir_ejecutar').display = none;
+    }
+    
 });
 
 function llenado(){
@@ -19,7 +33,7 @@ function llenado(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#tipo").append($('<option>').val(id).text(name));     
+            $("#tipo").append($('<option>').val(id).text(`${id} - ${name} `));     
         }
         $("#tipo").selectpicker('refresh');
     }, 'json');

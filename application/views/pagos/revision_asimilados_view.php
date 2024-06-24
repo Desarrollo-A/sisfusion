@@ -157,6 +157,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php $this->load->view('pagos/seguros/revision_asimilados_seguros_view'); ?>
                                 </div>
                             </div>
                         </div>
