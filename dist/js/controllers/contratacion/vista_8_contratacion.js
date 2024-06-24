@@ -365,54 +365,144 @@ $(document).ready(function () {
     });
 });
 
-$(document).on('click', '#save1', function (e) {
+$(document).on('click', '#save1', async function (e) {
     e.preventDefault();
     var comentario = $("#comentario1").val();
     var validaComentario = (document.getElementById("comentario1").value.trim() == '') ? 0 : 1;
+    const archivo = $("#archivo_complemento");
 
-    var dataExp1 = new FormData();
-    dataExp1.append("idCliente", getInfo1[0]);
-    dataExp1.append("nombreResidencial", getInfo1[1]);
-    dataExp1.append("nombreCondominio", getInfo1[2]);
-    dataExp1.append("idCondominio", getInfo1[3]);
-    dataExp1.append("nombreLote", getInfo1[4]);
-    dataExp1.append("idLote", getInfo1[5]);
-    dataExp1.append("comentario", comentario);
-    dataExp1.append("fechaVenc", getInfo1[6]);
-    dataExp1.append("numContrato", getInfo1[7]);
-    dataExp1.append("idMovimiento", getInfo1[8]);
-    dataExp1.append("perfil", getInfo1[9]);
-
-    if (validaComentario == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+    if (validaComentario == 0) {
+      return alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
+    }
+    // Input sin archivo
+    else if (archivo.val().length === 0) {
+      return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
+    }
+    // Archivo incorrecto
+    else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
+      return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+    }
     else{
-        $('#save1').prop('disabled', true);
-        $.ajax({
-            url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentes_proceso8`,
-            data: dataExp1,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                response = JSON.parse(data);
+      $('#save1').prop('disabled', true); // Deshabilitamos botón
+      // Borramos el complemento de pago en caso de tener uno y actualizamos los registros de historial_documento 
+      
+      const docData = new FormData();
+      docData.append("idLote", getInfo1[5]);
+      let rs1 = await $.ajax({
+          type: 'POST',
+          url: `${general_base_url}Contraloria/getComplementoPago`,
+          data: docData,
+          contentType: false,
+          cache: false,
+          processData: false,
+      });
+      result = JSON.parse(rs1);
 
-                if (response.status)
-                    alerts.showNotification("top", "right", response.message, "success");
-                else
-                    alerts.showNotification("top", "right", response.message, "danger");
+      alert('YES');
+      console.log("Q", result);
+      
+      if (result.length >= 1) {
+          const docData = new FormData();
+          docData.append("idDocumento", result[0].idDocumento);
+          docData.append("tipoDocumento", result[0].tipo_doc);
+          let rs1 = await $.ajax({
+              type: 'POST',
+              url: `${general_base_url}Documentacion/eliminarArchivo`,
+              data: docData,
+              contentType: false,
+              cache: false,
+              processData: false,
+          });
 
-                $('#save1').prop('disabled', false);
-                $('#rev').modal('hide');
-                $('#Jtabla').DataTable().ajax.reload();
-            },
-            error: function () {
-                $('#save1').prop('disabled', false);
-                $('#rev').modal('hide');
-                $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-            }
-        });
+          rs1 = JSON.parse(rs1);
+          console.log('Eliminar archivo', rs1);
+
+          if (rs1.code == 500 ){
+              alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
+              return;
+          } 
+      }
+
+      const tipoDocumento = 55;
+      const movimiento = 'COMPLEMENTO DE PAGO';
+      const expediente = generarTituloDocumento(getInfo1[1], getInfo1[4], getInfo1[5], getInfo1[0], tipoDocumento); // nombreResidencial, nombreLote, idLote, idCliente, tipoDoc.
+      const ndata = new FormData();
+      ndata.append("movimiento", movimiento); // Nombre del tipo de documento
+      ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
+      ndata.append("idCliente", getInfo1[0]);
+      ndata.append("idCondominio", getInfo1[3]);
+      ndata.append("idLote", getInfo1[5]);
+      ndata.append('tipo_doc', tipoDocumento); // TipoDocumento es el id del opc de mis archivos (53, 54)
+      let res = await $.ajax({
+          type: 'POST',
+          url: `${general_base_url}Liberaciones/registrarDocumentoEnArbol`,
+          data: ndata,
+          contentType: false,
+          cache: false,
+          processData: false,
+      });
+      res = JSON.parse(res);
+      console.log('Historial documento', res);
+      
+      const xdata = new FormData();
+      xdata.append("idLote", d.idLote);
+      xdata.append("idDocumento", res.documentId);
+      xdata.append("tipoDocumento", tipoDocumento);
+      xdata.append("tituloDocumento", expediente);
+      xdata.append("uploadedDocument", archivo[0].files[0]);
+      let rs = await $.ajax({
+          type: 'POST',
+          url: `${general_base_url}Documentacion/subirArchivo`,
+          data: xdata,
+          contentType: false,
+          cache: false,
+          processData: false,
+      });
+      rs = JSON.parse(rs);
+      console.log('Subir archivo', rs);
+      if (rs.code == 500 ){
+          alerts.showNotification("top", "right", 'Surgió un error al registrar el archivo', "warning");
+          return;
+      } 
+      
+      return 0;
+
+      const dataExp1 = new FormData();
+      dataExp1.append("idCliente", getInfo1[0]);
+      dataExp1.append("nombreResidencial", getInfo1[1]);
+      dataExp1.append("nombreCondominio", getInfo1[2]);
+      dataExp1.append("idCondominio", getInfo1[3]);
+      dataExp1.append("nombreLote", getInfo1[4]);
+      dataExp1.append("idLote", getInfo1[5]);
+      dataExp1.append("comentario", comentario);
+      dataExp1.append("fechaVenc", getInfo1[6]);
+      dataExp1.append("numContrato", getInfo1[7]);
+      dataExp1.append("idMovimiento", getInfo1[8]);
+      dataExp1.append("perfil", getInfo1[9]);
+      $.ajax({
+          url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentes_proceso8`,
+          data: dataExp1,
+          cache: false,
+          contentType: false,
+          processData: false,
+          type: 'POST',
+          success: function (data) {
+              response = JSON.parse(data);
+              if (response.status)
+                  alerts.showNotification("top", "right", response.message, "success");
+              else
+                  alerts.showNotification("top", "right", response.message, "danger");
+              $('#save1').prop('disabled', false);
+              $('#rev').modal('hide');
+              $('#Jtabla').DataTable().ajax.reload();
+          },
+          error: function () {
+              $('#save1').prop('disabled', false);
+              $('#rev').modal('hide');
+              $('#Jtabla').DataTable().ajax.reload();
+              alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+          }
+      });
     }
 });
 
@@ -511,6 +601,14 @@ $(document).on('click', '#save3', function (e) {
             }
         });
     }
+});
+
+// Función para colocar el nombre del archivo en el input de texto que comparte con el input de archivo
+$(document).on("change", "#archivo_complemento", function () {
+  const target = $(this);
+  const relatedTarget = target.siblings(".file-name");
+  const fileName = target[0].files[0].name;
+  relatedTarget.val(fileName);
 });
 
 jQuery(document).ready(function () {

@@ -12,9 +12,28 @@
                         <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="text-modal" id="comentario1" rows="3"></textarea>
-                        <br>              
+                        <div id="extra-content-accion-modal">
+                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
+                                <label>Compemento de pago:</label>
+                                <div id="selectFileSection">
+                                    <div class="file-gph">
+                                        <input type="file" accept=".pdf" id="archivo_complemento">
+                                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                                        <label class="upload-btn m-0" for="archivo_complemento">
+                                            <span>Seleccionar</span>
+                                            <i class="fas fa-folder-open"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="col-md-12 mb-2 comment">
+                            <label>Comentario:</label>
+                            <textarea class="text-modal" id="comentario1" rows="3"></textarea>                   
+                        </div>
+                        <!-- <label>Comentario:</label>
+                        <textarea class="text-modal" id="comentario1" rows="3"></textarea> -->
+                        <br>            
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

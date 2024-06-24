@@ -3667,4 +3667,23 @@ class Contraloria extends CI_Controller {
             echo json_encode(['result' => false, 'message' => 'Error al eliminar el documento.']);
         }
     }
+
+    public function actualizaRamaComplementoPago() {
+        $idCliente = $_POST['idCliente'];
+        $idCondominio = $_POST['idCondominio'];
+        $idLote = $_POST['idLote'];
+
+        $updateDocumentData = array(
+            "movimiento" => 'COMPLEMENTO DE PAGO',
+            "modificado" => date('Y-m-d H:i:s'),
+            "status" => 1,
+            "idCliente" => $idCliente,
+            "idCondominio" => $idCondominio,
+            "idLote" => $idLote,
+            "tipo_doc" => 55,
+            "idUser" => $this->session->userdata('id_usuario')
+        );
+        $response = $this->General_model->addRecord("historial_documento", $updateDocumentData);
+        echo json_encode($response);
+    }
 }
