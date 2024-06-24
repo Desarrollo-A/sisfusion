@@ -26,7 +26,9 @@ class Documentacion extends CI_Controller {
             'keyFilePath' => APPPATH . 'config/google.json'
         ]);
 
-        $this->bucket = $storage->bucket('maderascrm_bucket');
+        // $this->bucket = $storage->bucket('maderascrm_bucket');
+        $this->bucket = $storage->bucket('bucket_prueba_php');
+        
     }
 
     public function migracion(){

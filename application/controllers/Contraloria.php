@@ -3619,6 +3619,11 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->getComplementoPago($idLote)->result_array());
     }
 
+    public function getTipoEnganche() {
+        $idLote = $_POST['idLote'];
+        echo json_encode($this->Contraloria_model->getTipoEnganche($idLote)->result_array());
+    }
+
     public function insertRamaComplementoPago() {
         $idCliente = $_POST['idCliente'];
         $idCondominio = $_POST['idCondominio'];
@@ -3638,9 +3643,28 @@ class Contraloria extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function updateTipoEngancheEnCliente() {
+        $idCliente = $_POST['idCliente'];
+        $tipoEnganche = $_POST['tipoEnganche'];
+
+        $data = array(
+            "modificado_por" => $this->session->userdata('id_usuario'),
+            "tipoEnganche" => $tipoEnganche,
+        );
+        
+        $response=$this->General_model->updateRecord('clientes', $data, 'id_cliente', $idCliente);
+        echo json_encode($response);
+    }
+
     public function deleteRamaComplementoPago() {
         $idDocumento = $_POST['idDocumento'];
-
-        echo json_encode($this->Contraloria_model->deleteComplementoPago($idDocumento)->result_array());
+    
+        $result = $this->Contraloria_model->deleteRamaComplementoPago($idDocumento);
+    
+        if ($result) {
+            echo json_encode(['result' => true]);
+        } else {
+            echo json_encode(['result' => false, 'message' => 'Error al eliminar el documento.']);
+        }
     }
 }

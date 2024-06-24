@@ -1965,7 +1965,15 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		return $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND tipo_doc = 55 AND status = 1");
 	}
 
-    public function deleteComplementoPago($idDocumento) {
-		return $this->db->query("DELETE FROM historial_documento WHERE idDocumento = $idDocumento AND tipo_doc = 55 AND status = 1");
+    public function getTipoEnganche($idLote) {
+		return $this->db->query("SELECT cl.tipoEnganche FROM lotes as lo 
+            INNER JOIN clientes as cl ON cl.id_cliente = lo.idCliente 
+            WHERE lo.idLote = $idLote AND lo.status = 1 AND cl.status = 1;");
 	}
+
+    public function deleteRamaComplementoPago($idDocumento) {
+        $result = $this->db->query("DELETE FROM historial_documento WHERE idDocumento = $idDocumento AND tipo_doc = 55 AND status = 1");
+        return $result;
+    }
+    
 }

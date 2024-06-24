@@ -411,7 +411,7 @@ $('#tabla_ingresar_5').on('draw.dt', function() {
 
 /*modal para enviar a revision corrida elaborada*/
 $(document).on('click', '.stat5Rev', function () {
-  var idLote = $(this).attr("data-idLote");
+  const idLote = $(this).attr("data-idLote");
   var nomLote = $(this).attr("data-nomLote");
   const tipoVenta = $(this).attr('data-tipo-venta');
   const proceso = $(this).attr('data-proceso');
@@ -444,6 +444,37 @@ $(document).on('click', '.stat5Rev', function () {
   } else {
       $('#tipo_ventaenvARevCE').prop('disabled', false);
   }
+
+    $.post(general_base_url + 'Contraloria/getComplementoPago ', { idLote: idLote },
+    function (data) {
+        if (data.length >= 1){
+            $("#anexa_complemento").empty();
+            $("#anexa_complemento").append($('<option selected="selected">').val(1).text('SI'));
+            $("#anexa_complemento").append($('<option>').val(0).text('NO'));
+            $("#anexa_complemento").selectpicker('refresh');
+
+        }
+    },'json');
+
+  $.post(general_base_url + 'Contraloria/getTipoEnganche ', { idLote: idLote },
+    function (data) {
+        if (data[0].tipoEnganche){
+            $("#anexa_complemento").empty().selectpicker('refresh');
+            $.post(general_base_url + 'General/getCatalogOptions', { id_catalogo: 147 }, function (rs) {
+                for (let i = 0; i < rs.length; i++) {
+                      const id = rs[i]['id_opcion'];
+                      const name = rs[i]['nombre'];
+                      if (id == data[0].tipoEnganche){
+                        $("#tipo_enganche").append($('<option selected>').val(id).text(name.toUpperCase()));
+                      }else {
+                        $("#tipo_enganche").append($('<option>').val(id).text(name.toUpperCase()));
+                      }
+                }
+                $("#tipo_enganche").selectpicker('refresh');
+            }, 'json');
+        }
+        $("#tipo_enganche").selectpicker('refresh');
+    },'json');
 
   $('#enviarenvARevCE').removeAttr('onClick', 'preguntaenvARevCE2()');
   $('#enviarenvARevCE').attr('onClick', 'preguntaenvARevCE()');
@@ -488,50 +519,62 @@ function preguntaenvARevCE() {
 
     $.post(general_base_url + 'Contraloria/getComplementoPago ', { idLote: idLote },
         function (data) {
-            console.log("valid", data.length >= 1, anexa_complemento == 0, anexa_complemento)
             if (data.length >= 1 && anexa_complemento == 0) {
-                // BORRAR REGISTRO
-                
-                $.post(`${general_base_url}Documentacion/eliminarArchivo`, { idDocumento: data[0].idDocumento, tipoDocumento: 55 },
-                    function (rs1) {
-                        console.log('Eliminar archivo', rs1);
-                        if (rs1.code == 200) {
-                            $.post(`${general_base_url}Contraloria/deleteRamaComplementoPago`, { idDocumento: data[0].idDocumento, tipoDocumento: 55 },
-                                function (rs2) {
-                                    if (!rs2){
-                                        alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago.', "warning");
-                                        return;
+                // SI YA TIENE COMPLEMENTO Y LE DA QUE NO QUIERE ENTONCES BORRAMOS REGISTROS
+                if (!data[0].expediente) {
+                    $.post(`${general_base_url}Documentacion/eliminarArchivo`, { idDocumento: data[0].idDocumento, tipoDocumento: 55 },
+                        function (rs1) {
+                            if (rs1.code == 200) {
+                                $.post(`${general_base_url}Contraloria/deleteRamaComplementoPago`, { idDocumento: data[0].idDocumento },
+                                    function (rs2) {
+                                        if (!rs2.result){
+                                            alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago.', "warning");
+                                            return;
+                                        }
                                     }
-                                }
-                            ,'json');
+                                ,'json');
+                            }
+    
+                            if (rs1.code == 500 ){
+                                alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago', "warning");
+                                return;
+                            }
                         }
-
-                        if (rs1.code == 500 ){
-                            alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago', "warning");
-                            return;
+                    ,'json');
+                }else {
+                    // SI NO TIENE
+                    $.post(`${general_base_url}Contraloria/deleteRamaComplementoPago`, { idDocumento: data[0].idDocumento },
+                        function (rs2) {
+                            if (!rs2.result){
+                                alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago.', "warning");
+                                return;
+                            }
                         }
-                    }
-                ,'json');
-
-                alert(1);
+                    ,'json');
+                }
             }
             if (data.length == 0 && anexa_complemento == 1){
                 // CREAR REGISTRO
                 $.post(general_base_url + 'Contraloria/insertRamaComplementoPago ', { idLote: idLote, idCondominio: idCondominio, idCliente: idCliente},
                     function (data2) {
-                        if (!data2 ){
+                        if (!data2){
                             alerts.showNotification("top", "right", 'Surgió un error al requerir el complemento de pago', "warning");
                             return;
                         }
                     },'json'
                 );
-                alert(2);
             }
-            console.log(data);
         }
     ,'json');
 
-    return 1;
+    $.post(`${general_base_url}Contraloria/updateTipoEngancheEnCliente`, { idCliente: idCliente, tipoEnganche: tipo_enganche  },
+        function (rs3) {
+            if (!rs3){
+                alerts.showNotification("top", "right", 'Surgió un error al registrar el tipo de enganche.', "warning");
+                return;
+            }
+        }
+    ,'json');
     
     $.ajax({
       data: parametros,
