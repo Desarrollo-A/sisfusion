@@ -16,6 +16,9 @@ class Reestructura_model extends CI_Model
         $id_lider = $this->session->userdata('id_lider');
         $validacionAdicional = "";
 
+        if ($id_usuario == 14318) // REMEDIOS GUADALUPE GOMEZ MARTINEZ
+            $id_lider .= ", 13554";
+
         if ($id_rol == 15) { // JURÍDICO
             if (in_array($id_usuario, array(2762, 2747, 13691, 2765, 10463, 2876))) // ES DANI, CARLITOS O CECI
                 $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario AND dxc2.flagProcesoJuridico = 0 AND dxc2.flagProcesoContraloria = 1 ";
@@ -24,7 +27,7 @@ class Reestructura_model extends CI_Model
         } else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
             $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoContraloria = 0";
         else if ($id_rol == 6 && $tipo == 2) // ASISTENTE GERENCIA && ES OOAM
-            $validacionAdicional = "AND lo.estatus_preproceso NOT IN (7) AND (u6.id_lider = $id_lider OR lo.id_usuario_asignado = $id_lider)";
+            $validacionAdicional = "AND lo.estatus_preproceso NOT IN (7) AND (u6.id_lider IN ($id_lider) OR lo.id_usuario_asignado IN ($id_lider))";
         else if ($id_rol == 3 && $tipo == 2) // GERENTE && ES OOAM
             $validacionAdicional = "AND lo.estatus_preproceso NOT IN (7) AND (u6.id_lider = $id_usuario OR lo.id_usuario_asignado = $id_usuario)";
         else if ((in_array($id_rol, array(2, 5)) && $tipo == 2 && !in_array($id_usuario, [13589, 13549])) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
@@ -104,7 +107,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.idLote=70263 AND lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19)")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19) $validacionAdicional")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote)
@@ -639,7 +642,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
-        WHERE lo.idLote=70263 AND lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso IN (0, 1) $filtroSede AND lo.solicitudCancelacion != 2")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso IN (0, 1) $filtroSede AND lo.solicitudCancelacion != 2")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion()
