@@ -14,9 +14,13 @@ function asDirector(userType){
     // 69: Dirección general
     //  2: Subidrector
     //  72: Dirección biofísica
-    if (userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' || userType == '72'){
+    /*if (userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' || userType == '72'){
         rolOnReport = '1';
         idUserOnReport = '2';
+    }*/
+    if (userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' || userType == '72'){
+        rolOnReport = '1';
+        idUserOnReport = idUser;
     }
     //  5: Asistente subdirector especificamente para los usuarios diferentes de 28 y 30
     else if( userType == '5' && (idUser == '28' || idUser == '30' || idUser == '4888' || idUser == '29' || idUser == '7401')){
