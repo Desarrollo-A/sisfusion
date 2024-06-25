@@ -1368,7 +1368,7 @@ class CasasModel extends CI_Model
             voboADM = NULL,
             voboOOAM = NULL,
             voboGPH = NULL,
-            voboPV = NULL,
+            voboPV = NULL
         WHERE
             idProcesoCasas = $idProcesoCasas";
 

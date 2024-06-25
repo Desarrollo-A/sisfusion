@@ -69,6 +69,34 @@
         .textoDeshacer {
             font-size: 1.5rem;
         }
+
+        .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+        .accordion:hover {
+            background-color: #ccc;
+        }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: white;
+            overflow: hidden;
+        }
+
+        .coop {
+            display: 'none'
+        }
     </style>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
@@ -80,7 +108,7 @@
                         <h5>SELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
                         <div class="row" id="info-cliente"></div>
                         <hr>
-                        <div class="row hide" id="co-propietarios">
+                        <div class="row coop" id="co-propietarios">
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
@@ -107,6 +135,43 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="archivosReestructuraFusion" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                        <div class="modal-header"></div>
+                        <div class="modal-body text-center">
+                            <h5>SELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
+                            <div class="row" id="info-cliente"></div>
+                            <hr>
+                            <div class="row coop" id="co-propietarios">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                                            <h5 role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">COPROPIETARIO (S) <i id="copropietario-icono" class="fa fa-angle-down"></i></h5>
+                                        </div>
+                                    </div>
+
+                                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                        <div id="contenedorCoprop" role="tablist" aria-multiselectable="true">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                            <div id="formularioArchivosFusion"></div>
+                        </div>
+                        <div class="modal-footer mt-2">
+                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="button" id="sendRequestButtonFusion" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="modal fade" id="contratoFirmadoModal" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog" id="dialoSection">
@@ -161,7 +226,7 @@
                         <h4 id="preProcesoActual" class="textoDeshacer"></h4>
                         <div class="col-md-12">
                             <label class="control-label">Motivo del rechazo (opcional)</label>
-                            <input class="text-modal mb-1" id="comentarioRegreso" name="comentarioRegreso" autocomplete="off">                   
+                            <input class="text-modal mb-1" id="comentarioRegreso" name="comentarioRegreso" autocomplete="off">
                         </div>
                         <div class="container-fluid">
                             <div class="row" id="opcionesRegreso"></div>
