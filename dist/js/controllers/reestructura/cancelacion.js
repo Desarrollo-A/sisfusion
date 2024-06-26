@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $("#tabla_lotes").addClass('hide');
     $('#spiner-loader').removeClass('hide');
-    $.post(`${general_base_url}Reestructura/lista_proyecto`, function (data) {
+    $.post(general_base_url+'Reestructura/lista_proyecto', function (data) {
         const ids = data.map((row) => {
             return row.idResidencial;
         }).join(',');

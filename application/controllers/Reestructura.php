@@ -1866,7 +1866,7 @@ class Reestructura extends CI_Controller{
 	public function getregistrosLotes() {
         $id_proyecto = $this->input->post('index_proyecto');
 
-        if ($this->session->userdata('id_usuario') == 13546) {
+        if ($this->session->userdata('id_usuario') == 13546 || $this->session->userdata('id_usuario') == 15625 || $this->session->userdata('id_usuario') == 13547  ) {
             $union = "
                 AND re.idResidencial IN ($id_proyecto)
             UNION ALL
