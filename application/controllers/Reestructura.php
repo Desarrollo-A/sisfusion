@@ -1835,7 +1835,7 @@ class Reestructura extends CI_Controller{
                     LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
                 WHERE 
                     lo.status = 1  AND re.idResidencial IN ($id_proyecto)
-                AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3) )";
+                AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3, 17) )";
         }else {
             $union = "";
         }
