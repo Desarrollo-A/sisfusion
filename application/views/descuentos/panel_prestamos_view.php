@@ -6,8 +6,8 @@
 		.bkIcon{
 			background-repeat: no-repeat;
 			background-size: auto 70%;
-			background-position-x: 420px;
-			background-position-y: center;
+			background-position-x: 100%;
+			background-position-y: bottom;
 		}
 		.iconUno{
 			background-image: url(../dist/img/iconUno.png);
@@ -46,10 +46,6 @@
 					<div class="row">
 						<div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="boxMiniCharts d-flex justify-center align-start" id="ventasTotales">
-								<div class="loadChartMini w-100 h-100">
-									<!-- <img src='<?=base_url('dist/img/loadingTwo.gif')?>' alt="Icono gráfica" > -->
-									<!-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> <dotlottie-player src="https://lottie.host/a49ce5fd-939e-4553-8a5e-46fa19ca1311/uUunC6Mh01.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay class="h-100 w-auto"></dotlottie-player> -->
-								</div>
 							</div>
 						</div>
 					</div>
@@ -71,9 +67,6 @@
 					<div class="row">
 						<div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="boxMiniCharts d-flex justify-center align-start" id="ventasContratadas">
-								<div class="loadChartMini w-100 h-100">
-								<!-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> <dotlottie-player src="https://lottie.host/a49ce5fd-939e-4553-8a5e-46fa19ca1311/uUunC6Mh01.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay class="h-100 w-auto"></dotlottie-player> -->
-								</div>
 							</div>
 						</div>
 					</div>
@@ -95,9 +88,6 @@
 					<div class="row">
 						<div class="p-0 col-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="boxMiniCharts d-flex justify-center align-start" id="ventasContratadas">
-								<div class="loadChartMini w-100 h-100">
-								<!-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> <dotlottie-player src="https://lottie.host/a49ce5fd-939e-4553-8a5e-46fa19ca1311/uUunC6Mh01.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay class="h-100 w-auto"></dotlottie-player> -->
-								</div>
 							</div>
 						</div>
 					</div>
@@ -112,10 +102,8 @@
 				<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
 					<div class="card">
 					
-						<div class="right-align" 
-								style="text-align: right; padding-top:12px; padding-right: 15px; padding-left: 20px " >
-								<i class="fas fa-gear fa-2x "id="confiMotivo" name="configMotivo"  onclick="configMotivo()"
-									style=" color: #103f75;" title="Ajuste Evidencia">
+						<div class="right-align text-right mt-2 mr-2" style="color:#b9b9b9">
+								<i class="fas fa-gear fa-2x "id="confiMotivo" name="configMotivo"  onclick="configMotivo()" title="Ajuste Evidencia">
 								</i>
 						</div>
 						<h3 class="h3 card-title center-align">Préstamos y penalizaciones</h3>	
@@ -144,7 +132,7 @@
                                             <div class="form-group d-flex justify-center align-center">
 												<button Type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">
 												<i class="fas fa-coins"></i>	
-												Agregar Préstamo</button>
+												Agregar préstamo</button>
 											</div>
 										</div>
 
@@ -154,7 +142,7 @@
 													id="abrir_modal_plantillas" name="abrir_modal_plantillas"
 													data-toggle="modal" data-target="#modal_plantilla_descuentos">
 												<i class="fas fa-folder-open"></i>	
-												Plantilla Préstamos</button>
+												Plantilla préstamos</button>
 											</div>
 										</div>
 										<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -245,6 +233,18 @@
 	<script type="text/javascript">
 		Shadowbox.init();
 		var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
+
+		$(".scrollCharts").scroll(function() {
+			var scrollDiv = $(".scrollCharts").scrollLeft();
+
+			if (scrollDiv > 0){
+				$(".gradientLeft").removeClass("d-none");
+				$(".gradientLeft").addClass("fading");
+			}
+			else{
+				$(".gradientLeft").addClass("d-none");
+			}
+		});
 	</script>
 	
 </body>

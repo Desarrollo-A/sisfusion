@@ -1261,20 +1261,5 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 
     .boxMiniCharts{
         height: 110px!important;
-        .loadChartMini{
-            position: absolute;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 10px;
-        }
-    }
-    .no-spin::-webkit-inner-spin-button, .no-spin::-webkit-outer-spin-button {
-        -webkit-appearance: none !important;
-        margin: 0 !important;
-    }
-    
-    .no-spin {
-        -moz-appearance:textfield !important;
     }
 }
