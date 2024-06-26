@@ -818,7 +818,7 @@ class CasasModel extends CI_Model
         $tipos = "19, 20, 21, 22, 23, 24";
 
         // Usuarios de OOAM
-        if(in_array($this->idUsuario, [15891, 15892, 15893])){
+        if(in_array($this->idUsuario, [15891, 15892, 15893, 16197, 16198, 16199])){
             $tipos = "23";
         }
         
