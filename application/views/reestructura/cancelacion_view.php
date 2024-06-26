@@ -16,6 +16,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <input type="hidden" name="idLote" id="idLote">
                                 <input type="hidden" name="nombreLote" id="nombreLote">
+                                <input type="hidden" name="idCliente" id="idCliente">
                                 <label class="control-label overflow-hidden" for="proyecto">Observaciones</label>
                                 <textarea name="obsSolicitudCancel" id="obsSolicitudCancel" placeholder="Ingresa aquí tus comentarios" class="text-modal" required row="4"></textarea>
                             </div>
@@ -42,7 +43,7 @@
                                 <i class="fas fa-box fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Solicitud de cancelación de contrato</h3>
+                                <h3 class="card-title center-align">Cancelación de contrato</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
