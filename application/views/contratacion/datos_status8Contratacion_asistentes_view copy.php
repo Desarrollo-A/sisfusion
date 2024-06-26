@@ -4,20 +4,23 @@
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <!-- modal  ENVIA A CONTRALORIA 7-->
-        <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
+        <!-- modal enviar -->
+        <div class="modal fade" id="rev" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content" >
-
                     <div class="modal-header">
                         <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <div id="extra-content-accion-modal"></div>
+                        <div id="extra-content-accion-modal">
+                        </div>
                         <div class="col-md-12 mb-2 comment">
                             <label>Comentario:</label>
-                            <textarea class="text-modal" id="comentario" rows="3"></textarea>
-                        </div>       
+                            <textarea class="text-modal" id="comentario1" rows="3"></textarea>                   
+                        </div>
+                        <!-- <label>Comentario:</label>
+                        <textarea class="text-modal" id="comentario1" rows="3"></textarea> -->
+                        <br>            
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -27,19 +30,17 @@
             </div>
         </div>
 
-        <!-- modal  ENVIA A CONTRALORIA 7-->
-        <div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
+        <!-- modal  de rechazo-->
+        <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label>Rechazo/regreso estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <div id="extra-content-accion-modal"></div>
-                        <div class="col-md-12 mb-2 comment">
-                            <label>Comentario:</label>
-                            <textarea class="text-modal" id="comentario2" rows="3"></textarea>
-                        </div>      
+                        <label>Comentario:</label>
+                        <textarea class="text-modal" id="comentario2" rows="3"></textarea>
+                        <br>              
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -49,12 +50,12 @@
             </div>
         </div>
 
-        <!-- modal  rechazar A CONTRALORIA 7-->
-        <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
+        <!-- modal  de rechazo estatus 8 -->
+        <div class="modal fade" id="rechazoAs" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Rechazo/regreso estatus 8 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label>Rechazo estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
@@ -68,72 +69,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- modal  rechazar A asesor 7-->
-        <div class="modal fade" id="rechazoAs" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Rechazo estatus 8 - <b><span class="lote"></span></b></label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario:</label>
-                        <textarea class="text-modal" id="comentario4" rows="3"></textarea>
-                        <br>              
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save4" class="btn btn-primary">Registrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal  ENVIA A CONTRALORIA 7-->
-        <div class="modal fade" id="rev8" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id="extra-content-accion-modal"></div>
-                        <div class="col-md-12 mb-2 comment">
-                            <label>Comentario:</label>
-                            <textarea class="text-modal" id="comentario5" rows="3"></textarea>
-                        </div>     
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save5" class="btn btn-primary">Registrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal  ENVIA A CONTRALORIA 7-->
-        <div class="modal fade" id="rev_2" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id="extra-content-accion-modal"></div>
-                        <div class="col-md-12 mb-2 comment">
-                            <label>Comentario:</label>
-                            <textarea class="text-modal" id="comentario6" rows="3"></textarea>
-                        </div>            
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save6" class="btn btn-primary">Registrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END Modals -->
-
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -163,7 +98,7 @@
                                                     <th>CLIENTE</th>
                                                     <th>ESTATUS ACTUAL</th>
                                                     <th>UBICACIÓN</th>
-                                                    <th>ACCIONES</th>
+                                                    <th>ACCIONES</th> 
                                                 </tr>
                                             </thead>
                                         </table>
@@ -179,5 +114,5 @@
     </div>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_8_contratacion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/contratacion/vista_8_contratacion.js?v=1.1.1"></script>
 </body>

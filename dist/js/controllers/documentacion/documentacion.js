@@ -6,6 +6,7 @@ const rolesPermitidosEstatus7 = [15];
 const usuariosPermitidosContratoEspecial = [2762, 2747];
 const movimientosPermitidosContratoFirmado = [45];
 const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106, 45];
+const ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA = [17, 70, 71, 73];
 const rolesPermitidosEstatus6And15 = [17, 70];
 const movimientosPermitidosEstatus8 = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosEstatus8 = [5, 2, 6];

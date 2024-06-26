@@ -785,120 +785,50 @@ class Asistente_gerente extends CI_Controller {
    }
 
     public function editar_registro_loteRevision_asistentes_proceso8(){
-        $idLote=$this->input->post('idLote', true);
-        $idCondominio=$this->input->post('idCondominio', true);
-        $nombreLote=$this->input->post('nombreLote', true);
-        $idCliente=$this->input->post('idCliente', true);
-        $comentario=$this->input->post('comentario', true);
+        $idLote=$this->input->post('idLote');
+        $idCondominio=$this->input->post('idCondominio');
+        $nombreLote=$this->input->post('nombreLote');
+        $idCliente=$this->input->post('idCliente');
+        $comentario=$this->input->post('comentario');
         $modificado=date("Y-m-d H:i:s");
-        $fechaVenc=$this->input->post('fechaVenc', true);
-        $idMovimiento = $this->input->post("idMovimiento", true);
-        $perfil = $this->input->post("perfil", true);
-        $arreglo=array();
-        $arreglo2=array();
-        $idMovNuevo = 0;
-        $validNecesaria = false; // variable para 2 los estados en los que se checa documentación
-
-        if($idMovimiento == 64 && in_array($perfil, [13, 17, 32, 70])){
-            $idMovNuevo = 65;
-        }
-        if(in_array($idMovimiento, [7, 37, 77]) && in_array($perfil, [15])){
-            $idMovNuevo = 38;
-            $validNecesaria = true;
-        }
-        if ($idMovimiento == 66 && $perfil == 11){
-            $arreglo["fechaSolicitudValidacion"]=$modificado;
-            $idMovNuevo = 67;
-            $validNecesaria = true;
-        }
+        $fechaVenc=$this->input->post('fechaVenc');
         
+        $arreglo=array();
         $arreglo["idStatusContratacion"]=8;
-        $arreglo["idMovimiento"]=$idMovNuevo;
+        $arreglo["idMovimiento"]=65;
         $arreglo["comentario"]=$comentario;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
         $arreglo["modificado"]=date("Y-m-d H:i:s");
         $arreglo["status8Flag"] = 1;
-
+        
+        $arreglo2=array();
         $arreglo2["idStatusContratacion"]=8;
-        $arreglo2["idMovimiento"]=$idMovNuevo;
+        $arreglo2["idMovimiento"]=65;
         $arreglo2["nombreLote"]=$nombreLote;
         $arreglo2["comentario"]=$comentario;
         $arreglo2["usuario"]=$this->session->userdata('id_usuario');
         $arreglo2["perfil"]=$this->session->userdata('id_rol');
         $arreglo2["modificado"]=date("Y-m-d H:i:s");
         $arreglo2["fechaVenc"]= $fechaVenc;
-        $arreglo2["idLote"]= $idLote;
-        $arreglo2["idCondominio"]= $idCondominio;
-        $arreglo2["idCliente"]= $idCliente;
-
-        if($validNecesaria){
-            $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
-
-            if($valida_rama[0]['tipo_nc']==1){
-                $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
-                if($validacionCarta[0]['tipo_comprobanteD']==1) {
-                    if(count($validacionCarta)<=0){
-                        $data['status'] = false;
-                        $data['message'] = 'Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente';
-                        echo json_encode($data);
-                        exit;
-                    }else{
-                        if($validacionCarta[0]['tipo_comprobanteD']==1) {
-                            if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
-                                $data['status'] = false;
-                                $data['message'] = 'Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente';
-                                echo json_encode($data);
-                                exit;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
+        $arreglo2["idLote"]= $idLote; 
+        $arreglo2["idCondominio"]= $idCondominio;          
+        $arreglo2["idCliente"]= $idCliente; 
+        
         $validate = $this->VentasAsistentes_model->validateSt8($idLote);
         if ($validate != 1) {
-            $data['status'] = false;
-            $data['message'] = 'El status ya fue registrado.';
+            $data['message'] = 'FALSE';
             echo json_encode($data);
             return;
         }
-
+      
         if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
-            $data['status'] = false;
-            $data['message'] = 'Error al enviar la solicitud.';
+            $data['message'] = 'ERROR';
             echo json_encode($data);
             return;
         }
 
-        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-
-        if (!in_array($cliente->proceso, [2,4])) {
-            $data['status'] = true;
-            $data['message'] = 'Estatus enviado.';
-            echo json_encode($data);
-            return;
-        }
-
-        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote
-            ];
-
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['status'] = false;
-                $data['message'] = 'Error al enviar la solicitud.';
-                echo json_encode($data);
-                return;
-            }
-        }
-
-        $data['status'] = true;
-        $data['message'] = 'Estatus enviado';
+        $data['message'] = 'OK';
         echo json_encode($data);
     }
 

@@ -3669,21 +3669,22 @@ class Contraloria extends CI_Controller {
     }
 
     public function actualizaRamaComplementoPago() {
-        $idCliente = $_POST['idCliente'];
-        $idCondominio = $_POST['idCondominio'];
-        $idLote = $_POST['idLote'];
+        $idDocumento = $_POST['idDocumento'];
+        $expediente = $_POST['expediente'];
 
-        $updateDocumentData = array(
+        $data = array(
             "movimiento" => 'COMPLEMENTO DE PAGO',
+            'expediente' => $expediente,
             "modificado" => date('Y-m-d H:i:s'),
-            "status" => 1,
-            "idCliente" => $idCliente,
-            "idCondominio" => $idCondominio,
-            "idLote" => $idLote,
-            "tipo_doc" => 55,
-            "idUser" => $this->session->userdata('id_usuario')
+            'bucket'     => 1,
+            "idUser"     => $this->session->userdata('id_usuario')
         );
-        $response = $this->General_model->addRecord("historial_documento", $updateDocumentData);
-        echo json_encode($response);
+
+        $response=$this->General_model->updateRecord('historial_documento', $data, 'idDocumento', $idDocumento);
+        if ($response){
+            echo json_encode(array("result" => true, "msg" => "El registro se ha ingresado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+        }else {
+            echo json_encode(array("result" => false, "msg" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+        }
     }
 }

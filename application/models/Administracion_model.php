@@ -6,8 +6,6 @@ class Administracion_model extends CI_Model {
         parent::__construct();
     }
 
-
-
 	public function get_datos_lote_11 () {
         $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20) modificado, cl.rfc, l.totalNeto, l.totalValidado, CONVERT(varchar, l.fechaSolicitudValidacion, 20) fechaSolicitudValidacion,
