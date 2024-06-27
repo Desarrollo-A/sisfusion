@@ -226,11 +226,11 @@ class Comisiones extends CI_Controller
       $this->load->view("ventas/validate_region");
   }
 
-   public function resguardos(){
-     $this->load->view('template/header');
-     $this->load->view("ventas/revision_resguardo");
-  }
-  public function resguardos1(){
+//    public function resguardos(){
+//      $this->load->view('template/header');
+//      $this->load->view("ventas/revision_resguardo");
+//   }
+  public function resguardos(){
     $this->load->view('template/header');
     $this->load->view("resguardos/revision_resguardo_view");
  }
