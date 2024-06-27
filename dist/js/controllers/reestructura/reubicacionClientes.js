@@ -239,7 +239,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         {
             visible: (id_rol_general == 15) ? true : false,
             data: (d)=>{
-                if(parseInt(d.flagProcesoContraloria) === 1) // CONTRALORÍA Y REGISTRÓ
+                if(parseInt(d.flagProcesoContraloria) === 1 || parseInt(d.flagContraloriaFusion) === 1) // CONTRALORÍA Y REGISTRÓ
                     return '<label class="label lbl-azure">Registrado</label>';
                 else
                     return '<br><label class="label lbl-warning ">Pendiente</label>';
@@ -1840,6 +1840,8 @@ const botonesAccionReubicacion = (d) => {
                     data-banderaFusion="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.idLotePvOrigen : 0}"
                     data-flagProcesoContraloria="${d.flagProcesoContraloria}"
                     data-flagProcesoJuridico="${d.flagProcesoJuridico}"
+                    data-flagContraloriaFusion="${d.flagContraloriaFusion}"
+                    data-flagJuridicoFusion="${d.flagJuridicoFusion}"
                     data-editar="${editar}"   
                     data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
                     data-id_dxc="${d.id_dxc}"   
@@ -1935,26 +1937,21 @@ let BUTTONREGRESO = '';
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
     return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASANLUIS) ? (flagFusion == 1) ? BTN_PROPUESTAS + BTN_AVANCE: BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
-        if (d.idLoteXcliente == null && d.idStatusLote != 17){
-            if(flagFusion == 1){
-                return BTN_VER_OPCION + BTN_AGREGAR_OPCION + BTN_INFOCLIENTE + BTN_REGRESO_PREPROCESO;              
-            }
-            else{
-                return BTN_PROPUESTAS + BTN_INFOCLIENTE + BTN_REGRESO_PREPROCESO;
-            }
+        if (d.idLoteXclienteFusion == null && d.idStatusLote != 17 && flagFusion == 1){
+            return BTN_VER_OPCION + BTN_AGREGAR_OPCION + BTN_INFOCLIENTE + BTN_REGRESO_PREPROCESO;       
+        }
+        else if(d.idLoteXcliente == null && d.idStatusLote != 17 && flagFusion != 1){
+            return BTN_PROPUESTAS + BTN_INFOCLIENTE + BTN_REGRESO_PREPROCESO;
         }
         else if (d.idLoteXcliente == null && d.idStatusLote == 17){
             return BTN_INFOCLIENTE + BUTTONREGRESO;
         }
-        else if (d.idLoteXcliente != null && d.idStatusLote != 17){
-            if(flagFusion == 1){
+        else if (d.idLoteXclienteFusion != null && d.idStatusLote != 17 && flagFusion == 1){
                 return BTN_VER_OPCION + BTN_AGREGAR_OPCION + BTN_AVANCE + BTN_INFOCLIENTE + BTN_REGRESO_PREPROCESO;              
-            }
-            else{
-                return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE + BTN_REGRESO_PREPROCESO;
-            }
         }
-          
+        else if(d.idLoteXcliente != null && d.idStatusLote != 17 && flagFusion != 1){
+            return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE + BTN_REGRESO_PREPROCESO;
+        }
         else
             return BTN_AVANCE + BTN_INFOCLIENTE + BUTTONREGRESO;
     }

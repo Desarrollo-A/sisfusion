@@ -108,22 +108,7 @@
                         <h5>SELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
                         <div class="row" id="info-cliente"></div>
                         <hr>
-                        <div class="row coop" id="co-propietarios">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                                        <h5 role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">COPROPIETARIO (S) <i id="copropietario-icono" class="fa fa-angle-down"></i></h5>
-                                    </div>
-                                </div>
-
-                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                                    <div id="contenedorCoprop" role="tablist" aria-multiselectable="true">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
+                        
                         <div id="formularioArchivos"></div>
                     </div>
                     <div class="modal-footer mt-2">
@@ -142,7 +127,44 @@
                         <div class="modal-header"></div>
                         <div class="modal-body text-center">
                             <h5>SELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
-                            <div class="row" id="info-cliente"></div>
+                            <div class="row" id="info-clienteFusion"></div>
+                            <hr>
+                            <!-- <div class="row coop" id="co-propietarios">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                                            <h5 role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">COPROPIETARIO (S) <i id="copropietario-icono" class="fa fa-angle-down"></i></h5>
+                                        </div>
+                                    </div>
+
+                                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                        <div id="contenedorCoprop" role="tablist" aria-multiselectable="true">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div> -->
+                            <div id="formularioOrigenEditar"></div>
+                            <div id="formularioArchivosFusion"></div>
+                        </div>
+                        <div class="modal-footer mt-2">
+                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="button" id="sendRequestButtonFusion" class="btn btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="archivosFusionEditar" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                        <div class="modal-header"></div>
+                        <div class="modal-body text-center">
+                            <h5>SELECCIONA LOS ARCHIVOS PARA ASOCIARLOS AL LOTE</h5>
+                            <div class="row" id="info-clienteEditar"></div>
                             <hr>
                             <div class="row coop" id="co-propietarios">
                                 <div class="container-fluid">
@@ -160,18 +182,18 @@
                                 </div>
                                 <hr>
                             </div>
-                            <div id="formularioArchivosFusion"></div>
+                            <div id="formularioOrigenEditar"></div>
+                            <div id="formularioEditarFusion"></div>
                         </div>
                         <div class="modal-footer mt-2">
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="button" id="sendRequestButtonFusion" class="btn btn-primary">Guardar</button>
+                                <button type="button" id="sendRequestButtonEditar" class="btn btn-primary">Guardar</button>
                             </div>
                         </div>
                 </div>
             </div>
         </div>
-
 
         <div class="modal fade" id="contratoFirmadoModal" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog" id="dialoSection">

@@ -18,6 +18,8 @@ class Reestructura_model extends CI_Model
 
         if ($id_rol == 15) { // JURÍDICO
             if (in_array($id_usuario, array(2762, 2747, 13691, 2765, 10463, 2876))) // ES DANI, CARLITOS O CECI
+                $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario AND ((dxc4.flagProcesoJuridico = 0 OR dxc4.flagProcesoJuridico IS NULL AND dxc2.flagProcesoJuridico = 0) AND (dxc4.flagProcesoContraloria = 1 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 1))";
+            else
                 $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND ((dxc4.flagProcesoJuridico = 0 OR dxc4.flagProcesoJuridico IS NULL AND dxc2.flagProcesoJuridico = 0) AND (dxc4.flagProcesoContraloria = 1 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 1))";
         } else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
             $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND (dxc4.flagProcesoContraloria = 0 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 0)";
@@ -47,7 +49,7 @@ class Reestructura_model extends CI_Model
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
         CASE WHEN (lo.estatus_preproceso = 2 AND (dxc2.flagProcesoContraloria = 0 OR dxc4.flagProcesoContraloria = 0)) THEN 'Elaboración de corrida' WHEN (lo.estatus_preproceso = 2 AND ((dxc2.flagProcesoContraloria = 1 AND dxc2.flagProcesoJuridico = 0) OR (dxc4.flagProcesoContraloria = 1 AND dxc4.flagProcesoJuridico = 0))) 
         THEN 'Elaboración de contrato y rescisión' ELSE oxc1.nombre END estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl3.totalContratoNumero, pxl3.totalPropuestas,
-        pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente,
+        pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente, dxc4.loteDxc AS idLoteXclienteFusion,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado,
         HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado, hdcountlf.totalContratoFirmadoFusion,
         lf1.totalCorridaFusion, lf2.totalCorridasFusionNumero, lf3.totalContratosFusion, lf4.totalContratoFusionNumero, lf5.totalContratoFirmadoFusionNumero, lf6.totalRescisionFusion,
@@ -98,12 +100,11 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote 
 
         LEFT JOIN (       
-        select lf.idLotePvOrigen, lo.idLote, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico 
+        select lf.idLotePvOrigen, lo.idLote, dxc.idLote AS loteDxc, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico 
 			from lotes lo 
 			inner join lotesFusion lf on lf.idLote = lo.idLote 
 			left join datos_x_cliente dxc on dxc.idLote = lf.idLotePvOrigen 
         ) dxc4 ON dxc4.idLote = lo.idLote
-
 
     	LEFT JOIN (SELECT lf.idLotePvOrigen, COUNT(*) totalContratoFirmadoFusion FROM historial_documento hd2 INNER JOIN lotesFusion lf ON lf.idLote = hd2.idLote WHERE hd2.tipo_doc=30  AND lf.origen=1 AND hd2.expediente  IS NOT NULL GROUP BY lf.idLotePvOrigen) hdcountlf ON hdcountlf.idLotePvOrigen = lf.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalRescisionFusion FROM lotesFusion WHERE rescision IS NOT NULL GROUP BY idLotePvOrigen) lf6 ON lf6.idLotePvOrigen = lo.idLote

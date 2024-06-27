@@ -235,6 +235,7 @@ class Reestructura extends CI_Controller{
 
         $proceso = 3;
         $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
+        
         $idClienteInsert = $clienteNuevo[0]['lastId'];
 
         if (!$idClienteInsert) {
@@ -3600,10 +3601,19 @@ class Reestructura extends CI_Controller{
     }
 
     public function contraloriaJuridicoCambio($idLotePv, $contraloria, $juridico, $getFlagCJ){
-        $updateData = array(
-            'flagProcesoContraloria' => $contraloria == 1 ? 0 : $getFlagCJ[0]->flagProcesoContraloria,
-            'flagProcesoJuridico' => $juridico == 2 ? 0 : $getFlagCJ[0]->flagProcesoJuridico
-        );
+        if($contraloria == 1){
+            $updateData = array(
+                'flagProcesoContraloria' => 0,
+                'flagProcesoJuridico' => 0
+            );
+        }
+        else if($juridico == 2){
+            $updateData = array(
+                'flagProcesoContraloria' => $contraloria == 1 ? 0 : $getFlagCJ[0]->flagProcesoContraloria,
+                'flagProcesoJuridico' => 0
+            );
+        }
+        
 
         $update = $this->General_model->updateRecord('datos_x_cliente', $updateData, 'idLote', $idLotePv);
 
@@ -4262,7 +4272,58 @@ class Reestructura extends CI_Controller{
         $this->output->set_output(json_encode($response)); 
     }
 
-    public function subirArchivosFusion() {
-        print_r($this->input->post());
+    public function subirArchivosFusion() { // función para subir archivos solo para fusión
+        $data = $this->input->post();
+        $id_rol = $this->session->userdata('id_rol');
+        $tipo = 0;
+
+        if($id_rol == 17 || $id_rol == 70 || $id_rol == 71 || $id_rol == 73 ){
+            $pre = 'CORRIDA';
+            $tipo = 1; // contraloría
+        }
+        else if($id_rol == 15){
+            $pre = 'CONTRATO';
+            $tipo = 2; // juridico
+        }
+
+        foreach($_FILES as $key => $file){
+            foreach($data as $val){
+                if($val['idpxl'] == $key){
+                    $filename = $pre . "_" . $val['lote'] . "_" . date('dmY') . "." . pathinfo($file['name']['file'], PATHINFO_EXTENSION);
+                }
+            }
+            
+            if($tipo == 1){
+                $updateArray[] = array(
+                    "idFusion" => $key,
+                    "corrida" => $filename,
+                    "bucket" => 1
+                );
+            }
+            else{
+                $updateArray[] = array(
+                    "idFusion" => $key,
+                    "contrato" => $filename
+                );
+            }
+        }
+
+        $this->db->trans_begin();
+
+        $update = $this->General_model->updateBatch('lotesFusion', $updateArray, 'idFusion');
+
+        if($update){
+            $this->db->trans_commit();
+            $response["result"] = true;
+            $response["message"] = "Se han subido los archivos correctamente";
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "No se han subido los archivos";
+        }
+
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($response));  
+
     }
 }
