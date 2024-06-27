@@ -284,7 +284,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         (CASE WHEN opc.id_opcion = 1 THEN 'Comercial' WHEN opc.id_opcion = 0 THEN 'Habitacional' ELSE 'Ambos' END) tipoLote,
         opc2.nombre as estatusA,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor,
         (CASE WHEN aut.estatus_autorizacion=1 THEN 'lbl-sky' WHEN aut.estatus_autorizacion=2 THEN 'lbl-yellow' WHEN aut.estatus_autorizacion=3 THEN 'lbl-green' WHEN aut.estatus_autorizacion=4 THEN 'lbl-warning' ELSE 'lbl-gray' END) colorEstatus,
-        (CASE WHEN aut.superficie=1 THEN 'Menor a 200' WHEN aut.superficie=2 THEN 'Mayor a 200' WHEN aut.superficie=3 THEN 'Cualquiera' ELSE '' END) tipoSuperficie
+        (CASE WHEN aut.superficie=1 THEN 'Menor a 200' WHEN aut.superficie=2 THEN 'Mayor a 190' WHEN aut.superficie=3 THEN 'Cualquiera' ELSE '' END) tipoSuperficie
         FROM autorizaciones_pventas aut
         INNER JOIN sedes sd ON sd.id_sede=aut.id_sede
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion=aut.tipo_lote AND opc.id_catalogo=27
@@ -343,7 +343,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         $estatusRegistro = $tipo == 1 ? 1 : 2;
             if($siguienteEstatus == 3){
                 $query_tipo_lote = $datosAvance[0]['tipo_lote'] == 2 ? '' : 'AND co.tipo_lote='.$datosAvance[0]['tipo_lote'];
-                $query_superdicie = $datosAvance[0]['superficie'] == 3 ? '' :($datosAvance[0]['superficie'] == 1 ? 'AND lo.sup < 200' : 'AND lo.sup >= 200');
+                $query_superdicie = $datosAvance[0]['superficie'] == 3 ? '' :($datosAvance[0]['superficie'] == 1 ? 'AND lo.sup < 200' : 'AND lo.sup >= 190');
                 $this->UpdateLotes($datosAvance[0]['idResidencial'],$datosAvance[0]['paquetes'],$query_superdicie,$query_tipo_lote,$sesionado,$datosAvance[0]['fecha_inicio'],$datosAvance[0]['fecha_fin']);
             }
         $this->db->query("UPDATE autorizaciones_pventas SET estatus_autorizacion=$siguienteEstatus,modificado_por=$sesionado WHERE id_autorizacion=$id_autorizacion"); 

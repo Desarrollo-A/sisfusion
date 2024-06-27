@@ -74,7 +74,7 @@ class PaquetesCorrida extends CI_Controller
         if ($superficie == 1) { //Menor a 200
             $query_superdicie = 'and sup < 200 ';
         } else if ($superficie == 2) { // Mayor a 200
-            $query_superdicie = 'and sup >= 200 ';
+            $query_superdicie = 'and sup >= 190 ';
             $inicio =0;
             $fin = 0;
         } else if ($superficie == 3) { // Cualquiera
@@ -261,7 +261,7 @@ class PaquetesCorrida extends CI_Controller
       if ($superficie == 1) { //Menor a 200
           $query_superdicie = 'and sup < 200 ';
       } else if ($superficie == 2) { // Mayor a 200
-          $query_superdicie = 'and sup >= 200 ';
+          $query_superdicie = 'and sup >= 190 ';
           $inicio =0;
           $fin = 0;
       } else if ($superficie == 3) { // Cualquiera
@@ -437,7 +437,7 @@ class PaquetesCorrida extends CI_Controller
     if ($superficie == 1) { //Mayor a
       $query_superdicie = 'and sup < 200 ';
     } else if ($superficie == 2) { // Menor a
-     $query_superdicie = 'and sup >= 200 ';
+     $query_superdicie = 'and sup >= 190 ';
     } else if ($superficie == 3) { // Cualquiera
       $query_superdicie = '';
     }
