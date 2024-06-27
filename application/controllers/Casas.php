@@ -16,27 +16,27 @@ class Casas extends BaseController {
 
     public function cartera(){
         $this->load->view('template/header');
-        $this->load->view("casas/cartera");
+        $this->load->view("casas/procesoBanco/cartera");
     }
 
     public function asignacion(){
         $this->load->view('template/header');
-        $this->load->view("casas/asignacion");
+        $this->load->view("casas/procesoBanco/asignacion");
     }
 
     public function carta_auth(){
         $this->load->view('template/header');
-        $this->load->view("casas/carta_auth");
+        $this->load->view("casas/procesoBanco/carta_auth");
     }
 
     public function adeudos(){
         $this->load->view('template/header');
-        $this->load->view("casas/adeudos");
+        $this->load->view("casas/procesoBanco/adeudos");
     }
 
     public function docu_cliente(){
         $this->load->view('template/header');
-        $this->load->view("casas/docu_cliente");
+        $this->load->view("casas/procesoBanco/docu_cliente");
     }
 
     public function documentacion($proceso){
@@ -47,12 +47,12 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/documentacion", $data);
+        $this->load->view("casas/procesoBanco/documentacion", $data);
     }
 
     public function proyecto_ejecutivo(){
         $this->load->view('template/header');
-        $this->load->view("casas/proyecto_ejecutivo");
+        $this->load->view("casas/procesoBanco/proyecto_ejecutivo");
     }
 
     public function documentos_proyecto_ejecutivo($proceso){
@@ -63,12 +63,12 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/documentos_proyecto_ejecutivo", $data);
+        $this->load->view("casas/procesoBanco/documentos_proyecto_ejecutivo", $data);
     }
 
     public function valida_comite(){
         $this->load->view('template/header');
-        $this->load->view("casas/valida_comite");
+        $this->load->view("casas/procesoBanco/valida_comite");
     }
 
     public function comite_documentos($proceso){
@@ -79,27 +79,27 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/comite_documentos", $data);
+        $this->load->view("casas/procesoBanco/comite_documentos", $data);
     }
 
     public function carga_titulos(){
         $this->load->view('template/header');
-        $this->load->view("casas/carga_titulos");
+        $this->load->view("casas/procesoBanco/carga_titulos");
     }
 
     public function eleccion_propuestas(){
         $this->load->view('template/header');
-        $this->load->view("casas/eleccion_propuestas");
+        $this->load->view("casas/procesoBanco/eleccion_propuestas");
     }
 
     public function propuesta_firma(){
         $this->load->view('template/header');
-        $this->load->view("casas/propuesta_firma");
+        $this->load->view("casas/procesoBanco/propuesta_firma");
     }
 
     public function validacion_contraloria(){
         $this->load->view('template/header');
-        $this->load->view("casas/validacion_contraloria");
+        $this->load->view("casas/procesoBanco/validacion_contraloria");
     }
 
     public function valida_documentacion($proceso){
@@ -110,12 +110,12 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/valida_documentacion", $data);
+        $this->load->view("casas/procesoBanco/valida_documentacion", $data);
     }
 
     public function solicitar_contratos(){
         $this->load->view('template/header');
-        $this->load->view("casas/solicitar_contratos");
+        $this->load->view("casas/procesoBanco/solicitar_contratos");
     }
 
     public function contratos($proceso){
@@ -126,12 +126,12 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/contratos", $data);
+        $this->load->view("casas/procesoBanco/contratos", $data);
     }
 
     public function recepcion_contratos(){
         $this->load->view('template/header');
-        $this->load->view("casas/recepcion_contratos");
+        $this->load->view("casas/procesoBanco/recepcion_contratos");
     }
 
     public function vobo_contratos($proceso){
@@ -142,12 +142,12 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/vobo_contratos", $data);
+        $this->load->view("casas/procesoBanco/vobo_contratos", $data);
     }
 
     public function cierre_cifras(){
         $this->load->view('template/header');
-        $this->load->view("casas/cierre_cifras");
+        $this->load->view("casas/procesoBanco/cierre_cifras");
     }
 
     public function vobo_cifras(){
@@ -156,32 +156,32 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/vobo_cifras", $data);
+        $this->load->view("casas/procesoBanco/vobo_cifras", $data);
     }
 
     public function expediente_cliente(){
         $this->load->view('template/header');
-        $this->load->view("casas/expediente_cliente");
+        $this->load->view("casas/procesoBanco/expediente_cliente");
     }
 
     public function envio_a_firma(){
         $this->load->view('template/header');
-        $this->load->view("casas/envio_a_firma");
+        $this->load->view("casas/procesoBanco/envio_a_firma");
     }
 
     public function firma_contrato(){
         $this->load->view('template/header');
-        $this->load->view("casas/firma_contrato");
+        $this->load->view("casas/procesoBanco/firma_contrato");
     }
 
     public function recepcion_contrato(){
         $this->load->view('template/header');
-        $this->load->view("casas/recepcion_contrato");
+        $this->load->view("casas/procesoBanco/recepcion_contrato");
     }
 
     public function finalizar(){
         $this->load->view('template/header');
-        $this->load->view("casas/finalizar");
+        $this->load->view("casas/procesoBanco/finalizar");
     }
 
     public function ingresar_adeudos(){
@@ -191,12 +191,12 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/ingresar_adeudos", $data);
+        $this->load->view("casas/procesoBanco/ingresar_adeudos", $data);
     }
 
     public function reporte_casas(){
         $this->load->view('template/header');
-        $this->load->view("casas/reporte_casas");
+        $this->load->view("casas/procesoBanco/reporte_casas");
     }
 
     public function cotizaciones($proceso){
@@ -207,7 +207,7 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/cotizaciones", $data);
+        $this->load->view("casas/procesoBanco/cotizaciones", $data);
     }
 
     public function historial($proceso){
@@ -218,7 +218,7 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/historial", $data);
+        $this->load->view("casas/procesoBanco/historial", $data);
     }
 
     public function archivo($name){
