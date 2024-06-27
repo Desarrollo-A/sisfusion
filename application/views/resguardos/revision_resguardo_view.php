@@ -70,6 +70,7 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
+                                                    <th>EMPRESA</th>
                                                     <th>REFERENCIA</th>
                                                     <th>PRECIO DEL LOTE</th>
                                                     <th>TOTAL DE LA COMISIÓN</th>
@@ -100,5 +101,5 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/revision_resguardo.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/resguardos/revision_resguardos.js"></script>
 </body>

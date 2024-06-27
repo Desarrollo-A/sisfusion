@@ -252,6 +252,11 @@ function getAssimilatedCommissions(directivo, proyecto, anio, mes){
         },
         {
             "data": function( d ){
+                return '<p class="m-0">'+d.empresa+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
                 return '<p class="m-0">'+d.referencia+'</p>';
             }
         },
