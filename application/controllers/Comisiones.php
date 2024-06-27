@@ -230,7 +230,10 @@ class Comisiones extends CI_Controller
      $this->load->view('template/header');
      $this->load->view("ventas/revision_resguardo");
   }
-
+  public function resguardos1(){
+    $this->load->view('template/header');
+    $this->load->view("resguardos/revision_resguardo_view");
+ }
 
   // public function retiros(){
   //   $this->load->view('template/header');
