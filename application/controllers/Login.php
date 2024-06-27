@@ -17,10 +17,8 @@ class Login extends CI_Controller
 		$this->load->library(array('session','form_validation','get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-    }
-		
+	}
+
 	public function index()
 	{
 
@@ -37,7 +35,7 @@ class Login extends CI_Controller
 				redirect(base_url().$this->session->userdata('controlador'));
 			}
 		}
-}
+	}
 
 	public function token()
 	{
@@ -65,11 +63,9 @@ class Login extends CI_Controller
 				$id_usuario = $this->input->post('id_usuario');
 				$imagen_perfil = $this->input->post('imagen_perfil');
 				$check_user = $this->login_model->login_user($usuario,$contrasena);
-
 				if(empty($check_user))
 				{
 					$this->session->set_userdata('errorLogin', 33);
-
 					redirect(base_url());
 				}
 				else{
@@ -93,7 +89,6 @@ class Login extends CI_Controller
 					if($check_user[0]->id_rol != 0)
 					{
 						$dataRol = $this->login_model->getRolByUser($check_user[0]->id_rol);
-
 						if($dataRol[0]->nombre=="Asistente gerente")
 						{
 							$perfil = ($dataRol[0]->nombre=="Asistente gerente") ? "asistentesGerentes" : $dataRol[0]->nombre;
@@ -170,10 +165,6 @@ class Login extends CI_Controller
 						{
 							$perfil = ($dataRol[0]->nombre=="Asesor OOAM") ? "asesorOOAM" : $dataRol[0]->nombre;
 						}
-						elseif ($dataRol[0]->nombre=="OOAM casas")
-						{
-							$perfil = ($dataRol[0]->nombre=="OOAM casas") ? "administracion" : $dataRol[0]->nombre;
-						}
 
 					}
 					/*get ubicacion*/
@@ -189,7 +180,7 @@ class Login extends CI_Controller
 						document.write(localStorage.setItem("nombreUsuario", "'.$check_user[0]->nombre.' '.$check_user[0]->apellido_paterno.' '.$check_user[0]->apellido_materno.'"));
 						</script>';
 						
- 
+
 						$data = array(
 							'is_logued_in' 	        => 		TRUE,
 							'id_usuario' 	        => 		$check_user[0]->id_usuario,
@@ -216,12 +207,13 @@ class Login extends CI_Controller
 							'controlador'			=>		$check_user[0]->controlador,
 							'tipo'       			=>		$check_user[0]->tipo
 						);
-						
-						if(session_status() === PHP_SESSION_NONE) session_start();
-
+						session_start();
 						$_SESSION['rutaController'] = '';
 						$_SESSION['datos4'] = [];
 						$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
+
+						// Este bloque reemplaza el rol del usuario dependiendo del rol y tipo
+
 						if($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 7)
 							$id_rol = 86;
 						else if ($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 3)
@@ -232,15 +224,24 @@ class Login extends CI_Controller
 							$id_rol = 93;
 						else if ($check_user[0]->id_usuario == 12841)
 							$id_rol = 85;
+						// Subdireccion CASAS
 						else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 2)
 							$id_rol = 96;
+						// Asistente Subdireccion CASAS
 						else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 5)
 							$id_rol = 97;
+						// Gerentes CASAS
+						else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 3)
+							$id_rol = 102;
+						// Asistente de gerentes CASAS
+						else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 6)
+							$id_rol = 103;
 						else if ($check_user[0]->tipo == 4)
-							$id_rol = 98;
+							$id_rol = 95;
 						else
 							$id_rol = $check_user[0]->id_rol;
-						$datos = $this->get_menu->get_menu_data($id_rol, $check_user[0]->id_usuario, $check_user[0]->estatus);
+
+						$datos = $this->get_menu->get_menu_data($id_rol,$check_user[0]->id_usuario,$check_user[0]->estatus);
 						$opcionesMenu = $this->get_menu->get_menu_opciones();
 						$_SESSION['rutaActual'] = $_SERVER["HTTP_HOST"] == 'prueba.gphsis.com' || $_SERVER["HTTP_HOST"] == 'localhost' ? '/sisfusion/' : '/';
 						$data['datos'] = $datos;
