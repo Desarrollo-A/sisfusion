@@ -1315,9 +1315,13 @@ class CasasModel extends CI_Model
     public function getListaHistorial($idProcesoCasas){
         $query = " SELECT
             h.*,
+            anterior.nombre as procesoAnterior,
+            nuevo.nombre as procesoNuevo,
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS usuarioMovimiento
         FROM historial_proceso_casas h
         LEFT JOIN usuarios us ON h.idMovimiento = us.id_usuario
+        LEFT JOIN opcs_x_cats anterior ON anterior.id_catalogo = 135 AND anterior.id_opcion = h.procesoAnterior
+        LEFT JOIN opcs_x_cats nuevo ON nuevo.id_catalogo = 135 AND nuevo.id_opcion = h.procesoNuevo
         WHERE
             idProcesoCasas = $idProcesoCasas";
 
