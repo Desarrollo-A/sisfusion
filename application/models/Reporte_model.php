@@ -1624,7 +1624,7 @@ class Reporte_model extends CI_Model {
         )->result_array();
     }
 
-     public function amountShare($id_rol, $id_usuario = null, $render, $leadersList){
+     public function amountShare($id_rol, $id_usuario = null, $render, $leadersList = null){
         
         $userFilter = "";
         $nombreUsuarioCliente = "";
@@ -1648,9 +1648,6 @@ class Reporte_model extends CI_Model {
             
         }
         if($id_rol == 2) {
-            /*$nombreUsuarioCliente = "CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR(COMPARTIDO)' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario";
-            $nombreUsuarioCompartida = "CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR(COMPARTIDO)' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario";
-            */
             if($render == 1)
             {
                 $userFilter = 'AND u.id_usuario = '.$id_usuario;
