@@ -1239,4 +1239,15 @@ class Usuarios_modelo extends CI_Model
         $query = $this->db->query("SELECT * FROM menu_usuario WHERE id_usuario=".$id_usuario);
         return $query->result_array();
     }
+
+    public function getRolPorTipo($idRol, $idTipo, $idUsuario){
+        $query =  "SELECT * FROM rol_por_tipo
+        WHERE (idRol = $idRol AND idTipo = $idTipo)
+        OR (idRol IS NULL AND idTipo = $idTipo )
+        OR (idUsuario = $idUsuario)";
+
+        $result = $this->db->query($query)->row();
+
+        return $result->rol;
+    }
 }
