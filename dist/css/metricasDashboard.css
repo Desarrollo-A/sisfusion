@@ -1733,23 +1733,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   height: 110px !important;
 }
 
-#chartsAmount .boxMiniCharts .loadChartMini {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-}
-
-#chartsAmount .no-spin::-webkit-inner-spin-button, #chartsAmount .no-spin::-webkit-outer-spin-button {
-  -webkit-appearance: none !important;
-  margin: 0 !important;
-}
-
-#chartsAmount .no-spin {
-  -moz-appearance: textfield !important;
-}
-
 #metricas table.dataTable > thead > tr > th, #metricas table.dataTable > tbody > tr > th, #metricas table.dataTable > tfoot > tr > th, #metricas table.dataTable > thead > tr > td, #metricas table.dataTable > tbody > tr > td, #metricas table.dataTable > tfoot > tr > td {
   white-space: nowrap !important;
 }

@@ -204,16 +204,10 @@ class Reestructura_model extends CI_Model
 
     public function getCondominiosDisponibles($proyecto, $superficie, $flagFusion)
     {
-        $validacionSL = '';
-        if ($proyecto == 21 || $proyecto == 14 || $proyecto == 22 || $proyecto == 25) {
-            $validacionSL = '21'; //validación statusLote
-        } else {
-            $validacionSL = '1, 15';
-        }
         $query = $this->db->query("SELECT lo.idCondominio, co.nombre, COUNT(*) disponibles
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND ISNULL(lo.tipo_venta, 0) != 1
-        WHERE lo.idStatusLote IN ($validacionSL) AND lo.status = 1
+        WHERE lo.idStatusLote IN (1,15,21) AND lo.status = 1
         AND co.idResidencial = $proyecto
         GROUP BY lo.idCondominio, co.nombre");
         return $query->result();
@@ -221,7 +215,6 @@ class Reestructura_model extends CI_Model
 
     public function getLotesDisponibles($condominio, $superficie, $flagFusion, $idProyecto)
     {
-        $validacionSL = '1, 15, 21';
         $query = $this->db->query("SELECT CASE 
 		WHEN (lo.sup = $superficie) THEN op1.nombre
 		WHEN (lo.sup - $superficie) <= lo.sup * 0.05 THEN op2.nombre
@@ -230,7 +223,7 @@ class Reestructura_model extends CI_Model
 		INNER JOIN opcs_x_cats op1 ON op1.id_catalogo = 105 AND op1.id_opcion = 1
 		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 105 AND op2.id_opcion = 2
 		INNER JOIN opcs_x_cats op3 ON op3.id_catalogo = 105 AND op3.id_opcion = 3
-		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN ($validacionSL) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1");
+		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN (1, 15, 21) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1");
         return $query->result();
     }
 

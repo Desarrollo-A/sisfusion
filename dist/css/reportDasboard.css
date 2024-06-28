@@ -1733,23 +1733,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   height: 110px !important;
 }
 
-#chartsAmount .boxMiniCharts .loadChartMini {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-}
-
-#chartsAmount .no-spin::-webkit-inner-spin-button, #chartsAmount .no-spin::-webkit-outer-spin-button {
-  -webkit-appearance: none !important;
-  margin: 0 !important;
-}
-
-#chartsAmount .no-spin {
-  -moz-appearance: textfield !important;
-}
-
 #reporte .scrollCharts {
   display: flex;
   overflow: auto;
@@ -1757,13 +1740,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 
 #reporte .scrollCharts::-webkit-scrollbar {
   display: none;
-}
-
-@media (min-device-width: 320px) and (max-device-width: 480px) {
-  #reporte .scrollCharts {
-    display: block !important;
-    overflow: hidden !important;
-  }
 }
 
 #reporte table.dataTable > thead > tr > th, #reporte table.dataTable > tbody > tr > th, #reporte table.dataTable > tfoot > tr > th, #reporte table.dataTable > thead > tr > td, #reporte table.dataTable > tbody > tr > td, #reporte table.dataTable > tfoot > tr > td {
@@ -1799,7 +1775,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #reporte .gradientRight {
     width: 12%;
-    display: none;
   }
 }
 
@@ -1823,8 +1798,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #reporte .rowCarousel .cardMiniChart {
-    min-width: 80%;
-    margin-right: 0 !important;
+    min-width: 85%;
   }
 }
 
