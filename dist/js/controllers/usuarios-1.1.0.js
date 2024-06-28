@@ -278,14 +278,7 @@ function fillUsersTable() {
         },
         {
             data: function (d) {
-                let tipo = '';
-                if (d.tipo == 2 || d.tipo == '2')
-                    tipo = '<span class="label lbl-sky">MADERAS UPGRADE</span>';
-                else if (d.tipo == 3 || d.tipo == '3')
-                    tipo = '<span class="label lbl-violetBoots">CASAS</span>';
-                else
-                    tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
-                return tipo;
+                return `<span class="label ${d.colorTipo}">${d.tipoUsuario}</span> `; 
             }
         },
         {
@@ -982,6 +975,7 @@ $("#editUserForm").on('submit', function(e){
 
 $(document).on('click', '.see-changes-log', function(){
     id_usuario = $(this).attr("data-id-usuario");
+    document.getElementById('changelogUsers').innerHTML = '';
     $.post("getChangeLogUsers/"+id_usuario).done( function( data ){
         $("#changesRegsUsers").modal();
         $.each( JSON.parse(data), function(i, v){

@@ -19,6 +19,8 @@ var banderaFusionGlobal=0;
 var idsArchivos = [];
 var flagProcesoJuridicoGlobal = null;
 var flagProcesoContraloriaGlobal = null;
+let contenedorContenido = document.getElementById('contenedorCoprop');
+
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
         $("#fileElm1").val(null);
@@ -38,7 +40,6 @@ $(document).ready(function () {
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
     let banderaFusion = $(this).attr("data-banderaFusion");
-    console.log(banderaFusion)
     var flagProcesoContraloria = $(this).attr("data-flagProcesoContraloria");
     var flagProcesoJuridico = $(this).attr("data-flagProcesoJuridico");
     flagProcesoJuridicoGlobal = flagProcesoJuridico;
@@ -68,24 +69,29 @@ $(document).on('click', '.btn-abrir-modal', function () {
         success: function(data) {
             data = JSON.parse(data);
             if (data['copropietarios'].length > 0) {
-                loadCopropietarios(data['copropietarios']);
-                document.getElementById('co-propietarios').classList.remove('hide');
+                $('#co-propietarios').css("display", "block");
+                loadCopropietarios(data['copropietarios']);            
             } 
             else {
-                let copropietarios = document.getElementById('co-propietarios');
-                copropietarios.innerHTML = '';
-                document.getElementById('co-propietarios').classList.add('hide');
+                $('#co-propietarios').css("display", "none");
             }
-            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,banderaFusion,flagProcesoContraloria,flagProcesoJuridico)
+            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,banderaFusion,flagProcesoContraloria,flagProcesoJuridico, idLote)
+
+            if(flagFusion == 1){
+                $("#archivosReestructuraFusion").modal();
+            }
+            else{
+                $("#archivosReestructura").modal();
+            }
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 
-    $("#archivosReestructura").modal();
+    
 });
-function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusion = 0,flagProcesoContraloria,flagProcesoJuridico) {
+function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusion = 0,flagProcesoContraloria,flagProcesoJuridico, idLote) {
     archivosResicion = [];
     idsArchivos = [];
     id_dxcs = [];
@@ -142,14 +148,12 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             hideButton = '';
             break;
     }
-    console.log(flagProceso);
-    console.log(flagProcesoJuridico);
-    console.log(id_rol_general)
+
     if (flagEditar == 0) {
         editarFile = 0;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
        let nuevosDatosDestino = banderaFusion != 0 ?  datos.filter(destino => destino.destino == 1) : datos;
-       console.log(nombreLote);
+
       /* nuevosDatosOrigenBack.map((elementoBack, index2) => {
        // elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16
         banderaFusion != 0  ?  nombreLotes.push(elementoBack.nombreLote) : nombreLotes.push(nombreLote);
@@ -162,45 +166,50 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     }else{
         nombreLotes.push(nombreLote);
     }
-    console.log('nombreLotes', nombreLotes);
-       nuevosDatosDestino.map((elemento, index) => {
-        id_pxls.push(elemento.id_pxl);
-        banderaTipoProceso=elemento.tipo_proceso;
-       // elemento.idStatusLote == 17 || elemento.idStatusLote == 16  ? nombreLotes.push(elemento.nombreLote) : '';
-        
+    
+        if (flagFusion == 1) {
+            renderizar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles);
+        }
+        else {
+            nuevosDatosDestino.map((elemento, index) => {
+                id_pxls.push(elemento.id_pxl);
+                banderaTipoProceso = elemento.tipo_proceso;
+                // elemento.idStatusLote == 17 || elemento.idStatusLote == 16  ? nombreLotes.push(elemento.nombreLote) : '';
 
-            contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
-                '                            <h6 class="text-left">' + label + '<b>: </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
-                '                            <div class="" id="selectFileSection' + index + '">\n' +
-                '                                <div class="file-gph">\n' +
-                '                                    <input class="d-none" type="file" required accept="' + acceptFiles + '" id="fileElm' + index + '">\n' +
-                '                                    <input class="file-name" id="file-name' + index + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-                '                                    <label class="upload-btn m-0" for="fileElm' + index + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-                '                                </div>\n' +
-                '                            </div>\n' +
-                '                        </div>';
-            if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
-
-                let tooltip = flagProcesoContraloria == 0 ? 'Contraloría no ha cargado corridas' : 'Descargar excel';
-                let disabledBtn = flagProcesoContraloria == 0 ? 'disabled' : '';
-                contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
-                    '                           <div class="d-flex justify-center">' +
-                    '                               <button data-toggle="tooltip" '+disabledBtn+' data-placement="top" title="'+tooltip+'" ' +
-                    '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
-                    '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
-                    '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
-                    '                           </div>' +
+                contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
+                    '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
+                    '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
+                    '                            <h6 class="text-left">' + label + '<b>: </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
+                    '                            <div class="" id="selectFileSection' + index + '">\n' +
+                    '                                <div class="file-gph">\n' +
+                    '                                    <input class="d-none" type="file" required accept="' + acceptFiles + '" id="fileElm' + index + '">\n' +
+                    '                                    <input class="file-name" id="file-name' + index + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+                    '                                    <label class="upload-btn m-0" for="fileElm' + index + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+                    '                                </div>\n' +
+                    '                            </div>\n' +
                     '                        </div>';
-            }
-            arrayKeysArchivos.push(elemento);
-        });
+                if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15) {
+
+                    let tooltip = flagProcesoContraloria == 0 ? 'Contraloría no ha cargado corridas' : 'Descargar excel';
+                    let disabledBtn = flagProcesoContraloria == 0 ? 'disabled' : '';
+                    contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
+                        '                           <div class="d-flex justify-center">' +
+                        '                               <button data-toggle="tooltip" ' + disabledBtn + ' data-placement="top" title="' + tooltip + '" ' +
+                        '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
+                        '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
+                        '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
+                        '                           </div>' +
+                        '                        </div>';
+                }
+                arrayKeysArchivos.push(elemento);
+            });
+        }
+
         if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
             //se esta subiendo contrato se debe pedir uno adicional
             //cambiar el último número de la siguiente línea por datos[0]['tipo_proceso']
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
-            console.log(datos);
+
             nuevosDatosOrigen.map((elemento, index) => {
             nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
             idsArchivos.push(elemento.id_pxl);
@@ -223,7 +232,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     else if (flagEditar == 1) {
         editarFile = 1;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
-        console.log(datos);
+
         /*nuevosDatosOrigenBack.map((elementoBack, index2) => {
          elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
      });*/
@@ -327,8 +336,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
 function loadCopropietarios(datos){
     // cnt-headers //contenedor de las cabeceras
     let contenidoHTML = '';
-    let contenedorContenido = document.getElementById('contenedorCoprop');
-    if(datos.length>0){
+    
+    if(datos.length > 0) {
         datos.map((elemento, index)=>{
             let nombreCopropietario = elemento.nombre + ' ' + elemento.apellido_paterno+' '+elemento.apellido_materno;
             contenidoHTML += '<div class="card-body mb-3">';
@@ -376,7 +385,6 @@ function loadCopropietarios(datos){
     }else{
         contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">Sin copropietarios</h5></center></div>';
     }
-
     contenedorContenido.innerHTML = contenidoHTML;
 }
 
@@ -386,7 +394,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     let arrayResicion = [];
     let validacionArray = [];
     let flagValidacion = 0;
-    console.log(idsArchivos);
+
     for (let m = 0; m < idsArchivos.length; m++) {
         if($(`#Resicion_${idsArchivos[m]}`)[0].files[0] != undefined){
             arrayResicion.push(1);
@@ -402,8 +410,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
     });
 
     if (editarFile == 1) {
-        console.log('arrayResicion')
-        console.log(arrayResicion);
         if (flagValidacion > 0 && banderaFusionGlobal == 0) {
             //hay al menos un archivo actualizado
             flagEnviar = true;
@@ -457,7 +463,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append('rescisionArchivo[]', rescisionArchivos);
             }
         }
-        console.log(flagEnviar);
+
         if (flagEnviar) {
             $.ajax({
                 type: 'POST',
@@ -527,7 +533,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append("id_pxls[]",id_pxls);
                 data.append("editarFile", editarFile);
                 data.append("flagFusion", flagFusion);
-                console.log(arrayKeysArchivos);
                 arrayKeysArchivos.map((elemento, index) => {
                     let idLotePR = (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
                     data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
@@ -590,6 +595,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
     }
 });
+
 $(document).on('click', '.ver-archivo', function () {
     let id_pxl = $(this).attr("data-idPxl");
     let nombreArchivo = $(this).attr("data-nomArchivo");
@@ -798,7 +804,6 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
             }else{
                 flagEnviar = true;
             }
-            console.log(flagEnviar);
             // return '';//test
         }else{
             if ($("#contratoFirmado")[0].files[0] == undefined) {
@@ -889,7 +894,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
             let flagEditarCF = ($("#contratoFirmado")[0].files[0] == undefined) ? 0 : 1;
             data.append("flagEditarCF", flagEditarCF);
         }
-console.log(arrayCF);
+
         //submit de la data, independientemente sea fusion o normal
         $.ajax({
             type: 'POST',
@@ -949,3 +954,118 @@ const dlotesFusionados = async (idLoteOriginal, tipoOrigenDestino) => {
         });
     });
 }
+
+function renderizar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles){
+    let contenidoHTML;
+
+    $.ajax({
+        url: 'obtenerOpcionesFusion',
+        method: 'POST',
+        datatype: 'JSON',
+        data: { 'idLoteOriginal': idLote },
+        success: function(response){
+            if(response.result){
+                // console.log(response.opciones)
+
+                for (let opcion of response.opciones) {
+                    let html = `<button class="accordion" type="button" onClick='verOpciones(${opcion.noOpcion})' style="border-radius: 1em; margin-top: 1em; background-color: #0a548b; color: white">Opción ${opcion.noOpcion}</button>
+                        <div class="panel" id="opcion${opcion.noOpcion}" style="border:1px; padding:1em; border-radius: 1em;">
+                    </div>`;
+                    
+                    html += `<input type='hidden' id='numOpciones' value='${nuevosDatosDestino.length}' />`
+                    
+                    $("#formularioArchivosFusion").append(html);
+
+                    let option = 0
+                    for(let lote of nuevosDatosDestino){
+                        // console.log(nuevosDatosDestino)
+
+                        if(lote.noOpcion == opcion.noOpcion){
+                            let htmlOpciones = `<input type='hidden' id='opcion_${option}' value='${lote.id_pxl}' />`
+                            htmlOpciones += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
+            '                            <input type="" name="data[' + lote.id_pxl + ']" id="idLotep' + lote.id_pxl + '" value="' + lote.id_pxl + '">\n' +
+            '                            <input type="" id="nombreLote_' + lote.id_pxl + '" value="' + lote.nombreLote + '">\n' +
+            '                            <h6 class="text-left">' + label + '<b>: </b>' + lote.nombreLote + '<span class="text-red">*</span></h6>\n' +
+            '                            <div class="" id="selectFileSection' + lote.id_pxl + '">\n' +
+            '                                <div class="file-gph">\n' +
+            '                                    <input class="d-none" type="file" required onchange="onChangeFile('+ lote.id_pxl +')" accept="' + acceptFiles + '" id="file">\n' +
+            '                                    <input class="file-name" id="file-name' + lote.id_pxl + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+            '                                    <label class="upload-btn m-0" for="fileElm' + lote.id_pxl + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                        </div>';
+
+                            $("#opcion" + opcion.noOpcion).append(htmlOpciones);
+                        }
+
+                        option += 1
+                    }
+                }
+            }
+            else{
+                alerts.showNotification("top", "right", "Error al obtener los lotes de destino");
+            }
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "Ha ocurrido un error al enviar los datos", "danger");
+        }
+    });
+
+    
+    return contenidoHTML;
+}
+
+function verOpciones(noOpcion){
+    if( $("#opcion" + noOpcion).css("display") == 'none'){
+        $("#opcion" + noOpcion).css("display", "block")
+    }
+    else{
+        $("#opcion" + noOpcion).css("display", "none")
+    }
+}
+
+function onChangeFile(pxl){
+    var fileVal=document.getElementById("fileElm" + pxl);
+
+    document.getElementById("file-name" + pxl).value = fileVal.files[0].name;
+     alert(fileVal.files[0].name);
+}
+
+
+$(document).on("click", "#sendRequestButtonFusion", function (e) { // este es unicamente usado en las fusiones de quere regresar se puede eliminar
+    e.preventDefault();
+
+    let data = new FormData();
+
+    let opciones = $('#numOpciones').val()
+
+    for (let opcion = 0; opcion < opciones; opcion++) {
+        let idpxl = $(`#opcion_${opcion}`).val()
+        let lote = $(`#nombreLote_${idpxl}`).val()
+
+        /*
+        if(!lote){
+            alert('no existe')
+
+            break
+        }
+        */
+
+        console.log(lote)
+
+        data.append(`${idpxl}[lote]`, lote)
+        data.append(`${idpxl}[file]`, lote)
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: 'subirArchivosFusion',
+        data: data,
+        contentType: false,
+        cache: false,
+        processData: false,
+        success: function (response) {
+            console.log(response)
+        }
+    })
+});  

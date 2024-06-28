@@ -66,6 +66,13 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 
                 botonesModal += `
                 <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
+                
+                data-mensualidades_pra="${d.mensualidades}"
+                data-monto_parcialidad="${d.monto_parcialidad}"
+                data-id_parcialidad="${d.id_parcialidad}"
+                data-monto_formateado="${d.monto_formateado}"
+
+                
                 data-monto="${d.monto}"
                 data-name="${d.nombre}" class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
                 <i class="fas fa-forward"></i>
@@ -80,7 +87,9 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 
             }
             botonesModal += `
-            <button href="#" value="${d.id_anticipo}" data-name="${d.nombre}" data-id_usuario="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs" title="Historial">
+            <button href="#" value="${d.id_anticipo}" data-name="${d.nombre}" 
+            data-id_usuario="${d.id_usuario}" 
+            class="btn-data btn-blueMaderas consultar_logs" title="Historial">
                 <i class="fas fa-info"></i>
             </button>`;
                     return '<div class="d-flex justify-center">' + botonesModal + '<div>';
@@ -147,14 +156,92 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         const Modalbody = $('#myModalAceptar .modal-body');
         const monto1 = $(this).attr("data-monto");
         const Modalfooter = $('#myModalAceptar .modal-footer');
+
+        const mensualidades_pra = $(this).attr("data-mensualidades_pra");
+        const monto_parcialidad = $(this).attr("data-monto_parcialidad");
+        const id_parcialidad    = $(this).attr("data-id_parcialidad");
+
+        modalidad =  id_parcialidad == 'null' ? `PRÉSTAMO <br>`  : `APOYO <br>
+                                                    MENSUALIDADES   : ${mensualidades_pra} <br>
+                                                    MONTO           : ${monto_parcialidad} <br>` ;
+
+        
+
+        const monto_formateado = $(this).attr("data-monto_formateado");
+        
+        const formulario = id_parcialidad != 'null' ? `       
+        <div class="form-group col-md-6 ">
+            <label class="label control-label">número de mensualidades</label>
+            <input class="form-control input-gral" 
+                data-type="number" maxlength="2" 
+                required
+                type="text" value="${mensualidades_pra}" name="num_mensualidades" id="num_mensualidades">
+        </div>
+        
+        <div class="form-group col-md-6 ">
+            <label class="label control-label">Confirmar monto</label>
+            <input class="form-control input-gral" 
+            data-type="currency" maxlength="10" 
+            oncopy="return false" 
+            onpaste="return false"
+            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+            onkeypress="return onlyNumbers(event)"
+            required
+            type="text" value="${monto1}" name="monto" id="monto">
+        </div>
+        
+
+
+        <div class="form-group col-md-6 ">
+            <label class="label control-label">Monto por mes</label>
+            <input class="form-control input-gral" 
+                data-type="currency" maxlength="10" 
+                required
+                type="text" value="${monto_parcialidad}" name="mensualidad" id="mensualidad">
+        </div>
+
+        <div class="form-group col-md-6 ">
+                <a  
+                    name="nuevosNumeros"  
+                    id="nuevosNumeros" 
+                    onclick="validar_nuevosNumeros()"
+                    class="btn btn-violetDeep">
+                    Validar nuevos valores
+                </a>
+        </div>` 
+        : 
+        `<div class="form-group col-md-12 ">
+            <label class="label control-label">Confirmar monto</label>
+            <input class="form-control input-gral" 
+            data-type="currency" maxlength="10" 
+            oncopy="return false" 
+            onpaste="return false"
+            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+            onkeypress="return onlyNumbers(event)"
+            required
+            type="text" value="${monto1}" name="monto" id="monto">
+        </div>
+        ` ;
+
+
+
+
         Modalbody.html('');
         Modalfooter.html('');
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
             <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
-            <div class="form-group">
-                <label class="label control-label">Prioridad</label>
+            
+                <div>
+                    <h2 class="card_title">Detalles</h2>
+                    <p class="center-align"> 
+                        Monto solicitado : ${monto_formateado}.<br>
+                        Mendiante la modalidad : ${modalidad}
+
+                        
+                    </p>
+                </div>
 
                 <div class="row aligned-row d-flex align-end pt-3" style="display: flex; justify-content: center"> 
                     <div id="selectorModo" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -169,19 +256,11 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                         </div>
                     </div>
                 </div>
+
+                ${formulario}
                 
-            </div>
-            <div class="form-group col-md-12 ">
-                <label class="label control-label">Confirmar monto</label>
-                <input class="form-control input-gral" 
-                data-type="currency" maxlength="10" 
-                oncopy="return false" 
-                onpaste="return false"
-                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
-                onkeypress="return onlyNumbers(event)"
-                required
-                type="text" value="${monto1}" name="monto" id="monto">
-            </div>
+                
+            
             <div class="form-group">
                 <input type="hidden" value="${id_usuario}" name="id_usuario" id="id_usuario">
             </div>
@@ -189,14 +268,17 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 <input type="hidden" value="0" name="bandera_a" id="bandera_a">
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-12">
                 <label class="label control-label">Aceptar comentario</label>
                 <textarea id="motivoDescuento_aceptar" name="motivoDescuento_aceptar" class="text-modal" rows="3" required></textarea>
             </div>
             `);
         Modalfooter.append(`
+        <div class="form-group col-md-12 ">
                 <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name="Activo_aceptar"  id="Activo_aceptar" class="btn btn-primary">Aceptar</button>`);
+				<button  type="submit" name="Activo_aceptar"  id="Activo_aceptar" class="btn btn-primary">Aceptar</button>
+        </div>       
+            `);
         $("#myModalAceptar").modal();
     });
 
@@ -415,6 +497,63 @@ $("#form_subir").on('submit', function (e) {
         }
     });
 }); 
+
+
+// document.getElementById('num_mensualidades').addEventListener('input', validateInput);
+
+function validar_nuevosNumeros() {
+    const numero_mensualidades = document.getElementById('num_mensualidades').value;
+    const monto = document.getElementById('monto').value;
+    // const numero_mensualidades = document.getElementById('num_mensualidades');
+    // monto = parseFloat(monto);
+    // numero_mensualidades = parseFloat(numero_mensualidades);
+
+    const number = parseInt(numero_mensualidades, 10);
+    const validationMessage = document.getElementById('validationMessage');
+    var nuevo_dato = 0;
+
+
+    // if (isNaN(number) || number < 1 || number > 99) {
+    //     // validationMessage.textContent = 'Por favor, ingrese un número válido entre 1 y 99.';
+    //     // input.focus();
+    // } else {
+        
+        
+        console.log('nuevo dato',nuevo_dato);
+        console.log('numero_mensualidades', numero_mensualidades);
+        console.log('monto',monto);
+
+        nuevo_dato = (monto/numero_mensualidades);
+
+        document.getElementById('mensualidad').value = parseFloat(nuevo_dato);
+
+
+        // validationMessage.textContent = 'El número de mensualidades es válido.';
+        // Aquí puedes añadir la lógica adicional, como enviar los datos a un servidor
+        // console.log('Número de mensualidades:', number);
+    // }
+}
+// document.addEventListener('DOMContentLoaded', function() {
+//     const input = document.getElementById('num_mensualidades');
+//     input.addEventListener('input', validateInput);
+
+//     function validateInput() {
+//         const value = input.value;
+//         const number = parseInt(value, 10);
+//         const validationMessage = document.getElementById('validationMessage');
+
+//         if (isNaN(number) || number < 1 || number > 99) {
+//             validationMessage.textContent = 'Por favor, ingrese un número válido entre 1 y 99.';
+//         } else {
+//             validationMessage.textContent = '';
+//         }
+//     }
+// });
+
+
+
+
+
 function changeName(e){
     const fileName = e.files[0].name;
     let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );

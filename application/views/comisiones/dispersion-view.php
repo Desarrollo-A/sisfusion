@@ -393,6 +393,6 @@
     <?php $this->load->view('template/footer');?>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersionPruebasProduccion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion.js"></script>
 
 </body>

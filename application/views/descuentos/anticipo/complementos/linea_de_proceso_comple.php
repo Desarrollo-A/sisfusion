@@ -1,4 +1,4 @@
-<div class="card hide preceso_aticipo" id="preceso_aticipo" name="preceso_aticipo">
+<div class=" hide preceso_aticipo" id="preceso_aticipo" name="preceso_aticipo">
     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <!-- INICIO -->
         <div class="card-content">

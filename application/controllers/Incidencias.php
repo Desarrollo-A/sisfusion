@@ -35,7 +35,7 @@ class Incidencias extends CI_Controller
         $this->load->view("incidencias/IncidenciasByLote", $datos);
     }
 
-    public function getInCommissions($lote)
+    public function getInCommissions($lote) //agrega status
     {
       $datos = array();
       $datos = $this->Incidencias_model->getInCommissions($lote);
@@ -167,6 +167,19 @@ class Incidencias extends CI_Controller
 
     public function getUserVC($id_cliente){
       $datos = $this->Incidencias_model->getUserVC($id_cliente)->result_array();
+      echo json_encode($datos);
+    }
+
+    public function getUserVP($idLote){
+      $datos = $this->Incidencias_model->getUserVP($idLote)->result_array();
+      echo json_encode($datos);
+    }
+
+    public function updateVentaCompartida(){
+      $id = $this->input->post('id');
+      $idLote = $this->input->post('idLote');
+      $idCliente = $this->input->post('idCliente');
+      $datos = $this->Incidencias_model->updateVentaCompartida($id, $idLote, $idCliente);
       echo json_encode($datos);
     }
     
@@ -475,5 +488,35 @@ class Incidencias extends CI_Controller
 
     }
   
+    public function AddEmpresa(){
+      $idLote = $this->input->post("idLoteE");
+      $Precio = $this->input->post("PrecioLoteE");
+      $idCliente = $this->input->post("idClienteE");
+  
+      $respuesta = $this->Incidencias_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
+      echo json_encode($respuesta);
+    }
 
+
+  //----------------------Cambio de plan de comision----------------------//
+
+  public function getPlanComision(){
+    $plan = array();
+    $plan =$this->Incidencias_model->getPlanComision();
+
+    if ($plan != null) {
+      echo json_encode($plan);
+    } else {
+      echo json_encode(array());
+    }
+  }
+
+  public function updatePlanComision(){
+    $idUsuarioM =  $this->session->userdata('id_usuario');
+    $idCliente = $this->input->post('cliente');
+    $planComision = $this->input->post('plan_comision');
+
+    $result = $this->Incidencias_model->updatePlanComision($planComision, $idCliente ,$idUsuarioM);
+    echo json_encode($result); 
+  }
 }

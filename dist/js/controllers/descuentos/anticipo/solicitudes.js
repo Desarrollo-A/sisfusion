@@ -64,7 +64,15 @@ $("#tabla_anticipo_revision").ready(function () {
             
             if(d.id_proceso ==2 ){
                 botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" data-name="${d.nombre}"   data-monto="${d.monto}" class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
+                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
+                data-name="${d.nombre}"   data-monto="${d.monto}" 
+                data-monto_formateado="${d.monto_formateado}"
+                
+                data-mensualidades_pra="${d.mensualidades}"
+                data-monto_parcialidad="${d.monto_parcialidad}"
+                data-id_parcialidad="${d.id_parcialidad}"
+
+                class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
                 <i class="fas fa-forward"></i>
                 </button>`;
                 botonesModal += `
@@ -84,8 +92,13 @@ $("#tabla_anticipo_revision").ready(function () {
               
             }else if(d.id_proceso == 4 ){
                 botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" data-name="${d.nombre}"
-                data-monto="${d.monto}"
+                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
+                data-mensualidades_pra="${d.mensualidades}"
+                data-monto_parcialidad="${d.monto_parcialidad}"
+                data-id_parcialidad="${d.id_parcialidad}"
+
+                data-name="${d.nombre}"
+                data-monto="${d.monto}" data-monto_formateado="${d.monto_formateado}"
                 class="btn-data btn-sky aceptar_anticipo_confirmar" title="Continuar Anticipo confirmar información">
                 <i class="fas fa-address-card"></i>
                 </button>`;
@@ -112,8 +125,7 @@ $("#tabla_anticipo_revision").ready(function () {
             cache: false,
             data: function (d) {
             }
-        },
-        order: [[1, 'asc']]
+        }
     });
 
     $('#tabla_anticipo_revision').on('draw.dt', function () {
@@ -219,6 +231,18 @@ $("#tabla_anticipo_revision").ready(function () {
         const idAnticipo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
         const id_usuario = $(this).attr("data-id_usuario");
+
+        const mensualidades_pra = $(this).attr("data-mensualidades_pra");
+        const monto_parcialidad = $(this).attr("data-monto_parcialidad");
+        const id_parcialidad    = $(this).attr("data-id_parcialidad");
+        console.log(id_parcialidad);
+        modalidad =  id_parcialidad == 'null' ? `PRÉSTAMO <br>`  : `APOYO <br>
+                                                    MENSUALIDADES   : ${mensualidades_pra} <br>
+                                                    MONTO           : ${monto_parcialidad} <br>` ;
+
+        
+
+        const monto_formateado = $(this).attr("data-monto_formateado");
         const monto1 = $(this).attr("data-monto");
         const Modalbody = $('#myModalAceptar .modal-body');
         const Modalfooter = $('#myModalAceptar .modal-footer');
@@ -229,10 +253,24 @@ $("#tabla_anticipo_revision").ready(function () {
 
             <h4 class="center-align">¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
-                <label class="label  control-label  center-align">Prioridad</label>
+
+                
+
+                <div>
+                <h2 class="card_title">Detalles</h2>
+                    <p class="center-align"> 
+                        Monto solicitado : ${monto_formateado}.<br>
+                        Mendiante la modalidad : ${modalidad}
+
+                        
+                    </p>
+                </div>
+
 
                 <div class="row aligned-row d-flex align-end pt-3" style="display: flex; justify-content: center"> 
+                
                     <div id="selectorModo" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <h2 class="card_title">Prioridad</h2>
                         <div >
                             <div class="radio_container w-100">
                                 <input class="d-none find-results" type="radio" name="modoSubida" id="prioridad_normal" checked value="0">
@@ -274,6 +312,19 @@ $("#tabla_anticipo_revision").ready(function () {
         const nombreUsuario1 = $(this).attr("data-name");
         const monto1 = $(this).attr("data-monto");
         const id_usuario1 = $(this).attr("data-id_usuario");
+
+
+        const monto_formateado = $(this).attr("data-monto_formateado");
+        const mensualidades_pra = $(this).attr("data-mensualidades_pra");
+        const monto_parcialidad = $(this).attr("data-monto_parcialidad");
+        const id_parcialidad    = $(this).attr("data-id_parcialidad");
+        console.log(id_parcialidad);
+        modalidad =  id_parcialidad == 'null' ? `PRÉSTAMO <br>`  : `APOYO <br>
+                                                    MENSUALIDADES   : ${mensualidades_pra} <br>
+                                                    MONTO           : ${monto_parcialidad} <br>` ;
+
+        
+
         const Modalbody_subir = $('#myModalAceptar_subir .modal-body');
         const Modalfooter_subir = $('#myModalAceptar_subir .modal-footer');
         Modalbody_subir.html('');
@@ -282,6 +333,17 @@ $("#tabla_anticipo_revision").ready(function () {
             <input type="hidden" value="${idAnticipo1}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
             <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
+
+            <div>
+            <h2 class="card_title">Detalles</h2>
+                <p class="center-align"> 
+                    Monto solicitado : ${monto_formateado}.<br>
+                    Mendiante la modalidad : ${modalidad}
+
+                    
+                </p>
+            </div>
+
             <div class="form-group">
                 <label class="label center-align control-label">Prioridad</label>
 
