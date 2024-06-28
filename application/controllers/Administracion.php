@@ -77,6 +77,10 @@ class Administracion extends CI_Controller{
 		  	$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 		  	$dataPer[$i]['tipo_proceso']=$data[$i]->tipo_proceso;
             $dataPer[$i]['proceso']=$data[$i]->proceso;
+			$dataPer[$i]['idDocumento']=$data[$i]->idDocumento;
+			$dataPer[$i]['movimiento']=$data[$i]->movimiento;
+			$dataPer[$i]['expediente']=$data[$i]->expediente;
+			$dataPer[$i]['bucket']=$data[$i]->bucket;
 		  	$horaInicio = date("08:00:00");
 		  	$horaFin = date("16:00:00");
 		  	$arregloFechas = array();  
