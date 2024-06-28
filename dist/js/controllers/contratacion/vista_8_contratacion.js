@@ -115,52 +115,58 @@ $(document).ready(function () {
                     else {
                         if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
+
+                            cntActions += `${datatableButtons(data, 2)}`;
                         }
                         else if ((data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15)
                             || (data.idStatusContratacion == 11 && data.idMovimiento == 41)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
+                            
+                            cntActions += `${datatableButtons(data, 2)}`;
                         }
-                        else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) {
+                        else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) { //RECHAZO
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
+
+                            cntActions += `${datatableButtons(data, 2)}`;
                         }
                         else {
                             cntActions = 'N/A';
@@ -268,7 +274,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#Jtabla tbody").on("click", ".editReg", function (e) {
+    $("#Jtabla tbody").on("click", ".editReg", async function (e) {
         e.preventDefault();
         getInfo1[0] = $(this).attr("data-idCliente");
         getInfo1[1] = $(this).attr("data-nombreResidencial");
@@ -278,24 +284,45 @@ $(document).ready(function () {
         getInfo1[5] = $(this).attr("data-idLote");
         getInfo1[6] = $(this).attr("data-fecven");
         getInfo1[7] = $(this).attr("data-code");
+        getInfo1[10] = 0; // Dato para saber si tiene complemento de pago 
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
-        $('#editReg').modal('show');
-    });
 
-    $("#Jtabla tbody").on("click", ".editLoteRev", function (e) {
-        e.preventDefault();
-        getInfo2[0] = $(this).attr("data-idCliente");
-        getInfo2[1] = $(this).attr("data-nombreResidencial");
-        getInfo2[2] = $(this).attr("data-nombreCondominio");
-        getInfo2[3] = $(this).attr("data-idcond");
-        getInfo2[4] = $(this).attr("data-nomlote");
-        getInfo2[5] = $(this).attr("data-idLote");
-        getInfo2[6] = $(this).attr("data-fecven");
-        getInfo2[7] = $(this).attr("data-code");
-        nombreLote = $(this).data("nomlote");
-        $(".lote").html(nombreLote);
-        $('#editLoteRev').modal('show');
+        const docData = new FormData();
+        docData.append("idLote", getInfo1[5]);
+        let result = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Contraloria/getComplementoPago`,
+            data: docData,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+        result = JSON.parse(result);
+
+        let content = '';
+        if (result.length >= 1) {
+          getInfo1[10] = 1; // Con complemento de pago
+          content = `
+            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
+                <label>Compemento de pago:</label>
+                <div id="selectFileSection">
+                    <div class="file-gph">
+                        <input type="file" accept=".pdf" id="archivo_complemento">
+                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                        <label class="upload-btn m-0" for="archivo_complemento">
+                          <span>Seleccionar</span>
+                          <i class="fas fa-folder-open"></i>
+                        </label>
+                    </div>
+                </div>
+                <span><label class='pt-1'>NOTA: Si ya existe un complemento de pago, el mismo se remplazará con el nuevo.</label></span>
+            </div>`;
+        // Embebemos el contenido extra
+        }
+        $('#extra-content-accion-modal-1').html(content);
+
+        $('#editReg').modal('show');
     });
 
     $("#Jtabla tbody").on("click", ".cancelReg", function (e) {
@@ -328,7 +355,7 @@ $(document).ready(function () {
         $('#rechazoAs').modal('show');
     });
 
-    $("#Jtabla tbody").on("click", ".editLoteTo8", function (e) {
+    $("#Jtabla tbody").on("click", ".editLoteTo8", async function (e) {
         e.preventDefault();
         getInfo5[0] = $(this).attr("data-idCliente");
         getInfo5[1] = $(this).attr("data-nombreResidencial");
@@ -338,12 +365,57 @@ $(document).ready(function () {
         getInfo5[5] = $(this).attr("data-idLote");
         getInfo5[6] = $(this).attr("data-fecven");
         getInfo5[7] = $(this).attr("data-code");
+        getInfo5[10] = 0; // Dato para saber si tiene complemento de pago
+
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
+
+        const docData = new FormData();
+        docData.append("idLote", getInfo5[5]);
+        let result = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Contraloria/getComplementoPago`,
+            data: docData,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+        result = JSON.parse(result);
+
+        let content = '';
+        if (result.length >= 1) {
+            getInfo5[10] = 1; // Con complemento de pago
+            content = `
+            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
+                <label>Compemento de pago:</label>
+                <div id="selectFileSection">
+                    <div class="file-gph">
+                        <input type="file" accept=".pdf" id="archivo_complemento">
+                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                        <label class="upload-btn m-0" for="archivo_complemento">
+                          <span>Seleccionar</span>
+                          <i class="fas fa-folder-open"></i>
+                        </label>
+                    </div>
+                </div>
+                <span><label class='pt-1'>NOTA: ${result[0].expediente ? 'Se reemplazará el archivo actual si adjuntas un nuevo archivo' : 'Si ya existe un complemento de pago, el mismo se reemplazará  con el nuevo'}.</label></span>
+            </div>`;
+        }
+        
+        // Embebemos el contenido extra
+        $('#extra-content-accion-modal-5').html(content);
+
+        if (result.length >= 1) {
+            getInfo5[11] = result[0];
+            if (result[0].expediente) {
+                $("#archivo_complemento").siblings(".file-name").val(result[0].expediente);
+            }
+        }
+
         $('#rev8').modal('show');
     });
 
-    $("#Jtabla tbody").on("click", ".editReg2", function (e) {
+    $("#Jtabla tbody").on("click", ".editReg2", async function (e) {
         e.preventDefault();
         getInfo6[0] = $(this).attr("data-idCliente");
         getInfo6[1] = $(this).attr("data-nombreResidencial");
@@ -353,17 +425,77 @@ $(document).ready(function () {
         getInfo6[5] = $(this).attr("data-idLote");
         getInfo6[6] = $(this).attr("data-fecven");
         getInfo6[7] = $(this).attr("data-code");
+        getInfo6[10] = 0; // Dato para saber si tiene complemento de pago 
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
+
+        const docData = new FormData();
+        docData.append("idLote", getInfo6[5]);
+        let result = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Contraloria/getComplementoPago`,
+            data: docData,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+        result = JSON.parse(result);
+
+        let content = '';
+        if (result.length >= 1) {
+          getInfo6[10] = 1; // Con complemento de pago
+          content = `
+            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
+                <label>Compemento de pago:</label>
+                <div id="selectFileSection">
+                    <div class="file-gph">
+                        <input type="file" accept=".pdf" id="archivo_complemento">
+                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                        <label class="upload-btn m-0" for="archivo_complemento">
+                          <span>Seleccionar</span>
+                          <i class="fas fa-folder-open"></i>
+                        </label>
+                    </div>
+                </div>
+                <span><label class='pt-1'>NOTA: Si ya existe un complemento de pago, el mismo se remplazará con el nuevo.</label></span>
+            </div>`;
+        // Embebemos el contenido extra
+        }
+        $('#extra-content-accion-modal-6').html(content);  
+
         $('#rev_2').modal('show');
     });
 });
 
-$(document).on('click', '#save1', function (e) {
+$(document).on('click', '#save1', async function (e) {
     e.preventDefault();
-    var comentario = $("#comentario").val();
-    var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
-    var dataExp1 = new FormData();
+    const comentario = $("#comentario").val();
+    const validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
+
+    if (validaComent == 0) {
+        return alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+    }
+    if ( getInfo1[10] == 1){
+        const archivo = $("#archivo_complemento");
+        // Input sin archivo
+        if (archivo.val().length === 0) {
+          return alerts.showNotification("top", "right", "Selecciona el archivo a adjuntar.", "warning");
+        }
+        // Archivo incorrecto
+        else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
+          return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+        }
+    }
+    $('#save1').prop('disabled', true); // Deshabilitamos botón porque si paso validaciones.
+
+    if (getInfo1[10] == 1 ) {
+        const accion = await accionesComplementoPago(getInfo1);
+        if (accion == false) {
+            return;
+        }
+    }
+    
+    const dataExp1 = new FormData();
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("nombreResidencial", getInfo1[1]);
     dataExp1.append("nombreCondominio", getInfo1[2]);
@@ -373,51 +505,44 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("numContrato", getInfo1[7]);
-
-    if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
-
-    if (validaComent == 1) {
-        $('#save1').prop('disabled', true);
-        $.ajax({
-            url: `${general_base_url}Asistente_gerente/editar_registro_lote_asistentes_proceceso8`,
-            data: dataExp1,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                response = JSON.parse(data);
-                if (response.message == 'OK') {
-                    $('#save1').prop('disabled', false);
-                    $('#editReg').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
-                } else if (response.message == 'MISSING_CARTA_UPLOAD') {
-                    $('#save1').prop('disabled', false);
-                    $('#editReg').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
-                } else if (response.message == 'FALSE') {
-                    $('#save1').prop('disabled', false);
-                    $('#editReg').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
-                } else if (response.message == 'ERROR') {
-                    $('#save1').prop('disabled', false);
-                    $('#editReg').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                }
-            },
-            error: function (data) {
+    $.ajax({
+        url: `${general_base_url}Asistente_gerente/editar_registro_lote_asistentes_proceceso8`,
+        data: dataExp1,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (data) {
+            response = JSON.parse(data);
+            if (response.message == 'OK') {
+                $('#save1').prop('disabled', false);
+                $('#editReg').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Estatus enviado.", "success");
+            } else if (response.message == 'MISSING_CARTA_UPLOAD') {
+                $('#save1').prop('disabled', false);
+                $('#editReg').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
+            } else if (response.message == 'FALSE') {
+                $('#save1').prop('disabled', false);
+                $('#editReg').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+            } else if (response.message == 'ERROR') {
                 $('#save1').prop('disabled', false);
                 $('#editReg').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
             }
-        });
-    }
+        },
+        error: function (data) {
+            $('#save1').prop('disabled', false);
+            $('#editReg').modal('hide');
+            $('#Jtabla').DataTable().ajax.reload();
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+        }
+    });
 });
 
 $(document).on('click', '#save3', function (e) {
@@ -530,11 +655,37 @@ $(document).on('click', '#save4', function (e) {
     }
 });
 
-$(document).on('click', '#save5', function (e) {
+$(document).on('click', '#save5', async function (e) {
     e.preventDefault();
-    var comentario = $("#comentario5").val();
-    var validaComent = ($("#comentario5").val().length == 0) ? 0 : 1;
-    var dataExp5 = new FormData();
+    
+    const comentario = $("#comentario5").val();
+    const validaComent = ($("#comentario5").val().length == 0) ? 0 : 1;
+
+    if (validaComent == 0) {
+        return alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
+    }
+    if ( getInfo5[10] == 1 && (getInfo5[11].expediente != $("#archivo_complemento").siblings(".file-name").val())){
+        const archivo = $("#archivo_complemento");
+        // Input sin archivo
+        if (archivo.val().length === 0) {
+            return alerts.showNotification("top", "right", "Selecciona el archivo a adjuntar.", "warning");
+        }
+        // Archivo incorrecto
+        else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
+            return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+        }
+    }
+
+    $('#save5').prop('disabled', true); // Deshabilitamos botón porque pasó validaciones
+
+    if (getInfo5[10] == 1 && (getInfo5[11].expediente != $("#archivo_complemento").siblings(".file-name").val())) {
+        const accion = await accionesComplementoPago(getInfo5);
+        if (accion == false) {
+            return;
+        }
+    }
+
+    const dataExp5 = new FormData();
     dataExp5.append("idCliente", getInfo5[0]);
     dataExp5.append("nombreResidencial", getInfo5[1]);
     dataExp5.append("nombreCondominio", getInfo5[2]);
@@ -544,58 +695,78 @@ $(document).on('click', '#save5', function (e) {
     dataExp5.append("comentario", comentario);
     dataExp5.append("fechaVenc", getInfo5[6]);
     dataExp5.append("numContrato", getInfo5[7]);
-    if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
 
-    if (validaComent == 1) {
-        $('#save5').prop('disabled', true);
-        $.ajax({
-            url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentesAadministracion11_proceceso8/`,
-            data: dataExp5,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                response = JSON.parse(data);
-                if (response.message == 'OK') {
-                    $('#save5').prop('disabled', false);
-                    $('#rev8').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
-                } else if (response.message == 'FALSE') {
-                    $('#save5').prop('disabled', false);
-                    $('#rev8').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
-                } else if(response.message == 'MISSING_CARTA_UPLOAD'){
-                    $('#save5').prop('disabled', false);
-                    $('#rev8').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
-                }
-                else if (response.message == 'ERROR') {
-                    $('#save5').prop('disabled', false);
-                    $('#rev8').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                }
-            },
-            error: function (data) {
+    $.ajax({
+        url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentesAadministracion11_proceceso8/`,
+        data: dataExp5,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (data) {
+            response = JSON.parse(data);
+            if (response.message == 'OK') {
+                $('#save5').prop('disabled', false);
+                $('#rev8').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Estatus enviado.", "success");
+            } else if (response.message == 'FALSE') {
+                $('#save5').prop('disabled', false);
+                $('#rev8').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+            } else if(response.message == 'MISSING_CARTA_UPLOAD'){
+                $('#save5').prop('disabled', false);
+                $('#rev8').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
+            }
+            else if (response.message == 'ERROR') {
                 $('#save5').prop('disabled', false);
                 $('#rev8').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
             }
-        });
-    }
+        },
+        error: function (data) {
+            $('#save5').prop('disabled', false);
+            $('#rev8').modal('hide');
+            $('#Jtabla').DataTable().ajax.reload();
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+        }
+    });
 });
 
-$(document).on('click', '#save6', function (e) {
+$(document).on('click', '#save6', async function (e) {
     e.preventDefault();
-    var comentario = $("#comentario6").val();
-    var validaComent = ($("#comentario6").val().length == 0) ? 0 : 1;
-    var dataExp6 = new FormData();
+    const comentario = $("#comentario6").val();
+    const validaComent = ($("#comentario6").val().length == 0) ? 0 : 1;
+    
+    if (validaComent == 0) {
+        return alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+    }
+    if ( getInfo6[10] == 1){
+        const archivo = $("#archivo_complemento");
+        // Input sin archivo
+        if (archivo.val().length === 0) {
+          return alerts.showNotification("top", "right", "Selecciona el archivo a adjuntar.", "warning");
+        }
+        // Archivo incorrecto
+        else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
+          return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+        }
+    }
+
+    $('#save6').prop('disabled', true); // Deshabilitamos botón porque pasó validaciones
+
+    if (getInfo1[10] == 1 ) {
+        const accion = await accionesComplementoPago(getInfo6);
+        if (accion == false) {
+            return;
+        }
+    }
+        
+    const dataExp6 = new FormData();
     dataExp6.append("idCliente", getInfo6[0]);
     dataExp6.append("nombreResidencial", getInfo6[1]);
     dataExp6.append("nombreCondominio", getInfo6[2]);
@@ -605,56 +776,123 @@ $(document).on('click', '#save6', function (e) {
     dataExp6.append("comentario", comentario);
     dataExp6.append("fechaVenc", getInfo6[6]);
     dataExp6.append("numContrato", getInfo6[7]);
-    if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
-
-    if (validaComent == 1) {
-        $('#save6').prop('disabled', true);
-        $.ajax({
-            url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentes_proceceso8`,
-            data: dataExp6,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (data) {
-                response = JSON.parse(data);
-                if (response.message == 'OK') {
-                    $('#save6').prop('disabled', false);
-                    $('#rev_2').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
-                } else if (response.message == 'FALSE') {
-                    $('#save6').prop('disabled', false);
-                    $('#rev_2').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
-                } else if (response.message == 'ERROR') {
-                    $('#save6').prop('disabled', false);
-                    $('#rev_2').modal('hide');
-                    $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
-                }
-            },
-            error: function (data) {
+    $.ajax({
+        url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentes_proceceso8`,
+        data: dataExp6,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (data) {
+            response = JSON.parse(data);
+            if (response.message == 'OK') {
+                $('#save6').prop('disabled', false);
+                $('#rev_2').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Estatus enviado.", "success");
+            } else if (response.message == 'FALSE') {
+                $('#save6').prop('disabled', false);
+                $('#rev_2').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+            } else if (response.message == 'ERROR') {
                 $('#save6').prop('disabled', false);
                 $('#rev_2').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
             }
-        });
-    }
+        },
+        error: function (data) {
+            $('#save6').prop('disabled', false);
+            $('#rev_2').modal('hide');
+            $('#Jtabla').DataTable().ajax.reload();
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+        }
+    });
 });
+
+const accionesComplementoPago = async (getInfo) => {
+    // Borramos el complemento de pago en caso de tener uno y actualizamos los registros de historial_documento 
+    const docData = new FormData();
+    docData.append("idLote", getInfo[5]);
+
+    let result = await $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Contraloria/getComplementoPago`,
+        data: docData,
+        contentType: false,
+        cache: false,
+        processData: false,
+    });
+
+    result = JSON.parse(result);
+
+    if (getInfo[10] == 1) { // Verificamos si el lote cuenta con la opción de anexa complemento de pago activo.
+        if (result.length >= 1 && result.expediente) {
+            const docData = new FormData();
+            docData.append("idDocumento", result[0].idDocumento);
+            docData.append("tipoDocumento", result[0].tipo_doc);
+            let rs1 = await $.ajax({
+                type: 'POST',
+                url: `${general_base_url}Documentacion/eliminarArchivo`,
+                data: docData,
+                contentType: false,
+                cache: false,
+                processData: false,
+            });
+            rs1 = JSON.parse(rs1);
+            if (rs1.code == 500) {
+                alerts.showNotification("top", "right", 'Surgió un error al sustituir el archivo', "warning");
+                return false;
+            }
+        }
+
+        const expediente = generarTituloDocumento(getInfo[1], getInfo[4], getInfo[5], getInfo[0], 55); // nombreResidencial, nombreLote, idLote, idCliente, tipoDoc.
+
+        const ndata = new FormData();
+        ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
+        ndata.append("idDocumento", result[0].idDocumento);
+        let res = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Contraloria/actualizaRamaComplementoPago`,
+            data: ndata,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+        res = JSON.parse(res);
+
+        const xdata = new FormData();
+        xdata.append("idLote", getInfo[5]);
+        xdata.append("idDocumento", result[0].idDocumento);
+        xdata.append("tipoDocumento", 55);
+        xdata.append("tituloDocumento", expediente);
+        xdata.append("uploadedDocument", $("#archivo_complemento")[0].files[0]);
+        let rs = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Documentacion/subirArchivo`,
+            data: xdata,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+        rs = JSON.parse(rs);
+        if (rs.code == 500) {
+            alerts.showNotification("top", "right", 'Surgió un error al remplazar el archivo', "warning");
+            return false;
+        } else {
+            return true;
+        }
+    }
+    return true;
+}
 
 jQuery(document).ready(function () {
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario').val('');
-    })
-
-    jQuery('#editLoteRev').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario2').val('');
+        jQuery(this).find('#archivo_complemento').val('');
+        $('#extra-content-accion-modal-1').html('');
     })
 
     jQuery('#rechReg').on('hidden.bs.modal', function (e) {
@@ -670,10 +908,75 @@ jQuery(document).ready(function () {
     jQuery('#rev8').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario5').val('');
+        jQuery(this).find('#archivo_complemento').val('');
+        $('#extra-content-accion-modal-5').html('');
     })
 
     jQuery('#rev_2').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario6').val('');
+        jQuery(this).find('#archivo_complemento').val('');
+        $('#extra-content-accion-modal-6').html('');
     })
+});
+
+$(document).on('click', '.btn-archivo', function () {
+  $('.btn-archivo').attr('disabled', true);  // Lo vuelvo a activar
+  $('#spiner-loader').removeClass('hide'); // Aparece spinner
+  Shadowbox.init();
+  const d = JSON.parse($(this).attr("data-data"));
+  let filePath = `${general_base_url}Documentacion/archivo/${d.expediente}`;
+  Shadowbox.open({
+      content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${filePath}"></iframe></div>`,
+      player: "html",
+      title: `Visualizando archivo: ${d.movimiento}`,
+      width: 985,
+      height: 660
+  });
+
+  $('.btn-archivo').attr('disabled', false);  // Lo vuelvo a activar
+  $('#spiner-loader').addClass('hide'); // Quito spinner  
+});
+
+const datatableButtons = (d, type) => {
+  const BTN_VER_DOC = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+  
+  let NO_BTN = '';
+
+  if (type === 2) { 
+      if (d.expediente) return BTN_VER_DOC ;
+  }
+
+  return NO_BTN;
+}
+
+const newButton = (btnClass, title, action = '', data, icon) => {
+  const CUSTOM_BTN = `<button class='${btnClass}'
+      data-toggle='tooltip' 
+      data-placement='top'
+      title='${title.toUpperCase()}'
+      data-accion='${action}'
+      data-data='${JSON.stringify(data)}'>
+          <i class='${icon}'></i>
+      </button>`;
+
+  return CUSTOM_BTN;
+}
+
+const generarTituloDocumento = (abreviaturaNombreResidencial, nombreLote, idLote, idCliente, tipoDocumento) => {
+  let rama = '';
+  if (tipoDocumento === 55) rama = 'COMPLEMENTO DE PAGO';
+
+  const DATE = new Date();
+  const DATE_STR = [DATE.getMonth() + 1, DATE.getDate(), DATE.getFullYear()].join('-');
+  const TITULO_DOCUMENTO = `${abreviaturaNombreResidencial}_${nombreLote}_${idLote}_${idCliente}_TDOC${tipoDocumento}${rama.slice(0, 4)}_${DATE_STR}`;
+  return TITULO_DOCUMENTO;
+}
+
+// Función para colocar el nombre del archivo en el input de texto que comparte con el input de archivo
+$(document).on("change", "#archivo_complemento", function () {
+  const target = $(this);
+  const relatedTarget = target.siblings(".file-name");
+  const fileName = target[0].files[0].name;
+  relatedTarget.val(fileName);
 });

@@ -13,7 +13,7 @@
                         <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <div id="extra-content-accion-modal"></div>
+                        <div id="extra-content-accion-modal-1"></div>
                         <div class="col-md-12 mb-2 comment">
                             <label>Comentario:</label>
                             <textarea class="text-modal" id="comentario" rows="3"></textarea>
@@ -22,28 +22,6 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="save1" class="btn btn-primary">Registrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- modal  ENVIA A CONTRALORIA 7-->
-        <div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content" >
-                    <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id="extra-content-accion-modal"></div>
-                        <div class="col-md-12 mb-2 comment">
-                            <label>Comentario:</label>
-                            <textarea class="text-modal" id="comentario2" rows="3"></textarea>
-                        </div>      
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save2" class="btn btn-primary">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -97,7 +75,7 @@
                         <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <div id="extra-content-accion-modal"></div>
+                        <div id="extra-content-accion-modal-5"></div>
                         <div class="col-md-12 mb-2 comment">
                             <label>Comentario:</label>
                             <textarea class="text-modal" id="comentario5" rows="3"></textarea>
@@ -119,7 +97,7 @@
                         <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <div id="extra-content-accion-modal"></div>
+                        <div id="extra-content-accion-modal-6"></div>
                         <div class="col-md-12 mb-2 comment">
                             <label>Comentario:</label>
                             <textarea class="text-modal" id="comentario6" rows="3"></textarea>

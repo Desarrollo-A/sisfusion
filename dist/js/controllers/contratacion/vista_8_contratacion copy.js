@@ -428,7 +428,7 @@ $(document).on('click', '#save1', async function (e) {
       else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
         return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
       }
-    } 
+    }
 
     $('#save1').prop('disabled', true); // Deshabilitamos botón
 
