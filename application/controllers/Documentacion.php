@@ -299,7 +299,8 @@ class Documentacion extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to(['coord.administrativoslp@ciudadmaderas.com',
+            ->to('tester.ti2@ciudadmaderas.com')
+            /*->to('coord.administrativoslp@ciudadmaderas.com',
                 'coord.administrativo@ciudadmaderas.com',
                 'coord.administrativo1@ciudadmaderas.com',
                 'coord.administrativo2@ciudadmaderas.com',
@@ -308,8 +309,7 @@ class Documentacion extends CI_Controller {
                 'coord.administrativo4@ciudadmaderas.com',
                 'coord.administrativo5@ciudadmaderas.com',
                 'coord.administrativo7@ciudadmaderas.com',
-                'coord.administrativo8@ciudadmaderas.com',
-                'asistente.admon@ciudadmaderas.com'])
+                'asistente.admon@ciudadmaderas.com')*/
             ->subject('MODIFICACIÓN DE CORRIDA FINANCIERA')
             ->view($this->load->view('template/mail/componentes/tabla', [
                 'encabezados' => [
