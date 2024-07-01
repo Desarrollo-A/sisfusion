@@ -366,7 +366,7 @@ class Comisiones_model extends CI_Model {
                 $filtro_02 = ' '.$filtro_00;
                 break;
         }
-        return $this->db->query("SEL ECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' <i>(',com.loteReubicado,')</i>') ELSE lo.nombreLote END) nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
+        return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' <i>(',com.loteReubicado,')</i>') ELSE lo.nombreLote END) nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
         CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN UPPER(oprol2.nombre) ELSE UPPER(oprol.nombre) END as puesto, 
         (CASE WHEN com.ooam = 1 THEN  CONCAT(oxcest.nombre,' (EEC)') ELSE oxcest.nombre END) estatus_actual, oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, (CASE WHEN cl.lugar_prospeccion IS NULL THEN 0 ELSE cl.lugar_prospeccion END) lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo, 
         (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, oxcest.color,
@@ -5943,8 +5943,8 @@ function getDatosGralInternomex(){
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-        INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
-        INNER JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1 
+        LEFT JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
+        left JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1 
         AND hl.fecha_movimiento = (SELECT max(t2.fecha_movimiento) FROM historial_log t2 Where t2.identificador = hl.identificador AND t2.tabla = 'pago_comision')
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 95 AND oxc.id_opcion = TRY_CAST( hl.motivo AS BIGINT)
         LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote
@@ -5969,7 +5969,7 @@ function getDatosGralInternomex(){
         -- LEFT JOIN comisiones comi ON comi.id_lote = l.idLote
         -- LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11) OR descuento_aplicado = 1)
         -- GROUP BY id_comision) pci ON comi.id_comision = pci.id_comision
-        WHERE l.idStatusContratacion BETWEEN 9 AND 15  AND l.status IN (0,1) AND l.registro_comision IN (10,11,18,5,3,4,5,6) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) ORDER BY l.idLote");
+        WHERE l.idStatusContratacion BETWEEN 9 AND 15  AND l.status IN (0,1) AND l.registro_comision IN (10,11,18,5,3,4,5,6) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7.8) ORDER BY l.idLote");
         return $query->result();
     }
 
