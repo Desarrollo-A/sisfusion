@@ -5186,7 +5186,7 @@ function getDatosGralInternomex(){
                 INNER JOIN lotes l ON l.idLote = c.id_lote
                 INNER JOIN condominios con ON con.idCondominio=l.idCondominio
                 INNER JOIN residenciales re ON re.idResidencial=con.idResidencial
-                INNER JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
+                LEFT JOIN historial_comisiones hc ON hc.id_pago_i = rpp.id_pago_i 
                 and (hc.comentario like 'DESCUENTO POR%' or hc.comentario like '%, POR MOTIVO DE PRESTAMO' or hc.comentario like '%CONFERENCIA%'or hc.comentario like '%PENALIZACIÓN%' or hc.comentario like '%NOMINA%') and hc.estatus=1
                 WHERE pa.id_prestamo = $idPrestamo
                 ORDER BY np ASC");
@@ -6153,13 +6153,23 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
         }
 
         if($valor == 1){
-            return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
+
+            $cmdPagos="SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
             FROM comisiones com 
             INNER JOIN lotes l ON l.idLote = com.id_lote
             INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-
             INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-            WHERE com.estatus IN (1, 8) AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC");
+            WHERE com.estatus IN (1, 8) AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC";
+            $arrayDeDatos['PAGOS'] =  $this->db->query($cmdPagos)->result_array();
+
+
+            $cmdPrestamos="SELECT * FROM prestamos_aut where id_usuario = $user_vobo and estatus = 1 ";
+
+
+            $arrayDeDatos['PRESTAMOS'] =  $this->db->query($cmdPrestamos)->result_array();
+
+
+            return $arrayDeDatos;
         }else if($valor == 2){
             return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
             FROM comisiones com 
