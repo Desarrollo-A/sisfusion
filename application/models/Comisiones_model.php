@@ -5940,9 +5940,9 @@ function getDatosGralInternomex(){
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro,
         (CASE WHEN l.registro_comision IN(3, 4, 5, 6, 8, 9) THEN 1 ELSE 0 END) AS pass
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-        INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        LEFT JOIN clientes cl ON cl.id_cliente = l.idCliente
+        LEFT JOIN condominios cond ON l.idCondominio = cond.idCondominio
+        LEFT JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
         left JOIN historial_log hl ON hl.identificador = l.idLote AND hl.tabla = 'pago_comision' AND hl.estatus = 1 
         AND hl.fecha_movimiento = (SELECT max(t2.fecha_movimiento) FROM historial_log t2 Where t2.identificador = hl.identificador AND t2.tabla = 'pago_comision')
@@ -5969,7 +5969,7 @@ function getDatosGralInternomex(){
         -- LEFT JOIN comisiones comi ON comi.id_lote = l.idLote
         -- LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11) OR descuento_aplicado = 1)
         -- GROUP BY id_comision) pci ON comi.id_comision = pci.id_comision
-        WHERE l.idStatusContratacion BETWEEN 9 AND 15  AND l.status IN (0,1) AND l.registro_comision IN (10,11,18,5,3,4,5,6) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7.8) ORDER BY l.idLote");
+        WHERE l.idStatusContratacion BETWEEN 9 AND 15  AND l.status IN (0,1) AND l.registro_comision IN (10,11,18,5,3,4,5,6) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7,8) ORDER BY l.idLote");
         return $query->result();
     }
 
