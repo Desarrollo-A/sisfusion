@@ -861,51 +861,58 @@ class Descuentos extends CI_Controller
             $todos_los_pasos = $this->Descuentos_model->solicitudes_generales_dc();
             echo json_encode($todos_los_pasos);
         }
+
+        public function borrarComisiones() {
+            $resultado = $this->Descuentos_model->borrarComisiones();
+    
+            if ($resultado) {
+                echo "Procedimiento ejecutado con éxito. Filas afectadas: " . $resultado->RowsAffected;
+                echo "<br>Mensaje: " . $resultado->Message;
+            } else {
+                echo "Error al ejecutar el procedimiento almacenado";
+            }
+        }
+
         public function solicitudes_generales_reporte()
         {
             $bandera = $this->input->post('bandera');
             $todos_los_pasos = $this->Descuentos_model->solicitudes_generales_reporte($bandera);
             echo json_encode($todos_los_pasos);
         }
-// anticipo de pagos
-// 
-
 
         public function anticipo_update_generico(){
             $monto =  $this->input->post('monto');
             $id_anticipo =  $this->input->post('idAnticipo_Aceptar');
-            $bandera= 1;
+            $bandera= 0;
             $usuarioid = $this->session->userdata('id_usuario');
             if($this->input->post('proceso') != 0 ){
-            
+                // viene por un por un un proceso diferente a cancelado
                 if($this->input->post('bandera_a') == 1 ){  
-                    $file = $_FILES["evidenciaNueva"];
-                    if($_FILES["evidenciaNueva"]["name"] != '' && $_FILES["evidenciaNueva"]["name"] != null){
-                    $aleatorio = rand(100,1000);
-                    $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidenciaNueva"]["name"]); 
-                    $date = date('dmYHis');
-                    $expediente = $date."_".$aleatorio."_".$namedoc;
-                    $ruta = "static/documentos/solicitudes_anticipo/";
-                    if(move_uploaded_file($_FILES["evidenciaNueva"]["tmp_name"], $ruta.$expediente)){
-                        $bandera = 1;
-                        
-                    }else{
-                        $bandera = 0;
-                        $respuesta =  array(
-                            "response_code" => 800, 
+                        $file = $_FILES["evidenciaNueva"];
+                        if($_FILES["evidenciaNueva"]["name"] != '' && $_FILES["evidenciaNueva"]["name"] != null){
+                        $aleatorio = rand(100,1000);
+                        $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidenciaNueva"]["name"]); 
+                        $date = date('dmYHis');
+                        $expediente = $date."_".$aleatorio."_".$namedoc;
+                        $ruta = "static/documentos/solicitudes_anticipo/";
+                        if(move_uploaded_file($_FILES["evidenciaNueva"]["tmp_name"], $ruta.$expediente)){
+                            $bandera = 1;
+                        }else{
+                            $bandera = 0;
+                            $respuesta =  array(
+                                "response_code" => 800, 
                             "response_type" => 'error',
                             "message" => "Error Al subir el documento, inténtalo más tarde ");
                         }
-                }else if($banderaEvidencia == 0){
-                    $bandera = 2;
-                    $expediente = '';
-                    
-                }
+                    }else if($banderaEvidencia == 0){
+                        $bandera = 2;
+                        $expediente = '';  
+                    }
                 }else{
                     $expediente = '';
                 }
-    
                 if($this->input->post('proceso') ==6){
+                    //INICIO llave proceso 6
                     if($this->session->userdata('forma_pago') == 2){
                         // si aqui mero ocupamos la factura
                         if( isset( $_FILES ) && !empty($_FILES) ){
@@ -913,7 +920,6 @@ class Descuentos extends CI_Controller
                             $config['allowed_types'] = 'xml';
                             $this->load->library('upload', $config);
                             $resultado = $this->upload->do_upload("xmlfile");
-                            
                             if( $resultado ){
                                 $xml_subido = $this->upload->data();
                                 $datos_xml = $this->Descuentos_model->leerxml( $xml_subido['full_path'], TRUE );
@@ -927,20 +933,12 @@ class Descuentos extends CI_Controller
                                 rename( $xml_subido['full_path'], "./UPLOADS/XML_Anticipo/".$nuevo_nombre );
                                 $datos_xml['nombre_xml'] = $nuevo_nombre;
                                 $this->Descuentos_model->insertar_factura($id_anticipo, $datos_xml,$usuarioid);
-
                             }
-
                         }
                         // $datos_xml = $this->Descuentos_model->leerxml( $xml_subido, TRUE );
-
-
-
                     }else{
                         // solo nos llevamos los pagos normales
-
                     }
-
-                    
                     $insertArray = array(
                         'monto'         => $monto,
                         'estatus'       => $this->input->post('estatus'),
@@ -948,46 +946,52 @@ class Descuentos extends CI_Controller
                         'proceso'       => $this->input->post('proceso'),
                         'prioridad'     => $this->input->post('seleccion')
                         );
+                    // LLAVE FIN DE PROCESO 6
                 }else if($this->input->post('proceso') ==4){
-
+                    // INICIO PROCES 4                
                     if( $this->input->post('num_mensualidades') != null )
                     {
-                        
                         $array_parcialidad_relacion_anticipo = array (
                             'mensualidades'         => intval($this->input->post('num_mensualidades')),
                             'monto_parcialidad'     => intval($this->input->post('mensualidad'))
                         );
-                        
                         $tabla = 'parcialidad_relacion_anticipo';
                         $clave =  $id_anticipo;
                         $llave = 'id_anticipo';
                         $respuestaHistorial = $this->Descuentos_model->update_generico_aticipo($clave,$llave,$tabla,$array_parcialidad_relacion_anticipo);
-                
                         $insertArray = array(
-                            'monto'     =>  $monto,
+                            'monto'         =>  $monto,
                             'prioridad'     => $this->input->post('seleccion'),
                             'estatus'       => $this->input->post('estatus'),
                             'proceso'       => $this->input->post('proceso')
                         );
-
-                        
-
-
                         // vine por prestamo 
                     }else{
-                        // viene por apoyo     
-                        
-                        exit;
+                        $insertArray = array(
+                            'monto'         => $monto,
+                            'proceso'       => $this->input->post('proceso'),
+                            'prioridad'     => $this->input->post('seleccion')
+                            );
                     }
-                }
-                else
-                {
-                    $insertArray = array(
-                        'monto'         => $monto,
-                        'evidencia'     => $expediente,
-                        'proceso'       => $this->input->post('proceso'),
-                        'prioridad'     => $this->input->post('seleccion')
-                        );
+                    // FIN DEL PROCESO 4
+                } else {
+                    // PARA TODOS LOS CASOS !=4  . 6 != 
+                    if($bandera ==  1){ 
+                        // se sube imagen
+                        $insertArray = array(
+                            'monto'         => $monto,
+                            'evidencia'     => $expediente,
+                            'proceso'       => $this->input->post('proceso'),
+                            'prioridad'     => $this->input->post('seleccion')
+                            );
+                    }else{
+                        // no se sube imagen
+                        $insertArray = array(
+                            'monto'         => $monto,
+                            'proceso'       => $this->input->post('proceso'),
+                            'prioridad'     => $this->input->post('seleccion')
+                            );
+                        }
                 }
             }else{
                 // cancelado
@@ -996,9 +1000,7 @@ class Descuentos extends CI_Controller
                     // 'evidencia'     => $expediente,
                     'proceso'       => 0);
             }
-            
-                
-            
+
             $clave =  $id_anticipo;
             $llave = 'id_anticipo';
             $tabla = 'anticipo';
@@ -1015,6 +1017,27 @@ class Descuentos extends CI_Controller
 
                 $respuestaHistorial = $this->Descuentos_model->update_generico_aticipo($clave,$llave,$tabla,$insertArray);
                 
+                if($bandera == 1 && $this->input->post('proceso') == 5 &&  $this->session->userdata('forma_pago') != 2){
+                    // viemne por un subdirector, y aparte validamos que sea correcto y su forma de pago
+                    $insertArrayN = array(
+                        'proceso'       => 6,
+                        'estatus'       => 2,
+                        'prioridad'     => $this->input->post('seleccion')
+                        );
+                $respuestaHistorial = $this->Descuentos_model->update_generico_aticipo($clave,$llave,$tabla,$insertArrayN);
+
+                $insertHistorial2 = array(
+                    'id_anticipo'       =>  intval( $id_anticipo),
+                    'id_usuario'        =>  intval($this->input->post('id_usuario')),
+                    'proceso'           =>  6,
+                    'comentario'        =>  $this->input->post('motivoDescuento_aceptar'),
+                    'fecha_movimiento'  =>  date("Y-m-d H:i:s")
+                    );
+
+                $respuestaHistorial2 = $this->Descuentos_model->insertAdelantoGenerico($insertHistorial2, $tabla_insert);
+                
+                }
+
 
                 $respuestaHistorial2 = $this->Descuentos_model->insertAdelantoGenerico($insertHistorial, $tabla_insert);
                 if($respuestaHistorial){
