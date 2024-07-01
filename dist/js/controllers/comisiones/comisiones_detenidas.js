@@ -167,7 +167,7 @@ $('#comisiones-detenidas-table').ready(function () {
                     if (id_usuario_general == 2749 || id_usuario_general == 2807 || id_usuario_general == 2767 || id_usuario_general == 11947) {
                         botton += `<div class="d-flex justify-center"><button value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-cambiar-estatus" data-toggle="tooltip" data-placement="top" title="REGRESAR A DISPERSIÓN"><i class="material-icons">undo</i></button></div>`;
                     } else {
-                        botton += `NO APLICA`;
+                        // botton += `NO APLICA`;
                     }
 
                     disparador = 0;
@@ -216,7 +216,7 @@ $('#comisiones-detenidas-table').ready(function () {
 
                     return '<div class="d-flex justify-center">' + botton + '</div>';
                 } else {
-                    return 'NO APLICA ';
+                    // return 'NO APLICA ';
                 }
             }
         }],
