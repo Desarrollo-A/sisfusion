@@ -497,7 +497,7 @@ $(document).ready(function () {
         opcionMensualidad = $(this).attr("data-opcionMensualidad");
         nombreMensualidad = $(this).attr("data-nombreMensualidad");
 
-        
+
         totalNeto2 = (plan_comision == 66 || plan_comision == 86) ? total8P : totalNeto2;
 
 
@@ -508,6 +508,8 @@ $(document).ready(function () {
             $("#modal_NEODATA .modal-footer").html("");
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
                 var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
+                let adicional = 9000;
+                totalNeto2 = totalNeto2 +adicional;
                 if(data.length > 0){
                     switch (data[0].Marca) {
                         case 0:
@@ -520,7 +522,7 @@ $(document).ready(function () {
                                 let total = 0;
                                 let totalPivote=0;
                                 if(total0 > 0){
-                                    total = total0;
+                                    total = total0 +9000;
                                 }else{
                                     total = 0;
                                 }
@@ -574,7 +576,7 @@ $(document).ready(function () {
                                             </div>
 
                                             <div class="col-md-3 p-0">
-                                                <h5>NEODATA: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">${formatMoney(data[0].Aplicado)}</b></h5>
+                                                <h5>NEODATA: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">${formatMoney(data[0].Aplicado +adicional)}</b></h5>
                                             </div>
 
                                             <div class="col-md-3 p-0">
@@ -582,7 +584,7 @@ $(document).ready(function () {
                                             </div>
 
                                             <div class="col-md-3 p-0">
-                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5>
+                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0 +adicional)}</b></h5>
                                             </div>
                                                     ${cadena}
                                         </div>`);
@@ -768,9 +770,9 @@ $(document).ready(function () {
                                             case 0:// monto < 5% se dispersará solo lo proporcional
                                                     if(plan_comision == 56){
                                                         let nuevoPorcentaje = 0;
-                                                        let porcentajeMaderas = 0;
+                                                    let porcentajeMaderas = 0;
                                                         //let porcentajeReferido = 0;
-                                                        if(porcentajeAbonado < 1){ //ATICIPO MENOR AL 1%
+                                                        if(porcentajeAbonado < 2){ //ATICIPO MENOR AL 1%
                                                             let porcentajeRestante = 100 - porcentajeReferido;
 
                                                             if(parseInt(v.id_usuario) == 12841){
@@ -780,34 +782,47 @@ $(document).ready(function () {
 
                                                             }else{
                                                                 if([7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){
-                                                                    nuevoPorcentaje = v.id_rol == 7 ? (((porcentajeRestante /100) / 2) / cuantosAsesores) : (((porcentajeRestante /100) / 2) / cuantosCoor) ;
+                                                                    console.log('porcentaje restante'+porcentajeRestante);
+                                                                    nuevoPorcentaje = v.id_rol == 7 ? (8 * (((porcentajeRestante / 4) * 3)  / cuantosAsesores) /100): (8 *((porcentajeRestante / 4)  / cuantosCoor) /100);
+                                                                    console.log('nuevo porcentaje ' + nuevoPorcentaje)
                                                                 }else{
                                                                     nuevoPorcentaje = 0;
                                                                 }
 
                                                             } 
-                                                        }else{ //
+                                                        }else if(porcentajeAbonado >= 2 && porcentajeAbonado < 5){ // ABONADO ENTRE EL 5 Y EL 2%
+                                                            let porcentajeRestante = 100 - porcentajeReferido;
 
+                                                            if(parseInt(v.id_usuario) == 12841){
+                                                                porcentajeMaderas =  (8 * (porcentajeReferido / 100));
+                                                                nuevoPorcentaje = porcentajeMaderas;
+                                                               // operacionValidar = (total*(0.125*porcentajeMaderas));
+
+                                                            }else{
+                                                                if([7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){
+                                                                    console.log('porcentaje restante'+porcentajeRestante);
+                                                                    nuevoPorcentaje = v.id_rol == 7 ? (8 * (((porcentajeRestante / 4) * 3)  / cuantosAsesores) /100): (8 *((porcentajeRestante / 4)  / cuantosCoor) /100);
+                                                                    console.log('nuevo porcentaje ' + nuevoPorcentaje)
+                                                                }else{
+                                                                    nuevoPorcentaje = 0;
+                                                                }
+
+                                                            }
                                                         }
-                                                        /*if(plan_comision == 56 && [7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){ //MADERAS REWORDS
-                                                            porcentajeMaderas = 0;
-                                                        }
-                                                        else if(plan_comision == 56 && parseInt(v.id_usuario) == 12841){
-                                                            porcentajeMaderas = v.porcentaje_decimal + sumaAsesorCoor;
-                                                        } */
+                                                        
                                                             operacionValidar = (total*(0.125*nuevoPorcentaje));
                                                     }else{
                                                         operacionValidar = (total*(0.125*v.porcentaje_decimal));
                                                     }
-                                                if(operacionValidar > v.comision_total){
-                                                    saldo1C = v.comision_total;
-                                                }else{
-                                                    saldo1C = operacionValidar;
-                                                }
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                             break;
                                             case 1:// monto igual o mayor a 8% dispersar 12.5% / la mitad
                                             console.log("del 8 al 12");
-                                            operacionValidar = (total_comision1 / 2);
+                                            operacionValidar = parseInt(v.id_usuario) == 12841 ? total_comision1 : (total_comision1 / 2);
                                             if(operacionValidar > v.comision_total){
                                                 saldo1C = v.comision_total;
                                             }else{
@@ -817,7 +832,8 @@ $(document).ready(function () {
                                             case 2: // monto entre 5% y 8% dispersar 4 parte
                                             console.log("del 5 al 8");
 
-                                            operacionValidar = (total_comision1/4);
+                                            //operacionValidar = (total_comision1/4);
+                                            operacionValidar = parseInt(v.id_usuario) == 12841 ? total_comision1 : (total_comision1 / 2);
                                             if(operacionValidar > v.comision_total){
                                                 saldo1C = v.comision_total;
                                             }else{
