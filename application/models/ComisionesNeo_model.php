@@ -10,7 +10,17 @@ class ComisionesNeo_model extends CI_Model {
 
     public function getStatusNeodata($lote){
         $pre_validate = $this->db->query("SELECT l.id_estado FROM lotes l WHERE l.status = 1 AND l.idLote = $lote");
-        $var = $pre_validate->row()->id_estado;
+
+        
+        
+        if( !isset($pre_validate->row()->id_estado) )
+        {
+            $var = 2;
+        }else{
+            $var = $pre_validate->row()->id_estado;
+        }
+        
+        
         if($var == 1){
             $filter = " l.id_desarrollo_n AS idResidencial";
         }else{
@@ -23,6 +33,8 @@ class ComisionesNeo_model extends CI_Model {
             $ref = $validate->row()->referencia;
             $des = $validate->row()->idResidencial;
             return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoPrueba3] @referencia = $ref, @iddesarrollo = $des");
+            return false;
+        }else{
             return false;
         }
     }

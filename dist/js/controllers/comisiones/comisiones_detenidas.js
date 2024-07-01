@@ -210,7 +210,7 @@ $('#comisiones-detenidas-table').ready(function () {
                         data-nombreMensualidad = "${d.nombreMensualidad}"
                         class = "btn-data ${varColor} verify_neodata" data-toggle="tooltip" data-placement="top" title="${Mensaje}"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
 
-                 } else {
+                } else {
                         botton += `LOTE FALTA DE DATOS`
                     }
 
@@ -330,6 +330,7 @@ $('#comisiones-detenidas-table').ready(function () {
             $("#modal_NEODATA .modal-footer").html("");
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
                 var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
+                console.log(data)
                 if(data.length > 0){
                     switch (data[0].Marca) {
                         case 0:
@@ -370,11 +371,7 @@ $('#comisiones-detenidas-table').ready(function () {
                                     </div>
                                     `;
                                 } else{
-                                    cadena = 
-                                    `<div class="col-12">
-                                        <h5>Bonificación: <b style="color:#D84B16;">${formatMoney(bonificadoTotal)}</b></h5>
-                                    </div>
-                                    `;
+                                    
                                 }
                                 // FINAL BONIFICACION y PLAN 66
 
@@ -386,10 +383,7 @@ $('#comisiones-detenidas-table').ready(function () {
                                                 <h3>Lote: <b>${nombreLote}${labelPenalizacion}</b></h3>
                                             </div>
                                         </div>
-                                        
-                                            <div class="col-md-3 pl-2">
-                                                <h5>Tipo Mensualidad: <b><span class="card-title">${nombreMensualidad}</span></b></h5>
-                                            </div>
+                                    
 
                                             <div class="col-md-3 p-0">
                                                 <h5>Precio Lote: <b>${formatMoney(totalNeto2)}</b></h5>
@@ -399,13 +393,9 @@ $('#comisiones-detenidas-table').ready(function () {
                                                 <h5>NEODATA: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">${formatMoney(data[0].Aplicado)}</b></h5>
                                             </div>
 
-                                            <div class="col-md-3 p-0">
-                                                <h5>Pagado: <b style="color:'black;">${formatMoney(abonadoAnterior)}</b></h5>
-                                            </div>
 
-                                            <div class="col-md-3 p-0">
-                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5>
-                                            </div>
+
+
                                                     ${cadena}
                                         </div>`);
 
@@ -726,7 +716,7 @@ $('#comisiones-detenidas-table').ready(function () {
                                                     `);
                                                 }
                                     });
-                                    responsive(maxWidth);
+                                    // responsive(maxWidth);
                                     $("#modal_NEODATA .modal-footer").append('<div class="row"><input type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"><input type="submit" class="btn btn-primary mr-2" name="disper_btn"  id="dispersar" value="Dispersar"></div>');
                                 });
                             }
@@ -752,9 +742,7 @@ $('#comisiones-detenidas-table').ready(function () {
                                             <div class="col-md-4">Total abonado: <b style="color:green">${formatMoney(abonadoAnterior)}</b></div>
                                             <div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div>
                                         </div>
-                                        <div class="col-md-3 pl-2">
-                                            <h5>Tipo Mensualidad: <b><span class="card-title">${nombreMensualidad}</span></b></h5>
-                                        </div>
+                                
 
                                     `);
                                    let cadenaExcedente = [4,6,7].indexOf(parseInt(procesoReestructura)) >= 0 ? `<h4>Excedente: <b>${formatMoney(total8P)}</b></h4>` : ''; 
@@ -897,10 +885,10 @@ $('#comisiones-detenidas-table').ready(function () {
                 }
                 else{
                     //QUERY SIN RESULTADOS
-                    $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                    $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA  </b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                 }
             }); //FIN getStatusNeodata
-
+            // $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA .</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
             $("#modal_NEODATA").modal();
         }
     }); //FIN VERIFY_NEODATA
