@@ -20,7 +20,7 @@ $(document).ready(function () {
         ) {
             alert()
     }else{
-        document.getElementById('abrir_ejecutar').display = none;
+        // document.getElementById('abrir_ejecutar').display = none;
     }
     
 });
