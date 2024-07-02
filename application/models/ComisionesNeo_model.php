@@ -368,5 +368,9 @@ class ComisionesNeo_model extends CI_Model {
     public function updateFlagPendienteDistintos(){
         $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado WHERE total_comision NOT IN (0) AND bandera NOT IN (100, 150, 110, 170) ");
     }
+    public function getMensualidadAbonoNeo($empresa = '', $nombreLote = ''){
+        return $this->programacion->query("EXEC [programacion].[dbo].[CDM058PagosSaldosXLote] @empresa = 'FRO', @vivienda = 'CDMSLP-AGAH-008'");
+        
+    }
 
 }

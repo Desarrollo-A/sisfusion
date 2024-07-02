@@ -801,10 +801,10 @@ $(document).ready(function () {
                                                             }else{
                                                                 if([7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){
                                                                     console.log('porcentaje restante'+porcentajeRestante);
-                                                                    nuevoPorcentaje = v.id_rol == 7 ? (8 * (((porcentajeRestante / 4) * 3)  / cuantosAsesores) /100): (8 *((porcentajeRestante / 4)  / cuantosCoor) /100);
+                                                                    nuevoPorcentaje = v.id_rol == 7 ? (8 * (((porcentajeRestante / 7) * 2)  / cuantosAsesores) /100): (8 *((porcentajeRestante / 7)  / cuantosCoor) /100);
                                                                     console.log('nuevo porcentaje ' + nuevoPorcentaje)
                                                                 }else{
-                                                                    nuevoPorcentaje = 0;
+                                                                    nuevoPorcentaje = (8 * (porcentajeRestante / 7)  /100);
                                                                 }
 
                                                             }
