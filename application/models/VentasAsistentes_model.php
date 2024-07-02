@@ -366,7 +366,7 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6661)";
                     $filtroSede = "";
-				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
@@ -387,6 +387,8 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_rol == 5) { // SON ASISTENTES DE SUBDIRECCIÓN / REGIONALES
                     if ($id_usuario == 6627)
                         $filtroGerente = "AND ((cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) OR (cl.id_asesor IN (6253, 6626) AND l.tipo_venta = 3))";
+                    else if ($id_usuario == 7401) // CLAUDIA LORENA SERRATO VEGA
+                        $filtroGerente = "AND ((cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) OR (cl.id_asesor IN (15844)))";
                     else
                         $filtroGerente = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
                     $filtroSede = "";

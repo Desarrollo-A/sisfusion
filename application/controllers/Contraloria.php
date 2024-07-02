@@ -1071,8 +1071,21 @@ class Contraloria extends CI_Controller {
                 $id_sede_jur = 2;
                 $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
                 $id_asig = $data_asig->contador;
-                $arreglo["asig_jur"] = $id_asig == 2765 ? 2876 : ($id_asig == 2876 ? 10463 : 2765);
-            } else if ($assigned_location == 4 || $assigned_location == 13 ) { // EXPEDIENTES CIUDAD DE MÉXICO, CIUDAD  MX Y EDO MEX
+                
+                //$arreglo["asig_jur"] = $id_asig == 2765 ? 2876 : ($id_asig == 2876 ? 10463 : 2765);
+                
+                if ($id_asig == 2765)
+                    $assigned_user = 2876;
+                else if ($id_asig == 2876)
+                    $assigned_user = 10463;
+                else if ($id_asig == 10463)
+                    $assigned_user = 16263;
+                else if ($id_asig == 16263)
+                    $assigned_user = 2765;
+                
+                $arreglo["asig_jur"] = $assigned_user;
+
+                } else if ($assigned_location == 4 || $assigned_location == 13 ) { // EXPEDIENTES CIUDAD DE MÉXICO, CIUDAD  MX Y EDO MEX
                 $id_sede_jur = 4;
                 $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
                 $id_asig = $data_asig->contador;
