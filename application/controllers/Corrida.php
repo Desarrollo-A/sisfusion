@@ -3920,6 +3920,13 @@ legend {
         $this->load->view('template/header');
         $this->load->view("planesPagos/planes_pagos", $datos);
     }
+
+    public function pagos(){
+        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
+        $this->load->view('template/header');
+        $this->load->view("planesPagos/pagos", $datos);
+    }
+
     function getPlanesPago($idLote){
         $data = $this->Corrida_model->getPlanesPago($idLote);
         if ($data != null) {
