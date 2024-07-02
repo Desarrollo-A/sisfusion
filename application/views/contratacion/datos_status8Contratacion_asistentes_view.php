@@ -19,6 +19,7 @@
                             <textarea class="text-modal" id="comentario" rows="3"></textarea>
                         </div>       
                     </div>
+                    <input type="hidden" id="data-editReg"></input>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="save1" class="btn btn-primary">Registrar</button>
@@ -81,6 +82,7 @@
                             <textarea class="text-modal" id="comentario5" rows="3"></textarea>
                         </div>     
                     </div>
+                    <input type="hidden" id="data-rev8"></input>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="save5" class="btn btn-primary">Registrar</button>
@@ -103,6 +105,7 @@
                             <textarea class="text-modal" id="comentario6" rows="3"></textarea>
                         </div>            
                     </div>
+                    <input type="hidden" id="data-rev_2"></input>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="save6" class="btn btn-primary">Registrar</button>
@@ -110,6 +113,26 @@
                 </div>
             </div>
         </div>
+
+        <!-- MODAL DE AVANCE O RECHAZO DE CONTRALORÍA A POSTVENTA -->
+        <div class="modal fade" id="accion-modal" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header text-center" id="labelHeaderAccionModal">
+                        <!-- <h4>¿Está seguro de <b>rechazar</b> el expediente de <b>'+nombreLote+'</b>?</h4> -->
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div id="extra-content-accion-modal"></div>
+                        <div id="data-modal"></div>
+                    </div> 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btn-accion">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- END Modals -->
 
 

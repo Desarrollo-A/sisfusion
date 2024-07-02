@@ -55,7 +55,8 @@ const TipoDoc = {
     NUEVO_CONTRATO_REESTRUCTURA_FIRMA_CLIENTE: 47,
     ANEXO_1: 48,
     VIDEO_FIRMA: 49,
-    ANEXO_VENTA_DE_PARTICULARES: 50
+    ANEXO_VENTA_DE_PARTICULARES: 50,
+    COMPLEMENTO_DE_PAGO: 55,
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -302,7 +303,7 @@ $('#idLote').change(function () {
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
                     
-                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
+                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO || data.tipo_doc == TipoDoc.COMPLEMENTO_DE_PAGO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
                                 includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
