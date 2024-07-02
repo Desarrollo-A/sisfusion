@@ -17,7 +17,7 @@ function limpiarFormulario(){
     $("#prestamos").selectpicker("refresh");
     $('#descuento').val('default');
     $("#descuento").selectpicker("refresh");
-    document.getElementById('prestamo').innerHTML = '';
+    document.getElementById('prestamos').innerHTML = '';
     document.getElementById('descuento').innerHTML = '';
     document.getElementById('usuarioid').innerHTML = '';
     document.getElementById('sumaReal').innerHTML = '';
