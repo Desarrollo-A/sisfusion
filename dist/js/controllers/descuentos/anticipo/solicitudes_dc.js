@@ -66,7 +66,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 
                 botonesModal += `
                 <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
-                
+                data-forma_pago="${d.forma_pago}"
                 data-mensualidades_pra="${d.mensualidades}"
                 data-monto_parcialidad="${d.monto_parcialidad}"
                 data-id_parcialidad="${d.id_parcialidad}"
@@ -78,7 +78,9 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 <i class="fas fa-forward"></i>
                 </button>`;
                 botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
+                <button href="#" value="${d.id_anticipo}" 
+                data-forma_pago="${d.forma_pago}"
+                data-id_usuario="${d.id_usuario}" 
                 data-monto="${d.monto}"
                 data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" 
                 class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
@@ -152,6 +154,9 @@ $("#tabla_anticipo_revision_dc").ready(function () {
     $('#tabla_anticipo_revision_dc tbody').on('click', '.aceptar_anticipo', function () {
         const idAnticipo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
+
+        const forma_pago = $(this).attr("data-forma_pago");
+
         const id_usuario = $(this).attr("data-id_usuario");
         const Modalbody = $('#myModalAceptar .modal-body');
         const monto1 = $(this).attr("data-monto");
@@ -224,22 +229,16 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         ` ;
 
 
-
-
         Modalbody.html('');
         Modalfooter.html('');
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-
             <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
-            
                 <div>
                     <h2 class="card_title">Detalles</h2>
                     <p class="center-align"> 
                         Monto solicitado : ${monto_formateado}.<br>
                         Mendiante la modalidad : ${modalidad}
-
-                        
                     </p>
                 </div>
 
@@ -266,6 +265,10 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             </div>
             <div class="form-group">
                 <input type="hidden" value="0" name="bandera_a" id="bandera_a">
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" value="${forma_pago}" name="forma_pago" id="forma_pago">
             </div>
 
             <div class="form-group col-md-12">
@@ -502,8 +505,6 @@ $("#form_subir").on('submit', function (e) {
 // document.getElementById('num_mensualidades').addEventListener('input', validateInput);
 
 function validar_nuevosNumeros() {
-    alert('datos') 
-
     const numero_mensualidades = document.getElementById('num_mensualidades').value;
     const monto = document.getElementById('monto').value;
     // const numero_mensualidades = document.getElementById('num_mensualidades');

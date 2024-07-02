@@ -9,21 +9,32 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function getStatusNeodata($lote){
-        $pre_validate = $this->db->query("SELECT l.id_estado, mc.opcion FROM lotes l LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote WHERE l.status = 1 AND l.idLote = $lote");
-        $var = $pre_validate->row()->id_estado;
+        $pre_validate = $this->db->query("SELECT l.id_estado FROM lotes l WHERE l.status = 1 AND l.idLote = $lote");
+
+        
+        
+        if( !isset($pre_validate->row()->id_estado) )
+        {
+            $var = 2;
+        }else{
+            $var = $pre_validate->row()->id_estado;
+        }
+        
+        
         if($var == 1){
             $filter = " l.id_desarrollo_n AS idResidencial";
         }else{
             $filter = " r.idResidencial ";
         }
 
-        $validate = $this->db->query("SELECT l.referencia, $filter, mc.opcion FROM lotes l INNER JOIN condominios c ON c.idCondominio = l.idCondominio INNER JOIN residenciales r ON r.idResidencial = c.idResidencial INNER JOIN clientes cl ON cl.id_cliente = l.idCliente LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote 
-        WHERE l.status = 1 AND cl.status = 1 AND l.idLote = $lote");
+        $validate = $this->db->query("SELECT l.referencia, $filter FROM lotes l INNER JOIN condominios c ON c.idCondominio = l.idCondominio INNER JOIN residenciales r ON r.idResidencial = c.idResidencial INNER JOIN clientes cl ON cl.id_cliente = l.idCliente WHERE l.status = 1 AND cl.status = 1 AND l.idLote = $lote");
 
         if($validate->num_rows()>0){
             $ref = $validate->row()->referencia;
             $des = $validate->row()->idResidencial;
             return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoPrueba3] @referencia = $ref, @iddesarrollo = $des");
+            return false;
+        }else{
             return false;
         }
     }

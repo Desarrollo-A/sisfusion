@@ -8,7 +8,7 @@ class PaquetesCorrida extends CI_Controller
     {
       parent::__construct();
       $this->load->model(array('PaquetesCorrida_model', 'asesor/Asesor_model', 'General_model', 'registrolote_modelo'));
-      $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
+      $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar','excel'));
       $this->load->helper(array('url', 'form'));
       $this->load->database('default');
 //      $this->programacion = $this->load->database('default', TRUE);
@@ -74,7 +74,7 @@ class PaquetesCorrida extends CI_Controller
         if ($superficie == 1) { //Menor a 200
             $query_superdicie = 'and sup < 200 ';
         } else if ($superficie == 2) { // Mayor a 200
-            $query_superdicie = 'and sup >= 200 ';
+            $query_superdicie = 'and sup >= 190 ';
             $inicio =0;
             $fin = 0;
         } else if ($superficie == 3) { // Cualquiera
@@ -233,6 +233,146 @@ class PaquetesCorrida extends CI_Controller
         }
 
     }
+
+    public function cargarPlantillaPlanes(){
+      $this->db->trans_begin();
+      /**
+        1.- TOTAL
+        2.- ENGANCHE
+        3.- EFECTIVO POR M2 +
+        4.- BONO
+        5.- MSI
+       */
+      $replace = ["$",",","%"];
+      $datos_sede = $this->input->post("sede");
+      $residenciales = $this->input->post("residencial[]");
+      $superficie = $this->input->post("superficie");       
+      $dataExcel = $this->excel->load_fsc($_FILES['uploadedDocument']['tmp_name']);
+      $inicio = 0;
+      $fin = 0;
+      $query_superdicie = '';
+      $query_tipo_lote = '';
+      //Superficie
+      /**
+       * 1.-Mayor a
+       * 2.-Rango
+       * 3.-Cualquiera
+       */
+      if ($superficie == 1) { //Menor a 200
+          $query_superdicie = 'and sup < 200 ';
+      } else if ($superficie == 2) { // Mayor a 200
+          $query_superdicie = 'and sup >= 190 ';
+          $inicio =0;
+          $fin = 0;
+      } else if ($superficie == 3) { // Cualquiera
+          $query_superdicie = '';
+          $inicio = 0;
+          $fin = 0;
+      }
+      $Fechainicio =  $this->input->post("fechainicio");
+      $Fechafin = $this->input->post("fechafin");
+      /*Tipo lote
+      1.-Habitacional
+      2.-Comercial
+      3.-Ambos*/
+      $ArrPAquetes = array();
+      $TipoLote = $this->input->post("tipoLote");
+      if ($TipoLote == 0) { //Habitacional
+          $query_tipo_lote = 'and c.tipo_lote = 0 ';
+      } else if ($TipoLote == 1) { // Comercial
+          $query_tipo_lote = 'and c.tipo_lote = 1 ';
+      } else if ($TipoLote == 2) { // Ambos
+          $query_tipo_lote = '';
+      }
+
+        $datosInsertar = array();
+        date_default_timezone_set('America/Mexico_City');
+        $hoy2 = date('Y-m-d H:i:s');
+        $desarrollos = implode(",", $residenciales);
+
+        //exit;
+        $banderaExisteDescuento = 0;
+        $numeroPlan = 0;
+        for ($m=2; $m <= count($dataExcel) ; $m++) { 
+          if($numeroPlan != $dataExcel[$m]["D"]){
+              $descripcion_paquete = $dataExcel[$m]["C"];
+             $id_paquete = $this->PaquetesCorrida_model->guardarPaquete($descripcion_paquete,$Fechainicio,$Fechafin,$datos_sede,$desarrollos,$TipoLote,$inicio,$fin);
+              array_push($ArrPAquetes, $id_paquete);
+          }
+
+          $valorDescuento = str_replace($replace,"",$dataExcel[$m]["A"]);
+          if($dataExcel[$m]["B"] == 1){ //TOTAL
+            $datosDescuento = $this->PaquetesCorrida_model->ValidarDescuento(1,$valorDescuento)->result_array();
+            $banderaExisteDescuento =  count($datosDescuento) >= 1 ? 1 : 0;
+          }else if($dataExcel[$m]["B"] == 2){//ENGANCHE
+            $datosDescuento = $this->PaquetesCorrida_model->ValidarDescuento(2,$valorDescuento)->result_array();
+            $banderaExisteDescuento =  count($datosDescuento) >= 1 ? 1 : 0;
+          }else if($dataExcel[$m]["B"] == 3){//EFECTIVO M2
+            $datosDescuento = $this->PaquetesCorrida_model->ValidarDescuento(4,$valorDescuento)->result_array();
+            $banderaExisteDescuento =  count($datosDescuento) >= 1 ? 1 : 0;
+
+          }else if($dataExcel[$m]["B"] == 4){//BONO
+            $datosDescuento = $this->PaquetesCorrida_model->ValidarDescuento(12,$valorDescuento)->result_array();
+            $banderaExisteDescuento =  count($datosDescuento) >= 1 ? 1 : 0;
+          }else if($dataExcel[$m]["B"] == 5){//MSI
+            $datosDescuento = $this->PaquetesCorrida_model->ValidarDescuento(13,$valorDescuento)->result_array();
+            $banderaExisteDescuento =  count($datosDescuento) >= 1 ? 1 : 0;
+          }else{
+            $banderaExisteDescuento = 0;
+          }
+
+          $banderaExisteDescuento == 1 ? 
+          $data_descuento = array(
+            'id_paquete' => $id_paquete,
+            'id_descuento' => $datosDescuento[0]['id_descuento'],
+            'prioridad' => $m - 1,
+            'msi_descuento' => 0,
+            'fecha_creacion' => $hoy2,
+            'creado_por' => $this->session->userdata('id_usuario'),
+            'fecha_modificacion' => $hoy2,
+            'modificado_por' => $this->session->userdata('id_usuario'),
+        )
+        : '' ;
+        $banderaExisteDescuento == 1 ?  array_push($datosInsertar, $data_descuento) : '';
+
+        $banderaExisteDescuento = 0;
+        $numeroPlan = $dataExcel[$m]["D"];
+        }
+        $this->PaquetesCorrida_model->insertBatch('relaciones', $datosInsertar);
+        $cadena_lotes = implode(",", $ArrPAquetes);
+        $getPaquetesByLotes = $this->PaquetesCorrida_model->getPaquetesByLotes($desarrollos, $query_superdicie, $query_tipo_lote, $superficie, $inicio, $fin);
+        $user_sesionado = $this->session->userdata('id_usuario');
+        //ESTE INSERT ES EL QUE SE HACIA ANTERIORMENTE, AUN NO SE ELIMINA YA SE OCUPARA PARA EL
+        $dataInsertAutPventas = array(
+          "idResidencial" => $desarrollos,
+          "fecha_inicio" => $Fechainicio,
+          "fecha_fin" => $Fechafin,
+          "id_sede" => $datos_sede,
+          "tipo_lote" => $TipoLote,
+          "superficie" => $superficie,
+          "paquetes" => $cadena_lotes,
+          "estatus_autorizacion" => 1,
+          "estatus" => 1,
+          "fecha_creacion" => $hoy2,
+          "creado_por" => $user_sesionado,
+          "fecha_modificacion" => $hoy2,
+           "modificado_por" => $user_sesionado,
+           "accion" => 1,
+           "idAutorizacion" => 0
+        );
+         $this->PaquetesCorrida_model->saveAutorizacion($dataInsertAutPventas);
+        if ($this->db->trans_status() === false) {
+            $this->db->trans_rollback();
+            echo json_encode(0);
+
+        } else {
+            $this->db->trans_commit();
+            echo json_encode(1);
+        }
+       
+    }
+
+
   public function lista_sedes()
   {
     echo json_encode($this->PaquetesCorrida_model->get_lista_sedes()->result_array());
@@ -297,7 +437,7 @@ class PaquetesCorrida extends CI_Controller
     if ($superficie == 1) { //Mayor a
       $query_superdicie = 'and sup < 200 ';
     } else if ($superficie == 2) { // Menor a
-     $query_superdicie = 'and sup >= 200 ';
+     $query_superdicie = 'and sup >= 190 ';
     } else if ($superficie == 3) { // Cualquiera
       $query_superdicie = '';
     }
@@ -384,5 +524,6 @@ class PaquetesCorrida extends CI_Controller
       echo json_encode(array(array("paquetes" => $dataPaquetes,
       "descuentos" => $dataDescuentos)),JSON_NUMERIC_CHECK);
     }
+
 
 }

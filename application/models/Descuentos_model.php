@@ -463,7 +463,7 @@ class Descuentos_model extends CI_Model {
             LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion 
             WHERE id_catalogo=23 
             AND mrp.evidencia != 'true'
-            AND mrp.id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88)
+            AND mrp.id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,27,28,41,42,51,52,88)
             AND oxc0.estatus = 1
             AND mrp.estatus = 1
             ";
@@ -641,7 +641,7 @@ class Descuentos_model extends CI_Model {
                 $cmd = "DECLARE @user INT 
                 SELECT @user = $idUsu 
                 SELECT u.id_usuario, u.id_rol,
-                FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
+                FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,  u.forma_pago  as formaNomal ,
                 UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
                 AS nombre, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
                 UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
@@ -699,12 +699,30 @@ class Descuentos_model extends CI_Model {
                 return $query->result_array();
             } 
 
+            public function borrarComisiones() {
+                $cmd = "EXEC BorrarComisiones";
+        
+                try {
+                    $query = $this->db->query($cmd);
+                    if ($query) {
+                        return $query->row(); // Devuelve el primer resultado
+                    } else {
+                        return false;
+                    }
+                } catch (Exception $e) {
+                    // Manejo de errores
+                    log_message('error', $e->getMessage());
+                    return false;
+                }
+            }
+            
+
             public function solicitudes_generales_dc(){
 
                 $usuario =  $this->session->userdata('id_usuario');
                 
                 $cmd = "SELECT u.id_usuario, u.id_rol, 
-				UPPER(opcs_x_cats.nombre) AS puesto, 
+				UPPER(opcs_x_cats.nombre) AS puesto, us.forma_pago,
 				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
                 AS nombre,  FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
 				CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,

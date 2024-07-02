@@ -1167,7 +1167,7 @@ function mostrar(id){
 
             Modalheader.append(`
                 <input type="hidden" value="EDITAR" name="idPrestamo" id="idPrestamo"> 
-                    <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR 
+                    <h4>¿Desea editar o borrar la etiqueta del prestamo descuento? 
                     </h4>
             `);
             dataModal += ``; 
