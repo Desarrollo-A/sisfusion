@@ -21,15 +21,15 @@ class Neodata_model extends CI_Model {
         @Nombre = '" . $data['Nombre'] . "',
         @ApellidoPaterno = '" . $data['ApellidoPaterno'] . "',
         @ApellidoMaterno = '" . $data['ApellidoMaterno'] . "',
-        @Calle = " . ($data['Calle'] == '' ? 'NULL' : $data['Calle']) . ",
-        @Colonia = " . ($data['Colonia'] == '' ? 'NULL' :$data['Colonia']) . ",
-        @CodPost = " . ($data['CodPost'] == '' ? 'NULL' : $data['CodPost']) . ",
-        @MpioDeleg = " . ($data['MpioDeleg'] == '' ? 'NULL' : $data['MpioDeleg']) . ",
-        @Localidad = " . ($data['Localidad'] == '' ? 'NULL' : $data['Localidad']) . ",
+        @Calle = '" . ($data['Calle'] == '' ? 'NULL' : $data['Calle']) . "',
+        @Colonia = '" . ($data['Colonia'] == '' ? 'NULL' :$data['Colonia']) . "',
+        @CodPost = '" . ($data['CodPost'] == '' ? 'NULL' : $data['CodPost']) . "',
+        @MpioDeleg = '" . ($data['MpioDeleg'] == '' ? 'NULL' : $data['MpioDeleg']) . "',
+        @Localidad = '" . ($data['Localidad'] == '' ? 'NULL' : $data['Localidad']) . "',
         @Telefono = '" . $data['Telefono'] . "',
         @Email = '" . $data['Email'] . "',
         @RFC = '" . $data['RFC'] . "',
-        @FechaNacimiento = " . ($data['FechaNacimiento'] == '' ? 'NULL' : $data['FechaNacimiento']) . ",
+        @FechaNacimiento = '" . ($data['FechaNacimiento'] == '' ? 'NULL' : $data['FechaNacimiento']) . "',
         @FechaIngreso = '" . $data['FechaIngreso'] . "',
         @NumOficial = " . ($data['NumOficial'] == '' ? 'NULL' : $data['NumOficial']) . ",
         @NumInterior = " . ($data['NumInterior'] == '' ? 'NULL' : $data['NumInterior']) . ",
@@ -50,7 +50,7 @@ class Neodata_model extends CI_Model {
         @IdCuentaIntereses = " . ($data['IdCuentaIntereses'] == '' ? 'NULL' : $data['IdCuentaIntereses']) . ",
         @NoCuentaContable = " . ($data['NoCuentaContable'] == '' ? 'NULL' : $data['NoCuentaContable']) . ",
         @EscrituradoReal = " . $data['EscrituradoReal'] . ",
-        @IdTipoMoneda = " . $data['IdTipoMoneda'] . ",
+        @IdTipoMoneda = " . ($data['IdTipoMoneda'] == '' ? 1 : $data['IdTipoMoneda']) . ",
         @Lada = " . ($data['Lada'] == '' ? 'NULL' : $data['Lada']) . ",
         @Pais = " . $data['Pais'] . ",
         @MonedaSATDefault = '" . $data['MonedaSATDefault'] . "',
@@ -58,7 +58,7 @@ class Neodata_model extends CI_Model {
         @IdPaisSAT = " . $data['IdPaisSAT'] . ",
         @IdCatRegimen = " . $data['IdCatRegimen'] . ",
         @CuentaClabeSTP = " . ($data['CuentaClabeSTP'] == '' ? 'NULL' : $data['CuentaClabeSTP']) . ",
-        @Prospecto = " . $data['Prospecto'] . ")->result_array();
+        @Prospecto = " . $data['Prospecto'] . "")->result_array();
         
         if (isset($response[0]['idCliente']))
             return array("status" => 1, "message" => "Registro $messageDetail con éxito - " . $response[0]['idCliente'] . ".");

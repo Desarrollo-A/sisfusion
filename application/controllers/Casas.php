@@ -7,6 +7,11 @@ class Casas extends BaseController {
         parent::__construct();
 
         $this->load->model(array('CasasModel'));
+
+        $this->load->library(['session']);
+
+        $this->idRol = $this->session->userdata('id_rol');
+        $this->idUsuario = $this->session->userdata('id_usuario');
     }
 
     public function cartera(){
@@ -146,8 +151,12 @@ class Casas extends BaseController {
     }
 
     public function vobo_cifras(){
+        $data = [
+            'idUsuario' => $this->idUsuario,
+        ];
+
         $this->load->view('template/header');
-        $this->load->view("casas/vobo_cifras");
+        $this->load->view("casas/vobo_cifras", $data);
     }
 
     public function expediente_cliente(){
@@ -176,8 +185,13 @@ class Casas extends BaseController {
     }
 
     public function ingresar_adeudos(){
+        $data = [
+            'idRol' => $this->idRol,
+            'idUsuario' => $this->idUsuario,
+        ];
+
         $this->load->view('template/header');
-        $this->load->view("casas/ingresar_adeudos");
+        $this->load->view("casas/ingresar_adeudos", $data);
     }
 
     public function reporte_casas(){
@@ -1121,6 +1135,8 @@ class Casas extends BaseController {
 
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
+        $is_ok = $this->CasasModel->resetVoBos($id);
+
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
             
@@ -1138,25 +1154,52 @@ class Casas extends BaseController {
 
         if(!isset($id)){
             http_response_code(400);
-        }
-
-        $new_status = 12;
-
-        $proceso = $this->CasasModel->getProceso($id);
-
-        $movimiento = 0;
-        if($proceso->tipoMovimiento == 1){
-            $movimiento = 2;
-        }
-
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
-
-        if($is_ok){
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
-            
             $this->json([]);
-        }else{
-            http_response_code(404);
+        }
+
+        $column = null;
+        if(in_array($this->idUsuario, [5107])){
+            $column = 'voboADM';
+        }
+        if(in_array($this->idUsuario, [15891, 15892, 15893, 16197, 16198, 16199])){
+            $column = 'voboOOAM';
+        }
+        if(in_array($this->idUsuario, [15896, 16204, 15897, 16205, 15898, 16206, 4512])){
+            $column = 'voboGPH';
+        }
+        if(in_array($this->idUsuario, [2896, 12072, 12112, 15900, 16208])){
+            $column = 'voboPV';
+        }
+
+        if(!$column){
+            http_response_code(500);
+            $this->json([]);
+        }
+
+        $updated = $this->CasasModel->setVoboToProceso($id, $column);
+
+        if($updated){
+            $new_status = 12;
+
+            $proceso = $this->CasasModel->getProceso($id);
+
+            if($proceso->voboADM && $proceso->voboOOAM && $proceso->voboGPH && $proceso->voboPV){
+
+                $movimiento = 0;
+                if($proceso->tipoMovimiento == 1){
+                    $movimiento = 2;
+                }
+
+                $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
+
+                if($is_ok){
+                    $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
+                }else{
+                    http_response_code(404);
+                }
+            }
+
+            $this->json([]);
         }
     }
 
@@ -1398,8 +1441,9 @@ class Casas extends BaseController {
     public function ingresar_adeudo(){
         $form = $this->form();
 
-        if(!isset($form->id) || !isset($form->adeudoOoam) || !isset($form->adeudoAdm) || !isset($form->adeudoGph)){
+        if( !isset($form->id) || !isset($form->adeudo) || !isset($form->cantidad) ){
             http_response_code(400);
+            $this->json([]);
         }
 
         $id_rol = 2;
@@ -1407,7 +1451,7 @@ class Casas extends BaseController {
         $proceso = $this->CasasModel->getProceso($form->id);
 
         if($proceso /* && isset($column) */){
-            $is_ok = $this->CasasModel->setAdeudo($proceso->idProcesoCasas, $form->adeudoOoam, $form->adeudoAdm, $form->adeudoGph);
+            $is_ok = $this->CasasModel->setAdeudo($proceso->idProcesoCasas, $form->adeudo, $form->cantidad);
 
             if($is_ok){
                 $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se modifico adeudo");

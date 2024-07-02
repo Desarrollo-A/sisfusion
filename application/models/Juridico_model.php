@@ -13,20 +13,20 @@ class Juridico_model extends CI_Model {
 	    	$whereOne = "";
         	$whereTwo = "";
 
-        	if($typeTransaction == 0) { // SE CORRE FILTRO POR FECHA
-	           $whereOne = "AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";;
-	           $whereTwo = "";
-	           $number = 150;
-            } else if ($typeTransaction == 1) { // VA A CORRER FILTRO POR DESARROLLO
-				$complemento = '';
-				if($idCondominio != 0 && $idCondominio != ''){
-					$complemento = ' AND cond.idCondominio='.$idCondominio; 
+        if($typeTransaction == 0) { // SE CORRE FILTRO POR FECHA
+	       $whereOne = "AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";;
+	       $whereTwo = "";
+	       $number = 150;
+        } else if ($typeTransaction == 1) { // VA A CORRER FILTRO POR DESARROLLO
+			$complemento = '';
+			if($idCondominio != 0 && $idCondominio != ''){
+				$complemento = ' AND cond.idCondominio='.$idCondominio; 
+			}
+            $whereOne = "";
+            $whereTwo = "AND res.idResidencial = $idResidencial $complemento";
+            $number = 1000;
+        }
 
-				}
-                $whereOne = "";
-                $whereTwo = "AND res.idResidencial = $idResidencial $complemento";
-                $number = 1000;
-            }
 		$query = $this->db-> query("SELECT TOP($number) l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
         l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, cond.idCondominio, l.observacionContratoUrgente as vl, et.descripcion as etapa,

@@ -24,6 +24,7 @@
   border: none;
   background: white;
 }
+
 .tr-encabezados > th {
   border-top: none;
   border-bottom: none;
@@ -43,6 +44,7 @@
   font-size: 12px;
   background: white;
 }
+
 .tr-contenido > td {
   box-sizing: border-box;
   border: 1px solid #eaeaea;

@@ -49,5 +49,9 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
+    <script type="text/javascript">
+        const idUsuario = <?php echo $idUsuario ?>
+    </script>
+
     <script src="<?= base_url() ?>dist/js/controllers/casas/vobo_cifras.js"></script>
 </body>

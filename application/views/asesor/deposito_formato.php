@@ -377,11 +377,11 @@
                                 <?php
 
                                 for($n=0; $n < count($paises) ; $n++){
-                                    if($paises[$n]['nombre'] == $cliente[0]->pais){
-                                        echo '<option value="'.$paises[$n]['nombre'].'" selected>'.$paises[$n]['nombre'].'</option>';
+                                    if($paises[$n]['id_opcion'] == $cliente[0]->pais){
+                                        echo '<option value="'.$paises[$n]['id_opcion'].'" selected>'.$paises[$n]['nombre'].'</option>';
                                     }
                                     else{
-                                        echo '<option value="'.$paises[$n]['nombre'].'">'.$paises[$n]['nombre'].'</option>';
+                                        echo '<option value="'.$paises[$n]['id_opcion'].'">'.$paises[$n]['nombre'].'</option>';
                                     }
                                 }
                                 ?>
@@ -414,6 +414,12 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">MUNICIPIO(<small style="color: red;">*</small>)</label>
                         <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="municipio" id="municipio" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->municipio?>"/>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">COLONIA(<small style="color: red;">*</small>)</label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="colonia" id="colonia" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->colonia?>"/>
                     </div>
                 </div>
 

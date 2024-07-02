@@ -1202,7 +1202,7 @@ class Usuarios_modelo extends CI_Model
         $query = $this->db->query("SELECT rxu.*,opc.nombre,s.nombre AS sede FROM roles_x_usuario rxu
         INNER JOIN opcs_x_cats opc ON opc.id_opcion=rxu.idRol AND opc.id_catalogo=1
         INNER JOIN sedes s ON s.id_sede = rxu.idSede
-        WHERE rxu.idUsuario = " . $id_usuario . " AND rxu.idRol=59 AND rxu.estatus=1");
+        WHERE rxu.idUsuario = " . $id_usuario . " AND rxu.idRol=59");
         return $query->result_array();
     }
     function borrarMulti($idRU,$modificado_por)
