@@ -108,7 +108,7 @@ function fillTrimestral(beginDate, endDate) {
                     data: function(d){
                         let colorEstatus = (d.colorEstatus=='') ? 'fff' : d.colorEstatus;
                         let fondoEstatus = (d.fondoEstatus=='') ? 'f21100' : d.fondoEstatus;
-                            return `<center><span class="label" style="background-color:#${fondoEstatus}; color:#${colorEstatus}">${d.estatus}</span><center>`;
+                            return `<center><span class="label" style="background-color:#${fondoEstatus}75; color:#${colorEstatus}">${d.estatus}</span><center>`;
                     }
                 },
                 {data: 'cliente'},
@@ -130,7 +130,12 @@ function fillTrimestral(beginDate, endDate) {
                         let classCompartida = (n.numeroVC == 0) ? 'lbl-gray' : 'lbl-sky';
                         return `<center><span class="label ${classCompartida}" >${numCompartida}</span><center>`;
                     }
-                }
+                },
+                {
+                    data: function (n){
+                        return `<div class="d-flex justify-center"><button id="verifyNeodata" class="btn-data btn-sky" data-toggle="tooltip" data-placement="left" title="Verificar montos" data-nombreLote="${n.nombreLote}" data-empresa="${n.empresa}"><i class="fas fa-glasses"></i></button><div>`;
+                    }
+                },
             ],
             initComplete: function() {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -164,3 +169,25 @@ $('body').tooltip({
 }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
     $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });
+
+$(document).on("click", "#verifyNeodata", function () {
+    let empresa = $(this).attr("data-empresa");
+    let nombreLote = $(this).attr("data-nombreLote");
+    $('#spiner-loader').removeClass('hide');
+    $.ajax({
+        url: "getMensualidadAbonoNeo",
+        data: {empresa: empresa, nombreLote: nombreLote},
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        success: function (response) {
+            console.log(response[0]);
+            $("#detailPayments .modal-header").html('<div class="d-flex align-center" style="background: white; border-radius:25px; justify-content: space-around"><h4><small>'+(empresa)+'</small></h4><h4 class="text-center fw-600">'+nombreLote+'</h4><i class="fas fa-times-circle"></i></div>');
+            $("#detailPayments .modal-body").html(response);
+            $('#spiner-loader').addClass('hide');
+        },
+    });
+    
+    
+    $("#detailPayments").modal();
+  });

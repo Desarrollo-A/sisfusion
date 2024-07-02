@@ -2,7 +2,19 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-        <?php   $this->load->view('template/sidebar'); ?>
+        <?php $this->load->view('template/sidebar'); ?>
+
+        <div class="modal fade" id="detailPayments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content" style="background-color:#ecedf0">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -47,6 +59,7 @@
                                                 <th>ENGANCHE</th>
                                                 <th>VENTA COMPARTIDA</th>
                                                 <th>NÚMERO COMPARTIDA</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>
