@@ -1610,14 +1610,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 #chartsAmount .scrollCharts::-webkit-scrollbar {
   display: none;
 }
-
-@media (min-device-width: 320px) and (max-device-width: 480px) {
-  #chartsAmount .scrollCharts {
-    display: block !important;
-    overflow: hidden !important;
-  }
-}
-
 #chartsAmount .gradientLeft {
   height: 100%;
   width: 5%;
@@ -1639,7 +1631,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #chartsAmount .gradientRight {
     width: 12%;
-    display: none;
   }
 }
 
@@ -1666,8 +1657,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
 
 @media (min-device-width: 320px) and (max-device-width: 480px) {
   #chartsAmount .rowCarousel .cardMiniChart {
-    min-width: 80%;
-    margin-right: 0 !important;
+    min-width: 85%;
   }
 }
 

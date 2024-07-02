@@ -111,24 +111,8 @@
 						<div class="card-content">
 							<div class="toolbar">
                                 <div class="container-fluid p-0">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 m-0">
-                                            <div class="form-group d-flex justify-center align-center">
-                                            </div>
-											
-                                        </div>
-										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
-                                            <div class="form-group d-flex justify-center align-center">
-                                            </div>
-                                        </div>
-										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
-                                            <div class="form-group d-flex justify-center align-center">
-                                            </div>
-                                        </div>
-                                    </div>
-									
 									<div class="row">
-										<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+										<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                                             <div class="form-group d-flex justify-center align-center">
 												<button Type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">
 												<i class="fas fa-coins"></i>	
@@ -136,7 +120,7 @@
 											</div>
 										</div>
 
-										<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+										<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                                             <div class="form-group d-flex justify-center align-center">
 												<button Type="button"  class="btn-gral-data" 
 													id="abrir_modal_plantillas" name="abrir_modal_plantillas"
@@ -145,7 +129,7 @@
 												Plantilla préstamos</button>
 											</div>
 										</div>
-										<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+										<div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                                             <div class="form-group d-flex justify-center align-center">
 												<button Type="button"  class="btn-gral-data" 
 													id="abrir_ejecutar" name="modal_ejecutar"
@@ -155,12 +139,12 @@
 												Ejecutar función</button>
 											</div>
 										</div>
-										<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+										<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group d-flex justify-center align-center">
 												<buttons Type="button"  class="data" data-toggle="modal" data-target="#ModalAddMotivo"><i class="fas fa-plus"></i> Nuevo motivo de préstamo</buttons>
 											</div>
 										</div>
-										<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+										<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 											<div class="form-group d-flex">
 												<input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
 												<input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
@@ -222,7 +206,6 @@
 	</div>
 	</div>
 	<?php $this->load->view('template/footer');?>
-	<script src="https://unpkg.com/duo-icons@latest"></script>
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/general/funcionesGeneralesComisiones.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script>

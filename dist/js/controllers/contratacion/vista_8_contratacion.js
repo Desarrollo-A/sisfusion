@@ -114,9 +114,9 @@ $(document).ready(function () {
                     }
                     else {
                         if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
+                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-orangeYellow  " data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -133,7 +133,7 @@ $(document).ready(function () {
                         }
                         else if ((data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15)
                             || (data.idStatusContratacion == 11 && data.idMovimiento == 41)) {
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
+                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
@@ -151,7 +151,7 @@ $(document).ready(function () {
                             cntActions += `${datatableButtons(data, 2)}`;
                         }
                         else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) { //RECHAZO
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
+                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
@@ -288,40 +288,7 @@ $(document).ready(function () {
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
 
-        const docData = new FormData();
-        docData.append("idLote", getInfo1[5]);
-        let result = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Contraloria/getComplementoPago`,
-            data: docData,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-        result = JSON.parse(result);
-
-        let content = '';
-        if (result.length >= 1) {
-          getInfo1[10] = 1; // Con complemento de pago
-          content = `
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-                <label>Compemento de pago:</label>
-                <div id="selectFileSection">
-                    <div class="file-gph">
-                        <input type="file" accept=".pdf" id="archivo_complemento">
-                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                        <label class="upload-btn m-0" for="archivo_complemento">
-                          <span>Seleccionar</span>
-                          <i class="fas fa-folder-open"></i>
-                        </label>
-                    </div>
-                </div>
-                <span><label class='pt-1'>NOTA: Si ya existe un complemento de pago, el mismo se remplazará con el nuevo.</label></span>
-            </div>`;
-        // Embebemos el contenido extra
-        }
-        $('#extra-content-accion-modal-1').html(content);
-
+        $("#data-editReg").val($(this).attr("data-data"));
         $('#editReg').modal('show');
     });
 
@@ -369,49 +336,8 @@ $(document).ready(function () {
 
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
-
-        const docData = new FormData();
-        docData.append("idLote", getInfo5[5]);
-        let result = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Contraloria/getComplementoPago`,
-            data: docData,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-        result = JSON.parse(result);
-
-        let content = '';
-        if (result.length >= 1) {
-            getInfo5[10] = 1; // Con complemento de pago
-            content = `
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-                <label>Compemento de pago:</label>
-                <div id="selectFileSection">
-                    <div class="file-gph">
-                        <input type="file" accept=".pdf" id="archivo_complemento">
-                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                        <label class="upload-btn m-0" for="archivo_complemento">
-                          <span>Seleccionar</span>
-                          <i class="fas fa-folder-open"></i>
-                        </label>
-                    </div>
-                </div>
-                <span><label class='pt-1'>NOTA: ${result[0].expediente ? 'Se reemplazará el archivo actual si adjuntas un nuevo archivo' : 'Si ya existe un complemento de pago, el mismo se reemplazará  con el nuevo'}.</label></span>
-            </div>`;
-        }
         
-        // Embebemos el contenido extra
-        $('#extra-content-accion-modal-5').html(content);
-
-        if (result.length >= 1) {
-            getInfo5[11] = result[0];
-            if (result[0].expediente) {
-                $("#archivo_complemento").siblings(".file-name").val(result[0].expediente);
-            }
-        }
-
+        $("#data-rev8").val($(this).attr("data-data"));
         $('#rev8').modal('show');
     });
 
@@ -429,40 +355,7 @@ $(document).ready(function () {
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
 
-        const docData = new FormData();
-        docData.append("idLote", getInfo6[5]);
-        let result = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Contraloria/getComplementoPago`,
-            data: docData,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-        result = JSON.parse(result);
-
-        let content = '';
-        if (result.length >= 1) {
-          getInfo6[10] = 1; // Con complemento de pago
-          content = `
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-                <label>Compemento de pago:</label>
-                <div id="selectFileSection">
-                    <div class="file-gph">
-                        <input type="file" accept=".pdf" id="archivo_complemento">
-                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                        <label class="upload-btn m-0" for="archivo_complemento">
-                          <span>Seleccionar</span>
-                          <i class="fas fa-folder-open"></i>
-                        </label>
-                    </div>
-                </div>
-                <span><label class='pt-1'>NOTA: Si ya existe un complemento de pago, el mismo se remplazará con el nuevo.</label></span>
-            </div>`;
-        // Embebemos el contenido extra
-        }
-        $('#extra-content-accion-modal-6').html(content);  
-
+        $("#data-rev_2").val($(this).attr("data-data"));
         $('#rev_2').modal('show');
     });
 });
@@ -472,28 +365,18 @@ $(document).on('click', '#save1', async function (e) {
     const comentario = $("#comentario").val();
     const validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
 
+    const d = JSON.parse($("#data-editReg").val());
+    
     if (validaComent == 0) {
-        return alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        return alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
     }
-    if ( getInfo1[10] == 1){
-        const archivo = $("#archivo_complemento");
-        // Input sin archivo
-        if (archivo.val().length === 0) {
-          return alerts.showNotification("top", "right", "Selecciona el archivo a adjuntar.", "warning");
-        }
-        // Archivo incorrecto
-        else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
-          return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+    if ( d.movimiento ){ // <--- Debe anexar complemento de pago
+        if (!d.expediente) { // <--- No tiene archivo o expediente agregado
+          return alerts.showNotification("top", "right", "No has subido el complemento de pago", "warning");
         }
     }
-    $('#save1').prop('disabled', true); // Deshabilitamos botón porque si paso validaciones.
 
-    if (getInfo1[10] == 1 ) {
-        const accion = await accionesComplementoPago(getInfo1);
-        if (accion == false) {
-            return;
-        }
-    }
+    $('#save1').prop('disabled', true); // Deshabilitamos botón porque si paso validaciones.
     
     const dataExp1 = new FormData();
     dataExp1.append("idCliente", getInfo1[0]);
@@ -560,7 +443,7 @@ $(document).on('click', '#save3', function (e) {
     dataExp3.append("fechaVenc", getInfo3[6]);
     dataExp3.append("numContrato", getInfo3[7]);
     if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
 
     if (validaComent == 1) {
         $('#save3').prop('disabled', true);
@@ -615,7 +498,7 @@ $(document).on('click', '#save4', function (e) {
     dataExp4.append("fechaVenc", getInfo4[6]);
     dataExp4.append("numContrato", getInfo4[7]);
     if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
 
     if (validaComent == 1) {
         $('#save4').prop('disabled', true);
@@ -661,23 +544,19 @@ $(document).on('click', '#save5', async function (e) {
     const comentario = $("#comentario5").val();
     const validaComent = ($("#comentario5").val().length == 0) ? 0 : 1;
 
+    const d = JSON.parse($("#data-rev8").val());
+
     if (validaComent == 0) {
         return alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
     }
-    if ( getInfo5[10] == 1 && (getInfo5[11].expediente != $("#archivo_complemento").siblings(".file-name").val())){
-        const archivo = $("#archivo_complemento");
-        // Input sin archivo
-        if (archivo.val().length === 0) {
-            return alerts.showNotification("top", "right", "Selecciona el archivo a adjuntar.", "warning");
-        }
-        // Archivo incorrecto
-        else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
-            return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+    if ( d.movimiento ){ // <--- Debe anexar complemento de pago
+        if (!d.expediente) { // <--- No tiene archivo o expediente agregado
+          return alerts.showNotification("top", "right", "No has subido el complemento de pago", "warning");
         }
     }
 
     $('#save5').prop('disabled', true); // Deshabilitamos botón porque pasó validaciones
-
+    
     if (getInfo5[10] == 1 && (getInfo5[11].expediente != $("#archivo_complemento").siblings(".file-name").val())) {
         const accion = await accionesComplementoPago(getInfo5);
         if (accion == false) {
@@ -741,19 +620,14 @@ $(document).on('click', '#save6', async function (e) {
     e.preventDefault();
     const comentario = $("#comentario6").val();
     const validaComent = ($("#comentario6").val().length == 0) ? 0 : 1;
-    
+    const d = JSON.parse($("#data-rev_2").val());
+
     if (validaComent == 0) {
-        return alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        return alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
     }
-    if ( getInfo6[10] == 1){
-        const archivo = $("#archivo_complemento");
-        // Input sin archivo
-        if (archivo.val().length === 0) {
-          return alerts.showNotification("top", "right", "Selecciona el archivo a adjuntar.", "warning");
-        }
-        // Archivo incorrecto
-        else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
-          return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+    if ( d.movimiento ){ // <--- Debe anexar complemento de pago
+        if (!d.expediente) { // <--- No tiene archivo o expediente agregado
+          return alerts.showNotification("top", "right", "No has subido el complemento de pago", "warning");
         }
     }
 
@@ -811,78 +685,64 @@ $(document).on('click', '#save6', async function (e) {
     });
 });
 
-const accionesComplementoPago = async (getInfo) => {
+const accionesComplementoPago = async (d) => {
     // Borramos el complemento de pago en caso de tener uno y actualizamos los registros de historial_documento 
     const docData = new FormData();
-    docData.append("idLote", getInfo[5]);
+    docData.append("idLote", d.idLote);
 
-    let result = await $.ajax({
+    if (d.expediente && d.movimiento) {
+        const docData = new FormData();
+        docData.append("idDocumento", d.idDocumento);
+        docData.append("tipoDocumento", 55);
+        let rs1 = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Documentacion/eliminarArchivo`,
+            data: docData,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+        rs1 = JSON.parse(rs1);
+        if (rs1.code == 500) {
+            alerts.showNotification("top", "right", 'Surgió un error al sustituir el archivo', "warning");
+            return false;
+        }
+    }
+    // {"idLote":100528,"id_cliente":154634,"nombreCliente":"IRCON AGRICOLA S.A DE C.V ","nombreLote":"CDMMNL-ARBH-039","idStatusContratacion":7,"idMovimiento":37,"modificado":"2024-07-02 13:06:56","rfc":"IAG170918IY7","nombreSede":"Querétaro","comentario":"Prueba paso 3 #TI ","fechaVenc":"2024-07-24 13:06:56","perfil":"15","nombreCondominio":"CDMMNL-PREMIUM ARBOLEDAS-HABITACIONAL","nombreResidencial":"CDMMNL","ubicacion":"2","tipo_venta":"Venta normal","vl":null,"asesor":"ALEJANDRA VALDES CARREON","coordinador":"GABRIEL GUTIERREZ AVIÑA","gerente":"SERGIO IBARRA LLANO","idCondominio":926,"expediente":null,"descripcion":"LISTO JURÍDICO 7","tipo_proceso":"Normal","idDocumento":1624189,"movimiento":"COMPLEMENTO DE PAGO","bucket":0}
+
+    const expediente = generarTituloDocumento(d.nombreResidencial, d.nombreLote, d.idLote, d.id_cliente, 55); // nombreResidencial, nombreLote, idLote, idCliente, tipoDoc.
+    const ndata = new FormData();
+    ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
+    ndata.append("idDocumento", d.idDocumento);
+    let res = await $.ajax({
         type: 'POST',
-        url: `${general_base_url}Contraloria/getComplementoPago`,
-        data: docData,
+        url: `${general_base_url}Contraloria/actualizaRamaComplementoPago`,
+        data: ndata,
         contentType: false,
         cache: false,
         processData: false,
     });
-
-    result = JSON.parse(result);
-
-    if (getInfo[10] == 1) { // Verificamos si el lote cuenta con la opción de anexa complemento de pago activo.
-        if (result.length >= 1 && result.expediente) {
-            const docData = new FormData();
-            docData.append("idDocumento", result[0].idDocumento);
-            docData.append("tipoDocumento", result[0].tipo_doc);
-            let rs1 = await $.ajax({
-                type: 'POST',
-                url: `${general_base_url}Documentacion/eliminarArchivo`,
-                data: docData,
-                contentType: false,
-                cache: false,
-                processData: false,
-            });
-            rs1 = JSON.parse(rs1);
-            if (rs1.code == 500) {
-                alerts.showNotification("top", "right", 'Surgió un error al sustituir el archivo', "warning");
-                return false;
-            }
-        }
-
-        const expediente = generarTituloDocumento(getInfo[1], getInfo[4], getInfo[5], getInfo[0], 55); // nombreResidencial, nombreLote, idLote, idCliente, tipoDoc.
-
-        const ndata = new FormData();
-        ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
-        ndata.append("idDocumento", result[0].idDocumento);
-        let res = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Contraloria/actualizaRamaComplementoPago`,
-            data: ndata,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-        res = JSON.parse(res);
-
-        const xdata = new FormData();
-        xdata.append("idLote", getInfo[5]);
-        xdata.append("idDocumento", result[0].idDocumento);
-        xdata.append("tipoDocumento", 55);
-        xdata.append("tituloDocumento", expediente);
-        xdata.append("uploadedDocument", $("#archivo_complemento")[0].files[0]);
-        let rs = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Documentacion/subirArchivo`,
-            data: xdata,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-        rs = JSON.parse(rs);
-        if (rs.code == 500) {
-            alerts.showNotification("top", "right", 'Surgió un error al remplazar el archivo', "warning");
-            return false;
-        } else {
-            return true;
-        }
+    res = JSON.parse(res);
+    const xdata = new FormData();
+    xdata.append("idLote", d.idLote);
+    xdata.append("idDocumento", d.idDocumento);
+    xdata.append("tipoDocumento", 55);
+    xdata.append("tituloDocumento", expediente);
+    xdata.append("uploadedDocument", $("#archivo_complemento")[0].files[0]);
+    let rs = await $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Documentacion/subirArchivo`,
+        data: xdata,
+        contentType: false,
+        cache: false,
+        processData: false,
+    });
+    rs = JSON.parse(rs);
+    if (rs.code == 500) {
+        alerts.showNotification("top", "right", 'Surgió un error al remplazar el archivo', "warning");
+        return false;
+    } else {
+        return true;
     }
     return true;
 }
@@ -892,6 +752,7 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario').val('');
         jQuery(this).find('#archivo_complemento').val('');
+        $("#data-editReg").val('');
         $('#extra-content-accion-modal-1').html('');
     })
 
@@ -909,6 +770,7 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario5').val('');
         jQuery(this).find('#archivo_complemento').val('');
+        $("#data-rev8").val()
         $('#extra-content-accion-modal-5').html('');
     })
 
@@ -916,6 +778,7 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario6').val('');
         jQuery(this).find('#archivo_complemento').val('');
+        $("#data-rev_2").val()
         $('#extra-content-accion-modal-6').html('');
     })
 });
@@ -938,16 +801,92 @@ $(document).on('click', '.btn-archivo', function () {
   $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
 
-const datatableButtons = (d, type) => {
-  const BTN_VER_DOC = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+$(document).on('click', '.btn-subir-archivo', function () {
+    $('.btn-subir-archivo').attr('disabled', true);  // Lo vuelvo a activar
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+    const d = JSON.parse($(this).attr("data-data"));
+    // --------------------------
+    content = `
+        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
+            <label>Compemento de pago:</label>
+            <div id="selectFileSection">
+                <div class="file-gph">
+                    <input type="file" accept=".pdf" id="archivo_complemento">
+                    <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                    <label class="upload-btn m-0" for="archivo_complemento">
+                      <span>Seleccionar</span>
+                      <i class="fas fa-folder-open"></i>
+                    </label>
+                </div>
+            </div>
+            <span><label class='pt-1'>NOTA: ${d.expediente ? 'Se reemplazará el archivo actual si adjuntas un nuevo archivo' : 'Si ya existe un complemento de pago, el mismo se reemplazará  con el nuevo'}.</label></span>
+        </div>`;
+    
+    const titulo = `<h4>Anexar complemento de pago <b>${d.nombreLote}</b></h4>`;
+    $('#labelHeaderAccionModal').html(titulo);
+    // Embebemos el contenido extra
+    $('#extra-content-accion-modal').html(content);
+
+    // Mostramos el modal y mostramos la info del lote en el modal
+    $('#accion-modal').modal('show');
+
+    // Le agregamos la información que vallamos a usar en caso de confirmar el modal
+    const info = '<input type="hidden" id="data"></input>' ;
+    $('#data-modal').append(info);
+    
+    // Asignación de valores a los inputs
+    $("#data").val(JSON.stringify(d));
   
-  let NO_BTN = '';
+    $('.btn-subir-archivo').attr('disabled', false);  // Lo vuelvo a activar
+    $('#spiner-loader').addClass('hide'); // Quito spinner  
+});
 
-  if (type === 2) { 
-      if (d.expediente) return BTN_VER_DOC ;
-  }
+// FUNCIONALIDAD DEL BOTÓN DE ACEPTAR DEL MODAL
+$(document).on("click", "#btn-accion", async function (e) {
+    e.preventDefault();
+    const d = JSON.parse($("#data").val());
 
-  return NO_BTN;
+    const archivo = $("#archivo_complemento");
+    // Input sin archivo
+    if (archivo.val().length === 0) {
+        return alerts.showNotification("top", "right", "Selecciona el archivo a adjuntar.", "warning");
+    }
+      // Archivo incorrecto
+    else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
+        return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+    }
+
+    $('.btn-subir-archivo').attr('disabled', true);  // Lo vuelvo a activar
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+
+    const accion = await accionesComplementoPago(d);
+
+    $('#spiner-loader').addClass('hide'); // Quito spinner 
+    if (accion == false) {
+        return alerts.showNotification("top", "right", "Surgió un error al intentar subir el archivo", "warning");
+    }else if (accion == true) {
+        $('#accion-modal').modal('hide');
+        $('#Jtabla').DataTable().ajax.reload();
+        $('.btn-subir-archivo').attr('disabled', false);  // Lo vuelvo a activar 
+        return alerts.showNotification("top", "right", "¡El documento se ha subido!", "success");
+    }else {
+        return alerts.showNotification("top", "right", "Surgió un error desconocido, reportar a sistemas.", "warning");
+    }
+});
+
+const datatableButtons = (d, type) => {
+    const BTN_SUBIR_DOC = newButton('btn-data btn-green btn-subir-archivo', 'SUBIR DOCUMENTO', 'VER-ARCHIVO', d, 'fas fa-upload');
+    const BTN_VER_DOC = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR DOCUMENTO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    const BTN_REMPLAZAR_DOC = newButton('btn-data btn-green btn-subir-archivo', 'REMPLAZAR DOCUMENTO', 'VER-ARCHIVO', d, 'fas fa-copy');
+
+    let NO_BTN = ''; 
+
+    if (type === 2) { 
+        if (!d.expediente && d.movimiento) return BTN_SUBIR_DOC ;
+        if (d.expediente && d.movimiento) return BTN_VER_DOC + BTN_REMPLAZAR_DOC;
+    }
+
+    return NO_BTN;
 }
 
 const newButton = (btnClass, title, action = '', data, icon) => {

@@ -1238,14 +1238,14 @@ class Reporte_model extends CI_Model {
     public function getReporteTrimestral($beginDate, $endDate){
         $query=$this->db->query("SELECT t.nombreResidencial as nombreResidencial, t.nombreCondominio as nombreCondominio, t.nombreLote as nombreLote, t.precioFinal as precioFinal, t.referencia as referencia,
         t.nombreAsesor as nombreAsesor, CONVERT(VARCHAR,t.fechaApartado,20) AS fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, CONVERT(VARCHAR,t.fechaEstatus9,20) AS fechaEstatus9, t.estatusActual,
-        cliente, enganche, estatus, movimiento, colorEstatus, fondoEstatus, ISNULL(numeroVC, 0) numeroVC
+        cliente, enganche, estatus, movimiento, colorEstatus, fondoEstatus, ISNULL(numeroVC, 0) numeroVC, empresa
         FROM (
             SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
             lo.idLote, FORMAT(lo.totalNeto2, 'C') precioFinal, lo.referencia, 
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
             cl.fechaApartado, se.nombre nombreSede, tv.tipo_venta, st.nombre estatus, hl.modificado fechaEstatus9,
             sc.nombreStatus estatusActual, mo.descripcion movimiento, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente,
-            ISNULL(totalValidado, 0)enganche, st.color colorEstatus, st.background_sl fondoEstatus, vc.numeroVC
+            ISNULL(totalValidado, 0)enganche, st.color colorEstatus, st.background_sl fondoEstatus, vc.numeroVC, re.empresa
             FROM lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -1268,7 +1268,7 @@ class Reporte_model extends CI_Model {
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
             cl.fechaApartado, se.nombre nombreSede, tv.tipo_venta, st.nombre estatus, hl.modificado fechaEstatus9,
             sc.nombreStatus estatusActual, mo.descripcion movimiento, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente,
-            ISNULL(totalValidado, 0)enganche, st.color colorEstatus, st.background_sl fondoEstatus, vc2.numeroVC
+            ISNULL(totalValidado, 0)enganche, st.color colorEstatus, st.background_sl fondoEstatus, vc2.numeroVC, re.empresa
             FROM lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -1292,7 +1292,7 @@ class Reporte_model extends CI_Model {
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
             MAX (cl.fechaApartado) fechaApartado, se.nombre nombreSede, 'Sin especificar' tipo_venta, 'Cancelado' estatus, hl.modificado fechaEstatus9,
             sc.nombreStatus estatusActual, 'NA' movimiento, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente, 0 enganche,
-             '' colorEstatus, '' fondoEstatus, vc.numeroVC
+             '' colorEstatus, '' fondoEstatus, vc.numeroVC, re.empresa
             FROM lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -1310,7 +1310,7 @@ class Reporte_model extends CI_Model {
             GROUP BY CAST(re.descripcion AS VARCHAR(100)), UPPER(co.nombre), UPPER(lo.nombreLote),
             lo.idLote, lo.referencia, 
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno),
-            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), numeroVC
+            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), numeroVC, re.empresa
             UNION ALL
 
             SELECT CAST(re.descripcion AS VARCHAR(100)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
@@ -1318,7 +1318,7 @@ class Reporte_model extends CI_Model {
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
             MAX (cl.fechaApartado) fechaApartado, se.nombre nombreSede, 'Sin especificar' tipo_venta, 'Cancelado' estatus, hl.modificado fechaEstatus9,
             sc.nombreStatus estatusActual, 'NA' movimiento, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente, 0 enganche,
-            '' colorEstatus, '' fondoEstatus, vc2.numeroVC
+            '' colorEstatus, '' fondoEstatus, vc2.numeroVC, re.empresa
             FROM lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -1336,7 +1336,7 @@ class Reporte_model extends CI_Model {
             GROUP BY CAST(re.descripcion AS VARCHAR(100)), UPPER(co.nombre), UPPER(lo.nombreLote),
             lo.idLote, lo.referencia, 
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno),
-            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), numeroVC
+            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), numeroVC, re.empresa
         ) t
         ORDER BY t.fechaApartado");
         return $query;
@@ -1738,6 +1738,11 @@ class Reporte_model extends CI_Model {
          WHERE repeticiones > 10 
          AND us.status = 1
          ORDER BY us.nombre;");
+        return $query;
+    }
+
+    public function getMensualidadAbonoNeo($empresa, $nombreLote){
+        $query = $this->programacion->query("EXEC [programacion].[dbo].[CDM058PagosSaldosXLote] @empresa = '$empresa', @vivienda = '$nombreLote'")->result_array();
         return $query;
     }
 }
