@@ -30,6 +30,21 @@
                 </div>
             </div>
         </div>
+        <div class="spiner-loader hide" id="spiner-loader">
+        <div class="backgroundLS">
+            <div class="contentLS">
+                <div class="center-align">
+                    Este proceso puede demorar algunos segundos
+                </div>
+                <div class="inner">
+                    <div class="load-container load1">
+                        <div class="loader">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">

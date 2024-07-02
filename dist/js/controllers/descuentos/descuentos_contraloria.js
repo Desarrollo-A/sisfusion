@@ -141,7 +141,7 @@ $("#form_descuentos2").on('submit', function(e){
 $("#tabla_descuentos").ready( function(){
     let titulos = [];
     $('#tabla_descuentos thead tr:eq(0) th').each( function (i) {
-        if(i!=8){
+        if(i!=9){
             var title = $(this).text();
             titulos.push(title);
             $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
@@ -477,9 +477,11 @@ $("#form_aplicar").submit( function(e) {
             success: function(data){
                 if( data = 1 ){
                     $("#modal_nuevas").modal('toggle' );
+                    $("#spiner-loader").removeClass('hide' );
                     alerts.showNotification("top", "right", "Se aplicó el descuento correctamente", "success");
                     setTimeout(function() {
                         tabla_nuevas.ajax.reload();
+                        $("#spiner-loader").addClass('hide' );
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -487,6 +489,7 @@ $("#form_aplicar").submit( function(e) {
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
             }
+            
         });
     }
 });
