@@ -40,7 +40,7 @@ class Liberaciones extends CI_Controller{
 
     public function bloqueados(){
         $this->load->view('template/header');
-        $this->load->view("liberaciones/bloqueo_view");
+        $this->load->view("liberaciones/bloqueados_view");
     }
 
     public function sinContrato(){
@@ -64,6 +64,22 @@ class Liberaciones extends CI_Controller{
         } else {
             echo json_encode(array());
         }
+    }
+
+    // Solo para los que inician proceso de liberacion.
+    public function getLotesBloqueados(){
+        $lotes = $this->input->post('lotes');
+
+        $filtroLotes = '';
+        if (isset($lotes)) $filtroLotes = "AND lo.idLote IN (".$lotes.")";
+ 
+        $condicion = '';
+        if ($this->session->userdata('id_rol') == 3 )  $condicion = "AND (pl.proceso_lib IS NULL)"; // GERENTES
+        if ($this->session->userdata('id_rol') == 12 ) $condicion = "AND (pl.proceso_lib IS NULL)"; // CAJAS
+
+        $data = $this->Liberaciones_model->getLotesBloqueados($condicion, $filtroLotes);
+
+        echo json_encode($data, JSON_NUMERIC_CHECK);
     }
     
     // Solo para los que inician proceso de liberacion.

@@ -86,7 +86,7 @@
                     </div>
                     <div class="modal-body pt-0">
                         <div id="extra-content-accion-modal"></div>
-                        <div class="col-md-12 mb-2 text-center comment">
+                        <div class="col-md-12 mb-2 comment">
                             <label class="control-label" id="labelComentarioAccionModal">
                                 <!-- Motivo del rechazo (opcional) -->
                             </label>
@@ -104,38 +104,52 @@
 
         <!-- Modal de cambios -->
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-                <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Bitácora de cambios</h4>
-                        </div>
-                        <div class="modal-body">                      
-                            <div class="container-fluid" id="changelogTab">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
-                                        <ul class="timeline-3" id="changelog">
-                                        </ul>
-                                    </div>
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Bitácora de cambios</h4>
+                    </div>
+                    <div class="modal-body">                      
+                        <div class="container-fluid" id="changelogTab">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
+                                    <ul class="timeline-3" id="changelog">
+                                    </ul>
                                 </div>
                             </div>
-                            <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                        </div>
+                        <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
+                        <div class="pl-1">
+                            <ul class="nav nav-tabs nav-tabs-cm">
+                                <?php if($this->session->userdata('id_rol') == 3){?>
+                                <li class="active">
+                                    <a id='liberar' role="tab" data-toggle="tab">LIBERAR LOTE</a>
+                                </li>
+                                <?php } ?>
+                                <li  <?php if($this->session->userdata('id_rol') != 3){?> class="active"<?php } ?>>
+                                    <a id='pendientes'  role="tab"  data-toggle="tab">PENDIENTES</a>
+                                </li>
+                                <li>
+                                    <a id='proceso' role="tab" data-toggle="tab">EN PROCESO</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card no-shadow m-0">  <!-- card content -->
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Proceso de liberación de lotes (Rescisión)</h3>
-                                    <p class="card-title pl-1"></p>
+                                    <h3 class="card-title center-align">Proceso de liberación de lotes (Particulares)</h3>
                                 </div>
                                 <div class="material-datatables">
                                     <table id="liberacionesDataTable" class="table-striped table-hover">
@@ -157,9 +171,12 @@
                                                 <th>DIRECTOR REGIONAL</th>
                                                 <th>DIRECTOR REGIONAL 2</th>
                                                 <th>FECHA DE APARTADO</th>
+                                                <th>PRECIO LISTA</th>
                                                 <th>SUPERFICIE</th>
                                                 <th>COSTO M2 FINAL</th>
-                                                <th>TOTAL</th>
+                                                <th>TOTAL CON DESCUENTOS</th>
+                                                <th>PRECIO M2 ASIGNADO</th>
+                                                <th>COMENTARIO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -196,5 +213,5 @@
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/documentacion/manejoArchivos.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/liberaciones/liberacionRescision.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/liberaciones/liberacionBloqueados.js"></script>
 <!-- <script src="<?=base_url()?>dist/js/controllers/liberaciones/subirArchivosLiberaciones.js"></script> -->
