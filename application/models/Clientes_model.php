@@ -502,8 +502,6 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 5604) AND pr.id_sede IN (12)";
             else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
                 $where = "pr.id_gerente IN ($id_lider, 455) AND pr.id_sede IN (12)";
-            else if ($id_usuario == 14449) // ANALI MONSERRAT REYES ORTIZ
-                $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
             else if ($id_usuario == 14649) // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
                 $where = "pr.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435) AND pr.id_sede IN (10)";
             else if ($id_usuario == 14946) // MELANI BECERRIL FLORES

@@ -3520,9 +3520,6 @@
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
 					$sede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-					$id_lider = $id_lider . ', 21, 1545';
-					$sede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
 					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
 					$sede = "";

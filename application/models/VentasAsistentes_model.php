@@ -345,9 +345,6 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
                     $filtroSede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
-                    $filtroSede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435)";
                     $filtroSede = "";
