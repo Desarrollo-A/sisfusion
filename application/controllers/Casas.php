@@ -7,6 +7,7 @@ class Casas extends BaseController {
         parent::__construct();
 
         $this->load->model(array('CasasModel'));
+        $this->load->model('General_model');
 
         $this->load->library(['session']);
 
@@ -297,6 +298,13 @@ class Casas extends BaseController {
         $this->json($lotes);
     }
 
+    public function lotesCreditoDirecto(){
+        $proceso = 0; // se asigna esta variable para saber de que proceso se van a mostrar
+        $lotes = $this->CasasModel->lotesCreditoDirecto($proceso)->result();
+
+        $this->json($lotes);
+    }
+
     public function lista_asignacion(){
         $lotes = $this->CasasModel->getListaAsignacion();
 
@@ -310,21 +318,47 @@ class Casas extends BaseController {
         $idLote = $this->form('idLote');
         $comentario = $this->form('comentario');
         $gerente = $this->form('gerente');
+        $idUsuario = $this->session->userdata('id_usuario');
 
-        if(!isset($idLote) || !isset($gerente)){
+        $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crdito - 1: bancario - 2: directo
+
+        if(!isset($idLote) || !isset($gerente) ||!isset($esquemaCredito)){
+            $this->db->trans_rollback();
             http_response_code(400);
 
             $this->json([]);
         }
 
-        $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $gerente, $comentario);
+        $dataUpdate = array(
+            "esquemaCreditoCasas" => $esquemaCredito
+        );
 
-        if($proceso){
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso | Comentario: '.$proceso->comentario);
-        }else{
-            http_response_code(404);
+
+        $this->db->trans_begin();
+
+        if($esquemaCredito == 1){ // se agrega un condicion para saber que esquema de credito se usara
+            $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $gerente, $comentario);
+        }
+        else if($esquemaCredito == 2){
+            $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idLote, $gerente, $comentario, $idUsuario);
         }
 
+        if($proceso && $esquemaCredito == 1){
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso | Comentario: '.$proceso->comentario);
+            $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
+        }
+        else if($proceso && $esquemaCredito == 2){
+            $this->CasasModel->addHistorial($proceso->idProceso, 'NULL', 0, 'Se inicio proceso | Comentario: '.$proceso->comentario);
+            $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
+        }
+        else{
+            $this->db->trans_rollback();
+            http_response_code(404);
+
+            $this->json([]);
+        }
+
+        $this->db->trans_commit();
         $this->json([]);
     }
 
@@ -1585,5 +1619,27 @@ class Casas extends BaseController {
         $lotes = $this->CasasModel->getListaArchivosTitulos($proceso);
 
         $this->json($lotes);
+    }
+
+    public function creditoDirectoCaja(){
+        $this->load->view("template/header");
+
+        $this->load->view("casas/creditoDirecto/cajas_adeudo_view");
+    }
+
+    public function creditoDirecto16(){
+        $form = $this->form();
+        $idLote = $form->idLote;
+        $comentario = $form->comentario;
+        $banderaSuccess = true;
+
+        $this->db->trans_begin();
+
+        $updateData = array(
+            "comentario" => $comentario,
+            "proceso" => 17
+        );
+
+        $update = $this->General_model->updateRecord("procesoCasasDirecto", $updateData, "idLote", $idLote);
     }
 }

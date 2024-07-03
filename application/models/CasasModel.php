@@ -161,7 +161,8 @@ class CasasModel extends CI_Model
         AND lo.idStatusContratacion = 15
         AND lo.idCondominio = $idCondominio
         AND pc.status IS NULL
-        AND cli.status = 1";
+        AND cli.status = 1
+        AND lo.esquemaCreditoCasas = 0";
 
         return $this->db->query($query)->result();
     }
@@ -217,6 +218,32 @@ class CasasModel extends CI_Model
 
         if($result){
             $query = "SELECT TOP 1 * FROM proceso_casas ORDER BY idProcesoCasas DESC";
+            return $this->db->query($query)->row();
+        }else{
+            return null;
+        }
+    }
+
+    public function addLoteToAsignacionDirecto($idLote, $idGerente, $comentario, $idUsuario){
+        $query = "INSERT INTO proceso_casas_directo
+        (
+            idLote,
+            idGerente,
+            comentario,
+            creadoPor
+        )
+        VALUES
+        (
+            $idLote,
+            $idGerente,
+            '$comentario',
+            $idUsuario
+        )";
+
+        $result = $this->db->query($query);
+
+        if($result){
+            $query = "SELECT TOP 1 * FROM proceso_casas_directo ORDER BY idProceso DESC";
             return $this->db->query($query)->row();
         }else{
             return null;
@@ -1373,5 +1400,23 @@ class CasasModel extends CI_Model
             idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
+    }
+
+    public function lotesCreditoDirecto($proceso){
+        $query = $this->db->query("SELECT 
+            lo.idLote,
+            lo.nombreLote,
+            pcd.estatus,
+            pcd.proceso,
+            pcd.comentario,
+            co.nombre AS condominio,
+            re.descripcion AS proyecto
+        FROM proceso_casas_directo pcd
+        INNER JOIN lotes lo ON lo.idLote = pcd.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        WHERE pcd.proceso = ?", $proceso);
+
+        return $query;
     }
 }
