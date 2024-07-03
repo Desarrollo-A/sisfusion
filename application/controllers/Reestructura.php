@@ -193,9 +193,11 @@ class Reestructura extends CI_Controller{
 		$dataPost = $_POST;
 
         $data['modificado_por'] = $this->input->post('idCliente');
-        $data['tipoCancelacion'] = $dataPost['tipoCancelacion'];
+        $data['tipoCancelacion'] = isset($dataPost['tipoCancelacion']) ? $dataPost['tipoCancelacion'] : 1;
+        $update1 = TRUE;
 
-        $update1 = $this->General_model->updateRecord("clientes", $data, "id_cliente", $dataPost['idCliente']);
+        if (isset($dataPost['idCliente']) )
+            $update1 = $this->General_model->updateRecord("clientes", $data, "id_cliente", $dataPost['idCliente']);
         $update2 = $this->Reestructura_model->aplicaLiberacion($dataPost);
         if ($update1 == TRUE AND $update2 == TRUE)
             echo json_encode(1);
