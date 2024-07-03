@@ -11,7 +11,7 @@
 					<div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                                <h4>¿Estás seguro de solicitar la cancelación del contrato de lote?</h4>
+                                <h4>¿Estás seguro de realizar la cancelación del contrato de lote?</h4>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <input type="hidden" name="idLote" id="idLote">
@@ -42,7 +42,7 @@
                                 <i class="fas fa-box fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Solicitud de cancelación de contrato</h3>
+                                <h3 class="card-title center-align">Cancelación de contrato</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -66,6 +66,10 @@
                                                     <th>SUPERFICIE</th>
                                                     <th>PRECIO</th>
                                                     <th>NOMBRE</th>
+                                                    <th>COMENTARIO REUBICACIÓN</th>
+                                                    <th>COMENTARIO</th>
+                                                    <th>TIPO DE CANCELACIÓN</th>
+                                                    <th>ESTATUS</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

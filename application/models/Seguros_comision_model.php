@@ -119,7 +119,7 @@ class Seguros_comision_model extends CI_Model {
             return $query->result_array();
     }
 
-    //facturas_seguro
+    //facturas_seguros
 
     function getDatosNuevasFacturasSeguros($proyecto,$condominio){
 
@@ -294,7 +294,7 @@ class Seguros_comision_model extends CI_Model {
     }
     
     public function registroComisionAsimilados($id_pago){
-        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones_seguro c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
+        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones_seguros c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
         $query = $this->db->query($cmd);
         return  $query->result_array();
     }
@@ -303,17 +303,17 @@ class Seguros_comision_model extends CI_Model {
         $id_user_Vl = $this->session->userdata('id_usuario');
         $this->db->query("INSERT INTO  historial_seguro VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
         $respuesta =  $this->db->query("UPDATE pago_seguro_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
-        $row = $this->db->query("SELECT uuid FROM facturas_seguro WHERE id_comision = ".$id_pago_i.";")->result_array();
+        $row = $this->db->query("SELECT uuid FROM facturas_seguros WHERE id_comision = ".$id_pago_i.";")->result_array();
         
         if(count($row) > 0){
-            $datos =  $this->db->query("select id_factura,total,id_comision,bandera FROM facturas_seguro WHERE uuid='".$row[0]['uuid']."'")->result_array();
+            $datos =  $this->db->query("select id_factura,total,id_comision,bandera FROM facturas_seguros WHERE uuid='".$row[0]['uuid']."'")->result_array();
     
             for ($i=0; $i <count($datos); $i++) {
                 if($datos[$i]['bandera'] == 1){
                     $respuesta = 1;
                 }else{
                     $comentario = 'Se regresó esta factura que correspondo al pago con id '.$datos[$i]['id_comision'].' con el monto global de '.$datos[$i]['total'].' por motivo de: '.$obs.' ';
-                    $response = $this->db->query("UPDATE facturas_seguro set total=0,id_comision=0,bandera=1,descripcion='$comentario'  WHERE id_factura=".$datos[$i]['id_factura']."");
+                    $response = $this->db->query("UPDATE facturas_seguros set total=0,id_comision=0,bandera=1,descripcion='$comentario'  WHERE id_factura=".$datos[$i]['id_factura']."");
                     $respuesta = $this->db->query("INSERT INTO  historial_seguro VALUES (".$datos[$i]['id_comision'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
                 }
             }
@@ -352,7 +352,7 @@ class Seguros_comision_model extends CI_Model {
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
         FROM pago_seguro_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
         GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
-        INNER JOIN comisiones_seguro com ON pci1.id_comision = com.id_comision and com.estatus = 1
+        INNER JOIN comisiones_seguros com ON pci1.id_comision = com.id_comision and com.estatus = 1
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -369,101 +369,11 @@ class Seguros_comision_model extends CI_Model {
         oprol.nombre, oxcest.nombre, oxcest.id_opcion, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, com.estatus, pac.bonificacion, u.estatus,pe.id_penalizacion, oxcest.color, cl.estructura, oprol2.nombre, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2 ORDER BY lo.nombreLote");
     }
 
-    function getDatosNuevasXContraloria($proyecto,$condominio = 0){
-        if( $this->session->userdata('id_rol') == 31 ){
-            $filtro = "WHERE pci1.estatus IN (8,88) ";
-        } else{
-            $filtro = "WHERE pci1.estatus IN (4) ";
-        }
-
-        $user_data = $this->session->userdata('id_usuario');
-        switch($this->session->userdata('id_rol')){
-            case 2:
-            case 3:
-            case 7:
-            case 9:
-                $filtro02 = $filtro.' AND  fa.id_usuario = '.$user_data .' ';
-            break;
-            default:
-                $filtro02 = $filtro.' ';
-            break;
-        }
-        
-        if($condominio == 0){
-            return $this->db->query("SELECT SUM(pci1.abono_neodata) total, re.idResidencial, re.nombreResidencial AS proyecto, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, 0 AS factura, oxcest.id_opcion id_estatus_actual, re.empresa, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo AS xmla,fa.bandera, u.rfc
-            FROM pago_comision_ind pci1 
-            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8)
-            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
-            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2)
-            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
-            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
-            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2) 
-            INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
-            $filtro02 
-            GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid, fa.nombre_archivo, fa.bandera, u.rfc
-            ORDER BY u.nombre");
-        }
-        else{
-            return $this->db->query("SELECT SUM(pci1.abono_neodata) total, re.idResidencial, re.nombreResidencial AS proyecto, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, 0 AS factura, oxcest.id_opcion id_estatus_actual, re.empresa, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo AS xmla,fa.bandera , u.rfc
-            FROM pago_comision_ind pci1 
-            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8)
-            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
-            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2)
-            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
-            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
-            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2) 
-            INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
-            $filtro02
-            GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid,fa.nombre_archivo,fa.bandera, u.rfc
-            ORDER BY u.nombre");
-        }
-    }
-
-    function leerxml( $xml_leer, $cargar_xml ){
-        $str = '';
-        if( $cargar_xml ){
-            rename( $xml_leer, "./UPLOADS/XMLS/documento_temporal.txt" );
-            $str = file_get_contents( "./UPLOADS/XMLS/documento_temporal.txt" );
-            if( substr ( $str, 0, 3 ) == 'o;?' ){
-                $str = str_replace( "o;?", "", $str );
-                file_put_contents( './UPLOADS/XMLS/documento_temporal.txt', $str );
-            }
-            rename( "./UPLOADS/XMLS/documento_temporal.txt", $xml_leer );
-        }
     
-        libxml_use_internal_errors(true);
-        $xml = simplexml_load_file( $xml_leer, null, true );
-        $datosxml = array(
-            "version" => $xml ->xpath('//cfdi:Comprobante')[0]['Version'],
-            "regimenFiscal" => $xml ->xpath('//cfdi:Emisor')[0]['RegimenFiscal'],
-            "formaPago" => $xml -> xpath('//cfdi:Comprobante')[0]['FormaPago'],
-            "usocfdi" => $xml -> xpath('//cfdi:Receptor')[0]['UsoCFDI'],
-            "metodoPago" => $xml -> xpath('//cfdi:Comprobante')[0]['MetodoPago'],
-            "claveUnidad" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveUnidad'],
-            "unidad" => $xml -> xpath('//cfdi:Concepto')[0]['Unidad'],
-            "claveProdServ" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveProdServ'],
-            "descripcion" => $xml -> xpath('//cfdi:Concepto')[0]['Descripcion'],
-            "subTotal" => $xml -> xpath('//cfdi:Comprobante')[0]['SubTotal'],
-            "total" => $xml -> xpath('//cfdi:Comprobante')[0]['Total'],
-            "rfcemisor" => $xml -> xpath('//cfdi:Emisor')[0]['Rfc'],
-            "nameEmisor" => $xml -> xpath('//cfdi:Emisor')[0]['Nombre'],
-            "rfcreceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Rfc'],
-            "namereceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Nombre'],
-            "TipoRelacion"=> $xml->xpath('//@TipoRelacion'),
-            "uuidV" =>$xml->xpath('//@UUID')[0],
-            "fecha"=> $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'],
-            "folio"=> $xml -> xpath('//cfdi:Comprobante')[0]['Folio'],
-        );
-        $datosxml["textoxml"] = $str;
-        return $datosxml;
-    }
-
-    function verificar_uuid( $uuid ){
-        return $this->db->query("SELECT * FROM facturas WHERE uuid = '".$uuid."'");
-    }
+    function update_estatus_refresh($idcom) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO  historial_seguro VALUES ($idcom, $id_user_Vl, GETDATE(), 1, 'SE ACTIVÓ NUEVAMENTE COMISIÓN')");
+        return $this->db->query("UPDATE pago_seguro_ind SET estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idcom.")");
+    } 
 
 }

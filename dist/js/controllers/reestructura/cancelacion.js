@@ -135,9 +135,24 @@ function fillTable(index_proyecto) {
             { data: 'superficie' },
             { data: 'precio' },
             { data: 'nombreCliente' },
+            { data: 'comentarioReubicacion' },
+            { data: 'comentarioLiberacion' },
             {
                 data: function (d) {
-                    return `<div class="d-flex justify-center"><button class="btn-data btn-yellow cancel" data-toggle="tooltip" data-placement="top" title= "SOLICITUD DE CANCELACIÓN" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-comment-dots"></i></button>`;
+                    return `<span class='label lbl-violetBoots'>${d.tipoCancelacion}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label ${d.estatusCancelacion == 'CANCELADA' ? 'lbl-orange' : 'lbl-green'}'>${d.estatusCancelacion}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.consulta == 1) {
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-yellow cancel" data-toggle="tooltip" data-placement="top" title= "SOLICITUD DE CANCELACIÓN" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-comment-dots"></i></button>`;
+                    }
+                    return ``;
                 }
             }
         ],

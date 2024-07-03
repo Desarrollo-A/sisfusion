@@ -18,9 +18,30 @@ $(document).ready(function () {
         });
         });
         
+
+
+        document.querySelectorAll('.ag-courses-item_link').forEach(item => {
+            item.addEventListener('click', function() {
+              // Remover la clase 'clicked' de cualquier otro elemento
+                document.querySelectorAll('.ag-courses-item_link.clicked').forEach(clickedItem => {
+                clickedItem.classList.remove('clicked');
+                });
+               
+              // Agregar la clase 'clicked' al elemento que fue clickeado
+                this.classList.add('clicked');
+            });
+            });
+
         cargaLinea();
 
 });
+
+
+function cambiarColor() {
+    var elemento = document.getElementById('miElemento');
+    elemento.classList.toggle('gold-background');
+}
+
 
 function cargaLinea(){
     let linea = document.getElementById('linea_proceso');
@@ -70,7 +91,7 @@ function cargaLinea(){
                             if(elementoUSUARIO.id_opcion == elementTODOS.id_opcion ){
                                 especial =   (elementoUSUARIO.id_opcion == 5 && elementANTICIPOS.estatus ==1) ? `<botton class="epecial boton_confirmar_contraloria" 
                                 id="boton_confirmar_contraloria" 
-                                onclick="fucntion_paso_5(${elementANTICIPOS.id_anticipo},${elementANTICIPOS.monto},${elementANTICIPOS.id_usuario},${elementANTICIPOS.prioridad},${elementANTICIPOS.forma_pago})"
+                                onclick="fucntion_paso_5(${elementANTICIPOS.id_anticipo},${elementANTICIPOS.monto},${elementANTICIPOS.id_usuario},${elementANTICIPOS.prioridad},${elementANTICIPOS.forma_pago},${elementANTICIPOS.id_parcialidad},${elementANTICIPOS.monto_parcialidad},${elementANTICIPOS.mensualidades} )"
                                 name="boton_confirmar_contraloria"  data-anticipo="${elementANTICIPOS.id_anticipo}"
                                 data-id_usuario="${elementANTICIPOS.id_usuario}" data-name="${elementANTICIPOS.nombre_usuario}" >` : ` `;
 
@@ -213,12 +234,9 @@ function clickbotonProceso(){
     $("#cartSolicitar_aticipo").addClass("hide");
     $("#preceso_aticipo").removeClass("hide");
 }
+
+
 $("#anticipo_nomina").submit(function (e) { 
-    
-
-    
-  
-
     e.preventDefault();
 }).validate({
     submitHandler: function (form) {
@@ -228,6 +246,8 @@ $("#anticipo_nomina").submit(function (e) {
         const monto = replaceAll(totalDescuento, '$', '');
         
         var data1 = new FormData($(form)[0]);
+
+
 
         data1.append("limpioMonto", monto);
         $.ajax({
@@ -262,13 +282,17 @@ $("#anticipo_nomina").submit(function (e) {
 // });
 
 
-function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
+function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_parcialidad,mensualidades_pra){
     
     const Modalbody_subir = $('#myModalAceptar_subir .modal-body');
     const Modalfooter_subir = $('#myModalAceptar_subir .modal-footer');
     Modalbody_subir.html('');
     prioridad_nombre = prioridad == 1 ? 'URGENTE' : 'NORMAL'; 
     Modalfooter_subir.html('');
+
+    montoMandar =  id_parcialidad == 'null' ? monto  : mensualidades_pra ;
+
+    
     bloquear = forma_de_pago_general == 2 ? 'disabled' : ''; 
     FACTURAS = forma_de_pago_general == 2 ?  `
             <div class="form-group">      
@@ -283,7 +307,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
             </div>
             <br>
             <br>
-            <center><button class="btn btn-warning" type="button" onclick="xml2(${monto})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center>
+            <center><button class="btn btn-warning" type="button" onclick="xml2(${montoMandar})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center>
             <p id="cantidadSeleccionada"></p>
             <br>
             <br>
@@ -334,16 +358,35 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
                 </div> 
             </div>` :``; 
 
+    // const monto_formateado = $(this).attr("data-monto_formateado");
+
+    console.log(id_parcialidad);
+    modalidad =  id_parcialidad == 'null' ? `PRÉSTAMO <br>`  : `APOYO <br>
+                                                MENSUALIDADES   : ${mensualidades_pra} <br>
+                                                MONTO           : ${formatMoney(monto)} <br>` ;
+    
+
     Modalbody_subir.append(`
         <input type="hidden" value="${ID}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
         <h4 class=" center-align">¿Ésta seguro que desea aceptar el Descuento de ${ID}?</h4>
         <br>
         <p class=" card-title text-muted pl-1 col-md-6  center-align"> Monto autorizado :    ${formatMoney(monto)}     </p>
         <p class=" card-title text-muted pl-1 col-md-6 center-align"> Prioridad :    ${ prioridad_nombre}     </p>
+        
         <br>
         ${FACTURAS}
         <div class="form-group">
             <input type="hidden" value="0" name="bandera_a" id="bandera_a">
+        </div>
+
+        <div>
+        <h2 class="card_title">Detalles</h2>
+            <p class="center-align"> 
+                Monto solicitado : ${formatMoney(monto)} .<br>
+                Mendiante la modalidad : ${modalidad}
+
+                
+            </p>
         </div>
         <div class="form-group">
             <input type="hidden" value="${monto}" name="monto" id="monto">
@@ -646,3 +689,55 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
     }
 
 
+    $('#numeroPagosParcialidad').change(function() {
+
+        const totalDescuento = replaceAll($('#montoSolicitado').val(), ',' , '');
+        const monto = replaceAll(totalDescuento, '$', '');
+        pagos_parcialidades = document.getElementById("numeroPagosParcialidad").value;
+        montoParcialidades = monto/pagos_parcialidades;
+        document.getElementById("montoPrestadoParcialidad").value = montoParcialidades;
+        
+    });
+
+
+
+    
+    $('#procesoTipo').change(function() {
+        
+        console.log(this.value);
+        const totalDescuento = replaceAll($('#montoSolicitado').val(), ',' , '');
+        const monto = replaceAll(totalDescuento, '$', '');
+
+        if(monto != ''){
+            if(this.value == 1)
+                {
+                    // 1 es para apoyo 
+                    $("#n_parcialidades").addClass("hide");
+                    $("#d_tiempo_de_pago").addClass("hide");
+                    $("#monto_pago_parcialidades").addClass("hide");
+                    
+        
+                    // var tiempo_de_pago = document.getElementById('tiempo_de_pago');
+                    // tiempo_de_pago.disabled = false;
+                    // var numeroPagosParcialidad = document.getElementById('numeroPagosParcialidad');
+                    // numeroPagosParcialidad.disabled = false;
+                    // var montoPrestadoParcialidad = document.getElementById('montoPrestadoParcialidad');
+                    // montoPrestadoParcialidad.disabled = false;
+                
+                    
+                }else{
+        
+                    $("#n_parcialidades").removeClass("hide");
+                    $("#d_tiempo_de_pago").removeClass("hide");
+                    $("#monto_pago_parcialidades").removeClass("hide");
+                    
+                }
+        }else{
+            alerts.showNotification("top", "right", "Cantidad del monto no puede ser 0.", "warning");
+        }
+
+
+            // pagos_parcialidades = document.getElementById("numeroPagosParcialidad").value;
+        // $("#preceso_aticipo").addClass("hide");
+    
+    })

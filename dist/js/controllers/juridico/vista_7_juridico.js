@@ -411,7 +411,6 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("numContrato", getInfo1[7]);
-    console.log($("#comentario").val());
 
     if (validaComent == 0)
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");

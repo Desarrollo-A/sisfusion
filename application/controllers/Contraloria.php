@@ -678,67 +678,177 @@ class Contraloria extends CI_Controller {
             echo json_encode(array());
         }
     }
+    
 
-    public function editar_registro_lote_contraloria_proceso5() {
-        $idLote=$this->input->post('idLote');
-        $idCondominio=$this->input->post('idCondominio');
-        $nombreLote=$this->input->post('nombreLote');
-        $idCliente=$this->input->post('idCliente');
-        $comentario=$this->input->post('comentario');
-        $modificado = date('Y-m-d H:i:s');
-        $fechaVenc=$this->input->post('fechaVenc');
-        $ubicacion=$this->input->post('ubicacion');
-        $tipo_venta=$this->input->post('tipo_venta');
-        $idMovimiento = $this->input->post("idMovimiento");
+    public function editar_registro_lote_contraloria_proceceso5() {
+		$idLote=$this->input->post('idLote');
+		$idCondominio=$this->input->post('idCondominio');
+		$nombreLote=$this->input->post('nombreLote');
+		$idCliente=$this->input->post('idCliente');
+		$comentario=$this->input->post('comentario');
+		$modificado=date('Y-m-d H:i:s');
+		$fechaVenc=$this->input->post('fechaVenc');
+		$ubicacion=$this->input->post('ubicacion');
+		$tipo_venta=$this->input->post('tipo_venta');
+		
+		$arreglo=array();
+		$arreglo["idStatusContratacion"]= 5;
+		$arreglo["idMovimiento"]=35;
+		$arreglo["comentario"]=$comentario;
+		$arreglo["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo["perfil"]=$this->session->userdata('id_rol');
+		$arreglo["modificado"]=date("Y-m-d H:i:s");
+		$arreglo["ubicacion"]= $ubicacion;
+		$arreglo["tipo_venta"]= $tipo_venta;
 
-        $arreglo=array();
+		$horaActual = date('H:i:s');
+		$horaInicio = date("08:00:00");
+		$horaFin = date("16:00:00");
+	
+		if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+		$fechaAccion = date("Y-m-d H:i:s");
+		$hoy_strtotime2 = strtotime($fechaAccion);
+		$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+		$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+	
+		
+		if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+		 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+		 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+		 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+		 $sig_fecha_feriado2 == "25-12") {
+		$fecha = $fechaAccion;
 
-        if(in_array($idMovimiento, [4, 84, 101, 103])){
-            $idMovRegistro = 35;
-            $arreglo["ubicacion"]= $ubicacion;
-            $arreglo["tipo_venta"]= $tipo_venta;
-        }   
-        else if(in_array($idMovimiento, [74, 93])){
-            $idMovRegistro = 75;
-        }
-        
-        $arreglo["idStatusContratacion"]= 5;
-        $arreglo["idMovimiento"]=$idMovRegistro;
-        $arreglo["comentario"]=$comentario;
-        $arreglo["usuario"]=$this->session->userdata('id_usuario');
-        $arreglo["perfil"]=$this->session->userdata('id_rol');
-        $arreglo["modificado"] = date("Y-m-d H:i:s");
+		$i = 0;
+		while($i <= 2) {
+		$hoy_strtotime = strtotime($fecha);
+		$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+		$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+		$sig_fecha_dia = date('D', $sig_strtotime);
+		$sig_fecha_feriado = date('d-m', $sig_strtotime);
+		
+		
+		if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+		 $sig_fecha_feriado == "25-12") {}
+			 else {
+					$fecha= $sig_fecha;
+					 $i++;
+				  } 
+		$fecha = $sig_fecha;
+			   }
+		   $arreglo["fechaVenc"]= $fecha;
+		   }else{
+		$fecha = $fechaAccion;
 
-        $arreglo2=array();
-        $arreglo2["idStatusContratacion"]= 5;
-        $arreglo2["idMovimiento"]=$idMovRegistro;
-        $arreglo2["nombreLote"]=$nombreLote;
-        $arreglo2["comentario"]=$comentario;
-        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-        $arreglo2["perfil"]=$this->session->userdata('id_rol');
-        $arreglo2["modificado"]=date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"]= $fechaVenc;
-        $arreglo2["idLote"]= $idLote;
-        $arreglo2["idCondominio"]= $idCondominio;
-        $arreglo2["idCliente"]= $idCliente;
-        
-        $validate = $this->Contraloria_model->validateSt5($idLote);
+		$i = 0;
+		while($i <= 1) {
+		$hoy_strtotime = strtotime($fecha);
+		$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+		$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+		$sig_fecha_dia = date('D', $sig_strtotime);
+		$sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-        if($validate == 1){
+		if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+         $sig_fecha_feriado == "25-12") {}
+			 else {
+					$fecha= $sig_fecha;
+					 $i++;
+				  } 
+		$fecha = $sig_fecha;
+			   }
+		   $arreglo["fechaVenc"]= $fecha;
+		   }
 
-            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-                $data['status'] = true;
-                $data['message'] = "Estatus enviado";
-            }else{
-                $data['status'] = false;
-                $data['message'] = "Error al enviar la solicitud";
-            }
-        }else {
-            $data['status'] = false;
-            $data['message'] = "El estatus ya fue registrado";
-        }
+        }elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+		$fechaAccion = date("Y-m-d H:i:s");
+		$hoy_strtotime2 = strtotime($fechaAccion);
+		$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+		$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
 
-        echo json_encode($data);
+		if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+		 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+		 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+		 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+		 $sig_fecha_feriado2 == "25-12") {
+		 $fecha = $fechaAccion;
+		$i = 0;
+		while($i <= 2) {
+		$hoy_strtotime = strtotime($fecha);
+		$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+		$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+		$sig_fecha_dia = date('D', $sig_strtotime);
+		$sig_fecha_feriado = date('d-m', $sig_strtotime);
+		
+		if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+         $sig_fecha_feriado == "25-12") {}
+			 else {
+					$fecha= $sig_fecha;
+					 $i++;
+				  } 
+		$fecha = $sig_fecha;
+			   }
+		   $arreglo["fechaVenc"]= $fecha;
+		   }else{
+		$fecha = $fechaAccion;
+		$i = 0;
+		while($i <= 2) {
+		$hoy_strtotime = strtotime($fecha);
+		$sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+		$sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+		$sig_fecha_dia = date('D', $sig_strtotime);
+		$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+		
+		if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+         $sig_fecha_feriado == "25-12") {}
+			 else {
+					$fecha= $sig_fecha;
+					 $i++;
+				  } 
+		$fecha = $sig_fecha;
+			   }
+		 $arreglo["fechaVenc"]= $fecha;
+		   }
+		}
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"]= 5;
+		$arreglo2["idMovimiento"]=35;
+		$arreglo2["nombreLote"]=$nombreLote;
+		$arreglo2["comentario"]=$comentario;
+		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+		$arreglo2["perfil"]=$this->session->userdata('id_rol');
+		$arreglo2["modificado"]=date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"]= $fechaVenc;
+		$arreglo2["idLote"]= $idLote;  
+		$arreglo2["idCondominio"]= $idCondominio;          
+		$arreglo2["idCliente"]= $idCliente;          
+		$validate = $this->Contraloria_model->validateSt5($idLote);
+
+		if($validate == 1){
+	
+		   if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+			   $data['message'] = 'OK';
+			   echo json_encode($data);
+			}else{
+				$data['message'] = 'ERROR';
+				echo json_encode($data);
+			}
+		}else {
+			$data['message'] = 'FALSE';
+			echo json_encode($data);
+	  }
     }
 
     public function get_sede() {
@@ -3517,4 +3627,77 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->getMensualidades()->result_array());
     }
 
+    public function getComplementoPago() {
+        $idLote = $_POST['idLote'];
+        echo json_encode($this->Contraloria_model->getComplementoPago($idLote)->result_array());
+    }
+
+    public function getTipoEnganche() {
+        $idLote = $_POST['idLote'];
+        echo json_encode($this->Contraloria_model->getTipoEnganche($idLote)->result_array());
+    }
+
+    public function insertRamaComplementoPago() {
+        $idCliente = $_POST['idCliente'];
+        $idCondominio = $_POST['idCondominio'];
+        $idLote = $_POST['idLote'];
+
+        $updateDocumentData = array(
+            "movimiento" => 'COMPLEMENTO DE PAGO',
+            "modificado" => date('Y-m-d H:i:s'),
+            "status" => 1,
+            "idCliente" => $idCliente,
+            "idCondominio" => $idCondominio,
+            "idLote" => $idLote,
+            "tipo_doc" => 55,
+            "idUser" => $this->session->userdata('id_usuario')
+        );
+        $response = $this->General_model->addRecord("historial_documento", $updateDocumentData);
+        echo json_encode($response);
+    }
+
+    public function updateTipoEngancheEnCliente() {
+        $idCliente = $_POST['idCliente'];
+        $tipoEnganche = $_POST['tipoEnganche'];
+
+        $data = array(
+            "modificado_por" => $this->session->userdata('id_usuario'),
+            "tipoEnganche" => $tipoEnganche,
+        );
+        
+        $response=$this->General_model->updateRecord('clientes', $data, 'id_cliente', $idCliente);
+        echo json_encode($response);
+    }
+
+    public function deleteRamaComplementoPago() {
+        $idDocumento = $_POST['idDocumento'];
+    
+        $result = $this->Contraloria_model->deleteRamaComplementoPago($idDocumento);
+    
+        if ($result) {
+            echo json_encode(['result' => true]);
+        } else {
+            echo json_encode(['result' => false, 'message' => 'Error al eliminar el documento.']);
+        }
+    }
+
+    public function actualizaRamaComplementoPago() {
+        $idDocumento = $_POST['idDocumento'];
+        $expediente = $_POST['expediente'];
+
+        $data = array(
+            "movimiento" => 'COMPLEMENTO DE PAGO',
+            'expediente' => $expediente,
+            "modificado" => date('Y-m-d H:i:s'),
+            'bucket'     => 1,
+            "idUser"     => $this->session->userdata('id_usuario')
+        );
+
+        $response=$this->General_model->updateRecord('historial_documento', $data, 'idDocumento', $idDocumento);
+        if ($response){
+            echo json_encode(array("result" => true, "msg" => "El registro se ha ingresado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+        }else {
+            echo json_encode(array("result" => false, "msg" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+        }
+    }
 }

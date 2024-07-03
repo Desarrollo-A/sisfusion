@@ -153,6 +153,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <?php $this->load->view('pagos/seguros/revision_factura_ooam_view'); ?>
+                                    <?php $this->load->view('pagos/seguros/revision_factura_seguros_view'); ?>
                                 </div>
                             </div>
                         </div>

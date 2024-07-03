@@ -189,7 +189,7 @@
                                                                 <th>PROYECTO</th>
                                                                 <th>CONDOMINIO</th>
                                                                 <th>LOTE</th>
-                                                                <th>REFERENCIA1</th>
+                                                                <th>REFERENCIA</th>
                                                                 <th>PRECIO DEL LOTE</th>
                                                                 <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>PAGO DEL CLIENTE</th>

@@ -48,7 +48,6 @@ $('#catalogo_historial, #tipo_historial').change(function(){
         proyecto = $('#ano_historial').val();
         condominio = $('#catalogo_historial').val();
         tipo = $('#tipo_historial').val();
-        console.log(tipo, "asdf");
 
         $('#tabla_historialGral').removeClass('hide');
 

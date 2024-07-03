@@ -2543,8 +2543,8 @@ class Caja_outside extends CI_Controller {
             "ApellidoPaterno" => $data->apellido_paterno,
             "ApellidoMaterno" => $data->apellido_materno,
             "Calle" => $infoCliente->calle,
-            "Colonia" => NULL,
-            "CodPost" => $infoCliente->cp,
+            "Colonia" => $infoCliente->colonia,
+            "CodPost" => ($infoCliente->cp == '0' ? NULL : $infoCliente->cp),
             "MpioDeleg" => $infoCliente->municipio,
             "Localidad" => $infoCliente->localidad,
             "Telefono" => $infoCliente->telefono1,
@@ -2573,7 +2573,7 @@ class Caja_outside extends CI_Controller {
             "EscrituradoReal" => 0, // default 0
             "IdTipoMoneda" => $infoCliente->tipoMoneda, // default 1
             "Lada" => $infoCliente->ladaTel1, // NO TENGO LADA HASTA QUE SE GUARDA EL DS
-            "Pais" => 1142, // default México (1142)
+            "Pais" => $infoCliente->pais, // default México (1142)
             "MonedaSATDefault" => 'MXN', // default MXN
             "IdCodigoPostalSAT" => $infoCliente->cp_fac == "0" ? NULL : $infoCliente->cp_fac, // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
             "IdPaisSAT" => 1142, // default México (1142)

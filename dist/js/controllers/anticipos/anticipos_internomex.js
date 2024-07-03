@@ -63,8 +63,9 @@ $("#tabla_anticipos_internomex").ready(function () {
             { data: 'sede' },
             { data: 'esquema' },
             {
-                data: function( d ){
-                    return '<p class="m-0">'+formatMoney(d.montoParcial)+'</p>';
+                data: function(d) {
+                    var montoAMostrar = (d.montoParcial !== null) ? d.montoParcial : d.monto;
+                    return '<p class="m-0">' + formatMoney(montoAMostrar) + '</p>';
                 }
             },
             {
@@ -75,15 +76,12 @@ $("#tabla_anticipos_internomex").ready(function () {
                     if(d.mensualidadesBoton==0){
 
                         var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatusFinal" data-mensualidades="${d.mensualidades}" data-numero_mensualidades="${d.mensualidadesBoton}" data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
-
                         
                     }else{
 
                         var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-mensualidades="${d.mensualidades}" data-numero_mensualidades="${d.mensualidadesBoton}" data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
 
                     }
-
-                    // var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-mensualidades="${d.mensualidades}" data-numero_mensualidades="${d.mensualidadesBoton}" data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
 
                     return '<div class="d-flex justify-center">'  + botonEstatus  + '</div>';
                 }
@@ -118,7 +116,11 @@ $("#tabla_anticipos_internomex").ready(function () {
         var numero_mensualidades = $(this).attr("data-numero_mensualidades");
         $("#numero_mensualidades").val(numero_mensualidades);
 
-        $("#montoTituloFinal").text("Monto Restante: " + formatMoney(montoP*numero_mensualidades));
+        if (numero_mensualidades == null || isNaN(numero_mensualidades)) {
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(monto));
+        } else {
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(montoP * numero_mensualidades));
+        }
     
         $("#anticipoModalInternomexFinal").modal();
     });
@@ -134,10 +136,17 @@ $("#tabla_anticipos_internomex").ready(function () {
         var montoP = $(this).attr("data-montoParcialidad");
         $("#montoP").val(montoP);
 
+        var monto = $(this).attr("data-monto");
+        $("#monto").val(monto);
+
         var numero_mensualidades = $(this).attr("data-numero_mensualidades");
         $("#numero_mensualidades").val(numero_mensualidades);
 
-        $("#montoTitulo").text("Monto Restante: " + formatMoney(montoP*numero_mensualidades));
+        if (numero_mensualidades == null || isNaN(numero_mensualidades)) {
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(monto));
+        } else {
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(montoP * numero_mensualidades));
+        }
     
         $("#anticipoModalInternomex").modal();
     });

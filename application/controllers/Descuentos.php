@@ -757,49 +757,83 @@ class Descuentos extends CI_Controller
 // 
 // anticipo de pagos
 
-        public function anticipo_pago_insert(){
-            $insertArray = array(
-                'id_usuario' => $this->session->userdata('id_usuario'),
-                'monto'    =>   $this->input->post('limpioMonto'),
-                'comentario' => $this->input->post('descripcionMotivo'),
-                'estatus'    => 1,
-                'proceso'    => 2,
-                'impuesto'    => 3,
-                'fecha_registro' => date("Y-m-d H:i:s"),
-                'prioridad'    => 1,
-                'prioridad'    => ''
+        public function anticipo_pago_insert()
+        {
+            
+            $this->db->trans_begin();
+
+            
+                // $insertArray
+                $insertArray = array(
+                'id_usuario'            => $this->session->userdata('id_usuario'),
+                'monto'                 => $this->input->post('limpioMonto'),
+                'comentario'            => $this->input->post('descripcionMotivo'),
+                'estatus'               => 1,
+                'proceso'               => 2,
+                'impuesto'              => 3,
+                'fecha_registro'        => date("Y-m-d H:i:s"),
+                'prioridad'             => 1,
+                'evidencia'             => '',
+                'numero_mensualidades'    =>  $this->input->post('numeroPagosParcialidad')
                 );
                 
                 $idAnticipo = $this->Descuentos_model->insertAdelanto($insertArray);
                 // nace un anticipo
             
+                // REVISAMOS EL TIPO DE ANTICIPO
+                if($this->input->post('procesoTipo') != 1){
+                    // viene por  apoyo se crea parcialidades  no se crea prestamo 
+                    $insertArray_pran = array(
+                        'id_anticipo'           =>  intval($idAnticipo) ,
+                        'catalogo'              =>  intval($this->input->post('tiempo_de_pago')),
+                        'fecha_creacion'        =>  date("Y-m-d H:i:s"),
+                        'mensualidades'         =>  intval($this->input->post('numeroPagosParcialidad')) ,
+                        'monto_parcialidad'     =>  $this->input->post('montoPrestadoParcialidad')
+                    );
+                    $tablaGenerica = 'parcialidad_relacion_anticipo' ;
+                    $respuesta_PRA = $this->Descuentos_model->insertAdelantoGenerico($insertArray_pran,$tablaGenerica);
+                }else{
+                    // viene por prestamo.
+                    $respuesta_PRA = true;
+                }
+
+
+
                 $insertArrayHistorial = array(
                 'id_anticipo' => $idAnticipo,
                 'id_usuario'  => $this->session->userdata('id_usuario'),
                 'proceso'     => 1,
-                'comentario'  => $this->input->post('descripcionMotivo')            
+                'comentario'  => $this->input->post('descripcionMotivo'),
+                'fecha_movimiento'        =>  date("Y-m-d H:i:s")            
                 );
+
                 $tablaHistorial = 'historial_anticipo' ;
                 $respuestaHistorial = $this->Descuentos_model->insertAdelantoGenerico($insertArrayHistorial,$tablaHistorial);
+
                 $insertArrayHistorial = array(
                     'id_anticipo' => $idAnticipo,
                     'id_usuario'  => $this->session->userdata('id_usuario'),
                     'proceso'     => 2,
-                    'comentario'  => $this->input->post('descripcionMotivo')            
+                    'comentario'  => $this->input->post('descripcionMotivo')  ,
+                    'fecha_movimiento'        =>  date("Y-m-d H:i:s")              
                     );
                     $tablaHistorial = 'historial_anticipo' ;
-                    $respuestaHistorial = $this->Descuentos_model->insertAdelantoGenerico($insertArrayHistorial,$tablaHistorial);
-                if($respuestaHistorial){
+                    $respuestaHistorial1 = $this->Descuentos_model->insertAdelantoGenerico($insertArrayHistorial,$tablaHistorial);
+                
+                if($respuestaHistorial1 && $respuestaHistorial && $respuesta_PRA){
                     $respuesta =  array(
                         "response_code" => 200, 
                         "response_type" => 'success',
                         "message" => "Se ha dado de alta el anticipo puedes revisar el avance apartado  PROCESOS");
+                        $this->db->trans_commit();  
                 }else{
                     $respuesta =  array(
                         "response_code" => 400, 
                         "response_type" => 'danger',
                         "message" => "Error NO se ha dado el alta del anticipo");
-                }
+                        $this->db->trans_rollback();  
+                    }
+
                 echo json_encode($respuesta);
 
 
@@ -917,7 +951,40 @@ class Descuentos extends CI_Controller
                         'proceso'       => $this->input->post('proceso'),
                         'prioridad'     => $this->input->post('seleccion')
                         );
-                }else{
+                }else if($this->input->post('proceso') ==4){
+
+                    if( $this->input->post('num_mensualidades') != null )
+                    {
+                        
+                        $array_parcialidad_relacion_anticipo = array (
+                            'mensualidades'         => intval($this->input->post('num_mensualidades')),
+                            'monto_parcialidad'     => intval($this->input->post('mensualidad'))
+                        );
+                        
+                        $tabla = 'parcialidad_relacion_anticipo';
+                        $clave =  $id_anticipo;
+                        $llave = 'id_anticipo';
+                        $respuestaHistorial = $this->Descuentos_model->update_generico_aticipo($clave,$llave,$tabla,$array_parcialidad_relacion_anticipo);
+                
+                        $insertArray = array(
+                            'monto'     =>  $monto,
+                            'prioridad'     => $this->input->post('seleccion'),
+                            'estatus'       => $this->input->post('estatus'),
+                            'proceso'       => $this->input->post('proceso')
+                        );
+
+                        
+
+
+                        // vine por prestamo 
+                    }else{
+                        // viene por apoyo     
+                        
+                        exit;
+                    }
+                }
+                else
+                {
                     $insertArray = array(
                         'monto'         => $monto,
                         'evidencia'     => $expediente,
@@ -927,13 +994,10 @@ class Descuentos extends CI_Controller
                 }
             }else{
                 // cancelado
-                
                 $insertArray = array(
                     'estatus'       => 0,
                     // 'evidencia'     => $expediente,
                     'proceso'       => 0);
-
-                    
             }
             
                 
@@ -1199,15 +1263,18 @@ class Descuentos extends CI_Controller
 
         public function descuentos_masivos()
         {
+            $array_prestamos_aut = array();
                 if (!isset($_POST))
                 {    
-                echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
+                // echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
                 }
                 else {
                     
-                    if ($this->input->post("data") == "")
+                    // var_dump($this->input->post("data" ));
+
+                    if ($this->input->post("data" ) == "")
                     {
-                    echo json_encode(array("status" => 400, "message" => "El archivo viene vacio."), JSON_UNESCAPED_UNICODE);
+                    // echo json_encode(array("status" => 400, "message" => "El archivo viene vacio."), JSON_UNESCAPED_UNICODE);
                     }   
                     else {
 
@@ -1218,42 +1285,135 @@ class Descuentos extends CI_Controller
 
                         
                         if (count($decodedData) > 0) { // SE VALIDA QUE EL ARRAY AL MENOS TENGA DATOS
-                        
-                            echo('general ya entro al primero ');
+                            
+                            // echo('general ya entro al primero ');
                             // $id_usuario = array();
                             for ($i = 0; $i < count($decodedData); $i++) { 
+                                // var_dump($decodedData[$i]->id_usuario);
+                                // var_dump($decodedData[$i]->monto);
+                                // var_dump($decodedData[$i]->num_pagos);
+                                // var_dump($decodedData[$i]->pago_individual);
+                                // var_dump($decodedData[$i]->comentarios);
+                                // var_dump($decodedData[$i]->tipo);
+
                                 if(
                                 isset($decodedData[$i]->id_usuario) && 
                                 !empty($decodedData[$i]->id_usuario) && 
                                 isset($decodedData[$i]->monto) && 
                                 !empty($decodedData[$i]->monto) && 
-                                isset($decodedData[$i]->numero_pagos) && 
-                                !empty($decodedData[$i]->numero_pagos) &&
-                                isset($decodedData[$i]->montoConDescuentosSede) && 
-                                !empty($decodedData[$i]->montoConDescuentosSede) && 
-                                isset($decodedData[$i]->montoFinal) && 
-                                !empty($decodedData[$i]->montoFinal) && 
-                                isset($decodedData[$i]->comentario))
+                                isset($decodedData[$i]->num_pagos) && 
+                                !empty($decodedData[$i]->num_pagos) &&
+                                isset($decodedData[$i]->pago_individual) && 
+                                !empty($decodedData[$i]->pago_individual) && 
+                                isset($decodedData[$i]->comentarios) && 
+                                !empty($decodedData[$i]->comentarios) && 
+                                isset($decodedData[$i]->tipo) &&
+                                !empty($decodedData[$i]->tipo)
+                                )
                                 {// inicio de llave if
+                                    
+                                    //aqui validamos la información 
+                                    // array_push($array_prestamos_aut,);
+                                    // array_push($stack, "apple", "raspberry");
+                                    
+                                    
+                                    $insertArray = array(
+                                        'id_usuario'            =>  $decodedData[$i]->id_usuario,
+                                        'monto'                 =>  $decodedData[$i]->monto,
+                                        'num_pagos'             =>  $decodedData[$i]->num_pagos,
+                                        'pago_individual'       =>  $decodedData[$i]->pago_individual,
+                                        'comentario'            =>  $decodedData[$i]->comentarios,
+                                        'estatus'               =>  1,
+                                        'pendiente'             =>  $decodedData[$i]->monto,
+                                        'creado_por'            =>  $this->session->userdata('id_usuario'),
+                                        'fecha_creacion'        =>  date("Y-m-d H:i:s"),
+                                        'modificado_por'        =>  0,
+                                        'fecha_modificacion'    =>  date("Y-m-d H:i:s"),
+                                        'n_p'                   =>  0,
+                                        'tipo'                  =>  $decodedData[$i]->tipo,
+                                        'id_cliente'            =>  null,
+                                        'evidenciaDocs'         =>  null,
+                                    );
 
-                                
+                                    $array_prestamos_aut[$i] = $insertArray;
+
+                            
+
+
+                                    // ae ae ae ae eae  ae ea ae
                                 
                                 }// fin  llave del if
                                 else{
+                                    // echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
+                                }
 
+                            }
+                            // var_dump('vemos cuantos entran');
+                            
+                            // var_dump($array_prestamos_aut);
+                            // var_dump(count($array_prestamos_aut));
+                            
+                            $array_respuesta_positivas = array();
+                            $array_respuesta_negativas = array();
+                            $contadorPositivo = 0;
+                            $contadorNegativo = 0;
+                            
+                            // or ($i = 0; $i < count($decodedData); $i++) {
+                            // var_dump($array_prestamos_aut[1]);
+                            for($contador = 0; $contador < count($array_prestamos_aut) ; $contador++){
+                            $this->db->trans_begin();
+                            // echo('<br>');
+                            // echo('<br>');
+                            // echo('<br>');
+                            // echo('<br>');
+                            //     var_dump(75757575757575757575757);
+                            //     var_dump($array_prestamos_aut[$contador]);
+                                $respuesta =  $this->Descuentos_model->insertar_prestamos($array_prestamos_aut[$contador] );
+                                
+                                // var_dump();
+                                
+                                if($respuesta){
 
-
+                                    $array_respuesta_positivas[$contadorPositivo] = $array_prestamos_aut[$contador]['id_usuario'];
+                                    
+                                    $contadorPositivo ++;
+                                    $this->db->trans_commit();  
+                                }else{
+                                    $array_respuesta_negativas[$contadorNegativo] = $array_prestamos_aut[$contador]['id_usuario'];
+                                    // $respuesta =  array(
+                                    //     "response_code" => 811, 
+                                    //     "response_type" => 'error',
+                                    //     "message" => "El préstamo no se ha podido insertar, inténtalo más tarde");
+                                    $contadorNegativo++;
+                                    $this->db->trans_rollback();    
                                 }
                             }
-                        echo json_encode(array("status" => 200, "message" => "Algún parámetro no viene informado."));
+
+                            $respuesta =  array(
+                                "response_code" => 200, 
+                                "response_type" => 'success',
+                                "message"       => "El proceso se ha realizado correctamente."
+                                );
+                                $respuesta['correctas'] =  $array_respuesta_positivas;           
+                                $respuesta['incorrectas'] = $array_respuesta_negativas; 
+
+                            echo json_encode($respuesta);
+
+                        }else{
+                            echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
                         }
-
-
                     }
                     
                 }
         }
 
+        public function todos_los_tipos(){
+
+            $todos_los_pasos = $this->Descuentos_model->todos_los_tipos();
+
+            echo json_encode($todos_los_pasos);
+        
+        }
 
 
 }
