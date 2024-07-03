@@ -474,8 +474,8 @@ $(document).on('click', '.btn-archivo', function () {
         width: 985,
         height: 660
     });
-    $('.btn-archivo').attr('disabled', false);  // Lo vuelvo a activar
-    $('#spiner-loader').addClass('hide'); // Quito spinner  
+    $('.btn-archivo').attr('disabled', false);  // Lo vuelvo a activar.
+    $('#spiner-loader').addClass('hide'); // Quito spinner.
 });
 
 // DATATABLE
@@ -659,7 +659,7 @@ const datatableButtons = (d, type) => {
             if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
             return BTN_INFO; 
         }
-        if (id_rol_general == ROLES.) { // CONTRALORIA
+        if (id_rol_general == ROLES.SUBDIRECCION) { // CONTRALORIA
             if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) return BTN_INFO;
             if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
             return BTN_INFO;

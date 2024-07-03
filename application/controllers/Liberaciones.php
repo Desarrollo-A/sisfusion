@@ -246,4 +246,11 @@ class Liberaciones extends CI_Controller{
             echo json_encode(array());
         }
     }
+
+    public function pruebasHelper(){
+        $dias = $_POST['días'];
+
+        $response = $this->Liberaciones_model->historialLiberacionLote($idProcesoTipoLiberacion, $tipoVenta, $idLote)->result_array();
+        echo json_encode($response);
+    }
 }

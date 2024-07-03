@@ -159,4 +159,95 @@
         "mensaje" => $mensaje
     );
 	}
+
+    // Función para saber cuando es la fecha limite de un lote
+    function getFechaVencimiento ($numeroDias) {
+        $numeroDias = intval($numeroDias);
+        date_default_timezone_set('America/Mexico_City');
+        $horaActual = date('H:i:s');
+        $horaInicio = date("08:00:00");
+        $horaFin = date("16:00:00");
+        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            if (in_array($sig_fecha_dia2, ['Sat', 'Sun']) || in_array($sig_fecha_feriado2, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= $numeroDias) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento = $fecha;
+            } else {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= $numeroDias) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento = $fecha;
+            }
+        } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            if (in_array($sig_fecha_dia2, ['Sat', 'Sun']) || in_array($sig_fecha_feriado2, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= $numeroDias) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento = $fecha;
+            } else {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= $numeroDias) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento = $fecha;
+            }
+        }
+        return $fechaVencimiento;
+    }
 ?>
