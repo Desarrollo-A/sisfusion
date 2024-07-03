@@ -250,7 +250,7 @@ class Liberaciones extends CI_Controller{
     public function pruebasHelper(){
         $dias = $_POST['días'];
 
-        $response = $this->Liberaciones_model->historialLiberacionLote($idProcesoTipoLiberacion, $tipoVenta, $idLote)->result_array();
+        $response = getFechaVencimiento($dias);
         echo json_encode($response);
     }
 }
