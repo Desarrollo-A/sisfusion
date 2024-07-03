@@ -502,21 +502,19 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 5604) AND pr.id_sede IN (12)";
             else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
                 $where = "pr.id_gerente IN ($id_lider, 455) AND pr.id_sede IN (12)";
-            else if ($id_usuario == 14449) // ANALI MONSERRAT REYES ORTIZ
-                $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
             else if ($id_usuario == 14649) // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
                 $where = "pr.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435) AND pr.id_sede IN (10)";
             else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
                 $where = "pr.id_gerente IN ($id_lider, 694, 4509) AND pr.id_sede IN (14)";
             else if ($id_usuario == 14952) // GUILLERMO HELI IZQUIERDO VIEYRA
-                $where = "pr.id_gerente IN ($id_lider, 13295) AND pr.id_sede IN (14)";
+                $where = "pr.id_gerente IN ($id_lider, 13295, 7970) AND pr.id_sede IN (14)";
             else if ($id_usuario == 13348) // VIRIDIANA ZAMORA ORTIZ
                 $where = "pr.id_gerente IN ($id_lider, 10063) AND pr.id_sede IN (4)";
             else if ($id_usuario == 12576) // DIANA EVELYN PALENCIA AGUILAR
                 $where = "pr.id_gerente IN ($id_lider, 6942)";
             else if ($id_usuario == 12292) // REYNALDO HERNANDEZ SANCHEZ
                 $where = "pr.id_gerente IN ($id_lider, 6661)";
-            else if ($id_usuario == 15466) // LAURA CAROLINA GUTIERREZ SANCHEZ
+            else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
                 $where = "pr.id_gerente IN ($id_lider, 80, 664)";
             else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
                 $where = "pr.id_gerente IN ($id_lider, 495)";

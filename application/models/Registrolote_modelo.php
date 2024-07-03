@@ -3520,9 +3520,6 @@
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
 					$sede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-					$id_lider = $id_lider . ', 21, 1545';
-					$sede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
 					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
 					$sede = "";
@@ -3530,7 +3527,7 @@
 					$id_lider = $id_lider . ', 694, 4509';
 					$sede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-					$id_lider = $id_lider . ', 13295';
+					$id_lider = $id_lider . ', 13295, 7970';
 					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
@@ -3541,7 +3538,7 @@
 				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
 					$id_lider = $id_lider . ', 6661';
 					$sede = "";
-				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
 					$id_lider = $id_lider . ', 80, 664';
 					$sede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA

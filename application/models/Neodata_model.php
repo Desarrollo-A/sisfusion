@@ -54,7 +54,7 @@ class Neodata_model extends CI_Model {
         @Lada = " . ($data['Lada'] == '' ? 'NULL' : $data['Lada']) . ",
         @Pais = " . $data['Pais'] . ",
         @MonedaSATDefault = '" . $data['MonedaSATDefault'] . "',
-        @IdCodigoPostalSAT = " . $data['IdCodigoPostalSAT'] . ",
+        @IdCodigoPostalSAT = " . ($data['IdCodigoPostalSAT'] == '' ? 'NULL' : $data['IdCodigoPostalSAT']) . ",
         @IdPaisSAT = " . $data['IdPaisSAT'] . ",
         @IdCatRegimen = " . $data['IdCatRegimen'] . ",
         @CuentaClabeSTP = " . ($data['CuentaClabeSTP'] == '' ? 'NULL' : $data['CuentaClabeSTP']) . ",
