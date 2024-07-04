@@ -475,8 +475,7 @@ if($validate == 1){
 
 
 }
-	
-	
+
 public function editar_registro_loteRevision_juridico_proceceso7(){
 
     $idLote=$this->input->post('idLote');
@@ -534,7 +533,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	}
 
 
-}
+  }
 
 public function editar_registro_loteRechazo_juridico_proceceso7(){
 
