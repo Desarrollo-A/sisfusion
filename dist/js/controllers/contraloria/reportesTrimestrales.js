@@ -95,6 +95,8 @@ function fillTrimestral(beginDate, endDate) {
                 {data: 'precioFinal'},
                 {data: 'referencia'},
                 {data: 'nombreAsesor'},
+                {data: 'nombreCoordinador'},
+                {data: 'nombreGerente'},
                 {data: 'fechaApartado'},
                 {data: 'nombreSede'},
                 {data: 'tipo_venta'},

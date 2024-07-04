@@ -54,6 +54,8 @@
                                                 <th>PRECIO FINAL</th>
                                                 <th>REFERENCIA</th>
                                                 <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>SEDE</th>
                                                 <th>TIPO DE VENTA</th>
