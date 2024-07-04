@@ -488,9 +488,8 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 
 		$validarDocumentos = $this->validarDocumentacionEstatus7($idLote);
         if (!$validarDocumentos['status']) {
-			$documentsName = $validarDocumentos['documentos'];
             $data['message'] = 'DOCUMENTS';
-            $data['documentos'] = "Asegúrate de incluir los documentos: $documentsName.";
+            $data['documentos'] = "Asegúrate de incluir los documentos: ${$validarDocumentos['documentos']}";
             echo json_encode($data);
             return;
         }
@@ -534,66 +533,7 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	}
 
 
-}
-	
-	
-public function editar_registro_loteRevision_juridico_proceceso7(){
-
-    $idLote=$this->input->post('idLote');
-    $idCondominio=$this->input->post('idCondominio');
-    $nombreLote=$this->input->post('nombreLote');
-    $idCliente=$this->input->post('idCliente');
-    $comentario=$this->input->post('comentario');
-    $modificado=date("Y-m-d H:i:s");
-    $fechaVenc=$this->input->post('fechaVenc');
-
-	$validarDocumentos = $this->validarDocumentacionEstatus7($idLote);
-    if (!$validarDocumentos['status']) {
-        $data['message'] = 'DOCUMENTS';
-        $data['documentos'] = "Asegúrate de incluir los documentos: $validarDocumentos['documentos']";
-        echo json_encode($data);
-        return;
-    }
-
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]= 7;
-    $arreglo["idMovimiento"]=7;
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-    $arreglo["modificado"]=date("Y-m-d H:i:s");
-
-
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]= 7;
-    $arreglo2["idMovimiento"]=7;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario"]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $fechaVenc;
-    $arreglo2["idLote"]= $idLote;
-    $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente;
-
-	$validate = $this->Juridico_model->validateSt7($idLote);
-
-	if($validate == 1){
-		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-				$data['message'] = 'OK';
-				echo json_encode($data);
-			}else{
-				$data['message'] = 'ERROR';
-				echo json_encode($data);
-		}
-	}else {
-		$data['message'] = 'FALSE';
-		echo json_encode($data);
-	}
-
-
-}
+  }
 
 public function editar_registro_loteRechazo_juridico_proceceso7(){
 

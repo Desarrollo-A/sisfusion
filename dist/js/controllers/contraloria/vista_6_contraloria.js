@@ -194,7 +194,6 @@ $("#tabla_ingresar_6").ready(function () {
         orderable: false,
         data: function (data) {
           var cntActions;
-          console.log(data.perfil);
           if (data.vl == "1")
             cntActions = "En proceso de Liberación";
           else {
