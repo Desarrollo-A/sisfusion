@@ -160,54 +160,68 @@ const getPlanPagoDump = (idPlanPago) =>{
 }
 
 function fillTable(data) {
-    console.log(data)
+    // console.log(data)
     
     var tablePagos
 
-    const editarPago = function(row, value){
-        console.log(row, value)
+    const editarPago = function(row, value, date){
+        //console.log(row, value, date)
 
         let pagos = tablePagos.rows().data().toArray()
-        row = row.data()
 
-        console.log(pagos)
-        console.log(row)
+        for(let pago of pagos){
+            if(pago.pago == row.pago){
+                if(value){
+                    pago.pagado = value
+                    pago.capital = value
 
-        let nuevo_capital = parseFloat(data.monto)//montoInicial
+                    if(pago.total < value){
+                        pago.pagado = pago.total
+                        pago.capital = pago.total
+                    }
+                }
+
+                if(date){
+                    pago.fecha_pago = date
+                }
+            }
+        }
+
+        tablePagos.clear()
+        tablePagos.rows.add(pagos).draw(false)
+    }
+
+    const registrarPago = function(row) {
+        // console.log(row)
+
+        let pagos = tablePagos.rows().data().toArray()
 
         for (var p = 0; p < pagos.length; p++) {
             let pago = pagos[p]
 
             if(pago.pago == row.pago){
-                console.log('si es')
+                pago.registrado = true
 
-                if(pago.total > value){
-
+                if(pago.total > pago.pagado){
                     let new_pago = {
-                        capital: pago.saldo - value,
+                        pago: pago.pago + 1,
+                        capital: pago.total - pago.pagado,
                         fecha: pago.fecha,
-                        interes: pago.interes,
-                        iva: pago.iva,
-                        pago: pagos.length + 1,
-                        planPago: pago.planPago,
-                        saldo: pago.saldo,
-                        saldoCapital: pago.saldoCapital,
-                        saldoInteres: pago.saldoInteres,
-                        saldoIva: pago.saldoIva,
-                        total: pago.total - value,
+                        fecha_pago: pago.fecha,
+                        pagado: 0,
+                        saldoCapital: 0,
+                        interes: 0,
+                        saldoInteres: 0,
+                        iva: 0,
+                        saldoIva: 0,
+                        total: pago.total - pago.pagado,
                     }
-
-                    pago.total = value
-                    pago.saldo = nuevo_capital - pago.total
-                    pago.capital = value
 
                     pagos.splice(p + 1, 0, new_pago)
                 }
             }
 
             pago.pago = p + 1
-
-            nuevo_capital -= pago.total
         }
 
         tablePagos.clear()
@@ -216,91 +230,6 @@ function fillTable(data) {
 
     const createdCell = function(cell) {
         let original;
-
-        /*
-        const recalcularPlan = function(row, capital) {
-            // const row = tablePagos.row(e.target.parentElement)
-            //row.invalidate()
-            //console.log('Row changed: ', row.data())
-
-            // let montoInicial = parseFloat(data.monto)
-
-            // let capital = parseFloat(e.target.textContent)
-
-            let pagos = tablePagos.rows().data().toArray()
-
-            let pago_nuevo = row.data()
-
-            let nuevo_capital = parseFloat(data.monto)//montoInicial
-
-            let num_pagos = pagos.length
-            for (var p = 0; p < pagos.length; p++) {
-                let pago = pagos[p]
-                //console.log(pago.capital, capital)
-
-                if(pago.pago == pago_nuevo.pago){
-                    pago.capital = capital
-                }
-
-                if(pago.capital > nuevo_capital){
-                    pago.capital = nuevo_capital
-                }
-
-                nuevo_capital -= pago.capital
-
-                pago.total = pago.capital
-                pago.saldo = nuevo_capital
-
-                if(pago.capital === 0){
-                    pagos.splice(p, 1)
-                }
-
-                if(pagos.length === p + 1){
-                    if(nuevo_capital > 0){
-                        let date_parts = pago.fecha.split('-')
-                        let date = new Date(date_parts[2], date_parts[1] - 1, date_parts[0])
-                        
-                        let new_fecha = new Date(date.setMonth(date.getMonth()+1))
-                        let date_str = [
-                            ('0' + new_fecha.getDate()).slice(-2),
-                            ('0' + (new_fecha.getMonth() + 1)).slice(-2),
-                            new_fecha.getFullYear(),
-                        ].join('-')
-
-                        pagos.push({
-                            capital: nuevo_capital,
-                            fecha: date_str,
-                            interes: pago.interes,
-                            iva: pago.iva,
-                            pago: pagos.length + 1,
-                            planPago: pago.planPago,
-                            saldo: 0,
-                            saldoCapital: pago.saldoCapital,
-                            saldoInteres: pago.saldoInteres,
-                            saldoIva: pago.saldoIva,
-                            total: nuevo_capital,
-                        })
-                    }
-                }else{
-                    if(nuevo_capital <= 0){
-                        pagos.splice(p + 1, 1)
-                    }
-                }
-            }
-
-            // console.log(pagos)
-
-            if(num_pagos === pagos.length){
-                tablePagos
-                .rows()
-                .invalidate()
-                .draw()
-            }else{
-                tablePagos.clear()
-                tablePagos.rows.add(pagos).draw(false)
-            }
-        }
-        */
 
         cell.setAttribute('contenteditable', true)
         cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
@@ -316,7 +245,7 @@ function fillTable(data) {
             if (e.keyCode === 13){
                 e.preventDefault()
 
-                const row = tablePagos.row(e.target.parentElement)
+                const row = tablePagos.row(e.target.parentElement).data()
                 const value = parseFloat(e.target.textContent)
 
                 editarPago(row, value)
@@ -326,62 +255,73 @@ function fillTable(data) {
         cell.addEventListener("blur", function(e) {
             cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
 
-            /*
             if (original !== e.target.textContent) {
 
-                const row = tablePagos.row(e.target.parentElement)
+                const row = tablePagos.row(e.target.parentElement).data()
                 const value = parseFloat(e.target.textContent)
 
                 editarPago(row, value)
             }
-            */
         })
     }
 
-    const dateCell = function(cell) {
+    const dateCell = function(cell, row, data) {
         let date = cell.innerHTML
         //cell.innerHTML = `<input size="10" id="datetimepicker" value="${cell.innerHTML}" readonly />`
 
-        $(cell).html('').append(
-            $('<input>')
-            .attr('id', 'datetimepicker')
-            .attr('size', 10)
-            .attr('type', 'text')
-            .css('outline', 'none')
-            .css('border', '0px')
-            .css('margin', '0px')
-            .css('padding', '0px')
-            .css('background', 'transparent')
-            .val(date)
-            .datetimepicker({
-                format: 'DD-MM-YYYY',
+        //const row = tablePagos.row(cell.parentElement).data()
+        console.log(cell, row, data)
+
+        if(!data.registrado){
+            $(cell).html('').append(
+                $('<input>')
+                .attr('id', `datetimepicker_${data.pago}`)
+                .attr('size', 10)
+                .attr('type', 'text')
+                .css('outline', 'none')
+                .css('border', '0px')
+                .css('margin', '0px')
+                .css('padding', '0px')
+                .css('background', 'transparent')
+                .val(date)
+                .datetimepicker({
+                    format: 'DD-MM-YYYY',
+                })
+                .on('dp.change', function(event){
+                    var date = $(`#datetimepicker_${data.pago}`).val();
+
+                    const row = tablePagos.row(cell.parentElement).data()
+
+                    editarPago(row, null, date)
+                })
+            ).append(
+                $('<span>')
+                .html('📅')
+                .css('cursor', 'pointer')
+                .unbind("click").on('click', function(){
+                    $(`#datetimepicker_${data.pago}`).focus();
+                })
+            )
+        }
+    }
+
+
+    const buttonCell = function(cell){
+        if(cell.innerHTML !== '1'){
+            $(cell)
+            .append('<span>')
+            .css('cursor', 'pointer')
+            .attr('title', 'REGISTRAR PAGO')
+            .data('toggle', 'tooltip')
+            .html('🖊')
+            .on('click', function(e){
+                const row = tablePagos.row(cell.parentElement).data()
+
+                registrarPago(row)
             })
-        ).append(
-            $('<span>')
-            .html('📅')
-            .unbind("click").on('click', function(){
-                $("#datetimepicker").focus();
-            })
-        )
-
-        /*
-        $(cell).datetimepicker({
-            format: 'dd-mm-yyyy'
-        })
-        */
-
-        /*
-        $(cell).unbind("click").on('click', function(){
-            console.log('click')
-        })
-        */
-
-        /*
-        cell.addEventListener("click", function(e) {
-            //$("#date").datepicker().focus();
-
-        })
-        */
+        }else{
+            cell.innerHTML = ''
+        }
     }
 
     $('#nombrePlanPagotxt').val(data.nombrePlanPago);
@@ -481,7 +421,25 @@ function fillTable(data) {
             },
             {
                 data: function (d) {
+                    return formatMoney(parseFloat(d.total).toFixed(2));
+                }
+            },
+            {
+                data: function (d) {
+                    if(d.fecha_pago){
+                        return d.fecha_pago;
+                    }
+
                     return d.fecha;
+                }
+            },
+            {
+                data: function (d) {
+                    if(d.pagado){
+                        return parseFloat(d.pagado).toFixed(2);
+                    }
+
+                    return '0.00'
                 }
             },
             {
@@ -519,30 +477,28 @@ function fillTable(data) {
             },
             {
                 data: function (d) {
-                    return parseFloat(d.total).toFixed(2);
-                }
-            },
-            {
-                data: function (d) {
-                    return formatMoney(parseFloat(d.saldo).toFixed(2));
-                }
-            },
-            {
-                data: function (d) {
-                    return '<span style="cursor: pointer;" data-toggle="tooltip" data-placement="left" title="REGISTRAR PAGO">🖊</span>'
+                    if(d.registrado){
+                        return 1
+                    }
+
+                    return 0
                 }
             },
         ],
 
         columnDefs: [
             {
-                targets: [10],
+                targets: [4],
+                createdCell: dateCell
+            },
+            {
+                targets: [5],
                 createdCell: createdCell
             },
             {
-                targets: [3],
-                createdCell: dateCell
-            }
+                targets: [12],
+                createdCell: buttonCell
+            },
         ]
     });
 

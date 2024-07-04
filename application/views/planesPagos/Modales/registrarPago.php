@@ -59,15 +59,15 @@
                                             <th>PAGO</th>
                                             <th>CONCEPTO PAGO</th>
                                             <th>FECHA PACTADA</th>
+                                            <th>PAGO PACTADO</th>
                                             <th>FECHA PAGO</th>
-                                            <th>CAPITAL</th>
+                                            <th>PAGO REALIZADO</th>
                                             <th>SALDO CAPITAL</th>
                                             <th>INTERÉS</th>
                                             <th>SALDO INTERÉS</th>
                                             <th>IVA</th>
                                             <th>SALDO IVA</th>
-                                            <th>PAGO</th>
-                                            <th>SALDO</th>
+                                            <th>CAPITAL</th>
                                             <th>REGISTRAR</th>
                                         </tr>
                                         </thead>
