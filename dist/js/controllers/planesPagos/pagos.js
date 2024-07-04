@@ -172,8 +172,8 @@ function fillTable(data) {
         for(let pago of pagos){
             if(pago.pago == row.pago){
                 if(value){
-                    pago.pagado = value
-                    pago.capital = value
+                    pago.pagado = parseFloat(value)
+                    pago.capital = parseFloat(value)
 
                     if(pago.total < value){
                         pago.pagado = pago.total
@@ -202,6 +202,12 @@ function fillTable(data) {
             if(pago.pago == row.pago){
                 pago.registrado = true
 
+                console.log(pago, row)
+
+                if(!pago.pagado){
+                    pago.pagado = pago.total
+                }
+
                 if(pago.total > pago.pagado){
                     let new_pago = {
                         pago: pago.pago + 1,
@@ -228,7 +234,36 @@ function fillTable(data) {
         tablePagos.rows.add(pagos).draw(false)
     }
 
-    const createdCell = function(cell) {
+    const pagoCell = function(cell, value, row) {
+        // console.log(cell, value, row)
+
+        if(!row.registrado){
+            $(cell).html('').append(
+                $('<input>')
+                .attr('type', 'number')
+                .attr('placeholder', `${formatMoney(row.total)}`)
+                .attr("pattern","^\d+(?:\.\d{1,2})?$")
+                .attr("min","0")
+                .css('width', '100px')
+                .css('background', 'transparent')
+                .css('border', '0px')
+                .css('text-align', 'right')
+                .val(value)
+                .keypress(function (e) {
+                    if (e.which == 13) {
+                        $(this).trigger( "blur" )
+                    }
+                })
+                .on('blur', function(e) {
+                    let value = $(this).val()
+
+                    editarPago(row, value)
+                })
+            )
+        }else{
+            $(cell).html(formatMoney(value))
+        }
+        /*
         let original;
 
         cell.setAttribute('contenteditable', true)
@@ -263,19 +298,16 @@ function fillTable(data) {
                 editarPago(row, value)
             }
         })
+        */
     }
 
-    const dateCell = function(cell, row, data) {
-        let date = cell.innerHTML
-        //cell.innerHTML = `<input size="10" id="datetimepicker" value="${cell.innerHTML}" readonly />`
+    const dateCell = function(cell, value, row) {
+        // console.log(cell, row, row)
 
-        //const row = tablePagos.row(cell.parentElement).data()
-        console.log(cell, row, data)
-
-        if(!data.registrado){
+        if(!row.registrado){
             $(cell).html('').append(
                 $('<input>')
-                .attr('id', `datetimepicker_${data.pago}`)
+                .attr('id', `datetimepicker_${row.pago}`)
                 .attr('size', 10)
                 .attr('type', 'text')
                 .css('outline', 'none')
@@ -283,14 +315,14 @@ function fillTable(data) {
                 .css('margin', '0px')
                 .css('padding', '0px')
                 .css('background', 'transparent')
-                .val(date)
+                .val(value)
                 .datetimepicker({
                     format: 'DD-MM-YYYY',
                 })
                 .on('dp.change', function(event){
-                    var date = $(`#datetimepicker_${data.pago}`).val();
+                    let date = $(`#datetimepicker_${row.pago}`).val();
 
-                    const row = tablePagos.row(cell.parentElement).data()
+                    // const row = tablePagos.row(cell.parentElement).data()
 
                     editarPago(row, null, date)
                 })
@@ -299,8 +331,14 @@ function fillTable(data) {
                 .html('📅')
                 .css('cursor', 'pointer')
                 .unbind("click").on('click', function(){
-                    $(`#datetimepicker_${data.pago}`).focus();
+                    $(`#datetimepicker_${row.pago}`).focus();
                 })
+            )
+        }else{
+            $(cell).html('').append(
+                $('<div>')
+                .css('white-space', 'nowrap')
+                .html(value)
             )
         }
     }
@@ -439,7 +477,7 @@ function fillTable(data) {
                         return parseFloat(d.pagado).toFixed(2);
                     }
 
-                    return '0.00'
+                    return ''
                 }
             },
             {
@@ -493,7 +531,7 @@ function fillTable(data) {
             },
             {
                 targets: [5],
-                createdCell: createdCell
+                createdCell: pagoCell
             },
             {
                 targets: [12],
