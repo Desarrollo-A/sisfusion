@@ -31,37 +31,28 @@ $(document).ready(function () {
     },
     "json"
   );
+
+  $('[data-toggle="tooltip"]').tooltip();
+  code = "";
+  $.getJSON("get_enganches").done(function (data) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i]["id_catalogo"] == 104) {
+        $("#tipo_enganche").append(
+          $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
+        );
+      }
+      if (data[i]["id_catalogo"] == 103)
+        $("#estatus_enganche").append(
+          $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
+        );
+    }
+    $("#tipo_enganche").selectpicker("refresh");
+    $("#estatus_enganche").selectpicker("refresh");
+  });
+  
 });
 
 $("#tabla_ingresar_6").ready(function () {
-  let titulos = [];
-  $("#tabla_ingresar_6 thead tr:eq(0) th").each(function (i) {
-    if (i != 0) {
-      var title = $(this).text();
-      titulos.push(title);
-    }
-  });
-
-  $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-    code = "";
-    $.getJSON("get_enganches").done(function (data) {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i]["id_catalogo"] == 104) {
-          $("#tipo_enganche").append(
-            $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
-          );
-        }
-        if (data[i]["id_catalogo"] == 103)
-          $("#estatus_enganche").append(
-            $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
-          );
-      }
-      $("#tipo_enganche").selectpicker("refresh");
-      $("#estatus_enganche").selectpicker("refresh");
-    });
-  });
-
   tabla_6 = $("#tabla_ingresar_6").DataTable({
     dom:
       "Brt" +
