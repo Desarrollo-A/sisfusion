@@ -72,7 +72,7 @@ function fillTrimestral(beginDate, endDate) {
             titleAttr: 'Descargar archivo de Excel',
             title:'Reporte trimestral',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
@@ -133,7 +133,7 @@ function fillTrimestral(beginDate, endDate) {
                 },
                 {
                     data: function (n){
-                        return `<div class="d-flex justify-center"><button id="verifyNeodata" class="btn-data btn-sky" data-toggle="tooltip" data-placement="left" title="Verificar montos" data-nombreLote="${n.nombreLote}" data-empresa="${n.empresa}"><i class="fas fa-glasses"></i></button><div>`;
+                        return `<div class="d-flex justify-center"><button id="verifyNeodata" class="btn-data btn-violetBoots" data-toggle="tooltip" data-placement="left" title="Verificar montos" data-nombreLote="${n.nombreLote}" data-empresa="${n.empresa}"><i class="fas fa-glasses"></i></button><div>`;
                     }
                 },
             ],
@@ -143,16 +143,6 @@ function fillTrimestral(beginDate, endDate) {
             }
     });
 }
-
-function formatMoney( n ) {
-    const formatter = new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        maximumFractionDigits: 4,
-        currency: 'MXN'
-    });
-    return formatter.format(n);
-}
-
 
 $(document).on("click", "#searchByDateRange", function () {
     let finalBeginDate = $("#beginDate").val();
@@ -181,14 +171,22 @@ $(document).on("click", "#verifyNeodata", function () {
         dataType: 'json',
         cache: false,
         success: function (response) {
-            console.log(response[0]['Empresa']);
-            $("#detailPayments .modal-header").html('<div class="d-flex align-center titleCustom" style="background: white; border-radius:25px; justify-content: space-around"><h3 class="text-center fw-600"><b>lote</b></h3><h3 class="text-center fw-600">'+nombreLote+'</h3><i class="fas fa-times-circle fa-lg cursor-point" data-dismiss="modal" aria-hidden="true"></i></div>');
-            $("#detailPayments .modal-body").html('<p class="text-center">Total pagado actualmente</p><h1 class="text-center fw-600">'+formatMoney(response[0]['MontoTotalPagado'])+'</h1><p class="text-center"><i class="fas fa-money-bill-wave m-1" style="color:#6da36f"></i>mensualidades pagadas <b>'+response[0]['MenPagadas']+'/'+response[0]['MenPendientes']+'</b></p>');
+            $("#detailPayments .modal-body").hmtl('');
+            $("#detailPayments .modal-header").append('<div class="d-flex align-center titleCustom" style="background: white; border-radius:25px; justify-content: space-around"><h3 class="text-center fw-600"><b>lote</b></h3><h3 class="text-center fw-600">'+nombreLote+'</h3><i class="fas fa-times-circle fa-lg cursor-point" data-dismiss="modal" aria-hidden="true"></i></div>');
+            if(response.length != 0){
+                $("#detailPayments .modal-body").append('<p class="text-center">Total pagado actualmente</p><h1 class="text-center fw-600">'+formatMoney(response[0]['MontoTotalPagado'])+'</h1><p class="text-center"><i class="fas fa-money-bill-wave m-1" style="color:#6da36f"></i>mensualidades pagadas <b>'+response[0]['MenPagadas']+'/'+response[0]['MenPendientes']+'</b></p>');
+            }
+            else{
+                $("#detailPayments .modal-body").append(`<div class="h-100 text-center pt-4"><img src= '${general_base_url}dist/img/empty.png' alt="Icono vacío" class="w-60"></div><h3 class="titleEmpty">`);
+            }
             
             $('#spiner-loader').addClass('hide');
         },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            $('#btn_change_lp').prop('disabled', false);
+        }
     });
-    
     
     $("#detailPayments").modal();
   });
