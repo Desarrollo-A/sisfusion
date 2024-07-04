@@ -299,7 +299,13 @@ class Casas extends BaseController {
     }
 
     public function lotesCreditoDirecto(){
-        $proceso = 0; // se asigna esta variable para saber de que proceso se van a mostrar
+        $data = $this->input->get();
+        $proceso = $data["proceso"];
+        
+        if(!isset($proceso)){
+            $proceso = 0; // se asigna esta variable para saber de que proceso se van a mostrar
+        }
+
         $lotes = $this->CasasModel->lotesCreditoDirecto($proceso)->result();
 
         $this->json($lotes);
@@ -1627,6 +1633,12 @@ class Casas extends BaseController {
         $this->load->view("casas/creditoDirecto/cajas_adeudo_view");
     }
 
+    public function creditoDirectoCorrida(){
+        $this->load->view("template/header");
+
+        $this->load->view("casas/creditoDirecto/expedienteCorrida_view");
+    }
+
     public function creditoDirecto16(){
         $form = $this->form();
         $idLote = $form->idLote;
@@ -1641,5 +1653,34 @@ class Casas extends BaseController {
         );
 
         $update = $this->General_model->updateRecord("procesoCasasDirecto", $updateData, "idLote", $idLote);
+    }
+
+    public function creditoDirectoProceso(){
+        $form = $this->form();
+
+        $idLote = $form->idLote;
+        $comentario = $form->comentario;
+        $proceso = $form->proceso;
+
+        $this->db->trans_begin();
+
+        $updateData = array(
+            "comentario" => $comentario,
+            "proceso" => $proceso,
+            "modificadoPor" => $this->idUsuario
+        );
+
+        $updateRecord = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idLote", $idLote);
+
+        if($updateRecord){
+            $this->db->trans_commit();
+			$response["result"] = true;
+			print_r("Registro actualizado");
+		}
+		else{
+            $this->db->trans_rollback();
+			$response["result"] = false;
+			print_r("Error al actualizar");
+		}
     }
 }

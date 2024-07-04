@@ -8,7 +8,7 @@ let columns = [
     { data: function(data)
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
-            let upload_button = new RowButton({icon: '', color: '', label: 'Seleccionar para asignación', onClick: upload_archivo, data})
+            let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Seleccionar para asignación', onClick: upload_archivo, data})
             let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Seleccionar para asignación', onClick: return_lote, data})
             return '<div class="d-flex justify-center">' + pass_button + upload_button + return_button + '</div>'
         } 
