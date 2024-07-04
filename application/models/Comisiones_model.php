@@ -5320,6 +5320,8 @@ function getDatosGralInternomex(){
             $id_lider .= ", 495";
         else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
             $id_lider .= ", 5604";
+        else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
+            $id_lider .= ", 80, 664";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES

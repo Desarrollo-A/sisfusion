@@ -84,6 +84,7 @@
                                     </div>
                                     </div>
                                 <?php } ?>
+                                <?php if (isset($tipoFiltro)) { ?>
                                 <?php if ($tipoFiltro == 1) { ?>
                                     <div class="toolbar">
                                         <h3 class="card-title center-align">Documentación por lote</h3>
@@ -141,7 +142,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                <?php } ?>
+                                <?php } } ?>
                                 <table id="tableDoct" class="table-striped table-hover hide">
                                     <thead>
                                         <tr>
