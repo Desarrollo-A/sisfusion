@@ -31,6 +31,25 @@ $(document).ready(function () {
     },
     "json"
   );
+
+  $('[data-toggle="tooltip"]').tooltip();
+  code = "";
+  $.getJSON("get_enganches").done(function (data) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i]["id_catalogo"] == 104) {
+        $("#tipo_enganche").append(
+          $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
+        );
+      }
+      if (data[i]["id_catalogo"] == 103)
+        $("#estatus_enganche").append(
+          $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
+        );
+    }
+    $("#tipo_enganche").selectpicker("refresh");
+    $("#estatus_enganche").selectpicker("refresh");
+  });
+  
 });
 
 $("#tabla_ingresar_6").ready(function () {
