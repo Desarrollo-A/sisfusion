@@ -1302,7 +1302,7 @@ class Reporte_model extends CI_Model {
             GROUP BY CAST(re.descripcion AS VARCHAR(100)), UPPER(co.nombre), UPPER(lo.nombreLote),
             lo.idLote, lo.referencia, 
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno),
-            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cl.id_cliente
+            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cl.id_cliente, re.empresa
             UNION ALL
 
             SELECT CAST(re.descripcion AS VARCHAR(100)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
@@ -1325,9 +1325,9 @@ class Reporte_model extends CI_Model {
             GROUP BY CAST(re.descripcion AS VARCHAR(100)), UPPER(co.nombre), UPPER(lo.nombreLote),
             lo.idLote, lo.referencia, 
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno),
-            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cl.id_cliente
+            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cl.id_cliente, re.empresa
         ) t
-        LEFT JOIN (SELECT COUNT(*) totalVc, id_cliente FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = t.id_cliente, re.empresa
+        LEFT JOIN (SELECT COUNT(*) totalVc, id_cliente FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = t.id_cliente
         ORDER BY t.fechaApartado");
         return $query;
     }
