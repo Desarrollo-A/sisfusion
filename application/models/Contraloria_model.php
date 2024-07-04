@@ -113,7 +113,6 @@ class Contraloria_model extends CI_Model {
         return $this->db->query("SELECT * FROM sedes WHERE id_sede NOT IN (7) AND estatus = 1");
     }
 
-
     function get_tventa(){
         return $this->db->query("SELECT * FROM tipo_venta WHERE status = 1");
     }
@@ -123,7 +122,7 @@ class Contraloria_model extends CI_Model {
     }
 
     public function registroStatusContratacion6 () {
-        $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, convert(varchar,l.modificado,120) as modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)) as comentario, convert(varchar,l.fechaVenc,120) as fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl,
@@ -134,7 +133,7 @@ class Contraloria_model extends CI_Model {
 		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, l.totalNeto,
+		ISNULL(oxc0.nombre, 'Normal') tipo_proceso, l.totalNeto,
         CASE ISNULL(lf.idLotePvOrigen, 0) WHEN 0 THEN 0 ELSE 1 END banderaFusion
 	    FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
@@ -145,8 +144,8 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
-        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        LEFT JOIN lotesFusion lf ON lf.idLote = l.idLote
+		LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+		LEFT JOIN lotesFusion lf ON lf.idLote = l.idLote
 		WHERE l.status = 1 AND l.idStatusContratacion IN ('5', '2') AND l.idMovimiento IN ('35', '22', '62', '75', '94', '106', '108') and cl.status = 1
 	    GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -157,8 +156,8 @@ class Contraloria_model extends CI_Model {
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio, cl.expediente, sd.nombre, ISNULL(oxc0.nombre, 'Normal'), l.totalNeto, ISNULL(lf.idLotePvOrigen, 0)
 		ORDER BY l.nombreLote");
-        return $query->result();
-    }
+		return $query->result();
+	}
 
     public function validateSt6($idLote){
 		$query = $this->db->query("SELECT * FROM lotes WHERE idLote = $idLote AND idStatusContratacion IN (5, 2) AND idMovimiento IN (35, 22, 62, 75, 94, 106) AND idStatusLote = 3")->result();

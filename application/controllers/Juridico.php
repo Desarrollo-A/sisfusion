@@ -487,13 +487,13 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $modificado=date("Y-m-d H:i:s");
     $fechaVenc=$this->input->post('fechaVenc');
 
-		$validarDocumentos = $this->validarDocumentacionEstatus7($idLote);
-        if (!$validarDocumentos['status']) {
-            $data['message'] = 'DOCUMENTS';
-            $data['documentos'] = "Asegúrate de incluir los documentos: ${$validarDocumentos['documentos']}";
-            echo json_encode($data);
-            return;
-        }
+	$validarDocumentos = $this->validarDocumentacionEstatus7($idLote);
+    if (!$validarDocumentos['status']) {
+        $data['message'] = 'DOCUMENTS';
+        $data['documentos'] = "Asegúrate de incluir los documentos: $validarDocumentos['documentos']";
+        echo json_encode($data);
+        return;
+    }
 
     $arreglo=array();
     $arreglo["idStatusContratacion"]= 7;
@@ -513,10 +513,9 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $arreglo2["perfil"]=$this->session->userdata('id_rol');
     $arreglo2["modificado"]=date("Y-m-d H:i:s");
     $arreglo2["fechaVenc"]= $fechaVenc;
-    $arreglo2["idLote"]= $idLote; 
+    $arreglo2["idLote"]= $idLote;
     $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente; 
-
+    $arreglo2["idCliente"]= $idCliente;
 
 	$validate = $this->Juridico_model->validateSt7($idLote);
 
