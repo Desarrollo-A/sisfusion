@@ -6167,7 +6167,7 @@ class RegistroCliente extends CI_Controller {
         }
 
         if (trim($row['expediente']) === '') {
-            return $row;
+          return $row;
         }
 
         if (
@@ -6179,7 +6179,11 @@ class RegistroCliente extends CI_Controller {
             return $row;
         }
 
-        $path = $this->Documentacion_model->getCarpetaArchivo($row['tipo_doc'], $row['proceso'], $row['nombreLote'], $row['expediente']);
+        if(isset( $row["bucket"])  && $row['bucket']){
+            $path = base_url() . "Documentacion/archivo/";
+        }else{
+            $path = $this->Documentacion_model->getCarpetaArchivo($row['tipo_doc'], $row['proceso'], $row['nombreLote'], $row['expediente']);
+        }
 
         $row['expediente'] = $path.$row['expediente'];
 
