@@ -8,9 +8,16 @@ let columns = [
     { data: function(data)
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 17', onClick: select_lote, data})
-            let upload_button = new RowButton({icon: 'note_add', color: '', label: 'Subir archivo', onClick: upload_archivo, data})
+            let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Subir archivo', onClick: upload_archivo, data})
             let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a asignación de cartera', onClick: return_lote, data})
-            return '<div class="d-flex justify-center">' + pass_button + upload_button + return_button + '</div>'
+            let reupload_button = new RowButton({icon: 'upload_file', color: '', label: 'Subir archivo', onClick: upload_archivo, data})
+
+            if(data.documento == null){
+                return '<div class="d-flex justify-center">' + upload_button + return_button + '</div>'
+            }
+            else{
+                return '<div class="d-flex justify-center">' + pass_button + upload_button + return_button + '</div>'
+            }
         } 
     },
 ];
@@ -18,7 +25,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
-    params: { proceso: 17 },
+    params: { proceso: 17, tipoDocumento: 2 },
     columns,
     // button: buttons
 });
@@ -62,24 +69,22 @@ return_lote = function(data){ // funcion para subir el archivo de adeudo
 
 upload_archivo = function(data){ // funcion para subir el archivo de adeudo
     let form = new Form({
-        title: '¿Subir archivo?', 
-        text: `¿Se subira un archivo para el proceso con el lote - <b>${data.nombreLote}</b>?`,
+        title: `Subir orden de compra`,
         onSubmit: function(data){
-            // console.log(data)
-            form.loading(true)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/to_asignacion`,
+                url: `${general_base_url}casas/UploadDocumentoCreditoDirecto`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a asignación.", "success");
-        
-                    table.reload();
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
-                    form.hide();
+                    table.reload()
+
+                    form.hide()
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -89,8 +94,12 @@ upload_archivo = function(data){ // funcion para subir el archivo de adeudo
             })
         },
         fields: [
-            new HiddenField({ id: 'idLote', value: data.idLote }),
-            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idProceso', value: data.idProceso }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'tipoDocumento', value: data.archivo }),
+            new HiddenField({ id: 'id_documento', value: 2 }),
+            new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ],
     })
 
