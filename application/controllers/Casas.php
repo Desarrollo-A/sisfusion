@@ -301,12 +301,13 @@ class Casas extends BaseController {
     public function lotesCreditoDirecto(){
         $data = $this->input->get();
         $proceso = $data["proceso"];
+        $tipoDocumento = $data["tipoDocumento"] ? $data["tipoDocumento"] : 0;
         
         if(!isset($proceso)){
             $proceso = 0; // se asigna esta variable para saber de que proceso se van a mostrar
         }
 
-        $lotes = $this->CasasModel->lotesCreditoDirecto($proceso)->result();
+        $lotes = $this->CasasModel->lotesCreditoDirecto($proceso, $tipoDocumento)->result();
 
         $this->json($lotes);
     }
@@ -1639,6 +1640,12 @@ class Casas extends BaseController {
         $this->load->view("casas/creditoDirecto/expedienteCorrida_view");
     }
 
+    public function creditoDirectoContratoElaborado(){
+        $this->load->view("template/header");
+
+        $this->load->view("casas/creditoDirecto/contrato_elaborado_view");
+    }
+
     public function creditoDirecto16(){
         $form = $this->form();
         $idLote = $form->idLote;
@@ -1682,5 +1689,49 @@ class Casas extends BaseController {
 			$response["result"] = false;
 			print_r("Error al actualizar");
 		}
+    }
+
+    public function UploadDocumentoCreditoDirecto(){
+        $idProceso = $this->form('idProceso');
+        $proceso = $this->form('proceso');
+        $nombre_lote = $this->form('nombre_lote');
+        $tipoDocumento = $this->form('tipoDocumento') ? $this->form('tipoDocumento') : 0;
+        $id_documento = $this->form('id_documento');
+        $file = $this->file('file_uploaded');
+
+        if(!isset($proceso) || !isset($nombre_lote) || !isset($id_documento)){
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        if(!$file){
+            http_response_code(400);
+        }else{
+
+            // Consulta nombre tipo documento
+            $documento = $this->CasasModel->getDocumentoCreditoDirecto($id_documento);
+
+            $name_documento = $documento->result()[0]->nombre;
+
+            //  Nombre del archivo          
+            $filename = $this->generateFileName($name_documento, $nombre_lote, $idProceso, $file->name);
+
+            // Se sube archivo al buket
+            $uploaded = $this->upload($file->tmp_name, $filename);
+
+            if($uploaded){
+
+                $created = $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento);
+
+                if($created){
+                    $motivo = "Se subio archivo: $name_documento";
+                    $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2);
+
+                    $this->json([]);
+                }
+            }
+        }
+
+        http_response_code(404);
     }
 }

@@ -52,7 +52,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion){
+    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion, $esquema){
         $idMovimiento = $this->session->userdata('id_usuario');
 
         $query = "INSERT INTO historial_proceso_casas
@@ -61,7 +61,8 @@ class CasasModel extends CI_Model
             procesoAnterior,
             procesoNuevo,
             idMovimiento,
-            descripcion
+            descripcion,
+            esquemaCreditoProceso
         )
         VALUES
         (
@@ -69,7 +70,8 @@ class CasasModel extends CI_Model
             $procesoAnterior,
             $procesoNuevo,
             $idMovimiento,
-            '$descripcion'
+            '$descripcion',
+            $esquema
         )";
 
         return $this->db->query($query);
@@ -1402,21 +1404,60 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function lotesCreditoDirecto($proceso){
+    public function lotesCreditoDirecto($proceso, $tipoDocumento){
+
         $query = $this->db->query("SELECT 
+            pcd.idProceso,
             lo.idLote,
             lo.nombreLote,
             pcd.estatus,
             pcd.proceso,
             pcd.comentario,
             co.nombre AS condominio,
-            re.descripcion AS proyecto
+            re.descripcion AS proyecto,
+			dpc.archivo,
+            dpc.documento
         FROM proceso_casas_directo pcd
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
         WHERE pcd.proceso = ?", $proceso);
 
         return $query;
+    }
+
+    public function getDocumentoCreditoDirecto($id_documento){
+        $query = $this->db->query("SELECT * FROM opcs_x_cats 
+        WHERE id_catalogo = 149 AND id_opcion = ?", $id_documento);
+
+        return $query;
+    }
+
+    public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento){
+        
+        if($tipoDocumento === 0){
+            $query = "INSERT INTO documentos_proceso_credito_directo
+            (
+                idProceso,
+                documento,
+                archivo,
+                tipo
+            )
+            VALUES
+            (
+                $idProceso,
+                '$name_documento',
+                '$filename',
+                $id_documento
+            )";
+        }else{
+            $query = "UPDATE documentos_proceso_credito_directo 
+            SET documento = '$name_documento', archivo = '$filename' 
+            WHERE idProceso = $idProceso AND tipo = $id_documento";
+        }
+
+        return $this->db->query($query);
+
     }
 }
