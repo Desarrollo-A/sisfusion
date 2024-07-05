@@ -1221,8 +1221,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     }
 
-    function getCatalogs() {
-        return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (77, 78,121) AND estatus = 1 ORDER BY id_catalogo, nombre");
+    function getCatalogos() {
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (77, 78, 127) AND estatus = 1 
+        UNION ALL
+        SELECT 0 id_catalogo, id_sede id_opcion, nombre FROM sedes WHERE estatus = 1 AND id_sede != 7
+        ORDER BY id_catalogo, nombre");
     }
 
     function validaCorrida($idLote){
@@ -1915,10 +1918,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
         return $filtroSede;
-    }
-    
-    public function getMensualidades() {
-        return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (126) AND estatus = 1");
     }
 
     public function updateMensualidad($mensualidades, $idLote, $idCliente, $mensualidadesGuardadas){

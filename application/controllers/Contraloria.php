@@ -2903,10 +2903,8 @@ class Contraloria extends CI_Controller {
     }
 
     public function fillSelectsForV9() {
-        $catalogos = $this->Contraloria_model->getCatalogs()->result_array();
-        $sedes = $this->Contraloria_model->get_sede()->result_array();
-        $data = array_merge($catalogos, $sedes);
-        echo json_encode($data);
+        $catalogos = $this->Contraloria_model->getCatalogos()->result_array();
+        echo json_encode($catalogos);
     }
 
     function todasAutorizacionesMSI(){
@@ -3621,10 +3619,6 @@ class Contraloria extends CI_Controller {
     public function getReporteCoincidenciasCT() {
         $registros = $this->Contraloria_model->getReporteCoincidenciasCT();
         echo json_encode($registros, JSON_NUMERIC_CHECK);
-    }
-
-    public function fillMensualidades() {
-        echo json_encode($this->Contraloria_model->getMensualidades()->result_array());
     }
 
     public function getComplementoPago() {
