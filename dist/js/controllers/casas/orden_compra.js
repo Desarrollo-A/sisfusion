@@ -18,7 +18,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
-    params: { proceso: 16 },
+    params: { proceso: 17 },
     columns,
     // button: buttons
 });
