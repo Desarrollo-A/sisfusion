@@ -171,7 +171,8 @@ $(document).on("click", "#verifyNeodata", function () {
         dataType: 'json',
         cache: false,
         success: function (response) {
-            $("#detailPayments .modal-body").hmtl('');
+            $("#detailPayments .modal-body").empty();
+            $("#detailPayments .modal-header").empty();
             $("#detailPayments .modal-header").append('<div class="d-flex align-center titleCustom" style="background: white; border-radius:25px; justify-content: space-around"><h3 class="text-center fw-600"><b>lote</b></h3><h3 class="text-center fw-600">'+nombreLote+'</h3><i class="fas fa-times-circle fa-lg cursor-point" data-dismiss="modal" aria-hidden="true"></i></div>');
             if(response.length != 0){
                 $("#detailPayments .modal-body").append('<p class="text-center">Total pagado actualmente</p><h1 class="text-center fw-600">'+formatMoney(response[0]['MontoTotalPagado'])+'</h1><p class="text-center"><i class="fas fa-money-bill-wave m-1" style="color:#6da36f"></i>mensualidades pagadas <b>'+response[0]['MenPagadas']+'/'+response[0]['MenPendientes']+'</b></p>');
