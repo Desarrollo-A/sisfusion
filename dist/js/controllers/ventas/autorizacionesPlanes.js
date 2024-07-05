@@ -1,5 +1,5 @@
 let descuentosYCondiciones;
-$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
+//$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
 llenarTipoDescuentos();
 
 sp = {
