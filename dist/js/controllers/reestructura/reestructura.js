@@ -1,26 +1,18 @@
 var datosCatalogo = [];
 var tabla_valores_catalogos = '';
-
-$(document).ready(function () {
+$(document).ready(function(){
     $("#tabla_clientes").addClass('hide');
-    $('#spiner-loader').removeClass('hide');
-    $.post(`${general_base_url}Reestructura/lista_proyecto`, function (data) {
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
-        $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
+    $("#tabla_clientes_liberar").addClass('hide');
+    $("#spiner-loader").removeClass('hide');
+    $.post(`${general_base_url}Reestructura/lista_proyecto`, function(data) {
         for (var i = 0; i < data.length; i++) {
             $("#proyecto").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion'].toUpperCase()));
         }
         $("#proyecto").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
+        $("#spiner-loader").addClass('hide');
     }, 'json');
 
     $.post(`${general_base_url}Reestructura/lista_proyecto`, { bandera: 1, }, function (data) {
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
-        $("#proyectoLiberado").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
         for (var i = 0; i < data.length; i++) {
             $("#proyectoLiberado").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion'].toUpperCase()));
         }
@@ -28,7 +20,7 @@ $(document).ready(function () {
         $('#spiner-loader').addClass('hide');
     }, 'json');
 
-    $.post(`${general_base_url}Reestructura/lista_catalogo_opciones`, { id_catalogo: 100 }, function (data) {
+    $.post(`${general_base_url}General/getOpcionesPorCatalogo/100`, function(data) {
         datosCatalogo = data;
         for (var i = 0; i < data.length; i++) {
             var id = data[i]['id_opcion'];
@@ -78,7 +70,6 @@ $(document).on('click', '.stat5Rev', function () {
     $('#idLoteCatalogo').val($(this).attr('data-idLote'));
     $('#aceptarReestructura').modal();
 });
-
 $(document).on('click', '.guardarValidacion', function () {
     var idLoteCa = $('#idLoteCatalogo').val();
     var opcionValidacion = $('#grabado').val();
@@ -181,126 +172,74 @@ function open_Mb() {
     fillTableCatalogo(100);
 }
 
-function open_Mdc() {
+function open_Mdc () {
     $("#catalogoNuevo").modal();
 }
 
-$(document).on("submit", "#addNewDesc", function (e) {
-    e.preventDefault();
-    let data = new FormData($(this)[0]);
+function catalogoAcciones(opcionAccion, data, successMessage, modalId) {
     $("#spiner-loader").removeClass('hide');
+    data.append("actionCode", opcionAccion); 
     $.ajax({
         method: 'POST',
-        url: `${general_base_url}Reestructura/insertarOpcion`,
-        data: data,
+        url: `${general_base_url}Reestructura/catalogoAcciones`,
+        data:data,
         processData: false,
         contentType: false,
-        success: function (data) {
-            if (data == 1) {
+        success:function(response) {
+            if (response == 1) {
                 $('#tableCatalogo').DataTable().ajax.reload(null, false);
-                $('#catalogoNuevo').modal('hide');
                 $("#spiner-loader").addClass('hide');
-                alerts.showNotification("top", "right", "Opción insertada correctamente.", "success");
-                $('#inputCatalogo').val('');
+                $(modalId).modal('hide');
+                alerts.showNotification("top", "right", successMessage, "success");
+                if (opcionAccion === 1 || opcionAccion === 1) {
+                    $('#inputCatalogo, #editarCatalogo').val('');
+                    $('#id_opcion, #idOpcionEdit').val('');
+                }
             }
-        },
+        }, 
         error: function () {
-            $('#catalogoNuevo').modal('hide');
+            $(modalId).modal('hide');
             $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
+}
+
+$(document).on("submit", "#addNewDesc", function(e){
+    e.preventDefault();
+    let data = new FormData($(this)[0]);
+    catalogoAcciones(1, data, "Opción insertada correctamente.", '#catalogoNuevo');
     return false;
 });
 
-$(document).on('click', '#borrarOpcion', function () {
-    $('#idOpcion').val($(this).attr('data-idOpcion'));
-    $("#modalBorrar").modal();
-});
-
-$(document).on('click', '#borrarOp', function () {
+$(document).on('click', '#borrarOp', function(){
     var idOpcion = $("#idOpcion").val();
-    var datos = new FormData();
-    $("#spiner-loader").removeClass('hide');
-    datos.append("idOpcion", idOpcion);
-    $.ajax({
-        method: 'POST',
-        url: `${general_base_url}Reestructura/borrarOpcion`,
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data == 1) {
-                $('#tableCatalogo').DataTable().ajax.reload(null, false);
-                $("#spiner-loader").addClass('hide');
-                $('#modalBorrar').modal('hide');
-                alerts.showNotification("top", "right", "Opción eliminada.", "success");
-            }
-        },
-        error: function () {
-            $("#spiner-loader").addClass('hide');
-            $('#modalBorrar').modal('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
+    var data = new FormData();
+    data.append("idOpcion", idOpcion);
+    catalogoAcciones(2, data, "Opción eliminada.", '#modalBorrar');
 });
 
-$(document).on('click', '#editarOpcion', function () {
-    $('#id_opcionEdit').val($(this).attr('data-idOpcion'));
-    $("#editarModel").modal();
-})
-
-$(document).on('click', '#guardarEdit', function () {
+$(document).on('click', '#guardarEdit', function() {
     var idOpcionEdit = $('#id_opcionEdit').val();
     var editarCatalogo = $("#editarCatalogo").val();
-    var datos = new FormData();
-    $("#spiner-loader").removeClass('hide');
-
-    datos.append("idOpcionEdit", idOpcionEdit);
-    datos.append("editarCatalogo", editarCatalogo);
-
-    $.ajax({
-        method: 'POST',
-        url: `${general_base_url}Reestructura/editarOpcion`,
-        data: datos,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data == 1) {
-                $('#tableCatalogo').DataTable().ajax.reload(null, false);
-                $("#spiner-loader").addClass('hide');
-                $('#editarModel').modal('hide');
-                alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
-                $('#editarCatalogo').val('');
-                $('#idOpcionEdit').val('');
-            }
-        },
-        error: function () {
-            $('#editarModel').modal('hide');
-            $("#spiner-loader").addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
+    var data = new FormData();
+    data.append("idOpcionEdit", idOpcionEdit);
+    data.append("editarCatalogo", editarCatalogo);
+    catalogoAcciones(3, data, "Opción editada correctamente.", '#editarModel');
 });
 
-function fillChangelog(v) {
-    $("#historialLine").append(`<li>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <a><b>  ${v.creado_por.toUpperCase()}  </b></a><br>
-                </div>
-                <div class="float-end text-right">
-                    <a> ${v.fecha_creacion} </a>
-                </div>
-                <div class="col-md-12">
-                    <p class="m-0"><small>Valor anterior: </small><b>  ${(v.nombre) ? v.nombre.toUpperCase() : '-'} </b></p>
-                    <p class="m-0"><small>Valor nuevo: </small><b> ${v.nombreNuevo.toUpperCase()} </b></p>
-                </div>
-            </div>
-        </div>
-    </li>`);
-}
+$(document).on('click', '#borrarOpcion', function(){
+    $('#idOpcion').val($(this).attr('data-idOpcion'));
+    $('#modalBorrar').modal();
+});
+
+$(document).on('click', '#editarOpcion', function() {
+    var idOpcion = $(this).attr('data-idOpcion');
+    var optionName = $(this).attr('data-optionName');
+    $('#id_opcionEdit').val(idOpcion);
+    $('#editarCatalogo').val(optionName);
+    $('#editarModel').modal();
+});
 
 function fillTable(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes").DataTable({
@@ -406,15 +345,6 @@ function fillTable(index_proyecto) {
     });
 }
 
-$('#tableCatalogo thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($('#tableCatalogo').DataTable().column(i).search() !== this.value)
-            $('#tableCatalogo').DataTable().column(i).search(this.value).draw();
-    });
-});
-
 function fillTableCatalogo(id_catalogo) {
     tabla_valores_catalogos = $("#tableCatalogo").DataTable({
         width: '100%',
@@ -460,7 +390,7 @@ function fillTableCatalogo(id_catalogo) {
             orderable: false
         }],
         ajax: {
-            url: `${general_base_url}Reestructura/lista_catalogo_opciones`,
+            url: `${general_base_url}General/getOpcionesPorCatalogo/${id_catalogo}`,
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -480,29 +410,63 @@ function fillTableCatalogo(id_catalogo) {
     });
 }
 
-// tabla para liberar segunda tabla inicio 
-$(document).on('click', '.liberarBandera', function () {
-    document.getElementById('liberarBandera').disabled = true;
-    var bandera = document.getElementById('bandera').value;
-    var idLoteBandera = document.getElementById('idLoteBandera').value;
-    $.ajax({
-        url: 'cambiarBandera',
-        type: 'POST',
-        dataType: "json",
-        data: { bandera: bandera, idLoteBandera: idLoteBandera },
-        success: function (data) {
-            alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
-            document.getElementById('liberarBandera').disabled = false;
-            $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
-            // toastr[response.response_type](response.message);
-            $('#banderaLiberar').modal('toggle');
-        },
-        error: (a, b, c) => {
-            alerts.showNotification("top", "right", "Lote no actualizado .", "warning");
-        }
-    });
+$(document).on('click')
 
+let titulos_intxtLiberado = [];
+$('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    titulos_intxtLiberado.push(title);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+    $('input', this).on('keyup change', function () {
+        if ($('#tabla_clientes_liberar').DataTable().column(i).search() !== this.value)
+            $('#tabla_clientes_liberar').DataTable().column(i).search(this.value).draw();
+    });
 });
+
+$(document).on('change', '#proyectoLiberado', function() {
+    let index_proyecto = $(this).val();
+    $("#spiner-loader").removeClass('hide');
+    $("#tabla_clientes_liberar").removeClass('hide');
+    fillTable1(index_proyecto);
+});
+
+$(document).on('click', '.cambiarBandera', function () {
+    let bandera = '¿Estás seguro de LIBERAR el lote para reestructura?';
+    lote = $(this).attr("data-idLote");
+    activoDetenido = $(this).attr("data-bandera");
+    if (activoDetenido == 0)
+        bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
+    document.getElementById("tituloAD").innerHTML = bandera;
+    //document.getElementById("tituloModal").innerHTML = bandera;
+    document.getElementById("bandera").value = activoDetenido;
+    document.getElementById("idLoteBandera").value = lote;
+    $('#banderaLiberar').modal();
+    //$("#banderaAcciones").modal();
+});
+
+$(document).on('click', '.regresarBandera', function () {
+    let bandera = '¿Estás seguro de BLOQUEAR el lote?';
+    
+    // traer datos desde el boton 
+    lote = $(this).attr("data-idLote");
+    activoDetenido = $(this).attr("data-bandera");
+    idCliente = $(this).attr("data-idCliente");
+    preproceso = $(this).attr("data-preproceso");
+    
+    if(preproceso > 0)
+        bandera = '¿Estás seguro de BLOQUEAR y DESHACER el pre-proceso del lote?';
+    
+    //asignar 
+    document.getElementById("tituloBloqueo").innerHTML = bandera;
+    //document.getElementById("tituloModal").innerHTML = bandera;
+    document.getElementById("banderaBloqueo").value = activoDetenido;
+    document.getElementById("idLoteBloqueo").value = lote;
+    document.getElementById("clienteBloqueo").value = idCliente;
+    document.getElementById("preprocesoBloqueo").value = preproceso;
+    $('#banderaRegresar').modal();
+    //$("#banderaAcciones").modal();
+});
+
 
 $(document).on('click', '.bloquearBandera', function () { // proceso para bloquear lote
     document.getElementById('bloquearBandera').disabled = true;
@@ -531,12 +495,14 @@ $(document).on('click', '.bloquearBandera', function () { // proceso para bloque
                     alerts.showNotification("top", "right", response.message, "success");
                     $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
                     $('#banderaRegresar').modal('toggle');
+                    //$("#banderaAcciones").modal('toggle');
                 }
             }
             else{
                 alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
                 $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
                 $('#banderaRegresar').modal('toggle');
+                //$('#banderaAcciones').modal('toggle');
 
                 document.getElementById('bloquearBandera').disabled = false;
             }
@@ -548,6 +514,30 @@ $(document).on('click', '.bloquearBandera', function () { // proceso para bloque
         }
     });
 
+});
+
+$(document).on('click', '.liberarBandera', function() {
+    document.getElementById('liberarBandera').disabled = true;
+    var bandera = document.getElementById('bandera').value;
+    var idLoteBandera = document.getElementById('idLoteBandera');
+    $.ajax({
+        url: 'cambiarBandera',
+        type: 'POST',
+        dataType: "json",
+        data: {bandera: bandera, idLoteBandera: idLoteBandera},
+        success: function (response) {
+            if(response == 1) {
+                alerts.showNotification("top", "right", "Se ha liberado  satisfactoriamente", "success");
+                document.getElementById('liberarBandera').disabled = false;
+                $("#tabla_clientes_liberar").DataTable().ajax.reload(null, false);
+                $("#banderaLiberar").modal('toggle');
+            }
+        },
+        error: function() {
+            alerts.showNotification("top", "right", "Lote no actualizado, inténtalo más tarde", "warning");
+
+        }
+    });
 });
 
 function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLotePvOrigen){ // proceso para regresar el preproceso del lote a bloquear
@@ -590,6 +580,7 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
 
             $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
             $('#banderaRegresar').modal('toggle');
+            //$('#banderaAcciones').modal('toggle');
 
             document.getElementById('bloquearBandera').disabled = false;
         },
@@ -600,89 +591,6 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
         }
     });
 }
-
-function deshacerFusion(idLotePvOrigen){
-    $.ajax({
-        url: 'deshacerFusion',
-        type: 'POST',
-        dataType: "json",
-        data: {
-            idLotePvOrigen 
-        },
-        success: function (response) {
-            if(response.result){
-                alerts.showNotification("top", "right", response.message, "success");
-                $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
-            }
-            else
-                alerts.showNotification("top", "right", response.message, "danger");
-
-            document.getElementById('bloquearBandera').disabled = false;
-            $("#spiner-loader").addClass('hide');
-        },
-        error: function(){
-            $("#spiner-loader").addClass('hide');
-            alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
-            document.getElementById('bloquearBandera').disabled = false;
-        }
-    });
-}
-
-$(document).on('click', '.cambiarBandera', function () {
-    let bandera = '¿Estás seguro de LIBERAR el lote para reestructura?';
-    lote = $(this).attr("data-idLote");
-    activoDetenido = $(this).attr("data-bandera");
-    if (activoDetenido == 0)
-        bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
-    document.getElementById("tituloAD").innerHTML = bandera;
-    document.getElementById("bandera").value = activoDetenido;
-    document.getElementById("idLoteBandera").value = lote;
-    $('#banderaLiberar').modal();
-});
-
-$(document).on('click', '.regresarBandera', function () {
-    let bandera = '¿Estás seguro de BLOQUEAR el lote?';
-    
-    // traer datos desde el boton 
-    lote = $(this).attr("data-idLote");
-    activoDetenido = $(this).attr("data-bandera");
-    idCliente = $(this).attr("data-idCliente");
-    preproceso = $(this).attr("data-preproceso");
-    
-    if(preproceso > 0)
-        bandera = '¿Estás seguro de BLOQUEAR y DESHACER el pre-proceso del lote?';
-
-    //asignar 
-    document.getElementById("tituloBloqueo").innerHTML = bandera;
-    document.getElementById("banderaBloqueo").value = activoDetenido;
-    document.getElementById("idLoteBloqueo").value = lote;
-    document.getElementById("clienteBloqueo").value = idCliente;
-    document.getElementById("preprocesoBloqueo").value = preproceso;
-
-    $('#banderaRegresar').modal();
-});
-
-// $(window).resize(function () {
-//     tabla_valores_catalogos.columns.adjust().draw();
-// });
-
-let titulos_intxtLiberado = [];
-$('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_intxtLiberado.push(title);
-    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_clientes_liberar').DataTable().column(i).search() !== this.value)
-            $('#tabla_clientes_liberar').DataTable().column(i).search(this.value).draw();
-    });
-});
-
-$('#proyectoLiberado').change(function () {
-    let index_proyecto = $(this).val();
-    $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes_liberar").removeClass('hide');
-    fillTable1(index_proyecto);
-});
 
 function fillTable1(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({

@@ -5,7 +5,32 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
-            <!-- moldaes 2da tabla inicio -->        
+
+        <!--<div class="modal fade" id="banderaAcciones" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-small"> 
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                            <h4 id="tituloModal" name="tituloModal"></h4>
+                        </div>
+                        <br>
+                        <input type="hidden" name="idLoteBandera" id="idLoteBandera">
+                        <input type="hidden" name="bandera" id="bandera">
+                        <input type="hidden" name="idLoteBloqueo" id="idLoteBloqueo">
+                        <input type="hidden" name="banderaBloqueo" id="banderaBloqueo" >
+                        <input type="hidden" name="clienteBloqueo" id="clienteBloqueo" >
+                        <input type="hidden" name="preprocesoBloqueo" id="preprocesoBloqueo" >   
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar </button>
+                        <button type="button" name="banderaAccion" id="banderaAccion" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+        <!-- moldaes 2da tabla inicio -->        
+        
         <div class="modal fade " id="banderaLiberar" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-small">
 				<div class="modal-content" > 
@@ -66,7 +91,7 @@
 				</div>
 			</div>
 		</div>
-
+        <!--KEEP CATALOGO TABLE-->
         <div class="modal fade" id="catalogoRee" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" > 
@@ -198,7 +223,7 @@
 				</div>
 			</div>
 		</div>
-
+        <!--KEEP HISTORIAL MOVIMIENTOS-->
         <div class="modal fade" id="modal_historial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -228,101 +253,117 @@
                 </div>
             </div>
         </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Liberar para reestructura</a></li>
+                            <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Liberar cartera para reubicación</a>
+                            </li>
                             <li><a href="#proceso-1" role="tab" data-toggle="tab">Liberar</a></li>
                         </ul>
-                       <div class="card no-shadow m-0 border-conntent__tabs">
-                            <div class="card-content p-0"> 
+                        <div class="card no-shadow m-0 border-conntent__tabs">
+                            <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
-                                        <div class="tab-content p-2">
-                                            <div class="tab-pane active" id="nuevas-1">
+                                    <div class="tab-content p-2">
+                                        <!-- Tab 1: Liberar para reestructura -->
+                                        <div class="tab-pane active" id="nuevas-1">
                                             <div class="card-content">
-                                        <div class="encabezadoBox">
-                                         <h3 class="card-title center-align">Liberar para reestructura</h3>
-                                        </div>
-                                    <div class="toolbar">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                <div class="form-group">
-                                                    <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <div class="encabezadoBox">
+                                                    <h3 class="card-title center-align">Liberar cartera para reubicación</h3>
                                                 </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div>
-                                        </div>
-                                    </div>
-                                    <div class="material-datatables">
-                                        <div class="form-group">
-                                            <table class="table-striped table-hover" id="tabla_clientes" name="tabla_clientes">
-                                                <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE </th>
-                                                        <th>SUPERFICIE</th>
-                                                        <th>PRECIO M2</th>
-                                                        <th>NOMBRE CLIENTE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ESTATUS LOTE</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                    </div>
-                                
-                                </div>
-                            </div>
-                            <!-- nueva tabla libera  -->
-                            <div class="tab-pane" id="proceso-1">
-                                <div class="text-center">
-                                    <h3 class="card-title center-align">Liberar lotes</h3>
-                                </div>
-                                <div class="toolbar">
-                                    <div class="container-fluid p-0">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                <div class="form-group">
-                                                <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
-                                                <select name="proyectoLiberado" id="proyectoLiberado" class="selectpicker select-gral m-0" data-style="btn"
-                                                 data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                                </select>
+                                                <div class="toolbar">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label overflow-hidden"
+                                                                    for="proyecto">Proyecto</label>
+                                                                <select name="proyecto" id="proyecto"
+                                                                    class="selectpicker select-gral m-0" data-style="btn"
+                                                                    data-show-subtext="true" data-live-search="true"
+                                                                    title="SELECCIONA UNA OPCIÓN" data-size="7"
+                                                                    data-container="body" required></select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                        <table class="table-striped table-hover" id="tabla_clientes"
+                                                            name="tabla_clientes">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>PROYECTO</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>ID LOTE </th>
+                                                                    <th>SUPERFICIE</th>
+                                                                    <th>PRECIO M2</th>
+                                                                    <th>NOMBRE CLIENTE</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>ESTATUS LOTE</th>
+                                                                    <th>COMENTARIO</th>
+                                                                    <th>ACCIONES</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- Tab 2: Liberar lotes -->
+                                        <div class="tab-pane" id="proceso-1">
+                                            <div class="card-content">
+                                                <div class="encabezadoBox">
+                                                    <h3 class="card-title center-align">Liberar lotes</h3>
+                                                </div>
+                                                <div class="toolbar">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label overflow-hidden"
+                                                                    for="proyectoLiberado">Proyecto</label>
+                                                                <select name="proyectoLiberado" id="proyectoLiberado"
+                                                                    class="selectpicker select-gral m-0" data-style="btn"
+                                                                    data-show-subtext="true" data-live-search="true"
+                                                                    title="SELECCIONA UNA OPCIÓN" data-size="7"
+                                                                    data-container="body" required></select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                        <table class="table-striped table-hover" id="tabla_clientes_liberar"
+                                                            name="tabla_clientes_liberar">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>PROYECTO</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>ID LOTE </th>
+                                                                    <th>SUPERFICIE</th>
+                                                                    <th>PRECIO M2</th>
+                                                                    <th>NOMBRE</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>ACCIONES</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- End of new table -->
                                     </div>
-                                    <table class="table-striped table-hover" id="tabla_clientes_liberar" name="tabla_clientes_liberar">
-                                        <thead>
-                                            <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE </th>
-                                                <th>SUPERFICIE</th>
-                                                <th>PRECIO M2</th>
-                                                <th>NOMBRE</th>
-                                                <th>ESTATUS</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
                                 </div>
                             </div>
-                            <!-- fin de nueva tabla libera -->
-                       </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <?php $this->load->view('template/footer_legend'); ?>
         </div>
+
     </div>
 </body>
 <?php $this->load->view('template/footer'); ?>

@@ -8,7 +8,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Reestructura extends CI_Controller{
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model'));
+        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model', 'Administracion_model'));
         $this->load->library(array('session','form_validation', 'get_menu', 'permisos_sidebar', 'Formatter'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -112,25 +112,25 @@ class Reestructura extends CI_Controller{
 		$this->load->view('template/header');
         $this->load->view("reestructura/reestructura_view");
     }
-
-	public function lista_catalogo_opciones(){
-		$id_catalogo = $_POST['id_catalogo'];
-		echo json_encode($this->Reestructura_model->get_catalogo_restructura($id_catalogo)->result_array());
-	}
-
-	public function insertarOpcion(){
-		$idOpcion = $this->Reestructura_model->insertOpcion(100);
-		$idOpcion = $idOpcion->lastId;
-		$datos["id"] = $idOpcion;
-		$datos["nombre"] = $_POST['inputCatalogo'];
-		$datos["fecha_creacion"] = date('Y-m-d H:i:s');
-		$insert = $this->Reestructura_model->nuevaOpcion($datos);
-		if ($insert == TRUE) {
-			echo json_encode(1);
-		} else {
-			echo json_encode(0);
-		}
-	}
+    
+	/*public function insertarOpcion(){
+        $idOpcion = $this->Administracion_model->getLastId('opcs_x_cats', array('id_catalogo' => 100), 'id_opcion');
+        $data_insert = array(
+            'id_opcion' => $idOpcion + 1 ,
+            'id_catalogo' => 100,
+            'nombre' => $_POST['inputCatalogo'],
+            'estatus' => 1,
+            'fecha_creacion' => date('Y-m-d H:i:s'),
+            'creado_por' => 1,
+            'color' => NULL
+        );
+        $response = $this->General_model->addRecord('opcs_x_cats', $data_insert);
+        if($response) {
+            echo json_encode(1);
+        }else {
+            echo json_encode(0);
+        }
+	}*/
 
 	public function getHistorial($idLote){
         echo json_encode($this->Reestructura_model->historialModel($idLote)->result_array());
@@ -142,15 +142,17 @@ class Reestructura extends CI_Controller{
 		$datos["opcionReestructura"] = $dataPost['opcionReestructura'];
 		$datos["comentario"] = $dataPost['comentario'];
 		$datos["userLiberacion"] = $this->session->userdata('id_usuario');
-		$update = $this->Reestructura_model->actualizarValidacion($datos);
-
-		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		} 
+        $updateData = array(
+            "opcionReestructura" => $dataPost['opcionReestructura'],
+            "comentarioReubicacion" => $dataPost['comentario'],
+            "userLiberacion" => $this->session->userdata('id_usuario')
+        );
+        $updateResponse = $this->General_model->updateRecord("lotes", $updateData, "idLote", $dataPost['idLote']);
+        if($updateResponse) {
+            echo json_encode(1);
+        }else {
+            echo json_encode(0);
+        }
 	}
 
     public function insertarInformacionCli ($idLote) {
@@ -1973,7 +1975,7 @@ class Reestructura extends CI_Controller{
         }
     }
     
-    public function cambiarBandera  (){
+    /*public function cambiarBandera  (){
         $bandera   =  $this->input->post('bandera');
         $idLote    =  $this->input->post('idLoteBandera');
         $arr_update = array( 
@@ -1993,6 +1995,20 @@ class Reestructura extends CI_Controller{
             "message" => "Lote no actualizado, inténtalo más tarde ");
         }
         echo json_encode ($respuesta);             
+    }*/
+
+    public function cambiarBandera() {
+        $bandera = $this->input->post('bandera');
+        $idLote = $this->input->post('idLoteBandera');
+        $arrUpdate = array("liberaBandera" => $bandera,
+                            "usuario" => $this->session->userdata('id_usuario')
+                            );
+        $response = $this->General_model->updateRecord('lotes', $arrUpdate);
+        if($response) {
+            echo json_encode(1);
+        }else {
+            echo json_encode(0);
+        }
     }
 
     function getListaLotesArchivosReestrucura(){
@@ -2948,6 +2964,7 @@ class Reestructura extends CI_Controller{
             echo json_encode($this->Reestructura_model->get_proyecto_lista(1)->result_array());
     }
 
+    /*FUNCTIONS THAT ARE BEING USED RIGHT NOW
     public function borrarOpcion(){
 		$idOpcion = $_POST['idOpcion'];
 		$update = $this->Reestructura_model->borrarOpcionModel(100,$idOpcion);
@@ -2972,6 +2989,7 @@ class Reestructura extends CI_Controller{
 			echo json_encode(0);
 		}
 	}
+    */
 
     public function obtenerRegistrosLiberar()
     {
@@ -4337,13 +4355,6 @@ class Reestructura extends CI_Controller{
                 $this->Reestructura_model->actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
             }
         }
-        else{
-            $response["result"] = false;
-            $response["message"] = "No hay historial preproceso para este lote";
-            $response["idLote"] = 0;
-            $response["proceso"] = 0;
-        }
-
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($response));
     }
@@ -4431,5 +4442,49 @@ class Reestructura extends CI_Controller{
 
     public function subirArchivosFusion() {
         print_r($this->input->post());
+    }
+
+    public function catalogoAcciones () {
+        $data = $_POST;
+        $opcionAccion = isset($data['actionCode']) ? intval($data['actionCode']): 0;
+        if($opcionAccion == 1) {
+            //INSERT
+            $idOpcion = $this->Administracion_model->getLastId('opcs_x_cats', array('id_catalogo' => 100), 'id_opcion');
+            $dataInsert = array(
+                'id_opcion' => $idOpcion + 1 ,
+                'id_catalogo' => 100,
+                'nombre' => $_POST['inputCatalogo'],
+                'estatus' => 1,
+                'fecha_creacion' => date('Y-m-d H:i:s'),
+                'creado_por' => 1,
+                'color' => NULL
+            );
+            $insert = $this->General_model->addRecord('opcs_x_cats', $dataInsert);
+            if($insert) {
+                echo json_encode(1);
+            }
+            else {
+                echo json_encode(0);
+            }
+        }
+        if($opcionAccion == 2) {
+            //BORRAR
+            $idOpcion = $data['idOpcion'];
+            $dataDelete = array('id_opcion' => $idOpcion,'id_catalogo'=> 100, 'estatus' => 0);
+            try {
+                $this->db->WHERE('id_opcion', $idOpcion);
+                $this->db->WHERE('id_catalogo', 100);
+                $delete = $this->db->update('opcs_x_cats', $dataDelete);
+                if($delete) {
+                    echo json_encode(1);
+                }else {
+                    echo json_encode(0);
+                }
+            }catch(Exception $e) {
+                return $e->getMessage();
+            }
+        }
+        if($opcionAccion == 3) {
+        }
     }
 }
