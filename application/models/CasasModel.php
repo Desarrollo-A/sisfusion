@@ -1450,7 +1450,6 @@ class CasasModel extends CI_Model
             pcd.idProceso,
             lo.idLote,
             lo.nombreLote,
-            pcd.idProceso,
             pcd.estatus,
             pcd.proceso,
             pcd.comentario,
@@ -1462,6 +1461,7 @@ class CasasModel extends CI_Model
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
         WHERE pcd.proceso = ?", $proceso);
 
         return $query;
