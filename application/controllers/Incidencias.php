@@ -256,7 +256,26 @@ class Incidencias extends CI_Controller
     function getDatosAbonadoDispersion($idlote){
       echo json_encode($this->Incidencias_model->getDatosAbonadoDispersion($idlote)->result_array());
     }
-    
+
+    function comisionesUsuarios($idlote){
+      echo json_encode($this->Incidencias_model->comisionesUsuarios($idlote)->result_array());
+    }
+
+    public function catalogoUsuarios(){
+      echo json_encode($this->Incidencias_model->catalogoUsuarios()->result_array());
+  }
+
+  public function actualizarRol(){
+    $idLote= $this->input->post('idLote');
+    $id_rol= $this->input->post('id_rol');
+    $id_usuario= $this->input->post('id_usuario');
+    $modificadoPor = $this->session->userdata('id_usuario');
+    $proceso = $this->input->post ('proceso');
+
+    $resultado = $this->Incidencias_model->actualizarRol($idLote,$id_rol,$id_usuario,$modificadoPor,$proceso);
+    echo json_encode($resultado);
+}
+
     public function getPagosByComision($id_comision){
       $respuesta = $this->Incidencias_model->getPagosByComision($id_comision);
       echo json_encode($respuesta); 
