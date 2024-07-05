@@ -836,18 +836,6 @@ class Descuentos extends CI_Controller
             $todos_los_pasos = $this->Descuentos_model->solicitudes_generales_dc();
             echo json_encode($todos_los_pasos);
         }
-
-        public function borrarComisiones() {
-            $resultado = $this->Descuentos_model->borrarComisiones();
-    
-            if ($resultado) {
-                echo "Procedimiento ejecutado con éxito. Filas afectadas: " . $resultado->RowsAffected;
-                echo "<br>Mensaje: " . $resultado->Message;
-            } else {
-                echo "Error al ejecutar el procedimiento almacenado";
-            }
-        }
-
         public function solicitudes_generales_reporte()
         {
             $bandera = $this->input->post('bandera');

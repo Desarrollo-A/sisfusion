@@ -697,25 +697,7 @@ class Descuentos_model extends CI_Model {
 
                 $query = $this->db->query($cmd);
                 return $query->result_array();
-            } 
-
-            public function borrarComisiones() {
-                $cmd = "EXEC BorrarComisiones";
-        
-                try {
-                    $query = $this->db->query($cmd);
-                    if ($query) {
-                        return $query->row(); // Devuelve el primer resultado
-                    } else {
-                        return false;
-                    }
-                } catch (Exception $e) {
-                    // Manejo de errores
-                    log_message('error', $e->getMessage());
-                    return false;
-                }
-            }
-            
+            }           
 
             public function solicitudes_generales_dc(){
 
