@@ -4338,12 +4338,13 @@ class Reestructura extends CI_Controller{
                 $this->Reestructura_model->actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
             }
         }
-        else{
+        // MJ: NO HAY UN IF PRINCIPAL AL QUE ESTE ELSE HAGA REFERENCIA
+        /*else{
             $response["result"] = false;
             $response["message"] = "No hay historial preproceso para este lote";
             $response["idLote"] = 0;
             $response["proceso"] = 0;
-        }
+        }*/
 
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($response));
