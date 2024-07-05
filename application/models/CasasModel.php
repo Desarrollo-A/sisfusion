@@ -52,7 +52,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion, $esquema){
+    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion){
         $idMovimiento = $this->session->userdata('id_usuario');
 
         $query = "INSERT INTO historial_proceso_casas
@@ -70,8 +70,7 @@ class CasasModel extends CI_Model
             $procesoAnterior,
             $procesoNuevo,
             $idMovimiento,
-            '$descripcion',
-            $esquema
+            '$descripcion'
         )";
 
         return $this->db->query($query);
@@ -171,8 +170,13 @@ class CasasModel extends CI_Model
 
     public function getListaAsignacion(){
         $query = "SELECT
-        pc.*,
+        pc.proceso,
+        pc.idProcesoCasas,
+        pc.idLote,
+        pc.idAsesor,
+        pc.tipoMovimiento,
         lo.nombreLote,
+        lo.esquemaCreditoCasas,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
@@ -197,7 +201,42 @@ class CasasModel extends CI_Model
             pc.proceso = 0
             AND pc.status = 1
             AND pc.idGerente = $this->idUsuario
-            AND cli.status = 1";
+            AND cli.status = 1
+        UNION ALL
+        SELECT
+        pcd.proceso,
+        pcd.idProceso as idProcesoCasas,
+        pcd.idLote,
+        pcd.idAsesor,
+        pcd.tipoMovimiento,
+        lo.nombreLote,
+        lo.esquemaCreditoCasas,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+			 WHEN pcd.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+		END AS gerente,
+        oxc.nombre AS movimiento
+        FROM proceso_casas_directo pcd
+        LEFT JOIN usuarios us ON us.id_usuario = pcd.idAsesor
+        LEFT JOIN lotes lo ON lo.idLote = pcd.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pcd.idGerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pcd.tipoMovimiento
+        WHERE
+            pcd.proceso = 0
+            AND pcd.estatus = 1
+            AND pcd.idGerente = $this->idUsuario
+            AND cli.status = 1
+        ";
 
         return $this->db->query($query)->result();
     }
@@ -1410,6 +1449,7 @@ class CasasModel extends CI_Model
             pcd.idProceso,
             lo.idLote,
             lo.nombreLote,
+            pcd.idProceso,
             pcd.estatus,
             pcd.proceso,
             pcd.comentario,
@@ -1421,7 +1461,6 @@ class CasasModel extends CI_Model
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
         WHERE pcd.proceso = ?", $proceso);
 
         return $query;

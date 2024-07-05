@@ -7,9 +7,9 @@ let columns = [
     { data: 'proyecto' },
     { data: function(data)
         {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
-            let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Seleccionar para asignación', onClick: upload_archivo, data})
-            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Seleccionar para asignación', onClick: return_lote, data})
+            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 17', onClick: select_lote, data})
+            let upload_button = new RowButton({icon: 'note_add', color: '', label: 'Subir archivo', onClick: upload_archivo, data})
+            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a asignación de cartera', onClick: return_lote, data})
             return '<div class="d-flex justify-center">' + pass_button + upload_button + return_button + '</div>'
         } 
     },
@@ -18,6 +18,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
+    params: { proceso: 16 },
     columns,
     // button: buttons
 });
@@ -97,6 +98,7 @@ upload_archivo = function(data){ // funcion para subir el archivo de adeudo
 }
 
 select_lote = function(data){ // funcion para el avance del lote
+    console.log(data);
     let form = new Form({
         title: '¿Avanzar lote?', 
         text: `Se avanzara el proceso del lote  - <b>${data.nombreLote}</b>`,
@@ -124,6 +126,8 @@ select_lote = function(data){ // funcion para el avance del lote
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProceso', value: data.idProceso }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
