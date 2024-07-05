@@ -443,6 +443,53 @@ hr {
             </div>
         </div>
 
+        <div class="modal fade" id="modal_add_user" style="overflow-y: scroll;" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                        <!-- formulario -->
+                    <form method="post" id="form_add_users">
+                        <div class="modal-header">
+                            <button type="button" style="font-size: 20px;top:20px;" class="close" type="button" data-dismiss="modal">
+                                <i class="large material-icons">close</i>
+                            </button>
+                            <h4 class="modal-title">AGREGAR USUARIO</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="col-md-12">
+                                <div class="form-group" id="add_usuario">
+                                    <label class="label">USUARIOS</label>
+                                    <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="agregar_usuario" id="agregar_usuario" required data-live-search="true"></select>
+                                </div>
+                            </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group is-empty" id="add_rol">
+                                <label class="label">PORCENTAJE DE COMISIÓN</label>
+                                <input class="form-control input-gral" type="number" name="porcentaje" id="porcentaje" required min="0" max="4" step="0.1" placeholder="0.0"></input>
+                            </div>
+                        </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group" id="cambiar_usuarios">
+                                    <label class="label">ROL PARA EL USUARIO</label>
+                                    <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="agregar_roles" id="agregar_roles" required></select>
+                                    </div>
+                                </div>
+                        </div>
+                        
+
+                        <div class="modal-footer">
+                            
+                            <button class=" btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
+                            <button type="submit" id="btn_add_user" class="btn btn-primary">GUARDAR</button>
+                        </div>    
+                       
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="myUpdateBanderaModal" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog ">
                 <div class="modal-content">

@@ -276,6 +276,24 @@ class Incidencias extends CI_Controller
     echo json_encode($resultado);
 }
 
+public function getUsers(){
+  echo json_encode($this->Incidencias_model->getUsers()->result_array());
+}
+
+public function updateUser(){
+  $idLote = $this->input->post("idLote");
+  $id_usuario = $this->input->post('id_usuario');
+  $id_rol = $this->input-post('id_rol');
+  $porcentaje = $this->input->post('porcentaje');
+  $id_cliente = $this->input->post('id_cliente');
+  $precio = $this->input->post('PrecioLoteE');
+
+  $respuesta = $this->Incidencias_model->AddEmpresa($idLote,($precio*($porcentaje/100)),$id_cliente,$id_rol,$id_usuario,$porcentaje);
+  echo json_encode($respuesta);
+
+
+}
+
     public function getPagosByComision($id_comision){
       $respuesta = $this->Incidencias_model->getPagosByComision($id_comision);
       echo json_encode($respuesta); 

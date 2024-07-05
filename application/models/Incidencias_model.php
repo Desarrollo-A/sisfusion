@@ -50,6 +50,22 @@ class Incidencias_model extends CI_Model {
         return $query->result();
     }
 
+    function getUsers(){
+        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS name_user FROM usuarios WHERE id_usuario NOT IN (1) AND estatus IN (1,3) AND tipo IN (1,2)");
+
+    }
+    function updateUser($idLote,$comision,$id_cliente,$id_rol,$id_usuario,$porcentaje){
+        $comisionesEmpresa = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote AND id_usuario= $id_usuario AND estatus=1")->result_array();
+        $comisiones = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote AND estatus=1")->result_array();
+
+        if(count($comisionesEmpresa) == 0 && count($comisiones) > 0){
+        return $this->db->query("INSERT INTO comisiones
+                ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente]) VALUES (".$idLote.",$id_usuarios,".$comision.", 1, 'SE AGREGÓ COMISIONISTA', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(),$porcentaje, GETDATE(), $id_rol,$id_cliente)");
+        } else{
+            return 0;
+        }
+    }
+
 
     function getUsuariosRol3($rol){
         $cmd = "SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS name_user,id_lider 
