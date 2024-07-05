@@ -1796,30 +1796,32 @@ class Casas extends BaseController {
 
         $this->load->view("casas/creditoDirecto/contrato_elaborado_view");
     }
-
-    public function creditoDirecto16(){
+    
+    public function creditoDirectoAvance(){
         $form = $this->form();
         
         $idLote = $form->idLote;
         $idProceso = $form->idProceso;
         $proceso = $form->proceso;
+        $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
         $banderaSuccess = true;
 
         $dataHistorial = array(
             "idProcesoCasas"  => $idProceso,
             "procesoAnterior" => $proceso,
-            "procesoNuevo"    => 17,
+            "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "idMovimiento"    => $this->session->userdata('id_usuario'),
-            "descripcion"     => "Se ha terminado el paso 16 | comentario: " . $comentario
+            "descripcion"     => "Se ha terminado el paso ". $procesoNuevo ." | comentario: " . $comentario,
+            "esquemaCreditoProceso" => 2
         );
 
         $this->db->trans_begin();
 
         $updateData = array(
             "comentario" => $comentario,
-            "proceso" => 17
+            "proceso" => $procesoNuevo
         );
 
         // paso 1: hacer update del proceso
@@ -1833,8 +1835,6 @@ class Casas extends BaseController {
         if(!$addHistorial){
             $banderaSuccess = false;
         }
-
-        // paso 3: guardar archivo o captura de documentos
 
         if($banderaSuccess){
             $this->db->trans_commit();
@@ -1919,5 +1919,10 @@ class Casas extends BaseController {
         }
 
         http_response_code(404);
+    }
+    public function ordenCompra(){
+        $this->load->view("template/header");
+
+        $this->load->view("casas/creditoDirecto/ordenCompra_view");
     }
 }
