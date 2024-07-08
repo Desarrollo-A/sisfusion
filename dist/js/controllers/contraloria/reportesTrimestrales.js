@@ -160,6 +160,15 @@ $('body').tooltip({
     $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });
 
+function formatMoney( n ) {
+    const formatter = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        maximumFractionDigits: 4,
+        currency: 'MXN'
+    });
+    return formatter.format(n);
+}
+
 $(document).on("click", "#verifyNeodata", function () {
     let empresa = $(this).attr("data-empresa");
     let nombreLote = $(this).attr("data-nombreLote");
@@ -175,7 +184,7 @@ $(document).on("click", "#verifyNeodata", function () {
             $("#detailPayments .modal-header").empty();
             $("#detailPayments .modal-header").append('<div class="d-flex align-center titleCustom" style="background: white; border-radius:25px; justify-content: space-around"><h3 class="text-center fw-600"><b>lote</b></h3><h3 class="text-center fw-600">'+nombreLote+'</h3><i class="fas fa-times-circle fa-lg cursor-point" data-dismiss="modal" aria-hidden="true"></i></div>');
             if(response.length != 0){
-                $("#detailPayments .modal-body").append('<p class="text-center">Total pagado actualmente</p><h1 class="text-center fw-600">'+formatMoney(response[0]['MontoTotalPagado'])+'</h1><p class="text-center"><i class="fas fa-money-bill-wave m-1" style="color:#6da36f"></i>mensualidades pagadas <b>'+response[0]['MenPagadas']+'/'+response[0]['MenPendientes']+'</b></p>');
+                $("#detailPayments .modal-body").append('<p class="text-center">Total pagado actualmente</p><h1 class="text-center fw-600">'+formatMoney(response[0]['MontoTotalPagado'])+'</h1><p class="text-center"><i class="fas fa-money-bill-wave m-1" style="color:#6da36f"></i>mensualidades pagadas <b>'+response[0]['MenPagadas']+' pendientes '+response[0]['MenPendientes']+'</b></p>');
             }
             else{
                 $("#detailPayments .modal-body").append(`<div class="h-100 text-center pt-4"><img src= '${general_base_url}dist/img/empty.png' alt="Icono vacío" class="w-60"></div><h3 class="titleEmpty">`);
