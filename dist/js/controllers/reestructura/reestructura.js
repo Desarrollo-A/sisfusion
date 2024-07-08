@@ -458,7 +458,6 @@ $(document).on('click', '.accionModal', function() {
     $("#accionModal").modal();
 });
 
-
 $(document).on('click', '#guardarAccion', function() {
     document.getElementById('guardarAccion').disabled = true;
     let idLote = $('#idLoteAccion').val();
@@ -466,7 +465,7 @@ $(document).on('click', '#guardarAccion', function() {
     let idCliente =  $('#clienteAccion').val();
     let preproceso = $('#preprocesoAccion').val();
     $("#spiner-loader").removeClass('hide');
-    const data = { bandera, idLoteBandera: idLote };
+    let data = { bandera, idLoteBandera: idLote };
     if (bandera == 0) {
         data.idCliente = idCliente;
         data.preproceso = preproceso;
@@ -482,18 +481,16 @@ $(document).on('click', '#guardarAccion', function() {
                     regresarLote(response.flagRe, response.flagFusion, idCliente, preproceso, idLote, response.idLotePvOrigen);
                 }
                 else {
-                    const successMessage = bandera == 1 ? "Lote liberado satisfactoriamente." : "Lote bloqueado satisfactoriamente.";
+                    let successMessage = bandera == 1 ? "Lote liberado satisfactoriamente." : "Lote bloqueado satisfactoriamente.";
                     alerts.showNotification("top", "right", successMessage, "success");
                     $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
                     $('#accionModal').modal('toggle');
                     document.getElementById('guardarAccion').disabled = false;
                 }
-                
             } 
             $("#spiner-loader").addClass('hide');
         },
         error: function (response) {
-            //const errorMessage = bandera == 1 ? "Lote no actualizado, inténtalo más tarde." : "Error al actualizar el lote.";
             let errorMessage = bandera == 1 ? response.message : response.message;
             alerts.showNotification("top", "right", errorMessage, "danger");
             $("#spiner-loader").addClass('hide');
@@ -501,7 +498,6 @@ $(document).on('click', '#guardarAccion', function() {
         }
     });
 });
-
 
 function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLotePvOrigen){ // proceso para regresar el preproceso del lote a bloquear
     var url = '';
@@ -542,7 +538,6 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
 
             $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
             $('#accionModal').modal('toggle');
-
             document.getElementById('guardarAccion').disabled = false;
         },
         error: function(response){
