@@ -555,7 +555,6 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
 
 function deshacerFusion(idLotePvOrigen){
     $.ajax({
-        //url: 'deshacerFusion',
         url: `${general_base_url}Reestructura/deshacerFusion`,
         type: 'POST',
         dataType: "json",
