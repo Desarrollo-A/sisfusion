@@ -150,38 +150,21 @@ $(document).on('click', '.btn-accion', async function(){
     $('#labelHeaderAccionModal').html(titulo);
     $('#labelComentarioAccionModal').html(comentarioLabel);
 
-    // Declaramos el contenido extra que embeberemos
     let content = ``;
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) {
-        content = `
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 overflow-hidden">
-                <label class="control-label" for="id_documento_liberacion">Documento a adjuntar (*) ${d.expediente ? '<span style="color: red;">Se sustituirá el archivo previamente cargado</span>' : ''}</label>
-                <select id="id_documento_liberacion" name="id_documento_liberacion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
-            </div>
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-                <div id="selectFileSection">
-                    <div class="file-gph">
-                        <input type="file" accept=".pdf" id="archivo_liberacion">
-                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                        <label class="upload-btn m-0" for="archivo_liberacion">
-                            <span>Seleccionar</span>
-                            <i class="fas fa-folder-open"></i>
-                        </label>
-                    </div>
-                </div>
-            </div>`;
-    }
-    if (d.enProcesoLiberacion === 3) {
-        content = `
-            <div class="col-12 col-sm-12 col-md-12 col-lg-12" id="cambioPrecio">
-                <label class="control-label"> Precio por m<sup>2</sup> (<span class="isRequired">*</span>)</label>
-                <input class="form-control input-gral" placeholder="$" name="costoM2" id="costoM2" data-type="currency" step="any">
-            </div>`;
-    }
+    if ((d.enProcesoLiberacion === 1 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
+        precioLiberacion = $('#costoM2').val().replace('$', '').replace(',', ''); // El precio del lote
+        plazo = comentario; // El plazo es el input del comentario
+        comentario = ''; // El comentario no está habilitado para el proceso de liberación para el proceso 3
+        
+        // Input de precio sin monto
+        if (precioLiberacion === '') return alerts.showNotification("top", "right", `Digita el nuevo precio por m<sup>2</sup> del lote.`, "warning");
 
+         // Input de plazo sin valor
+         if (plazo === '') return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
+    }
     // Embebemos el contenido extra
     $('#extra-content-accion-modal').html(content);
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) fillInputs(); //Cargamos los valores de los inputs
+    //if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) fillInputs(); //Cargamos los valores de los inputs
 
     // Limpiamos valores de los campos antes de abrir el modal.
     $('#comentarioAccionModal').val('');
@@ -213,22 +196,33 @@ $(document).on("click", "#btn-accion", async function (e) {
     let archivo, proceso, estatusLib, rescision, autorizacionDG, concepto, precioLiberacion, plazo;
 
     //Validaciones en caso de tener
-    if ((d.enProcesoLiberacion === 1 || d.enProcesoLiberacion === 0)) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
-        if ($("#id_documento_liberacion").val() ==  53) tieneRescision = 1; // idOpcion en oxc catalogo 31
-        if ($("#id_documento_liberacion").val() ==  54) tieneAutorizacionDG = 1;
-        archivo = $("#archivo_liberacion");
+    if ( d.enProcesoLiberacion === 0 ) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
+        // Loading y disables mientras hace la carga
+        $('#btn-accion').attr('disabled', true); // Deshabilita botón
+        $('#spiner-loader').removeClass('hide'); // Aparece spinner
         
-        // Select de tipo de archivo vacio
-        if (tieneRescision === 0 && tieneAutorizacionDG === 0) return alerts.showNotification("top", "right", "Selecciona el tipo de archivo a adjuntar.", "warning");
+        // Validamos cuantos días tiene el lote desde que se bloqueo.
+        const body = new FormData();
+        body.append("idLote", d.idLote);
         
-        // Input sin archivo
-        if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
-
-        // Archivo incorrecto
-        if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "Adjunta un archivo con formato correcto", "warning");
-        
+        let res = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Liberaciones/getDiasBloqueosDeLote`,
+            data: body,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+    
+        res = JSON.parse(res);
+    
+        if (res.result !== true) {
+            $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
+            $('#spiner-loader').addClass('hide'); // Quito spinner  
+            return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
+        }
     }
-    if ((d.enProcesoLiberacion === 3 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
+    if ((d.enProcesoLiberacion === 1 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
         precioLiberacion = $('#costoM2').val().replace('$', '').replace(',', ''); // El precio del lote
         plazo = comentario; // El plazo es el input del comentario
         comentario = ''; // El comentario no está habilitado para el proceso de liberación para el proceso 3
@@ -236,8 +230,11 @@ $(document).on("click", "#btn-accion", async function (e) {
         // Input de precio sin monto
         if (precioLiberacion === '') return alerts.showNotification("top", "right", `Digita el nuevo precio por m<sup>2</sup> del lote.`, "warning");
 
-         // Input de plazo sin valor
-         if (plazo === '') return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
+        // Input de plazo sin valor
+        if (plazo === '') return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
+    }
+    if ((d.enProcesoLiberacion === 2 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
+
     }
 
     // Asignación de valores dependiendo el proceso
@@ -263,10 +260,6 @@ $(document).on("click", "#btn-accion", async function (e) {
             plazo = d.plazo;
         }
     }
-
-    // Loading y disables mientras hace la carga
-    $('#btn-accion').attr('disabled', true); // Deshabilita botón
-    $('#spiner-loader').removeClass('hide'); // Aparece spinner
 
     // Datos a envíar al endpoint para su registro.
     const data = new FormData();
@@ -636,26 +629,27 @@ const newButton = (btnClass, title, action = '', data, icon) => {
 }
 
 const datatableButtons = (d, type) => {
-    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LOTE', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A POSTVENTA', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
     const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
     const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
     const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
-    const BTN_VER_DOC    = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    const BTN_VER_DOC    = newButton('btn-data btn-sky btn-ins-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    const BTN_DEL_DOC    = newButton('btn-data btn-danger btn-del-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-trash');
     
     let NO_BTN = '';
 
-    if (type === 2) {
+    if (type === 2) { // Es para visualizar documentos o informaciones
         if (d.expediente) return BTN_VER_DOC + BTN_INFO ;
         if (!d.expediente) return BTN_INFO;
         return BTN_INFO;
     }
 
-    if (type === 1) {
-        if (id_rol_general == ROLES.VENTAS || id_rol_general == ROLES.CAJAS) { // POSTVENTA
-            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
+    if (type === 1) { // PARTICIPAN EN LOS PASOS
+        if (id_rol_general == ROLES.VENTAS || id_rol_general == ROLES.CAJAS) { 
+            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC +  BTN_INFO ;
             if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
             return BTN_INFO; 
         }

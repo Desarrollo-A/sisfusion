@@ -133,12 +133,12 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="pl-1">
                             <ul class="nav nav-tabs nav-tabs-cm">
-                                <?php if($this->session->userdata('id_rol') == 3){?>
+                                <?php if($this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 12){?>
                                 <li class="active">
                                     <a id='liberar' role="tab" data-toggle="tab">LIBERAR LOTE</a>
                                 </li>
                                 <?php } ?>
-                                <li  <?php if($this->session->userdata('id_rol') != 3){?> class="active"<?php } ?>>
+                                <li  <?php if($this->session->userdata('id_rol') != 3 AND $this->session->userdata('id_rol') != 12 ){?> class="active"<?php } ?>>
                                     <a id='pendientes'  role="tab"  data-toggle="tab">PENDIENTES</a>
                                 </li>
                                 <li>
@@ -149,7 +149,7 @@
                         <div class="card no-shadow m-0">  <!-- card content -->
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Proceso de liberación de lotes (Particulares)</h3>
+                                    <h3 class="card-title center-align">Proceso de liberación de lotes (Bloqueados)</h3>
                                 </div>
                                 <div class="material-datatables">
                                     <table id="liberacionesDataTable" class="table-striped table-hover">

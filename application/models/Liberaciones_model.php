@@ -216,5 +216,11 @@ class Liberaciones_model extends CI_Model {
         return $query;
     }
 
-    
+    public function getFechaBloqueoDeLote($idLote) 
+    {
+        $query = $this->db->query(
+            "SELECT TOP (1) * FROM auditoria WHERE tabla = 'lotes' AND col_afect = 'idStatusLote' AND id_parametro = ? AND nuevo = 8 ORDER BY fecha_creacion DESC;", $idLote
+        );
+        return $query;
+    }
 }

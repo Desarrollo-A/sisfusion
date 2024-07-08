@@ -160,94 +160,81 @@
     );
 	}
 
-    // Función para saber cuando es la fecha limite de un lote
-    function getFechaVencimiento ($numeroDias) {
-        $numeroDias = intval($numeroDias);
-        date_default_timezone_set('America/Mexico_City');
-        $horaActual = date('H:i:s');
-        $horaInicio = date("08:00:00");
-        $horaFin = date("16:00:00");
-        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-            $fechaAccion = date("Y-m-d H:i:s");
-            $hoy_strtotime2 = strtotime($fechaAccion);
-            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-            if (in_array($sig_fecha_dia2, ['Sat', 'Sun']) || in_array($sig_fecha_feriado2, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
-                $fecha = $fechaAccion;
-                $i = 0;
-                while ($i <= $numeroDias) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
-                    } else {
-                        $fecha = $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $fechaVencimiento = $fecha;
-            } else {
-                $fecha = $fechaAccion;
-                $i = 0;
-                while ($i <= $numeroDias) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
-                    } else {
-                        $fecha = $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $fechaVencimiento = $fecha;
-            }
-        } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-            $fechaAccion = date("Y-m-d H:i:s");
-            $hoy_strtotime2 = strtotime($fechaAccion);
-            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-            if (in_array($sig_fecha_dia2, ['Sat', 'Sun']) || in_array($sig_fecha_feriado2, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
-                $fecha = $fechaAccion;
-                $i = 0;
-                while ($i <= $numeroDias) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
-                    } else {
-                        $fecha = $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $fechaVencimiento = $fecha;
-            } else {
-                $fecha = $fechaAccion;
-                $i = 0;
-                while ($i <= $numeroDias) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
-                    } else {
-                        $fecha = $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $fechaVencimiento = $fecha;
+    // Función para obtener el enésimo lunes del mes
+    function nLunesDelMes($fecha, $n) {
+        $anio = $fecha->format('Y');
+        $mes = $fecha->format('m');
+    
+        // Comenzamos en el primer día del mes
+        $nuevaFecha = new DateTime("$anio-$mes-01");
+    
+        // Avanzamos hasta el próximo lunes
+        while ($nuevaFecha->format('N') != 1) {
+            $nuevaFecha->modify('+1 day');
+        }
+    
+        // Avanzamos (n-1) semanas más para llegar al n-ésimo lunes
+        $nuevaFecha->modify('+' . (7 * ($n - 1)) . ' days');
+    
+        return $nuevaFecha;
+    }
+    
+    // Genera dia festivos de MX de los siguientes dos años al año que reciba como parametro
+    function generarDiasFestivos($anio) {
+        $diasFestivos = [
+            new DateTime("$anio-01-01"), // Año Nuevo
+            new DateTime("$anio-02-05"), // Día de la Constitución
+            new DateTime("$anio-03-21"), // Natalicio de Benito Juárez
+            new DateTime("$anio-05-01"), // Día del Trabajo
+            new DateTime("$anio-09-16"), // Día de la Independencia
+            new DateTime("$anio-11-20"), // Día de la Revolución
+            new DateTime("$anio-12-01"), // Transmisión del Poder Ejecutivo Federal
+            new DateTime("$anio-12-25"), // Navidad
+            new DateTime(($anio + 1) . "-01-01"), // Año Nuevo
+            new DateTime(($anio + 1) . "-02-05"), // Día de la Constitución
+            new DateTime(($anio + 1) . "-03-21"), // Natalicio de Benito Juárez
+            new DateTime(($anio + 1) . "-05-01"), // Día del Trabajo
+            new DateTime(($anio + 1) . "-09-16"), // Día de la Independencia
+            new DateTime(($anio + 1) . "-11-20"), // Día de la Revolución
+            new DateTime(($anio + 1) . "-12-01"), // Transmisión del Poder Ejecutivo Federal
+            new DateTime(($anio + 1) . "-12-25"), // Navidad
+        ];
+    
+        // Ajustar los días que se mueven al lunes más cercano
+        $diasFestivos[1] = nLunesDelMes($diasFestivos[1], 1); // Día de la Constitución
+        $diasFestivos[2] = nLunesDelMes($diasFestivos[2], 3); // Natalicio de Benito Juárez
+        $diasFestivos[5] = nLunesDelMes($diasFestivos[5], 3); // Día de la Revolución
+        $diasFestivos[9] = nLunesDelMes($diasFestivos[9], 1); // Día de la Constitución
+        $diasFestivos[10] = nLunesDelMes($diasFestivos[10], 3); // Natalicio de Benito Juárez
+        $diasFestivos[13] = nLunesDelMes($diasFestivos[13], 3); // Día de la Revolución
+    
+        // Convertir a formato ISO y obtener solo la parte de la fecha
+        $festivos = array_map(function($fecha) {
+            return $fecha->format('Y-m-d');
+        }, $diasFestivos);
+    
+        return $festivos;
+    }
+    
+    // Función para calcular días HABILES transcurridos entre dos fechas
+    function elapsedDaysBetweenTwoDates($start, $end) {
+        $startDate = new DateTime($start);
+        $endDate = new DateTime($end);
+        $elapsedDays = 0;
+        
+        if ($startDate > $endDate){
+            return ["result" => false, "msg" => 'Error al calcular el tiempo bloqueado del lote', "days" => 0];
+        }
+        
+        $festivalDays = generarDiasFestivos($startDate->format('Y'));
+        
+        while ($startDate->format('Y-m-d') < $endDate->format('Y-m-d')) {
+            $startDate->modify('+1 day');
+            if ($startDate->format('N') != 6 && $startDate->format('N') != 7 && !in_array($startDate->format('Y-m-d'), $festivalDays)) {
+                $elapsedDays++;
             }
         }
-        return $fechaVencimiento;
+        
+        return ["result" => true, "msg" => 'Días calculados', "days" => $elapsedDays];
     }
 ?>

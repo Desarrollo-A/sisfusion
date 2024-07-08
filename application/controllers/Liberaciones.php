@@ -247,10 +247,12 @@ class Liberaciones extends CI_Controller{
         }
     }
 
-    public function pruebasHelper(){
-        $dias = $_POST['días'];
+    public function getDiasBloqueosDeLote(){
+        $idLote = $_POST['idLote'];
 
-        $response = getFechaVencimiento($dias);
+        $rs = $this->Liberaciones_model->getFechaBloqueoDeLote($idLote)->row();
+        
+        $response = elapsedDaysBetweenTwoDates($rs->fecha_creacion, (new DateTime())->format('Y-m-d'));
         echo json_encode($response);
     }
 }
