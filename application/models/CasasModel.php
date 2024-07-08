@@ -1468,7 +1468,8 @@ class CasasModel extends CI_Model
             pcd.voBoOrdenCompra,
             pcd.voBoValidacionEnganche,
             pcd.voBoContrato,
-            pcd.voBoOrdenCompra
+            pcd.voBoOrdenCompra,
+            pcd.finalizado
         FROM proceso_casas_directo pcd
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
