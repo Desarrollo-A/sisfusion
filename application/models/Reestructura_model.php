@@ -260,7 +260,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN cl.id_cliente IS NULL THEN '-' ELSE UPPER(CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno)) END nombreCliente,
         ISNULL(oxc.nombre, 'Sin especificar') estatus,oxc.id_opcion as idCatalogo, lo.idStatusLote,
         lo.comentarioReubicacion, lo.liberadoReubicacion, lo.liberaBandera,
-        sl.nombre estatusContratacion, sl.background_sl, sl.color
+        sl.nombre estatusContratacion, sl.background_sl, sl.color, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE cl.id_cliente END idCliente
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re on re.idResidencial = co.idResidencial

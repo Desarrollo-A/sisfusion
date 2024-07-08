@@ -82,7 +82,8 @@
                         <br>
                         <input type="hidden" name="idLote" id="idLoteenvARevCE" >
                         <input type="hidden" name="nombreLote" id="nombreLoteAv" >
-                        <input type="hidden" name="precio" id="precioAv" >        
+                        <input type="hidden" name="precio" id="precioAv" >    
+                        <input type="hidden" name="idCliente" id="idCliente" >    
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

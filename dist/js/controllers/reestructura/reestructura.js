@@ -52,6 +52,7 @@ $(document).on('click', '.reesVal', function () {
     $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
     $('#nombreLoteAv').val($(this).attr('data-nombreLote'));
     $('#precioAv').val($(this).attr('data-precio'));
+    $('#idCliente').val($(this).attr('data-idCliente'));
     $('#liberarReestructura').modal();
 });
 
@@ -137,11 +138,13 @@ $(document).on('click', '#saveLi', function () {
     var idLote = $("#idLoteenvARevCE").val();
     var nombreLot = $("#nombreLoteAv").val();
     var precio = $("#precioAv").val();
+    var idCliente = $("#idCliente").val();
     var datos = new FormData();
     datos.append("idLote", idLote);
     datos.append("nombreLote", nombreLot);
     datos.append("precio", precio);
     datos.append("tipoLiberacion", 9);
+    datos.append("idCliente", idCliente);
     $.ajax({
         method: 'POST',
         url: `${general_base_url}Reestructura/aplicarLiberacion`,
@@ -311,7 +314,7 @@ function fillTable(index_proyecto) {
                         return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-idCatalogo="${d.idCatalogo}" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     } else {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-precio="${d.precio}"><i class="fas fa-thumbs-up"></i></button>
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-precio="${d.precio}" data-idCliente="${d.idCliente}"><i class="fas fa-thumbs-up"></i></button>
                         <button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" data-idCatalogo="${d.idCatalogo}" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     }
