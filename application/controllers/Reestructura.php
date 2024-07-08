@@ -112,25 +112,6 @@ class Reestructura extends CI_Controller{
 		$this->load->view('template/header');
         $this->load->view("reestructura/reestructura_view");
     }
-    
-	/*public function insertarOpcion(){
-        $idOpcion = $this->Administracion_model->getLastId('opcs_x_cats', array('id_catalogo' => 100), 'id_opcion');
-        $data_insert = array(
-            'id_opcion' => $idOpcion + 1 ,
-            'id_catalogo' => 100,
-            'nombre' => $_POST['inputCatalogo'],
-            'estatus' => 1,
-            'fecha_creacion' => date('Y-m-d H:i:s'),
-            'creado_por' => 1,
-            'color' => NULL
-        );
-        $response = $this->General_model->addRecord('opcs_x_cats', $data_insert);
-        if($response) {
-            echo json_encode(1);
-        }else {
-            echo json_encode(0);
-        }
-	}*/
 
 	public function getHistorial($idLote){
         echo json_encode($this->Reestructura_model->historialModel($idLote)->result_array());
@@ -191,12 +172,12 @@ class Reestructura extends CI_Controller{
         }
     }
 
-	public function aplicarLiberacion() {
+    public function aplicarLiberacion() {
 		$dataPost = $_POST;
 
         $data['modificado_por'] = $this->input->post('idCliente');
-        $data['tipoCancelacion'] = $dataPost['tipoCancelacion'];
-
+        $data['tipoCancelacion'] = isset($dataPost['tipoCancelacion']) ? $dataPost['tipoCancelacion'] : 1;
+        
         $update1 = $this->General_model->updateRecord("clientes", $data, "id_cliente", $dataPost['idCliente']);
         $update2 = $this->Reestructura_model->aplicaLiberacion($dataPost);
         if ($update1 == TRUE AND $update2 == TRUE)
