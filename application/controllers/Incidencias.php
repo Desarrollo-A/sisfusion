@@ -281,16 +281,21 @@ public function getUsers(){
 }
 
 public function updateUser(){
-  $idLote = $this->input->post("idLote");
+  $idLote = $this->input->post('idLote');
   $id_usuario = $this->input->post('id_usuario');
-  $id_rol = $this->input-post('id_rol');
+  $id_rol = $this->input->post('id_rol');
   $porcentaje = $this->input->post('porcentaje');
   $id_cliente = $this->input->post('id_cliente');
-  $precio = $this->input->post('PrecioLoteE');
+  $precio = $this->input->post('precioLote');
 
-  $respuesta = $this->Incidencias_model->AddEmpresa($idLote,($precio*($porcentaje/100)),$id_cliente,$id_rol,$id_usuario,$porcentaje);
+  $respuesta = $this->Incidencias_model->updateUser($idLote,($precio*($porcentaje/100)),$id_cliente,$id_rol,$id_usuario,$porcentaje);
   echo json_encode($respuesta);
+}
 
+public function listaRol(){
+
+  $puestos = $this->General_model->getCatOptionsEspecific(1,'1,2,3,7,9,87,88,89,90,91')->result_array();
+  echo json_encode($puestos);
 
 }
 

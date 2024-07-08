@@ -1,5 +1,7 @@
 var mensualidad = [];
 var catalogoUsuario = [];
+var listaUsuarios = [];
+var catalogo2 = [];
 
 $(document).ready(function () {
     $.getJSON(general_base_url + "Incidencias/fillMensualidades").done(function(data) {
@@ -9,9 +11,19 @@ $(document).ready(function () {
         }
         $('#mensualidad9').selectpicker('refresh');
     });
+
     $.getJSON( general_base_url + "Incidencias/catalogoUsuarios").done( function( data ){
         catalogoUsuario = data;
-    }); 
+    });
+    
+    $.getJSON( general_base_url + "Incidencias/getUsers/").done( function( data ){
+        listaUsuarios = data;
+    });
+
+    $.getJSON( general_base_url + "Incidencias/listaRol/").done( function( data ){
+        catalogo2 = data;
+    });
+
 });
 
  
@@ -1248,10 +1260,10 @@ $(".find_doc").click( function() {
                     
                     }
                 }
+                BtnStats += data.estatus == 1 ? `<button data-lote="${data.idLote}" data-cliente="${data.id_cliente}" data-precioLote ="${data.totalNeto2}" class=" btn-data btn-sky agregar_usuario"  title="Agregar usuario"><i class="fas fa-user-plus"></i></button>` : '';
+
                 BtnStats += (data.idStatusContratacion >= 9 && [64,65,66,84,85,86].indexOf(data.plan_comision) < 0) ? `<button data-estatus="${data.estatus}" data-idCliente="${data.id_cliente}" class=" btn-data btn-yellow cambiar_plan_comision"  title="Cambiar plan de comisión"><i class="fas fa-chart-bar"></i></button>` : '';
                 BtnStats +=  data.registro_comision ===0 || data.registro_comision ===8 && data.compartida!=null ? `<button  value="${data.idLote}" data-lote="${data.idLote}" data-cliente="${data.id_cliente}" class=" btn-data btn-warning bajaVentaC"><i class="fas fa-trash"></i></button>`:'';
-
-                BtnStats += data.estatus == 1 ? `<button data-lote="${data.idLote}" data-idCliente="${data.id_cliente}" class=" btn-data btn-sky agregar_usuario"  title="Agregar usuario"><i class="fas fa-user-plus"></i></button>` : '';
 
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
@@ -1377,54 +1389,58 @@ $(".find_doc").click( function() {
     });
 
     $("#tabla_inventario_contraloria tbody").on("click", ".agregar_usuario", function(e){
-        $("#btn_add_user").prop('disabled',true);
+        e.preventDefault();
+        e.stopImmediatePropagation();
 
-        id_cliente = document.getElementById("clientes2").value;
-        idLote     = document.getElementById("lotes1").value;
+        $("#btn_add_user").prop('disabled',false);
 
-        $.getJSON( general_base_url + "Incidencias/getUsers/").done( function( data ){
-            datos = data;
-            var len2 = datos.length;
-            for( var i2 = 0; i2<len2; i2++){
-                var id_opcion = datos[i2]['id_usuario'];
-                var descripcion = datos[i2]['name_user'];
+        $('#agregar_usuario').html('');
+        $('#agregar_usuario').val('default');
+        $("#agregar_usuario").selectpicker("refresh");
 
-                // var id = id_opcion+','+nombre
-                
-                $("#agregar_usuario").append($('<option>').val(id_opcion).attr('data-value',id_opcion ).text(id_opcion+ "- "+ descripcion));
-                
-            }
-            $("#agregar_usuario").selectpicker('refresh');
-            
-            $('#agregar_usuario').change(function(){
-                var idSeleccionado = $('#agregar_usuario').val();
-                $('#rol_usuario').val(idSeleccionado);
+        $('#agregar_roles').html('');
+        $('#agregar_roles').val('default');
+        $("#agregar_roles").selectpicker("refresh");
 
-                
-                if(idSeleccionado == 2){
-                    $('#agregar_roles').html('');
-                    for (let i = 0; i < catalogoUsuario.length; i++) {
-                        $("#agregar_roles").append($('<option>').val(catalogoUsuario[i]['id_opcion']).text(catalogoUsuario[i]['nombre']));
-                    }
-                    $("#agregar_roles").selectpicker('refresh');
+        $('#porcentaje').val('');
 
-                }else{
-                    $('#agregar_roles').html('');
-                    for (let i = 1; i < catalogoUsuario.length; i++) {
-                        $("#agregar_roles").append($('<option>').val(catalogoUsuario[i]['id_opcion']).text(catalogoUsuario[i]['nombre']));
-                    }
-                    $("#agregar_roles").selectpicker('refresh');
+        document.getElementById("lotes1").value = (idLote);
+        id_cliente = $(this).attr("data-cliente");
+        document.getElementById("clientes2").value = (id_cliente);
+
+        precioLote = $(this).attr("data-precioLote");
+        document.getElementById("precioLote").value = (precioLote);
                     
-                }
+        var len2 = listaUsuarios.length;
+        for( var i2 = 0; i2<len2; i2++){
+            var id_opcion = listaUsuarios[i2]['id_usuario'];
+            var descripcion = listaUsuarios[i2]['name_user'];
+                
+            $("#agregar_usuario").append($('<option>').val(id_opcion).attr('data-value',id_opcion ).text(id_opcion+ "- "+ descripcion));
+        }
+        
+        $("#agregar_usuario").selectpicker('refresh');
+               
+        $('#agregar_usuario').change(function(){
+            $('#agregar_roles').html('');
 
-            });
-            
+            var len2 = catalogo2.length;
+            var i2
+            var idSeleccionado = $('#agregar_usuario').val();
+                
+            i2 = idSeleccionado == 2 ? 0: 1;
+
+            for( i2 ; i2<len2; i2++){
+                var id_opcion = catalogo2[i2]['id_opcion'];
+                var descripcion = catalogo2[i2]['nombre'];
+                    
+                $("#agregar_roles").append($('<option>').val(id_opcion).attr('data-value',id_opcion ).text(descripcion));
+                    
+            }
+            $("#agregar_roles").selectpicker('refresh');
         }); 
 
-        
-
         $("#modal_add_user").modal();
-        
    
     });
 
@@ -1432,27 +1448,27 @@ $(".find_doc").click( function() {
         e.preventDefault();
         e.stopImmediatePropagation();
         $("#btn_add_user").prop('disabled',true);
-        id_cliente = document.getElementById("clientes2").value;
-        idLote     = document.getElementById("lotes1").value;
-        PrecioLoteE     = document.getElementById("PrecioLoteE").value;
+        id_cliente= document.getElementById("clientes2").value;
+        idLote= document.getElementById("lotes1").value;
+        precioLote = document.getElementById("precioLote").value;
     
         var id_usuario = $('#agregar_usuario').val();
         var id_rol = $('#agregar_roles').val();
         var porcentaje = $('#porcentaje').val();
     
-        var updateRoles = new FormData();
-        
-        updateRoles.append("id_cliente",id_cliente);
-        updateRoles.append("porcentaje",porcentaje);
-        updateRoles.append("idLote", idLote);
-        updateRoles.append("id_rol", id_rol);
-        updateRoles.append("id_usuario", id_usuario);
+        var updateUsuario = new FormData();
 
+        updateUsuario.append("idLote", idLote);
+        updateUsuario.append("id_cliente",id_cliente);
+        updateUsuario.append("porcentaje",porcentaje);
+        updateUsuario.append("id_rol", id_rol);
+        updateUsuario.append("id_usuario", id_usuario);
+        updateUsuario.append("precioLote",precioLote);
 
         $.ajax({
             type: 'POST',
             url: general_base_url+'Incidencias/updateUser',
-            data: new FormData(this),
+            data: updateUsuario,
             contentType: false,
             cache: false,
             processData: false,
@@ -1462,9 +1478,10 @@ $(".find_doc").click( function() {
                 if (data == 1) {
                     $('#modal_add_user').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
-                    $('#form_add_users').DataTable().ajax.reload();
-                } else {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                } if(data == 0){
+                    alerts.showNotification("top", "right", "Usuario duplicado, realiza otro registro.", "warning");
+                    $('#modal_add_user').modal("hide");
                 }
             },
             error: function(){

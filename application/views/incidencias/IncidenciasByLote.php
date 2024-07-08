@@ -386,6 +386,8 @@ hr {
                             id="clientes2" name="clientes2">
                             <input type="hidden" class="form-control"
                             id="proceso" name="proceso">
+                            <input type="hidden" class="form-control"
+                            id="precioLote" name="precioLote">
                             </div> 
                         </div> 
                   
@@ -463,24 +465,23 @@ hr {
                                 </div>
                             </div>
 
-                        <div class="col-md-12">
-                            <div class="form-group is-empty" id="add_rol">
-                                <label class="label">PORCENTAJE DE COMISIÓN</label>
-                                <input class="form-control input-gral" type="number" name="porcentaje" id="porcentaje" required min="0" max="4" step="0.1" placeholder="0.0"></input>
+                            <div class="col-md-12">
+                                <div class="form-group is-empty" id="add_rol">
+                                    <label class="label">PORCENTAJE DE COMISIÓN</label>
+                                    <input class="form-control input-gral" type="number" name="porcentaje" id="porcentaje" required min="0.04" max="4" step="0.01" placeholder="0.0"></input>
+                                </div>
                             </div>
-                        </div>
 
                             <div class="col-md-12">
                                 <div class="form-group" id="cambiar_usuarios">
                                     <label class="label">ROL PARA EL USUARIO</label>
                                     <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="agregar_roles" id="agregar_roles" required></select>
-                                    </div>
                                 </div>
-                        </div>
-                        
+                            </div>
 
+                        </div>
+                    
                         <div class="modal-footer">
-                            
                             <button class=" btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
                             <button type="submit" id="btn_add_user" class="btn btn-primary">GUARDAR</button>
                         </div>    
