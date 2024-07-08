@@ -1475,7 +1475,7 @@ class CasasModel extends CI_Model
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
 		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
-        WHERE pcd.proceso IN ($placeholders)", $procesoArray);
+        WHERE pcd.proceso IN ($placeholders) AND pcd.estatus IN(1)", $procesoArray, 1);
 
         return $query;
     }

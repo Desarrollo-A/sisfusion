@@ -12,10 +12,10 @@ let columns = [
             let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar al paso 16', onClick: return_process, data})
             let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
 
-            if(data.documento == null){
+            if(data.documento == null && data.voBoOrdenCompra == 0){
                 return '<div class="d-flex justify-center">' + upload_button + return_button + '</div>'
             }
-            else if (data.documento == null){
+            else if (data.documento != null && data.voBoOrdenCompra == 0){
                 return '<div class="d-flex justify-center">' + pass_button + upload_button + view_button + return_button + '</div>'
             }
             else {
@@ -140,6 +140,8 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 18 }),
+            new HiddenField({ id: 'voBoOrdenCompra', value: 1 }),
+            new HiddenField({ id: 'voBoAdeudoTerreno', value: data.voBoAdeudoTerreno }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
