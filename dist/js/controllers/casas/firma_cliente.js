@@ -7,8 +7,14 @@ let columns = [
     { data: 'proyecto' },
     { data: function(data)
         {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso al lote', onClick: nextProcess, data})
-            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
+           let pass_button = '';
+           let return_button = '';
+
+            if((data.voBoContrato == null || data.voBoContrato == 0) && (data.voBoValidacionEnganche == 1)){
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso al lote', onClick: nextProcess, data})
+                return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
+            }
+
             return '<div class="d-flex justify-center">' + pass_button + return_button + '</div>'
         } 
     },
@@ -17,7 +23,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: `casas/lotesCreditoDirecto`,
-    params: { proceso: 19},
+    params: { proceso: [21, 22], tipoDocumento: 0},
     columns,
     // button: buttons
 });
@@ -33,7 +39,7 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoDirectoAvance`,
+                url: `${general_base_url}casas/firmaClienteAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -55,7 +61,9 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 18 }),
+            new HiddenField({ id: 'procesoNuevo', value: 21 }),
+            new HiddenField({ id: 'voBoContrato', value: 0 }),
+            new HiddenField({ id: 'voBoValidacionEnganche', value: 0 }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -73,7 +81,7 @@ nextProcess = function(data){ // funcion para el avance del lote
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoDirectoAvance`,
+                url: `${general_base_url}casas/firmaClienteAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -94,7 +102,8 @@ nextProcess = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 20 }),
+            new HiddenField({ id: 'procesoNuevo', value: 23 }),
+            new HiddenField({ id: 'voBoContrato', value: 1 }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

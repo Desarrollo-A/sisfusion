@@ -1446,6 +1446,9 @@ class CasasModel extends CI_Model
 
     public function lotesCreditoDirecto($proceso, $tipoDocumento){
 
+        $procesoArray = explode(',', $proceso);
+        $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
+
         $query = $this->db->query("SELECT 
             pcd.idProceso,
             lo.idLote,
@@ -1456,13 +1459,17 @@ class CasasModel extends CI_Model
             co.nombre AS condominio,
             re.descripcion AS proyecto,
 			dpc.archivo,
-            dpc.documento
+            dpc.documento,
+            pcd.voBoOrdenCompra,
+            pcd.voBoValidacionEnganche,
+            pcd.voBoContrato,
+            pcd.voBoOrdenCompra
         FROM proceso_casas_directo pcd
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
 		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
-        WHERE pcd.proceso = ?", $proceso);
+        WHERE pcd.proceso IN ($placeholders)", $procesoArray);
 
         return $query;
     }

@@ -45,7 +45,7 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoDirectoProceso`,
+                url: `${general_base_url}casas/creditoDirectoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -65,7 +65,9 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 19 }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -75,9 +77,6 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
 
 nextProcess = function(data){ // funcion para el avance del lote
     
-    // Número de proceso a avanzar
-    data.proceso = 21;
-    
     let form = new Form({
         title: '¿Avanzar lote?', 
         text: `Se avanzara el proceso del lote  - <b>${data.nombreLote}</b>`,
@@ -86,7 +85,7 @@ nextProcess = function(data){ // funcion para el avance del lote
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoDirectoProceso`,
+                url: `${general_base_url}casas/creditoDirectoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -105,7 +104,9 @@ nextProcess = function(data){ // funcion para el avance del lote
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 21 }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
