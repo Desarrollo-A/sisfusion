@@ -433,159 +433,97 @@ $(document).on('change', '#proyectoLiberado', function() {
     fillTable1(index_proyecto);
 });
 
-$(document).on('click', '.cambiarBandera', function () {
-    let bandera = '¿Estás seguro de LIBERAR el lote para reestructura?';
-    lote = $(this).attr("data-idLote");
-    activoDetenido = $(this).attr("data-bandera");
-    if (activoDetenido == 0)
-        bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
-    document.getElementById("tituloAD").innerHTML = bandera;
-    //document.getElementById("tituloModal").innerHTML = bandera;
-    document.getElementById("bandera").value = activoDetenido;
-    document.getElementById("idLoteBandera").value = lote;
-    $('#banderaLiberar').modal();
-    //$("#banderaAcciones").modal();
-});
-
-$(document).on('click', '.regresarBandera', function () {
-    let bandera = '¿Estás seguro de BLOQUEAR el lote?';
-    
-    // traer datos desde el boton 
-    lote = $(this).attr("data-idLote");
-    activoDetenido = $(this).attr("data-bandera");
-    idCliente = $(this).attr("data-idCliente");
-    preproceso = $(this).attr("data-preproceso");
-    
-    if(preproceso > 0)
-        bandera = '¿Estás seguro de BLOQUEAR y DESHACER el pre-proceso del lote?';
-    
-    //asignar 
-    document.getElementById("tituloBloqueo").innerHTML = bandera;
-    //document.getElementById("tituloModal").innerHTML = bandera;
-    document.getElementById("banderaBloqueo").value = activoDetenido;
-    document.getElementById("idLoteBloqueo").value = lote;
-    document.getElementById("clienteBloqueo").value = idCliente;
-    document.getElementById("preprocesoBloqueo").value = preproceso;
-    $('#banderaRegresar').modal();
-    //$("#banderaAcciones").modal();
+$(document).on('click', '.accionModal', function() {
+    let idLote = $(this).attr('data-idLote');
+    let bandera = $(this).attr('data-bandera');
+    let idCliente = $(this).attr('data-idCliente');
+    let preproceso = $(this).attr('data-preproceso');
+    let titulo = ''
+    if(bandera == 0) {
+        if(preproceso > 0) {
+            titulo = '¿Estás seguro de BLOQUEAR y DESHACER el pre-proceso del lote?';
+        }
+        else {
+            titulo = '¿Estás seguro de BLOQUEAR el lote?';
+        }
+    }
+    else {
+        titulo = '¿Estás seguro de LIBERAR el lote para reestructura?';
+    }
+    $('#idLoteAccion').val(idLote);
+    $('#banderaAccion').val(bandera);
+    $('#clienteAccion').val(idCliente);
+    $('#preprocesoAccion').val(preproceso);
+    $('#tituloAccion').text(titulo);
+    $("#accionModal").modal();
 });
 
 
-$(document).on('click', '.bloquearBandera', function () { // proceso para bloquear lote
-    document.getElementById('bloquearBandera').disabled = true;
-    var bandera = document.getElementById('banderaBloqueo').value;
-    var idLoteBandera = document.getElementById('idLoteBloqueo').value;
-    var idCliente = document.getElementById('clienteBloqueo').value;
-    var preproceso = document.getElementById('preprocesoBloqueo').value;
+$(document).on('click', '#guardarAccion', function() {
+    document.getElementById('guardarAccion').disabled = true;
+    let idLote = $('#idLoteAccion').val();
+    let bandera = $('#banderaAccion').val();
+    let idCliente =  $('#clienteAccion').val();
+    let preproceso = $('#preprocesoAccion').val();
     $("#spiner-loader").removeClass('hide');
+    const data = { bandera, idLoteBandera: idLote };
+    if (bandera == 0) {
+        data.idCliente = idCliente;
+        data.preproceso = preproceso;
+    }
     $.ajax({
-        url: 'bloqueoRegreso',
+        url: `${general_base_url}Reestructura/cambiarBandera`,
         type: 'POST',
         dataType: "json",
-        data: {
-                bandera, 
-                idLoteBandera,
-                idCliente
-            },
+        data: data,
         success: function (response) {
-            if(response.result){
-                if(response.flagRe > 0 || response.flagFusion > 0){
-                    console.log(response.idLotePvOrigen);
-                    regresarLote(response.flagRe, response.flagFusion, idCliente, preproceso, idLoteBandera, response.idLotePvOrigen);
+            if(response.result == true) {
+                if(bandera == 0) {
+                    regresarLote(response.flagRe, response.flagFusion, idCliente, preproceso, idLote, response.idLotePvOrigen);
+                    console.log("calledager");
                 }
-                else{
-                    $("#spiner-loader").addClass('hide');
-                    alerts.showNotification("top", "right", response.message, "success");
+                else {
+                    const successMessage = bandera == 1 ? "Lote liberado satisfactoriamente." : "Lote bloqueado satisfactoriamente.";
+                    alerts.showNotification("top", "right", successMessage, "success");
                     $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
-                    $('#banderaRegresar').modal('toggle');
-                    //$("#banderaAcciones").modal('toggle');
+                    $('#accionModal').modal('toggle');
+                    document.getElementById('guardarAccion').disabled = false;
                 }
-            }
-            else{
-                alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
-                $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
-                $('#banderaRegresar').modal('toggle');
-                //$('#banderaAcciones').modal('toggle');
-
-                document.getElementById('bloquearBandera').disabled = false;
-            }
-        },
-        error: function(){
+                
+            } 
             $("#spiner-loader").addClass('hide');
-            alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
-            document.getElementById('bloquearBandera').disabled = false;
-        }
-    });
-
-});
-
-$(document).on('click', '.liberarBandera', function() {
-    document.getElementById('liberarBandera').disabled = true;
-    var bandera = document.getElementById('bandera').value;
-    var idLoteBandera = document.getElementById('idLoteBandera');
-    $.ajax({
-        url: 'cambiarBandera',
-        type: 'POST',
-        dataType: "json",
-        data: {bandera: bandera, idLoteBandera: idLoteBandera},
-        success: function (response) {
-            if(response == 1) {
-                alerts.showNotification("top", "right", "Se ha liberado  satisfactoriamente", "success");
-                document.getElementById('liberarBandera').disabled = false;
-                $("#tabla_clientes_liberar").DataTable().ajax.reload(null, false);
-                $("#banderaLiberar").modal('toggle');
-            }
         },
-        error: function() {
-            alerts.showNotification("top", "right", "Lote no actualizado, inténtalo más tarde", "warning");
-
+        error: function (response) {
+            //const errorMessage = bandera == 1 ? "Lote no actualizado, inténtalo más tarde." : "Error al actualizar el lote.";
+            let errorMessage = bandera == 1 ? response.message : response.message;
+            alerts.showNotification("top", "right", errorMessage, "danger");
+            $("#spiner-loader").addClass('hide');
+            document.getElementById('guardarAccion').disabled = true;
         }
     });
 });
 
-function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLotePvOrigen){ // proceso para regresar el preproceso del lote a bloquear
-    var url = '';
-    var lote = 0;
+x   
 
-    if(flagRe > 0){
-        url = 'regresoPreproceso';
-        lote = idLote;
-    }
-    else if(flagFusion > 0){
-        url = 'regresoPreprocesoFusion';
-        lote = idLotePvOrigen;
-    }
-
+function deshacerFusion(idLotePvOrigen){
     $.ajax({
-        url: url,
+        //url: 'deshacerFusion',
+        url: `${general_base_url}Reestructura/deshacerFusion`,
         type: 'POST',
         dataType: "json",
         data: {
-                preproceso: 0,
-                juridico: 2,
-                contraloria: 1,
-                idLote: lote,
-                idCliente: idCliente,
-                comentario: 'Regreso de pre-proceso por bloqueo del lote'
-            },
+            idLotePvOrigen 
+        },
         success: function (response) {
             if(response.result){
-                if(flagFusion > 0){
-                    deshacerFusion(idLotePvOrigen);
-                }
-                else if(flagRe > 0){
-                    $("#spiner-loader").addClass('hide');
-                    alerts.showNotification("top", "right", response.message, "success");
-                }
+                alerts.showNotification("top", "right", response.message, "success");
+                $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
             }
             else
                 alerts.showNotification("top", "right", response.message, "danger");
 
-            $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
-            $('#banderaRegresar').modal('toggle');
-            //$('#banderaAcciones').modal('toggle');
-
             document.getElementById('bloquearBandera').disabled = false;
+            $("#spiner-loader").addClass('hide');
         },
         error: function(){
             $("#spiner-loader").addClass('hide');
@@ -594,7 +532,6 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
         }
     });
 }
-
 function fillTable1(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({
         width: '100%',
@@ -650,18 +587,20 @@ function fillTable1(index_proyecto) {
                 data: function (d) {
                     if (d.liberaBandera == 0)
                         return `<div class="d-flex justify-center">
-                                    <button class="btn-data btn-blueMaderas cambiarBandera" data-toggle="tooltip" data-placement="top" title= "Liberar lote" data-idLote="${d.idLote}" data-bandera="1">
+                                    <button class="btn-data btn-blueMaderas accionModal" data-toggle="tooltip" data-placement="top" title= "Liberar lote" data-idLote="${d.idLote}" data-bandera="1" data-toggle="modal" data-target="#accionModal">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </div>`;
                     else if(d.estatus_preproceso < 7)
                         return `<div class="d-flex justify-center">
-                                    <button class="btn-data btn-warning regresarBandera" data-toggle="tooltip" data-placement="top" title= "Regresar y bloquear lote" data-idLote="${d.idLote}" data-bandera="0" data-idCliente="${d.idCliente}" data-preproceso="${d.estatus_preproceso}">
+                                    <button class="btn-data btn-warning accionModal" data-toggle="tooltip" data-placement="top" title= "Regresar y bloquear lote" data-idLote="${d.idLote}" data-bandera="0" data-idCliente="${d.idCliente}" data-preproceso="${d.estatus_preproceso}" data-toggle="modal" data-target="#accionModal">
                                         <i class="fas fa-ban"></i>
                                     </button>                
                                 </div>`;
                 }
-            }],
+            }
+        
+        ],
         columnDefs: [{
             defaultContent: "",
             targets: "_all",
