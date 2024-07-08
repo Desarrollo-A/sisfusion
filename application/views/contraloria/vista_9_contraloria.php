@@ -4,6 +4,7 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
     <!--MODALS-->
+    
     <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
@@ -11,13 +12,8 @@
                     <h4 class="modal-title text-center"><label>Registro estatus 9 - <b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-2">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <label class="control-label">Comentario</label>
-                            <textarea class="text-modal" id="comentario" rows="3"></textarea>
-                            <br>
-                        </div>
-                        <div >
+                    <div class="container-fluid">
+                        <div class="row">
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                 <div class="form-group m-0">
                                     <label class="control-label" id="tvLbl">Total neto</label>
@@ -25,11 +21,19 @@
                                 </div>
                             </div>
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <div class="form-group m-0">
-                                <label class="control-label" for="sedeRecepcion">Sede recepción contrato</label>
-                                <select name="sedeRecepcion" id="sedeRecepcion"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                <div class="form-group m-0">
+                                    <label class="control-label" for="sedeRecepcion">Sede recepción contrato</label>
+                                    <select name="sedeRecepcion" id="sedeRecepcion"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <label class="control-label " for="proyecto">Representante legal</label>
+                                    <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -47,13 +51,13 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label class="control-label">Comentario</label>
                                 <textarea class="text-modal" id="comentario" rows="3"></textarea>
+                            </div>
                         </div>
-                        <div class="row">
+                        <!--<div class="row">
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                 <div class="form-group m-0 overflow-hidden">
                                 <label class="control-label" for="proyecto">Residencia cliente</label>
                                 <select name="residencia" id="residencia"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
-                            </div>
                             </div>
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                 <div class="form-group m-0 overflow-hidden">
@@ -61,8 +65,7 @@
                                     <select name="mensualidad9" id="mensualidad9"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                 </div>
                             </div>
-                            
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="modal-footer pt-3">

@@ -349,7 +349,6 @@ $(document).on('click', '#save3', function (e) {
 
 jQuery(document).ready(function () {
     fillSelectsForV9();
-    fillMensualidades();
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario').val('');
@@ -385,29 +384,13 @@ function fillSelectsForV9() {
                 $("#rl").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 78) // RESIDENCIA SELECT
                 $("#residencia").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            if (data[i]['id_sede'])
-                $("#sedeRecepcion").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre']));
+            if (data[i]['id_catalogo'] == 127) // MENSUALIDADES SELECT
+                $("#mensualidad9").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            if (data[i]['id_catalogo'] == 0) // SELECT SEDE UBICACIÓN EXPEDIENTE
+                $("#sedeRecepcion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
         }
         $('#rl').selectpicker('refresh');
         $('#residencia').selectpicker('refresh');
         $('#sedeRecepcion').selectpicker('refresh');
-    });
-}
-
-function fillMensualidades() {
-    $.getJSON("fillMensualidades").done(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            $("#mensualidad9").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-        }
-        $('#mensualidad9').selectpicker('refresh');
-    });
-}
-
-function fillMensualidades() {
-    $.getJSON("fillMensualidades").done(function (data) {
-        for (let i = 0; i < data.length; i++) {
-            $("#mensualidad9").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-        }
-        $('#mensualidad9').selectpicker('refresh');
     });
 }
