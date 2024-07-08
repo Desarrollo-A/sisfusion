@@ -320,7 +320,7 @@ function fillTable(data) {
                     format: 'DD-MM-YYYY',
                 })
                 .on('dp.change', function(event){
-                    let date = $(`#datetimepicker_${row.pago}`).val();
+                    let date = $(`#datetimepicker_${row.pago}`).val()
 
                     // const row = tablePagos.row(cell.parentElement).data()
 
@@ -331,7 +331,7 @@ function fillTable(data) {
                 .html('📅')
                 .css('cursor', 'pointer')
                 .unbind("click").on('click', function(){
-                    $(`#datetimepicker_${row.pago}`).focus();
+                    $(`#datetimepicker_${row.pago}`).focus()
                 })
             )
         }else{
