@@ -4443,7 +4443,6 @@ class Reestructura extends CI_Controller{
             'message' => ''
         );
 
-  
         if($bandera == '0') {
             $dataUpdate = array('liberaBandera' => 0);
             $dataUpdate = array(
