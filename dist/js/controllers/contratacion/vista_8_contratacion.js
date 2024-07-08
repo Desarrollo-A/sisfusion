@@ -704,7 +704,7 @@ const accionesComplementoPago = async (d) => {
         });
         rs1 = JSON.parse(rs1);
         if (rs1.code == 500) {
-            alerts.showNotification("top", "right", 'Surgió un error al sustituir el archivo', "warning");
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             return false;
         }
     }
@@ -739,7 +739,7 @@ const accionesComplementoPago = async (d) => {
     });
     rs = JSON.parse(rs);
     if (rs.code == 500) {
-        alerts.showNotification("top", "right", 'Surgió un error al remplazar el archivo', "warning");
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
         return false;
     } else {
         return true;
