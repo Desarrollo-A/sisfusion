@@ -478,9 +478,8 @@ $(document).on('click', '#guardarAccion', function() {
         data: data,
         success: function (response) {
             if(response.result == true) {
-                if(bandera == 0) {
+                if(bandera == 0 && (response.flagRe > 0 || response.flagFusion > 0)) {
                     regresarLote(response.flagRe, response.flagFusion, idCliente, preproceso, idLote, response.idLotePvOrigen);
-                    console.log("calledager");
                 }
                 else {
                     const successMessage = bandera == 1 ? "Lote liberado satisfactoriamente." : "Lote bloqueado satisfactoriamente.";
@@ -503,7 +502,56 @@ $(document).on('click', '#guardarAccion', function() {
     });
 });
 
-x   
+
+function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLotePvOrigen){ // proceso para regresar el preproceso del lote a bloquear
+    var url = '';
+    var lote = 0;
+
+    if(flagRe > 0){
+        url = 'regresoPreproceso';
+        lote = idLote;
+    }
+    else if(flagFusion > 0){
+        url = 'regresoPreprocesoFusion';
+        lote = idLotePvOrigen;
+    }
+    $.ajax({
+        url: url,
+        type: 'POST',
+        dataType: "json",
+        data: {
+                preproceso: 0,
+                juridico: 2,
+                contraloria: 1,
+                idLote: lote,
+                idCliente: idCliente,
+                comentario: 'Regreso de pre-proceso por bloqueo del lote'
+            },
+        success: function (response) {
+            if(response.result){
+                if(flagFusion > 0){
+                    deshacerFusion(idLotePvOrigen);
+                }
+                else if(flagRe > 0){
+                    $("#spiner-loader").addClass('hide');
+                    alerts.showNotification("top", "right", response.message, "success");
+                }
+            }
+            else
+                alerts.showNotification("top", "right", response.message, "danger");
+
+            $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
+            $('#accionModal').modal('toggle');
+
+            document.getElementById('guardarAccion').disabled = false;
+        },
+        error: function(response){
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
+            document.getElementById('guardarAccion').disabled = false;
+        }
+    });
+}
 
 function deshacerFusion(idLotePvOrigen){
     $.ajax({

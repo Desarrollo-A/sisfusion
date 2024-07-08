@@ -4443,71 +4443,68 @@ class Reestructura extends CI_Controller{
             'message' => ''
         );
 
-        $dataUpdate = array(
-            'liberaBandera' => $bandera,
-            'usuario' => $this->session->userdata('id_usuario')
-        );
+  
+        if($bandera == '0') {
+            $dataUpdate = array('liberaBandera' => 0);
+            $dataUpdate = array(
+                'liberaBandera' => $bandera,
+            );
+            $flagFusion = 0;
+            $flagRe = 0;
+            $flagPass = true;
+            $flagFusion = 0;
+            $flagRe = 0;
+            $idLotePvOrigen = $idLote;
+            $checkFusion = $this->Reestructura_model->checkFusion($idLote);
+            $checkRe = $this->Reestructura_model->checkReubicacion($idLote);
+            $checkRee = $this->Reestructura_model->checkReestructura($idLote);
+            $this->db->trans_begin();
+            if($checkRe->num_rows() > 0 || $checkRee->num_rows() > 0){
+                $flagRe = 1;
+            }
+            else if($checkFusion->num_rows() > 0){
+                $flagFusion = 1;
+                $fusionResult = $checkFusion->result();
+                $idLotePvOrigen = $fusionResult[0]->idLotePvOrigen;
+            }
+            $updateBandera = $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
+            if(!$updateBandera) {
+                $flagPass = false;
+            }
 
-        switch($bandera) {
-            case '1':
-                $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
-                if ($this->db->affected_rows() > 0) {
-                    $response['result'] = true;
-                    $response['message'] = 'Se ha liberado el lote satisfactoriamente.';
-                } else {
-                    $response['message'] = 'Error al intentar liberar el lote.';
-                }
-                break;
-            
-            case '0':
-                $dataUpdate = array('liberaBandera' => 0);
-                $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
-                $flagFusion = 0;
-                $flagRe = 0;
-                $flagPass = true;
-                $flagFusion = 0;
-                $flagRe = 0;
-                $idLotePvOrigen = $idLote;
-                $checkFusion = $this->Reestructura_model->checkFusion($idLote);
-                $checkRe = $this->Reestructura_model->checkReubicacion($idLote);
-                $checkRee = $this->Reestructura_model->checkReestructura($idLote);
-                $this->db->trans_begin();
-                if($checkRe->num_rows() > 0 || $checkRee->num_rows() > 0){
-                    $flagRe = 1;
-                }
-                else if($checkFusion->num_rows() > 0){
-                    $flagFusion = 1;
-
-                    $fusionResult = $checkFusion->result();
-                    $idLotePvOrigen = $fusionResult[0]->idLotePvOrigen;
-                }
-
-                $updateBandera = $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
-                if(!$updateBandera) {
-                    $flagPass = false;
-                    error_log('Error updating record: ' . $this->db->last_query()); // Log the SQL query for debugging
-
-                }
-
-                if($flagPass){
-                    $this->db->trans_commit();
-                    $response["result"] = true;
-                    $response["flagRe"] = $flagRe;
-                    $response["flagFusion"] = $flagFusion;
-                    $response["idLotePvOrigen"] = $idLotePvOrigen;
-                    $response["message"] = "Se ha bloqueado el lote correctamente";
-                }
-                else{
-                    error_log('Error updating record: ' . $this->db->last_query()); // Log the SQL query for debugging
-
-                    $this->db->trans_rollback();
-                    $response["result"] = false;
-                    $response["message"] = "Ha ocurrido un error al bloquear el lote";
-                }
-                break;
-                
+            if($flagPass) {
+                $this->db->trans_commit();
+                $response["result"] = true;
+                $response["flagRe"] = $flagRe;
+                $response["flagFusion"] = $flagFusion;
+                $response["idLotePvOrigen"] = $idLotePvOrigen;
+                $response["message"] = "Se ha bloqueado el lote correctamente";
+            }
+            else {
+                $this->db->trans_rollback();
+                $response["result"] = false;
+                $response["message"] = "Ha ocurrido un error al bloquear el lote";
+            }
+        }
+        if($bandera == '1') {
+            $dataUpdate = array(
+                'liberaBandera' => $bandera,
+                'usuario' => $this->session->userdata('id_usuario')
+            );
+            $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
+            if ($this->db->affected_rows() > 0) {
+                $response['result'] = true;
+                $response['message'] = 'Se ha liberado el lote satisfactoriamente.';
+            } else {
+                $response['message'] = 'Error al intentar liberar el lote.';
+            }
         }
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($response));
+    }
+    public function deshacerFusion($id_lote)
+    {
+        $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ?', $id_lote);
+        return $query;
     }
 }
