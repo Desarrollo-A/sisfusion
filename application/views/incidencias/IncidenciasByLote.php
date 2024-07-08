@@ -368,9 +368,7 @@ hr {
                     <h4 class="modal-title" >Cambiar usuario</h4>
                         <div class="form-group">        
                             <div class="col-md-12" >
-                            <label class="control-label"  >
-                                Seleccione una opción
-                            </label>
+                            
                                 <select class="selectpicker select-gral m-0"
                                 data-style="btn"
                                 data-cliente=""
@@ -380,18 +378,67 @@ hr {
                                 onchange="selectOpcion()" id="opcion" >
                                     <option value="1">Cliente</option>
                                     <option value="2">Venta compartida</option>
+                                    <option value="3">Cambiar roles (Con comisiones)</option>
                                 </select>
                             <input type="hidden" class="form-control"
                             id="lotes1" name="lotes1">
                             <input type="hidden" class="form-control"
                             id="clientes2" name="clientes2">
-                            <!-- aqui mero vamos a poner los imputs  -->
-                            <!--  -->
+                            <input type="hidden" class="form-control"
+                            id="proceso" name="proceso">
                             </div> 
                         </div> 
                   
                     </div>
                     <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal_cambio_rol" style="overflow-y: scroll;" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                        <!-- formulario -->
+                    <form method="post" id="form_roles">
+                        <div class="modal-header">
+                            <button type="button" style="font-size: 20px;top:20px;" class="close" type="button" data-dismiss="modal">
+                                <i class="large material-icons">close</i>
+                            </button>
+                            <h4 class="modal-title">CAMBIO DE ROL</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="col-md-12">
+                                <div class="form-group" id="lista_usuarios">
+                                    <label class="label">USUARIOS</label>
+                                    <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="select_usuarios" id="select_usuarios" required></select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group is-empty" id="rol">
+                                    <label class="label">ROL ACTUAL DEL USUARIO</label>
+                                    <input class="form-control input-gral" type="text" name="rol_usuario" id="rol_usuario" readonly></input>
+                                </div>
+                            </div>
+                                
+                            <div class="col-md-12">
+                                <div class="form-group" id="cambiar_usuarios">
+                                    <label class="label">NUEVO ROL</label>
+                                    <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="select_roles" id="select_roles" required></select>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <label class="control-label"  >
+                                Cualquier cambio realizado será registrado con la sesión
+                            </label>
+                            <button class=" btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
+                            <button type="submit" id="btn_rol" class="btn btn-primary">GUARDAR</button>
+                        </div>    
+                       
+                    </form>
                 </div>
             </div>
         </div>
