@@ -301,6 +301,8 @@ class Casas extends BaseController {
     public function lotesCreditoDirecto(){
         $data = $this->input->get();
         $proceso = $data["proceso"];
+
+        $tipoDocumento = isset($data["tipoDocumento"]) ? $data["tipoDocumento"] : 0;
         
         $tipoDocumento = isset($data["tipoDocumento"]) ? $data["tipoDocumento"] : 0;
         
@@ -1798,17 +1800,7 @@ class Casas extends BaseController {
         $this->load->view("casas/creditoDirecto/contrato_elaborado_view");
     }
 
-    public function creditoDirectoCongelacionSaldos(){
-        $this->load->view("template/header");
 
-        $this->load->view("casas/creditoDirecto/congelacionSaldos_view");
-    }
-
-    public function creditoDirectoFirmaCliente(){
-        $this->load->view("template/header");
-
-        $this->load->view("casas/creditoDirecto/firmaCliente_view");
-    }
     
     public function creditoDirectoAvance(){
         $form = $this->form();
@@ -1826,19 +1818,20 @@ class Casas extends BaseController {
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "idMovimiento"    => $this->session->userdata('id_usuario'),
-            "descripcion"     => "Se ha terminado el paso ". $procesoNuevo ." | comentario: " . $comentario,
+            "descripcion"     => "Se ha enviado al paso: ". $procesoNuevo ." | comentario: " . $comentario,
             "esquemaCreditoProceso" => 2
         );
 
         $this->db->trans_begin();
 
         $updateData = array(
-            "comentario" => $comentario,
-            "proceso" => $procesoNuevo
+            "comentario"        => $comentario,
+            "proceso"           => $procesoNuevo,
+            "fechaModificacion" => date("Y-m-d H:i:s")
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idLote", $idLote);
+        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
         if(!$update){
             $banderaSuccess = false;
         }
@@ -2016,5 +2009,72 @@ class Casas extends BaseController {
 
             $this->json([]);
         }
+    }
+
+    public function adeudoCreditoDirecto(){
+        $this->load->view("template/header");
+
+        $this->load->view("casas/creditoDirecto/admon_adeudo_view");
+    }
+
+    public function setAdeudo(){
+        $form = $this->form();
+        
+        $idProceso = $form->idProceso;
+        $adeudo = $form->adeudo;
+        $banderaSuccess = true;
+
+        $this->db->trans_begin();
+
+        $updateData = array(
+            "adeudo"            => $adeudo,
+            "fechaModificacion" => date("Y-m-d H:i:s")
+        );
+
+        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
+        if(!$update){
+            $banderaSuccess = false;
+        }
+
+        if($banderaSuccess){
+            $this->db->trans_commit();
+            $this->json([]);
+        }
+        else{
+            $this->db->trans_rollback();
+            http_response_code(400);
+
+            $this->json([]);
+        }
+    }
+
+    public function avanceOrdenCompra(){
+        $form = $this->form();
+
+        $idProceso = $form->idProceso;
+        $idLote = $form->idLote;
+        $proceso = $form->proceso;
+        $procesoNuevo = $form->procesoNuevo;
+        $comentario = $form->comentario;
+
+        if(!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario)){
+            http_response_code(400);
+
+            $this->json([]);
+        }
+
+        
+    }
+
+    public function creditoDirectoCongelacionSaldos(){
+        $this->load->view("template/header");
+
+        $this->load->view("casas/creditoDirecto/congelacionSaldos_view");
+    }
+
+    public function creditoDirectoFirmaCliente(){
+        $this->load->view("template/header");
+
+        $this->load->view("casas/creditoDirecto/firmaCliente_view");
     }
 }

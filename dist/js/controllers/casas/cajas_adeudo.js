@@ -23,25 +23,63 @@ let table = new Table({
     // button: buttons
 });
 
-return_lote = function(data){ // funcion para subir el archivo de adeudo
+// return_lote = function(data){ // funcion para subir el archivo de adeudo
+//     let form = new Form({
+//         title: '¿Rechazar lote?', 
+//         text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
+//         onSubmit: function(data){
+//             // console.log(data)
+//             form.loading(true)
+
+//             $.ajax({
+//                 type: 'POST',
+//                 url: `${general_base_url}casas/to_asignacion`,
+//                 data: data,
+//                 contentType: false,
+//                 processData: false,
+//                 success: function (response) {
+//                     alerts.showNotification("top", "right", "El lote ha sido enviado a asignación.", "success");
+        
+//                     table.reload();
+
+//                     form.hide();
+//                 },
+//                 error: function () {
+//                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+//                     form.loading(false)
+//                 }
+//             })
+//         },
+//         fields: [
+//             new HiddenField({ id: 'idLote', value: data.idLote }),
+//             new HiddenField({ id: 'idProceso', value: data.idProceso }),
+//             new HiddenField({ id: 'proceso', value: data.proceso }),
+//             new HiddenField({ id: 'procesoNuevo', value: 17 }),
+//             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+//         ],
+//     })
+
+//     form.show()
+// }
+
+return_lote = function(data){ // funcion para el avance del lote
     let form = new Form({
         title: '¿Rechazar lote?', 
         text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
-            // console.log(data)
             form.loading(true)
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/to_asignacion`,
+                url: `${general_base_url}casas/creditoDirectoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a asignación.", "success");
+                    alerts.showNotification("top", "right", "El lote se ha regresado correctamente.", "success");
         
                     table.reload();
-
                     form.hide();
                 },
                 error: function () {
@@ -53,6 +91,9 @@ return_lote = function(data){ // funcion para subir el archivo de adeudo
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProceso', value: data.idProceso }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 0 }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

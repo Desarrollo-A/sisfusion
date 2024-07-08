@@ -8,20 +8,16 @@ let columns = [
     { data: function(data)
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 18', onClick: select_lote, data})
-            let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Subir archivo', onClick: upload_archivo, data})
+            let edit_button = new RowButton({icon: 'edit', color: '', label: 'Capturar adeudo', onClick: update_adeudo, data})
             let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar al paso 16', onClick: return_process, data})
-            let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
 
-            if(data.documento == null){
-                return '<div class="d-flex justify-center">' + upload_button + return_button + '</div>'
+            if(data.adeudo != 0){
+                return '<div class="d-flex justify-center">' + pass_button + edit_button + return_button + '</div>'
             }
-            else if (data.documento == null){
-                return '<div class="d-flex justify-center">' + pass_button + upload_button + view_button + return_button + '</div>'
+            else{
+                return '<div class="d-flex justify-center">' + edit_button + return_button + '</div>'
             }
-            else {
-                return ''
-            }
-        } 
+        }
     },
 ];
 
@@ -71,15 +67,15 @@ return_process = function(data){ // funcion para el avance del lote
     form.show()
 }
 
-upload_archivo = function(data){ // funcion para subir el archivo de adeudo
+update_adeudo = function(data){ // funcion para subir el archivo de adeudo
     let form = new Form({
-        title: `Subir orden de compra`,
+        title: `Captura de adeudo de la construcción`,
         onSubmit: function(data){
             form.loading(true);
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/UploadDocumentoCreditoDirecto`,
+                url: `${general_base_url}casas/setAdeudo`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -99,10 +95,8 @@ upload_archivo = function(data){ // funcion para subir el archivo de adeudo
         fields: [
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'tipoDocumento', value: data.archivo }),
-            new HiddenField({ id: 'id_documento', value: 2 }),
             new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
+            new NumberField({ id: 'adeudo', label: 'Adeudo', placeholder: '', required: true})
         ],
     })
 
@@ -118,7 +112,7 @@ select_lote = function(data){ // funcion para el avance del lote
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/avanceOrdenCompra`,
+                url: `${general_base_url}casas/creditoDirectoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,

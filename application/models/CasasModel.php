@@ -1451,11 +1451,16 @@ class CasasModel extends CI_Model
 
         $query = $this->db->query("SELECT 
             pcd.idProceso,
-            lo.idLote,
+            lo.idLote,  
             lo.nombreLote,
             pcd.estatus,
             pcd.proceso,
             pcd.comentario,
+            pcd.voBoOrdenCompra,
+            pcd.voBoAdeudoTerreno,
+            pcd.voBoValidacionEnganche,
+            pcd.voBoContrato,
+            pcd.adeudo,
             co.nombre AS condominio,
             re.descripcion AS proyecto,
 			dpc.archivo,

@@ -42,7 +42,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Paso 17 - Orden de compra</h3>
+                                    <h3 class="card-title center-align">Paso 17 - Adeudo</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
 
@@ -70,5 +70,5 @@
     <?php $this->load->view('template/footer'); ?>
     <?php $this->load->view('template/modals'); ?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/orden_compra.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/admon_adeudo.js"></script>
 </body>
