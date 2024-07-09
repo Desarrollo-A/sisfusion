@@ -1855,7 +1855,7 @@ class Reestructura extends CI_Controller{
         $id_proyecto = $this->input->post('index_proyecto');
 
         if ($this->session->userdata('id_usuario') == 13546 || $this->session->userdata('id_usuario') == 15625 || $this->session->userdata('id_usuario') == 13547  ) {
-            $union = "
+            $union = "s
                 AND re.idResidencial IN ($id_proyecto)
             UNION ALL
                 SELECT re.idResidencial, re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.estatus_preproceso, lo.idCliente, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
@@ -2908,33 +2908,6 @@ class Reestructura extends CI_Controller{
         else // MJ: SELECT DE LA VISTA reestructura
             echo json_encode($this->Reestructura_model->get_proyecto_lista(1)->result_array());
     }
-
-    /*FUNCTIONS THAT ARE BEING USED RIGHT NOW
-    public function borrarOpcion(){
-		$idOpcion = $_POST['idOpcion'];
-		$update = $this->Reestructura_model->borrarOpcionModel(100,$idOpcion);
-		if ($update == TRUE) {
-			echo json_encode(1);
-		} else {
-			echo json_encode(0);
-		}
-	}
-
-    public function editarOpcion(){
-		$dataPost = $_POST;
-		$datos["idOpcionEdit"] = $dataPost['idOpcionEdit'];
-		$datos["editarCatalogo"] = $dataPost['editarCatalogo'];
-		$update = $this->Reestructura_model->editarOpcionModel($datos);
-
-		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
-			echo json_encode(1);
-		} else {
-			$response['message'] = 'ERROR';
-			echo json_encode(0);
-		}
-	}
-    */
 
     public function obtenerRegistrosLiberar()
     {
@@ -4501,9 +4474,16 @@ class Reestructura extends CI_Controller{
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($response));
     }
-    public function deshacerFusion($id_lote)
+    public function deshacerFusion()
     {
+        $id_lote = $this->input->post('idLotePvOrigen');
         $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ?', $id_lote);
-        return $query;
+        if($query) {
+            $response["result"] = true;
+
+        }
+        else {
+            echo json_encode(0);
+        }
     }
 }

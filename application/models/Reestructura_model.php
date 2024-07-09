@@ -1117,6 +1117,7 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT lotx.idProyecto AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
         FROM loteXReubicacion lotx
 		INNER JOIN residenciales res ON res.idResidencial = lotx.idProyecto 
+        WHERE idResidencial IN (14, 21, 22, 25)
 		GROUP BY lotx.idProyecto,CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
     }
 
@@ -1739,7 +1740,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query('SELECT lf.*, lo.nombreLote, lo.tipo_estatus_regreso
         FROM lotesFusion lf
         INNER JOIN lotes lo on lo.idLote = lf.idLote
-        WHERE lf.idLotePvOrigen = ( SELECT idLotePvOrigen FROM lotesFusion WHERE idLote = ? )', $id_lote);
+        WHERE lf.idLotePvOrigen IN ( SELECT idLotePvOrigen FROM lotesFusion WHERE idLote = ? )', $id_lote);
         return $query;
     }
 

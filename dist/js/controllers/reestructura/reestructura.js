@@ -385,7 +385,7 @@ function fillTableCatalogo(id_catalogo) {
             },
             attr: {
                 class: 'btn btn-azure',
-                style: 'position: relative; float: left',
+                style: 'position: relative; float: left: margin-bottom: 5px;',
             },
         }],
         pagingType: "full_numbers",
@@ -548,6 +548,7 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
                 comentario: 'Regreso de pre-proceso por bloqueo del lote'
             },
         success: function (response) {
+            console.log("response: ", response);
             if(response.result){
                 if(flagFusion > 0){
                     deshacerFusion(idLotePvOrigen);
@@ -565,6 +566,7 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
             document.getElementById('guardarAccion').disabled = false;
         },
         error: function(response){
+            console.log("response: ", response)
             $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
             document.getElementById('guardarAccion').disabled = false;
@@ -581,6 +583,7 @@ function deshacerFusion(idLotePvOrigen){
             idLotePvOrigen 
         },
         success: function (response) {
+            console.log("response: ", response);
             if(response.result){
                 alerts.showNotification("top", "right", response.message, "success");
                 $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
@@ -588,13 +591,14 @@ function deshacerFusion(idLotePvOrigen){
             else
                 alerts.showNotification("top", "right", response.message, "danger");
 
-            document.getElementById('bloquearBandera').disabled = false;
+            document.getElementById('guardarAccion').disabled = false;
             $("#spiner-loader").addClass('hide');
         },
-        error: function(){
+        error: function(jqXHR, textStatus, errorThrown){
+            console.log("resp: ", textStatus);
             $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
-            document.getElementById('bloquearBandera').disabled = false;
+            document.getElementById('guardarAccion').disabled = false;
         }
     });
 }
