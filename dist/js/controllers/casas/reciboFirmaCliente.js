@@ -9,7 +9,7 @@ let columns = [
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso al lote', onClick: nextProcess, data})
             let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
-            return '<div class="d-flex justify-center">' + pass_button + return_button + '</div>'
+            return '<div class="d-flex justify-center">' + pass_button + '</div>'
         } 
     },
 ];
@@ -38,10 +38,10 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha rechazado.", "success");
-        
-                    table.reload();
+                    returnFlag(data);
 
+                    // alerts.showNotification("top", "right", "El lote ha rechazado.", "success");
+                    // table.reload();
                     form.hide();
                 },
                 error: function () {
@@ -61,6 +61,24 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
     })
 
     form.show()
+}
+
+returnFlag = function(data){
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}casas/removerFlagContrato`,
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            alerts.showNotification("top", "right", "El lote ha sido rechazado.", "success");
+
+            table.reload();
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    })
 }
 
 nextProcess = function(data){ // funcion para el avance del lote

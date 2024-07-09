@@ -2237,4 +2237,88 @@ class Casas extends BaseController {
             $this->json([]);
         }
     }
+
+    public function creditoDirectoReciboFirmaCliente()
+    {
+        $this->load->view("template/header");
+        $this->load->view("casas/creditoDirecto/reciboFirmaCliente_view");
+    }
+    public function creditoDirectoEnvioContrato()
+    {
+        $this->load->view("template/header");
+        $this->load->view("casas/creditoDirecto/envioContrato_view");
+    }
+    public function creditoDirectoContratoListo()
+    {
+        $this->load->view("template/header");
+        $this->load->view("casas/creditoDirecto/contratoListo_view");
+    }
+
+    public function creditoDirectoFirmaAcusteCliente()
+    {
+        $this->load->view("template/header");
+        $this->load->view("casas/creditoDirecto/firmaAcusteCliente_view");
+    }
+    public function creditoDirectoAcusteEntregado()
+    {
+        $this->load->view("template/header");
+        $this->load->view("casas/creditoDirecto/acusteEntregado_view");
+    }
+    public function acusteEntregadoFinalizar()
+    {
+        $form = $this->form();
+        $idLote = $form->idLote;
+        $idProceso = $form->idProceso;
+        $proceso = $form->proceso;
+        $finalizado = $form->finalizado;
+        $banderaSuccess = true;
+        $dataHistorial = array(
+            "idProcesoCasas"  => $idProceso,
+            "procesoAnterior" => $proceso,
+            "procesoNuevo"    => $finalizado,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "descripcion"     => "Se ha terminado el paso " . $finalizado,
+            "esquemaCreditoProceso" => 2
+        );
+        $this->db->trans_begin();
+        $updateData = array(
+            "finalizado" => $finalizado
+        );
+        // paso 1: hacer update del proceso
+        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idLote", $idLote);
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+        // paso 2: guardar registro del movimiento
+        $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+        if (!$addHistorial) {
+            $banderaSuccess = false;
+        }
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+
+            $this->json([]);
+        }
+    }
+
+    public function removerFlagContrato(){
+        $idLote = $this->input->post("idLote");
+        $idProceso = $this->input->post("idProceso");
+
+        $updateData = array(
+            "voBoContrato" => 0
+        );
+        
+        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
+
+        if($update){
+            $this->json([]);
+        }
+        else{
+            http_response_code(400);
+            $this->json([]);
+        }
+    }
+       
 }
