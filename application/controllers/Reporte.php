@@ -1,11 +1,14 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Reporte extends CI_Controller {
+
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Reporte_model', 'General_model'));
         $this->load->library(array('session','form_validation', 'get_menu', 'Email', 'Jwt_actions', 'Formatter','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
+        $this->programacion = $this->load->database('programacion', TRUE);
+
         date_default_timezone_set('America/Mexico_City');
         $this->jwt_actions->authorize('9717', $_SERVER['HTTP_HOST']);
         $this->validateSession();
@@ -404,4 +407,15 @@ class Reporte extends CI_Controller {
         }
     }
 
+    public function getMensualidadAbonoNeo(){
+        $empresa = $_POST['empresa'];
+        $nombreLote = $_POST['nombreLote'];
+
+        $data = $this->Reporte_model->getMensualidadAbonoNeo($empresa, $nombreLote);
+        if( $data != null) {
+            echo json_encode($data,JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
