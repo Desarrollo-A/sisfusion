@@ -683,9 +683,9 @@ $('#formTopar').on('submit', function (e) {
                     dataType: "json",
                     data: {
                         "tipoD":    tipoD,
-                        "pagoEdit": parsefloat(pagoEdit),
-                        "numeroPagos": parsefloat(numeroPagos),
-                        "montoPagos": parsefloat(montoPagos),
+                        "pagoEdit": parseFloat(pagoEdit),
+                        "numeroPagos": parseFloat(numeroPagos),
+                        "montoPagos": parseFloat(montoPagos),
                         "comentario": comentario,
                         "prestamoId": prestamoId,
                     },
