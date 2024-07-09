@@ -1600,7 +1600,9 @@
                 cl.calle,
                 cl.localidad, 
                 cl.regimen_fac,
-                cp_fac
+                cl.cp_fac, 
+                cl.colonia,
+                cl.pais
 
             FROM
                 clientes cl
@@ -1617,7 +1619,8 @@
             "SELECT
                 lo.nombreLote,
                 lo.idViviendaNeoData,
-                co.idProyectoNeoData
+                co.idProyectoNeoData,
+                lo.referencia
             FROM
                 lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio

@@ -23,7 +23,7 @@ $('#tablaReporteVentas').DataTable({
         titleAttr: 'Reporte de ventas',
         title: "Reporte de ventas",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ,16, 17],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -38,7 +38,7 @@ $('#tablaReporteVentas').DataTable({
     pageLength: 10,
     bAutoWidth: false,
     fixedColumns: true,
-    ordering: false,
+    ordering: true,
     language: {
         url: `${general_base_url}static/spanishLoader_v2.json`,
         paginate: {
@@ -66,13 +66,13 @@ $('#tablaReporteVentas').DataTable({
         { data: "supLoteOrigen" },
         {
             data: function (d) {
-                    return `$${formatMoney(d.precioM2FinalOrigen)}`;
+                return `$${formatMoney(d.precioM2FinalOrigen)}`;
             }
         },
         { data: "nombreCliente" },
-        { data: "nombreAsesor" },
-        { data: "nombreGerente" },
-        { data: "nombreSubdirector" },
+        { visible: (id_rol_general == 15) ? false : true, data: "nombreAsesor" },
+        { visible: (id_rol_general == 15) ? false : true, data: "nombreGerente" },
+        { visible: (id_rol_general == 15) ? false : true, data: "nombreSubdirector" },
         { data: "fechaApartado" },
         {
             data: function (d) {
@@ -97,8 +97,8 @@ $('#tablaReporteVentas').DataTable({
         // { data: "nombreSedeRecepcion" },
         {
             data: function (d) {
-                if(d.tipoV == 1) return `<div class="d-flex justify-center">` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + construirBotonCambio(d, 'getInfoRe2') +`</div>`;
-                if(d.tipoV == 2) return `<center>` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + `</center>`;
+                if (d.tipoV == 1) return `<div class="d-flex justify-center"> <button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + construirBotonCambio(d, 'getInfoRe2') + `</div>`;
+                if (d.tipoV == 2) return `<div class="d-flex justify-center"> <button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + `</div>`;
             }
         },
     ],
@@ -194,7 +194,7 @@ $(document).on("click", ".getInfoRe", function (e) {
     getInfoData[8] = $(this).attr("data-EstatusRegreso");
 
     titulo_modal = 'Regresión del lote - ';
-    
+
     $(".lote").html(getInfoData[4]);
     $(".titulo_modal").html(titulo_modal);
     tipo_comprobante = $(this).attr('data-ticomp');
@@ -214,14 +214,14 @@ $(document).on("click", ".getInfoRe2", function (e) {
     getInfoData[8] = $(this).attr("data-EstatusRegreso");
 
     titulo_modal = 'Cambio de plan de comisión del lote - ';
-    
+
     $(".lote_2").html(getInfoData[4]);
     $(".titulo_modal_2").html(titulo_modal);
     tipo_comprobante = $(this).attr('data-ticomp');
     $('#modalCambio').modal('show');
 });
 
-function construiBotonRegreso(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
+function construiBotonRegreso(data, fechaVenc, classButton, atributoButton = '', titulo = 'REGRESAR A PREPROCESO') {
     return `<button href='#' ${atributoButton} 
                 data-tiComp='${data.tipo_comprobanteD}' 
                 data-nomLote='${data.nombreLote}' 
@@ -256,7 +256,7 @@ function construirBotonCambio(data, classButton, atributoButton = '', titulo = '
                 title="${titulo}"> <i class="fa fa-money-bill-wave"></i></button>`;
 }
 
-$(document).on('click', '#saveRegreso', function(e) { // accion para el botón de regreso del procesos y preproceso
+$(document).on('click', '#saveRegreso', function (e) { // accion para el botón de regreso del procesos y preproceso
     e.preventDefault();
     var comentario = $("#comentarioRe").val();
     var validaComent = (document.getElementById("comentarioRe").value.trim() == '') ? 0 : 1;
@@ -283,28 +283,28 @@ $(document).on('click', '#saveRegreso', function(e) { // accion para el botón d
         $('#saveRegreso').prop('disabled', true);
         $('#spiner-loader').removeClass('hide');
         $.ajax({
-            url : general_base_url + 'Reestructura/regresoProcesoVenta',
-            data: dataExp1, 
+            url: general_base_url + 'Reestructura/regresoProcesoVenta',
+            data: dataExp1,
             dataType: 'json',
             cache: false,
             contentType: false,
             processData: false,
             type: 'POST',
-            success: function(result){
-                if(result.result) {
+            success: function (result) {
+                if (result.result) {
                     $('#saveRegreso').prop('disabled', false);
                     $('#modal1').modal('hide');
                     $('#tablaReporteVentas').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", result.message, "success");
                     $('#modalRegreso').modal('hide');
                 }
-                else{
+                else {
                     alerts.showNotification("top", "right", result.message, "danger");
                 }
 
                 $('#spiner-loader').addClass('hide');
             },
-            error: function(){
+            error: function () {
                 $('#spiner-loader').addClass('hide');
                 $('#saveRegreso').prop('disabled', false);
                 $('#modal1').modal('hide');
@@ -314,21 +314,21 @@ $(document).on('click', '#saveRegreso', function(e) { // accion para el botón d
     }
 });
 
-$(document).on('click', '#verPreproceso', function(e){
+$(document).on('click', '#verPreproceso', function (e) {
     $("#proceso").addClass('hide');
     $("#preproceso").removeClass('hide');
 
     $("#tab-proceso").removeClass('active');
     $("#tab-preProceso").addClass('active');
-    
+
 });
 
-$(document).on('click', '#verProceso', function(e){
+$(document).on('click', '#verProceso', function (e) {
     $("#preproceso").addClass('hide');
     $("#proceso").removeClass('hide');
-    
+
     $("#tab-proceso").addClass('active');
-    $("#tab-preProceso").removeClass('active'); 
+    $("#tab-preProceso").removeClass('active');
 });
 
 $(document).on("click", ".ver_historial", function () {
@@ -341,7 +341,7 @@ $(document).on("click", ".ver_historial", function () {
 
     $("#tab-proceso").addClass('active');
     $("#tab-preproceso").removeClass('active');
-    
+
     $('.btn-historial').attr('data-idLote', idLote); // se asignan los valores por default
     $('.btn-historial').attr('data-flagFusion', flagFusion);
 
@@ -352,23 +352,23 @@ $(document).on("click", ".ver_historial", function () {
         data: {
             idLote
         },
-        success: function(response){
-            if(response.result){
+        success: function (response) {
+            if (response.result) {
                 $('.btn-historial').attr('data-idLote', response.idLote); // se vuelven a reasignar en caso de que se traigan los datos correctamente
                 $('.btn-historial').attr('data-flagFusion', 0);
             }
-            else{
-                
+            else {
+
             }
 
             $("#spiner-loader").addClass('hide');
         },
-        error: function(response){
+        error: function (response) {
             $("#spiner-loader").addClass('hide');
         }
     });
 
-    
+
     // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
     consultarHistoriaContratacion(idLote);
     $("#seeInformationModal").modal();

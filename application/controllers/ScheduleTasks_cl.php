@@ -1167,7 +1167,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 'nohemi.castillo@ciudadmaderas.com',
                 'lorena.serrato@ciudadmaderas.com',
                 'yaretzi.rosales@ciudadmaderas.com',
-                'esmeralda.vega@ciudadmaderas.com')*/
+                'esmeralda.vega@ciudadmaderas.com',
+                'analilia.hernandez@ciudadmaderas.com')*/
             ->subject('Cambio de contraseña ASESOR COMODÍN.')
             ->view($this->load->view('mail/schedule-tasks-cl/change-password', [
                 'encabezados' => $encabezados,

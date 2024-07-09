@@ -5315,15 +5315,18 @@ function getDatosGralInternomex(){
     }
 
     public function findUsuariosByPuestoAsistente($puesto, $id_lider, $id_usuario) {
-        $addLider = '';
         if ($id_usuario == 12449) // MARCELA CUELLAR MORON
             $id_lider .= ", 654";
-        else if ($id_usuario == 10270) { // ANDRES BARRERA VENEGAS
+        else if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
             $id_lider .= ", 113";
-            $puestoWhereClause = '';
-        }
+        else if($id_usuario == 15109)
+            $id_lider .= ", 10251";
         else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
             $id_lider .= ", 495";
+        else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
+            $id_lider .= ", 5604";
+        else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
+            $id_lider .= ", 80, 664";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES
@@ -5331,10 +5334,10 @@ function getDatosGralInternomex(){
         else if($puesto == 7 && $id_usuario == 13511){
             $addLider = "id_lider , ";
             $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE  id_rol IN (7,9)) OR ( id_rol IN (7,9) ) OR id_usuario IN (13634)";
-        }   
+        }
         else if ($puesto === '7') // CONSULTA ASESORES Y COORDINADORES
             $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN ($id_lider) AND id_rol IN (7,9)) OR (id_lider IN ($id_lider) AND id_rol IN (7,9)  )  ";
-        return $this->db->query("SELECT $addLider id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre_completo FROM usuarios WHERE $puestoWhereClause ORDER BY nombre_completo")->result_array();
+        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre_completo FROM usuarios WHERE $puestoWhereClause ORDER BY nombre_completo")->result_array();
     }
 
     public function findAllResidenciales()

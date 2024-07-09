@@ -7,10 +7,6 @@
         &::-webkit-scrollbar {
             display: none;
         }
-        @media #{$smartphone}{
-            display: block!important;
-            overflow: hidden!important;
-        }
     }
     table.dataTable > thead > tr > th, table.dataTable > tbody > tr > th, table.dataTable > tfoot > tr > th, table.dataTable > thead > tr > td, table.dataTable > tbody > tr > td, table.dataTable > tfoot > tr > td {
         white-space: nowrap!important;
@@ -39,7 +35,6 @@
         background: linear-gradient(90deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, $platinumLight 75%);
         @media #{$smartphone}{
             width: 12%;
-            display: none;
         }
     }
     .rowCarousel{
@@ -54,8 +49,7 @@
                 min-width: 43%;
             }
             @media #{$smartphone}{
-                min-width: 80%;
-                margin-right: 0!important;
+                min-width: 85%;
             }
         }
         .card{

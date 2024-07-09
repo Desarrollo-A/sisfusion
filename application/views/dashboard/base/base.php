@@ -13,7 +13,7 @@
                 $this->load->view('template/sidebar');
         ?>
 
-        <div class="content boxContent pt-0">
+        <div class="content boxContent">
             <div class="container-fluid">
                 <ul class="nav nav-pills nav-pills-gray dashboard-nav-pills d-flex justify-center">
                     <?php 

@@ -534,8 +534,8 @@ hr {
                         <h4 class="card-title"><b>Ceder comisiones</b></h4>
                     </div>
                     <form method="post" id="form_ceder">
-                        <div class="modal-body">
-                            <div class="form-group">
+                        <div class="modal-body pt-0">
+                            <div class="form-group m-0">
                                 <label class="control-label">Asesor dado de baja</label>
                                 <select name="asesorold" id="asesorold" class="selectpicker select-gral" 
                                 title="SELECCIONA UNA OPCIÓN"
@@ -543,9 +543,8 @@ hr {
                                 title="Selecciona un usuario" data-size="7" required>
                                 </select>
                             </div>
-                            <div id="info" ></div>
-                            <div class="form-group" id="users"></div>
-                            <div class="form-group">
+                            <div id="info" class="text-center"></div>
+                            <div class="form-group mt-0">
                                 <label class="control-label">Puesto del usuario a ceder la comisiones</label>
                                 <select class="selectpicker select-gral roles2" 
                                     name="roles2" id="roles2" required
@@ -555,16 +554,16 @@ hr {
                                     <option value="3">Gerente</option>
                                 </select> 
                             </div>
-                            <div class="form-group" id="users">
+                            <div class="form-group mt-0" id="users">
                                 <label class="control-label">Usuario a ceder comisiones</label>
                                 <select id="usuarioid2" name="usuarioid2" class="selectpicker directorSelect select-gral"
                                 title="SELECCIONA UNA OPCIÓN" 
                                  required data-live-search="true"></select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-0">
                                 <label class="control-label">Descripción</label>
-                                <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" 
-                                placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario" name="comentario" class="text-modal" rows="3" 
+                                 required="required"></textarea>
                             </div>
                             <div class="form-group">
                              
@@ -616,7 +615,7 @@ hr {
                             <div class="form-group">
                                 <label class="control-label">Descripción</label>
                                 <textarea id="comentario3" name="comentario3" 
-                                class="form-control input-gral" rows="3" placeholder="Descripción"
+                                class="text-modal" rows="3"
                                  required></textarea>
                             </div>
                 
@@ -663,8 +662,8 @@ hr {
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Descripción</label>
-                                <textarea id="comentario4" name="comentario4" class="form-control input-gral"
-                                 rows="3" placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario4" name="comentario4" class="text-modal"
+                                 rows="3" required="required"></textarea>
                             </div>
                             <div class="form-group">
                               

@@ -34,7 +34,7 @@ class Administracion extends CI_Controller{
 	public function index() {
 		if (!in_array($this->session->userdata('id_rol'), array('11', '34' , '23', '35' , '26', '41' , '39', '31' , '49', '50' , '40', '54' , '58', '10', '18', '19', '20', 
 		    '21', '28', '33', '25', '25', '27', '30', '36', '22', '53', '8' , '23', '12', '61', '63', '64' , '65', '66' , '69', '68' , '70', '71', '72', '73' , '74', '75' ,
-		    '76', '77' , '78', '79' , '80', '81' , '82', '83' , '84', '95', '98'))) {
+		    '76', '77' , '78', '79' , '80', '81' , '82', '83' , '84', '98', '99', '101'))) {
 			redirect(base_url() . 'login');
 		}
 		$this->load->view('template/header');
@@ -77,6 +77,10 @@ class Administracion extends CI_Controller{
 		  	$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 		  	$dataPer[$i]['tipo_proceso']=$data[$i]->tipo_proceso;
             $dataPer[$i]['proceso']=$data[$i]->proceso;
+			$dataPer[$i]['idDocumento']=$data[$i]->idDocumento;
+			$dataPer[$i]['movimiento']=$data[$i]->movimiento;
+			$dataPer[$i]['expediente']=$data[$i]->expediente;
+			$dataPer[$i]['bucket']=$data[$i]->bucket;
 		  	$horaInicio = date("08:00:00");
 		  	$horaFin = date("16:00:00");
 		  	$arregloFechas = array();  

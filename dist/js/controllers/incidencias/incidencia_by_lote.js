@@ -370,14 +370,14 @@ $("#asesorold").change(function() {
                 $("#info").css("overflow", "scroll");
             }
             $('#info').append(`
-            <table class="table">
-            <thead style="font-size:9px;text-align:center;">
+            <table class="table mt-2">
+            <thead style="color: white; font-size: 9px;">
             <tr>
-                <th>ID LOTE</th>
-                <th>LOTE</th>
-                <th>COMISIÓN TOTAL</th>
-                <th>COMISIÓN TOPADA</th>
-                <th>COMISIÓN NUEVO ASESOR</th>
+                <th style="text-align: center">ID LOTE</th>
+                <th style="text-align: center">LOTE</th>
+                <th style="text-align: center">COMISIÓN TOTAL</th>
+                <th style="text-align: center">COMISIÓN TOPADA</th>
+                <th style="text-align: center">COMISIÓN NUEVO ASESOR</th>
             </tr>
             <tbody class="tinfo" style="font-size:12px;text-align:center;">`);
             
@@ -834,7 +834,7 @@ function updateVentaC(id, idLote, idCliente){
                 $("#modal_NEODATA").modal('hide');
                 $('#tabla_inventario_contraloria').DataTable().ajax.reload();
                 $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "La venta compartirda ha sido dada de baja", "success");
+                    alerts.showNotification("top", "right", "Se han realizado los cambios con éxito", "success");
             }
             else{
                 $('#modalBajaVcUpdate .modal-body').html('');
@@ -1650,6 +1650,7 @@ $(".find_doc").click( function() {
 
 
     $("#tabla_inventario_contraloria tbody").on("click", ".verify_neodata", function(e){
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         var tr = $(this).closest('tr');
@@ -1674,9 +1675,11 @@ $(".find_doc").click( function() {
                 switch (data[0].Marca) {
                     case 0:
                         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $('#spiner-loader').addClass('hide');
                     break;
                     case 1:
                         if(registro_status==0 || registro_status==8){//COMISION NUEVA
+                        $('#spiner-loader').addClass('hide');
                         }
                         else if(registro_status==1){
                             $.getJSON( general_base_url + "Incidencias/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
@@ -1701,6 +1704,7 @@ $(".find_doc").click( function() {
 
                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> <i>'+row.data().nombreLote+'</i></b></h3></div></div><br>');
                                 $.getJSON( general_base_url + "Incidencias/getDatosAbonadoDispersion/"+idLote+"/"+1).done( function( data ){
+                                    $('#spiner-loader').addClass('hide');
                                     
                                     $("#modal_NEODATA .modal-body").append(` <div class="row"><div class="col-md-2"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-3">ACCIONES</div></div>`);
                                     let contador=0;
@@ -1806,15 +1810,15 @@ $(".find_doc").click( function() {
                                         ${(parseInt(banderaPermisos) != 1) ? 'style="display:none" ' : 'style="display:show" '} 
                                         onclick="SaveAjuste(${i})" ${v.descuento == 1 || v.descuento > 1  ? 'style="display:none" ' : 'style="display:show" ' }  
                                          data-toggle="tooltip" disabled
-                                        data-placement="top" title="GUARDAR PORCENTAJE" class="btn btn-dark btn-round btn-fab btn-fab-mini"><span class="material-icons">check</span>
+                                        data-placement="top" title="GUARDAR PORCENTAJE" class="btn-data btn-gray"><span class="material-icons">check</span>
                                         </button>`;
                                         // boton topar
                                         let boton_topar = `
                                         <button type="button" id="btnTopar_${i}"  data-toggle="tooltip"
                                         data-placement="top" title="TOPAR COMISIÓN" 
                                         ${v.descuento == 1 || v.descuento > 1 ? 'style="display:none" ' : 'style="display:show" '} 
-                                        onclick="Confirmacion(${i} ,'${v.colaborador}')" class="btn btn-danger btn-round btn-fab btn-fab-mini">
-                                        <span class="material-icons">pan_tool</span>
+                                        onclick="Confirmacion(${i} ,'${v.colaborador}')" class="btn-data btn-warning">
+                                        <i class="fas fa-hand-paper"></i>
                                         </button>`;
                                         // boton  regresar 
                                         let boton_regresar = `
@@ -1823,7 +1827,7 @@ $(".find_doc").click( function() {
                                           ${v.descuento == 0 || v.descuento > 1 ? 'style="display:none" ' : 'style="display:show" '} 
 
                                         title="Regresar" onclick="Regresar(${i}, ${v.porcentaje_decimal},'${v.colaborador}','${v.rol}',${data1[0].totalNeto2})" 
-                                        class="btn btn-dark btn-info btn-fab btn-fab-mini"><span class="material-icons">cached</span>
+                                        class="btn-data btn-sky"><span class="material-icons">cached</span>
                                         </button>`;
                                         // botton pago
                                         let boton_pago = `
@@ -1832,7 +1836,7 @@ $(".find_doc").click( function() {
                                         ${v.descuento == 1 || v.descuento > 1  ? 'style="display:none" ' : 'style="display:show" '} 
                                         
                                         onclick="AgregarPago(${i}, ${pending},'${v.colaborador}','${v.rol}')" 
-                                        class="btn btn-dark btn-success btn-fab btn-fab-mini"><span class="material-icons">add</span>
+                                        class="btn-data btn-green"><i class="fas fa-plus"></i>
                                         </button>
                                         `;
 
@@ -1859,7 +1863,7 @@ $(".find_doc").click( function() {
                                         <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}"></div>
                                         <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}"></div>
                                         <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}"></div>
-                                        <div class="col-md-3 botones">
+                                        <div class="col-md-3 botones d-flex">
                                         ${(parseInt(banderaPermisos) != 1) ? '' : boton}  
                                         ${boton_topar}
                                         ${boton_pago}
@@ -1898,24 +1902,29 @@ $(".find_doc").click( function() {
                     break;
                     case 2:
                         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No se encontró esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $('#spiner-loader').addClass('hide');
                     break;
                     case 3:
                         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No tiene vivienda, si hay referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $('#spiner-loader').addClass('hide');
                     break;
                     case 4:
                         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No hay pagos aplicados a esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $('#spiner-loader').addClass('hide');
                     break;
                     case 5:
                         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Referencia duplicada de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                        $('#spiner-loader').addClass('hide');
                     break;
                     default:
                         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Sin localizar.</b></h4><br><h5>Revisar con sistemas: '+row.data().nombreLote+'.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
-                        
+                        $('#spiner-loader').addClass('hide');
                     break;
                 }
             }
             else{
                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
+                $('#spiner-loader').addClass('hide');
             }
         });
 
@@ -2125,12 +2134,13 @@ function Confirmacion(i,name){
     $("#modal_avisos .modal-header").append('<h4 class="card-title"><b></b></h4>');
     $("#modal_avisos .modal-body").append(`
         <div id="inputhidden">
-                <label class="lbl-gral" >¿Estás seguro de DETENER la comisión al usuario <b>${name}</b>?<br><br>
-                 <b>NOTA:</B> El cambio ya no se podrá revertir.</label>
-            <div class="form-group">
-                <textarea id="comentario_topaT_${i}" name="comentario_topaT_${i}" class="form-control input-gral" rows="3" 
-                    required placeholder="Describe el motivo por el cual se detendrán los pagos de esta comisión">
-                </textarea>
+                <p class="text-gral" >¿Estás seguro de DETENER la comisión al usuario <b>${name}</b>?
+                <br>
+                 <i><b>NOTA:</b> El cambio ya no se podrá revertir.</i></p>
+            <div class="form-group m-0">
+                <label class="control-label">Describe el motivo por el cual se detendrán los pagos de esta comisión</label>
+                <textarea id="comentario_topaT_${i}" name="comentario_topaT_${i}" class="text-modal" rows="3" 
+                    required></textarea>
             </div>
         </div>`);
     $("#modal_avisos .modal-footer").append(`
@@ -2168,9 +2178,8 @@ function AgregarPago(i,pendiente,colab,rol){
         <div class="form-group">
             <input id="monotAdd" name="monotAdd" min="1" class="form-control input-gral"  type="number" onblur="verifica_pago(${pendiente})" placeholder="Monto a abonar" maxlength="6"/>
              <p id="msj2" style="color:red;"></p>
-            <br>
-            <textarea id="comentario_topa" name="comentario_topa" class="form-control input-gral" rows="3" required placeholder="Describe el motivo por el cual se agrega este pago">
-            </textarea>
+            <label class="control-label">Describe el motivo por el cual se agrega este pago</label>
+            <textarea id="comentario_topa" name="comentario_topa" class="text-modal" rows="3" required></textarea>
         </div>
     </div>`);
     $("#modal_add .modal-footer").append(`
@@ -2875,8 +2884,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
 
         $("#modalBajaVcUpdate .modal-body").append(`
             <h5 style= "text-align: center;">¿Estás seguro de dar de baja esta venta compartida?
-            <b>Antes</b> de hacerlo, asegúrate de haber ajustado los <b>porcentajes</b>.</h5>
-            
+            <br><b>Nota.</b> Antes de hacerlo, asegúrate de haber ajustado los <b>porcentajes</b>.</h5>
         `);
 
         $("#modalBajaVcUpdate .modal-footer").append(`
