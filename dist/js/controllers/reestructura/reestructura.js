@@ -240,15 +240,6 @@ $(document).on('click', '#borrarOp', function(){
     catalogoAcciones(2, data, "Opción eliminada.", '#modalBorrar');
 });
 
-$(document).on('click', '#guardarEdit', function() {
-    var idOpcionEdit = $('#id_opcionEdit').val();
-    var editarCatalogo = $("#editarCatalogo").val();
-    var data = new FormData();
-    data.append("idOpcionEdit", idOpcionEdit);
-    data.append("editarCatalogo", editarCatalogo);
-    catalogoAcciones(3, data, "Opción editada correctamente.", '#editarModel');
-});
-
 $(document).on('click', '#borrarOpcion', function(){
     $('#idOpcion').val($(this).attr('data-idOpcion'));
     $('#modalBorrar').modal();
