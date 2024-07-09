@@ -56,7 +56,7 @@ class Reporte_model extends CI_Model {
             $canceladasApartadas = $canceladasApartadas . " UNION ALL " . $canceladasApartadasN;
         }
         //Crear por defecto las columnas en default para evaluar esos puntos en la gráfica. 
-        $defaultColumns = "WITH cte AS(s
+        $defaultColumns = "WITH cte AS(
             SELECT CAST('$beginDate' AS DATETIME) DateValue
             UNION ALL
             SELECT  DateValue + 1
@@ -426,7 +426,7 @@ class Reporte_model extends CI_Model {
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction);
         list($userFilter, $nombreUsuarioCliente, $nombreUsuarioCompartida, $usuarioFilter, $joinUsuarios,$nombreUsuarioFilter) = $this->amountShare($id_rol, $id_usuario, $render, $leadersList);
         $query = $this->db->query("
-        WITH comodinCounts AS (s
+        WITH comodinCounts AS (
             SELECT id_cliente, SUM(total_occurrences) AS total_occurrences
             FROM (
                 SELECT cl.id_cliente, 1 AS total_occurrences
