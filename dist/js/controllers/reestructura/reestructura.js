@@ -132,6 +132,24 @@ $(document).on('click', '.reesInfo', function () {
     });
     $('#modal_historial').modal();
 });
+function fillChangelog(v) {
+    $("#historialLine").append(`<li>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 colmd-6 col-lg-6">
+                    <a><b> ${v.creado_por.toUpperCase()} </b></a><br>
+                </div>
+                <div class="float-end text-right">
+                    <a> ${v.fecha_creacion}</a>
+                </div>
+                <div class="col-md-12">
+                    <p class="m-0"><small>Valor anterior: </small><b> ${(v.nombre) ? v.nombre.toUpperCase() : '-'}</b></p>
+                    <p class="m-0"><small>Valor nuevo: </small><b> ${v.nombreNuevo.toUpperCase()}</b></p>
+                </div>
+            </div>
+        </div>
+    </li>`);
+}
 
 $(document).on('click', '#saveLi', function () {
     $("#spiner-loader").removeClass('hide');
@@ -347,6 +365,14 @@ function fillTable(index_proyecto) {
         });
     });
 }
+$('#tableCatalogo thead tr:eq(0) th').each(function (i) {
+    var title = $(this).text();
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + ' " placeholder="' + title + '"/>');
+    $('input', this).on('keyup change', function () {
+        if($('#tableCatalogo').DataTable().column(i).search() !== this.value)
+            $('#tableCatalogo').DataTable().column(i).search(this.value).draw();
+    });
+});
 
 function fillTableCatalogo(id_catalogo) {
     tabla_valores_catalogos = $("#tableCatalogo").DataTable({
@@ -412,8 +438,6 @@ function fillTableCatalogo(id_catalogo) {
         });
     });
 }
-
-$(document).on('click')
 
 let titulos_intxtLiberado = [];
 $('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
@@ -622,7 +646,8 @@ function fillTable1(index_proyecto) {
             { data: "nombreCliente" },
             {
                 data: function (d) {
-                    return `<label class="label lbl-violetBoots">${d.estatusLiberacion}</label>`;
+                    //return `<label class="label lbl-violetBoots">${d.estatusLiberacion}</label>`;
+                    return `<span class="label lbl-violetBoots">${d.estatusLiberacion}</span>`;
                 }
             },
             {
