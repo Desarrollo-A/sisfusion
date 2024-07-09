@@ -254,14 +254,6 @@ $(document).on('click', '#borrarOpcion', function(){
     $('#modalBorrar').modal();
 });
 
-$(document).on('click', '#editarOpcion', function() {
-    var idOpcion = $(this).attr('data-idOpcion');
-    var optionName = $(this).attr('data-optionName');
-    $('#id_opcionEdit').val(idOpcion);
-    $('#editarCatalogo').val(optionName);
-    $('#editarModel').modal();
-});
-
 function fillTable(index_proyecto) {
     tabla_valores_cliente = $("#tabla_clientes").DataTable({
         width: '100%',
@@ -329,11 +321,11 @@ function fillTable(index_proyecto) {
             {
                 data: function (d) {
                     if (d.idStatusLote == 15 || d.idStatusLote == 16) { // MJ: ESTÁ LIBERADO
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-idCatalogo="${d.idCatalogo}" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-violetDeep stat5Rev" data-toggle="tooltip" data-idCatalogo="${d.idCatalogo}" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     } else {
                         return `<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-precio="${d.precio}" data-idCliente="${d.idCliente}"><i class="fas fa-thumbs-up"></i></button>
-                        <button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" data-idCatalogo="${d.idCatalogo}" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
+                        <button class="btn-data btn-violetDeep stat5Rev" data-toggle="tooltip" data-placement="top" data-idCatalogo="${d.idCatalogo}" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     }
                 }
@@ -548,7 +540,6 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
                 comentario: 'Regreso de pre-proceso por bloqueo del lote'
             },
         success: function (response) {
-            console.log("response: ", response);
             if(response.result){
                 if(flagFusion > 0){
                     deshacerFusion(idLotePvOrigen);
@@ -565,8 +556,7 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
             $('#accionModal').modal('toggle');
             document.getElementById('guardarAccion').disabled = false;
         },
-        error: function(response){
-            console.log("response: ", response)
+        error: function(){
             $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
             document.getElementById('guardarAccion').disabled = false;
@@ -583,7 +573,6 @@ function deshacerFusion(idLotePvOrigen){
             idLotePvOrigen 
         },
         success: function (response) {
-            console.log("response: ", response);
             if(response.result){
                 alerts.showNotification("top", "right", response.message, "success");
                 $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
@@ -594,8 +583,7 @@ function deshacerFusion(idLotePvOrigen){
             document.getElementById('guardarAccion').disabled = false;
             $("#spiner-loader").addClass('hide');
         },
-        error: function(jqXHR, textStatus, errorThrown){
-            console.log("resp: ", textStatus);
+        error: function(){
             $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
             document.getElementById('guardarAccion').disabled = false;
@@ -650,7 +638,6 @@ function fillTable1(index_proyecto) {
             { data: "nombreCliente" },
             {
                 data: function (d) {
-                    //return `<label class="label lbl-violetBoots">${d.estatusLiberacion}</label>`;
                     return `<span class="label lbl-violetBoots">${d.estatusLiberacion}</span>`;
                 }
             },
@@ -670,7 +657,6 @@ function fillTable1(index_proyecto) {
                                 </div>`;
                 }
             }
-        
         ],
         columnDefs: [{
             defaultContent: "",

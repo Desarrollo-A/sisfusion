@@ -129,34 +129,6 @@
 			</div>
 		</div>
 
-        <div class="modal fade modal-alertas" id="editarModel" role="dialog">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title text-center">Editar opción</h5>
-					</div>
-					<form id="updateNewDesc">
-						<input type="hidden" value="0" name="id_opcionEdit" id="id_opcionEdit">
-						<div class="form-group d-flex justify-center">
-							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<input type="text" class="form-control input-gral" id="editarCatalogo" name="editarCatalogo" required>
-							</div>
-						</div>
-						<div class="container-fluid">
-							<div class="row mt-1 mb-1 d-flex align-center">
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-danger btn-simple m-0 align-center" data-dismiss="modal" value="CANCELAR">
-								</div>
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="submit" class="btn btn-primary" name="guardarEdit"  id="guardarEdit" value="GUARDAR">
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-
         <div class="modal fade" id="aceptarReestructura" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" > 
