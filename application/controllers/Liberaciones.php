@@ -127,6 +127,29 @@ class Liberaciones extends CI_Controller{
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
 
+    public function getLotesPendientesBloqueo(){
+        $tipoVenta = $this->input->post('tipoVenta');
+        $idProcesoTipoLiberacion = $this->input->post('idProcesoTipoLiberacion');
+ 
+        $condicion = '';
+        if ($idProcesoTipoLiberacion == 133) { // Filtro de acuerdo al concepto de liberación: En este caso Particulares.
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IN (1, 3))"; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib = (2))"; // CONTRALORÍA
+            if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (4))"; // CAJAS
+        }
+        if ($idProcesoTipoLiberacion == 134) { // Filtro de acuerdo al concepto de liberación: En este caso Rescisión.
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IN (1))"; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib = (2))"; // CONTRALORÍA
+            if ($this->session->userdata('id_rol') == 11) $condicion = "AND (pl.proceso_lib = (3))"; // ADMINISTRACIÓN
+            // if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4))"; // VENTAS SUBDIRECTOR
+            if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // VENTAS SUBDIRECTOR
+            if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (5))"; // CAJAS
+        }
+        $data = $this->Liberaciones_model->getLotesPendientesBloqueo($idProcesoTipoLiberacion, $tipoVenta, $condicion);
+
+        echo json_encode($data, JSON_NUMERIC_CHECK);
+    }
+
     // Consultar los lotes que no estan en su proceso pero estan en un proceso de liberación con otra area.
     public function getLotesEnProcesoLiberacion(){
         $tipoVenta = $this->input->post('tipoVenta');
@@ -147,6 +170,19 @@ class Liberaciones extends CI_Controller{
             if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (5))"; // CAJAS
         }
         $data = $this->Liberaciones_model->getLotesEnProcesoLiberacion($idProcesoTipoLiberacion, $tipoVenta, $condicion);
+
+        echo json_encode($data, JSON_NUMERIC_CHECK);
+    }
+
+    // Consultar los lotes que no estan en su proceso pero estan en un proceso de liberación de bloqueo con otra area
+    public function getLotesEnProcesoBloqueo(){
+        $condicion = '';
+        if ($this->session->userdata('id_rol') == 3) $condicion = "AND (pl.proceso_lib IS NOT NULL)"; // VENTAS
+        if ($this->session->userdata('id_rol') == 2) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (1)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // SUBDIRECCIÓN 
+        if ($this->session->userdata('id_rol') == 5) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (1)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // ASISTENTES DE SUBDIRECCIÓN
+        if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (2, 3 ))"; // CAJAS
+
+        $data = $this->Liberaciones_model->getLotesEnProcesoBloqueo($condicion);
 
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }

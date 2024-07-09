@@ -1,7 +1,8 @@
 const LIBERACION = Object.freeze({
     PARTICULARES: 133,
     RESCISION: 134,
-    BLOQUEADOS: 134
+    BLOQUEADOS: 148,
+    SIN_CONTRATO: 500,
 })
 
 const TIPO_VENTA = Object.freeze({
@@ -14,6 +15,28 @@ const ROLES = Object.freeze({
     SUBDIRECCION: 2,
     ASISTENTE_SUBDIRECCION: 5,
     CAJAS: 12,
+});
+
+const PROCESO = Object.freeze({
+    INICIO: 0,
+    CAMBIO_PRECIO: 1, // MAS DE 30 DÍAS BLOQUEADO
+    SOLICITUD_LIBERACION: 2,
+    FINALIZADO_LIBERADO: 3,
+    FINALIZADO_NO_LIBERADO: 4,
+});
+
+const AVANCE = Object.freeze({
+    NORMAL: 1,
+    RECHAZO: 2,
+    CORRECCIÓN: 3,
+});
+
+const CONCEPTO = Object.freeze({
+    PARTICULARES:1, 
+    JURIDICO:2,
+    RESCISIÓN:3,
+    SIN_CONTRATO:4,
+    BLOQUEO:5,
 });
 
 let liberacionesDataTable;
@@ -70,8 +93,7 @@ $(document).on("click", "#pendientes", function () {
 
     $.ajax({
         type: 'POST',
-        url: `${general_base_url}Liberaciones/getLotesBloqueados`,
-        data: {tipoVenta: TIPO_VENTA.PARTICULARES, idProcesoTipoLiberacion: LIBERACION.PARTICULARES},
+        url: `${general_base_url}Liberaciones/getLotesPendientesBloqueo`,
         cache: false,
         success: function(rs) {
             const res = JSON.parse(rs);
@@ -90,8 +112,7 @@ $(document).on("click", "#proceso", function () {
     
     $.ajax({
         type: 'POST',
-        url: `${general_base_url}Liberaciones/getLotesEnProcesoLiberacion`,
-        data: {tipoVenta: TIPO_VENTA.PARTICULARES, idProcesoTipoLiberacion: LIBERACION.PARTICULARES},
+        url: `${general_base_url}Liberaciones/getLotesEnProcesoBloqueo`,
         cache: false,
         success: function(rs) {
             const res = JSON.parse(rs);
@@ -194,18 +215,19 @@ $(document).on("click", "#btn-accion", async function (e) {
     let tieneRescision = 0;
     let tieneAutorizacionDG = 0;
     let archivo, proceso, estatusLib, rescision, autorizacionDG, concepto, precioLiberacion, plazo;
+    let res; // Dato para saber los dias bloqueados de un lote.
 
-    //Validaciones en caso de tener
-    if ( d.enProcesoLiberacion === 0 ) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
+    // VALIDACIONES: En caso de tener
+    if ( d.enProcesoLiberacion === PROCESO.INICIO ) { // VENTAS O CAJA: LIBERAR LOTE O AL COLOCAR PLAZO. 
         // Loading y disables mientras hace la carga
         $('#btn-accion').attr('disabled', true); // Deshabilita botón
         $('#spiner-loader').removeClass('hide'); // Aparece spinner
-        
+
         // Validamos cuantos días tiene el lote desde que se bloqueo.
         const body = new FormData();
         body.append("idLote", d.idLote);
-        
-        let res = await $.ajax({
+
+        res = await $.ajax({
             type: 'POST',
             url: `${general_base_url}Liberaciones/getDiasBloqueosDeLote`,
             data: body,
@@ -213,16 +235,16 @@ $(document).on("click", "#btn-accion", async function (e) {
             cache: false,
             processData: false,
         });
-    
+
         res = JSON.parse(res);
-    
+
         if (res.result !== true) {
             $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
             $('#spiner-loader').addClass('hide'); // Quito spinner  
             return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
         }
     }
-    if ((d.enProcesoLiberacion === 1 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
+    if ((d.enProcesoLiberacion === PROCESO.CAMBIO_PRECIO )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
         precioLiberacion = $('#costoM2').val().replace('$', '').replace(',', ''); // El precio del lote
         plazo = comentario; // El plazo es el input del comentario
         comentario = ''; // El comentario no está habilitado para el proceso de liberación para el proceso 3
@@ -233,32 +255,28 @@ $(document).on("click", "#btn-accion", async function (e) {
         // Input de plazo sin valor
         if (plazo === '') return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
     }
-    if ((d.enProcesoLiberacion === 2 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
+    if ((d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
+        // Poner la validación
+    } 
 
-    }
-
-    // Asignación de valores dependiendo el proceso
+    // CAMBIO DE PROCESO: se dirige al proceso
     if (accion === 'AVANCE') {
-        proceso = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? 2 : d.enProcesoLiberacion + 1; // Avanza proceso
-        estatusLib = d.estatus_lib === 2 ? 3 : 1; // 1: avance normal, 2 rechazo y 3 correccion.
-        rescision = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? tieneRescision :d.rescision; // Si esta en el proceso 0 o 1, el valor es el input, si no el que ya habia registrado.
-        autorizacionDG = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? tieneAutorizacionDG : d.autorizacion_DG; // Si esta en el proceso 0 o 1, el valor es el input, si no el que ya habia registrado.
-        concepto = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? 1 : d.concepto;
-        if ( d.enProcesoLiberacion >=  4 ) { // Arrastramos el valor de precio en los registros ya una vez registrado.
-            precioLiberacion = d.precioLiberacion;
-            plazo = d.plazo;
+        if ( d.enProcesoLiberacion === PROCESO.INICIO ) { // CUANDO INICIA EL PROCESO.
+            if (res.days >= 30) proceso = PROCESO.CAMBIO_PRECIO;
+            if (res.days < 30) proceso = PROCESO.SOLICITUD_LIBERACION;
+
+            estatusLib = AVANCE.NORMAL;
+            rescision = 0; // NO APLICA PARA BLOQUEADOS
+            autorizacionDG = 0; // NO APLICA PARA BLOQUEADOS
+            concepto = CONCEPTO.BLOQUEO;
+            
+    
+
+
         }
     }
     if (accion === 'RECHAZO') {
-        proceso = d.enProcesoLiberacion  === 4 ? d.enProcesoLiberacion + 2 : d.enProcesoLiberacion - 1; // Rechaza proceso, si proceso = 4 entonces se finaliza y es otro estatus.
-        estatusLib = d.enProcesoLiberacion  === 4 ? 1 : 2; // Estatus de liberacion es rechazo
-        rescision = proceso === 1 ? 0 : d.rescision; // Si lo regresan para validar doc, se asigna 0 sino el que ya tenia registrado.
-        autorizacionDG = proceso === 1 ? 0 : d.autorizacion_DG; // Si lo regresan para validar doc, se asigna 0 sino el que ya tenia registrado.
-        concepto = d.concepto;
-        if ( d.enProcesoLiberacion >=  4 ) { // Arrastramos el valor de precio en los registros ya una vez registrado.
-            precioLiberacion = d.precioLiberacion;
-            plazo = d.plazo;
-        }
+        // NO HAY RECHAZOS EN BLOQUEOS SEGÚN EL DIAGRAMA 🤷‍♀️​
     }
 
     // Datos a envíar al endpoint para su registro.
@@ -291,80 +309,8 @@ $(document).on("click", "#btn-accion", async function (e) {
         }
     });
 
-    // Hacemos el registro de en historial_documento
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 && proceso === 2) {
-
-        // Borramos el archivo en caso de tener uno y actualizamos los registros de historial_documento 
-        if (d.expediente) {
-            const docData = new FormData();
-            docData.append("idDocumento", d.idDocumento);
-            docData.append("tipoDocumento", d.tipo_doc);
-            let rs1 = await $.ajax({
-                type: 'POST',
-                url: `${general_base_url}Documentacion/eliminarArchivo`,
-                data: docData,
-                contentType: false,
-                cache: false,
-                processData: false,
-            });
-
-            rs1 = JSON.parse(rs1);
-            console.log('Eliminar archivo', rs1);
-            
-            if (rs1.code == 500 ){
-                alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
-                return;
-            } 
-        }
-
-        const tipoDocumento = rescision ? 53 : 54; 
-        const movimiento = tipoDocumento === 53 ? 'RESCICIÓN DE CONTRATO' : 'AUTORIZACIÓN DG';
-        const expediente = generarTituloDocumento(d.nombreResidencial, d.nombreLote, d.idLote, d.idCliente, tipoDocumento);
-        const ndata = new FormData();
-        ndata.append("movimiento", movimiento); // Nombre del tipo de documento
-        ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
-        ndata.append("idCliente", d.idCliente);
-        ndata.append("idCondominio", d.idCondominio);
-        ndata.append("idLote", d.idLote);
-        ndata.append('tipo_doc', tipoDocumento); // TipoDocumento es el id del opc de mis archivos (53, 54)
-
-        let res = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Liberaciones/registrarDocumentoEnArbol`,
-            data: ndata,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-
-        res = JSON.parse(res);
-        console.log('Historial documento', res);
-
-        const xdata = new FormData();
-        xdata.append("idLote", d.idLote);
-        xdata.append("idDocumento", res.documentId);
-        xdata.append("tipoDocumento", tipoDocumento);
-        xdata.append("tituloDocumento", expediente);
-        xdata.append("uploadedDocument", archivo[0].files[0]);
-        let rs = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Documentacion/subirArchivo`,
-            data: xdata,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-
-        rs = JSON.parse(rs);
-        console.log('Subir archivo', rs);
-        if (rs.code == 500 ){
-            alerts.showNotification("top", "right", 'Surgió un error al registrar el archivo', "warning");
-            return;
-        } 
-    }
-
     // En caso de ser el ultimo proceso, ya se libera.
-    if (d.enProcesoLiberacion === 4 && proceso === 5) {
+    if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION) {
         // Generamos el token para liberar el lote
         let res = await $.ajax({
             type: 'POST',
@@ -417,8 +363,21 @@ $(document).on("click", "#btn-accion", async function (e) {
     $('#accion-modal').modal('hide');
     $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 && proceso === 2) {
-        datatableFn([]);
+    if (d.enProcesoLiberacion === 0) {
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Liberaciones/getLotesBloqueados`,
+            cache: false,
+            success: function(rs) {
+                const res = JSON.parse(rs);
+                datatableFn(res, 1);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la petición AJAX:", error);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            }
+        });
     }else {
         $('#pendientes').click();
     }
