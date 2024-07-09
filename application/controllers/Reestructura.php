@@ -4402,8 +4402,6 @@ class Reestructura extends CI_Controller{
                 return $e->getMessage();
             }
         }
-        if($opcionAccion == 3) {
-        }
     }
 
     public function cambiarBandera () {
