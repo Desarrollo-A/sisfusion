@@ -4366,7 +4366,7 @@ class Reestructura extends CI_Controller{
         $data = $_POST;
         $opcionAccion = isset($data['actionCode']) ? intval($data['actionCode']): 0;
         if($opcionAccion == 1) {
-            //INSERT
+            //INSERTAR
             $idOpcion = $this->Administracion_model->getLastId('opcs_x_cats', array('id_catalogo' => 100), 'id_opcion');
             $dataInsert = array(
                 'id_opcion' => $idOpcion + 1 ,
@@ -4386,9 +4386,10 @@ class Reestructura extends CI_Controller{
             }
         }
         if($opcionAccion == 2) {
-            //BORRAR
+            //EDITAR
             $idOpcion = $data['idOpcion'];
-            $dataDelete = array('id_opcion' => $idOpcion,'id_catalogo'=> 100, 'estatus' => 0);
+            $estatusOpcion = $data['estatusOpcion'];
+            $dataDelete = array('id_opcion' => $idOpcion,'id_catalogo'=> 100, 'estatus' => $estatusOpcion);
             try {
                 $this->db->WHERE('id_opcion', $idOpcion);
                 $this->db->WHERE('id_catalogo', 100);
@@ -4506,5 +4507,10 @@ class Reestructura extends CI_Controller{
         }
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($response)); 
+    }
+
+    public function getOpcionesCatalogo() {
+        $result = $this->db->query("SELECT *, CASE WHEN estatus = 1 THEN 'ACTIVO' ELSE 'INACTIVO' END statusOpcion FROM opcs_x_cats WHERE id_catalogo IN (100)")->result_array();
+        echo json_encode($result);
     }
 }

@@ -47,13 +47,13 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="saveLi" name="saveLi" class="btn btn-primary">Aceptar</button>
+						<button type="button" id="saveLiberacion" name="saveLiberacion" class="btn btn-primary">Aceptar</button>
 					</div>
 				</div>
 			</div>
 		</div>
         <!--KEEP CATALOGO TABLE-->
-        <div class="modal fade" id="catalogoRee" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="catalogoReestructura" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" > 
 					<div class="modal-header">
@@ -70,6 +70,7 @@
                                     <thead>
                                         <tr>
                                             <th>NOMBRE</th>
+                                            <th>ESTATUS</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -84,19 +85,20 @@
 			</div>
 		</div>
 
-        <div class="modal fade" id="modalBorrar" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="modalEditar" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content"> 
 					<div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4>¿Está seguro de borrar la opción?</h4>
+                            <h4 id="edtTitle"></h4>
                         </div>
                         <br>
                         <input type="hidden" name="idOpcion" id="idOpcion">       
+                        <input type="hidden" name="estatusOpcion" id="estatusOpcion">
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-						<button type="button" id="borrarOp" name="borrarOp" class="btn btn-primary">Aceptar</button>
+						<button type="button" id="editarOpcion" name="editarOpcion" class="btn btn-primary">Aceptar</button>
 					</div>
 				</div>
 			</div>
