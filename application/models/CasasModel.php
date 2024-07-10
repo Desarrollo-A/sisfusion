@@ -189,7 +189,8 @@ class CasasModel extends CI_Model
 			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
-        oxc.nombre AS movimiento
+        oxc.nombre AS movimiento,
+        oxc.color
         FROM proceso_casas pc
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
@@ -223,7 +224,8 @@ class CasasModel extends CI_Model
 			 WHEN pcd.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
-        oxc.nombre AS movimiento
+        oxc.nombre AS movimiento,
+        oxc.color
         FROM proceso_casas_directo pcd
         LEFT JOIN usuarios us ON us.id_usuario = pcd.idAsesor
         LEFT JOIN lotes lo ON lo.idLote = pcd.idLote
@@ -231,7 +233,7 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pcd.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pcd.tipoMovimiento
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 108 AND oxc.id_opcion = pcd.tipoMovimiento
         WHERE
             pcd.proceso = 0
             AND pcd.estatus = 1

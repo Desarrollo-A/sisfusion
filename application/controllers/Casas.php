@@ -524,9 +524,9 @@ class Casas extends BaseController
                 $banderaSuccess = false;
             }
         } else if ($esquemaCreditoCasas == 2) { // proceso de credito directo
-            $movimiento = 0;
-            if ($tipoMovimiento == 1) {
-                $movimiento = 2;
+            $movimiento = 1;
+            if ($tipoMovimiento == 2) {
+                $movimiento = 3;
             }
 
             $updateData = array(
