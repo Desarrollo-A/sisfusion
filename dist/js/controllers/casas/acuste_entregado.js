@@ -1,10 +1,19 @@
 let columns = [
+    {
+        data: (d) => {
+            return `<span class="label" 
+                style="color: ${d.color}; background: ${d.color}18;}">
+                ${d.nombreMovimiento}
+            </span>`;
+        }
+    },
     { data: 'idLote' },
     { data: function(data)
         { return `${data.nombreLote}` } 
     },
     { data: 'condominio' },
     { data: 'proyecto' },
+    { data: 'tiempoProceso' },
     { data: function(data)
         {
 
@@ -16,7 +25,7 @@ let columns = [
             return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
             }
 
-            return '<div class="d-flex justify-center">' + pass_button + return_button + '</div>'
+            return '<div class="d-flex justify-center">' + pass_button + '</div>'
         } 
     },
 ];
@@ -63,6 +72,8 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 26 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

@@ -10,7 +10,7 @@
         color: white;
         opacity: 0.4;
 
-        ::-moz-placeholder { /* Firefox 19+ */
+        :-moz-placeholder { /* Firefox 19+ */
             color: white;
             opacity: 0.4;
         }

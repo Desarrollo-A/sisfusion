@@ -22,10 +22,12 @@
                                 <table id="tableAdeudo" class="table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th>MOVIMIENTO</th>
                                             <th>ID LOTE</th>
                                             <th>LOTE</th>
                                             <th>CONDOMINIO</th>
                                             <th>PROYECTO</th>
+                                            <th>TIEMPO EN PROCESO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
