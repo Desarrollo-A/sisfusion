@@ -1468,7 +1468,7 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pcd.tipoMovimiento AND id_catalogo = 108
 		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
-        WHERE pcd.proceso IN ($placeholders) AND pcd.estatus IN(1)", $procesoArray, 1);
+        WHERE pcd.proceso IN ($placeholders) AND pcd.estatus IN(1) AND pcd.finalizado = 0", $procesoArray, 1);
 
         return $query;
     }
