@@ -1,10 +1,19 @@
 let columns = [
+    {
+        data: (d) => {
+            return `<span class="label" 
+                style="color: ${d.color}; background: ${d.color}18;}">
+                ${d.nombreMovimiento}
+            </span>`;
+        }
+    },
     { data: 'idLote' },
     { data: function(data)
         { return `${data.nombreLote}` } 
     },
     { data: 'condominio' },
     { data: 'proyecto' },
+    { data: 'tiempoProceso' },
     { data: function(data)
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 18', onClick: select_lote, data})
@@ -48,8 +57,8 @@ return_process = function(data){ // funcion para el avance del lote
                 processData: false,
                 success: function (response) {
                     alerts.showNotification("top", "right", "El lote ha sido avanzdo en su proceso.", "success");
-        
-                    table.reload();
+                    return_flags(data);
+    
                     form.hide();
                 },
                 error: function () {
@@ -64,11 +73,30 @@ return_process = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 16 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show()
+}
+
+return_flags = function (data) { // funcion para el avance del lote
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}casas/returnFlagsPaso17`,
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            alerts.showNotification("top", "right", "Se ha rechazado el lote correctamente.", "success");
+
+            table.reload();
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");            
+        }
+    })
 }
 
 upload_archivo = function(data){ // funcion para subir el archivo de adeudo
@@ -142,6 +170,7 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'procesoNuevo', value: 18 }),
             new HiddenField({ id: 'voBoOrdenCompra', value: 1 }),
             new HiddenField({ id: 'voBoAdeudoTerreno', value: data.voBoAdeudoTerreno }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

@@ -1,10 +1,19 @@
 let columns = [
+    {
+        data: (d) => {
+            return `<span class="label" 
+                style="color: ${d.color}; background: ${d.color}18;}">
+                ${d.nombreMovimiento}
+            </span>`;
+        }
+    },
     { data: 'idLote' },
     { data: function(data)
         { return `${data.nombreLote}` } 
     },
     { data: 'condominio' },
     { data: 'proyecto' },
+    { data: 'tiempoProceso' },
     { data: function(data)
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 18', onClick: select_lote, data})
@@ -56,6 +65,7 @@ return_process = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 17 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -132,6 +142,7 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 19 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

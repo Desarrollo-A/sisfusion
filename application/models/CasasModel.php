@@ -1450,30 +1450,23 @@ class CasasModel extends CI_Model
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
 
         $query = $this->db->query("SELECT 
-            pcd.idProceso,
+            pcd.*,
+            oxc.color,
+            oxc.nombre AS nombreMovimiento,
+            CASE
+                WHEN DATEDIFF(DAY, GETDATE() , pcd.fechaAvance) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pcd.fechaAvance), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
             lo.idLote,  
             lo.nombreLote,
-            pcd.estatus,
-            pcd.proceso,
-            pcd.comentario,
-            pcd.voBoOrdenCompra,
-            pcd.voBoAdeudoTerreno,
-            pcd.voBoValidacionEnganche,
-            pcd.voBoContrato,
-            pcd.adeudo,
             co.nombre AS condominio,
             re.descripcion AS proyecto,
 			dpc.archivo,
-            dpc.documento,
-            pcd.voBoOrdenCompra,
-            pcd.voBoValidacionEnganche,
-            pcd.voBoContrato,
-            pcd.voBoOrdenCompra,
-            pcd.finalizado
+            dpc.documento
         FROM proceso_casas_directo pcd
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pcd.tipoMovimiento AND id_catalogo = 108
 		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
         WHERE pcd.proceso IN ($placeholders) AND pcd.estatus IN(1)", $procesoArray, 1);
 

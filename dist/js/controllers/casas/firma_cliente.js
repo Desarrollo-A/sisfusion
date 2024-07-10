@@ -1,10 +1,19 @@
 let columns = [
+    {
+        data: (d) => {
+            return `<span class="label" 
+                style="color: ${d.color}; background: ${d.color}18;}">
+                ${d.nombreMovimiento}
+            </span>`;
+        }
+    },
     { data: 'idLote' },
     { data: function(data)
         { return `${data.nombreLote}` } 
     },
     { data: 'condominio' },
     { data: 'proyecto' },
+    { data: 'tiempoProceso' },
     { data: function(data)
         {
            let pass_button = '';

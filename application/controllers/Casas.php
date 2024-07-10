@@ -496,6 +496,7 @@ class Casas extends BaseController {
                 "proceso"        => 16, 
                 "comentario"     => $comentario,
                 "tipoMovimiento" => $movimiento,
+                "fechaAvance"  => date("Y-m-d H:i:s"),
                 "fechaModificacion"  => date("Y-m-d H:i:s") 
             );
 
@@ -1808,6 +1809,7 @@ class Casas extends BaseController {
         $proceso = $form->proceso;
         $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
+        $tipoMovimiento = $form->tipoMovimiento;
         $banderaSuccess = true;
 
         $dataHistorial = array(
@@ -1825,7 +1827,9 @@ class Casas extends BaseController {
         $updateData = array(
             "comentario"        => $comentario,
             "proceso"           => $procesoNuevo,
-            "fechaModificacion" => date("Y-m-d H:i:s")
+            "fechaAvance"       => date("Y-m-d H:i:s"),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "tipoMovimiento"    => ($proceso > $procesoNuevo) ? 2 : (($tipoMovimiento == 2 && $procesoNuevo >= $proceso) ? 3 : 1)
         );
 
         // paso 1: hacer update del proceso
@@ -2211,7 +2215,8 @@ class Casas extends BaseController {
             "proceso"            => $procesoNuevo,
             "voBoOrdenCompra"    => 0,
             "voBoAdeudoTerreno"  => 0,
-            "fechaModificacion" => date("Y-m-d H:i:s")
+            "fechaModificacion"  => date("Y-m-d H:i:s"),
+            "tipoMovimiento"     => 2 
         );
 
         // paso 1: hacer update del proceso
@@ -2283,8 +2288,10 @@ class Casas extends BaseController {
         );
         $this->db->trans_begin();
         $updateData = array(
-            "finalizado" => $finalizado
+            "finalizado"  => $finalizado,
+            "fechaAvance" => date("Y-m-d H:i:s"),
         );
+        
         // paso 1: hacer update del proceso
         $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idLote", $idLote);
         if (!$update) {
@@ -2320,5 +2327,26 @@ class Casas extends BaseController {
             $this->json([]);
         }
     }
-       
+
+    public function returnFlagsPaso17(){
+        $idLote = $this->input->post("idLote");
+        $idProceso = $this->input->post("idProceso");
+
+        $updateData = array(
+            "voBoOrdenCompra"   => 0,
+            "voBoAdeudoTerreno" => 0,
+            "adeudo"            => 0,
+            "fechaAvance"       => date("Y-m-d H:i:s"),
+        );
+        
+        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
+
+        if($update){
+            $this->json([]);
+        }
+        else{
+            http_response_code(400);
+            $this->json([]);
+        }
+    }
 }
