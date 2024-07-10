@@ -134,105 +134,96 @@ class Usuarios_modelo extends CI_Model
                     $id_usuario
                     ORDER BY nombre");
                 break;
-            case '6': // ASISTENTE GERENCIA
-                $id_lider = $this->session->userdata('id_lider');
-                if ($this->session->userdata('id_usuario') == 895)
-                    $where = "((id_lider = $id_lider OR id_lider_2 = $id_lider) AND id_rol IN (7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR (usuarios.id_usuario = $id_lider OR usuarios.id_lider = 896)";
-                else if ($this->session->userdata('id_usuario') == 11656) { // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
-                    $id_lider = $this->session->userdata('id_lider') . ', 106';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                }
-                else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
-                    $id_lider = $this->session->userdata('id_lider') . ', 113';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                }
-                else if ($this->session->userdata('id_usuario') == 479) { // ANDRES BARRERA VENEGAS
-                    $id_lider = $this->session->userdata('id_lider') . ', 4223';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                }
-                else if ($this->session->userdata('id_usuario') == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                }
-                else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 1916, 11196, 2599';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                }
-				else if ($this->session->userdata('id_usuario') == 13418) { // MARIA FERNANDA RUIZ PEDROZA
-                    $id_lider = $this->session->userdata('id_lider') . ', 5604';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-				}
-				else if ($this->session->userdata('id_usuario') == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
-                    $id_lider = $this->session->userdata('id_lider') . ', 455';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-				}
-                else if ($this->session->userdata('id_usuario')  == 14449) { // ANALI MONSERRAT REYES ORTIZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-				} else if ($this->session->userdata('id_usuario') == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
-                    $id_lider = $this->session->userdata('id_lider') . ', 12027, 13059, 2599, 609, 11680, 7435';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-				} else if ($this->session->userdata('id_usuario') == 14946) { // MELANI BECERRIL FLORES
-                    $id_lider = $this->session->userdata('id_lider') . ', 694, 4509';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-				} else if ($this->session->userdata('id_usuario') == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-                    $id_lider = $this->session->userdata('id_lider') . ', 13295';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-				} else if ($this->session->userdata('id_usuario') == 13348) { // VIRIDIANA ZAMORA ORTIZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 10063';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                } else if ($this->session->userdata('id_usuario') == 12576) { // DIANA EVELYN PALENCIA AGUILAR
-                    $id_lider = $this->session->userdata('id_lider') . ', 6942';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                } else if ($this->session->userdata('id_usuario') == 12292) { // REYNALDO HERNANDEZ SANCHEZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 6661';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                } else if ($this->session->userdata('id_usuario') == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 80, 664';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                } else if ($this->session->userdata('id_usuario') == 15110) { // IVONNE BRAVO VALDERRAMA
-                    $id_lider = $this->session->userdata('id_lider') . ', 495';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                } else if ($this->session->userdata('id_usuario') == 15761) { // JACQUELINE GARCIA SOTELLO
-                    $id_lider = $this->session->userdata('id_lider') . ', 13016, 12027';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                } else if ($this->session->userdata('id_usuario') == 15545) { // PAMELA IVONNE LEE MORENO
-                    $id_lider = $this->session->userdata('id_lider') . ', 13059, 11680';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                } else if ($this->session->userdata('id_usuario') == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 10251';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                } else if ($this->session->userdata('id_usuario') == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 10251';
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                }
-                else
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                
-                if($this->session->userdata('id_sede') == 6)
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR (usuarios.id_usuario IN (9827)) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                else if($this->session->userdata('id_sede') == 4)
-                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR (usuarios.id_usuario IN (9359)) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-
-                return $this->db->query("SELECT usuarios.id_usuario, id_rol, 
-                CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END puesto,
-                CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
-                AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
-                id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico,
-                (CASE WHEN usuarios.tipo = 2 THEN 'MADERAS UPGRADE' WHEN usuarios.tipo = 3 THEN 'CASAS' WHEN usuarios.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
-                (CASE WHEN usuarios.tipo = 2 THEN 'lbl-sky' WHEN usuarios.tipo = 3 THEN 'lbl-violetBoots' WHEN usuarios.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                usuarios.tipo,usuarios.fac_humano
-                FROM usuarios 
-                INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
-                LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  
-                FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider
-                LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider_coord  
-                FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
-                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
-                LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
-                WHERE $where
-                ORDER BY nombre");
-                break;
+                case '6': // ASISTENTE GERENCIA
+                    $id_lider = $this->session->userdata('id_lider');
+                    if ($this->session->userdata('id_usuario') == 895)
+                        $where = "((id_lider = $id_lider OR id_lider_2 = $id_lider) AND id_rol IN (7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR (usuarios.id_usuario = $id_lider OR usuarios.id_lider = 896)";
+                    else if ($this->session->userdata('id_usuario') == 11656) { // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
+                        $id_lider = $this->session->userdata('id_lider') . ', 106';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    }
+                    else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
+                        $id_lider = $this->session->userdata('id_lider') . ', 113';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    }
+                    else if ($this->session->userdata('id_usuario') == 479) { // ANDRES BARRERA VENEGAS
+                        $id_lider = $this->session->userdata('id_lider') . ', 4223';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    }
+                    else if ($this->session->userdata('id_usuario') == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ
+                        $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    }
+                    else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
+                        $id_lider = $this->session->userdata('id_lider') . ', 1916, 11196, 2599';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    }
+                    else if ($this->session->userdata('id_usuario') == 13418) { // MARIA FERNANDA RUIZ PEDROZA
+                        $id_lider = $this->session->userdata('id_lider') . ', 5604';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    }
+                    else if ($this->session->userdata('id_usuario') == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
+                        $id_lider = $this->session->userdata('id_lider') . ', 455';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    }
+                    else if ($this->session->userdata('id_usuario') == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
+                        $id_lider = $this->session->userdata('id_lider') . ', 12027, 13059, 2599, 609, 11680, 7435';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 14946) { // MELANI BECERRIL FLORES
+                        $id_lider = $this->session->userdata('id_lider') . ', 694, 4509';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
+                        $id_lider = $this->session->userdata('id_lider') . ', 13295, 7970';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 13348) { // VIRIDIANA ZAMORA ORTIZ
+                        $id_lider = $this->session->userdata('id_lider') . ', 10063';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 12576) { // DIANA EVELYN PALENCIA AGUILAR
+                        $id_lider = $this->session->userdata('id_lider') . ', 6942';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+                        $id_lider = $this->session->userdata('id_lider') . ', 6661';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
+                        $id_lider = $this->session->userdata('id_lider') . ', 80, 664';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 15110) { // IVONNE BRAVO VALDERRAMA
+                        $id_lider = $this->session->userdata('id_lider') . ', 495';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 15761) { // JACQUELINE GARCIA SOTELLO
+                        $id_lider = $this->session->userdata('id_lider') . ', 13016, 12027';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 15545) { // PAMELA IVONNE LEE MORENO
+                        $id_lider = $this->session->userdata('id_lider') . ', 13059, 11680';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+                        $id_lider = $this->session->userdata('id_lider') . ', 10251';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    }
+                    else
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    
+                    if($this->session->userdata('id_sede') == 6)
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR (usuarios.id_usuario IN (9827)) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    else if($this->session->userdata('id_sede') == 4)
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR (usuarios.id_usuario IN (9359)) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+    
+                    return $this->db->query("SELECT usuarios.id_usuario, id_rol, 
+                    CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END puesto,
+                    CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
+                    AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
+                    id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico, usuarios.tipo,usuarios.fac_humano
+                    FROM usuarios 
+                    INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
+                    LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  
+                    FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider
+                    LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider_coord  
+                    FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
+                    INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
+                    LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
+                    WHERE $where
+                    ORDER BY nombre");
+                    break;
             case '41': // GENERALISTA
                 if($this->session->userdata('id_usuario') == 4585) // PAOLA HURTADO HERNANDEZ 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
                     $id_sede = "'4', '9'";
@@ -733,30 +724,32 @@ class Usuarios_modelo extends CI_Model
     { 
         return $this->db->query("SELECT id_usuario, nombre, apellido_paterno, apellido_materno, correo, usuario, telefono, rfc, usuario, contrasena, forma_pago FROM usuarios WHERE id_usuario = " . $id . "");
     }
+    
     public function getChangeLogUsers($id_usuario){
-         $query = $this->db->query("SELECT CONVERT(varchar, fecha_creacion, 120) AS fecha_creacion, creador, col_afect,(
-          CASE 
-            WHEN col_afect = 'usuario' OR col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
-            WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
-            WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 16)
-            WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(nuevo AS VARCHAR(45)))
-            WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 1)
-            WHEN col_afect = 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
-            ELSE nuevo  
-          END) AS nuevo,(
-          CASE 
-            WHEN col_afect = 'usuario' OR col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
-            WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
-            WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 16)
-            WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(anterior AS VARCHAR(45)))
-            WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 1)
-            WHEN col_afect = 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
-            ELSE anterior   
-          END) AS anterior
-          FROM auditoria
-          INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador AS VARCHAR(45)) = CAST(creado_por AS VARCHAR(45))
-          WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
-         return $query->result_array();
+        $query =  $this->db->query("SELECT CONVERT(varchar, fecha_creacion, 120) AS fecha_creacion, ISNULL(creador, 'SIN ESPECIFICAR') creador, col_afect,(
+            CASE 
+                WHEN col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
+                WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
+                WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 16)
+                WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(nuevo AS VARCHAR(45)))
+                WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 1)
+                WHEN col_afect = 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
+                ELSE nuevo  
+            END) AS nuevo,(
+            CASE 
+                WHEN col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
+                WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
+                WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 16)
+                WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(anterior AS VARCHAR(45)))
+                WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 1)
+                WHEN col_afect = 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
+
+                ELSE anterior  
+            END) AS anterior
+            FROM auditoria
+            LEFT JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador AS VARCHAR(45)) = CAST(creado_por AS VARCHAR(45))
+            WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
+        return $query->result_array();
     }
 
     function getCatalogs()

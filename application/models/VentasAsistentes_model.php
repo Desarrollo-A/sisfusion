@@ -344,9 +344,6 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
                     $filtroSede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
-                    $filtroSede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435)";
                     $filtroSede = "";
@@ -354,7 +351,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 4509)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295, 7970)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10063)";
@@ -365,7 +362,7 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6661)";
                     $filtroSede = "";
-				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
@@ -386,6 +383,8 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_rol == 5) { // SON ASISTENTES DE SUBDIRECCIÓN / REGIONALES
                     if ($id_usuario == 6627)
                         $filtroGerente = "AND ((cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) OR (cl.id_asesor IN (6253, 6626) AND l.tipo_venta = 3))";
+                    else if ($id_usuario == 7401) // CLAUDIA LORENA SERRATO VEGA
+                        $filtroGerente = "AND ((cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) OR (cl.id_asesor IN (15844)))";
                     else
                         $filtroGerente = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
                     $filtroSede = "";

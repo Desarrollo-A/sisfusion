@@ -55,7 +55,8 @@ const TipoDoc = {
     NUEVO_CONTRATO_REESTRUCTURA_FIRMA_CLIENTE: 47,
     ANEXO_1: 48,
     VIDEO_FIRMA: 49,
-    ANEXO_VENTA_DE_PARTICULARES: 50
+    ANEXO_VENTA_DE_PARTICULARES: 50,
+    COMPLEMENTO_DE_PAGO: 55,
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -302,7 +303,7 @@ $('#idLote').change(function () {
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
                     
-                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
+                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO || data.tipo_doc == TipoDoc.COMPLEMENTO_DE_PAGO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
                                 includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
@@ -478,11 +479,14 @@ $('#idLote').change(function () {
     });
 });
 
-$(document).on('click', '.verDocumento', function (e) {
-    e.preventDefault();
+$(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
-    let pathUrl = general_base_url + $itself.attr("data-expediente");
-    
+
+    let pathUrl = $itself.attr("data-expediente");
+    if($itself.attr("data-bucket") != 1){
+        pathUrl = general_base_url + $itself.attr("data-expediente");
+    }
+
     if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW || $itself.attr('data-tipoDocumento') === TipoDoc.DS_OLD) {
         const idCliente = $itself.attr('data-idCliente');
         const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
@@ -515,7 +519,7 @@ $(document).on('click', '.verDocumento', function (e) {
         Shadowbox.open({
             content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
             player: "html",
-            title: `Visualizando archivo: ${$itself.attr('data-titulodocumento')}`,
+            title: `Visualizando archivo: ${$itself.attr('data-nombre')}`,
             width: 985,
             height: 660
         });
@@ -776,6 +780,7 @@ function crearBotonAccion(type, data) {
     return `<button class="${buttonClassColor} ${buttonClassAccion}" 
                 title="${buttonTitulo}" 
                 data-expediente="${data.expediente}" 
+                data-bucket="${data.bucket}"
                 data-accion="${buttonTipoAccion}" 
                 data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
                 data-toggle="tooltip" 

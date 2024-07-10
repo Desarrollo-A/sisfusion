@@ -183,14 +183,14 @@ class Contraloria extends CI_Controller {
     }
 
     public function getregistroStatus6ContratacionContraloria() {
-        $data = array();
-        $data = $this->Contraloria_model->registroStatusContratacion6();
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
+		$data = array();
+		$data = $this->Contraloria_model->registroStatusContratacion6();
+		if($data != null) {
+			echo json_encode($data);
+		} else {
+			echo json_encode(array());
+		}
+	}
 
     public function getregistroStatus9ContratacionContraloria() {
         $datos = array();
@@ -1017,11 +1017,9 @@ class Contraloria extends CI_Controller {
         $fechaVenc = $this->input->post('fechaVenc');
         $fechaVenStatus = $this->input->post('fechaVenStatus');
         $charactersNoPermit = array('$',',');
-        $totalNeto = $this->input->post('totalNeto');
-        $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
-        $tipo_enganche = $this->input->post('tipo_enganche');
-        $estatus_enganche = $this->input->post('estatus_enganche');
-        $banderaFusion = $this->input->post('banderaFusion');
+	  	$totalNeto = $this->input->post('totalNeto');
+	  	$totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
+		$banderaFusion = $this->input->post('banderaFusion');
 
         $arreglo = array();
         $arreglo["idStatusContratacion"] = 6;
@@ -1035,29 +1033,25 @@ class Contraloria extends CI_Controller {
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
         $horaFin = date("16:00:00");
-        
         if ($horaActual > $horaInicio and $horaActual < $horaFin) {
             $fechaAccion = date("Y-m-d H:i:s");
             $hoy_strtotime2 = strtotime($fechaAccion);
             $sig_fecha_dia2 = date('D', $hoy_strtotime2);
             $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
             if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
                 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
                 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                 $sig_fecha_feriado2 == "25-12") {
-                    $fecha = $fechaAccion;
-                    $i = 0;
-                    
-                    while ($i <= 2) {
-                        $hoy_strtotime = strtotime($fecha);
-                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                        $sig_fecha_dia = date('D', $sig_strtotime);
-                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= 2) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
@@ -1069,7 +1063,6 @@ class Contraloria extends CI_Controller {
                     $fecha = $sig_fecha;
                 }
                 $arreglo["fechaVenc"] = $fecha;
-
             } else {
                 $fecha = $fechaAccion;
                 $i = 0;
@@ -1174,84 +1167,86 @@ class Contraloria extends CI_Controller {
 
         $assigned_location = null;
         if ($cliente->proceso <= 1) {
-            $ub_jur = $this->Contraloria_model->val_ub($idLote);
-            $id_sede_jur = '';
-            $assigned_location = $ub_jur[0]['ubicacion'];
-            if ($assigned_location == 2 || $assigned_location == 15) { // EXPEDIENTES QUERÉTARO Y PRUEBLA
-                $id_sede_jur = 2;
-                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-                $id_asig = $data_asig->contador;
-                $arreglo["asig_jur"] = $id_asig == 2765 ? 2876 : ($id_asig == 2876 ? 10463 : 2765);
-            } else if ($assigned_location == 4 || $assigned_location == 13 ) { // EXPEDIENTES CIUDAD DE MÉXICO, CIUDAD  MX Y EDO MEX
-                $id_sede_jur = 4;
-                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-                $id_asig = $data_asig->contador;
+			$ub_jur = $this->Contraloria_model->val_ub($idLote);
+			$id_sede_jur = '';
+			$assigned_location = $ub_jur[0]['ubicacion'];
+			if ($assigned_location == 2 || $assigned_location == 15) { // EXPEDIENTES QUERÉTARO Y PRUEBLA
+				$id_sede_jur = 2;
+				$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+				$id_asig = $data_asig->contador;
+				$arreglo["asig_jur"] = $id_asig == 2765 ? 2876 : ($id_asig == 2876 ? 10463 : 2765);
+			} else if ($assigned_location == 4) { // EXPEDIENTES CIUDAD DE MÉXICO, CIUDAD  MX Y EDO MEX
+				$id_sede_jur = 4;
+				$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+				$id_asig = $data_asig->contador;
 
-                if ($id_asig == 2820)
-                    $assigned_user = 11258;
-                else if ($id_asig == 11258)
-                    $assigned_user = 2820;
+				if ($id_asig == 2820)
+					$assigned_user = 11258;
+				else if ($id_asig == 11258)
+					$assigned_user = 10437;
+				else if ($id_asig == 10437)
+					$assigned_user = 2820;
 
-                $arreglo["asig_jur"] = $assigned_user;
+				$arreglo["asig_jur"] = $assigned_user;
 
-            } else if ($assigned_location == 1) { // EXPEDIENTES SAN LUIS POTOSÍ
-                $id_sede_jur = 1;
-                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-                $id_asig = $data_asig->contador;
-                
-                if ($id_asig == 15418)
-                    $assigned_user = 2764;
-                else if ($id_asig == 2764)
-                    $assigned_user = 15418;
+			} else if ($assigned_location == 1) { // EXPEDIENTES SAN LUIS POTOSÍ
+				$id_sede_jur = 1;
+				$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+				$id_asig = $data_asig->contador;
+				
+				if ($id_asig == 15418)
+					$assigned_user = 2764;
+				else if ($id_asig == 2764)
+					$assigned_user = 15418;
 
-                $arreglo["asig_jur"] = $assigned_user;
-            } else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
-                $id_sede_jur = 5;
-                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-                $id_asig = $data_asig->contador;
+				$arreglo["asig_jur"] = $assigned_user;
+			} else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
+				$id_sede_jur = 5;
+				$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+				$id_asig = $data_asig->contador;
 
-                if ($id_asig == 6856)
-                    $assigned_user = 2800;
-                else if ($id_asig == 2800)
-                    $assigned_user = 12047;
-                else if ($id_asig == 12047)
-                    $assigned_user = 6856;
+				if ($id_asig == 6856)
+					$assigned_user = 2800;
+				else if ($id_asig == 2800)
+					$assigned_user = 12047;
+				else if ($id_asig == 12047)
+					$assigned_user = 6856;
 
-                $arreglo["asig_jur"] = $assigned_user;
-            } else if ($assigned_location == 3) { // EXPEDIENTES MÉRIDA
-                $id_sede_jur = 3;
-                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+				$arreglo["asig_jur"] = $assigned_user;
+			} else if ($assigned_location == 3) { // EXPEDIENTES MÉRIDA
+				$id_sede_jur = 3;
+				$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
 
-                $id_asig = $data_asig->contador;
-                
-                if ($id_asig == 11097)
-                    $assigned_user = 15108;
-                else if ($id_asig == 15108)
-                    $assigned_user = 11097;
+				$id_asig = $data_asig->contador;
+				
+				if ($id_asig == 11097)
+					$assigned_user = 15108;
+				else if ($id_asig == 15108)
+					$assigned_user = 11097;
 
-                $arreglo["asig_jur"] = $assigned_user;
-            }
-            else if ($assigned_location == 16) // EXPEDIENTES AGUASCALIENTES
-                $arreglo["asig_jur"] = 14183;
-            else if ($assigned_location == 6) { // CANCÚN
-                $id_sede_jur = 6;
-                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-                $id_asig = $data_asig->contador;
-                if ($id_asig == 10427)
-                    $assigned_user = 15025;
-                else if ($id_asig == 15025)
-                    $assigned_user = 10427;
-                $arreglo["asig_jur"] = $assigned_user;
-            } else if (in_array($assigned_location, [8, 19])) { // TIJUANA / MIAMI
-                $id_sede_jur = 8;
-                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-                $id_asig = $data_asig->contador;
-                if ($id_asig == 15046)
-                    $assigned_user = 11125;
-                else if ($id_asig == 11125)
-                    $assigned_user = 15046;
-                $arreglo["asig_jur"] = $assigned_user;
-            } else if ($assigned_location == 11) { // EXPEDIENTES MONTERREY
+				$arreglo["asig_jur"] = $assigned_user;
+			}
+			else if ($assigned_location == 16) // EXPEDIENTES AGUASCALIENTES
+            	$arreglo["asig_jur"] = 14183;
+			else if ($assigned_location == 6) { // CANCÚN
+				$id_sede_jur = 6;
+				$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+				$id_asig = $data_asig->contador;
+				if ($id_asig == 10427)
+					$assigned_user = 15025;
+				else if ($id_asig == 15025)
+					$assigned_user = 10427;
+				$arreglo["asig_jur"] = $assigned_user;
+			} else if (in_array($assigned_location, [8, 19])) { // TIJUANA
+				$id_sede_jur = 8;
+				$data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+				$id_asig = $data_asig->contador;
+				if ($id_asig == 15046)
+					$assigned_user = 11125;
+				else if ($id_asig == 11125)
+					$assigned_user = 15046;
+				$arreglo["asig_jur"] = $assigned_user;
+			} else if ($assigned_location == 11) { // EXPEDIENTES MONTERREY
                 $id_sede_jur = 11;
                 $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
 
@@ -1264,92 +1259,93 @@ class Contraloria extends CI_Controller {
 
                 $arreglo["asig_jur"] = $assigned_user;
             }
+		}
+		
+        $validate = $this->Contraloria_model->validateSt6($idLote);
+
+        if ($validate != 1) {
+			$data['message'] = 'FALSE';
+            echo json_encode($data);
+            return;
         }
-    
-    $validate = $this->Contraloria_model->validateSt6($idLote);
 
-    if ($validate != 1) {
-        $data['message'] = 'FALSE';
-        echo json_encode($data);
-        return;
+		//se valida si existe una corrida en el árbol de documentos
+		$corrida = $this->Contraloria_model->validaCorrida($idLote);
+		if(empty($corrida->expediente)){
+			$data['message'] = 'MISSING_CORRIDA';
+			echo json_encode($data);
+			return;
+		}
+
+		if (!$this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2)) {
+			$data['message'] = 'ERROR';
+			echo json_encode($data);
+			return;
+		}
+
+		if (in_array($assigned_location, [1, 2, 4, 5, 3, 13, 15, 16, 6, 8, 19, 11]))
+			$this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur);
+
+		if (in_array($cliente->proceso, [0, 1])) {
+			$data['message'] = 'OK';
+			echo json_encode($data);
+			return;
+		}
+
+		if($cliente->proceso != 3){
+			$loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
+			if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
+				$lotesFusionOrigen = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
+				if(count($lotesFusionOrigen) != 0){
+		
+					for ($x=0; $x < count($lotesFusionOrigen) ; $x++) { 
+						if($lotesFusionOrigen[$x]['origen'] == 1){
+							$data = [
+								'tipoLiberacion' => 7,
+								'idLote' => $lotesFusionOrigen[$x]['idLote'],
+								'idLoteNuevo' => NULL,
+								'banderaFusion' => 1,
+							];
+		
+							if($x == count($lotesFusionOrigen) -1){
+								if (!$this->Reestructura_model->aplicaLiberacion($data)) {
+									$data['message'] = 'ERROR';
+									echo json_encode($data);
+									return;
+								}
+							}else{
+								$this->Reestructura_model->aplicaLiberacion($data);
+							}
+						}  
+					}
+				}else{
+					$data = [
+						'tipoLiberacion' => 7,
+						'idLote' => $loteAnterior->idLote,
+						'idLoteNuevo' => $idLote,
+						'banderaFusion' => $banderaFusion
+					];
+		
+					if (!$this->Reestructura_model->aplicaLiberacion($data)) {
+						$data['message'] = 'ERROR';
+						echo json_encode($data);
+						return;
+					}
+				}
+			}
+		}
+
+		$numContrato = $this->generarNumContrato($idLote);
+
+        if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
+            $data['message'] = 'ERROR';
+            echo json_encode($data);
+            return;
+        }
+
+		$data['message'] = 'OK';
+		echo json_encode($data);
     }
-
-    //se valida si existe una corrida en el árbol de documentos
-    $corrida = $this->Contraloria_model->validaCorrida($idLote);
-    if(empty($corrida->expediente)){
-        $data['message'] = 'MISSING_CORRIDA';
-        echo json_encode($data);
-        return;
-    }
-
-    if (!$this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2)) {
-        $data['message'] = 'ERROR';
-        echo json_encode($data);
-        return;
-    }
-
-    if (in_array($assigned_location, [1, 2, 4, 5, 3, 13, 15, 16, 6, 8, 19, 11]))
-        $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur);
-
-    if ($cliente->proceso <= 1) {
-        $data['message'] = 'OK';
-        echo json_encode($data);
-        return;
-    }
-
-    $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-    if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-        $lotesFusionOrigen = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
-        if(count($lotesFusionOrigen) != 0){
-            for ($x=0; $x < count($lotesFusionOrigen) ; $x++) { 
-                if($lotesFusionOrigen[$x]['origen'] == 1){
-                    $data = [
-                        'tipoLiberacion' => 7,
-                        'idLote' => $lotesFusionOrigen[$x]['idLote'],
-                        'idLoteNuevo' => NULL,
-                        'banderaFusion' => 1,
-                    ];
-
-                    if($x == count($lotesFusionOrigen) -1){
-                        if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                            $data['message'] = 'ERROR';
-                            echo json_encode($data);
-                            return;
-                        }
-                    }else{
-                        $this->Reestructura_model->aplicaLiberacion($data);
-                    }
-                }  
-            }
-        }else{
-            $data = [
-                'tipoLiberacion' => 7,
-                'idLote' => $loteAnterior->idLote,
-                'idLoteNuevo' => $idLote,
-                'banderaFusion' => $banderaFusion
-            ];
-
-            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['status'] = false;
-                $data['message'] = 'Error al enviar la solicitud';
-                echo json_encode($data);
-                return;
-            }
-        } 
-    }
-
-    $numContrato = $this->generarNumContrato($idLote);
-
-
-    if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
-        $data['message'] = 'ERROR';
-        echo json_encode($data);
-        return;
-    }
-
-    $data['message'] = 'OK';
-    echo json_encode($data);
-}
 
     public function editar_registro_loteRechazo_contraloria_proceceso6() {
         $idLote=$this->input->post('idLote');

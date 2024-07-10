@@ -1185,10 +1185,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
         &::-webkit-scrollbar {
             display: none;
         }
-        @media #{$smartphone}{
-            display: block!important;
-            overflow: hidden!important;
-        }
     }
     .gradientLeft{
         height: 100%;
@@ -1207,7 +1203,6 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
         background: linear-gradient(90deg, RGBA(238, 238, 238, 0) 10%, RGB(238 238 238/100%) 100%, RGB(238 238 238/29%) 51%, RGBA(238, 238, 238, 0.68391) 88%, $platinumLight 75%);
         @media #{$smartphone}{
             width: 12%;
-            display: none;
         }
     }
     .rowCarousel{
@@ -1225,8 +1220,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
                 min-width: 43%;
             }
             @media #{$smartphone}{
-                min-width: 80%;
-                margin-right: 0!important;
+                min-width: 85%;
             }
         }
         .card{

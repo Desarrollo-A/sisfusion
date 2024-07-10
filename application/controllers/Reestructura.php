@@ -177,8 +177,15 @@ class Reestructura extends CI_Controller{
 
         $data['modificado_por'] = $this->input->post('idCliente');
         $data['tipoCancelacion'] = isset($dataPost['tipoCancelacion']) ? $dataPost['tipoCancelacion'] : 1;
+<<<<<<< HEAD
         
         $update1 = $this->General_model->updateRecord("clientes", $data, "id_cliente", $dataPost['idCliente']);
+=======
+        $update1 = TRUE;
+
+        if (isset($dataPost['idCliente']) )
+            $update1 = $this->General_model->updateRecord("clientes", $data, "id_cliente", $dataPost['idCliente']);
+>>>>>>> master
         $update2 = $this->Reestructura_model->aplicaLiberacion($dataPost);
         if ($update1 == TRUE AND $update2 == TRUE)
             echo json_encode(1);
@@ -1855,7 +1862,7 @@ class Reestructura extends CI_Controller{
         $id_proyecto = $this->input->post('index_proyecto');
 
         if ($this->session->userdata('id_usuario') == 13546 || $this->session->userdata('id_usuario') == 15625 || $this->session->userdata('id_usuario') == 13547  ) {
-            $union = "s
+            $union = "
                 AND re.idResidencial IN ($id_proyecto)
             UNION ALL
                 SELECT re.idResidencial, re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.estatus_preproceso, lo.idCliente, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
@@ -1873,7 +1880,7 @@ class Reestructura extends CI_Controller{
                     lo.status = 1  AND re.idResidencial IN ($id_proyecto)
                 AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3, 17) )";
         }else {
-            $union = " AND re.idResidencial IN ($id_proyecto)";
+            $union = "AND re.idResidencial IN ($id_proyecto)";
         }
         
         $dato = $this->Reestructura_model->getLotes($union);
