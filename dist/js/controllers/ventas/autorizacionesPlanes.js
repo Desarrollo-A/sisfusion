@@ -1,5 +1,5 @@
 let descuentosYCondiciones;
-$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
+//$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
 llenarTipoDescuentos();
 
 sp = {
@@ -241,9 +241,10 @@ $(document).on('click', '#btnLimpiar', function (e) {
 }
 
 function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus_autorizacion){
+    //<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>
         let botones = '';
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
-            if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>`; }
+            if(permisoEditar == 1){ botones += ``; }
             if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
             if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
         return  botones;
@@ -296,7 +297,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         selectSuperficie(data.superficie);
         const scroll=document.querySelector(".ps-scrollbar-y-rail");
         scroll.scrollTop=0;
-        $('#btn_consultar').prop('disabled', true);
+       // $('#btn_consultar').prop('disabled', true);
         setTimeout(() => {
             ConsultarPlanes();
         }, 1000);
@@ -799,11 +800,34 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     }
     
     //Guardar nuevo paquetes de planes de venta según attr seleccionados
-    function SavePaquete(){
-        let formData = new FormData(document.getElementById("form-paquetes"));
+function SavePaquete(){
+        //let formData = new FormData(document.getElementById("form-paquetes"));
+        let sendRequestPermission = 0;
+        let uploadedDocument = $("#uploadedDocument")[0].files[0];
+        console.log(uploadedDocument)
+        let allowedExtensions = /(\.xlsx)$/i;
+        let validateUploadedDocument = (uploadedDocument == undefined) || !allowedExtensions.exec(uploadedDocument.name) ? 0 : 1;
+    
+        // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
+        if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
+        else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
+     
+       
+
+        if (sendRequestPermission == 1) {
+            let data = new FormData(document.getElementById("form-paquetes"));
+            data.append("uploadedDocument", $("#uploadedDocument")[0].files[0]);
+            console.log(data);
+            $('#spiner-loader').removeClass('hide');
+            
+              if($("#uploadedDocument")[0].files[0].size > 50000000){
+                alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
+                return false;
+              }
+            
         $.ajax({
-            url: 'SavePaquete',
-            data: formData,
+            url: 'cargarPlantillaPlanes',
+            data: data,
             method: 'POST',
             contentType: false,
             cache: false,
@@ -817,11 +841,14 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 $('#ModalAlert .btnSave').css("opacity","1");
                 if(data == 1){
                     tablaAutorizacion.ajax.reload();
-                    tablaAutorizacion.columns.adjust();
                     ClearAll();
-                    alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");	
+                    alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");
+                    $('#spiner-loader').addClass('hide');
+                    tablaAutorizacion.columns.adjust();
+	
                 }else{
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    $('#spiner-loader').addClass('hide');
                 }
             
             },
@@ -833,6 +860,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             async: false
         });
     }
+}
     
     //Fn para consultar los planes de ventas existente según parametros seleccionados
     async function ConsultarPlanes(){
@@ -1088,13 +1116,55 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         }
         
     }
+
     
+    $("input:file").on("change", function () {
+        alert()
+        var target = $(this);
+        var relatedTarget = target.siblings(".file-name");
+        if (target.val() == "") {
+          var fileName = "No ha seleccionado nada aún";
+        } else {
+          var fileName = target[0].files[0].name;
+        }
+        relatedTarget.val(fileName);
+      });
     function selectSuperficie(tipoSup){
         $('#super').val(tipoSup);
         document.getElementById("printSuperficie").innerHTML ='';
-        validateAllInForm();
+        var select = document.getElementById("sede");
+        document.getElementById("showPackage").innerHTML ='';
+        // Obtener el texto seleccionado
+        var sedeText = select.options[select.selectedIndex].text;
+        //validateAllInForm();
+        $('#showPackage').append(`
+            <div class="emptyCards h-100 d-flex justify-center align-center pt-4">
+                <div class="h-100 text-center pt-4">
+                    <img src= '`+general_base_url+`dist/img/emptyFile.png' alt="Icono gráfica" class="h-50 w-auto">
+                    <h3 class="titleEmpty">CARGAR PLANTILLA PLANES DE VENTAS</h3>
+                    <div class="subtitleEmpty">Por favor cargue la plantilla de la sede <b>${sedeText}</b></div>
+                    
+                    <div class="file-gph" id="selectFileSection">
+                        <input class="d-none" type="file" onchange="changeName(this)" name="uploadedDocument" id="uploadedDocument">
+                        <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
+                        <label class="upload-btn m-0" for="uploadedDocument">
+                            <span>Seleccionar</span>
+                            <i class="fas fa-folder-open"></i>
+                        </label>
+                </div>
+
+                </div>
+            </div>`);
         $('[data-toggle="tooltip"]').tooltip();
     }
+
+    function changeName(e){
+        const fileName = e.files[0].name;
+        let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+        relatedTarget[0].value = fileName;
+        $("#btn_save").removeClass('d-none');
+    }
+
     
     function RemovePackage(){
         let divNum = $('#iddiv').val();
@@ -1147,12 +1217,12 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         var checkedSuper = containerSup.querySelectorAll('input[type="radio"]:checked').length;
     
         if(dinicio != '' && dfin != '' && sede != '' && proyecto != '' && checkedTipoLote != 0 && checkedSuper != 0){
-            $("#btn_generate").removeClass('d-none');
-            $("#btn_consultar").removeClass('d-none');
+            //$("#btn_generate").removeClass('d-none');
+            //$("#btn_consultar").removeClass('d-none');
         }
         else{
-            $("#btn_generate").addClass('d-none');
-            $("#btn_consultar").addClass('d-none');
+           // $("#btn_generate").addClass('d-none');
+            //$("#btn_consultar").addClass('d-none');
             $("#btn_save").addClass('d-none');
         }
     }
@@ -1201,6 +1271,24 @@ function setInitialValues() {
     $('#fechainicio').val(finalBeginDate);
     $('#fechafin').val(finalEndDate);
 }
+
+
+
+$("#btnPlantilla").click(function(e){
+    e.preventDefault();
+    var createXLSLFormatObj = [];
+    var xlsHeader = ["VALOR DESCUENTO", "APLICA A", 'NOMBRE DEL PLAN', "NÚMERO PLAN"];
+    xlsHeader.push($(this).data('name'));
+    createXLSLFormatObj.push(xlsHeader);
+    let date = new Date();
+    var filename = "PlantillaPlanes_" + date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + date.getMinutes() + date.getSeconds() + date.getMilliseconds() + ".xlsx";
+    var ws_name = "Plantilla";
+    var wb = XLSX.utils.book_new(),
+        ws = XLSX.utils.aoa_to_sheet(createXLSLFormatObj);
+    XLSX.utils.book_append_sheet(wb, ws, ws_name);
+    XLSX.writeFile(wb, filename);
+    $('#spiner-loader').addClass('hide');
+});
 
 $(window).resize(function(){
     tablaAutorizacion.columns.adjust();

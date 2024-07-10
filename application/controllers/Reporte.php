@@ -346,22 +346,6 @@ class Reporte extends CI_Controller {
 		$this->load->view("reportes/reporteClientes_view");
     }
 
-    public function lotesContrato(){
-        $this->load->view('template/header');
-        $this->load->view("reportes/reporteLotesContrato");
-    }
-    public function getLotesContrato(){
-        $beginDate = $this->input->post("beginDate");
-        $endDate = $this->input->post("endDate");
-        $data = $this->Reporte_model->getLotesContrato($beginDate, $endDate);
-        foreach ($data as $index=>$elemento){$data[$index]['nombreSede'] = ($elemento['nombreSede']=='')?'NA':$elemento['nombreSede'];}
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
-
     public function ventasPorUsuario(){
         $this->load->view('template/header');
         $this->load->view("reportes/ventasPorUsuario");
@@ -414,6 +398,22 @@ class Reporte extends CI_Controller {
         $data = $this->Reporte_model->getMensualidadAbonoNeo($empresa, $nombreLote);
         if( $data != null) {
             echo json_encode($data,JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    
+    public function lotesContrato(){
+        $this->load->view('template/header');
+        $this->load->view("reportes/reporteLotesContrato");
+    }
+    public function getLotesContrato(){
+        $beginDate = $this->input->post("beginDate");
+        $endDate = $this->input->post("endDate");
+        $data = $this->Reporte_model->getLotesContrato($beginDate, $endDate);
+        foreach ($data as $index=>$elemento){$data[$index]['nombreSede'] = ($elemento['nombreSede']=='')?'NA':$elemento['nombreSede'];}
+        if($data != null) {
+            echo json_encode($data);
         } else {
             echo json_encode(array());
         }

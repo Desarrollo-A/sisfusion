@@ -403,6 +403,7 @@
                                                                 <th>% COMISIÓN</th>
                                                                 <th>DETALLE</th>
                                                                 <th>ESTATUS</th>
+                                                                <th>NOMBRE CLIENTE</th>
                                                                 <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>

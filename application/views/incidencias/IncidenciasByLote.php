@@ -368,9 +368,7 @@ hr {
                     <h4 class="modal-title" >Cambiar usuario</h4>
                         <div class="form-group">        
                             <div class="col-md-12" >
-                            <label class="control-label"  >
-                                Seleccione una opción
-                            </label>
+                            
                                 <select class="selectpicker select-gral m-0"
                                 data-style="btn"
                                 data-cliente=""
@@ -380,18 +378,115 @@ hr {
                                 onchange="selectOpcion()" id="opcion" >
                                     <option value="1">Cliente</option>
                                     <option value="2">Venta compartida</option>
+                                    <option value="3">Cambiar roles (Con comisiones)</option>
                                 </select>
                             <input type="hidden" class="form-control"
                             id="lotes1" name="lotes1">
                             <input type="hidden" class="form-control"
                             id="clientes2" name="clientes2">
-                            <!-- aqui mero vamos a poner los imputs  -->
-                            <!--  -->
+                            <input type="hidden" class="form-control"
+                            id="proceso" name="proceso">
+                            <input type="hidden" class="form-control"
+                            id="precioLote" name="precioLote">
                             </div> 
                         </div> 
                   
                     </div>
                     <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal_cambio_rol" style="overflow-y: scroll;" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                        <!-- formulario -->
+                    <form method="post" id="form_roles">
+                        <div class="modal-header">
+                            <button type="button" style="font-size: 20px;top:20px;" class="close" type="button" data-dismiss="modal">
+                                <i class="large material-icons">close</i>
+                            </button>
+                            <h4 class="modal-title">CAMBIO DE ROL</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="col-md-12">
+                                <div class="form-group" id="lista_usuarios">
+                                    <label class="label">USUARIOS</label>
+                                    <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="select_usuarios" id="select_usuarios" required></select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group is-empty" id="rol">
+                                    <label class="label">ROL ACTUAL DEL USUARIO</label>
+                                    <input class="form-control input-gral" type="text" name="rol_usuario" id="rol_usuario" readonly></input>
+                                </div>
+                            </div>
+                                
+                            <div class="col-md-12">
+                                <div class="form-group" id="cambiar_usuarios">
+                                    <label class="label">NUEVO ROL</label>
+                                    <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="select_roles" id="select_roles" required></select>
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <label class="control-label"  >
+                                Cualquier cambio realizado será registrado con la sesión
+                            </label>
+                            <button class=" btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
+                            <button type="submit" id="btn_rol" class="btn btn-primary">GUARDAR</button>
+                        </div>    
+                       
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal_add_user" style="overflow-y: scroll;" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                        <!-- formulario -->
+                    <form method="post" id="form_add_users">
+                        <div class="modal-header">
+                            <button type="button" style="font-size: 20px;top:20px;" class="close" type="button" data-dismiss="modal">
+                                <i class="large material-icons">close</i>
+                            </button>
+                            <h4 class="modal-title">AGREGAR USUARIO</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="col-md-12">
+                                <div class="form-group" id="add_usuario">
+                                    <label class="label">USUARIOS</label>
+                                    <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="agregar_usuario" id="agregar_usuario" required data-live-search="true"></select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group is-empty" id="add_rol">
+                                    <label class="label">PORCENTAJE DE COMISIÓN</label>
+                                    <input class="form-control input-gral" type="number" name="porcentaje" id="porcentaje" required min="0.04" max="4" step="0.01" placeholder="0.0"></input>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group" id="cambiar_usuarios">
+                                    <label class="label">ROL PARA EL USUARIO</label>
+                                    <select class="selectpicker select-gral descuento ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" name="agregar_roles" id="agregar_roles" required></select>
+                                </div>
+                            </div>
+
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button class=" btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
+                            <button type="submit" id="btn_add_user" class="btn btn-primary">GUARDAR</button>
+                        </div>    
+                       
+                    </form>
                 </div>
             </div>
         </div>
@@ -439,8 +534,8 @@ hr {
                         <h4 class="card-title"><b>Ceder comisiones</b></h4>
                     </div>
                     <form method="post" id="form_ceder">
-                        <div class="modal-body">
-                            <div class="form-group">
+                        <div class="modal-body pt-0">
+                            <div class="form-group m-0">
                                 <label class="control-label">Asesor dado de baja</label>
                                 <select name="asesorold" id="asesorold" class="selectpicker select-gral" 
                                 title="SELECCIONA UNA OPCIÓN"
@@ -448,9 +543,8 @@ hr {
                                 title="Selecciona un usuario" data-size="7" required>
                                 </select>
                             </div>
-                            <div id="info" ></div>
-                            <div class="form-group" id="users"></div>
-                            <div class="form-group">
+                            <div id="info" class="text-center"></div>
+                            <div class="form-group mt-0">
                                 <label class="control-label">Puesto del usuario a ceder la comisiones</label>
                                 <select class="selectpicker select-gral roles2" 
                                     name="roles2" id="roles2" required
@@ -460,16 +554,16 @@ hr {
                                     <option value="3">Gerente</option>
                                 </select> 
                             </div>
-                            <div class="form-group" id="users">
+                            <div class="form-group mt-0" id="users">
                                 <label class="control-label">Usuario a ceder comisiones</label>
                                 <select id="usuarioid2" name="usuarioid2" class="selectpicker directorSelect select-gral"
                                 title="SELECCIONA UNA OPCIÓN" 
                                  required data-live-search="true"></select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-0">
                                 <label class="control-label">Descripción</label>
-                                <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" 
-                                placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario" name="comentario" class="text-modal" rows="3" 
+                                 required="required"></textarea>
                             </div>
                             <div class="form-group">
                              
@@ -521,7 +615,7 @@ hr {
                             <div class="form-group">
                                 <label class="control-label">Descripción</label>
                                 <textarea id="comentario3" name="comentario3" 
-                                class="form-control input-gral" rows="3" placeholder="Descripción"
+                                class="text-modal" rows="3"
                                  required></textarea>
                             </div>
                 
@@ -568,8 +662,8 @@ hr {
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Descripción</label>
-                                <textarea id="comentario4" name="comentario4" class="form-control input-gral"
-                                 rows="3" placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario4" name="comentario4" class="text-modal"
+                                 rows="3" required="required"></textarea>
                             </div>
                             <div class="form-group">
                               
@@ -584,7 +678,7 @@ hr {
             </div>
         </div>
 
-        <div class="modal fade modalBajaVc" id="modalBajaVc" style="overflow:auto !important;" role="dialog">
+        <div class="modal fade modalBajaVc" id="modalBajaVc" style="overflow:auto !important;" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -598,7 +692,7 @@ hr {
             </div> 
         </div>
 
-        <div class="modal fade modalBajaVcUpdate" id="modalBajaVcUpdate" style="overflow:auto !important;" role="dialog">
+        <div class="modal fade modalBajaVcUpdate" id="modalBajaVcUpdate" style="overflow:auto !important;" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
