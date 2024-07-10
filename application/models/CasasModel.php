@@ -1513,4 +1513,37 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
 
     }
+
+    public function getReporteProcesoCredito(){
+        $query = "SELECT 
+            pcd.idProceso,
+            lo.idLote,  
+            lo.nombreLote,
+            pcd.estatus,
+            pcd.proceso,
+            pcd.comentario,
+            pcd.voBoOrdenCompra,
+            pcd.voBoAdeudoTerreno,
+            pcd.voBoValidacionEnganche,
+            pcd.voBoContrato,
+            pcd.adeudo,
+            co.nombre AS condominio,
+            re.descripcion AS proyecto,
+            pcd.voBoOrdenCompra,
+            pcd.voBoValidacionEnganche,
+            pcd.voBoContrato,
+            pcd.voBoOrdenCompra,
+            pcd.finalizado
+        FROM proceso_casas_directo pcd
+        INNER JOIN lotes lo ON lo.idLote = pcd.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial ";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getHistorialCreditoActual($idProceso)
+    {
+        return $this->db->query("SELECT * FROM historial_proceso_casas WHERE idProcesoCasas = $idProceso")->result_array();
+    }
 }
