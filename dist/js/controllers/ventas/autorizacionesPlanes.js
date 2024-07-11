@@ -515,39 +515,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
-    /*function addDescuento(id_condicion, descripcion){
-        const arrayCondiciones = [1,2,4,12,13];
-        var desc = document.getElementById("descuento");
-
-        const found = arrayCondiciones.find((element) => element == id_condicion);
-        console.log(found)
-        found != undefined ? desc.setAttribute("data-type","") : desc.setAttribute("data-type","currency") ;
-        
-        $('#descuento').val('');
-        $('#label_descuento').html();
-        $('#id_condicion').val(id_condicion);
-        $('#nombreCondicion').val(descripcion);
-        $('#label_descuento').html('Agregar descuento a "' + descripcion +'"');
-        $('#ModalFormAddDescuentos').modal();
-    };
-    */
-    /*$("input[data-type='currency']").on({
-        keyup: function() {
-            let id_condicion = $('#id_condicion').val();
-            if(id_condicion == 12 || id_condicion == 4){
-                //formatCurrency($(this));
-                console.log("condicion: ", id_condicion);
-            }
-        },
-        blur: function() { 
-            let id_condicion = $('#id_condicion').val();
-            if(id_condicion == 12 || id_condicion == 4){
-                //formatCurrency($(this), "blur");
-                console.log("condicion: ", id_condicion);
-            }
-        }
-    });*/
-
     function addDescuento(id_condicion, descripcion) {
         const arrayCondiciones = [1, 2, 4, 12];
         var desc = document.getElementById("descuento");
