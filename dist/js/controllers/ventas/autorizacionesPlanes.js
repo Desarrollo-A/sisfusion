@@ -607,7 +607,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             let id_condicion = element['condicion']['id_condicion'];
             let dataCondicion = element['data'];
             let title = (descripcion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
-            console.log("id_condicion: ", id_condicion);
             
             $('#table'+title+' thead tr:eq(0) th').each( function (i) {
                 var subtitle = $(this).text();
@@ -632,7 +631,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 {
                     text: `<i class="fas fa-plus"></i> Agregar descuento`,
                     action: function () {
-                        console.log("I was changed");
                         addDescuento(id_condicion, descripcion)
                     },
                     attr: {
@@ -640,11 +638,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                         style: 'position: relative;'
                     }
                 }
-                /*{
-                    text: `<button  onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</button>`,
-                    className: 'btn btn-blueMaderas text-white',
-                }*/
-            
             ],
                 pagingType: "full_numbers",
                 language: {
