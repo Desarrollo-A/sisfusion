@@ -23,9 +23,6 @@ sp = {
 }
 
 $(document).ready(function(){
-
-
-
     $.post('getCatalogo', {
         id_catalogo: 90
     }, function (data) {        
@@ -189,28 +186,19 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 $('[data-toggle="tooltip"]').tooltip();
                 let botones = '';
                 switch(id_rol_general){
-                    case 5:
-                    case 4:
-                        if(d.estatus_autorizacion == 1){
-                            botones += botonesPermiso(1,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
-                        }
-                        if(d.estatus_autorizacion == 3){
-                            botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
-                        }
-                        if(d.estatus_autorizacion == 4){
-                            botones += botonesPermiso(1,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
-                        }
-                    break;
                     case 17:
                     case 70:
                         if(d.estatus_autorizacion == 2){
-                            botones += botonesPermiso(1,0,1,1,d.id_autorizacion,d.estatus_autorizacion);
+                            botones += botonesPermiso(1,0,1,1,1,d.id_autorizacion,d.estatus_autorizacion);
                         }
                         if(d.estatus_autorizacion == 3){
-                            botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
+                            botones += botonesPermiso(1,0,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
                         if(d.estatus_autorizacion == 4){
-                            botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
+                            botones += botonesPermiso(1,0,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
+                        }
+                        if (d.estatus_autorizacion == 6) {
+                            botones += botonesPermiso(1,0,0,0,0,d.id_autorizacion, d.estatus_autorizacion);
                         }
                     break;
                 }
@@ -240,13 +228,14 @@ $(document).on('click', '#btnLimpiar', function (e) {
     });
 }
 
-function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus_autorizacion){
+function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,permisoDesactivar,idAutorizacion,estatus_autorizacion){
     //<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>
         let botones = '';
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
             if(permisoEditar == 1){ botones += ``; }
-            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
-            if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
+            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" data-opcion="1" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
+            if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="2" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
+            if(permisoDesactivar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="3" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Desactivar autorización"><i class="fas fa-trash"></i></button>`; }
         return  botones;
     }
 
@@ -307,18 +296,34 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let idAutorizacion = $(this).attr('data-idAutorizacion');
         let estatus = $(this).attr('data-estatus');
         let tipo = $(this).attr('data-tipo');
-        tipo == 1  ? $('#modalAutorizacion').addClass("modal-sm") : $('#modalAutorizacion').addClass("modal-md") ;
-        document.getElementById('titleAvance').innerHTML = tipo == 1 ? '¿Estás seguro de avanzar está autorización?' : '¿Estás seguro de rechazar está autorización?';
+        let accion = $(this).attr('data-opcion');
+        switch(accion) {
+            case '1': 
+                $('#modalAutorizacion').addClass("modal-sm");
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de avanzar está autorización?';
+                document.getElementById('modal-body').innerHTML = '';
+                break;
+            case '2':
+                $('#modalAutorizacion').addClass("modal-md");
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de rechazar está autorización?';
+                document.getElementById('modal-body').innerHTML = `<textarea class="text-modal" scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value.toUpperCase();" placeholder="Escriba aqui su comentario"></textarea><b id="text-observations" class="text-danger"></b>`;
+                break;
+            case '3':
+                $('#modalAutorizacion').addClass("modal-sm");
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de desactivar está autorización?';
+                document.getElementById('modal-body').innerHTML = '';
+                break;
+        }
         $('#id_autorizacion').val(idAutorizacion);
         $('#estatus').val(estatus);
         $('#tipo').val(tipo);
-        document.getElementById('modal-body').innerHTML = tipo == 2 ? `<textarea class="text-modal scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
-        <b id="text-observations" class="text-danger"></b>` : ''; 
+        $('#opcionAccion').val(accion);
         $("#avanzarAut").modal();
     });
     
     $(document).on('submit', '#avanceAutorizacion', function (e) {
         e.preventDefault();
+        
         let tipo = $('#tipo').val();
         let data = new FormData($(this)[0]);
         $('#spiner-loader').removeClass('hide');
@@ -331,6 +336,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             type: 'POST',
             success: function (response) {
                 response = JSON.parse(response);
+
                 if (response.estatus == 1) {
                     $("#avanzarAut").modal("hide");
                     tipo == 1  ? $('#modalAutorizacion').removeClass("modal-sm") : $('#modalAutorizacion').removeClass("modal-md") ;
@@ -382,8 +388,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             }, 'json');
         $("#modalHistorial").modal();
     });
-
-
 
     $(document).on('click', '#btnVer', function () {
         $('#spiner-loader').removeClass('hide');
@@ -483,8 +487,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         sinPlanesDiv();
     });
 
-    
-
     async function llenarTipoDescuentos(){
         descuentosYCondiciones = await getDescuentosYCondiciones();
         descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
@@ -513,8 +515,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
-    function addDescuento(id_condicion, descripcion){
-        const arrayCondiciones = [1,2,13];
+    /*function addDescuento(id_condicion, descripcion){
+        const arrayCondiciones = [1,2,4,12,13];
         var desc = document.getElementById("descuento");
 
         const found = arrayCondiciones.find((element) => element == id_condicion);
@@ -528,17 +530,48 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $('#label_descuento').html('Agregar descuento a "' + descripcion +'"');
         $('#ModalFormAddDescuentos').modal();
     };
-    
-    $("input[data-type='currency']").on({
+    */
+    /*$("input[data-type='currency']").on({
         keyup: function() {
             let id_condicion = $('#id_condicion').val();
             if(id_condicion == 12 || id_condicion == 4){
-                formatCurrency($(this));
+                //formatCurrency($(this));
+                console.log("condicion: ", id_condicion);
             }
         },
         blur: function() { 
             let id_condicion = $('#id_condicion').val();
             if(id_condicion == 12 || id_condicion == 4){
+                //formatCurrency($(this), "blur");
+                console.log("condicion: ", id_condicion);
+            }
+        }
+    });*/
+
+    function addDescuento(id_condicion, descripcion) {
+        const arrayCondiciones = [1, 2, 4, 12];
+        var desc = document.getElementById("descuento");
+
+        const found = arrayCondiciones.includes(parseInt(id_condicion));
+        console.log(found);
+        desc.setAttribute("data-type", found ? "currency" : "");
+
+        $('#descuento').val('');
+        $('#label_descuento').html('');
+        $('#id_condicion').val(id_condicion);
+        $('#nombreCondicion').val(descripcion);
+        $('#label_descuento').html('Agregar descuento a "' + descripcion + '"');
+        $('#ModalFormAddDescuentos').modal();
+    }
+
+    $("input").on({
+        keyup: function() {
+            if ($(this).attr('data-type') === 'currency'){
+                formatCurrency($(this));
+            }
+        },
+        blur: function() {
+            if ($(this).attr('data-type') === 'currency') {
                 formatCurrency($(this), "blur");
             }
         }
@@ -607,6 +640,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             let id_condicion = element['condicion']['id_condicion'];
             let dataCondicion = element['data'];
             let title = (descripcion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
+            console.log("id_condicion: ", id_condicion);
             
             $('#table'+title+' thead tr:eq(0) th').each( function (i) {
                 var subtitle = $(this).text();
@@ -626,12 +660,25 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title: 'DESCUENTOS AL '+ descripcion.toUpperCase()
+                    title: 'DESCUENTO$("#S AL '+ descripcion.toUpperCase()
                 },
                 {
+                    text: `<i class="fas fa-plus"></i> Agregar descuento`,
+                    action: function () {
+                        console.log("I was changed");
+                        addDescuento(id_condicion, descripcion)
+                    },
+                    attr: {
+                        class: 'btn btn-azure',
+                        style: 'position: relative;'
+                    }
+                }
+                /*{
                     text: `<button  onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</button>`,
                     className: 'btn btn-blueMaderas text-white',
-                }],
+                }*/
+            
+            ],
                 pagingType: "full_numbers",
                 language: {
                     url: general_base_url + "static/spanishLoader_v2.json",
