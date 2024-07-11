@@ -392,7 +392,7 @@ class PaquetesCorrida extends CI_Controller
     $id_condicion = $this->input->post("id_condicion");
     $descuento = $this->input->post("descuento");
 
-    if ($this->input->post("id_condicion") == 4 || $this->input->post("id_condicion") == 12) {
+    if ($this->input->post("id_condicion") == 4 || $this->input->post("id_condicion") == 12 || $this->input->post("id_condicion") == 1 || $this->input->post("id_condicion") == 2) {
       $replace = ["$", ","];
       $descuento = str_replace($replace, "", $descuento);
     }
@@ -505,7 +505,8 @@ class PaquetesCorrida extends CI_Controller
       $estatus = $this->input->post("estatus");
       $tipo = $this->input->post("tipo");
       $comentario = $tipo == 2 ? $this->input->post("comentario") : 0 ;
-      echo json_encode($this->PaquetesCorrida_model->avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$this->session->userdata('id_usuario')));
+      $accion = $this->input->post("opcionAccion");
+      echo json_encode($this->PaquetesCorrida_model->avanceAutorizacion($id_autorizacion,$estatus,$tipo,$comentario,$this->session->userdata('id_usuario'), $accion));
     }
 
     public function getHistorialAutorizacion(){
