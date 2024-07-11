@@ -751,6 +751,10 @@ function getExtensionPorTipoDocumento(tipoDocumento) {
         return 'pdf';
     }
 
+    if (tipoDocumento === TipoDoc.COMPLEMENTO_DE_PAGO)  {
+        return 'pdf';
+    }
+
     return 'jpg, jpeg, png, pdf';
 }
 

@@ -1201,7 +1201,7 @@ class Reestructura_model extends CI_Model
     }
     public function getLotesFusion($idLote)
     {
-        $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote) AND origen=1");
+        $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote) AND origen = 1");
         return $query->result_array();
     }
     public function get_catalogo_restructura($id_catalogo)
@@ -2154,6 +2154,18 @@ class Reestructura_model extends CI_Model
 
     public function checkDestinos($idLote){
         $query = $this->db->query("SELECT idFusion FROM lotesFusion WHERE idLotePvOrigen = ? AND destino = ?", array($idLote, 1));
+
+        return $query;
+    }
+
+    public function getFusionCompleta($idLote)
+    {
+        $query = $this->db->query("SELECT lf.*, lo.tipo_estatus_regreso FROM lotesFusion lf INNER JOIN lotes lo ON lo.idLote = lf.idLote WHERE idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote)");
+        return $query->result_array();
+    }
+
+    public function eliminarFusion($pvLote){
+        $query = $this->db->query("DELETE FROM lotesFusion WHERE idLotePvOrigen = ?", $pvLote);
 
         return $query;
     }
