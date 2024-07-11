@@ -3296,7 +3296,6 @@ class Reestructura extends CI_Controller{
         //rmdir('/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMNQRO-CONH-080/');
     }
 
-
     public function moverArchivo(){
         $currentLocation = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/YUCA-27 CMLJAL.xlsx';
         $newLocation = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMCJAL-UCAH-017/CORRIDA/CMLJAL-YUCH-027-20240119154209.xlsx';

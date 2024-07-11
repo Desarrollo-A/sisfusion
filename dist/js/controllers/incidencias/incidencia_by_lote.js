@@ -1080,12 +1080,10 @@ $(".find_doc").click( function() {
         <div class="form-group">
         <label  class="label">Seleccionar tipo de venta</label>
         
-        <select class="form-control  select-gral tipo_v" id="tipo_v" name="tipo_v"
-        title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
-
-        <option value="1">Venta de particulares</option>
-        <option value="2">Venta normal</option>
-        
+        <select class="form-control select-gral tipo_v" id="tipo_v" name="tipo_v"
+        title="SELECCIONA UNA OPCIÓN" required data-live-search="true" style="background-color: #f2f2f2; background-image: none; border-radius: 25px; padding: 0 15px;">
+            <option value="1">Venta de particulares</option>
+            <option value="2">Venta normal</option>
         </select>
         </div> ` );
 
