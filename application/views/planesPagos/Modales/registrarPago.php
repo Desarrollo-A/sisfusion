@@ -62,12 +62,11 @@
                                             <th>PAGO PACTADO</th>
                                             <th>FECHA PAGO</th>
                                             <th>PAGO REALIZADO</th>
-                                            <th>SALDO CAPITAL</th>
+                                            <th>CAPITAL</th>
                                             <th>INTERÉS</th>
                                             <th>SALDO INTERÉS</th>
                                             <th>IVA</th>
                                             <th>SALDO IVA</th>
-                                            <th>CAPITAL</th>
                                             <th>REGISTRAR</th>
                                         </tr>
                                         </thead>

@@ -160,7 +160,9 @@ const getPlanPagoDump = (idPlanPago) =>{
 }
 
 function fillTable(data) {
-    // console.log(data)
+    console.log(data)
+
+    let data_plan = JSON.parse(data.dumpPlan)
     
     var tablePagos
 
@@ -171,14 +173,31 @@ function fillTable(data) {
 
         for(let pago of pagos){
             if(pago.pago == row.pago){
-                if(value){
-                    pago.pagado = parseFloat(value)
-                    pago.capital = parseFloat(value)
+                // console.log(pago)
 
-                    if(pago.total < value){
-                        pago.pagado = pago.total
-                        pago.capital = pago.total
-                    }
+                if(value === '' || value === 0){
+                    value = parseFloat(pago.total)
+                }
+
+                if(parseFloat(pago.total) < value){
+                    pago.pagado = parseFloat(pago.total)
+                }else{
+                    pago.pagado = parseFloat(value)
+                }
+
+                if(pago.pagado < pago.interes){
+                    pago.saldoInteres = pago.interes - pago.pagado
+                    // pago.interes = pago.pagado
+                }else{
+                    pago.saldoInteres = 0
+                }
+
+                pago.capital = ( pago.pagado - pago.interes - pago.saldoInteres ) / (1 + (data.montoIvaPorcentaje / 100) )
+                pago.iva = (pago.pagado - pago.interes - pago.saldoInteres) - pago.capital
+
+                if(pago.capital < 0){
+                    pago.capital = 0
+                    pago.iva = 0
                 }
 
                 if(date){
@@ -202,25 +221,30 @@ function fillTable(data) {
             if(pago.pago == row.pago){
                 pago.registrado = true
 
-                console.log(pago, row)
+                // console.log(pago, row)
 
                 if(!pago.pagado){
                     pago.pagado = pago.total
                 }
 
                 if(pago.total > pago.pagado){
+                    let total = pago.total - pago.pagado
+                    let interes = pago.saldoInteres
+                    let capital = ( total - interes ) / (1 + (data.montoIvaPorcentaje / 100) )
+                    let iva = (total - interes) - capital
+
                     let new_pago = {
                         pago: pago.pago + 1,
-                        capital: pago.total - pago.pagado,
+                        capital,
                         fecha: pago.fecha,
                         fecha_pago: pago.fecha,
                         pagado: 0,
                         saldoCapital: 0,
-                        interes: 0,
+                        interes,
                         saldoInteres: 0,
-                        iva: 0,
+                        iva: iva,
                         saldoIva: 0,
-                        total: pago.total - pago.pagado,
+                        total,
                     }
 
                     pagos.splice(p + 1, 0, new_pago)
@@ -344,8 +368,24 @@ function fillTable(data) {
     }
 
 
-    const buttonCell = function(cell){
-        if(cell.innerHTML !== '1'){
+    const buttonCell = function(cell, value, row){
+        // console.log(cell, value, row)
+
+        let pagos = data_plan
+        if(tablePagos){
+            pagos = tablePagos.rows().data().toArray()
+        }
+
+        let next_pago
+        for(let pago of pagos){
+            if(!pago.registrado){
+                next_pago = pago.pago
+
+                break
+            }
+        }
+
+        if(cell.innerHTML !== '1' && next_pago === row.pago){
             $(cell)
             .append('<span>')
             .css('cursor', 'pointer')
@@ -353,7 +393,7 @@ function fillTable(data) {
             .data('toggle', 'tooltip')
             .html('🖊')
             .on('click', function(e){
-                const row = tablePagos.row(cell.parentElement).data()
+                // const row = tablePagos.row(cell.parentElement).data()
 
                 registrarPago(row)
             })
@@ -370,7 +410,7 @@ function fillTable(data) {
     $('#mensualidadPlanPago').val(formatMoney(data.mensualidad));
     $('#periodosPlanPago').val(data.numeroPeriodos);
     $('#montoInicialPlan').val(formatMoney(data.saldoInicialPlan));
-    data_plan = JSON.parse(data.dumpPlan);
+    
     let titulosTabla = [];
 
     /*
@@ -485,12 +525,7 @@ function fillTable(data) {
                     if(d.capital){
                         return formatMoney(parseFloat(d.capital).toFixed(2));
                     }
-                    return ''
-                }
-            },
-            {
-                data: function (d) {
-                    return formatMoney(parseFloat(d.saldoCapital).toFixed(2));
+                    return '$0.00'
                 }
             },
             {
@@ -534,7 +569,7 @@ function fillTable(data) {
                 createdCell: pagoCell
             },
             {
-                targets: [12],
+                targets: [11],
                 createdCell: buttonCell
             },
         ]
@@ -547,7 +582,7 @@ function fillTable(data) {
 
         $.ajax({
             type: "POST",
-            url: `${general_base_url}Corrida/guardarPlanPago/${idLote}?plan=${data.idPlanPago}`,
+            url: `${general_base_url}Corrida/guardarPago/${idLote}?plan=${data.idPlanPago}`,
             data: JSON.stringify(pagos),
             dataType: 'json',
         })

@@ -697,10 +697,17 @@
         return $this->db->query($query)->result();
     }
 
-    public function savePlanPagoRaw($idPlanPago, $numeroPeriodos, $dumpPlan){
+    public function getPlanPagoRaw($idPlanPago){
+        $query = "SELECT *
+        FROM planes_pago
+        WHERE idPlanPago = $idPlanPago";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function savePlanPagoRaw($idPlanPago, $dumpPlan){
         $query = "UPDATE planes_pago
         SET
-            numeroPeriodos = $numeroPeriodos,
             dumpPlan = '$dumpPlan'
         WHERE
             idPlanPago = $idPlanPago";

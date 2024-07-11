@@ -4144,4 +4144,18 @@ legend {
         print_r(json_encode([]));
     }
 
+    //Registrar pago
+    public function guardarPago($lote){
+        $plan_id = $this->input->get('plan');
+
+        $pagos = json_decode(file_get_contents("php://input"));
+
+        // $plan = $this->Corrida_model->getPlanPagoRaw($plan_id);
+
+        $is_ok = $this->Corrida_model->savePlanPagoRaw($plan_id, json_encode($pagos));
+
+        if($is_ok){
+            print_r(json_encode([]));
+        }
+    }
 }
