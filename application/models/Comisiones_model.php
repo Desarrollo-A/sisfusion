@@ -5322,6 +5322,8 @@ function getDatosGralInternomex(){
             $id_lider .= ", 5604";
         else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
             $id_lider .= ", 80, 664";
+        else if ($id_usuario == 16186) // CAROLINA CORONADO YAÑEZ
+            $id_lider .= ", 6942";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES
