@@ -114,11 +114,8 @@ class PaquetesCorrida_model extends CI_Model
     }
 
     public function SaveNewDescuento($id_condicion,$descuento){
-      
-      
-       $id_tdescuento= $id_condicion == 2 ? 2 : 1;
-
-      $response =  $this->db->query("INSERT INTO descuentos VALUES($id_tdescuento,NULL,NULL,$id_condicion,$descuento,NULL)"); 
+        $id_tdescuento= $id_condicion == 2 ? 2 : 1;
+        $response =  $this->db->query("INSERT INTO descuentos VALUES($id_tdescuento,NULL,NULL,$id_condicion,$descuento,NULL)"); 
 
         if (! $response ) {
             return $finalAnswer = 0;
