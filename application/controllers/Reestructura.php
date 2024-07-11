@@ -3210,110 +3210,76 @@ class Reestructura extends CI_Controller{
         echo json_encode($result);
     }
 
-    public function removeLoteFusion()
+    public function eliminarFusion()
     {
         $datosPost = $_POST;
         $pvLote = $datosPost["pvLote"];
-        $result = false;
-        $data = array();
-        $lotesDestino = array();
-        $lotesOrigen = array();
-        $statusLoteDestino = array();
-        $idRegreso = 0;
-        $allUpdates = true;
-        $idUsuario = $this->session->userdata('id_usuario');
+        $idUsuario = $this->session->userdata("id_usuario");
+        $banderaSuccess = true;
 
-        if (!empty($pvLote)) {
-            // 1. checamos los lotes que estas involucrados en la fusion
-            $checkFusion = $this->Reestructura_model->checkFusion($pvLote);
-            // $checkFusionOrigen = $this->Reestructura_model->checkFusionOrigen();
+        $this->db->trans_begin();
 
+        // paso 1: verificar todos los lotes que tenga la fusión
+        $getLoteFusion = $this->Reestructura_model->getFusionCompleta($pvLote);
+        if(count($getLoteFusion) == 0 ){
+            $banderaSuccess = false;
+        }
 
-            $data = $checkFusion->result();
-
-            $this->db->trans_begin();
-
-            // una vez que se comprueba que haya resultados de la consulta, se guardan los lotes en un arreglo
-            foreach ($data as $d) {
-                if($d->origen == 1){
-                    $lotesOrigen[] = $d->idLote;
-                }
-                else if($d->origen == 0){
-                    $lotesDestino[] = $d->idLote;
-                }
-                
+        // paso 2: retornar esos lotes a sus valores de origen
+        foreach($getLoteFusion as $lote){
+            if($lote["origen"] == 1){
+                $dataUpdate[] = array(
+                    "idLote"             => $lote["idLote"], 
+                    "usuario"            => $idUsuario,
+                    "estatus_preproceso" => 0
+                );
             }
+            else if($lote["destino"] == 1){
+                $dataUpdateDestino[] = array(
+                    "idLote"             => $lote["idLote"], 
+                    "idStatusLote"       => $lote["tipo_estatus_regreso"] == 2 ? 21 : $lote["tipo_estatus_regreso"] == 1 ? 15 : 1,
+                    "usuario"            => $idUsuario,
+                );
+            }                
+        }
 
-            // 2. despues se eliminan los registros de la fusión
-            $delete = $this->Reestructura_model->deleteFusion($pvLote);
+        // actualizacion origen
+        $updateOrigen = $this->General_model->updateBatch("lotes", $dataUpdate, "idLote");
+        if(!$updateOrigen){
+            $banderaSuccess = false;
+        }
 
-            if ($delete) {
-                $idLotes = implode(',', $lotesDestino);
-
-                if ($checkFusion->num_rows() > 0 && count($lotesDestino) > 0) {
-                    $checkLotes = $this->Reestructura_model->checkLotesFusion($idLotes);
-
-                    $data = $checkLotes->result();
-
-                    foreach ($data as $d) {
-                        // $statusLoteDestino["idLote"] = $d->idLote;
-                        // $statusLoteDestino["idStatusLote"] = $d->idStatusLote;
-
-                        if ($d->idStatusLote == 20) {
-                            $idRegreso = 21;
-                        } else if ($d->idStatusLote == 16) {
-                            $idRegreso = 15;
-                        }
-
-                        //3. Se regresan los lotes a su estatus anterior
-                        //actualizar uno por uno
-                        $update = $this->Reestructura_model->updateLotesFusion($d->idLote, $idRegreso, $idUsuario);
-
-                        if (!$update) {
-                            $allUpdates = false;
-                            break;
-                        }
-                    }
-                }
-
-                if ($allUpdates) {
-
-                    $idsOrigen = implode(',', $lotesOrigen);
-                    
-                    // 4. se regresa el lotes de origen a su estatus de preproceso 0
-                    $update = $this->Reestructura_model->updateLotesOrigen($idsOrigen, 0, 2, $idUsuario); // estatus preproceso en 0
-
-                    if($update){
-                        $this->db->trans_commit();
-
-                        $result["result"] = true;
-                        $result["msg"] = "La fusión ha sido removida correctamente";
-                    }
-                    else {
-                        $this->db->trans_rollback();
-
-                        $result["result"] = false;
-                        $result["msg"] = "Error al actualizar los lotes de origen";
-                    }
-                    
-                } else {
-                    $this->db->trans_rollback();
-                    $result["result"] = false;
-                    $result["msg"] = "Error al actualizar los lotes";
-                }
-            } else {
-                $this->db->trans_rollback();
-                $result["result"] = false;
-                $result["msg"] = "Error: no se han eliminado los destinos de la fusión";
+        // actualizacion destino
+        if (isset($dataUpdateDestino)) {
+            $updateDestino = $this->General_model->updateBatch("lotes", $dataUpdateDestino, "idLote");
+            if (!$updateDestino) {
+                $banderaSuccess = false;
             }
         }
+
+        // paso 3: eliminar la fusión
+        $delete = $this->Reestructura_model->eliminarFusion($pvLote);
+        if(!$delete){
+            $banderaSuccess = false;
+        }
+
+        //paso 4: regresar respuesta
+        if($banderaSuccess){
+            $this->db->trans_commit();
+
+            $response["result"] = true;
+            $response["message"] = "Se ha eliminado la fusión correctamente";
+        }
         else{
-            $result["result"] = false;
-            $result["msg"] = "Faltan datos en el formulario";
+            $this->db->trans_rollback();
+            $response["result"] = false;
+            $response["message"] = "No se puede deshacer la fusión";
+
+            
         }
 
         $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($result));
+        $this->output->set_output(json_encode($response));
     }
 
     public function renameFile(){
@@ -3329,7 +3295,6 @@ class Reestructura extends CI_Controller{
         //eliminar carpeta
         //rmdir('/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMNQRO-CONH-080/');
     }
-
 
     public function moverArchivo(){
         $currentLocation = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/YUCA-27 CMLJAL.xlsx';
@@ -3655,10 +3620,19 @@ class Reestructura extends CI_Controller{
     }
 
     public function contraloriaJuridicoCambio($idLotePv, $contraloria, $juridico, $getFlagCJ){
-        $updateData = array(
-            'flagProcesoContraloria' => $contraloria == 1 ? 0 : $getFlagCJ[0]->flagProcesoContraloria,
-            'flagProcesoJuridico' => $juridico == 2 ? 0 : $getFlagCJ[0]->flagProcesoJuridico
-        );
+        if($contraloria == 1){
+            $updateData = array(
+                'flagProcesoContraloria' => 0,
+                'flagProcesoJuridico' => 0
+            );
+        }
+        else if($juridico == 2){
+            $updateData = array(
+                'flagProcesoContraloria' => $contraloria == 1 ? 0 : $getFlagCJ[0]->flagProcesoContraloria,
+                'flagProcesoJuridico' => 0
+            );
+        }
+        
 
         $update = $this->General_model->updateRecord('datos_x_cliente', $updateData, 'idLote', $idLotePv);
 
@@ -4430,7 +4404,58 @@ class Reestructura extends CI_Controller{
         $this->output->set_output(json_encode($response)); 
     }
 
-    public function subirArchivosFusion() {
-        print_r($this->input->post());
+    public function subirArchivosFusion() { // función para subir archivos solo para fusión
+        $data = $this->input->post();
+        $id_rol = $this->session->userdata('id_rol');
+        $tipo = 0;
+
+        if($id_rol == 17 || $id_rol == 70 || $id_rol == 71 || $id_rol == 73 ){
+            $pre = 'CORRIDA';
+            $tipo = 1; // contraloría
+        }
+        else if($id_rol == 15){
+            $pre = 'CONTRATO';
+            $tipo = 2; // juridico
+        }
+
+        foreach($_FILES as $key => $file){
+            foreach($data as $val){
+                if($val['idpxl'] == $key){
+                    $filename = $pre . "_" . $val['lote'] . "_" . date('dmY') . "." . pathinfo($file['name']['file'], PATHINFO_EXTENSION);
+                }
+            }
+            
+            if($tipo == 1){
+                $updateArray[] = array(
+                    "idFusion" => $key,
+                    "corrida" => $filename,
+                    "bucket" => 1
+                );
+            }
+            else{
+                $updateArray[] = array(
+                    "idFusion" => $key,
+                    "contrato" => $filename
+                );
+            }
+        }
+
+        $this->db->trans_begin();
+
+        $update = $this->General_model->updateBatch('lotesFusion', $updateArray, 'idFusion');
+
+        if($update){
+            $this->db->trans_commit();
+            $response["result"] = true;
+            $response["message"] = "Se han subido los archivos correctamente";
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "No se han subido los archivos";
+        }
+
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($response));  
+
     }
 }
