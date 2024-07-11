@@ -123,7 +123,7 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <form id="formDesFusion">
-                        <input id="pvLote" name="pvLote" hidden readonly />
+                        <input id="pvLote" name="pvLote"  hidden readonly />
                         <div class="modal-body">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
                                 <h4><b style='color:red;'>¡Atención!</b></h4>
