@@ -1509,8 +1509,8 @@ class CasasModel extends CI_Model
 
     }
 
-    public function getReporteProcesoCredito(){
-        $query = "SELECT 
+    public function getReporteProcesoCredito($proceso, $finalizado){
+        $query = "SELECT
             pcd.idProceso,
             lo.idLote,  
             lo.nombreLote,
@@ -1528,17 +1528,59 @@ class CasasModel extends CI_Model
             pcd.voBoValidacionEnganche,
             pcd.voBoContrato,
             pcd.voBoOrdenCompra,
-            pcd.finalizado
+            pcd.finalizado,
+            oxc.color,
+            oxc.nombre AS nombreMovimiento,
+            CASE
+                WHEN DATEDIFF(DAY, GETDATE() , pcd.fechaAvance) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pcd.fechaAvance), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
+            CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente,
+            CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
+            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
+            CASE
+                WHEN pcd.idAsesor IS NULL AND pcd.proceso = 0 THEN 'ASIGNACIÓN DE ASESOR'
+                ELSE oxc2.nombre
+            END AS nombreProceso,
+            pcd.fechaCreacion,
+            pcd.fechaAvance
         FROM proceso_casas_directo pcd
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial ";
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN usuarios usA ON usA.id_usuario = cl.id_asesor
+        INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pcd.tipoMovimiento AND oxc.id_catalogo = 108
+        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pcd.proceso AND oxc2.id_catalogo = 150
+        WHERE pcd.proceso IN ($proceso)
+        AND pcd.finalizado IN ($finalizado)";
 
         return $this->db->query($query)->result();
     }
 
-    public function getHistorialCreditoActual($idProceso)
+    public function getHistorialCreditoActual($idProceso, $tipoEsquema)
     {
-        return $this->db->query("SELECT * FROM historial_proceso_casas WHERE idProcesoCasas = $idProceso")->result_array();
+        $query = $this->db->query("SELECT 
+	        hpc.*,
+	        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) as nombreUsuario
+	        FROM historial_proceso_casas hpc
+	        INNER JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+	        WHERE idProcesoCasas = ?
+	        AND esquemaCreditoProceso = ?", array($idProceso, $tipoEsquema));
+            
+        return $query->result_array();
+    }
+
+    public function getProcesosOptionsDirecto(){
+        $query = "SELECT
+            id_opcion AS value,
+            nombre AS label
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 150
+        AND estatus = 1";
+
+        return $this->db->query($query)->result();
     }
 }

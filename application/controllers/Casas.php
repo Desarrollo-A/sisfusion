@@ -265,7 +265,6 @@ class Casas extends BaseController
 
             header("Content-type: $contentType");
 
-            print($file);
         } else {
             header("HTTP/1.1 404 Not Found");
 
@@ -2384,7 +2383,7 @@ class Casas extends BaseController
             "procesoNuevo"    => $finalizado,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "idMovimiento"    => $this->session->userdata('id_usuario'),
-            "descripcion"     => "Se ha terminado el paso " . $finalizado,
+            "descripcion"     => "Se ha finalizado el proceso del lote",
             "esquemaCreditoProceso" => 2
         );
         $this->db->trans_begin();
@@ -2455,8 +2454,9 @@ class Casas extends BaseController
     {
         $opcion = $this->input->get('opcion');
 
-        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16";
-        /* $finalizado = "0, 1";
+        $proceso = "16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27";
+
+        $finalizado = "0, 1";
 
         if($opcion != -1 && $opcion != -2 && isset($opcion)){
             $proceso = $opcion;
@@ -2465,16 +2465,27 @@ class Casas extends BaseController
 
         if($opcion == -2){
             $finalizado = "1";
-        } */
+        }
 
-        $lotes = $this->CasasModel->getReporteProcesoCredito($proceso);
+        $lotes = $this->CasasModel->getReporteProcesoCredito($proceso, $finalizado);
 
         $this->json($lotes);
     }
 
-    public function getHistorialCreditoActual($idProceso)
+    public function getHistorial($idProceso, $tipoEsquema)
     {
-        echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso));
+        echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso, $tipoEsquema));
     }
-    
+
+    public function options_procesos_directo()
+    {
+        $asesores = $this->CasasModel->getProcesosOptionsDirecto();
+
+        $this->json($asesores);
+    }
+
+    public function reporte_casas_venta(){
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/reporte_casas_venta_view');
+    }
 }

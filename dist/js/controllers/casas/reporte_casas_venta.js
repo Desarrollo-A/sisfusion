@@ -25,14 +25,14 @@ function dataFunction(value) {
     if (valueTab == 1) {
         tableConfig = {
             id: '#tableDoct',
-            url: 'casas/lista_reporte_casas',
+            url: 'casas/lista_reporte_casas?opcion=-2',
             buttons: buttons,
             columns: columns,
         };
     } else if (valueTab == 2) {
         tableConfig = {
             id: '#tableCredito',
-            url: 'casas/getReporteProcesoCredito',
+            url: 'casas/getReporteProcesoCredito?opcion=-2',
             buttons: buttonsCredito,
             columns: columnsCredito,
         };
@@ -182,70 +182,6 @@ let columnsCredito = [
         }
     }
 ]
-
-let filtro_proceso_directo = new SelectFilter({ id: 'opcion', label: 'Proceso', placeholder: 'Selecciona una opción' })
-
-filtro_proceso_directo.onChange(function (option) {
-    table.setParams({ opcion: option.value })
-    table.reload()
-})
-
-$.ajax({
-    type: 'GET',
-    url: 'options_procesos_directo',
-    success: function (response) {
-        let status_option = [
-            { value: -1, label: 'Todos' },
-            ...response,
-            { value: -2, label: 'Finalizado' },
-        ]
-
-        filtro_proceso_directo.setOptions(status_option)
-    },
-    error: function () {
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-    }
-})
-
-let filtrosDirecto = new Filters({
-    id: 'table-filters-directo',
-    filters: [
-        filtro_proceso_directo        
-    ],
-})
-
-
-let filtro_proceso = new SelectFilter({ id: 'opcion', label: 'Proceso', placeholder: 'Selecciona una opción' })
-
-filtro_proceso.onChange(function (option) {
-    table.setParams({ opcion: option.value })
-    table.reload()
-})
-
-$.ajax({
-    type: 'GET',
-    url: 'options_procesos',
-    success: function (response) {
-        let status_option = [
-            { value: -1, label: 'Todos' },
-            ...response,
-            { value: -2, label: 'Finalizado' },
-        ]
-
-        filtro_proceso.setOptions(status_option)
-    },
-    error: function () {
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-    }
-})
-
-
-let filtros = new Filters({
-    id: 'table-filters',
-    filters: [
-        filtro_proceso,
-    ],
-})
 
 $(document).on('click', '#verProceso', function (e) {
     $("#venta").addClass('hide');

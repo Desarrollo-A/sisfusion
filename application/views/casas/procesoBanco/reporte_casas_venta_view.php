@@ -74,22 +74,20 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#reporteCasas" role="tab" data-toggle="tab" onclick="dataFunction(1)">Reporte proceso de banco</a>
+                                <a href="#reporteCasas" role="tab" data-toggle="tab" onclick="dataFunction(1)">Reporte de ventas (Banco)</a>
                             </li>
                             <li>
-                                <a href="#reporteCredito" role="tab" data-toggle="tab" onclick="dataFunction(2)">Reporte proceso crédito directo</a>
+                                <a href="#reporteCredito" role="tab" data-toggle="tab" onclick="dataFunction(2)">Reporte de ventas (Crédito directo)</a>
                             </li>
                         </ul>
                         <div class="card no-shadow m-0">
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
-
                                         <div class="tab-pane active" id="reporteCasas">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Proceso banco</h3>
-                                                    <div id="table-filters" class="row mb-1"></div>
+                                                    <h3 class="card-title center-align">Reporte de ventas (CASAS)</h3>                                                    
                                                 </div>
 
                                                 <table id="tableDoct" class="table-striped table-hover">
@@ -111,15 +109,13 @@
                                                         </tr>
                                                     </thead>
                                                 </table>
-
                                             </div>
                                         </div>
 
                                         <div class="tab-pane" id="reporteCredito">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Proceso banco</h3>
-                                                    <div id="table-filters-directo" class="row mb-1"></div>
+                                                    <h3 class="card-title center-align">Proceso banco</h3>                                                    
                                                 </div>
 
                                                 <table id="tableCredito" class="table-striped table-hover">
@@ -158,5 +154,5 @@
     <?php $this->load->view('template/footer'); ?>
     <?php $this->load->view('template/modals'); ?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/reporte_casas.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/reporte_casas_venta.js"></script>
 </body>
