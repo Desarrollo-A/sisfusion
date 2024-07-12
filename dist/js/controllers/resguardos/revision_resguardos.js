@@ -69,7 +69,7 @@ $(document).ready(function () {
             $(`#anio`).append($('<option>').val(anio).text(anio));
         }
         $("#anio").selectpicker('refresh')
-        
+        $(`#catalogo_resguardo`).append($('<option>').val(0).text('SIN PROYECTO'));
         for (var i1 = 0; i1 < proyecto.length; i1++) {
             var id = proyecto[i1]['idResidencial'];
             $(`#catalogo_resguardo`).append($('<option>').val(id).text(proyecto[i1]['descripcion']));
@@ -248,6 +248,11 @@ function getAssimilatedCommissions(directivo, proyecto, anio, mes){
         {
             "data": function( d ){
                 return '<p class="m-0">'+d.nombreLote+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.empresa+'</p>';
             }
         },
         {

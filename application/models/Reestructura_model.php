@@ -227,12 +227,6 @@ class Reestructura_model extends CI_Model
         return $query->result();
     }
 
-
-    function get_catalogo_reestructura()
-    {
-        return $this->db->query("SELECT id_opcion, nombre, fecha_creacion FROM opcs_x_cats WHERE id_catalogo = 100 and estatus = 1");
-    }
-
     function  insertOpcion($id_catalogo)
     {
         return $this->db->query("SELECT TOP (1) id_opcion + 1 AS lastId FROM opcs_x_cats WHERE id_catalogo = $id_catalogo ORDER BY id_opcion DESC")->row();
@@ -266,7 +260,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN cl.id_cliente IS NULL THEN '-' ELSE UPPER(CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno)) END nombreCliente,
         ISNULL(oxc.nombre, 'Sin especificar') estatus,oxc.id_opcion as idCatalogo, lo.idStatusLote,
         lo.comentarioReubicacion, lo.liberadoReubicacion, lo.liberaBandera,
-        sl.nombre estatusContratacion, sl.background_sl, sl.color
+        sl.nombre estatusContratacion, sl.background_sl, sl.color, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE cl.id_cliente END idCliente
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re on re.idResidencial = co.idResidencial
@@ -659,7 +653,7 @@ class Reestructura_model extends CI_Model
         ORDER BY UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno, ' '))")->result_array();
     }
 
-    function banderaLiberada($clave, $data)
+    /*function banderaLiberada($clave, $data)
     {
         try {
             $this->db->where('idLote', $clave);
@@ -669,7 +663,7 @@ class Reestructura_model extends CI_Model
         } catch (Exception $e) {
             return $e->getMessage();
         }
-    }
+    }*/
     function getListaLotesArchivosReestrucura()
     {
         $query = $this->db->query("SELECT l.nombreLote, dxc.* FROM datos_x_cliente dxc INNER JOIN lotes l ON l.idLote = dxc.idLote");
@@ -1095,25 +1089,10 @@ class Reestructura_model extends CI_Model
         return $this->db->query("INSERT INTO opcs_x_cats values(" . $datos['id'] . ",100,'" . $datos['nombre'] . "',1,'" . $datos['fecha_creacion'] . "',1,NULL)");
     }
 
-    public function actualizarValidacion($datos)
-    {
-        return $this->db->query("UPDATE lotes SET opcionReestructura = " . $datos['opcionReestructura'] . ", comentarioReubicacion = '" . $datos['comentario'] . "', usuario = " . $datos['userLiberacion'] . " where idLote = " . $datos['idLote'] . " ");
-    }
-
     public function insertarCliente($datos)
     {
         return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por], [tipo_proceso], [impresionEn]) VALUES (" . $datos['idLote'] . ", '" . $datos['nombre'] . "', '" . $datos['apellido_paterno'] . "', '" . $datos['apellido_materno'] . "', " . $datos['estado_civil'] . ", '" . $datos['ine'] . "', '" . $datos['domicilio_particular'] . "', '" . $datos['correo'] . "', '" . $datos['telefono1'] . "', '" . $datos['ocupacion'] . "', null, GETDATE(), 1, GETDATE(), 1, 
             " . $datos['tipo_proceso'] . ", " . $datos['impresionEn'] . ") ");
-    }
-
-    public function borrarOpcionModel($id_catalogo, $idOpcion)
-    {
-        return $this->db->query("UPDATE opcs_x_cats SET estatus = 0 WHERE id_catalogo = $id_catalogo AND id_opcion = $idOpcion ");
-    }
-
-    public function editarOpcionModel($datos)
-    {
-        return $this->db->query("UPDATE opcs_x_cats set nombre = '" . $datos['editarCatalogo'] . "' where id_opcion = " . $datos['idOpcionEdit'] . " and id_catalogo = 100");
     }
 
     function get_proyecto_lista_yola()
@@ -1138,6 +1117,7 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT lotx.idProyecto AS idResidencial, CONCAT(res.nombreResidencial, ' - ' , res.descripcion) AS descripcion  
         FROM loteXReubicacion lotx
 		INNER JOIN residenciales res ON res.idResidencial = lotx.idProyecto 
+        WHERE idResidencial IN (14, 21, 22, 25)
 		GROUP BY lotx.idProyecto,CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
     }
 
@@ -1759,7 +1739,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query('SELECT lf.*, lo.nombreLote, lo.tipo_estatus_regreso
         FROM lotesFusion lf
         INNER JOIN lotes lo on lo.idLote = lf.idLote
-        WHERE lf.idLotePvOrigen = ( SELECT idLotePvOrigen FROM lotesFusion WHERE idLote = ? )', $id_lote);
+        WHERE lf.idLotePvOrigen IN ( SELECT idLotePvOrigen FROM lotesFusion WHERE idLote = ? )', $id_lote);
         return $query;
     }
 

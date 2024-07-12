@@ -201,13 +201,14 @@ class Incidencias extends CI_Controller
     }
 
     public function AddVentaCompartida(){
-      $datosAse = explode(",",$this->input->post('usuarioid5'));
-      $coor = $this->input->post('usuarioid6');
-      $ger = $this->input->post('usuarioid7');
-      $sub = $this->input->post('usuarioid8');
+      $datosAse = explode(",",$this->input->post('elegir_asesor'));
+      $coor = $this->input->post('elegir_coordinador');
+      $ger = $this->input->post('elegir_gerente');
+      $sub = $this->input->post('elegir_subdirector');
+      $diReg = $this->input->post('elegir_diRegional');
       $id_cliente = $this->input->post('id_cliente');
       $id_lote = $this->input->post('id_lote');
-      $respuesta = array($this->Incidencias_model->AddVentaCompartida($datosAse[0],$coor,$ger,$sub,$id_cliente,$id_lote));
+      $respuesta = array($this->Incidencias_model->AddVentaCompartida($datosAse[0],$coor,$ger,$sub,$diReg,$id_cliente,$id_lote));
       echo json_encode($respuesta[0]);
     }
     
@@ -256,7 +257,49 @@ class Incidencias extends CI_Controller
     function getDatosAbonadoDispersion($idlote){
       echo json_encode($this->Incidencias_model->getDatosAbonadoDispersion($idlote)->result_array());
     }
-    
+
+    function comisionesUsuarios($idlote){
+      echo json_encode($this->Incidencias_model->comisionesUsuarios($idlote)->result_array());
+    }
+
+    public function catalogoUsuarios(){
+      echo json_encode($this->Incidencias_model->catalogoUsuarios()->result_array());
+  }
+
+  public function actualizarRol(){
+    $idLote= $this->input->post('idLote');
+    $id_rol= $this->input->post('id_rol');
+    $id_usuario= $this->input->post('id_usuario');
+    $modificadoPor = $this->session->userdata('id_usuario');
+    $proceso = $this->input->post ('proceso');
+
+    $resultado = $this->Incidencias_model->actualizarRol($idLote,$id_rol,$id_usuario,$modificadoPor,$proceso);
+    echo json_encode($resultado);
+}
+
+public function getUsers(){
+  echo json_encode($this->Incidencias_model->getUsers()->result_array());
+}
+
+public function updateUser(){
+  $idLote = $this->input->post('idLote');
+  $id_usuario = $this->input->post('id_usuario');
+  $id_rol = $this->input->post('id_rol');
+  $porcentaje = $this->input->post('porcentaje');
+  $id_cliente = $this->input->post('id_cliente');
+  $precio = $this->input->post('precioLote');
+
+  $respuesta = $this->Incidencias_model->updateUser($idLote,($precio*($porcentaje/100)),$id_cliente,$id_rol,$id_usuario,$porcentaje);
+  echo json_encode($respuesta);
+}
+
+public function listaRol(){
+
+  $puestos = $this->General_model->getCatOptionsEspecific(1,'1,2,3,7,9,87,88,89,90,91')->result_array();
+  echo json_encode($puestos);
+
+}
+
     public function getPagosByComision($id_comision){
       $respuesta = $this->Incidencias_model->getPagosByComision($id_comision);
       echo json_encode($respuesta); 

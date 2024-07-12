@@ -14,10 +14,8 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <div>
                                     <h3 class="card-title center-align" >Comisiones resguardo</h3>
-                                    <p class="card-title ">(Comisiones solictadas por colaboradores de sudirección y dirección de ventas)</p>
-                                    </div>
+                                    <p class="card-title pl-1">(Comisiones solictadas por colaboradores de sudirección y dirección de ventas)</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
@@ -36,13 +34,25 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
                                                 <div class="form-group overflow-hidden">
                                                     <label className="m-0" for="directivo_resguardo">Directivo</label>
                                                     <select name="directivo_resguardo" id="directivo_resguardo" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                                                <div class="form-group overflow-hidden">
+                                                    <label className="m-0" for="anio">Año</label>
+                                                    <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                                                <div class="form-group overflow-hidden">
+                                                    <label className="m-0" for="mes">Mes</label>
+                                                    <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
                                                 <div class="form-group select-gral overflow-hidden">
                                                     <label className="m-0" for="catalogo_resguardo">Proyecto</label>
                                                     <select class="selectpicker" id="catalogo_resguardo" name="catalogo_resguardo[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
@@ -60,6 +70,7 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
+                                                    <th>EMPRESA</th>
                                                     <th>REFERENCIA</th>
                                                     <th>PRECIO DEL LOTE</th>
                                                     <th>TOTAL DE LA COMISIÓN</th>
@@ -90,5 +101,5 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/resguardos/resguardos_comisiones.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/resguardos/revision_resguardos.js"></script>
 </body>
