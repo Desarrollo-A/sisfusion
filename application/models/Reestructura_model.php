@@ -50,7 +50,7 @@ class Reestructura_model extends CI_Model
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
         CASE WHEN (lo.estatus_preproceso = 2 AND (dxc2.flagProcesoContraloria = 0 OR dxc4.flagProcesoContraloria = 0)) THEN 'Elaboración de corrida' WHEN (lo.estatus_preproceso = 2 AND ((dxc2.flagProcesoContraloria = 1 AND dxc2.flagProcesoJuridico = 0) OR (dxc4.flagProcesoContraloria = 1 AND dxc4.flagProcesoJuridico = 0))) 
         THEN 'Elaboración de contrato y rescisión' ELSE oxc1.nombre END estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl3.totalContratoNumero, pxl3.totalPropuestas,
-        pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente,
+        pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente, dxc4.idLote AS idLoteXclienteFusion,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado,
         HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado, hdcountlf.totalContratoFirmadoFusion,
         lf1.totalCorridaFusion, lf2.totalCorridasFusionNumero, lf3.totalContratosFusion, lf4.totalContratoFusionNumero, lf5.totalContratoFirmadoFusionNumero, lf6.totalRescisionFusion,
