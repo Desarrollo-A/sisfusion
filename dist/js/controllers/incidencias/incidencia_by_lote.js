@@ -31,9 +31,6 @@ $(document).ready(function () {
             var nombre_diRegional = diRegional[i5]['name_user'];
             $("#elegir_diRegional").append($('<option>').val(id_usuario_diRegional).attr('data-value',id_usuario_diRegional ).text(id_usuario_diRegional+ "- "+ nombre_diRegional));
         }
-        $("#add_gerente").selectpicker('refresh');
-        $("#elegir_gerente").selectpicker('refresh');
-
         subdirector = data.filter((subdi) => subdi.id_rol == parseInt(2));
         len4 = subdirector.length;
         for( let i4 = 0; i4<len4; i4++){
@@ -46,8 +43,6 @@ $(document).ready(function () {
             $("#elegir_subdirector").append($('<option>').val(id_usuario_subdirector).attr('data-value',id_usuario_subdirector ).text(id_usuario_subdirector+ "- "+ nombre_subdirecto));
            
         }
-        $("#add_subdirector").selectpicker('refresh');
-        $("#elegir_subdirector").selectpicker('refresh');
 
         gerente = data.filter((gere) => gere.id_rol == parseInt(3));
         len3 = gerente.length;
@@ -60,8 +55,6 @@ $(document).ready(function () {
             $("#add_gerente").append($('<option>').val(id3).attr('data-value',id_usario_gerente ).text(id_usario_gerente+ "- "+ nombre_gerente));
             $("#elegir_gerente").append($('<option>').val(id_usario_gerente).attr('data-value',id_usario_gerente ).text(id_usario_gerente+ "- "+ nombre_gerente));
         }
-        $("#add_gerente").selectpicker('refresh');
-        $("#elegir_gerente").selectpicker('refresh');
 
         coordinador = data.filter((coor) => coor.id_rol == parseInt(9));
         len2 = coordinador.length;
@@ -75,8 +68,6 @@ $(document).ready(function () {
             $("#elegir_coordinador").append($('<option>').val(id_opcion_coordinador).attr('data-value',id_opcion_coordinador ).text(id_opcion_coordinador+ "- "+ nombre_coordinador)); 
         }
 
-        $("#add_coordinador").selectpicker('refresh');
-        $("#elegir_coordinador").selectpicker('refresh');
 
         asesor = data.filter((ases) => ases.id_rol == parseInt(7));
         len = coordinador.length;
@@ -89,8 +80,8 @@ $(document).ready(function () {
             $("#add_asesor").append($('<option>').val(id).attr('data-value',id_usuario_asesor ).text(id_usuario_asesor+ "- "+ nombre_asesor));
              
         }
-        $("#elegir_asesor").selectpicker('refresh');
-        $("#add_asesor").selectpicker('refresh');
+        $("#add_coordinador, #add_asesor, #add_gerente, #add_subdirector").selectpicker('refresh');
+        $("#elegir_coordinador, #elegir_gerente, #elegir_subdirector, #elegir_asesor").selectpicker('refresh');
         
     });
 
@@ -115,12 +106,11 @@ $("#modal_avisos").draggable({
     handle: ".modal-header"
 }); 
 
-
+// ---------------------------Inicia funciones del botón con la clase Inventario-----------------------
 
 var rol  = id_rol_general;
 const id_usuariosPermisos = [1,2767,2826,4878,5957,2749,9775];
 var id_user  = id_usuario_general;
-
 var banderaPermisos = id_usuariosPermisos.includes(id_usuario_general) ? 1 : 0;
 var idLote = 0;
 var banderaAgregarVenta=0;
@@ -143,6 +133,138 @@ $('#agregar_venta_compartida').on('click', function(){
 
 })
 
+var banderaBoton =0;
+$('.boton_usuario').click(function(ef) {
+    ef.preventDefault();
+    $("#boton_vCompartida").prop('disabled',false);
+    $('#add_subdirector, #add_coordinador, #add_gerente, #add_asesor').attr('required', true);
+    $('#puesto_usuario, #add_coordinador, #add_gerente, #add_subdirector, #add_asesor').val('');
+    $("#puesto_usuario, #add_coordinador, #add_gerente, #add_subdirector, #add_asesor").selectpicker("refresh");
+    $('#input_coordinador, #input_asesor, #input_gerente, #input_subdirector').addClass('hide');
+
+    var selectId = $(this).attr('data-target');
+                        
+    switch (selectId) {
+        case 'select1':
+            banderaBoton = 1;
+            $('#titulo_modal_cordi').text('AGREGAR COORDINADOR');                           
+            break;
+        case 'select2':
+            banderaBoton = 2;
+            $('#titulo_modal_cordi').text('AGREGAR GERENTE');
+            break;
+        case 'select3':
+            banderaBoton = 3;
+            $('#titulo_modal_cordi').text('AGREGAR SUBDIRECTOR');
+            break;
+        case 'select4':
+            banderaBoton = 4;
+            $('#titulo_modal_cordi').text('AGREGAR DIRECTOR REGIONAL');
+            break;
+        case 'select5':
+            banderaBoton = 5;
+            $('#titulo_modal_cordi').text('AGREGAR ASESOR');
+            break;
+        default:
+            $('#modal_coordinador').modal('hide');
+            alerts.showNotification("top", "right", "Ocurrio un error, intenta mas tarde.", "danger");
+            break;
+    }
+
+    $('#modal_coordinador').modal('show');
+});
+
+$('#puesto_usuario').change(function(){
+    var seleccionado = $('#puesto_usuario').val();
+
+    if(seleccionado == 2){
+        $('#input_subdirector').removeClass('hide');
+        $('#add_subdirector').attr('required', true);
+        $('#add_coordinador, #add_gerente, #add_asesor').removeAttr('required');
+        $('#input_asesor,#input_gerente,#input_coordinador').addClass('hide');
+        $("#add_coordinador, #add_gerente, #add_asesor").selectpicker("refresh");
+        $('#add_coordinador, #add_gerente, #add_asesor').val('');
+        $("#add_coordinador, #add_gerente, #add_asesor").trigger('change');
+
+    }else if(seleccionado == 3){
+        $('#input_gerente').removeClass('hide');
+        $('#add_gerente').attr('required', true);
+        $('#add_coordinador, #add_subdirector, #add_asesor').removeAttr('required');
+        $('#input_asesor, #input_subdirector, #input_coordinador').addClass('hide');
+        $("#add_coordinador, #add_subdirector, #add_asesor").selectpicker("refresh");
+        $('#add_coordinador, #add_subdirector, #add_asesor').val('');
+        $("#add_coordinador, #add_subdirector, #add_asesor").trigger('change');
+    }else if(seleccionado == 9){
+        $('#input_coordinador').removeClass('hide');
+        $('#add_coordinador').attr('required', true);
+        $('#add_gerente, #add_subdirector, #add_asesor').removeAttr('required');
+        $('#input_asesor, #input_gerente, #input_subdirector').addClass('hide');
+        $("#add_gerente, #add_subdirector, #add_asesor").selectpicker("refresh");
+        $('#add_gerente, #add_subdirector, #add_asesor').val('');
+        $("#add_gerente, #add_subdirector, #add_asesor").trigger('change');
+
+    }else if(seleccionado == 7){
+        $('#input_asesor').removeClass('hide');
+        $('#add_asesor').attr('required', true);
+        $('#add_gerente, #add_subdirector, #add_coordinador').removeAttr('required');
+        $('#input_gerente, #input_subdirector, #input_coordinador').addClass('hide');
+        $("#add_gerente, #add_subdirector, #add_coordinador").selectpicker("refresh");
+        $('#add_gerente, #add_subdirector, #add_coordinador').val('');
+        $("#add_gerente, #add_subdirector, #add_coordinador").trigger('change');
+    }
+       
+});
+
+$("#agregar_lider").on("submit", function(e){ 
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    $("#boton_vCompartida").prop('disabled',true);
+
+
+    var coordi = $('#add_coordinador').val();
+    var id1 = coordi.split(',');
+    var id_usuario1 = id1[0];
+    var name1 = id1[1];
+
+     var gere = $('#add_gerente').val();
+     var id2 = gere.split(',');
+     var id_usuario2 = id2[0];
+     var name2 = id2[1];
+
+     var subd = $('#add_subdirector').val();
+     var id3 = subd.split(',');
+     var id_usuario3 = id3[0];
+     var name3 = id3[1];
+
+     var asesor = $('#add_asesor').val();
+     var id4 = asesor.split(',');
+     var id_usuario4 = id4[0];
+     var name4 = id4[1];
+
+     if(banderaBoton == 1 ){
+        inputselect = 'elegir_coordinador';
+     }else if(banderaBoton == 2){
+        inputselect = 'elegir_gerente';
+     } else if(banderaBoton == 3){
+         inputselect = 'elegir_subdirector';
+     } else if(banderaBoton == 4){
+        inputselect = 'elegir_diRegional';
+     } else if(banderaBoton == 5){
+       inputselect = 'elegir_asesor';
+     }
+
+     id_usuario2 == 0 && id_usuario3 == 0 && id_usuario4 == 0 && id_usuario1 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario1).attr('data-value', id_usuario1).text(id_usuario1+' - '+name1))+ $('#'+inputselect+'').val(parseInt(id_usuario1)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
+     id_usuario1 == 0 && id_usuario3 == 0 && id_usuario4 == 0 && id_usuario2 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario2).attr('data-value', id_usuario2).text(id_usuario2+' - '+name2))+ $('#'+inputselect+'').val(parseInt(id_usuario2)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
+     id_usuario2 == 0 && id_usuario1 == 0 && id_usuario4 == 0 && id_usuario3 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario3).attr('data-value', id_usuario3).text(id_usuario3+' - '+name3))+ $('#'+inputselect+'').val(parseInt(id_usuario3)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
+     id_usuario2 == 0 && id_usuario1 == 0 && id_usuario3 == 0 && id_usuario4 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario4).attr('data-value', id_usuario4).text(id_usuario4+' - '+name4))+ $('#'+inputselect+'').val(parseInt(id_usuario4)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
+
+
+     $('#'+inputselect+'').selectpicker("refresh");
+
+    $('#modal_coordinador').modal('hide');
+
+});
+
 function selectOpcion(){
     banderaAgregarVenta = 0 ;
 
@@ -150,7 +272,6 @@ function selectOpcion(){
     idLote     = document.getElementById("lotes1").value;
     cuantos = document.getElementById("ventaCompartida").value;
     
-
     var parent = $('#opcion').val();
     $('#modal_avisitos').modal('hide');
     document.getElementById('UserSelect').innerHTML='';
@@ -158,8 +279,6 @@ function selectOpcion(){
     $("#usuarioid4").val('');
     $('#usuarioid4').val('default');
     $("#usuarioid4").selectpicker("refresh");
-
-   
 
     if(parent == 1){
         $.getJSON( general_base_url + "incidencias/getUserInventario/"+id_cliente).done( function( data ){
@@ -222,7 +341,6 @@ function selectOpcion(){
             $('[data-toggle="tooltip"]').tooltip();
             $('#miModalVcNew .vcnew').html('');
             $("#btn_vcnew").prop('disabled',false);
-            // let cuantos = data.length;
             if(cuantos == 0 || banderaAgregarVenta==1){
                 $('#form_vcNew')[0].reset();
 
@@ -230,210 +348,29 @@ function selectOpcion(){
                 $("#elegir_asesor, #elegir_coordinador, #elegir_gerente,#elegir_subdirector, #elegir_diRegional").selectpicker("refresh");
                 $("#elegir_asesor, #elegir_coordinador, #elegir_gerente,#elegir_subdirector, #elegir_diRegional").val('default');
                 
-
                 $('#miModalVcNew .vcnew').append(`
                 <input type="hidden" id="id_lote" value="${idLote}" name="id_lote" >
                 <input type="hidden" id="id_cliente" value="${id_cliente}" name="id_cliente" >`);
-
-                $('#puesto_usuario').change(function(){
-                    var seleccionado = $('#puesto_usuario').val();
-
-                    if(seleccionado == 2){
-                        $('#input_subdirector').removeClass('hide');
-                        $('#add_subdirector').attr('required', true);
-                        $('#add_coordinador').removeAttr('required');
-                        $("#add_gerente").removeAttr('required');
-                        $('#add_asesor').removeAttr('required');
-                        $('#input_asesor').addClass('hide');
-                        $('#input_gerente').addClass('hide');
-                        $('#input_coordinador').addClass('hide');
-                        $("#add_gerente").selectpicker("refresh");
-                        $('#add_coordinador').selectpicker("refresh");
-                        $('#add_asesor').selectpicker("refresh");
-                        $('#add_asesor').val('');
-                        $('#add_gerente').val('');
-                        $('#add_coordinador').val('');
-                        $("#add_gerente").trigger('change');
-                        $("#add_coordinador").trigger('change');
-                        $("#add_asesor").trigger('change');
-
-                    }else if(seleccionado == 3){
-                        $('#input_gerente').removeClass('hide');
-                        $('#add_gerente').attr('required', true);
-                        $('#add_coordinador').removeAttr('required');
-                        $("#add_subdirector").removeAttr('required');
-                        $('#add_asesor').removeAttr('required');
-                        $('#input_asesor').addClass('hide');
-                        $('#input_subdirector').addClass('hide');
-                        $('#input_coordinador').addClass('hide');
-                        $("#add_subdirector").selectpicker("refresh");
-                        $('#add_coordinador').selectpicker("refresh");
-                        $('#add_asesor').selectpicker("refresh");
-                        $('#add_asesor').val('');
-                        $('#add_subdirector').val('');
-                        $('#add_coordinador').val('');
-                        $("#add_subdirector").trigger('change');
-                        $("#add_coordinador").trigger('change');
-                        $("#add_asesor").trigger('change');
-
-                    }else if(seleccionado == 9){
-                        $('#input_coordinador').removeClass('hide');
-                        $('#add_coordinador').attr('required', true);
-                        $('#add_gerente').removeAttr('required');
-                        $("#add_subdirector").removeAttr('required');
-                        $('#add_asesor').removeAttr('required');
-                        $('#input_asesor').addClass('hide');
-                        $('#input_gerente').addClass('hide');
-                        $('#input_subdirector').addClass('hide');
-                        $("#add_gerente").selectpicker("refresh");
-                        $('#add_subdirector').selectpicker("refresh");
-                        $('#add_asesor').selectpicker("refresh");
-                        $('#add_gerente').val('');
-                        $('#add_subdirector').val('');
-                        $('#add_asesor').val('');
-                        $("#add_gerente").trigger('change');
-                        $("#add_subdirector").trigger('change');
-                        $("#add_asesor").trigger('change');
-                       
-                    }else if(seleccionado == 7){
-                        $('#input_asesor').removeClass('hide');
-                        $('#add_asesor').attr('required', true);
-                        $('#add_gerente').removeAttr('required');
-                        $("#add_subdirector").removeAttr('required');
-                        $("#add_coordinador").removeAttr('required');
-                        $('#input_gerente').addClass('hide');
-                        $('#input_subdirector').addClass('hide');
-                        $('#input_coordinador').addClass('hide');
-                        $("#add_gerente").selectpicker("refresh");
-                        $('#add_subdirector').selectpicker("refresh");
-                        $('#add_coordinador').selectpicker("refresh");
-                        $('#add_gerente').val('');
-                        $('#add_subdirector').val('');
-                        $('#add_coordinador').val('');
-                        $("#add_gerente").trigger('change');
-                        $("#add_subdirector").trigger('change');
-                        $("#add_coordinador").trigger('change');
-
-                    }
-                       
-                });
-
-                var banderaBoton =0;
-
-                $('.boton_usuario').click(function(ef) {
-                    
-                    ef.preventDefault();
-                    // $('#modal_coordinador').modal('show');
-                    $("#boton_vCompartida").prop('disabled',false);
-                    $('#modal_coordinador').modal('show');
-                    $('#add_subdirector').attr('required', true);
-                    $('#add_coordinador').attr('required', true);
-                    $('#add_gerente').attr('required', true);
-                    $('#puesto_usuario').val('');
-                    $('#add_coordinador').val('');
-                    $('#add_gerente').val('');
-                    $('#add_subdirector').val('');
-                    $("#puesto_usuario").selectpicker("refresh");
-                    $("#add_coordinador").selectpicker("refresh");
-                    $("#add_subdirector").selectpicker("refresh");
-                    $("#add_gerente").selectpicker("refresh");
-                    $('#input_coordinador').addClass('hide');
-                    $('#input_asesor').addClass('hide');
-                    $('#input_gerente').addClass('hide');
-                    $('#input_subdirector').addClass('hide')
-
-                    
-                    var selectId = $(this).attr('data-target');
-                                        
-                    switch (selectId) {
-                        case 'select1':
-                            banderaBoton = 1;
-                            $('#titulo_modal_cordi').text('AGREGAR COORDINADOR');                           
-                            break;
-                        case 'select2':
-                            banderaBoton = 2;
-                            $('#titulo_modal_cordi').text('AGREGAR GERENTE');
-                            break;
-                        case 'select3':
-                            banderaBoton = 3;
-                            $('#titulo_modal_cordi').text('AGREGAR SUBDIRECTOR');
-                            break;
-                        case 'select4':
-                            banderaBoton = 4;
-                            $('#titulo_modal_cordi').text('AGREGAR DIRECTOR REGIONAL');
-                            break;
-                        case 'select5':
-                            banderaBoton = 5;
-                            $('#titulo_modal_cordi').text('AGREGAR ASESOR');
-                            break;
-                        default:
-                            $('#modal_coordinador').modal('hide');
-                            alerts.showNotification("top", "right", "Ocurrio un error, intenta mas tarde.", "danger");
-                            break;
-                    }
-
-                    $('#modal_coordinador').modal('show');
-                });
-
-                $("#agregar_lider").on("submit", function(e){ 
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    $("#boton_vCompartida").prop('disabled',true);
-
-
-                    var coordi = $('#add_coordinador').val();
-                    var id1 = coordi.split(',');
-                    var id_usuario1 = id1[0];
-                    var name1 = id1[1];
-
-                     var gere = $('#add_gerente').val();
-                     var id2 = gere.split(',');
-                     var id_usuario2 = id2[0];
-                     var name2 = id2[1];
-
-                     var subd = $('#add_subdirector').val();
-                     var id3 = subd.split(',');
-                     var id_usuario3 = id3[0];
-                     var name3 = id3[1];
-
-                     var asesor = $('#add_asesor').val();
-                     var id4 = asesor.split(',');
-                     var id_usuario4 = id4[0];
-                     var name4 = id4[1];
-
-                     if(banderaBoton == 1 ){
-                        inputselect = 'elegir_coordinador';
-                     }else if(banderaBoton == 2){
-                        inputselect = 'elegir_gerente';
-                     } else if(banderaBoton == 3){
-                         inputselect = 'elegir_subdirector';
-                     } else if(banderaBoton == 4){
-                        inputselect = 'elegir_diRegional';
-                     } else if(banderaBoton == 5){
-                       inputselect = 'elegir_asesor';
-                     }
-
-                     id_usuario2 == 0 && id_usuario3 == 0 && id_usuario4 == 0 && id_usuario1 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario1).attr('data-value', id_usuario1).text(name1))+ $('#'+inputselect+'').val(parseInt(id_usuario1)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
-                     id_usuario1 == 0 && id_usuario3 == 0 && id_usuario4 == 0 && id_usuario2 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario2).attr('data-value', id_usuario2).text(name2))+ $('#'+inputselect+'').val(parseInt(id_usuario2)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
-                     id_usuario2 == 0 && id_usuario1 == 0 && id_usuario4 == 0 && id_usuario3 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario3).attr('data-value', id_usuario3).text(name3))+ $('#'+inputselect+'').val(parseInt(id_usuario3)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
-                     id_usuario2 == 0 && id_usuario1 == 0 && id_usuario3 == 0 && id_usuario4 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario3).attr('data-value', id_usuario4).text(name4))+ $('#'+inputselect+'').val(parseInt(id_usuario4)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
-
-
-                     $('#'+inputselect+'').selectpicker("refresh");
-
-                    $('#modal_coordinador').modal('hide');
-
-                });
-                /**----------------------------------------------------------------------- */
+                
                 $('#miModalVcNew').modal('show');
 
             }
             else if(cuantos == 1){
 
                 $('#modal_vCompartida').modal('show');
+                $('#agregar_venta_compartida').prop('disabled', false);
+                $('#agregar_venta_compartida').removeClass('btn-gray');
+                
                 banderaAgregarVenta = 0;
 
                 $.getJSON( general_base_url + "Incidencias/getUserVC/"+id_cliente).done( function( data ){
+                    let cVentas = data.length;
+
+                    if(cVentas == 3){
+                        $('#agregar_venta_compartida').prop('disabled', true);
+                        $('#agregar_venta_compartida').addClass('btn-gray');
+                        alerts.showNotification("top", "right", "Esta lote ya alcanzó el limite de ventas compartidas.", "warning");
+                    }
 
                     $('#miModalVc .vc').html('');
                     $('#miModalVc .vc').append(`
@@ -457,9 +394,6 @@ function selectOpcion(){
                         <input type="hidden" value="${data[0].id_asesor}" id="asesor" name="asesor">
                         <input type="hidden" value="${data[0].id_coordinador}" id="coordinador" name="coordinador">
                         <input type="hidden" value="${data[0].id_gerente}" id="gerente" name="gerente">
-                
-                
-                
                         <input type="hidden" value="${data[0].asesor}" id="asesorname" name="asesorname">
                         <input type="hidden" value="${data[0].coordinador}" id="coordinadorname" name="coordinadorname">
                         <input type="hidden" value="${data[0].gerente}" id="gerentename" name="gerentename">
@@ -467,7 +401,6 @@ function selectOpcion(){
                         <input type="hidden" value="${id_cliente}" id="idCliente" name="idCliente">
                         
                         `);
-                        // $('#miModalVc').modal('show');
                 });
                 }
                 else if(cuantos == 2){
@@ -536,6 +469,7 @@ function selectOpcion(){
     }
     
 }
+// ---------------------------Termina funciones del botón con la clase Inventario-----------------------
 
 $("#form_roles").on("submit" , function(e){
     e.preventDefault();
