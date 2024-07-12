@@ -8,7 +8,7 @@ class Incidencias_model extends CI_Model {
     }
     
     public function getInCommissions($idlote){
-        $query = $this->db-> query("(SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede,sd.nombre, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre AS nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre AS enganche_tipo, cl.lugar_prospeccion, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, di.id_usuario AS id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, pc.fecha_modificacion, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, mc.opcion
+        $query = $this->db-> query("(SELECT DISTINCT(l.idLote),cl.proceso, com.estatus, cl.plan_comision, l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede,sd.nombre, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre AS nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre AS enganche_tipo, cl.lugar_prospeccion, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, di.id_usuario AS id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, pc.fecha_modificacion, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, mc.opcion
         FROM  lotes l
         INNER JOIN  clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN  condominios cond ON l.idCondominio=cond.idCondominio
@@ -25,9 +25,10 @@ class Incidencias_model extends CI_Model {
         LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
 		LEFT JOIN mensualidad_cliente mc ON mc.id_cliente = l.idCliente
+        LEFT JOIN comisiones com ON com.id_lote = l.idLote and com.estatus= 1
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 AND cl.status = 1 AND l.status = 1 AND l.idLote = $idlote)
         UNION
-        (SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede, sd.nombre, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ', cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre AS nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre AS enganche_tipo, cl.lugar_prospeccion, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, di.id_usuario AS id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, pc.fecha_modificacion, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, mc.opcion
+        (SELECT DISTINCT(l.idLote),cl.proceso, com.estatus,cl.plan_comision, l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede, sd.nombre, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ', cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre AS nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre AS enganche_tipo, cl.lugar_prospeccion, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, di.id_usuario AS id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, pc.fecha_modificacion, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, mc.opcion
         FROM  lotes l
         INNER JOIN  clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN  condominios cond ON l.idCondominio=cond.idCondominio
@@ -44,8 +45,32 @@ class Incidencias_model extends CI_Model {
         LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
 		LEFT JOIN mensualidad_cliente mc ON mc.id_cliente = l.idCliente
+        LEFT JOIN comisiones com ON com.id_lote = l.idLote and com.estatus= 1
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 AND cl.status = 1 AND l.status = 1 AND l.idLote = $idlote AND l.registro_comision IN (0,8))");
         return $query->result();
+    }
+
+    function busquedaUsuarios($rol){
+        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS name_user FROM usuarios WHERE id_rol = $rol");
+    }
+
+    function getUsers(){
+        return $this->db->query("SELECT u.id_usuario,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS name_user,id_rol,r.idRol 
+                                FROM usuarios u
+                                LEFT JOIN (SELECT idRol, idUsuario FROM roles_x_usuario GROUP BY idRol, idUsuario) r ON r.idUsuario=u.id_usuario
+                                WHERE u.id_usuario NOT IN (1) AND u.estatus IN (1,3) AND u.tipo IN (1,2) and u.id_rol IN (1,2,3,7,9,87,88,89,90,91,45)");
+
+    }
+    function updateUser($idLote,$comision,$id_cliente,$id_rol,$id_usuario,$porcentaje){
+        $comisionesEmpresa = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote AND id_usuario= $id_usuario AND estatus=1")->result_array();
+        $comisiones = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote AND estatus=1")->result_array();
+
+        if(count($comisionesEmpresa) == 0 && count($comisiones) > 0){
+        return $this->db->query("INSERT INTO comisiones
+                ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente]) VALUES (".$idLote.",$id_usuario,".$comision.", 1, 'SE AGREGÓ COMISIONISTA', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(),$porcentaje, GETDATE(), $id_rol,$id_cliente)");
+        } else{
+            return 0;
+        }
     }
 
 
@@ -524,7 +549,13 @@ class Incidencias_model extends CI_Model {
         }
 
         public function getUserVC($id_cliente){
-            return  $this->db->query("SELECT vc.id_vcompartida,cl.id_cliente,cl.nombre, cl.apellido_paterno, cl.apellido_materno, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector,di.id_usuario AS id_lider, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS lider
+            return  $this->db->query("SELECT vc.id_vcompartida,cl.id_cliente,cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
+            ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, 
+            co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, 
+            ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, 
+            su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector,
+            re.id_usuario AS id_regional, CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) AS regional,
+            di.id_usuario AS id_lider, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS lider
             FROM ventas_compartidas vc
             INNER JOIN clientes cl ON vc.id_cliente = cl.id_cliente
             INNER JOIN  usuarios ae ON ae.id_usuario = vc.id_asesor
@@ -532,8 +563,1164 @@ class Incidencias_model extends CI_Model {
             LEFT JOIN  usuarios ge ON ge.id_usuario = vc.id_gerente
             LEFT JOIN  usuarios su ON su.id_usuario = vc.id_subdirector
             LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
+            LEFT JOIN  usuarios re ON re.id_usuario = vc.id_regional
             WHERE cl.id_cliente=$id_cliente AND vc.estatus = 1 AND cl.status = 1");
         }
+
+        public function getUserVP($idLote){
+            return  $this->db->query("SELECT
+            CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, 
+            CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador,
+            CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, 
+            CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector,
+            CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) AS regional
+            FROM lotes l
+            INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
+            INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios co ON co.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
+            LEFT JOIN usuarios su ON su.id_usuario = cl.id_subdirector
+            LEFT JOIN usuarios re ON re.id_usuario = cl.id_regional
+            WHERE l.idLote = $idLote  AND cl.status = 1");
+        }
+
+        public function updateVentaCompartida($id, $idLote, $idCliente){
+            $modificadoPor = $this->session->userdata('id_usuario');
+            
+            $cmd = ("UPDATE ventas_compartidas SET estatus = 0, modificado_por = $modificadoPor WHERE id_vcompartida = $id");
+            $respuesta =  $this->db->query($cmd);
+
+            return $respuesta ? 1 : 0;
+        }
+
+        /* public function updateVentaCompartida($id, $idLote, $idCliente){
+
+            $modificadoPor = $this->session->userdata('id_usuario');
+
+            // Se consulta quien es el adicional a la venta compartida
+            $query = $this->db->query("SELECT ase.id_asesor, co.id_coordinador, ge.id_gerente, sub.id_subdirector, reg.id_regional
+            FROM clientes cli
+            LEFT JOIN ventas_compartidas ase ON ase.id_cliente = cli.id_cliente AND cli.id_asesor != ase.id_asesor AND ase.id_vcompartida = $id
+            LEFT JOIN ventas_compartidas co ON co.id_cliente = cli.id_cliente AND co.id_coordinador != cli.id_coordinador AND co.id_vcompartida = $id
+            LEFT JOIN ventas_compartidas ge ON ge.id_cliente = cli.id_cliente AND ge.id_gerente != cli.id_gerente AND ge.id_vcompartida = $id
+            LEFT JOIN ventas_compartidas sub ON sub.id_cliente = cli.id_cliente AND sub.id_subdirector != cli.id_subdirector AND sub.id_vcompartida = $id
+            LEFT JOIN ventas_compartidas reg ON reg.id_cliente = cli.id_cliente AND reg.id_regional != cli.id_regional AND reg.id_regional != 0 AND reg.id_vcompartida= $id
+            WHERE cli.id_cliente IN 
+            (SELECT idCliente FROM lotes WHERE idLote = $idLote)")->result();
+
+            $asesor = '';
+            $coordinador = '';
+            $gerente = '';
+            $subdirector = '';
+            $regional = '';
+
+            $queryEstatus = $this->db->query("SELECT estatus
+            FROM pago_comision_ind
+            WHERE id_comision IN (
+                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote)
+            ORDER BY id_usuario")->result();
+
+            $estusUno = true; // Variable para verificar si todos los estatus son 1
+
+            foreach ($queryEstatus as $row) {
+                if ($row->estatus != 1) {
+                    $estusUno = false; // Si encontramos un estatus diferente de 1, cambiamos la variable a false
+                    break; // No necesitamos seguir buscando, salimos del bucle
+                }
+            }
+
+            if ($estusUno) {
+                // Todos los registros tienen estatus = 1
+
+                foreach ($query as $row) {
+                    if ($row->id_asesor != null) {
+                        $asesor = $row->id_asesor;
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $asesor AND id_lote = $idLote)
+                        AND comi.id_usuario != $asesor AND comi.estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta compartida
+                        $valoresC = $this->db->query("SELECT comision_total, porcentaje_decimal 
+                        FROM comisiones
+                        WHERE id_usuario = $asesor AND id_lote = $idLote
+                        ");
+
+                        // Comisión y porcentaje del usuarios de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.comision_total, comi.porcentaje_decimal 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $asesor AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $asesor AND id_lote = $idLote)
+                        ");
+
+                        $rowValores = $valoresC ->row();
+                        $comision = $rowValores->comision_total;
+                        $porcentaje = $rowValores->porcentaje_decimal;
+
+                        $rowValoresP = $valoresP ->row();
+                        $comisionP = $rowValoresP->comision_total;
+                        $porcentajeP = $rowValoresP->porcentaje_decimal;
+
+                        // Porcentaje y comision proporcional individual para usuarios principales
+                        $comisionRep = ($comisionP/$count);
+                        $porcentajeRep = ($porcentajeP/$count);
+
+                        // Porcentaje y comision resultante para usuarios de venta principal
+                        $comisionPr =  $comisionRep + $comisionP;
+                        $porcentajePr = $porcentajeRep + $porcentajeP;
+
+                        // Porcentaje y comision resultante para usuario de venta compartida
+                        $comisionC = $comision - $comisionRep;
+                        $porcentajeC = $porcentaje - $porcentajeRep;
+                        
+                        // Se ajustan paramentros de los usuarios principales
+                        $updateUsP = $this->db->query("UPDATE comisiones 
+                        SET comision_total = $comisionPr,
+                            porcentaje_decimal = $porcentajePr, 
+                            modificado_por = '$modificadoPor'
+                        WHERE id_lote = $idLote 
+                          AND id_usuario IN (
+                              SELECT comi.id_usuario 
+                              FROM comisiones comi
+                              WHERE id_lote = $idLote 
+                                AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $asesor)
+                                AND comi.id_usuario != $asesor
+                          )");
+
+                          // Se ajustan paramentros a usuario compartido
+                          if ($updateUsP) {
+                            // Segunda actualización: usuario compartido
+                            $updateUsC = $this->db->query("UPDATE comisiones 
+                                                    SET comision_total = $comisionC,
+                                                        porcentaje_decimal = $porcentajeC, 
+                                                        estatus = 0,
+                                                        modificado_por = '$modificadoPor'
+                                                    WHERE id_lote = $idLote 
+                                                    AND id_usuario = $asesor");
+                          }
+
+                        if ($updateUsC) {
+
+                            $ventasCompartidas = $this->db->query("SELECT * FROM ventas_compartidas 
+                            WHERE id_cliente = $idCliente AND id_asesor = $asesor");
+
+                            if($ventasCompartidas->num_rows() == 1){
+                            // Se eliminan todos los registros en estatus 1
+                            $this->db->query("DELETE FROM pago_comision_ind
+                            WHERE id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote AND id_usuario = $asesor
+                            )");
+
+                            }
+                        }else{
+                            return 0;
+                        }
+                    }
+                    if ($row->id_coordinador != null) {
+                        $coordinador = $row->id_coordinador;
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $coordinador AND id_lote = $idLote)
+                        AND comi.id_usuario != $coordinador AND comi.estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta compartida
+                        $valoresC = $this->db->query("SELECT comision_total, porcentaje_decimal 
+                        FROM comisiones
+                        WHERE id_usuario = $coordinador AND id_lote = $idLote
+                        ");
+
+                        // Comisión y porcentaje del usuarios de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.comision_total, comi.porcentaje_decimal 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $coordinador AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $coordinador AND id_lote = $idLote)
+                        ");
+
+                        $rowValores = $valoresC ->row();
+                        $comision = $rowValores->comision_total;
+                        $porcentaje = $rowValores->porcentaje_decimal;
+
+                        $rowValoresP = $valoresP ->row();
+                        $comisionP = $rowValoresP->comision_total;
+                        $porcentajeP = $rowValoresP->porcentaje_decimal;
+
+                        // Porcentaje y comision proporcional individual para usuarios principales
+                        $comisionRep = ($comisionP/$count);
+                        $porcentajeRep = ($porcentajeP/$count);
+
+                        // Porcentaje y comision resultante para usuarios de venta principal
+                        $comisionPr =  $comisionRep + $comisionP;
+                        $porcentajePr = $porcentajeRep + $porcentajeP;
+
+                        // Porcentaje y comision resultante para usuario de venta compartida
+                        $comisionC = $comision - $comisionRep;
+                        $porcentajeC = $porcentaje - $porcentajeRep;
+                        
+                        // Se ajustan paramentros de los usuarios principales
+                        $updateUsP = $this->db->query("UPDATE comisiones 
+                        SET comision_total = $comisionPr,
+                            porcentaje_decimal = $porcentajePr, 
+                            modificado_por = '$modificadoPor'
+                        WHERE id_lote = $idLote 
+                          AND id_usuario IN (
+                              SELECT comi.id_usuario 
+                              FROM comisiones comi
+                              WHERE id_lote = $idLote 
+                                AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $coordinador)
+                                AND comi.id_usuario != $coordinador
+                          )");
+
+                          // Se ajustan paramentros a usuario compartido
+                          if ($updateUsP) {
+                            // Segunda actualización: usuario compartido
+                            $updateUsC = $this->db->query("UPDATE comisiones 
+                                                    SET comision_total = $comisionC,
+                                                        porcentaje_decimal = $porcentajeC, 
+                                                        estatus = 0,
+                                                        modificado_por = '$modificadoPor'
+                                                    WHERE id_lote = $idLote 
+                                                    AND id_usuario = $coordinador");
+                          }
+
+                        if ($updateUsC) {
+
+                            $ventasCompartidas = $this->db->query("SELECT * FROM ventas_compartidas 
+                            WHERE id_cliente = $idCliente AND id_asesor = $coordinador");
+
+                            if($ventasCompartidas->num_rows() == 1){
+                            // Se eliminan todos los registros en estatus 1
+                            $this->db->query("DELETE FROM pago_comision_ind
+                            WHERE id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote AND id_usuario = $coordinador
+                            )");
+
+                            }
+                        }else{
+                            return 0;
+                        }
+                    }
+                    if ($row->id_gerente != null) {
+                        $gerente = $row->id_gerente;
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $gerente AND id_lote = $idLote)
+                        AND comi.id_usuario != $gerente AND comi.estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta compartida
+                        $valoresC = $this->db->query("SELECT comision_total, porcentaje_decimal 
+                        FROM comisiones
+                        WHERE id_usuario = $gerente AND id_lote = $idLote
+                        ");
+
+                        // Comisión y porcentaje del usuarios de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.comision_total, comi.porcentaje_decimal 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $gerente AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $gerente AND id_lote = $idLote)
+                        ");
+
+                        $rowValores = $valoresC ->row();
+                        $comision = $rowValores->comision_total;
+                        $porcentaje = $rowValores->porcentaje_decimal;
+
+                        $rowValoresP = $valoresP ->row();
+                        $comisionP = $rowValoresP->comision_total;
+                        $porcentajeP = $rowValoresP->porcentaje_decimal;
+
+                        // Porcentaje y comision proporcional individual para usuarios principales
+                        $comisionRep = ($comisionP/$count);
+                        $porcentajeRep = ($porcentajeP/$count);
+
+                        // Porcentaje y comision resultante para usuarios de venta principal
+                        $comisionPr =  $comisionRep + $comisionP;
+                        $porcentajePr = $porcentajeRep + $porcentajeP;
+
+                        // Porcentaje y comision resultante para usuario de venta compartida
+                        $comisionC = $comision - $comisionRep;
+                        $porcentajeC = $porcentaje - $porcentajeRep;
+                        
+                        // Se ajustan paramentros de los usuarios principales
+                        $updateUsP = $this->db->query("UPDATE comisiones 
+                        SET comision_total = $comisionPr,
+                            porcentaje_decimal = $porcentajePr, 
+                            modificado_por = '$modificadoPor'
+                        WHERE id_lote = $idLote 
+                          AND id_usuario IN (
+                              SELECT comi.id_usuario 
+                              FROM comisiones comi
+                              WHERE id_lote = $idLote 
+                                AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $gerente)
+                                AND comi.id_usuario != $gerente
+                          )");
+
+                          // Se ajustan paramentros a usuario compartido
+                          if ($updateUsP) {
+                            // Segunda actualización: usuario compartido
+                            $updateUsC = $this->db->query("UPDATE comisiones 
+                                                    SET comision_total = $comisionC,
+                                                        porcentaje_decimal = $porcentajeC, 
+                                                        estatus = 0,
+                                                        modificado_por = '$modificadoPor'
+                                                    WHERE id_lote = $idLote 
+                                                    AND id_usuario = $gerente");
+                          }
+
+                        if ($updateUsC) {
+
+                            $ventasCompartidas = $this->db->query("SELECT * FROM ventas_compartidas 
+                            WHERE id_cliente = $idCliente AND id_asesor = $gerente");
+
+                            if($ventasCompartidas->num_rows() == 1){
+                            // Se eliminan todos los registros en estatus 1
+                            $this->db->query("DELETE FROM pago_comision_ind
+                            WHERE id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote AND id_usuario = $gerente
+                            )");
+
+                            }
+                        }else{
+                            return 0;
+                        }
+                    }
+
+                    if ($row->id_subdirector != null) {
+                        $subdirector = $row->id_subdirector;
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        LEFT JOIN usuarios us ON us.id_usuario = comi.id_usuario
+                        WHERE id_lote = $idLote AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $subdirector AND id_lote = $idLote)
+                        AND comi.id_usuario != $subdirector AND comi.estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta compartida
+                        $valoresC = $this->db->query("SELECT comision_total, porcentaje_decimal 
+                        FROM comisiones
+                        WHERE id_usuario = $subdirector AND id_lote = $idLote
+                        ");
+
+                        // Comisión y porcentaje del usuarios de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.comision_total, comi.porcentaje_decimal 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $subdirector AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $subdirector AND id_lote = $idLote)
+                        ");
+
+                        $rowValores = $valoresC ->row();
+                        $comision = $rowValores->comision_total;
+                        $porcentaje = $rowValores->porcentaje_decimal;
+
+                        $rowValoresP = $valoresP ->row();
+                        $comisionP = $rowValoresP->comision_total;
+                        $porcentajeP = $rowValoresP->porcentaje_decimal;
+
+                        // Porcentaje y comision proporcional individual para usuarios principales
+                        $comisionRep = ($comisionP/$count);
+                        $porcentajeRep = ($porcentajeP/$count);
+
+                        // Porcentaje y comision resultante para usuarios de venta principal
+                        $comisionPr =  $comisionRep + $comisionP;
+                        $porcentajePr = $porcentajeRep + $porcentajeP;
+
+                        // Porcentaje y comision resultante para usuario de venta compartida
+                        $comisionC = $comision - $comisionRep;
+                        $porcentajeC = $porcentaje - $porcentajeRep;
+                        
+                        // Se ajustan paramentros de los usuarios principales
+                        $updateUsP = $this->db->query("UPDATE comisiones 
+                        SET comision_total = $comisionPr,
+                            porcentaje_decimal = $porcentajePr, 
+                            modificado_por = '$modificadoPor'
+                        WHERE id_lote = $idLote 
+                          AND id_usuario IN (
+                              SELECT comi.id_usuario 
+                              FROM comisiones comi
+                              WHERE id_lote = $idLote 
+                                AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $subdirector)
+                                AND comi.id_usuario != $subdirector
+                          )");
+
+                          // Se ajustan paramentros a usuario compartido
+                          if ($updateUsP) {
+                            // Segunda actualización: usuario compartido
+                            $updateUsC = $this->db->query("UPDATE comisiones 
+                                                    SET comision_total = $comisionC,
+                                                        porcentaje_decimal = $porcentajeC, 
+                                                        estatus = 0,
+                                                        modificado_por = '$modificadoPor'
+                                                    WHERE id_lote = $idLote 
+                                                    AND id_usuario = $subdirector");
+                          }
+
+                        if ($updateUsC) {
+
+                            $ventasCompartidas = $this->db->query("SELECT * FROM ventas_compartidas 
+                            WHERE id_cliente = $idCliente AND id_asesor = $subdirector");
+
+                            if($ventasCompartidas->num_rows() == 1){
+                            // Se eliminan todos los registros en estatus 1
+                            $this->db->query("DELETE FROM pago_comision_ind
+                            WHERE id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote AND id_usuario = $subdirector
+                            )");
+
+                            }
+                        }else{
+                            return 0;
+                        }
+                    }
+
+                    if ($row->id_regional != null) {
+                        $regional = $row->id_regional;
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $regional AND id_lote = $idLote)
+                        AND comi.id_usuario != $regional AND comi.estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta compartida
+                        $valoresC = $this->db->query("SELECT comision_total, porcentaje_decimal 
+                        FROM comisiones
+                        WHERE id_usuario = $regional AND id_lote = $idLote
+                        ");
+
+                        // Comisión y porcentaje del usuarios de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.comision_total, comi.porcentaje_decimal 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $regional AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_usuario = $regional AND id_lote = $idLote)
+                        ");
+
+                        $rowValores = $valoresC ->row();
+                        $comision = $rowValores->comision_total;
+                        $porcentaje = $rowValores->porcentaje_decimal;
+
+                        $rowValoresP = $valoresP ->row();
+                        $comisionP = $rowValoresP->comision_total;
+                        $porcentajeP = $rowValoresP->porcentaje_decimal;
+
+                        // Porcentaje y comision proporcional individual para usuarios principales
+                        $comisionRep = ($comisionP/$count);
+                        $porcentajeRep = ($porcentajeP/$count);
+
+                        // Porcentaje y comision resultante para usuarios de venta principal
+                        $comisionPr =  $comisionRep + $comisionP;
+                        $porcentajePr = $porcentajeRep + $porcentajeP;
+
+                        // Porcentaje y comision resultante para usuario de venta compartida
+                        $comisionC = $comision - $comisionRep;
+                        $porcentajeC = $porcentaje - $porcentajeRep;
+                        
+                        // Se ajustan paramentros de los usuarios principales
+                        $updateUsP = $this->db->query("UPDATE comisiones 
+                        SET comision_total = $comisionPr,
+                            porcentaje_decimal = $porcentajePr, 
+                            modificado_por = '$modificadoPor'
+                        WHERE id_lote = $idLote 
+                          AND id_usuario IN (
+                              SELECT comi.id_usuario 
+                              FROM comisiones comi
+                              WHERE id_lote = $idLote 
+                                AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $regional)
+                                AND comi.id_usuario != $regional
+                          )");
+
+                          // Se ajustan paramentros a usuario compartido
+                          if ($updateUsP) {
+                            // Segunda actualización: usuario compartido
+                            $updateUsC = $this->db->query("UPDATE comisiones 
+                                                    SET comision_total = $comisionC,
+                                                        porcentaje_decimal = $porcentajeC, 
+                                                        estatus = 0,
+                                                        modificado_por = '$modificadoPor'
+                                                    WHERE id_lote = $idLote 
+                                                    AND id_usuario = $regional");
+                          }
+
+                        if ($updateUsC) {
+
+                            $ventasCompartidas = $this->db->query("SELECT * FROM ventas_compartidas 
+                            WHERE id_cliente = $idCliente AND id_asesor = $regional");
+
+                            if($ventasCompartidas->num_rows() == 1){
+                            // Se eliminan todos los registros en estatus 1
+                            $this->db->query("DELETE FROM pago_comision_ind
+                            WHERE id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote AND id_usuario = $regional
+                            )");
+
+                            }
+                        }else{
+                            return 0;
+                        }
+                    }
+                }
+
+            } else {
+                // Al menos un registro tiene un estatus diferente de 1
+                
+                foreach ($query as $row) {
+                    if ($row->id_asesor != null) {
+                        $asesor = $row->id_asesor;
+
+                        // Número de registros de ventas compartidas de usuario 
+                        $queryVc = $this->db->query("SELECT * FROM ventas_compartidas vc 
+                        WHERE id_asesor = $asesor AND id_cliente = $idCliente");
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $asesor)
+                        AND comi.id_usuario != $asesor AND estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.porcentaje_decimal, comi.comision_total 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $asesor AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT TOP 1 rol_generado FROM comisiones WHERE id_usuario = $asesor AND id_lote = $idLote)
+                        ");
+
+                        // Si el usuario de vc tiene mas de un registro
+                        if($queryVc->num_rows() > 1){
+
+                        //Número de usuarios a topar
+                        $usComi = ($count + $queryVc->num_rows())-1;
+
+                        $UsVc = $this->db->query("SELECT porcentaje_decimal, comision_total from comisiones WHERE id_lote = $idLote AND id_usuario = $asesor");
+
+                        $rowPcjVc = $UsVc->row();
+                        $pcjVc = $rowPcjVc->porcentaje_decimal;
+                        $comiVc= $rowPcjVc->comision_total;
+
+                        $newPorcentajeVc = (($pcjVc/$queryVc->num_rows())*($queryVc->num_rows()-1));
+                        $newPorcentajeVp = (($pcjVc/$queryVc->num_rows())/$usComi);
+
+                        $rowPcjVp = $valoresP ->row();
+                        $pcjVp= $rowPcjVp->porcentaje_decimal;
+                        $comiVp= $rowPcjVp->comision_total;
+
+                        $newComiVp = (($comiVp*$newPorcentajeVp)/$pcjVp);
+                        $newComiVc = (($comiVc*$newPorcentajeVc)/$pcjVc);
+
+                        // Se topa comision del usuario de vc
+                            $UpdateComiVc = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                porcentaje_decimal = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($UpdateComiVc, array($newComiVc, $newPorcentajeVc, $modificadoPor, $idLote, $asesor));
+
+                        // Se topa comision de usuarios vp
+                            $updateComiVp = "UPDATE comisiones 
+                            SET comision_total = ?, 
+                                porcentaje_decimal = ?, 
+                                modificado_por = ? 
+                            WHERE id_lote = ? 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = ? 
+                                AND rol_generado IN (
+                                    SELECT rol_generado 
+                                    FROM comisiones 
+                                    WHERE id_lote = ? 
+                                    AND id_usuario = ?
+                                ) 
+                                AND comi.id_usuario != ?)";
+                                $this->db->query($updateComiVp, [
+                                    $newComiVp,
+                                    $newPorcentajeVp,
+                                    $modificadoPor,
+                                    $idLote,
+                                    $idLote,
+                                    $idLote,
+                                    $asesor,
+                                    $asesor
+                                ]);
+
+                        }else{
+
+                            // Delete a pagos individuales de usuario vc en estatus = 1
+                            $sqlDelete = "DELETE FROM pago_comision_ind
+                            WHERE id_usuario = ? AND estatus = 1
+                            AND id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = ? AND id_usuario = ?
+                            )";
+                            $this->db->query($sqlDelete, array($asesor, $idLote, $asesor));
+
+                            // Consulta para obtener suma de pagos individuales de usuario de vc estatus != 1
+                            $querySum = $this->db->query("SELECT SUM(abono_neodata) AS abono
+                            FROM pago_comision_ind
+                            WHERE id_usuario = $asesor AND estatus != 1
+                            AND id_comision IN (
+                            SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote)");
+
+                            $rowSumaAn = $querySum->row();
+                            $abonoUsVc = $rowSumaAn->abono;
+
+                            // Se topa comision del usuario de vc
+                            $sqlUpdate = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($sqlUpdate, array($abonoUsVc, $modificadoPor, $idLote, $asesor));
+
+                            $rowValoresP = $valoresP ->row();
+                            $porcentajeP = $rowValoresP->porcentaje_decimal;
+                            $comisionP = $rowValoresP->comision_total;
+
+                            $prcentajeVpFinal = (($porcentajeP/$count)+$porcentajeP);
+                            $comisionVpFinal = (($comisionP*($prcentajeVpFinal/100))/($porcentajeP/100));
+
+                            // Se topa comision de usuarios vp
+                            $updateUsP = $this->db->query("UPDATE comisiones 
+                            SET porcentaje_decimal = $prcentajeVpFinal, 
+                                comision_total = $comisionVpFinal,
+                                modificado_por = '$modificadoPor'
+                            WHERE id_lote = $idLote 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = $idLote 
+                                    AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $asesor)
+                                    AND comi.id_usuario != $asesor)");
+                        }
+
+                    }
+                    if ($row->id_coordinador != null) {
+                        $coordinador = $row->id_coordinador;
+
+                        // Número de registros de ventas compartidas de usuario 
+                        $queryVc = $this->db->query("SELECT * FROM ventas_compartidas vc 
+                        WHERE id_asesor = $coordinador AND id_cliente = $idCliente");
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $coordinador)
+                        AND comi.id_usuario != $coordinador AND estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.porcentaje_decimal, comi.comision_total 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $coordinador AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT TOP 1 rol_generado FROM comisiones WHERE id_usuario = $coordinador AND id_lote = $idLote)
+                        ");
+
+                        // Si el usuario de vc tiene mas de un registro
+                        if($queryVc->num_rows() > 1){
+
+                        //Número de usuarios a topar
+                        $usComi = ($count + $queryVc->num_rows())-1;
+
+                        $UsVc = $this->db->query("SELECT porcentaje_decimal, comision_total from comisiones WHERE id_lote = $idLote AND id_usuario = $coordinador");
+
+                        $rowPcjVc = $UsVc->row();
+                        $pcjVc = $rowPcjVc->porcentaje_decimal;
+                        $comiVc= $rowPcjVc->comision_total;
+
+                        $newPorcentajeVc = (($pcjVc/$queryVc->num_rows())*($queryVc->num_rows()-1));
+                        $newPorcentajeVp = (($pcjVc/$queryVc->num_rows())/$usComi);
+
+                        $rowPcjVp = $valoresP ->row();
+                        $pcjVp= $rowPcjVp->porcentaje_decimal;
+                        $comiVp= $rowPcjVp->comision_total;
+
+                        $newComiVp = (($comiVp*$newPorcentajeVp)/$pcjVp);
+                        $newComiVc = (($comiVc*$newPorcentajeVc)/$pcjVc);
+
+                        // Se topa comision del usuario de vc
+                            $UpdateComiVc = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                porcentaje_decimal = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($UpdateComiVc, array($newComiVc, $newPorcentajeVc, $modificadoPor, $idLote, $coordinador));
+
+                        // Se topa comision de usuarios vp
+                            $updateComiVp = "UPDATE comisiones 
+                            SET comision_total = ?, 
+                                porcentaje_decimal = ?, 
+                                modificado_por = ? 
+                            WHERE id_lote = ? 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = ? 
+                                AND rol_generado IN (
+                                    SELECT rol_generado 
+                                    FROM comisiones 
+                                    WHERE id_lote = ? 
+                                    AND id_usuario = ?
+                                ) 
+                                AND comi.id_usuario != ?)";
+                                $this->db->query($updateComiVp, [
+                                    $newComiVp,
+                                    $newPorcentajeVp,
+                                    $modificadoPor,
+                                    $idLote,
+                                    $idLote,
+                                    $idLote,
+                                    $coordinador,
+                                    $coordinador
+                                ]);
+
+                        }else{
+
+                            // Delete a pagos individuales de usuario vc en estatus = 1
+                            $sqlDelete = "DELETE FROM pago_comision_ind
+                            WHERE id_usuario = ? AND estatus = 1
+                            AND id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = ? AND id_usuario = ?
+                            )";
+                            $this->db->query($sqlDelete, array($coordinador, $idLote, $coordinador));
+
+                            // Consulta para obtener suma de pagos individuales de usuario de vc estatus != 1
+                            $querySum = $this->db->query("SELECT SUM(abono_neodata) AS abono
+                            FROM pago_comision_ind
+                            WHERE id_usuario = $coordinador AND estatus != 1
+                            AND id_comision IN (
+                            SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote)");
+
+                            $rowSumaAn = $querySum->row();
+                            $abonoUsVc = $rowSumaAn->abono;
+
+                            // Se topa comision del usuario de vc
+                            $sqlUpdate = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($sqlUpdate, array($abonoUsVc, $modificadoPor, $idLote, $coordinador));
+
+                            $rowValoresP = $valoresP ->row();
+                            $porcentajeP = $rowValoresP->porcentaje_decimal;
+                            $comisionP = $rowValoresP->comision_total;
+
+                            $prcentajeVpFinal = (($porcentajeP/$count)+$porcentajeP);
+                            $comisionVpFinal = (($comisionP*($prcentajeVpFinal/100))/($porcentajeP/100));
+
+                            // Se topa comision de usuarios vp
+                            $updateUsP = $this->db->query("UPDATE comisiones 
+                            SET porcentaje_decimal = $prcentajeVpFinal, 
+                                comision_total = $comisionVpFinal,
+                                modificado_por = '$modificadoPor'
+                            WHERE id_lote = $idLote 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = $idLote 
+                                    AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $coordinador)
+                                    AND comi.id_usuario != $coordinador)");
+                        }
+
+                    }
+                    if ($row->id_gerente != null) {
+                        $gerente = $row->id_gerente;
+
+                        // Número de registros de ventas compartidas de usuario 
+                        $queryVc = $this->db->query("SELECT * FROM ventas_compartidas vc 
+                        WHERE id_asesor = $gerente AND id_cliente = $idCliente");
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $gerente)
+                        AND comi.id_usuario != $gerente AND estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.porcentaje_decimal, comi.comision_total 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $gerente AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT TOP 1 rol_generado FROM comisiones WHERE id_usuario = $gerente AND id_lote = $idLote)
+                        ");
+
+                        // Si el usuario de vc tiene mas de un registro
+                        if($queryVc->num_rows() > 1){
+
+                        //Número de usuarios a topar
+                        $usComi = ($count + $queryVc->num_rows())-1;
+
+                        $UsVc = $this->db->query("SELECT porcentaje_decimal, comision_total from comisiones WHERE id_lote = $idLote AND id_usuario = $gerente");
+
+                        $rowPcjVc = $UsVc->row();
+                        $pcjVc = $rowPcjVc->porcentaje_decimal;
+                        $comiVc= $rowPcjVc->comision_total;
+
+                        $newPorcentajeVc = (($pcjVc/$queryVc->num_rows())*($queryVc->num_rows()-1));
+                        $newPorcentajeVp = (($pcjVc/$queryVc->num_rows())/$usComi);
+
+                        $rowPcjVp = $valoresP ->row();
+                        $pcjVp= $rowPcjVp->porcentaje_decimal;
+                        $comiVp= $rowPcjVp->comision_total;
+
+                        $newComiVp = (($comiVp*$newPorcentajeVp)/$pcjVp);
+                        $newComiVc = (($comiVc*$newPorcentajeVc)/$pcjVc);
+
+                        // Se topa comision del usuario de vc
+                            $UpdateComiVc = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                porcentaje_decimal = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($UpdateComiVc, array($newComiVc, $newPorcentajeVc, $modificadoPor, $idLote, $gerente));
+
+                        // Se topa comision de usuarios vp
+                            $updateComiVp = "UPDATE comisiones 
+                            SET comision_total = ?, 
+                                porcentaje_decimal = ?, 
+                                modificado_por = ? 
+                            WHERE id_lote = ? 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = ? 
+                                AND rol_generado IN (
+                                    SELECT rol_generado 
+                                    FROM comisiones 
+                                    WHERE id_lote = ? 
+                                    AND id_usuario = ?
+                                ) 
+                                AND comi.id_usuario != ?)";
+                                $this->db->query($updateComiVp, [
+                                    $newComiVp,
+                                    $newPorcentajeVp,
+                                    $modificadoPor,
+                                    $idLote,
+                                    $idLote,
+                                    $idLote,
+                                    $gerente,
+                                    $gerente
+                                ]);
+
+                        }else{
+
+                            // Delete a pagos individuales de usuario vc en estatus = 1
+                            $sqlDelete = "DELETE FROM pago_comision_ind
+                            WHERE id_usuario = ? AND estatus = 1
+                            AND id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = ? AND id_usuario = ?
+                            )";
+                            $this->db->query($sqlDelete, array($gerente, $idLote, $gerente));
+
+                            // Consulta para obtener suma de pagos individuales de usuario de vc estatus != 1
+                            $querySum = $this->db->query("SELECT SUM(abono_neodata) AS abono
+                            FROM pago_comision_ind
+                            WHERE id_usuario = $gerente AND estatus != 1
+                            AND id_comision IN (
+                            SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote)");
+
+                            $rowSumaAn = $querySum->row();
+                            $abonoUsVc = $rowSumaAn->abono;
+
+                            // Se topa comision del usuario de vc
+                            $sqlUpdate = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($sqlUpdate, array($abonoUsVc, $modificadoPor, $idLote, $gerente));
+
+                            $rowValoresP = $valoresP ->row();
+                            $porcentajeP = $rowValoresP->porcentaje_decimal;
+                            $comisionP = $rowValoresP->comision_total;
+
+                            $prcentajeVpFinal = (($porcentajeP/$count)+$porcentajeP);
+                            $comisionVpFinal = (($comisionP*($prcentajeVpFinal/100))/($porcentajeP/100));
+
+                            // Se topa comision de usuarios vp
+                            $updateUsP = $this->db->query("UPDATE comisiones 
+                            SET porcentaje_decimal = $prcentajeVpFinal, 
+                                comision_total = $comisionVpFinal,
+                                modificado_por = '$modificadoPor'
+                            WHERE id_lote = $idLote 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = $idLote 
+                                    AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $gerente)
+                                    AND comi.id_usuario != $gerente)");
+                        }
+
+                    }
+                    if ($row->id_subdirector != null) {
+                        $subdirector = $row->id_subdirector;
+
+                        // Número de registros de ventas compartidas de usuario 
+                        $queryVc = $this->db->query("SELECT * FROM ventas_compartidas vc 
+                        WHERE id_asesor = $subdirector AND id_cliente = $idCliente");
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $subdirector)
+                        AND comi.id_usuario != $subdirector AND estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.porcentaje_decimal, comi.comision_total 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $subdirector AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT TOP 1 rol_generado FROM comisiones WHERE id_usuario = $subdirector AND id_lote = $idLote)
+                        ");
+
+                        // Si el usuario de vc tiene mas de un registro
+                        if($queryVc->num_rows() > 1){
+
+                        //Número de usuarios a topar
+                        $usComi = ($count + $queryVc->num_rows())-1;
+
+                        $UsVc = $this->db->query("SELECT porcentaje_decimal, comision_total from comisiones WHERE id_lote = $idLote AND id_usuario = $subdirector");
+
+                        $rowPcjVc = $UsVc->row();
+                        $pcjVc = $rowPcjVc->porcentaje_decimal;
+                        $comiVc= $rowPcjVc->comision_total;
+
+                        $newPorcentajeVc = (($pcjVc/$queryVc->num_rows())*($queryVc->num_rows()-1));
+                        $newPorcentajeVp = (($pcjVc/$queryVc->num_rows())/$usComi);
+
+                        $rowPcjVp = $valoresP ->row();
+                        $pcjVp= $rowPcjVp->porcentaje_decimal;
+                        $comiVp= $rowPcjVp->comision_total;
+
+                        $newComiVp = (($comiVp*$newPorcentajeVp)/$pcjVp);
+                        $newComiVc = (($comiVc*$newPorcentajeVc)/$pcjVc);
+
+                        // Se topa comision del usuario de vc
+                            $UpdateComiVc = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                porcentaje_decimal = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($UpdateComiVc, array($newComiVc, $newPorcentajeVc, $modificadoPor, $idLote, $subdirector));
+
+                        // Se topa comision de usuarios vp
+                            $updateComiVp = "UPDATE comisiones 
+                            SET comision_total = ?, 
+                                porcentaje_decimal = ?, 
+                                modificado_por = ? 
+                            WHERE id_lote = ? 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = ? 
+                                AND rol_generado IN (
+                                    SELECT rol_generado 
+                                    FROM comisiones 
+                                    WHERE id_lote = ? 
+                                    AND id_usuario = ?
+                                ) 
+                                AND comi.id_usuario != ?)";
+                                $this->db->query($updateComiVp, [
+                                    $newComiVp,
+                                    $newPorcentajeVp,
+                                    $modificadoPor,
+                                    $idLote,
+                                    $idLote,
+                                    $idLote,
+                                    $subdirector,
+                                    $subdirector
+                                ]);
+
+                        }else{
+
+                            // Delete a pagos individuales de usuario vc en estatus = 1
+                            $sqlDelete = "DELETE FROM pago_comision_ind
+                            WHERE id_usuario = ? AND estatus = 1
+                            AND id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = ? AND id_usuario = ?
+                            )";
+                            $this->db->query($sqlDelete, array($subdirector, $idLote, $subdirector));
+
+                            // Consulta para obtener suma de pagos individuales de usuario de vc estatus != 1
+                            $querySum = $this->db->query("SELECT SUM(abono_neodata) AS abono
+                            FROM pago_comision_ind
+                            WHERE id_usuario = $subdirector AND estatus != 1
+                            AND id_comision IN (
+                            SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote)");
+
+                            $rowSumaAn = $querySum->row();
+                            $abonoUsVc = $rowSumaAn->abono;
+
+                            // Se topa comision del usuario de vc
+                            $sqlUpdate = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($sqlUpdate, array($abonoUsVc, $modificadoPor, $idLote, $subdirector));
+
+                            $rowValoresP = $valoresP ->row();
+                            $porcentajeP = $rowValoresP->porcentaje_decimal;
+                            $comisionP = $rowValoresP->comision_total;
+
+                            $prcentajeVpFinal = (($porcentajeP/$count)+$porcentajeP);
+                            $comisionVpFinal = (($comisionP*($prcentajeVpFinal/100))/($porcentajeP/100));
+
+                            // Se topa comision de usuarios vp
+                            $updateUsP = $this->db->query("UPDATE comisiones 
+                            SET porcentaje_decimal = $prcentajeVpFinal, 
+                                comision_total = $comisionVpFinal,
+                                modificado_por = '$modificadoPor'
+                            WHERE id_lote = $idLote 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = $idLote 
+                                    AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $subdirector)
+                                    AND comi.id_usuario != $subdirector)");
+                        }
+
+                    }
+                    if ($row->id_regional != null) {
+                        $regional = $row->id_regional;
+
+                        // Número de registros de ventas compartidas de usuario 
+                        $queryVc = $this->db->query("SELECT * FROM ventas_compartidas vc 
+                        WHERE id_asesor = $regional AND id_cliente = $idCliente");
+
+                        // Número de usuarios de la venta principal
+                        $count = $this->db->query("SELECT COUNT(*) AS count FROM comisiones comi
+                        WHERE id_lote = $idLote AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $regional)
+                        AND comi.id_usuario != $regional AND estatus = 1
+                        ")->row()->count;
+
+                        // Comisión y porcentaje del usuario de venta principal
+                        $valoresP = $this->db->query("SELECT  TOP 1 comi.id_usuario, comi.porcentaje_decimal, comi.comision_total 
+                        FROM comisiones comi
+                        WHERE comi.id_usuario != $regional AND comi.id_lote = $idLote 
+                        AND comi.rol_generado IN(SELECT TOP 1 rol_generado FROM comisiones WHERE id_usuario = $regional AND id_lote = $idLote)
+                        ");
+
+                        // Si el usuario de vc tiene mas de un registro
+                        if($queryVc->num_rows() > 1){
+
+                        //Número de usuarios a topar
+                        $usComi = ($count + $queryVc->num_rows())-1;
+
+                        $UsVc = $this->db->query("SELECT porcentaje_decimal, comision_total from comisiones WHERE id_lote = $idLote AND id_usuario = $regional");
+
+                        $rowPcjVc = $UsVc->row();
+                        $pcjVc = $rowPcjVc->porcentaje_decimal;
+                        $comiVc= $rowPcjVc->comision_total;
+
+                        $newPorcentajeVc = (($pcjVc/$queryVc->num_rows())*($queryVc->num_rows()-1));
+                        $newPorcentajeVp = (($pcjVc/$queryVc->num_rows())/$usComi);
+
+                        $rowPcjVp = $valoresP ->row();
+                        $pcjVp= $rowPcjVp->porcentaje_decimal;
+                        $comiVp= $rowPcjVp->comision_total;
+
+                        $newComiVp = (($comiVp*$newPorcentajeVp)/$pcjVp);
+                        $newComiVc = (($comiVc*$newPorcentajeVc)/$pcjVc);
+
+                        // Se topa comision del usuario de vc
+                            $UpdateComiVc = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                porcentaje_decimal = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($UpdateComiVc, array($newComiVc, $newPorcentajeVc, $modificadoPor, $idLote, $regional));
+
+                        // Se topa comision de usuarios vp
+                            $updateComiVp = "UPDATE comisiones 
+                            SET comision_total = ?, 
+                                porcentaje_decimal = ?, 
+                                modificado_por = ? 
+                            WHERE id_lote = ? 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = ? 
+                                AND rol_generado IN (
+                                    SELECT rol_generado 
+                                    FROM comisiones 
+                                    WHERE id_lote = ? 
+                                    AND id_usuario = ?
+                                ) 
+                                AND comi.id_usuario != ?)";
+                                $this->db->query($updateComiVp, [
+                                    $newComiVp,
+                                    $newPorcentajeVp,
+                                    $modificadoPor,
+                                    $idLote,
+                                    $idLote,
+                                    $idLote,
+                                    $regional,
+                                    $regional
+                                ]);
+
+                        }else{
+
+                            // Delete a pagos individuales de usuario vc en estatus = 1
+                            $sqlDelete = "DELETE FROM pago_comision_ind
+                            WHERE id_usuario = ? AND estatus = 1
+                            AND id_comision IN (
+                                SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = ? AND id_usuario = ?
+                            )";
+                            $this->db->query($sqlDelete, array($regional, $idLote, $regional));
+
+                            // Consulta para obtener suma de pagos individuales de usuario de vc estatus != 1
+                            $querySum = $this->db->query("SELECT SUM(abono_neodata) AS abono
+                            FROM pago_comision_ind
+                            WHERE id_usuario = $regional AND estatus != 1
+                            AND id_comision IN (
+                            SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $idLote)");
+
+                            $rowSumaAn = $querySum->row();
+                            $abonoUsVc = $rowSumaAn->abono;
+
+                            // Se topa comision del usuario de vc
+                            $sqlUpdate = "UPDATE comisiones 
+                            SET comision_total = ?,
+                                modificado_por = ?
+                            WHERE id_lote = ? 
+                            AND id_usuario = ?";
+                            $this->db->query($sqlUpdate, array($abonoUsVc, $modificadoPor, $idLote, $regional));
+
+                            $rowValoresP = $valoresP ->row();
+                            $porcentajeP = $rowValoresP->porcentaje_decimal;
+                            $comisionP = $rowValoresP->comision_total;
+
+                            $prcentajeVpFinal = (($porcentajeP/$count)+$porcentajeP);
+                            $comisionVpFinal = (($comisionP*($prcentajeVpFinal/100))/($porcentajeP/100));
+
+                            // Se topa comision de usuarios vp
+                            $updateUsP = $this->db->query("UPDATE comisiones 
+                            SET porcentaje_decimal = $prcentajeVpFinal, 
+                                comision_total = $comisionVpFinal,
+                                modificado_por = '$modificadoPor'
+                            WHERE id_lote = $idLote 
+                            AND id_usuario IN (
+                                SELECT comi.id_usuario 
+                                FROM comisiones comi
+                                WHERE id_lote = $idLote 
+                                    AND rol_generado IN(SELECT rol_generado FROM comisiones WHERE id_lote = $idLote AND id_usuario = $regional)
+                                    AND comi.id_usuario != $regional)");
+                        }
+
+                    }
+                }
+            }
+           // exit;
+
+            $cmd = ("UPDATE ventas_compartidas SET estatus = 0, modificado_por = $modificadoPor WHERE id_vcompartida = $id");
+            $respuesta =  $this->db->query($cmd);
+
+            return $respuesta ? 1 : 0;
+        } */
         
         public function getUserInventario($id_cliente){
             $cmd = "SELECT cl.id_cliente, ase.id_usuario AS id_asesor,  CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno) AS asesor, coor.id_usuario AS id_coordinador,  CONCAT(coor.nombre, ' ', coor.apellido_paterno, ' ', coor.apellido_materno) AS coordinador, ger.id_usuario AS id_gerente,  CONCAT(ger.nombre, ' ', ger.apellido_paterno, ' ', ger.apellido_materno) AS gerente, subd.id_usuario AS id_subdirector, CONCAT(subd.nombre,' ', subd.apellido_paterno, ' ', subd.apellido_materno) AS subdirector, regio.id_usuario AS id_regional, concat (regio.nombre, ' ',regio.apellido_paterno, ' ', regio.apellido_materno) AS regional
@@ -597,43 +1784,61 @@ class Incidencias_model extends CI_Model {
             }
         }
         
-        function AddVentaCompartida($id_asesor,$coor,$ger,$sub,$id_cliente,$id_lote){
+        function AddVentaCompartida($id_asesor,$coor,$ger,$sub,$diReg,$id_cliente,$id_lote){
             date_default_timezone_set('America/Mexico_City');       
-            $response = $this->db->query("INSERT INTO ventas_compartidas VALUES($id_cliente,$id_asesor,$coor,$ger,1,GETDATE(),".$this->session->userdata('id_usuario').",$sub, GETDATE(),".$this->session->userdata('id_usuario').",0,0,0);");
+            $response = $this->db->query("INSERT INTO ventas_compartidas VALUES($id_cliente,$id_asesor,$coor,$ger,1,GETDATE(),".$this->session->userdata('id_usuario').",$sub, GETDATE(),".$this->session->userdata('id_usuario').",$diReg,0,0);");
 
             $usuario = 0;
             $rolSelect = 0;
             $porcentaje = 0;
 
-            for($i=0;$i<4;$i++){
+            $directivoBandera;
+
+            for($i=0;$i<5;$i++){
                 if($i== 0){ //Asesor
                     $usuario=$id_asesor;
                     $rolSelect =7;
                     $porcentaje=1.5;
+                
                 } else if($i == 1){ //Coordinador
                     $usuario=$coor;
                     $rolSelect =9;
                     $porcentaje=0.5;
+
                 } else if($i == 2){ //Gerente
                     $usuario=$ger;
                     $rolSelect =3;
                     $porcentaje=0.5;
+                    
                 } else if($i == 3){ //Subdir
                     $usuario=$sub;
                     $rolSelect =2;
                     $porcentaje=0.5;
-                }
 
-                $validate = $this->db->query("SELECT id_usuario FROM comisiones WHERE id_lote IN (SELECT idLote FROM lotes WHERE idLote = $id_lote) AND id_usuario = $usuario");
+                }else if($i == 4){ //DireReg
+                    $usuario=$diReg;
+                    $rolSelect =2;
+                    $porcentaje=0.5;
+                    
+                }
+                $directivoBandera = $usuario == 0 ? 0 :1;
+
                 $data_lote = $this->db->query("SELECT idLote, totalNeto2 FROM lotes WHERE idLote = $id_lote");
                 $precio_lote = $data_lote->row()->totalNeto2;
                 $comision_total=$precio_lote * ($porcentaje /100);
-        
-                if(empty($validate->row()->id_usuario)){
-                    $response = $this->db->query("UPDATE comisiones SET comision_total=$comision_total,porcentaje_decimal=$porcentaje,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_lote=".$id_lote." AND rol_generado=$rolSelect");
-                    $response = $this->db->query("INSERT INTO comisiones(id_lote,id_usuario,comision_total,estatus,observaciones,evidencia,factura,creado_por,fecha_creacion,porcentaje_decimal,fecha_autorizacion,rol_generado,descuento,idCliente,modificado_por) 
-                    VALUES (".$id_lote.",$usuario,$comision_total,1,'SE AGREGÓ VENTA COMPARTIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),$porcentaje,GETDATE(),$rolSelect,0,$id_cliente,'".$this->session->userdata('id_usuario')."')");
+
+                if($directivoBandera != 0){
+                
+                    $validate = $this->db->query("SELECT id_usuario FROM comisiones WHERE id_lote IN (SELECT idLote FROM lotes WHERE idLote = $id_lote) AND id_usuario = $usuario");
+                    if(empty($validate->row()->id_usuario)){
+                        $response = $this->db->query("INSERT INTO comisiones(id_lote,id_usuario,comision_total,estatus,observaciones,ooam,loteReubicado,creado_por,fecha_creacion,porcentaje_decimal,fecha_autorizacion,rol_generado,descuento,idCliente,modificado_por,liquidada) 
+                        VALUES (".$id_lote.",$usuario,$comision_total,1,'SE AGREGÓ VENTA COMPARTIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),$porcentaje,GETDATE(),$rolSelect,0,$id_cliente,'".$this->session->userdata('id_usuario')."',0)");
+                    }
+
                 }
+
+                $response = $this->db->query("UPDATE comisiones SET comision_total=$comision_total,porcentaje_decimal=$porcentaje,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_lote=".$id_lote." AND rol_generado=$rolSelect AND estatus=1");
+
             }
         
             if($response){
@@ -777,6 +1982,31 @@ class Incidencias_model extends CI_Model {
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = com.rol_generado AND oxc2.id_catalogo = 83
             WHERE com.id_lote = $idlote  AND com.estatus = 1 ORDER BY com.rol_generado asc");
         }
+
+        public function comisionesUsuarios($idlote){
+            
+            return $this->db->query("SELECT com.id_usuario, oxc.nombre, com.rol_generado, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador
+            FROM comisiones com
+            INNER JOIN usuarios us ON us.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = com.rol_generado AND oxc.id_catalogo = 1
+            WHERE us.id_usuario NOT IN (4824) AND  com.id_lote = $idlote  AND com.estatus = 1 and com.rol_generado NOT IN (89,90,91,87,88)");
+            
+        }
+
+        public function catalogoUsuarios(){
+            return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=1 and id_opcion in (1,2,3,7,9,59) ");
+            
+        }
+
+        public function actualizarRol($idLote,  $id_nuevoRol, $id_comisionista, $user, $proceso){
+
+            $valorRol = ($proceso == 0 && $id_nuevoRol == 59) ?  2 :  $id_nuevoRol;
+
+            return $this->db->query("UPDATE comisiones SET rol_generado = $valorRol, modificado_por =$user where id_lote = $idLote and  id_usuario = $id_comisionista and estatus=1"); 
+
+            
+        }
+
 
         public  function sedesCambios (){
             $cmd = "SELECT id_sede,nombre,abreviacion FROM sedes WHERE estatus = 1";
@@ -990,4 +2220,44 @@ class Incidencias_model extends CI_Model {
             }
 
         }
+
+
+        //----------------------Cambio de plan de comision----------------------//
+
+        public function getPlanComision(){
+            $planComision= $this->db->query("SELECT id_plan, descripcion FROM plan_comision");
+            return $planComision->result_array();
+        }
+
+        public function updatePlanComision($planComision, $idCliente ,$idUsuarioM){
+            $plan = $this->db->query("UPDATE clientes SET  modificado_por=$idUsuarioM, plan_comision=$planComision, fecha_modificacion=GETDATE() WHERE  id_cliente=$idCliente");
+
+            if($plan){
+            return 1;
+             }else{
+            return 0;
+            }
+        }
+
+        public function AddEmpresa($idLote,$comision,$idCliente){
+
+            $comisionesEmpresa = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote AND id_usuario=4824 AND estatus=1")->result_array();
+            $comisiones = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote AND estatus=1")->result_array();
+
+            $respuesta=false;
+            if(count($comisionesEmpresa) == 0 && count($comisiones) > 0){
+                $respuesta=    $this->db->query("INSERT INTO comisiones
+                ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente]) VALUES (".$idLote.",4824,".$comision.", 1, 'SE AGREGÓ EMPRESA', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(),1, GETDATE(), 45,$idCliente)");
+                
+                if($respuesta){
+                    return 1;
+            }else{
+                    return 0;
+            }
+             }else{
+                return 2;
+             }    
+        }
     }
+
+ 

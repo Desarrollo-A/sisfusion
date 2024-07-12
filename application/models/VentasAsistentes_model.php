@@ -96,7 +96,6 @@ class VentasAsistentes_model extends CI_Model {
     }
    
 	public function registroStatusContratacion8 () {
-
         list($filtroProceso, $where, $validacionMktd) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
 		return $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR, l.modificado, 120) AS modificado, cl.rfc, sd.nombre as nombreSede,
@@ -106,7 +105,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, hd.idDocumento, hd.movimiento, hd.expediente, hd.bucket 
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $validacionMktd $filtroProceso
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -118,6 +117,7 @@ class VentasAsistentes_model extends CI_Model {
         LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
         LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        LEFT JOIN historial_documento as hd ON hd.idLote = l.idLote AND hd.status = 1 AND hd.tipo_doc = 55 
         WHERE l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 $where
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sd.nombre,
@@ -126,7 +126,8 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente, mo.descripcion, ISNULL(oxc0.nombre, 'Normal')
+        cond.idCondominio, cl.expediente, mo.descripcion, ISNULL(oxc0.nombre, 'Normal'),
+        hd.idDocumento, hd.movimiento, hd.expediente, hd.bucket 
         ORDER BY l.nombreLote")->result();
 	}
 
@@ -215,8 +216,6 @@ class VentasAsistentes_model extends CI_Model {
 		return $query->result_array();
 
 	}
-
-
 
 	public function getNameLote($idLote){
 		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre,
@@ -345,9 +344,6 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
                     $filtroSede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
-                    $filtroSede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435)";
                     $filtroSede = "";
@@ -355,7 +351,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 4509)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295, 7970)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10063)";
@@ -366,7 +362,7 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6661)";
                     $filtroSede = "";
-				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
@@ -387,6 +383,8 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_rol == 5) { // SON ASISTENTES DE SUBDIRECCIÓN / REGIONALES
                     if ($id_usuario == 6627)
                         $filtroGerente = "AND ((cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) OR (cl.id_asesor IN (6253, 6626) AND l.tipo_venta = 3))";
+                    else if ($id_usuario == 7401) // CLAUDIA LORENA SERRATO VEGA
+                        $filtroGerente = "AND ((cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) OR (cl.id_asesor IN (15844)))";
                     else
                         $filtroGerente = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
                     $filtroSede = "";

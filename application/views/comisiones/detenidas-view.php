@@ -4,6 +4,31 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
+
+        <div class="modal fade modal-alertas" id="modal_NEODATA_reubicadas" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form method="post" id="form_NEODATA_reubicadas">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- modal verifyNEODATA -->
+        <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form method="post" id="form_NEODATA">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">

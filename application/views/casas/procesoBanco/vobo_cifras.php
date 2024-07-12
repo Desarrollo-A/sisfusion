@@ -12,11 +12,11 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-check-square fa-2x"></i>
+                                <i class="fas fa-check fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Reporte proceso de CASAS</h3>
+                                    <h3 class="card-title center-align">Vo.Bo. de cifras</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -30,9 +30,6 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>PROCESO</th>
-                                            <th>FECHA INICIO</th>
-                                            <th>FECHA MOVIMIENTO</th>
                                             <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
@@ -52,5 +49,9 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/reporte_casas.js"></script>
+    <script type="text/javascript">
+        const idUsuario = <?php echo $idUsuario ?>
+    </script>
+
+    <script src="<?= base_url() ?>dist/js/controllers/casas/vobo_cifras.js"></script>
 </body>

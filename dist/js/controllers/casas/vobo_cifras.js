@@ -164,9 +164,28 @@ let columns = [
             }
         }
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Aprobar cierre de cifras', onClick: pass_to_expediente_cliente, data})
+        vobo = true
+        if(idUsuario == 5107){
+            vobo = data.voboADM
+        }
+        if([15891, 15892, 15893, 16197, 16198, 16199].includes(idUsuario)){
+            vobo = data.voboOOAM
+        }
+        if([15896, 16204, 15897, 16205, 15898, 16206, 4512].includes(idUsuario)){
+            vobo = data.voboGPH
+        }
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carga de cierre de cifras', onClick: back_to_cierre_cifras, data})
+        if([2896, 12072, 12112, 15900, 16208].includes(idUsuario)){
+            vobo = data.voboPV
+        }
+
+        let pass_button = ''
+        let back_button = ''
+        if(!vobo){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Aprobar cierre de cifras', onClick: pass_to_expediente_cliente, data})
+
+            back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carga de cierre de cifras', onClick: back_to_cierre_cifras, data})
+        }
 
         return `<div class="d-flex justify-center">${view_button}${pass_button}${back_button}</div>`
     } },

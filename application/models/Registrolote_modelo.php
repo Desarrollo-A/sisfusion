@@ -3520,9 +3520,6 @@
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
 					$sede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-					$id_lider = $id_lider . ', 21, 1545';
-					$sede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
 					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
 					$sede = "";
@@ -3530,7 +3527,7 @@
 					$id_lider = $id_lider . ', 694, 4509';
 					$sede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-					$id_lider = $id_lider . ', 13295';
+					$id_lider = $id_lider . ', 13295, 7970';
 					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
@@ -3541,7 +3538,7 @@
 				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
 					$id_lider = $id_lider . ', 6661';
 					$sede = "";
-				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
 					$id_lider = $id_lider . ', 80, 664';
 					$sede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
@@ -3659,7 +3656,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
+        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso, hd.bucket
 		FROM historial_documento hd
 		INNER JOIN lotes lo ON lo.idLote = hd.idLote
 		INNER JOIN clientes cl ON  lo.idCliente = cl.id_cliente AND cl.idLote = lo.idLote AND cl.status = 1
@@ -3964,6 +3961,18 @@
 			$where = "AND cond.idCondominio = $id_condominio";
         }
 		
+		if(in_array($this->session->userdata('id_rol'),array(3,6))){
+			$idUsuario = $this->session->userdata('id_rol') == 3 ? $this->session->userdata('id_usuario') : $this->session->userdata('id_lider');
+			$sqlRol = " AND cl.id_gerente=".$idUsuario;
+		}else if( $this->session->userdata('id_rol') == 2){
+			$sqlRol = " AND cl.id_subdirector = ".$this->session->userdata('id_usuario')." OR cl.id_regional = ".$this->session->userdata('id_usuario');
+		}else{
+			$sqlRol = "";
+		}
+
+
+
+
 		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
 		cl.id_sede, personalidad_juridica, cl.nacionalidad,
 		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
@@ -3995,7 +4004,7 @@
 		LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
 		LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
 		LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-		WHERE cl.status = 1 $where
+		WHERE cl.status = 1 $where $sqlRol
 		ORDER BY cl.id_cliente DESC")->result();
     }
 

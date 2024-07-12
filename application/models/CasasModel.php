@@ -52,7 +52,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion){
+    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion, $esquema){
         $idMovimiento = $this->session->userdata('id_usuario');
 
         $query = "INSERT INTO historial_proceso_casas
@@ -61,7 +61,8 @@ class CasasModel extends CI_Model
             procesoAnterior,
             procesoNuevo,
             idMovimiento,
-            descripcion
+            descripcion,
+            esquemaCreditoProceso
         )
         VALUES
         (
@@ -69,7 +70,8 @@ class CasasModel extends CI_Model
             $procesoAnterior,
             $procesoNuevo,
             $idMovimiento,
-            '$descripcion'
+            '$descripcion',
+            $esquema
         )";
 
         return $this->db->query($query);
@@ -161,15 +163,21 @@ class CasasModel extends CI_Model
         AND lo.idStatusContratacion = 15
         AND lo.idCondominio = $idCondominio
         AND pc.status IS NULL
-        AND cli.status = 1";
+        AND cli.status = 1
+        AND lo.esquemaCreditoCasas = 0";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaAsignacion(){
         $query = "SELECT
-        pc.*,
+        pc.proceso,
+        pc.idProcesoCasas,
+        pc.idLote,
+        pc.idAsesor,
+        pc.tipoMovimiento,
         lo.nombreLote,
+        lo.esquemaCreditoCasas,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
@@ -181,7 +189,8 @@ class CasasModel extends CI_Model
 			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
-        oxc.nombre AS movimiento
+        oxc.nombre AS movimiento,
+        oxc.color
         FROM proceso_casas pc
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
@@ -193,7 +202,44 @@ class CasasModel extends CI_Model
         WHERE
             pc.proceso = 0
             AND pc.status = 1
-            AND cli.status = 1";
+            AND pc.idGerente = $this->idUsuario
+            AND cli.status = 1
+        UNION ALL
+        SELECT
+        pcd.proceso,
+        pcd.idProceso as idProcesoCasas,
+        pcd.idLote,
+        pcd.idAsesor,
+        pcd.tipoMovimiento,
+        lo.nombreLote,
+        lo.esquemaCreditoCasas,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+			 WHEN pcd.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+		END AS gerente,
+        oxc.nombre AS movimiento,
+        oxc.color
+        FROM proceso_casas_directo pcd
+        LEFT JOIN usuarios us ON us.id_usuario = pcd.idAsesor
+        LEFT JOIN lotes lo ON lo.idLote = pcd.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pcd.idGerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 108 AND oxc.id_opcion = pcd.tipoMovimiento
+        WHERE
+            pcd.proceso = 0
+            AND pcd.estatus = 1
+            AND pcd.idGerente = $this->idUsuario
+            AND cli.status = 1
+        ";
 
         return $this->db->query($query)->result();
     }
@@ -222,15 +268,39 @@ class CasasModel extends CI_Model
         }
     }
 
+    public function addLoteToAsignacionDirecto($idLote, $idGerente, $comentario, $idUsuario){
+        $query = "INSERT INTO proceso_casas_directo
+        (
+            idLote,
+            idGerente,
+            comentario,
+            creadoPor
+        )
+        VALUES
+        (
+            $idLote,
+            $idGerente,
+            '$comentario',
+            $idUsuario
+        )";
+
+        $result = $this->db->query($query);
+
+        if($result){
+            $query = "SELECT TOP 1 * FROM proceso_casas_directo ORDER BY idProceso DESC";
+            return $this->db->query($query)->row();
+        }else{
+            return null;
+        }
+    }
+
     public function getGerentesOptions(){
         $query = "SELECT
             concat(nombre, ' ', apellido_paterno) AS label,
             id_usuario AS value
         FROM usuarios
         WHERE
-            estatus = 1
-        AND id_rol = 3
-        AND tipo = 2";
+            id_usuario IN (671, 75, 207, 1853)";
 
         // Cambiar por tipo 3
 
@@ -244,7 +314,8 @@ class CasasModel extends CI_Model
         FROM usuarios
         WHERE
             estatus = 1
-        AND id_rol = 7";
+        AND id_rol = 7
+        AND id_lider = $this->idUsuario";
 
         return $this->db->query($query)->result();
     }
@@ -426,6 +497,12 @@ class CasasModel extends CI_Model
     }
 
     public function getListaProcesoDocumentos(){
+        $gerentes = implode(',', [$this->idUsuario]);
+
+        if($this->idUsuario == 11650){
+            $gerentes = implode(',', [671, 75, 207, 1853]);
+        }
+
         $query = "SELECT
         pc.*,
         lo.nombreLote,
@@ -453,7 +530,9 @@ class CasasModel extends CI_Model
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
             pc.proceso = 3
-        AND pc.status = 1 AND cli.status = 1";
+        AND pc.status = 1
+        AND cli.status = 1
+        AND pc.idGerente IN ($gerentes)";
 
         return $this->db->query($query)->result();
     }
@@ -807,6 +886,23 @@ class CasasModel extends CI_Model
     }
 
     public function getListaContratos($idProcesoCasas){
+        $tipos = "19, 20, 21, 22, 23, 24";
+
+        // Usuarios de OOAM
+        if(in_array($this->idUsuario, [15891, 15892, 15893])){
+            $tipos = "23";
+        }
+        
+        // Usuarios de PV
+        if(in_array($this->idUsuario, [2896, 12072, 12112, 15900])){
+            $tipos = "24";
+        }
+
+        // Usuarios de Titulacion
+        if(in_array($this->idUsuario, [10846, 10849, 10862, 10865])){
+            $tipos = "19, 20, 21, 22";
+        }
+
         $query = "SELECT
             idProcesoCasas,
             idDocumento,
@@ -817,12 +913,18 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (19,20,21,22,23,24)";
+        AND tipo IN ($tipos)";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaRecepcionContratos(){
+        $gerentes = implode(',', [$this->idUsuario]);
+
+        if($this->idUsuario == 11650){
+            $gerentes = implode(',', [671, 75, 207, 1853]);
+        }
+
         $query = "SELECT
             pc.*,
             lo.nombreLote,
@@ -850,7 +952,9 @@ class CasasModel extends CI_Model
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (19,20,21,22) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         WHERE
             pc.proceso IN (8,9)
-        AND pc.status = 1 AND cli.status = 1";
+        AND pc.status = 1
+        AND cli.status = 1
+        AND pc.idGerente IN ($gerentes)";
 
         return $this->db->query($query)->result();
     }
@@ -1019,6 +1123,12 @@ class CasasModel extends CI_Model
     }
 
     public function getListaRecepcionContrato(){
+        $gerentes = implode(',', [$this->idUsuario]);
+
+        if($this->idUsuario == 11650){
+            $gerentes = implode(',', [671, 75, 207, 1853]);
+        }
+
         $query = "SELECT
             pc.*,
             lo.nombreLote,
@@ -1044,7 +1154,9 @@ class CasasModel extends CI_Model
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
             pc.proceso = 15
-        AND pc.status = 1 AND cli.status = 1";
+        AND pc.status = 1
+        AND cli.status = 1
+        AND pc.idGerente IN ($gerentes)";
 
         return $this->db->query($query)->result();
     }
@@ -1093,10 +1205,10 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function setAdeudo($idProcesoCasas, $adeudoOoam, $adeudoAdm, $adeudoGph){
+    public function setAdeudo($idProcesoCasas, $adeudo, $cantidad){
         $query = "UPDATE proceso_casas
-                  SET adeudoOOAM = $adeudoOoam, adeudoADM = $adeudoAdm, adeudoGPH = $adeudoGph
-                  WHERE idProcesoCasas = $idProcesoCasas";
+        SET $adeudo = $cantidad
+        WHERE idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
     }
@@ -1307,6 +1419,167 @@ class CasasModel extends CI_Model
         WHERE
             idProcesoCasas = $idProcesoCasas
         AND tipo IN (17, 28, 29, 30, 31, 32)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setVoboToProceso($idProcesoCasas, $column){
+        $query = "UPDATE proceso_casas
+        SET
+            $column = 1
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function resetVoBos($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            voboADM = NULL,
+            voboOOAM = NULL,
+            voboGPH = NULL,
+            voboPV = NULL
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function lotesCreditoDirecto($proceso, $tipoDocumento){
+
+        $procesoArray = explode(',', $proceso);
+        $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
+
+        $query = $this->db->query("SELECT 
+            pcd.*,
+            oxc.color,
+            oxc.nombre AS nombreMovimiento,
+            CASE
+                WHEN DATEDIFF(DAY, GETDATE() , pcd.fechaAvance) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pcd.fechaAvance), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
+            lo.idLote,  
+            lo.nombreLote,
+            co.nombre AS condominio,
+            re.descripcion AS proyecto,
+			dpc.archivo,
+            dpc.documento
+        FROM proceso_casas_directo pcd
+        INNER JOIN lotes lo ON lo.idLote = pcd.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pcd.tipoMovimiento AND id_catalogo = 108
+		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
+        WHERE pcd.proceso IN ($placeholders) AND pcd.estatus IN(1) AND pcd.finalizado = 0", $procesoArray, 1);
+
+        return $query;
+    }
+
+    public function getDocumentoCreditoDirecto($id_documento){
+        $query = $this->db->query("SELECT * FROM opcs_x_cats 
+        WHERE id_catalogo = 149 AND id_opcion = ?", $id_documento);
+
+        return $query;
+    }
+
+    public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento){
+        
+        if($tipoDocumento === 0){
+            $query = "INSERT INTO documentos_proceso_credito_directo
+            (
+                idProceso,
+                documento,
+                archivo,
+                tipo
+            )
+            VALUES
+            (
+                $idProceso,
+                '$name_documento',
+                '$filename',
+                $id_documento
+            )";
+        }else{
+            $query = "UPDATE documentos_proceso_credito_directo 
+            SET documento = '$name_documento', archivo = '$filename' 
+            WHERE idProceso = $idProceso AND tipo = $id_documento";
+        }
+
+        return $this->db->query($query);
+
+    }
+
+    public function getReporteProcesoCredito($proceso, $finalizado){
+        $query = "SELECT
+            pcd.idProceso,
+            lo.idLote,  
+            lo.nombreLote,
+            pcd.estatus,
+            pcd.proceso,
+            pcd.comentario,
+            pcd.voBoOrdenCompra,
+            pcd.voBoAdeudoTerreno,
+            pcd.voBoValidacionEnganche,
+            pcd.voBoContrato,
+            pcd.adeudo,
+            co.nombre AS condominio,
+            re.descripcion AS proyecto,
+            pcd.voBoOrdenCompra,
+            pcd.voBoValidacionEnganche,
+            pcd.voBoContrato,
+            pcd.voBoOrdenCompra,
+            pcd.finalizado,
+            oxc.color,
+            oxc.nombre AS nombreMovimiento,
+            CASE
+                WHEN DATEDIFF(DAY, GETDATE() , pcd.fechaAvance) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pcd.fechaAvance), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
+            CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente,
+            CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
+            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
+            CASE
+                WHEN pcd.idAsesor IS NULL AND pcd.proceso = 0 THEN 'ASIGNACIÓN DE ASESOR'
+                ELSE oxc2.nombre
+            END AS nombreProceso,
+            pcd.fechaCreacion,
+            pcd.fechaAvance
+        FROM proceso_casas_directo pcd
+        INNER JOIN lotes lo ON lo.idLote = pcd.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN usuarios usA ON usA.id_usuario = cl.id_asesor
+        INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pcd.tipoMovimiento AND oxc.id_catalogo = 108
+        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pcd.proceso AND oxc2.id_catalogo = 150
+        WHERE pcd.proceso IN ($proceso)
+        AND pcd.finalizado IN ($finalizado)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getHistorialCreditoActual($idProceso, $tipoEsquema)
+    {
+        $query = $this->db->query("SELECT 
+	        hpc.*,
+	        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) as nombreUsuario
+	        FROM historial_proceso_casas hpc
+	        INNER JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+	        WHERE idProcesoCasas = ?
+	        AND esquemaCreditoProceso = ?", array($idProceso, $tipoEsquema));
+            
+        return $query->result_array();
+    }
+
+    public function getProcesosOptionsDirecto(){
+        $query = "SELECT
+            id_opcion AS value,
+            nombre AS label
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 150
+        AND estatus = 1";
 
         return $this->db->query($query)->result();
     }

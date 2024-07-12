@@ -3,12 +3,26 @@ var tr;
 var valorGlobal = 3; 
 var banderaNewEvidencia = 2; 
 var datosDataTable = [];
+var banderaPermiso = 0;
 
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     $(".datepicker").datetimepicker({ locale: "es" });
     setInitialValues();
     llenado();
+    var hoy = new Date(fechaServer);
+    var dia = hoy.getDate();
+    var mes = hoy.getMonth() + 1;
+    var hora = hoy.getHours();
+    if (
+        ((mes == fechaInicioCorteGlobal[1] && dia < fechaInicioCorteGlobal[2])  
+                        &&  (mes == fechaInicioCorteGlobal[1] && dia > 5)) //VALIDACION FECHA CORTE
+        ) {
+            alert()
+    }else{
+        // document.getElementById('abrir_ejecutar').display = none;
+    }
+    
 });
 
 function llenado(){
@@ -19,7 +33,7 @@ function llenado(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#tipo").append($('<option>').val(id).text(name));     
+            $("#tipo").append($('<option>').val(id).text(`${id} - ${name} `));     
         }
         $("#tipo").selectpicker('refresh');
     }, 'json');
@@ -341,7 +355,7 @@ function setDataTableDescuentos(beginDate, endDate){
                             <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
                             <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_prestamo}" 
                                 onclick="esconder(${d.id_prestamo})" aria-expanded="true" aria-controls="collapseOne${d.id_prestamo}">
-                                <span class="lbl-blueMaderas">Ver más</span> 
+                                <span style="font-weight: 900;text-transform: math-auto;">Ver más <i class="fas fa-chevron-down"></i></span>
                                 
                             </a>
                         </div>
@@ -350,7 +364,7 @@ function setDataTableDescuentos(beginDate, endDate){
                                 ${d.comentario}</p> 
                                 <a href='#'  data-toggle="collapse" data-target="#collapseOne${d.id_prestamo}" 
                                     onclick="mostrar(${d.id_prestamo})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
-                                    <span class="lbl-blueMaderas">Ver menos</span> 
+                                    <span style="font-weight: 900;text-transform: math-auto;">Ver menos <i class="fas fa-chevron-up"></i></span> 
                                 </a>
                             </div>
                         </div>
@@ -463,21 +477,21 @@ function setDataTableDescuentos(beginDate, endDate){
                         <button href="#" value="${d.id_prestamo}"  id="preview" 
                         data-ruta="UPLOADS/EvidenciaGenericas"
                         data-doc="${d.relacion_evidencia}"   
-                        class="btn-data btn-orangeLight " title="Ver Evidencia">
+                        class="btn-data btn-orangeYellow" title="Ver Evidencia">
                             <i class="fas fa-folder-open">
                             </i>
                         </button>`; 
-                        }   else if(d.evidencia != null){
-                            botonesModal += `
-                            <button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  
-                            data-ruta="static/documentos/evidencia_prestamo_auto" 
-                            class="btn-data btn-violetDeep " title="Ver Evidencia">
-                                <i class="fas fa-folder-open">
-                                </i>
-                            </button>`; 
-                            }else{
-                                botonesModal += ``; 
-                            }
+                    }   else if(d.evidencia != null){
+                        botonesModal += `
+                        <button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  
+                        data-ruta="static/documentos/evidencia_prestamo_auto" 
+                        class="btn-data btn-violetDeep " title="Ver Evidencia">
+                            <i class="fas fa-folder-open">
+                            </i>
+                        </button>`; 
+                        }else{
+                            botonesModal += ``; 
+                        }
                     }
                 if (d.total_pagado != null || d.total_pagado > 0) {
                     botonesModal += `
@@ -669,9 +683,9 @@ $('#formTopar').on('submit', function (e) {
                     dataType: "json",
                     data: {
                         "tipoD":    tipoD,
-                        "pagoEdit": parseInt(pagoEdit),
-                        "numeroPagos": parseInt(numeroPagos),
-                        "montoPagos": parseInt(montoPagos),
+                        "pagoEdit": parsefloat(pagoEdit),
+                        "numeroPagos": parsefloat(numeroPagos),
+                        "montoPagos": parsefloat(montoPagos),
                         "comentario": comentario,
                         "prestamoId": prestamoId,
                     },
@@ -1153,7 +1167,7 @@ function mostrar(id){
 
             Modalheader.append(`
                 <input type="hidden" value="EDITAR" name="idPrestamo" id="idPrestamo"> 
-                    <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR 
+                    <h4>¿Desea editar o borrar la etiqueta del préstamo descuento? 
                     </h4>
             `);
             dataModal += ``; 
