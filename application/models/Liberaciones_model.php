@@ -146,7 +146,7 @@ class Liberaciones_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function getLotesPendientesBloqueo($idProcesoTipoLiberacion, $tipoVenta, $condicion) 
+    public function getLotesPendientesBloqueo( $condicion ) 
     {
         ini_set('memory_limit', -1);
         $query = $this->db->query(
@@ -165,7 +165,7 @@ class Liberaciones_model extends CI_Model {
 			CASE WHEN oxc2.color IS NOT NULL THEN oxc2.color ELSE '#1B4F72' END colorMovimiento, pl.concepto, hd.idDocumento, 
             CASE WHEN hd.movimiento IS NULL THEN 'SIN ESPECIFICAR' ELSE hd.movimiento END AS movimiento, hd.expediente, hd.tipo_doc,
 			CASE WHEN oxc3.nombre IS NOT NULL THEN oxc3.nombre ELSE 'Sin concepto' END nombreConceptoLiberacion, 
-            CASE WHEN pl.comentario = '' THEN 'Sin comentarios.' ELSE pl.comentario END comentario, pl.precioLiberacion, pl.plazo
+            CASE WHEN pl.comentario = '' THEN 'Sin comentarios.' ELSE pl.comentario END AS comentario, pl.precioLiberacion, pl.plazo
         FROM lotes AS lo
             LEFT JOIN clientes AS cl ON cl.id_cliente = lo.idCliente
             LEFT JOIN condominios AS co ON lo.idCondominio = co.idCondominio
@@ -178,11 +178,11 @@ class Liberaciones_model extends CI_Model {
             LEFT JOIN usuarios AS u5 ON u5.id_usuario = cl.id_regional_2
             LEFT JOIN proceso_liberacion_temp AS pl ON pl.idLote = lo.idLote AND rn = 1
 			LEFT JOIN historial_documento hd ON hd.idLote = lo.idLote AND hd.tipo_doc IN (53, 54) AND hd.status = 1 AND hd.expediente IS NOT NULL
-			LEFT JOIN opcs_x_cats AS oxc ON pl.proceso_lib = oxc.id_opcion AND oxc.id_catalogo = ?
+			LEFT JOIN opcs_x_cats AS oxc ON pl.proceso_lib = oxc.id_opcion AND oxc.id_catalogo = 148
 			LEFT JOIN opcs_x_cats AS oxc2 ON pl.estatus_lib = oxc2.id_opcion AND oxc2.id_catalogo = 108
 			LEFT JOIN opcs_x_cats AS oxc3 ON pl.concepto = oxc3.id_opcion AND oxc3.id_catalogo = 132
-        WHERE lo.tipo_venta = ? AND cl.status = 1 AND lo.idStatusContratacion IN (9,10,13,14,15) $condicion 
-        ORDER BY enProcesoLiberacion DESC;", array($idProcesoTipoLiberacion, $tipoVenta));
+        WHERE lo.idStatusLote = (8) and lo.status = 1 $condicion 
+        ORDER BY enProcesoLiberacion DESC;");
         return $query->result_array();
     }
 
@@ -257,7 +257,7 @@ class Liberaciones_model extends CI_Model {
             LEFT JOIN usuarios AS u5 ON u5.id_usuario = cl.id_regional_2
             LEFT JOIN proceso_liberacion_temp AS pl ON pl.idLote = lo.idLote AND rn = 1
 			LEFT JOIN historial_documento hd ON hd.idLote = lo.idLote AND hd.tipo_doc IN (53, 54) AND hd.status = 1 AND hd.expediente IS NOT NULL
-			LEFT JOIN opcs_x_cats AS oxc ON pl.proceso_lib = oxc.id_opcion AND oxc.id_catalogo = 148 /* ? */
+			LEFT JOIN opcs_x_cats AS oxc ON pl.proceso_lib = oxc.id_opcion AND oxc.id_catalogo = 148
 			LEFT JOIN opcs_x_cats AS oxc2 ON pl.estatus_lib = oxc2.id_opcion AND oxc2.id_catalogo = 108
 			LEFT JOIN opcs_x_cats AS oxc3 ON pl.concepto = oxc3.id_opcion AND oxc3.id_catalogo = 132
         WHERE lo.idStatusLote = (8) and lo.status = 1 $condicion 
@@ -300,6 +300,14 @@ class Liberaciones_model extends CI_Model {
     {
         $query = $this->db->query(
             "SELECT TOP (1) * FROM auditoria WHERE tabla = 'lotes' AND col_afect = 'idStatusLote' AND id_parametro = ? AND nuevo = 8 ORDER BY fecha_creacion DESC;", $idLote
+        );
+        return $query;
+    }
+
+    public function getDatosLoteParaDesbloqueo($idLote) 
+    {
+        $query = $this->db->query(
+            "SELECT TOP (1) * FROM lotes WHERE idLote = ? AND status = 1;", $idLote
         );
         return $query;
     }

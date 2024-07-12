@@ -138,7 +138,7 @@
                                     <a id='liberar' role="tab" data-toggle="tab">LIBERAR LOTE</a>
                                 </li>
                                 <?php } ?>
-                                <li  <?php if($this->session->userdata('id_rol') != 3 AND $this->session->userdata('id_rol') != 12 ){?> class="active"<?php } ?>>
+                                <li  <?php if($this->session->userdata('id_rol') != 3 AND $this->session->userdata('id_rol') != 12 ){?> class="active"<?php }else if ($this->session->userdata('id_rol') == 3){?> class="hide" <?php }?>>
                                     <a id='pendientes'  role="tab"  data-toggle="tab">PENDIENTES</a>
                                 </li>
                                 <li>

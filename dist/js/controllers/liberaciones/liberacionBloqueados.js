@@ -172,16 +172,12 @@ $(document).on('click', '.btn-accion', async function(){
     $('#labelComentarioAccionModal').html(comentarioLabel);
 
     let content = ``;
-    if ((d.enProcesoLiberacion === 1 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
-        precioLiberacion = $('#costoM2').val().replace('$', '').replace(',', ''); // El precio del lote
-        plazo = comentario; // El plazo es el input del comentario
-        comentario = ''; // El comentario no está habilitado para el proceso de liberación para el proceso 3
-        
-        // Input de precio sin monto
-        if (precioLiberacion === '') return alerts.showNotification("top", "right", `Digita el nuevo precio por m<sup>2</sup> del lote.`, "warning");
-
-         // Input de plazo sin valor
-         if (plazo === '') return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
+    if ((d.enProcesoLiberacion === PROCESO.CAMBIO_PRECIO )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
+        content = `
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12" id="cambioPrecio">
+                <label class="control-label"> Precio por m<sup>2</sup> (<span class="isRequired">*</span>)</label>
+                <input class="form-control input-gral" placeholder="$" name="costoM2" id="costoM2" data-type="currency" step="any">
+            </div>`;
     }
     // Embebemos el contenido extra
     $('#extra-content-accion-modal').html(content);
@@ -246,18 +242,15 @@ $(document).on("click", "#btn-accion", async function (e) {
     }
     if ((d.enProcesoLiberacion === PROCESO.CAMBIO_PRECIO )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
         precioLiberacion = $('#costoM2').val().replace('$', '').replace(',', ''); // El precio del lote
-        plazo = comentario; // El plazo es el input del comentario
-        comentario = ''; // El comentario no está habilitado para el proceso de liberación para el proceso 3
+        comentario = comentario; // El comentario no está habilitado para el proceso de liberación para el proceso 3
+        plazo = ''; // EN BLOQUEADOS NO APLICA EL PLAZO
         
         // Input de precio sin monto
         if (precioLiberacion === '') return alerts.showNotification("top", "right", `Digita el nuevo precio por m<sup>2</sup> del lote.`, "warning");
-
-        // Input de plazo sin valor
-        if (plazo === '') return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
     }
     if ((d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
         // Poner la validación
-    } 
+    }
 
     // CAMBIO DE PROCESO: se dirige al proceso
     if (accion === 'AVANCE') {
@@ -269,10 +262,14 @@ $(document).on("click", "#btn-accion", async function (e) {
             rescision = 0; // NO APLICA PARA BLOQUEADOS
             autorizacionDG = 0; // NO APLICA PARA BLOQUEADOS
             concepto = CONCEPTO.BLOQUEO;
-            
-    
+        }
+        if ( d.enProcesoLiberacion === PROCESO.CAMBIO_PRECIO ) { // CUANDO INICIA EL PROCESO.
 
-
+            proceso = PROCESO.SOLICITUD_LIBERACION;
+            estatusLib = AVANCE.NORMAL;
+            rescision = 0; // NO APLICA PARA BLOQUEADOS
+            autorizacionDG = 0; // NO APLICA PARA BLOQUEADOS
+            concepto = CONCEPTO.BLOQUEO;
         }
     }
     if (accion === 'RECHAZO') {
@@ -310,7 +307,7 @@ $(document).on("click", "#btn-accion", async function (e) {
     });
 
     // En caso de ser el ultimo proceso, ya se libera.
-    if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION) {
+    if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION && proceso === FINALIZADO_LIBERADO) {
         // Generamos el token para liberar el lote
         let res = await $.ajax({
             type: 'POST',
@@ -325,6 +322,8 @@ $(document).on("click", "#btn-accion", async function (e) {
         console.log('getToken', res);
 
         // Realizamos la acción de la función que libera el lote!
+        // PD TENGO QUE USAR ESA FUNCIÓN DE CAJA MODULES -> SOLO TENGO QUE ACTUALIZAR EL LOTE DE ESTATUS.
+        /*
         let data = await $.ajax({
             type: 'POST',
             url: `${general_base_url}Caja_outside/caja_modules`,
@@ -352,6 +351,7 @@ $(document).on("click", "#btn-accion", async function (e) {
             cache: false,
             processData: false,
         });
+        */
 
         // Notificamos al usuario
         data = JSON.parse(data);
@@ -588,12 +588,12 @@ const newButton = (btnClass, title, action = '', data, icon) => {
 }
 
 const datatableButtons = (d, type) => {
-    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LOTE', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A POSTVENTA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
+    const BTN_AVANCE_P0  = newButton('btn-data btn-green btn-accion', 'AVANZAR LOTE', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR A CAJA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_RECHAZO_P1 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fas fa-thumbs-down');
     const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
-    const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
+    const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR DESBLOQUEO', 'AVANCE', d, 'fa fa-check');
+    const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR DESBLOQUEO', 'RECHAZO', d, 'fa fa-times-circle');
     const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
     const BTN_VER_DOC    = newButton('btn-data btn-sky btn-ins-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
     const BTN_DEL_DOC    = newButton('btn-data btn-danger btn-del-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-trash');
@@ -607,20 +607,18 @@ const datatableButtons = (d, type) => {
     }
 
     if (type === 1) { // PARTICIPAN EN LOS PASOS
-        if (id_rol_general == ROLES.VENTAS || id_rol_general == ROLES.CAJAS) { 
-            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC +  BTN_INFO ;
-            if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
+        if (id_rol_general == ROLES.VENTAS ) { 
+            if (d.enProcesoLiberacion === 0 ) return BTN_AVANCE_P0 +  BTN_INFO ;
             return BTN_INFO; 
         }
         if (id_rol_general == ROLES.SUBDIRECCION) { // CONTRALORIA
-            if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) return BTN_INFO;
-            if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
+            if ( d.enProcesoLiberacion === 1) return BTN_AVANCE_P1 + /* BTN_RECHAZO_P1 + */ BTN_INFO;
             return BTN_INFO;
         }
-        if (id_rol_general == 12) { // CAJAS
-            if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) return BTN_INFO;
-            if (d.enProcesoLiberacion === 4) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;
-            return BTN_INFO;
+        if (id_rol_general == ROLES.CAJAS) { // CAJAS
+            if (d.enProcesoLiberacion === PROCESO.INICIO ) return BTN_AVANCE_P0 +  BTN_INFO ;
+            if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION) return BTN_LIBERA + BTN_NO_LIBERA + BTN_INFO;
+            return NO_BTN;
         }
         return NO_BTN;
     }
@@ -673,15 +671,4 @@ const fillChangelog = (i, d) => {
   '            <br>\n' +
   '            <a><b>Comentario: </b> '+d.comentario+' </a>\n' +
       '</li>');
-}
-
-const generarTituloDocumento = (abreviaturaNombreResidencial, nombreLote, idLote, idCliente, tipoDocumento) => {
-    let rama;
-    if (tipoDocumento === 53) rama = 'RESCICIÓN DE CONTRATO' ;
-    if (tipoDocumento === 54) rama = 'AUTORIZACIÓN DG' ;
-
-    const DATE = new Date();
-    const DATE_STR = [DATE.getMonth() + 1, DATE.getDate(), DATE.getFullYear()].join('-');
-    const TITULO_DOCUMENTO = `${abreviaturaNombreResidencial}_${nombreLote}_${idLote}_${idCliente}_TDOC${tipoDocumento}${rama.slice(0, 4)}_${DATE_STR}`;
-    return TITULO_DOCUMENTO;
 }

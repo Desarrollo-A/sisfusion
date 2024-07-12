@@ -128,24 +128,13 @@ class Liberaciones extends CI_Controller{
     }
 
     public function getLotesPendientesBloqueo(){
-        $tipoVenta = $this->input->post('tipoVenta');
-        $idProcesoTipoLiberacion = $this->input->post('idProcesoTipoLiberacion');
- 
         $condicion = '';
-        if ($idProcesoTipoLiberacion == 133) { // Filtro de acuerdo al concepto de liberación: En este caso Particulares.
-            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IN (1, 3))"; // POSTVENTA
-            if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib = (2))"; // CONTRALORÍA
-            if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (4))"; // CAJAS
-        }
-        if ($idProcesoTipoLiberacion == 134) { // Filtro de acuerdo al concepto de liberación: En este caso Rescisión.
-            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IN (1))"; // POSTVENTA
-            if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib = (2))"; // CONTRALORÍA
-            if ($this->session->userdata('id_rol') == 11) $condicion = "AND (pl.proceso_lib = (3))"; // ADMINISTRACIÓN
-            // if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4))"; // VENTAS SUBDIRECTOR
-            if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // VENTAS SUBDIRECTOR
-            if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (5))"; // CAJAS
-        }
-        $data = $this->Liberaciones_model->getLotesPendientesBloqueo($idProcesoTipoLiberacion, $tipoVenta, $condicion);
+
+        if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (1)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // VENTAS SUBDIRECTOR
+        if ($this->session->userdata('id_rol') == 11) $condicion = "AND (pl.proceso_lib = (1))"; // ASISTENTE SUBDIRECTOR
+        if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (2))"; // CAJAS
+        
+        $data = $this->Liberaciones_model->getLotesPendientesBloqueo($condicion);
 
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
@@ -180,7 +169,7 @@ class Liberaciones extends CI_Controller{
         if ($this->session->userdata('id_rol') == 3) $condicion = "AND (pl.proceso_lib IS NOT NULL)"; // VENTAS
         if ($this->session->userdata('id_rol') == 2) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (1)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // SUBDIRECCIÓN 
         if ($this->session->userdata('id_rol') == 5) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (1)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // ASISTENTES DE SUBDIRECCIÓN
-        if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (2, 3 ))"; // CAJAS
+        if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib NOT IN (2, 3))"; // CAJAS
 
         $data = $this->Liberaciones_model->getLotesEnProcesoBloqueo($condicion);
 
@@ -287,6 +276,39 @@ class Liberaciones extends CI_Controller{
         $idLote = $_POST['idLote'];
 
         $rs = $this->Liberaciones_model->getFechaBloqueoDeLote($idLote)->row();
+        
+        $response = elapsedDaysBetweenTwoDates($rs->fecha_creacion, (new DateTime())->format('Y-m-d'));
+        echo json_encode($response);
+    }
+
+    public function desbloqueoDeLote(){
+        $idLote = $_POST['idLote'];
+        $precioNuevo = $_POST['precioNuevo'];
+
+        $lote = $this->Liberaciones_model->getDatosLoteParaDesbloqueo($idLote)->row();
+
+        // if ($lote.length ) 
+
+        $precio = $precioNuevo;
+        $total = $precioNuevo * $lote->sup;
+        $enganche = $total * 0.1;
+        $saldo = $total - $enganche;
+        $idStatusLote = 1; 
+
+        $updateData['precio'] = $precio;
+        $updateData['total'] = $total;
+        $updateData['enganche'] = $enganche;
+        $updateData['saldo'] = $saldo;
+        $updateData['idStatusLote'] = 1; // ESTATUS DISPONIBLE
+        $updateData['usuario'] = $this->session->userdata('id_usuario');
+        $updateData['modificado'] = date('Y-m-d h:i:s');
+
+        
+        /* array(
+            "registro_comision" => 2,
+            "usuario" => $this->session->userdata('id_usuario')
+        ); */
+        $response = $this->Cobranza_model->updateRecord("lotes", $update_lotes_data, "idLote", $this->input->post("idLote")); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
         
         $response = elapsedDaysBetweenTwoDates($rs->fecha_creacion, (new DateTime())->format('Y-m-d'));
         echo json_encode($response);
