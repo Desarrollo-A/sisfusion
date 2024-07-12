@@ -45,7 +45,7 @@ $(document).ready(function () {
           $("#tipo_enganche").selectpicker('refresh');
     }, 'json');
 
-    $("#anexa_complemento").append($('<option>').val(1).text('SI'));
+    $("#anexa_complemento").append($('<option>').val(1).text('SÍ'));
     $("#anexa_complemento").append($('<option>').val(0).text('NO'));
     $("#anexa_complemento").selectpicker('refresh');
 });
@@ -449,7 +449,7 @@ $(document).on('click', '.stat5Rev', function () {
     function (data) {
         if (data.length >= 1){
             $("#anexa_complemento").empty();
-            $("#anexa_complemento").append($('<option selected="selected">').val(1).text('SI'));
+            $("#anexa_complemento").append($('<option selected="selected">').val(1).text('SÍ'));
             $("#anexa_complemento").append($('<option>').val(0).text('NO'));
             $("#anexa_complemento").selectpicker('refresh');
 

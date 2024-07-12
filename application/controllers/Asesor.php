@@ -2185,7 +2185,7 @@ class Asesor extends CI_Controller {
         //revisar si coloco que no quiere la carta, revisar si hay un registro en el arbol
         //si es así hayq ue borrar la rama ya que no la estará utilizando
 
-        if($tipo_comprobante == 2){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
+        if($tipo_comprobante == 0){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
             //$dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente,  29);
 
