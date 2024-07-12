@@ -175,7 +175,7 @@ function fillTable(data) {
             if(pago.pago == row.pago){
                 // console.log(pago)
 
-                if(value === '' || value === 0){
+                if(value === '' || value === 0 || value === '0'){
                     value = parseFloat(pago.total)
                 }
 
