@@ -591,7 +591,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     }
 
     function formatPercentage(input, blur) {
-        console.log("I am being called");
         let input_val = input.val();
         if (input_val === "") { return; }
         input_val = input_val.replace(/\D/g, '');
@@ -637,7 +636,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             let title = (descripcion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
             const arrayCondiciones = [1, 2];
             const found = arrayCondiciones.includes(parseInt(id_condicion));
-            console.log("id_condicion: ", id_condicion);
             
             $('#table'+title+' thead tr:eq(0) th').each( function (i) {
                 var subtitle = $(this).text();
