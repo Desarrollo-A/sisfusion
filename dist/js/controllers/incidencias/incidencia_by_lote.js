@@ -1382,7 +1382,7 @@ $(".find_doc").click( function() {
                 BtnStats += data.estatus == 1 ? `<button data-toggle="tooltip" data-placement="top"data-lote="${data.idLote}" data-cliente="${data.id_cliente}" data-precioLote ="${data.totalNeto2}" class=" btn-data btn-sky agregar_usuario"  title="Agregar usuario" ><i class="fas fa-user-plus"></i></button>` : '';
 
                 BtnStats += (data.idStatusContratacion >= 9 && [64,65,66,84,85,86].indexOf(data.plan_comision) < 0) ? `<button data-toggle="tooltip" data-placement="top"data-estatus="${data.estatus}" data-idCliente="${data.id_cliente}" class=" btn-data btn-yellow cambiar_plan_comision"  title="Cambiar plan de comisión"><i class="fas fa-chart-bar"></i></button>` : '';
-                BtnStats +=  data.registro_comision ===0 || data.registro_comision ===8 && data.compartida!=null ? `<button data-toggle="tooltip" data-placement="top" value="${data.idLote}" data-lote="${data.idLote}" data-cliente="${data.id_cliente}" class=" btn-data btn-warning bajaVentaC"><i class="fas fa-trash"></i></button>`:'';
+                BtnStats +=  data.registro_comision ===0 || data.registro_comision ===8 && data.compartida!=null ? `<button data-toggle="tooltip" data-placement="top" value="${data.idLote}" data-lote="${data.idLote}" title="Baja venta compartida" data-cliente="${data.id_cliente}" class=" btn-data btn-warning bajaVentaC"><i class="fas fa-trash"></i></button>`:'';
 
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
