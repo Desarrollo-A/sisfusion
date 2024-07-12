@@ -201,13 +201,14 @@ class Incidencias extends CI_Controller
     }
 
     public function AddVentaCompartida(){
-      $datosAse = explode(",",$this->input->post('usuarioid5'));
-      $coor = $this->input->post('usuarioid6');
-      $ger = $this->input->post('usuarioid7');
-      $sub = $this->input->post('usuarioid8');
+      $datosAse = explode(",",$this->input->post('elegir_asesor'));
+      $coor = $this->input->post('elegir_coordinador');
+      $ger = $this->input->post('elegir_gerente');
+      $sub = $this->input->post('elegir_subdirector');
+      $diReg = $this->input->post('elegir_diRegional');
       $id_cliente = $this->input->post('id_cliente');
       $id_lote = $this->input->post('id_lote');
-      $respuesta = array($this->Incidencias_model->AddVentaCompartida($datosAse[0],$coor,$ger,$sub,$id_cliente,$id_lote));
+      $respuesta = array($this->Incidencias_model->AddVentaCompartida($datosAse[0],$coor,$ger,$sub,$diReg,$id_cliente,$id_lote));
       echo json_encode($respuesta[0]);
     }
     

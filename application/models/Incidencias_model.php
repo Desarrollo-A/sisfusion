@@ -50,8 +50,15 @@ class Incidencias_model extends CI_Model {
         return $query->result();
     }
 
+    function busquedaUsuarios($rol){
+        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS name_user FROM usuarios WHERE id_rol = $rol");
+    }
+
     function getUsers(){
-        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS name_user FROM usuarios WHERE id_usuario NOT IN (1) AND estatus IN (1,3) AND tipo IN (1,2) and id_rol IN (1,2,3,7,9,87,88,89,90,91,45)");
+        return $this->db->query("SELECT u.id_usuario,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS name_user,id_rol,r.idRol 
+                                FROM usuarios u
+                                LEFT JOIN (SELECT idRol, idUsuario FROM roles_x_usuario GROUP BY idRol, idUsuario) r ON r.idUsuario=u.id_usuario
+                                WHERE u.id_usuario NOT IN (1) AND u.estatus IN (1,3) AND u.tipo IN (1,2) and u.id_rol IN (1,2,3,7,9,87,88,89,90,91,45)");
 
     }
     function updateUser($idLote,$comision,$id_cliente,$id_rol,$id_usuario,$porcentaje){
@@ -1777,43 +1784,61 @@ class Incidencias_model extends CI_Model {
             }
         }
         
-        function AddVentaCompartida($id_asesor,$coor,$ger,$sub,$id_cliente,$id_lote){
+        function AddVentaCompartida($id_asesor,$coor,$ger,$sub,$diReg,$id_cliente,$id_lote){
             date_default_timezone_set('America/Mexico_City');       
-            $response = $this->db->query("INSERT INTO ventas_compartidas VALUES($id_cliente,$id_asesor,$coor,$ger,1,GETDATE(),".$this->session->userdata('id_usuario').",$sub, GETDATE(),".$this->session->userdata('id_usuario').",0,0,0);");
+            $response = $this->db->query("INSERT INTO ventas_compartidas VALUES($id_cliente,$id_asesor,$coor,$ger,1,GETDATE(),".$this->session->userdata('id_usuario').",$sub, GETDATE(),".$this->session->userdata('id_usuario').",$diReg,0,0);");
 
             $usuario = 0;
             $rolSelect = 0;
             $porcentaje = 0;
 
-            for($i=0;$i<4;$i++){
+            $directivoBandera;
+
+            for($i=0;$i<5;$i++){
                 if($i== 0){ //Asesor
                     $usuario=$id_asesor;
                     $rolSelect =7;
                     $porcentaje=1.5;
+                
                 } else if($i == 1){ //Coordinador
                     $usuario=$coor;
                     $rolSelect =9;
                     $porcentaje=0.5;
+
                 } else if($i == 2){ //Gerente
                     $usuario=$ger;
                     $rolSelect =3;
                     $porcentaje=0.5;
+                    
                 } else if($i == 3){ //Subdir
                     $usuario=$sub;
                     $rolSelect =2;
                     $porcentaje=0.5;
-                }
 
-                $validate = $this->db->query("SELECT id_usuario FROM comisiones WHERE id_lote IN (SELECT idLote FROM lotes WHERE idLote = $id_lote) AND id_usuario = $usuario");
+                }else if($i == 4){ //DireReg
+                    $usuario=$diReg;
+                    $rolSelect =2;
+                    $porcentaje=0.5;
+                    
+                }
+                $directivoBandera = $usuario == 0 ? 0 :1;
+
                 $data_lote = $this->db->query("SELECT idLote, totalNeto2 FROM lotes WHERE idLote = $id_lote");
                 $precio_lote = $data_lote->row()->totalNeto2;
                 $comision_total=$precio_lote * ($porcentaje /100);
-        
-                if(empty($validate->row()->id_usuario)){
-                    $response = $this->db->query("UPDATE comisiones SET comision_total=$comision_total,porcentaje_decimal=$porcentaje,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_lote=".$id_lote." AND rol_generado=$rolSelect");
-                    $response = $this->db->query("INSERT INTO comisiones(id_lote,id_usuario,comision_total,estatus,observaciones,evidencia,factura,creado_por,fecha_creacion,porcentaje_decimal,fecha_autorizacion,rol_generado,descuento,idCliente,modificado_por) 
-                    VALUES (".$id_lote.",$usuario,$comision_total,1,'SE AGREGÓ VENTA COMPARTIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),$porcentaje,GETDATE(),$rolSelect,0,$id_cliente,'".$this->session->userdata('id_usuario')."')");
+
+                if($directivoBandera != 0){
+                
+                    $validate = $this->db->query("SELECT id_usuario FROM comisiones WHERE id_lote IN (SELECT idLote FROM lotes WHERE idLote = $id_lote) AND id_usuario = $usuario");
+                    if(empty($validate->row()->id_usuario)){
+                        $response = $this->db->query("INSERT INTO comisiones(id_lote,id_usuario,comision_total,estatus,observaciones,ooam,loteReubicado,creado_por,fecha_creacion,porcentaje_decimal,fecha_autorizacion,rol_generado,descuento,idCliente,modificado_por,liquidada) 
+                        VALUES (".$id_lote.",$usuario,$comision_total,1,'SE AGREGÓ VENTA COMPARTIDA',NULL,NULL,".$this->session->userdata('id_usuario').",GETDATE(),$porcentaje,GETDATE(),$rolSelect,0,$id_cliente,'".$this->session->userdata('id_usuario')."',0)");
+                    }
+
                 }
+
+                $response = $this->db->query("UPDATE comisiones SET comision_total=$comision_total,porcentaje_decimal=$porcentaje,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_lote=".$id_lote." AND rol_generado=$rolSelect AND estatus=1");
+
             }
         
             if($response){
