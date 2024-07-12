@@ -15,7 +15,7 @@ $.ajax({
 })
 
 function cambio(option) {
-    console.log(option)
+    // console.log(option)
 }
 
 filtro_proyectos.onChange(function(option){
@@ -51,6 +51,9 @@ let filtros = new Filters({
 })
 
 let gerentes = []
+let tipoEsquema = [];
+tipoEsquema[0] = {label: "Credito de banco", value: 1}; // credito de banco
+tipoEsquema[1] = {label: "Credito directo", value: 2}; // credito directo
 
 $.ajax({
     type: 'GET',
@@ -65,15 +68,6 @@ $.ajax({
 })
 
 select_lote = function(data) {
-    /* let ask = new AskDialog({
-        title: 'Iniciar proceso', 
-        text: `Iniciar proceso de asignación del lote ${data.nombreLote}`,
-        onOk: () => sendToAsignacion(data),
-        //onCancel: sayNo,
-    })
-
-    ask.show() */
-
     let form = new Form({
         title: 'Iniciar proceso', 
         text: `¿Iniciar proceso de asignación del lote <b>${data.nombreLote}</b>?`,
@@ -104,12 +98,12 @@ select_lote = function(data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
+            new SelectField({   id: 'esquemaCredito', label: 'Tipo de credito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show()
-
 }
 
 let buttons = [
@@ -132,17 +126,18 @@ let buttons = [
 
 let columns = [
     { data: 'idLote' },
-    { data: function(data){
-        return `${data.nombreLote}`
-    } },
+    { data: function(data)
+        { return `${data.nombreLote}` } 
+    },
     { data: 'condominio' },
     { data: 'proyecto' },
     { data: 'cliente' },
-    { data: function(data){
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
-
-        return '<div class="d-flex justify-center">' + pass_button + '</div>'
-    } },
+    { data: function(data)
+        {
+            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
+            return '<div class="d-flex justify-center">' + pass_button + '</div>'
+        } 
+    },
 ]
 
 let table = new Table({

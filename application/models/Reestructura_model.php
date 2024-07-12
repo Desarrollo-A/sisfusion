@@ -1384,7 +1384,6 @@ class Reestructura_model extends CI_Model
                 AND lo.liberaBandera = 1 
                 AND lo.idLote NOT IN(SELECT idLote from lotesFusion) 
                 $condicion
-                $validacionExtra
               GROUP BY pxl.idLote, reOrigen.nombreResidencial, coOrigen.nombre, lo.nombreLote, lo.referencia, oxc.nombre, u.modificado, u2.modificado, u3.modificado, usG.nombre, usA.nombre, lo.idLote, 
               lo.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lo.sup, usS.nombre, lo.totalNeto2, opc2.nombre 
               UNION ALL 
@@ -1450,7 +1449,7 @@ class Reestructura_model extends CI_Model
                 LEFT JOIN usuarios AS us4 ON us3.id_lider = us4.id_usuario -- regional 
                 LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108 
                 LEFT JOIN usuario usL on usL.id_usuario = usA.id_lider 
-                WHERE loPv.liberaBandera = 1 AND loPv.estatus_preproceso != 7 AND loPv.id_usuario_asignado != 0 $validacionExtra
+                WHERE loPv.liberaBandera = 1 AND loPv.estatus_preproceso != 7 AND loPv.id_usuario_asignado != 0
                 GROUP BY lf.idLotePvOrigen, oxc.nombre, loPv.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico 
                 ) d 
                 $condicionFusion
