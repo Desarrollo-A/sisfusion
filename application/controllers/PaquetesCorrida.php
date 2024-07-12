@@ -391,12 +391,20 @@ class PaquetesCorrida extends CI_Controller
   public function SaveNewDescuento(){
     $id_condicion = $this->input->post("id_condicion");
     $descuento = $this->input->post("descuento");
-
-    if ($this->input->post("id_condicion") == 4 || $this->input->post("id_condicion") == 12 || $this->input->post("id_condicion") == 1 || $this->input->post("id_condicion") == 2) {
+    //PERCENTAGES
+    if($id_condicion == 1 || $id_condicion == 2) {
+      $replace = ["%"];
+      $descuento = str_replace($replace, "", $descuento);
+    }
+    //CURRENCY
+    if($id_condicion == 4 || $id_condicion == 12) {
       $replace = ["$", ","];
       $descuento = str_replace($replace, "", $descuento);
     }
-    
+    //NORMAL
+    if($id_condicion == 13) {
+      $descuento = $descuento;
+    }
     $row = $this->PaquetesCorrida_model->ValidarDescuento($id_condicion, $descuento)->result_array();
     if (count($row) > 1){    
       echo(json_encode(array("status" => 403, "mensaje" => "Porcentaje existente duplicado, no se puede agregar otro.", "color" => "warning"), JSON_UNESCAPED_UNICODE));

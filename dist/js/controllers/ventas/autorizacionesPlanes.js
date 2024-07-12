@@ -188,8 +188,11 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 switch(id_rol_general){
                     case 17:
                     case 70:
+                        if(d.estatus_autorizacion == 1) {
+                            botones += botonesPermiso(1,1,1,0,1, d.id_autorizacion, d.estatus_autorizacion);
+                        }                        
                         if(d.estatus_autorizacion == 2){
-                            botones += botonesPermiso(1,0,1,1,1,d.id_autorizacion,d.estatus_autorizacion);
+                            botones += botonesPermiso(1,0,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
                         if(d.estatus_autorizacion == 3){
                             botones += botonesPermiso(1,0,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
@@ -516,12 +519,19 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
     function addDescuento(id_condicion, descripcion) {
-        const arrayCondiciones = [1, 2, 4, 12];
+        const currencyCondiciones = [4, 12];
+        const percentageCondiciones = [1,2]
         var desc = document.getElementById("descuento");
 
-        const found = arrayCondiciones.includes(parseInt(id_condicion));
-        console.log(found);
-        desc.setAttribute("data-type", found ? "currency" : "");
+        const isCurrency = currencyCondiciones.includes(parseInt(id_condicion));
+        const isPercentage = percentageCondiciones.includes(parseInt(id_condicion));
+        if (isCurrency) {
+            desc.setAttribute("data-type", "currency");
+        } else if (isPercentage) {
+            desc.setAttribute("data-type", "percentage");
+        } else {
+            desc.setAttribute("data-type", "");
+        }
 
         $('#descuento').val('');
         $('#label_descuento').html('');
@@ -533,13 +543,19 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
 
     $("input").on({
         keyup: function() {
-            if ($(this).attr('data-type') === 'currency'){
+            const dataType = $(this).attr('data-type');
+            if (dataType === 'currency'){
                 formatCurrency($(this));
+            } else if (dataType === 'percentage') {
+                formatPercentage($(this));
             }
         },
         blur: function() {
-            if ($(this).attr('data-type') === 'currency') {
+            const dataType = $(this).attr('data-type');
+            if (dataType === 'currency') {
                 formatCurrency($(this), "blur");
+            } else if (dataType === 'percentage') {
+                formatPercentage($(this), "blur");
             }
         }
     });
@@ -574,6 +590,18 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
 
+    function formatPercentage(input, blur) {
+        console.log("I am being called");
+        let input_val = input.val();
+        if (input_val === "") { return; }
+        input_val = input_val.replace(/\D/g, '');
+        let percentage_val = parseFloat(input_val) / 100;
+        input_val = percentage_val.toFixed(2);
+        input_val += "%";
+        input.val(input_val);
+    }
+
+
     function getDescuentosYCondiciones(){
         $('#spiner-loader').removeClass('hide');
         return new Promise ((resolve, reject) => {   
@@ -607,6 +635,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             let id_condicion = element['condicion']['id_condicion'];
             let dataCondicion = element['data'];
             let title = (descripcion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
+            const arrayCondiciones = [1, 2];
+            const found = arrayCondiciones.includes(parseInt(id_condicion));
+            console.log("id_condicion: ", id_condicion);
             
             $('#table'+title+' thead tr:eq(0) th').each( function (i) {
                 var subtitle = $(this).text();
@@ -654,7 +685,12 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 },
                 {
                     data: function (d) {
-                        return d.porcentaje + '%';
+                         if(found) {
+                            return d.porcentaje + '%';
+                         }
+                         else {
+                            return d.porcentaje ;
+                         }
                     }
                 }
                 ],

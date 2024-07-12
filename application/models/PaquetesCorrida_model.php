@@ -276,7 +276,8 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
 }
     public function getAutorizaciones($id_rol,$opcion = 1,$anio = '',$estatus = ''){
         $estatusWhere1 = $opcion == 2 ? ($estatus == 0 ? 'YEAR(aut.fecha_creacion) = '.$anio : 'aut.estatus_autorizacion in('.$estatus.') AND YEAR(aut.fecha_creacion) = '.$anio) : '' ;
-        $estatusWhere2 = $opcion == 1 ? ($id_rol == 17 ? ' aut.estatus_autorizacion in(2,3,4,6)' : ' aut.estatus_autorizacion in(1,3,4)') : '';
+        //$estatusWhere2 = $opcion == 1 ? ($id_rol == 17 ? ' aut.estatus_autorizacion in(1,2,3,4,6)' : ' aut.estatus_autorizacion in(1,3,4)') : '';
+        $estatusWhere2 = $opcion == 1 ? 'aut.estatus_autorizacion in(1,2,3,4,6)' : '';
         return $this->db->query("SELECT aut.*,sd.nombre as sede,STRING_AGG((CONVERT(VARCHAR(MAX), RE.descripcion)), ',') nombreResidencial,
         (CASE WHEN opc.id_opcion = 1 THEN 'Comercial' WHEN opc.id_opcion = 0 THEN 'Habitacional' ELSE 'Ambos' END) tipoLote,
         opc2.nombre as estatusA,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor,
@@ -331,14 +332,14 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
     public function avanceAutorizacion($id_autorizacion, $estatus, $tipo,$comentario, $sesionado, $accion) {
         date_default_timezone_set('America/Mexico_City');
         $hoy2 = date('Y-m-d H:i:s');
-        $datosAvance = $this->db->query("SELECT * FROM avanceAutorizacion a 
-        INNER JOIN autorizaciones_pventas pv ON pv.estatus_autorizacion = a.estatus
-        WHERE a.estatus = $estatus AND a.tipo = $tipo AND pv.id_autorizacion = $id_autorizacion")->result_array();        
-
-        $siguienteEstatus = $datosAvance[0]['estatus_siguiente'];
-        $comentario = $comentario === 0 ? $datosAvance[0]['comentario'] : $comentario;
-        $estatusRegistro = $tipo == 1 ? 1 : 2;
         if($accion == 1 || $accion == 2) {
+            $datosAvance = $this->db->query("SELECT * FROM avanceAutorizacion a 
+            INNER JOIN autorizaciones_pventas pv ON pv.estatus_autorizacion = a.estatus
+            WHERE a.estatus = $estatus AND a.tipo = $tipo AND pv.id_autorizacion = $id_autorizacion")->result_array();       
+            
+            $siguienteEstatus = $datosAvance[0]['estatus_siguiente'];
+            $comentario = $comentario === 0 ? $datosAvance[0]['comentario'] : $comentario;
+            $estatusRegistro = $tipo == 1 ? 1 : 2;    
             $this->db->trans_begin();
             if($siguienteEstatus == 3){
                 $query_tipo_lote = $datosAvance[0]['tipo_lote'] == 2 ? '' : 'AND co.tipo_lote='.$datosAvance[0]['tipo_lote'];
@@ -357,8 +358,8 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
             }            
         }
         if($accion == 3) {
-            $paquetes = $datosAvance[0]['paquetes'];
-            $test = $this->db->query("SELECT * FROM paquetes where id_paquete IN ($paquetes)");
+            $paquetesValor = $this->db->query("SELECT * FROM autorizaciones_pventas WHERE id_autorizacion = $id_autorizacion")->result_array();
+            $paquetes = $paquetesValor[0]['paquetes'] != null ? $paquetesValor[0]['paquetes'] : '';
             //DEACTIVATE 
             $this->db->query("UPDATE autorizaciones_pventas SET estatus_autorizacion = 6 WHERE id_autorizacion = $id_autorizacion");
             $this->db->query("UPDATE paquetes SET estatus = 0 WHERE id_paquete IN ($paquetes)");
