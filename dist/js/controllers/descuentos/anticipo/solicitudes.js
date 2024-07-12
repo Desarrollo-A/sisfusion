@@ -71,6 +71,7 @@ $("#tabla_anticipo_revision").ready(function () {
                 data-mensualidades_pra="${d.mensualidades}"
                 data-monto_parcialidad="${d.monto_parcialidad}"
                 data-id_parcialidad="${d.id_parcialidad}"
+                data-forma_pago="${d.formaNomal}"
 
                 class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
                 <i class="fas fa-forward"></i>
@@ -96,6 +97,7 @@ $("#tabla_anticipo_revision").ready(function () {
                 data-mensualidades_pra="${d.mensualidades}"
                 data-monto_parcialidad="${d.monto_parcialidad}"
                 data-id_parcialidad="${d.id_parcialidad}"
+                data-forma_pago="${d.formaNomal}"
 
                 data-name="${d.nombre}"
                 data-monto="${d.monto}" data-monto_formateado="${d.monto_formateado}"
@@ -313,6 +315,7 @@ $("#tabla_anticipo_revision").ready(function () {
         const monto1 = $(this).attr("data-monto");
         const id_usuario1 = $(this).attr("data-id_usuario");
 
+        const forma_pago = $(this).attr("data-forma_pago");
 
         const monto_formateado = $(this).attr("data-monto_formateado");
         const mensualidades_pra = $(this).attr("data-mensualidades_pra");
@@ -335,15 +338,12 @@ $("#tabla_anticipo_revision").ready(function () {
             <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
 
             <div>
-            <h2 class="card_title">Detalles</h2>
+                <h2 class="card_title">Detalles</h2>
                 <p class="center-align"> 
                     Monto solicitado : ${monto_formateado}.<br>
                     Mendiante la modalidad : ${modalidad}
-
-                    
                 </p>
             </div>
-
             <div class="form-group">
                 <label class="label center-align control-label">Prioridad</label>
 
@@ -380,6 +380,9 @@ $("#tabla_anticipo_revision").ready(function () {
             <br>
             <div class="form-group">
                 <input type="hidden" value="1" name="bandera_a" id="bandera_a">
+            </div>
+            <div class="form-group">
+                <input type="hidden" value="${forma_pago}" name="forma_pago" id="forma_pago">
             </div>
             <div class="form-group">
                 <input type="hidden" value="${id_usuario1}" name="id_usuario" id="id_usuario">

@@ -4,8 +4,7 @@ let form = new Form({
 })
 
 form.onSubmit = function (data) {
-    //console.log(data)
-    form.loading(true)
+    form.loading(true);
 
     $.ajax({
         type: 'POST',
@@ -45,6 +44,10 @@ $.ajax({
 function choose_asesor(data) {
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+        new HiddenField({ id: 'esquemaCreditoCasas', value: data.esquemaCreditoCasas }),
+        new HiddenField({ id: 'idLote', value: data.idLote }),
+        new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+        new HiddenField({ id: 'proceso', value: data.proceso }),
         new SelectField({ id: 'asesor', label: 'Asesor', value: data.idAsesor, placeholder: 'Selecciona una opción', data: items, required: true }),
     ]
 
@@ -82,12 +85,17 @@ select_asesor = function (data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'esquemaCreditoCasas', value: data.esquemaCreditoCasas }),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'asesor', value: data.idAsesor }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show()
-
 }
 
 cancel_process = function (data) {
@@ -120,6 +128,10 @@ cancel_process = function (data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'esquemaCreditoCasas', value: data.esquemaCreditoCasas }),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -154,20 +166,14 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: function (data) {
-        switch(data.tipoMovimiento){
-        case 1:
-            clase = 'warning'
-            break
-        case 2:
-            clase = 'orange'
-            break
-        default:
-            clase = 'blueMaderas'
+    {
+        data: (d) => {
+            return `<span class="label" 
+                style="color: ${d.color}; background: ${d.color}18;}">
+                ${d.movimiento}
+            </span>`;
         }
-
-        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
-    } },
+    },
     {
         data: function (data) {
             let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data })

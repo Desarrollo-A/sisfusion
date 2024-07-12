@@ -14,6 +14,7 @@ class ComisionesNeo extends CI_Controller{
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->gphsis = $this->load->database('GPHSIS', TRUE);
+        $this->programacion = $this->load->database('programacion', TRUE);
     }
 
     public function index(){
@@ -61,5 +62,10 @@ class ComisionesNeo extends CI_Controller{
         else{
             echo json_encode(array("data" => ''));
         }
+    }
+
+    public function getMensualidadAbonoNeo(){
+        $datos = $this->ComisionesNeo_model->getMensualidadAbonoNeo()->result_array();
+        var_dump($datos);
     }
 }

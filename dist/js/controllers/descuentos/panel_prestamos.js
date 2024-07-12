@@ -20,7 +20,7 @@ $(document).ready(function () {
         ) {
             alert()
     }else{
-        document.getElementById('abrir_ejecutar').display = none;
+        // document.getElementById('abrir_ejecutar').display = none;
     }
     
 });
@@ -683,9 +683,9 @@ $('#formTopar').on('submit', function (e) {
                     dataType: "json",
                     data: {
                         "tipoD":    tipoD,
-                        "pagoEdit": parseInt(pagoEdit),
-                        "numeroPagos": parseInt(numeroPagos),
-                        "montoPagos": parseInt(montoPagos),
+                        "pagoEdit": parsefloat(pagoEdit),
+                        "numeroPagos": parsefloat(numeroPagos),
+                        "montoPagos": parsefloat(montoPagos),
                         "comentario": comentario,
                         "prestamoId": prestamoId,
                     },
@@ -1167,7 +1167,7 @@ function mostrar(id){
 
             Modalheader.append(`
                 <input type="hidden" value="EDITAR" name="idPrestamo" id="idPrestamo"> 
-                    <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR 
+                    <h4>¿Desea editar o borrar la etiqueta del préstamo descuento? 
                     </h4>
             `);
             dataModal += ``; 
