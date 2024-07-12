@@ -1,6 +1,8 @@
 let descuentosYCondiciones;
 //$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
 llenarTipoDescuentos();
+let count = 0;
+let tableData = [];
 
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -642,102 +644,99 @@ function formatPercentage(input, blur) {
     }
     
     //Fn para construir las tablas según el número de condiciones existente, esto en la modal para ver condiciones
-    async function construirTablas(){
-        //if(primeraCarga == 1){
-        //    descuentosYCondiciones = await getDescuentosYCondiciones(primeraCarga, 0);
-        //    descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
-        //    primeraCarga = 0;
-        //}
-        
+    async function construirTablas() {
         descuentosYCondiciones.forEach(element => {
             let descripcion = element['condicion']['descripcion'];
             let id_condicion = element['condicion']['id_condicion'];
             let dataCondicion = element['data'];
-            let title = (descripcion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
+            let title = (descripcion.replace(/ /g, '')).replace(/[^a-zA-Z ]/g, "");
             const currencyCondiciones = [4, 12];
-            const percentageCondiciones = [1,2];
+            const percentageCondiciones = [1, 2];
             const isCurrency = currencyCondiciones.includes(parseInt(id_condicion));
             const isPercentage = percentageCondiciones.includes(parseInt(id_condicion));
-            $('#table'+title+' thead tr:eq(0) th').each( function (i) {
+            let subtitleTable = '';
+            if ($.fn.DataTable.isDataTable('#table' + title)) {
+                $('#table' + title).DataTable().destroy();
+            }
+          if(count == 0) {
+            $('#table'+title+' thead tr:eq(0) th').each(function (i) {
                 var subtitle = $(this).text();
-                $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>' );
-                $( 'input', this ).on('keyup change', function () {
-                    if ($('#table' + title).column(i).search() !== this.value ) {
-                        $('#table' + title).column(i).search(this.value).draw();
+                subtitleTable = subtitle;
+                $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>');
+                $('input', this).on('keyup change', function () {
+                    if ($('#table' + title).DataTable().column(i).search() !== this.value) {
+                        $('#table' + title).DataTable().column(i).search(this.value).draw();
                     }
                 });
+                tableData.push({title: subtitleTable});
             });
-            
-            $("#table"+title).DataTable({
-                dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+          }
+            let dataTable = $("#table" + title).DataTable({
+                dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
                 width: "auto",
                 buttons: [{
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Descargar archivo de Excel',
-                    title: 'DESCUENTO$("#S AL '+ descripcion.toUpperCase()
-                },
-                {
-                    text: `<i class="fas fa-plus"></i> Agregar descuento`,
-                    action: function () {
-                        addDescuento(id_condicion, descripcion)
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                        className: 'btn buttons-excel',
+                        titleAttr: 'Descargar archivo de Excel',
+                        title: 'DESCUENTO AL ' + descripcion.toUpperCase()
                     },
-                    attr: {
-                        class: 'btn btn-azure',
-                        style: 'position: relative;'
+                    {
+                        text: `<i class="fas fa-plus"></i> Agregar descuento`,
+                        action: function () {
+                            addDescuento(id_condicion, descripcion);
+                        },
+                        attr: {
+                            class: 'btn btn-azure',
+                            style: 'position: relative;'
+                        }
                     }
-                }
-            ],
+                ],
                 pagingType: "full_numbers",
                 language: {
                     url: general_base_url + "static/spanishLoader_v2.json",
                     paginate: {
-                        previous: "<i class='fa fa-angle-left'>",
-                        next: "<i class='fa fa-angle-right'>"
+                        previous: "<i class='fa fa-angle-left'></i>",
+                        next: "<i class='fa fa-angle-right'></i>"
                     }
                 },
-                destroy: true,
                 ordering: false,
                 columns: [{
-                    data: 'id_descuento'
-                },
-                {
-                    data: 'porcentaje',
-                    render: function(data, type, row) {
-                        if (type === 'display') {
-                            //%
-                            if (isPercentage) {
-                            let formattedValue = parseFloat(data).toFixed(2); 
-                            formattedValue = formattedValue.replace(/\.00$/, '');
-                            return formattedValue + '%';
-                            } 
-                            //$
-                            else if (isCurrency) {
-                            let formattedValue = parseFloat(data).toLocaleString('es-MX', {
-                                style: 'currency',
-                                currency: 'MXN',
-                                minimumFractionDigits: 0, 
-                                maximumFractionDigits: 2 
-                            });
-                            formattedValue = formattedValue.replace(/(\.\d*?)0+$/, '$1').replace(/\sMXN$/, ''); 
-                            return formattedValue;
-                            } 
-                            //NORMAL
-                            else {
-                            return parseFloat(data).toLocaleString('es-MX');
+                        data: 'id_descuento'
+                    },
+                    {
+                        data: 'porcentaje',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                // Formatear $
+                                if (isPercentage) {
+                                    let formattedValue = parseFloat(data).toFixed(2);
+                                    formattedValue = formattedValue.replace(/\.00$/, '');
+                                    return formattedValue + '%';
+                                }
+                                // Formatear $
+                                else if (isCurrency) {
+                                    let formattedValue = parseFloat(data).toLocaleString('es-MX', {
+                                        style: 'currency',
+                                        currency: 'MXN',
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 2
+                                    });
+                                    formattedValue = formattedValue.replace(/(\.\d*?)0+$/, '$1').replace(/\sMXN$/, '');
+                                    return formattedValue;
+                                }
+                                else {
+                                    return parseFloat(data).toLocaleString('es-MX');
+                                }
                             }
-                        }
-                        return data; 
+                            return data;
                         }
                     }
                 ],
                 data: dataCondicion,
                 columnDefs: [{
                     orderable: false,
-                    className: 'select-checkbox',
-                    targets:   0,
-                    searchable:false,
+                    targets: 0,
                     className: 'dt-body-center'
                 }],
                 order: [
@@ -745,8 +744,8 @@ function formatPercentage(input, blur) {
                 ]
             });
         });
-    
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip();    
+        count = 1;
     }
     
     //Fn para agregar nuevo descuento
