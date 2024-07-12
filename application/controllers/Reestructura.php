@@ -2288,18 +2288,15 @@ class Reestructura extends CI_Controller{
         // AVANCE A Elaboración de corridas, contrato y rescisión: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
         if ($idPreproceso + 1 == 2) { 
             $id_asig = $this->Contraloria_model->get_id_asig('reestructura')->contador;
-            if ($id_asig == 2747) // CARLITOS
-                $assigned_user = 2762; // SE ASIGNA A DANI
-            else if ($id_asig == 2762) // ES DANI
-                $assigned_user = 13691; // SE ASIGNA A CECILIA
-            else if ($id_asig == 13691) // ES CECILIA
+            
+            if ($id_asig == 13691) // ES CECILIA
                 $assigned_user = 2765; // SE LE ASIGNA A  LUIS OCTAVIO
             else if ($id_asig == 2765) //  LUIS OCTAVIO
                 $assigned_user = 10463; // SE LE ASIGNA A KARINA ANGELICA
             else if ($id_asig == 10463) // KARINA ANGELICA
                 $assigned_user = 2876; // SE LE ASIGNA A JENNIFER ARELI
             else if ($id_asig == 2876) // JENNIFER ARELI 
-                $assigned_user = 2747; // SE LE ASIGNA A CARLITOS
+                $assigned_user = 13691; // SE LE ASIGNA A CECILIA
         
             $dataUpdateVariable = array('contador' => $assigned_user);
             $responseVariable = $this->General_model->updateRecord("variables", $dataUpdateVariable, "identificador", 'reestructura');
