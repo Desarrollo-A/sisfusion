@@ -590,16 +590,36 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
 
-    function formatPercentage(input, blur) {
-        let input_val = input.val();
-        if (input_val === "") { return; }
-        input_val = input_val.replace(/\D/g, '');
-        let percentage_val = parseFloat(input_val) / 100;
-        input_val = percentage_val.toFixed(2);
-        input_val += "%";
-        input.val(input_val);
+function formatPercentage(input, blur) {
+    var input_val = input.val();
+    if (input_val === "") { return; }
+    var original_len = input_val.length;
+    var caret_pos = input.prop("selectionStart");
+    input_val = input_val.replace(/[^\d.]/g, '');
+    var decimal_pos = input_val.indexOf(".");
+    if (decimal_pos >= 0) {
+        var left_side = input_val.substring(0, decimal_pos);
+        var right_side = input_val.substring(decimal_pos);
+        left_side = formatNumber(left_side);
+        right_side = formatNumber(right_side);
+        if (blur === "blur") {
+            right_side += "00";
+        }
+        right_side = right_side.substring(0, 2);
+        input_val = left_side + "." + right_side + "%";
+    } else {
+        input_val = formatNumber(input_val);
+        if (blur === "blur") {
+            input_val += ".00%";
+        } else {
+            input_val += "%";
+        }
     }
-
+    input.val(input_val);
+    var updated_len = input_val.length;
+    caret_pos = updated_len - original_len + caret_pos;
+    input[0].setSelectionRange(caret_pos, caret_pos);
+}
 
     function getDescuentosYCondiciones(){
         $('#spiner-loader').removeClass('hide');
@@ -634,9 +654,10 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             let id_condicion = element['condicion']['id_condicion'];
             let dataCondicion = element['data'];
             let title = (descripcion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
-            const arrayCondiciones = [1, 2];
-            const found = arrayCondiciones.includes(parseInt(id_condicion));
-            
+            const currencyCondiciones = [4, 12];
+            const percentageCondiciones = [1,2];
+            const isCurrency = currencyCondiciones.includes(parseInt(id_condicion));
+            const isPercentage = percentageCondiciones.includes(parseInt(id_condicion));
             $('#table'+title+' thead tr:eq(0) th').each( function (i) {
                 var subtitle = $(this).text();
                 $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>' );
@@ -682,15 +703,34 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                     data: 'id_descuento'
                 },
                 {
-                    data: function (d) {
-                         if(found) {
-                            return d.porcentaje + '%';
-                         }
-                         else {
-                            return d.porcentaje ;
-                         }
+                    data: 'porcentaje',
+                    render: function(data, type, row) {
+                        if (type === 'display') {
+                            //%
+                            if (isPercentage) {
+                            let formattedValue = parseFloat(data).toFixed(2); 
+                            formattedValue = formattedValue.replace(/\.00$/, '');
+                            return formattedValue + '%';
+                            } 
+                            //$
+                            else if (isCurrency) {
+                            let formattedValue = parseFloat(data).toLocaleString('es-MX', {
+                                style: 'currency',
+                                currency: 'MXN',
+                                minimumFractionDigits: 0, 
+                                maximumFractionDigits: 2 
+                            });
+                            formattedValue = formattedValue.replace(/(\.\d*?)0+$/, '$1').replace(/\sMXN$/, ''); 
+                            return formattedValue;
+                            } 
+                            //NORMAL
+                            else {
+                            return parseFloat(data).toLocaleString('es-MX');
+                            }
+                        }
+                        return data; 
+                        }
                     }
-                }
                 ],
                 data: dataCondicion,
                 columnDefs: [{
