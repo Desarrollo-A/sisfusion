@@ -718,7 +718,7 @@ hr {
                                         </select>
                                     </div>
                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 overflow-hidden">
-                                            <button data-toggle="tooltip" data-placement="top" type="btn" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select5" title="Agregar asesor"><i class="fas fa-plus"></i></button>
+                                            <button data-toggle="tooltip" data-placement="top" type="button" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select5" title="Agregar asesor"><i class="fas fa-plus"></i></button>
                                     </div>
                                 </div>
 
@@ -730,7 +730,7 @@ hr {
                                             </select>
                                         </div>
                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 overflow-hidden">
-                                            <button data-toggle="tooltip" data-placement="top" type="btn" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select1" title="Agregar coordinador"><i class="fas fa-plus"></i></button>
+                                            <button data-toggle="tooltip" data-placement="top" type="button" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select1" title="Agregar coordinador"><i class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
                                     <div class="row" id="users7">
@@ -739,7 +739,7 @@ hr {
                                             <select id="elegir_gerente" name="elegir_gerente" class="selectpicker  select-gral ng-invalid ng-invalid-required ger " required data-live-search="true" title="SELECCIONA UNA OPCIÓN"  data-container="body"></select>
                                         </div>
                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 overflow-hidden">
-                                            <button data-toggle="tooltip" data-placement="top" type="btn" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select2" title="Agregar gerente"><i class="fas fa-plus"></i></button>
+                                            <button data-toggle="tooltip" data-placement="top" type="button" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select2" title="Agregar gerente"><i class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
 
@@ -749,7 +749,7 @@ hr {
                                             <select id="elegir_subdirector" name="elegir_subdirector" class="selectpicker  select-gral ng-invalid ng-invalid-required sub " required data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body"></select>
                                         </div>
                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 overflow-hidden">
-                                            <button data-toggle="tooltip" data-placement="top" type="btn" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select3" title="Agregar subdirector"><i class="fas fa-plus"></i></button>
+                                            <button data-toggle="tooltip" data-placement="top" type="button" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select3" title="Agregar subdirector"><i class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
 
@@ -761,7 +761,7 @@ hr {
                                             </select>
                                         </div>
                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 overflow-hidden">
-                                            <button data-toggle="tooltip" data-placement="top" type="btn" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select4" title="Agregar subdirector"><i class="fas fa-plus"></i></button>
+                                            <button data-toggle="tooltip" data-placement="top" type="button" class="btn-data btn-sky boton_usuario" style="margin-top: 40px;" data-target="select4" title="Agregar subdirector"><i class="fas fa-plus"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -779,14 +779,12 @@ hr {
         <div class="modal fade" id="modal_coordinador" style="overflow-y: scroll;" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                        <!-- formulario -->
                     <form method="post" id="agregar_lider">
                         <div class="modal-header">
                             <button type="button" style="font-size: 20px;top:20px;" class="close" type="button" data-dismiss="modal">
                                 <i class="large material-icons">close</i>
                             </button>
                             <h4 class="modal-title" id="titulo_modal_cordi"></h4>
-                            <!-- <label class="label" id="titulo_modal_cordi"></label> -->
                         </div>
 
                         <div class="modal-body">
