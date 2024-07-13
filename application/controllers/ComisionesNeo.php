@@ -66,6 +66,6 @@ class ComisionesNeo extends CI_Controller{
 
     public function getMensualidadAbonoNeo(){
         $datos = $this->ComisionesNeo_model->getMensualidadAbonoNeo()->result_array();
-        var_dump($datos);
+        echo json_encode($datos);
     }
 }

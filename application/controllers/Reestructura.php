@@ -8,7 +8,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Reestructura extends CI_Controller{
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model', 'Administracion_model'));
+        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model', 'Administracion_model', 'ComisionesNeo_model'));
         $this->load->library(array('session','form_validation', 'get_menu', 'permisos_sidebar', 'Formatter'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -19,6 +19,7 @@ class Reestructura extends CI_Controller{
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
 		//$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
         //$this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+        $this->programacion = $this->load->database('programacion', TRUE);
     }
 
     public function validateSession() {
@@ -4544,5 +4545,10 @@ class Reestructura extends CI_Controller{
     public function getOpcionesCatalogo() {
         $result = $this->db->query("SELECT *, CASE WHEN estatus = 1 THEN 'ACTIVO' ELSE 'INACTIVO' END statusOpcion FROM opcs_x_cats WHERE id_catalogo IN (100)")->result_array();
         echo json_encode($result);
+    }
+
+    public function getMensualidadAbonoNeo(){
+        $datos = $this->ComisionesNeo_model->getMensualidadAbonoNeo()->result_array();
+        echo json_encode($datos);
     }
 }
