@@ -531,18 +531,18 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
                     </button>`;
-                }else if(data.proceso == 7 || data.proceso == 4 ){
-                    botones += ` <button href="#" 
-                    value="${data.id_pago_i}"
-                    data-idLote="${data.idLote}"
-                    data-proceso="2"
-                    class="btn-data btn-violetBoots excedente1" 
-                    title="Excedente"
-                    data-toggle="tooltip_nuevas" 
-                    data-placement="top">
-                    <i class="fas fa-sitemap"></i>
-                    </button>`;
-                }
+                } //else if(data.proceso == 7 || data.proceso == 4 ){
+                //     botones += ` <button href="#" 
+                //     value="${data.id_pago_i}"
+                //     data-idLote="${data.idLote}"
+                //     data-proceso="2"
+                //     class="btn-data btn-violetBoots excedente1" 
+                //     title="Excedente"
+                //     data-toggle="tooltip_nuevas" 
+                //     data-placement="top">
+                //     <i class="fas fa-sitemap"></i>
+                //     </button>`;
+                // }
                 
 
                 return `<div class="d-flex justify-center">
@@ -680,7 +680,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         }else{
 
 
-            
+
             $('#spiner-loader').addClass('hide');
         }
 
