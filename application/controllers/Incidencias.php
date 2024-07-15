@@ -4,6 +4,7 @@ if (!defined('BASEPATH')) {
 }
  
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
  
 class Incidencias extends CI_Controller
 {
@@ -22,25 +23,32 @@ class Incidencias extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
+        $this->jwt_actions->authorize('566', $_SERVER['HTTP_HOST']);
+        $this->validateSession(); 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+        $rutaUrl = substr($_SERVER["REQUEST_URI"],1);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+    }
+    public function validateSession() {
+      if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
+        redirect(base_url() . "index.php/login");
     }
 
     public function index()
     {
-        $datos["sedes"] = $this->Incidencias_model->sedesCambios();
-        $this->load->view('template/header');
-        $this->load->view("incidencias/IncidenciasByLote", $datos);
+      $datos = array();
+      $datos["sedes"] = $this->Incidencias_model->sedesCambios();
+      $this->load->view('template/header');
+      $this->load->view("incidencias/IncidenciasByLote", $datos);
     }
 
-    public function getInCommissions($lote) //agrega status
+    public function getInCommissions($lote)
     {
       $datos = array();
       $datos = $this->Incidencias_model->getInCommissions($lote);
       if ($datos != null) {
-        echo json_encode($datos);
+        echo json_encode($datos,JSON_NUMERIC_CHECK);
       } else {
         echo json_encode(array());
       }
@@ -91,7 +99,6 @@ class Incidencias extends CI_Controller
       echo json_encode($respuesta[0]);
     }
 
-    
     public function UpdateInventarioClient(){
       $usuarioOld=0;
       $banderaSubRegional = 2;
@@ -192,7 +199,6 @@ class Incidencias extends CI_Controller
       $respuesta = array($this->Incidencias_model->datosLotesaCeder($id_usuario));
       echo json_encode($respuesta);
     }
-
     public function saveTipoVenta(){
       $idLote = $this->input->post('id');
       $tipo = $this->input->post('tipo');
@@ -227,10 +233,18 @@ class Incidencias extends CI_Controller
     public function CambiarPrecioLote(){
       $idLote = $this->input->post("idLote");
       $precioAnt = $this->input->post("precioAnt");
+      $plan_comision = $this->input->post("plan_comision");
       $precio=str_replace(",", "", $this->input->post("precioL"));
       $comentario='Se modificó el precio de '.$precioAnt.' a '.$precio;
-      $respuesta = $this->Incidencias_model->CambiarPrecioLote($idLote,$precio,$comentario);
+      $respuesta = $this->Incidencias_model->CambiarPrecioLote($idLote,$precio,$comentario,$plan_comision);
     echo json_encode($respuesta);
+    }
+
+    public function ToparComision($id_comision,$idLote = '')
+    {
+      $comentario = $this->input->post("comentario");
+      $respuesta = $this->Incidencias_model->ToparComision($id_comision,$comentario);
+      echo json_encode($respuesta); 
     }
 
     public function tieneRegional(){
@@ -294,8 +308,7 @@ public function updateUser(){
 }
 
 public function listaRol(){
-
-  $puestos = $this->General_model->getCatOptionsEspecific(1,'1,2,3,7,9,87,88,89,90,91')->result_array();
+  $puestos = $this->General_model->getCatOptionsEspecific(1,'1,2,3,7,9,87,88,89,90,91,45')->result_array();
   echo json_encode($puestos);
 
 }
@@ -321,18 +334,6 @@ public function listaRol(){
       echo json_encode($result,$result_2);
     }
 
-    // public function ToparComision_2($id_comision, $idLote = ''){
-    //   $comentario = $this->input->post("descripcion");
-    //   $respuesta = $this->Comisiones_model->ToparComision_2($id_comision,$comentario);
-    //   echo json_encode($respuesta); 
-    // }
-
-    public function ToparComision($id_comision,$idLote = '')
-    {
-      $comentario = $this->input->post("comentario");
-      $respuesta = $this->Incidencias_model->ToparComision($id_comision,$comentario);
-      echo json_encode($respuesta); 
-    }
 
     public function updateEstatusCompartidas()
     {
@@ -346,7 +347,6 @@ public function listaRol(){
       for ($o=1; $o < $index; $o++) {
         if(!empty($this->input->post('checkBoxVC_'.$o))){
           echo $this->input->post('checkBoxVC_'.$o);
-          //$respuesta = $this->Incidencias_model->updateEstatusVentasC($this->input->post('checkBoxVC_'.$o),$modificadoPor);
           array_push($idVentasCompartidas,$this->input->post('checkBoxVC_'.$o));
         } 
       }
@@ -530,7 +530,6 @@ public function listaRol(){
       echo json_encode ($result);
 
     }
-  
     public function AddEmpresa(){
       $idLote = $this->input->post("idLoteE");
       $Precio = $this->input->post("PrecioLoteE");

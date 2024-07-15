@@ -27,8 +27,7 @@ hr {
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header ">
-                    <h4 class="card-title text-center"><b>Cambio de sedes</b></h4>
-                   
+                        <h4 class="card-title text-center"><b>Cambio de sedes</b></h4>
                     </div>
                     <form method="post" id="form_sede">
 
