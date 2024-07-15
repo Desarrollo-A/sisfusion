@@ -277,7 +277,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
     public function getAutorizaciones($id_rol,$opcion = 1,$anio = '',$estatus = ''){
         $estatusWhere1 = $opcion == 2 ? ($estatus == 0 ? 'YEAR(aut.fecha_creacion) = '.$anio : 'aut.estatus_autorizacion in('.$estatus.') AND YEAR(aut.fecha_creacion) = '.$anio) : '' ;
         //$estatusWhere2 = $opcion == 1 ? ($id_rol == 17 ? ' aut.estatus_autorizacion in(1,2,3,4,6)' : ' aut.estatus_autorizacion in(1,3,4)') : '';
-        $estatusWhere2 = $opcion == 1 ? 'aut.estatus_autorizacion in(1,2,3,4,6)' : '';
+        $estatusWhere2 = $opcion == 1 ? 'aut.estatus_autorizacion in(1,2,3,4)' : '';
         return $this->db->query("SELECT aut.*,sd.nombre as sede,STRING_AGG((CONVERT(VARCHAR(MAX), RE.descripcion)), ',') nombreResidencial,
         (CASE WHEN opc.id_opcion = 1 THEN 'Comercial' WHEN opc.id_opcion = 0 THEN 'Habitacional' ELSE 'Ambos' END) tipoLote,
         opc2.nombre as estatusA,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor,

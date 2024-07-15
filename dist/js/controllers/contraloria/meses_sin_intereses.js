@@ -4,6 +4,7 @@ var tablaMsiVisualizar;
 var dataUpdateGeneral=[];
 var flagTipoUploadMeses;
 let titulos_intxt = [];
+console.log("I am here");
 
 $(document).ready (function() {
     flagTipoUploadMeses = 1; 
@@ -118,17 +119,6 @@ $(document).ready (function() {
                     $('[data-toggle="tooltip"]').tooltip();
                     let botones = '';
                     switch(id_rol_general) {
-                        case 5:
-                            if (d.estatus_id == 1) {
-                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 3) {
-                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 4) {
-                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            break;
                         case 17:
                             if (d.estatus_id == 2) {
                                 botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
@@ -147,6 +137,7 @@ $(document).ready (function() {
                             break;
                         default:
                             break;
+
                     }
                     let autTipo = isNum(d.lote);
                     let valor = (autTipo) ? 2 : 1;

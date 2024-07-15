@@ -32,10 +32,12 @@ $(document).ready(function(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#estatusAut").append($('<option>').val(id).text(name));
-                if(i == data.length -1) { 
-                    $("#estatusAut").append($('<option>').val(0).text('Todos'));
-                }
+            if(id  != 6) {
+                $("#estatusAut").append($('<option>').val(id).text(name));
+            }
+            if(i == data.length -1) { 
+                $("#estatusAut").append($('<option>').val(0).text('Todos'));
+            }
         } 
         if (len <= 0) {
             $("#estatusAut").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -43,6 +45,7 @@ $(document).ready(function(){
         $("#estatusAut").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json'); 
+    console.log("here");
 });
 
 function verificarEdicion(){
@@ -654,13 +657,13 @@ function formatPercentage(input, blur) {
             const percentageCondiciones = [1, 2];
             const isCurrency = currencyCondiciones.includes(parseInt(id_condicion));
             const isPercentage = percentageCondiciones.includes(parseInt(id_condicion));
-            let subtitleTable = '';
+            let titulos = [];
             if ($.fn.DataTable.isDataTable('#table' + title)) {
                 $('#table' + title).DataTable().destroy();
             }
-          if(count == 0) {
             $('#table'+title+' thead tr:eq(0) th').each(function (i) {
                 var subtitle = $(this).text();
+                titulos.push(subtitle);
                 subtitleTable = subtitle;
                 $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>');
                 $('input', this).on('keyup change', function () {
@@ -668,9 +671,9 @@ function formatPercentage(input, blur) {
                         $('#table' + title).DataTable().column(i).search(this.value).draw();
                     }
                 });
-                tableData.push({title: subtitleTable});
+                titulos.push(subtitle);
             });
-          }
+            console.log("titulos: ", titulos);
             let dataTable = $("#table" + title).DataTable({
                 dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
                 width: "auto",
@@ -679,7 +682,17 @@ function formatPercentage(input, blur) {
                         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                         className: 'btn buttons-excel',
                         titleAttr: 'Descargar archivo de Excel',
-                        title: 'DESCUENTO AL ' + descripcion.toUpperCase()
+                        title: 'DESCUENTO AL ' + descripcion.toUpperCase(),
+                         exportOptions: {
+                            columns: [0, 1],
+                            format: {
+                                header:  function (d, columnIdx) {
+                                    console.log("d: ", d);
+                                    console.log("headers: ", this.header[columnIdx]);
+                                    return titulos[columnIdx];
+                                }
+                            }
+                        },
                     },
                     {
                         text: `<i class="fas fa-plus"></i> Agregar descuento`,

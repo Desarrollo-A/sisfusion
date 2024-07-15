@@ -196,7 +196,6 @@
 						<div class="form-group d-flex justify-center">
 							<div class="">
 								<p class="m-0" id="label_descuento"></p>
-								<!--<input type="text" class="input-gral border-none w-100" required data-type="currency" id="descuento" name="descuento">-->
 								<input type="text" class="input-gral border-none w-100" required id="descuento" name="descuento">
 							</div>
 						</div>
@@ -290,7 +289,6 @@
 											<div class="container-fluid">
 												<div class="row">
 													<div class="boxInfoGral">
-													<button type="button" data-toggle="modal" id="btnPlantilla" class="btnDescuento" rel="tooltip" data-placement="top" title="Descargar plantilla"><i class="fas fa-file-excel"></i></button>
 														<button type="button" data-toggle="modal" onclick="construirTablas();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
 														<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes">Guardar todo</button>
 													</div>
@@ -315,7 +313,7 @@
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 																	<div class="form-group">
 																		<label class="mb-0" for="residencial">Proyecto (<b class="text-danger">*</b>)</label> 
-																		<select id="residencial" name="residencial[]" multiple="multiple" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required onchange="validateAllInForm()"></select>
+																		<select id="residencial" name="residencial[]" multiple="multiple" class="form-control multiSelect"  data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required onchange="validateAllInForm()"></select>
 																	</div>
 																</div>
 																<div class="col-xs-12 col-sm-6 col-md-12 col-lg-12">
@@ -340,7 +338,7 @@
 																				<input type="radio" id="customRadio1" value="1" name="superficie"  onclick="selectSuperficie(1)">
 																				<label class="custom-control-label" for="customRadio1">Menor a 200</label>
 																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
-																				<label class="custom-control-label" for="customRadio2">Mayor a 190</label>
+																				<label class="custom-control-label" for="customRadio2">Mayor a 200</label>
 																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
 																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>	
 																				<input type="hidden" id="super" name="super" value="0">
@@ -350,8 +348,8 @@
 																	</div>
 																</div>
 																<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 boxActionsCards">
-																<!--<button type="button" id="btn_consultar" class="btnAction d-none" onclick="ConsultarPlanes()" rel="tooltip" data-placement="top" title="Consultar planes"><p class="mb-0 mr-1">Consultar</p><i class="fas fa-database"></i></button>-->
-																	<!--<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar</p><i class="fas fa-plus"></i></button>-->
+																<button type="button" id="btn_consultar" class="btnAction d-none" onclick="ConsultarPlanes()" rel="tooltip" data-placement="top" title="Consultar planes"><p class="mb-0 mr-1">Consultar</p><i class="fas fa-database"></i></button>
+																	<button type="button" id="btn_generate" class="btnAction d-none" onclick="GenerarCard()" rel="tooltip" data-placement="top" title="Agregar plan"><p class="mb-0 mr-1">Agregar</p><i class="fas fa-plus"></i></button>
 																	<input type="hidden" value="0" name="index" id="index">
 																	<input type="hidden" value="1" name="accion" id="accion">
 																	<input type="hidden" name="idSolicitudAut" id="idSolicitudAut">
