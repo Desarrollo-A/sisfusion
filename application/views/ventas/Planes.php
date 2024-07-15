@@ -113,7 +113,7 @@
 											<table class="table-striped table-hover" id="tableTotal" name="tableTotal">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
+														<th>ID</th>
 														<th>PORCENTAJE</th>
 													</tr>
 												</thead>
@@ -127,7 +127,7 @@
 											<table class="table-striped table-hover" id="tableEnganche" name="tableEnganche">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
+														<th>ID</th>
 														<th>PORCENTAJE</th>
 													</tr>
 												</thead>
@@ -141,8 +141,8 @@
 											<table class="table-striped table-hover" id="tableEfectivoporm" name="tableEfectivoporm">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
-														<th>PORCENTAJE</th>
+														<th>ID</th>
+														<th>TOTAL</th>
 													</tr>
 												</thead>
 											</table>
@@ -155,8 +155,8 @@
 											<table class="table-striped table-hover" id="tableBono" name="tableBono">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
-														<th>PORCENTAJE</th>
+														<th>ID</th>
+														<th>TOTAL</th>
 													</tr>
 												</thead>
 											</table>
@@ -169,8 +169,8 @@
 											<table class="table-striped table-hover" id="tableMSI" name="tableMSI">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
-														<th>PORCENTAJE</th>
+														<th>ID</th>
+														<th>MESES</th>
 													</tr>
 												</thead>
 											</table>
