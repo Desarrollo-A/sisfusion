@@ -6519,24 +6519,30 @@ LEFT JOIN (SELECT SUM(sup) AS superDestino,
     }
 
     public function resumenIndividualExce($idLote){
-
+        
 
         $cmd = "WITH UltimoValor AS (SELECT * from  UltimoPrecioDeLote)
-	    select cl.id_cliente_reubicacion_2,
-		cl.idLote AS idLoteDestino,
-		lo.sup as superficieDestino,
-		lo.totalNeto2 as totalNeto2Destino,
-		clReu.id_cliente as clienteReubicado,
-		loReu.idLote AS idLoteOrigen,
-		--loReu.totalNeto2 AS totalNeto2Origen,
-		UPDL.anterior AS totalNeto2Origen,
-		loReu.sup as superficieOrigen
-		from lotes lo
-		INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-		INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente 
-		INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
-		LEFT JOIN UltimoValor UPDL ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
-        where lo.idLote =  $idLote";
+				select cl.id_cliente_reubicacion_2,
+				cl.idLote AS idLoteDestino,
+				lo.nombreLote AS nombreDestino,
+				lo.sup as superficieDestino,
+				lo.totalNeto2 as totalNeto2Destino,
+				clReu.id_cliente as clienteReubicado,
+				loReu.idLote AS idLoteOrigen,
+				loReu.nombreLote as nombreOrigen,
+				cl.total8P	AS montoExcedente,
+				((lo.sup) - ((loReu.sup * 0.05) + (loReu.sup))) AS Excedente_sup,
+				--loReu.totalNeto2 AS totalNeto2Origen,
+				--((cl.total8P * @excedente)/100 ) AS ExcedenteDinero,
+				UPDL.anterior AS totalNeto2Origen,
+				loReu.sup as superficieOrigen
+				from lotes lo
+				INNER JOIN clientes cl ON cl.idLote = lo.idLote 
+				INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente 
+				INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
+				LEFT JOIN UltimoValor UPDL ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
+				
+				where lo.idLote =    $idLote";
         $query = $this->db->query($cmd);
 
         return $query->result_array();
