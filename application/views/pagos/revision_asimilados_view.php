@@ -56,6 +56,7 @@
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#asimiladosComercializacion" role="tab" data-toggle="tab">Asimilados lotes</a></li>
                         <li ><a href="#asimiladosSeguros" role="tab" data-toggle="tab">Seguros lotes</a></li>
+                        <li ><a href="#asimiladosCasas" role="tab" data-toggle="tab">Casas Asimilados</a></li>
                         <!-- <li ><a href="#asimiladosOOAM" role="tab" data-toggle="tab">Asimilados lotes</a></li> -->
 
                     </ul>
@@ -158,6 +159,7 @@
                                         </div>
                                     </div>
                                     <?php $this->load->view('pagos/seguros/revision_asimilados_seguros_view'); ?>
+                                    <?php $this->load->view('pagos/casas/revision_asimilados_casas_view'); ?>
                                 </div>
                             </div>
                         </div>
@@ -171,4 +173,5 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros/revision_asimilados_seguros.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/casas/revision_asimilados_casas.js"></script>
 </body>
