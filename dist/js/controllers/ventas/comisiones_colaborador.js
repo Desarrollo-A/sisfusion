@@ -516,6 +516,18 @@ $("#tabla_nuevas_comisiones").ready(function () {
             }
         },
         {
+            visible: [12841].indexOf(parseInt(id_usuario_general)) >= 0 ? true : false,
+            "data": function (d) {
+                return '<p class="m-0">' + d.id_arcus + '</p>';
+            }
+        },
+        {
+            visible: [12841].indexOf(parseInt(id_usuario_general)) >= 0 ? true : false,
+            "data": function (d) {
+                return '<p class="m-0">' + d.nombreCliente + '</p>';
+            }
+        },
+        {
             "orderable": false,
             "data": function (data) {
                 let botones = ``;

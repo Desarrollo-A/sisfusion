@@ -135,6 +135,7 @@
                                                                 <th>% COMISIÓN</th>
                                                                 <th>DETALLE</th>
                                                                 <th>ESTATUS</th>
+                                                                <th>ID ARCUS</th>
                                                                 <th>NOMBRE CLIENTE</th>
                                                                 <th>ACCIONES</th>
                                                             </tr>
