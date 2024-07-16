@@ -219,21 +219,21 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
 						<ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-							<li class="active" id="li-aut">
-								<a href="#nuevas-1" role="tab" onclick="verificarEdicion()" data-toggle="tab">AUTORIZACIONES</a>
+							<li class="active" id="li-plan">
+								<a href="#nuevas-2" role="tab" onclick="verificarEdicion()" data-toggle="tab">CARGAR PLAN</a>
 							</li>
-                            <li id="li-plan" class="">
-								<a href="#nuevas-2" role="tab" data-toggle="tab">CARGAR PLAN</a>
+                            <li id="li-aut" class="">
+								<a href="#nuevas-1" role="tab" data-toggle="tab">AUTORIZACIONES</a>
 							</li>
                             <li id="autorizacionesMsiPanel" class="">
                                 <a href="#autorizacionesTab" role="tab" data-toggle="tab">AUTORIZACIONES MSI</a>
 							</li>
                         </ul>
 
-						<div class="card no-shadow m-0">
+						<div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0">
 								<div class="tab-content">
-									<div class="tab-pane active" id="nuevas-1">
+									<div class="tab-pane" id="nuevas-1">
 										<div class="toolbar">
 											<div class="container-fluid">
 												<div class="row aligned-row">
@@ -284,11 +284,12 @@
 											</div>
 										</div>
 									</div> 
-									<div class="tab-pane" id="nuevas-2">
+									<div class="tab-pane active" id="nuevas-2">
 										<form id="form-paquetes" class="formulario">
 											<div class="container-fluid">
 												<div class="row">
 													<div class="boxInfoGral">
+														<button type="button" data-toggle="modal" id="btnPlantilla" class="btnDescuento" rel="tooltip" data-placement="top" title="Descargar plantilla"><i class="fas fa-file-excel"></i></button>
 														<button type="button" data-toggle="modal" onclick="construirTablas();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
 														<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes">Guardar todo</button>
 													</div>

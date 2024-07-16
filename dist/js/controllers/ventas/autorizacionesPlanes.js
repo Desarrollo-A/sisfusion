@@ -240,9 +240,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let botones = '';
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
             if(permisoEditar == 1){ botones += ``; }
-            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" data-opcion="1" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
+            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" data-opcion="1" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar Plan de ventas"><i class="fas fa-thumbs-up"></i></button>`;  }
             if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="2" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
-            if(permisoDesactivar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="3" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Desactivar autorización"><i class="fas fa-trash"></i></button>`; }
+            if(permisoDesactivar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="3" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Desactivar plan de ventas"><i class="fas fa-trash"></i></button>`; }
         return  botones;
     }
 
@@ -307,17 +307,17 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         switch(accion) {
             case '1': 
                 $('#modalAutorizacion').addClass("modal-sm");
-                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de avanzar está autorización?';
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de avanzar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = '';
                 break;
             case '2':
                 $('#modalAutorizacion').addClass("modal-md");
-                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de rechazar está autorización?';
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de rechazar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = `<textarea class="text-modal" scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value.toUpperCase();" placeholder="Escriba aqui su comentario"></textarea><b id="text-observations" class="text-danger"></b>`;
                 break;
             case '3':
                 $('#modalAutorizacion').addClass("modal-sm");
-                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de desactivar está autorización?';
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de desactivar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = '';
                 break;
         }
@@ -405,18 +405,32 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let params = {'paquetes': data.paquetes};
         document.getElementById('contentView').innerHTML = '';  
         $('#contentView').append(`
-        <div style="line-height: 15px;padding-bottom: 10px;">
-            <p class="m-0"><small style="font-size:10px"><b>Rango de fechas: </b></small>${fecha_inicio} - ${fecha_fin}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Sede: </b></small>${data.sede}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Residencial(es): </b></small>${residenciales.map(function (element) { return `${element} </p>`})}
-            <p class="m-0"><small style="font-size:10px"><b>Tipo lote: </b></small>${data.tipoLote}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Superficie: </b></small>${data.tipoSuperficie}</p>
-        </div>
-        <div class="row scroll-styles" style="height: 420px; overflow: auto">
-            <div class="col-lg-12" id="cards" style="padding: 0 40px"></div>
-        </div>
-        `);
-        
+            <div style="line-height: 15px; padding-bottom: 10px;">
+                <p class="m-0" style=">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Rango de fechas: </b></small>
+                    <span style="font-size: 13px;">${fecha_inicio} - ${fecha_fin}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Sede: </b></small>
+                    <span style="font-size: 13px;">${data.sede}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Residencial(es): </b></small>
+                    <span style="font-size: 13px;">${residenciales.map(function (element) { return `${element}` }).join(', ')}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Tipo lote: </b></small>
+                    <span style="font-size: 13px;">${data.tipoLote}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Superficie: </b></small>
+                    <span style="font-size: 13px;">${data.tipoSuperficie}</span>
+                </p>
+            </div>
+            <div class="row scroll-styles" style="height: 420px; overflow: auto;">
+                <div class="col-lg-12" id="cards" style="padding: 0 40px;"></div>
+            </div>`);
+
         let tiposDescuentos = descuentosYCondiciones;
         $.post('paquetesView',params, function(data) {
             data = JSON.parse(data);

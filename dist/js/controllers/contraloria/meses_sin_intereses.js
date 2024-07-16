@@ -528,7 +528,7 @@ function botonesPermisoMSI(permisoVista,permisoEditar,permisoAvanzar,permisoRech
     if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}"  class="btn-data btn-sky btnVerMA" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
     if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}" class="btn-data btn-yellow btnEditarMA" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
     if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" class="btn-data btn-green btnAvanzarAM" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
-    if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazarAM" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
+    //if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazarAM" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
     return  botones;
 }
 function isNum(val){
@@ -801,12 +801,6 @@ $(document).on('click', '.btnHistorial', function () {
     $("#modalHistorialAM").modal();
 });
 
-
-$(".testing").on( "click", function() {
-    console.log("perro");
-});
-
-
 $(document).on('submit', '#cambiosMSIF', function(e) {
     e.preventDefault();
     var params = tablaMsiVisualizar.$('input').serialize();
@@ -907,14 +901,18 @@ $(document).on('click', '.btnAvanzarAM', function(){
     }
 
     dataUpdateGeneral[0] = id_aut;
-    if(id_rol_general==17 || id_rol_general==70){
+    /*if(id_rol_general==17 || id_rol_general==70){
         dataUpdateGeneral[1] = 5;
         $('#tittleModalAM').text('¿Deseas autorizar los meses sin intereses?');
         $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
     }else{
         dataUpdateGeneral[1] = 2;
         $('#tittleModalAM').text('Avanzar autorización');
-    }
+    }*/
+
+    $("#titleModalAM").text('¿Deseas autorizar los meses sin intereses?');
+    $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
+    dataUpdateGeneral[1] = 5;
     $('#avanzarAutAM').modal('show');
 });
 
