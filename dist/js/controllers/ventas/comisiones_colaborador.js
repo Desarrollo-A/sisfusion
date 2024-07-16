@@ -543,18 +543,18 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
                     </button>`;
-                } //else if(data.proceso == 7 || data.proceso == 4 ){
-                //     botones += ` <button href="#" 
-                //     value="${data.id_pago_i}"
-                //     data-idLote="${data.idLote}"
-                //     data-proceso="2"
-                //     class="btn-data btn-violetBoots excedente1" 
-                //     title="Excedente"
-                //     data-toggle="tooltip_nuevas" 
-                //     data-placement="top">
-                //     <i class="fas fa-sitemap"></i>
-                //     </button>`;
-                // }
+                } else if(data.proceso == 7 || data.proceso == 4 ){
+                    botones += ` <button href="#" 
+                    value="${data.id_pago_i}"
+                    data-idLote="${data.idLote}"
+                    data-proceso="2"
+                    class="btn-data btn-violetBoots excedente1" 
+                    title="Excedente"
+                    data-toggle="tooltip_nuevas" 
+                    data-placement="top">
+                    <i class="fas fa-sitemap"></i>
+                    </button>`;
+                }
                 
 
                 return `<div class="d-flex justify-center">
@@ -690,10 +690,28 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 $('#spiner-loader').addClass('hide');
             });
         }else{
+            $('#spiner-loader').removeClass('hide');
 
 
+            var origenes = ``;
+            var destino = ``;
+            $.getJSON("resumenIndividual/" + idLote+"/"+proceso).done(function (data) {
+                ExcedenteDinero = formatMoney(data[0].ExcedenteDinero);
+                destino = data[0].nombreDestino;
+                origenes = data[0].nombreOrigen ;
+                porciento1 = formatMoney(data[0].porciento1);
+                exceSup = data[0].Excedente_sup;
+                document.getElementById("exceSup").innerHTML = exceSup;
+                exceMonto += `<div class="col-lg-12 col-md-12 ">  ${formatMoney(data[0].montoExcedente)} . </div>`;
+                document.getElementById("origenes").innerHTML = origenes;
+                document.getElementById("destino").innerHTML = destino;
+                document.getElementById("exceMonto").innerHTML = exceMonto;
+                document.getElementById("ExcedenteDinero").innerHTML = ExcedenteDinero;
+                document.getElementById("porciento1").innerHTML = porciento1;
+                $('#spiner-loader').addClass('hide');
+            });
 
-            $('#spiner-loader').addClass('hide');
+            
         }
 
         

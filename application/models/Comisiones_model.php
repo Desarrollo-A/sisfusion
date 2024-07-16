@@ -6405,17 +6405,11 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
         $cmd = "
 
 DECLARE @usuario INTEGER,
-        
         @lote INTEGER,
-        
         @rol INTEGER,
-        
         @plan_comisiON INTEGER,
-        
         @excedente FLOAT,
-        
         --@plan_comisiON INTEGER,
-        
     @porcentaje FLOAT; SET @usuario = $usuario; SET @lote = $idLote; SET @rol = (SELECT TOP 1 id_rol
     FROM usuarios
     WHERE id_usuario = @usuario); SET @plan_comisiON = (SELECT cl.plan_comision
@@ -6423,10 +6417,8 @@ DECLARE @usuario INTEGER,
 	INNER JOIN clientes cl
     ON cl.id_cliente = lo.idCliente
     WHERE lo.idLote = @lote ); -- Uso de bloques BEGIN y
-
 	IF  @plan_comisiON = 66
 	BEGIN
-		
 		IF @rol = 7 BEGIN SET @excedente = (SELECT comAs FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.5; END
 		ELSE IF @rol = 3 BEGIN SET @excedente = (SELECT comCo FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.2; END
 		ELSE IF @rol = 2 BEGIN SET @excedente = (SELECT comSu FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.2; END
@@ -6442,8 +6434,6 @@ DECLARE @usuario INTEGER,
 		ELSE IF @rol = 1 BEGIN SET @excedente = (SELECT comDi FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.1; END
 		ELSE BEGIN SET @excedente = (SELECT comSu FROM plan_comision WHERE id_plan = @plan_comisiON );  SET @porcentaje = 0.0; END;
 	END;
-
-
 WITH UltimoValOR AS (SELECT *
     FROM UltimoPrecioDeLote )SELECT cl.id_cliente_reubicacion_2,
         cl.total8P,
@@ -6519,24 +6509,30 @@ LEFT JOIN (SELECT SUM(sup) AS superDestino,
     }
 
     public function resumenIndividualExce($idLote){
-
+        
 
         $cmd = "WITH UltimoValor AS (SELECT * from  UltimoPrecioDeLote)
-	    select cl.id_cliente_reubicacion_2,
-		cl.idLote AS idLoteDestino,
-		lo.sup as superficieDestino,
-		lo.totalNeto2 as totalNeto2Destino,
-		clReu.id_cliente as clienteReubicado,
-		loReu.idLote AS idLoteOrigen,
-		--loReu.totalNeto2 AS totalNeto2Origen,
-		UPDL.anterior AS totalNeto2Origen,
-		loReu.sup as superficieOrigen
-		from lotes lo
-		INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-		INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente 
-		INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
-		LEFT JOIN UltimoValor UPDL ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
-        where lo.idLote =  $idLote";
+				select cl.id_cliente_reubicacion_2,
+				cl.idLote AS idLoteDestino,
+				lo.nombreLote AS nombreDestino,
+				lo.sup as superficieDestino,
+				lo.totalNeto2 as totalNeto2Destino,
+				clReu.id_cliente as clienteReubicado,
+				loReu.idLote AS idLoteOrigen,
+				loReu.nombreLote as nombreOrigen,
+				cl.total8P	AS montoExcedente,
+				((lo.sup) - ((loReu.sup * 0.05) + (loReu.sup))) AS Excedente_sup,
+				--loReu.totalNeto2 AS totalNeto2Origen,
+				--((cl.total8P * @excedente)/100 ) AS ExcedenteDinero,
+				UPDL.anterior AS totalNeto2Origen,
+				loReu.sup as superficieOrigen
+				from lotes lo
+				INNER JOIN clientes cl ON cl.idLote = lo.idLote 
+				INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente 
+				INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
+				LEFT JOIN UltimoValor UPDL ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
+				
+				where lo.idLote =    $idLote";
         $query = $this->db->query($cmd);
 
         return $query->result_array();
