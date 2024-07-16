@@ -6510,29 +6510,122 @@ LEFT JOIN (SELECT SUM(sup) AS superDestino,
 
     public function resumenIndividualExce($idLote){
         
+        $usuario = $this->session->userdata('id_usuario');
+        $cmd = "DECLARE @usuario INTEGER,
+        @lote INTEGER,
+        @rol INTEGER,
+        @plan_comision INTEGER,
+        @excedente FLOAT,
+        @porcentaje FLOAT;
 
-        $cmd = "WITH UltimoValor AS (SELECT * from  UltimoPrecioDeLote)
-				select cl.id_cliente_reubicacion_2,
-				cl.idLote AS idLoteDestino,
-				lo.nombreLote AS nombreDestino,
-				lo.sup as superficieDestino,
-				lo.totalNeto2 as totalNeto2Destino,
-				clReu.id_cliente as clienteReubicado,
-				loReu.idLote AS idLoteOrigen,
-				loReu.nombreLote as nombreOrigen,
-				cl.total8P	AS montoExcedente,
-				((lo.sup) - ((loReu.sup * 0.05) + (loReu.sup))) AS Excedente_sup,
-				--loReu.totalNeto2 AS totalNeto2Origen,
-				--((cl.total8P * @excedente)/100 ) AS ExcedenteDinero,
-				UPDL.anterior AS totalNeto2Origen,
-				loReu.sup as superficieOrigen
-				from lotes lo
-				INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-				INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente 
-				INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
-				LEFT JOIN UltimoValor UPDL ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
-				
-				where lo.idLote =    $idLote";
+-- Asignar valores iniciales
+SET @usuario = $usuario;
+SET @lote = $idLote;
+
+-- Obtener el rol del usuario
+SET @rol = (SELECT TOP 1 id_rol
+            FROM usuarios
+            WHERE id_usuario = @usuario);
+
+-- Obtener el plan de comisión del lote
+SET @plan_comision = (SELECT cl.plan_comision
+                      FROM lotes lo
+                      INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+                      WHERE lo.idLote = @lote);
+
+-- Determinar excedente y porcentaje basado en el plan de comisión y el rol
+IF @plan_comision = 66
+BEGIN
+    IF @rol = 7 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comAs AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.5; 
+    END
+    ELSE IF @rol = 3 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comCo AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.2; 
+    END
+    ELSE IF @rol = 2 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comSu AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.2; 
+    END
+    ELSE IF @rol = 1 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comDi AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.1; 
+    END
+    ELSE 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comSu AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision);  
+        SET @porcentaje = 0.0; 
+    END;
+END
+ELSE IF @plan_comision = 86 
+BEGIN 
+    IF @rol = 7 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comAs AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.5; 
+    END
+    ELSE IF @rol = 3 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comCo AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.2; 
+    END
+    ELSE IF @rol = 2 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comSu AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.2; 
+    END
+    ELSE IF @rol = 59 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comRe AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.2; 
+    END
+    ELSE IF @rol = 1 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comDi AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+        SET @porcentaje = 0.1; 
+    END
+    ELSE 
+    BEGIN 
+        SET @excedente = (SELECT CAST(comSu AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision);  
+        SET @porcentaje = 0.0; 
+    END;
+END;
+
+-- Definir la CTE para obtener el último valor
+WITH UltimoValor AS (
+    SELECT * 
+    FROM UltimoPrecioDeLote
+)
+
+-- Consulta principal
+SELECT cl.id_cliente_reubicacion_2,
+       cl.idLote AS idLoteDestino,
+       lo.nombreLote AS nombreDestino,
+       lo.sup AS superficieDestino,
+       lo.totalNeto2 AS totalNeto2Destino,
+       clReu.id_cliente AS clienteReubicado,
+       loReu.idLote AS idLoteOrigen,
+       loReu.nombreLote AS nombreOrigen,
+       cl.total8P AS montoExcedente,
+       ((lo.sup) - ((loReu.sup * 0.05) + (loReu.sup))) AS Excedente_sup,
+      
+		((CAST(UPDL.anterior AS NUMERIC) * 0.01) * @porcentaje) AS porciento1,
+		
+
+		UPDL.anterior AS totalNeto2Origen,
+       ((cl.total8P * @excedente) / 100) AS ExcedenteDinero,
+       loReu.sup AS superficieOrigen
+FROM lotes lo
+INNER JOIN clientes cl ON cl.idLote = lo.idLote 
+INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente		
+INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
+LEFT JOIN UltimoValor UPDL   ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
+WHERE lo.idLote = @lote;";
         $query = $this->db->query($cmd);
 
         return $query->result_array();
