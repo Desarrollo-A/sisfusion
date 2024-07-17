@@ -1407,3 +1407,8 @@ $("#btnPlantilla").click(function(e){
 $(window).resize(function(){
     tablaAutorizacion.columns.adjust();
 });
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+    console.log("tab shown");
+    tablaAutorizacion.columns.adjust();
+});
