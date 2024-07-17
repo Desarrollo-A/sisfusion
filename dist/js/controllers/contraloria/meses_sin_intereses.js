@@ -118,7 +118,6 @@ $(document).ready (function() {
                 data:function(d){
                     $('[data-toggle="tooltip"]').tooltip();
                     let botones = '';
-                    console.log("data: ", d);
                     switch(id_rol_general) {
                         case 17:
                             if (d.estatus_id == 1) {
@@ -570,6 +569,7 @@ $(document).on('click', '.btnVerMA', function(e){
 });
 
 function loadTableVAUT(data){
+    console.log("data: ", data);
     let button_excel = '';
     let dom;
 
@@ -644,7 +644,7 @@ function loadTableVAUT(data){
         {
             data: function(d){
                 let action_return = '';
-                if(id_rol_general==5 && data['edit'] == 1){
+                if(data['edit'] == 1) {
                     action_return = '<input type="text" class="form-control"  name="msi" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="'+d.msi+'">';
                 }else{
                     action_return = d.msi;
