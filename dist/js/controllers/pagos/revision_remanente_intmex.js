@@ -381,7 +381,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Pagos/getDatosNuevasRemanenteContraloria/",
+            "url": general_base_url + "Pagos/getDatosNuevasRContraloria/",
             "type": "POST",
             cache: false,
             data: {

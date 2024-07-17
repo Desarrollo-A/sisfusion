@@ -301,7 +301,6 @@ function getAssimilatedCommissions(proyecto, condominio){
 
                 const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles"><i class="fas fa-info"></i></button>`;
                 const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
-                console.log(BTN_PAUASI);
                 const BTN_ACTASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="Activar solicitud"><i class="fas fa-play"></i></button>`
 
                 if(data.estatus == 8){
@@ -339,12 +338,12 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasAsimiladosContraloria/",
+            url: general_base_url + "Pagos/getDatosNuevasAContraloria/",
             type: "POST",
             cache: false,
             data: {
-                puesto:    proyecto,
-                usuario: condominio
+                proyecto:    proyecto,
+                condominio: condominio
             }
         },
     });

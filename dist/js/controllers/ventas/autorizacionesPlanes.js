@@ -2,7 +2,7 @@ let descuentosYCondiciones;
 //$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
 llenarTipoDescuentos();
 let count = 0;
-let tableData = [];
+let titulosTables = [];
 
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -32,10 +32,12 @@ $(document).ready(function(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#estatusAut").append($('<option>').val(id).text(name));
-                if(i == data.length -1) { 
-                    $("#estatusAut").append($('<option>').val(0).text('Todos'));
-                }
+            if(id  != 6) {
+                $("#estatusAut").append($('<option>').val(id).text(name));
+            }
+            if(i == data.length -1) { 
+                $("#estatusAut").append($('<option>').val(0).text('Todos'));
+            }
         } 
         if (len <= 0) {
             $("#estatusAut").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -190,6 +192,7 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 switch(id_rol_general){
                     case 17:
                     case 70:
+                        console.log("estatus_autorizacion: ", d.estatus_autorizacion);
                         if(d.estatus_autorizacion == 1) {
                             botones += botonesPermiso(1,1,1,0,1, d.id_autorizacion, d.estatus_autorizacion);
                         }                        
@@ -238,9 +241,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let botones = '';
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
             if(permisoEditar == 1){ botones += ``; }
-            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" data-opcion="1" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
+            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" data-opcion="1" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar Plan de ventas"><i class="fas fa-thumbs-up"></i></button>`;  }
             if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="2" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
-            if(permisoDesactivar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="3" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Desactivar autorización"><i class="fas fa-trash"></i></button>`; }
+            if(permisoDesactivar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="3" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Desactivar plan de ventas"><i class="fas fa-trash"></i></button>`; }
         return  botones;
     }
 
@@ -305,17 +308,17 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         switch(accion) {
             case '1': 
                 $('#modalAutorizacion').addClass("modal-sm");
-                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de avanzar está autorización?';
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de avanzar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = '';
                 break;
             case '2':
                 $('#modalAutorizacion').addClass("modal-md");
-                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de rechazar está autorización?';
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de rechazar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = `<textarea class="text-modal" scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value.toUpperCase();" placeholder="Escriba aqui su comentario"></textarea><b id="text-observations" class="text-danger"></b>`;
                 break;
             case '3':
                 $('#modalAutorizacion').addClass("modal-sm");
-                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de desactivar está autorización?';
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de desactivar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = '';
                 break;
         }
@@ -403,18 +406,32 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let params = {'paquetes': data.paquetes};
         document.getElementById('contentView').innerHTML = '';  
         $('#contentView').append(`
-        <div style="line-height: 15px;padding-bottom: 10px;">
-            <p class="m-0"><small style="font-size:10px"><b>Rango de fechas: </b></small>${fecha_inicio} - ${fecha_fin}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Sede: </b></small>${data.sede}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Residencial(es): </b></small>${residenciales.map(function (element) { return `${element} </p>`})}
-            <p class="m-0"><small style="font-size:10px"><b>Tipo lote: </b></small>${data.tipoLote}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Superficie: </b></small>${data.tipoSuperficie}</p>
-        </div>
-        <div class="row scroll-styles" style="height: 420px; overflow: auto">
-            <div class="col-lg-12" id="cards" style="padding: 0 40px"></div>
-        </div>
-        `);
-        
+            <div style="line-height: 15px; padding-bottom: 10px;">
+                <p class="m-0" style=">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Rango de fechas: </b></small>
+                    <span style="font-size: 13px;">${fecha_inicio} - ${fecha_fin}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Sede: </b></small>
+                    <span style="font-size: 13px;">${data.sede}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Residencial(es): </b></small>
+                    <span style="font-size: 13px;">${residenciales.map(function (element) { return `${element}` }).join(', ')}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Tipo lote: </b></small>
+                    <span style="font-size: 13px;">${data.tipoLote}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Superficie: </b></small>
+                    <span style="font-size: 13px;">${data.tipoSuperficie}</span>
+                </p>
+            </div>
+            <div class="row scroll-styles" style="height: 420px; overflow: auto;">
+                <div class="col-lg-12" id="cards" style="padding: 0 40px;"></div>
+            </div>`);
+
         let tiposDescuentos = descuentosYCondiciones;
         $.post('paquetesView',params, function(data) {
             data = JSON.parse(data);
@@ -592,36 +609,36 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
 
-function formatPercentage(input, blur) {
-    var input_val = input.val();
-    if (input_val === "") { return; }
-    var original_len = input_val.length;
-    var caret_pos = input.prop("selectionStart");
-    input_val = input_val.replace(/[^\d.]/g, '');
-    var decimal_pos = input_val.indexOf(".");
-    if (decimal_pos >= 0) {
-        var left_side = input_val.substring(0, decimal_pos);
-        var right_side = input_val.substring(decimal_pos);
-        left_side = formatNumber(left_side);
-        right_side = formatNumber(right_side);
-        if (blur === "blur") {
-            right_side += "00";
-        }
-        right_side = right_side.substring(0, 2);
-        input_val = left_side + "." + right_side + "%";
-    } else {
-        input_val = formatNumber(input_val);
-        if (blur === "blur") {
-            input_val += ".00%";
+    function formatPercentage(input, blur) {
+        var input_val = input.val();
+        if (input_val === "") { return; }
+        var original_len = input_val.length;
+        var caret_pos = input.prop("selectionStart");
+        input_val = input_val.replace(/[^\d.]/g, '');
+        var decimal_pos = input_val.indexOf(".");
+        if (decimal_pos >= 0) {
+            var left_side = input_val.substring(0, decimal_pos);
+            var right_side = input_val.substring(decimal_pos);
+            left_side = formatNumber(left_side);
+            right_side = formatNumber(right_side);
+            if (blur === "blur") {
+                right_side += "00";
+            }
+            right_side = right_side.substring(0, 2);
+            input_val = left_side + "." + right_side + "%";
         } else {
-            input_val += "%";
+            input_val = formatNumber(input_val);
+            if (blur === "blur") {
+                input_val += ".00%";
+            } else {
+                input_val += "%";
+            }
         }
+        input.val(input_val);
+        var updated_len = input_val.length;
+        caret_pos = updated_len - original_len + caret_pos;
+        input[0].setSelectionRange(caret_pos, caret_pos);
     }
-    input.val(input_val);
-    var updated_len = input_val.length;
-    caret_pos = updated_len - original_len + caret_pos;
-    input[0].setSelectionRange(caret_pos, caret_pos);
-}
 
     function getDescuentosYCondiciones(){
         $('#spiner-loader').removeClass('hide');
@@ -644,7 +661,12 @@ function formatPercentage(input, blur) {
     }
     
     //Fn para construir las tablas según el número de condiciones existente, esto en la modal para ver condiciones
-    async function construirTablas() {
+    async function construirTablas(){
+        //if(primeraCarga == 1){
+        //    descuentosYCondiciones = await getDescuentosYCondiciones(primeraCarga, 0);
+        //    descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
+        //    primeraCarga = 0;
+        //}        
         descuentosYCondiciones.forEach(element => {
             let descripcion = element['condicion']['descripcion'];
             let id_condicion = element['condicion']['id_condicion'];
@@ -654,23 +676,26 @@ function formatPercentage(input, blur) {
             const percentageCondiciones = [1, 2];
             const isCurrency = currencyCondiciones.includes(parseInt(id_condicion));
             const isPercentage = percentageCondiciones.includes(parseInt(id_condicion));
-            let subtitleTable = '';
             if ($.fn.DataTable.isDataTable('#table' + title)) {
                 $('#table' + title).DataTable().destroy();
             }
-          if(count == 0) {
-            $('#table'+title+' thead tr:eq(0) th').each(function (i) {
-                var subtitle = $(this).text();
-                subtitleTable = subtitle;
-                $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>');
-                $('input', this).on('keyup change', function () {
-                    if ($('#table' + title).DataTable().column(i).search() !== this.value) {
-                        $('#table' + title).DataTable().column(i).search(this.value).draw();
-                    }
+            if(count == 0) {
+                $('#table'+title+' thead tr:eq(0) th').each(function (i) {
+                    var subtitle = $(this).text();
+                    subtitleTable = subtitle;
+                    $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>');
+                    $('input', this).on('keyup change', function () {
+                        if ($('#table' + title).DataTable().column(i).search() !== this.value) {
+                            $('#table' + title).DataTable().column(i).search(this.value).draw();
+                        }
+                    });
+                    titulosTables.push({
+                        key: title,
+                        subtitle: subtitle
+                    });
                 });
-                tableData.push({title: subtitleTable});
-            });
-          }
+            }
+
             let dataTable = $("#table" + title).DataTable({
                 dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
                 width: "auto",
@@ -679,7 +704,17 @@ function formatPercentage(input, blur) {
                         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                         className: 'btn buttons-excel',
                         titleAttr: 'Descargar archivo de Excel',
-                        title: 'DESCUENTO AL ' + descripcion.toUpperCase()
+                        title: 'DESCUENTO AL ' + descripcion.toUpperCase(),
+                        exportOptions : {
+                            columns : [0,1],
+                            format: {
+                                header: function (d, columnIdx) {
+                                    const headers = titulosTables.filter(item => item.key === title).map(item => item.subtitle);
+                                    return headers[columnIdx];
+                                }
+                            }
+                        }
+                        
                     },
                     {
                         text: `<i class="fas fa-plus"></i> Agregar descuento`,
@@ -744,7 +779,7 @@ function formatPercentage(input, blur) {
                 ]
             });
         });
-        $('[data-toggle="tooltip"]').tooltip();    
+        $('[data-toggle="tooltip"]').tooltip();   
         count = 1;
     }
     

@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="modal fade modal-alertas" id="modal_multiplesOoam" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -91,7 +91,7 @@
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
                         <!-- <li><a href="#proceso-1" role="tab" data-toggle="tab">Pagos lotes ooam</a></li> -->
-                        <li><a href="#factura_seguros" role="tab" data-toggle="tab">Pagos lotes seguros</a></li>
+<li><a href="#factura_seguros" role="tab" data-toggle="tab">Pagos lotes seguros</a></li>
                     </ul>
                     <div class="card no-shadow m-0 border-conntent__tabs">
                         <div class="card-content p-0">
@@ -103,8 +103,8 @@
                                                 <div class="encabezadoBox">
                                                     <h3 class="card-title center-align" >Comisiones nuevas <b>factura</b></h3>
                                                 </div>
-                                                <div>
-                                                     <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturacion)</p>
+                                                    <div>
+                                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturacion)</p>
                                                 </div>
                                             </div>
                                             <div class="toolbar">
