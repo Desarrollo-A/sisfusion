@@ -117,32 +117,17 @@ $(document).ready (function() {
                 data:function(d){
                     $('[data-toggle="tooltip"]').tooltip();
                     let botones = '';
-                    switch(id_rol_general) {
-                        case 17:
-                            if (d.estatus_id == 1) {
-                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 2) {
-                                botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 4) {
-                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            break;
-                        case 70:
-                            if (d.estatus_id == 1) {
-                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 2) {
-                                botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 4) {
-                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            break;
-                        default:
-                            break;
-
+                    
+                    if(id_rol_general == 17 || id_rol_general == 70) {
+                        if (d.estatus_id == 1) {
+                            botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
+                        }
+                        if (d.estatus_id == 2) {
+                            botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
+                        }
+                        if (d.estatus_id == 4) {
+                            botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
+                        }
                     }
                     let autTipo = isNum(d.lote);
                     let valor = (autTipo) ? 2 : 1;
@@ -168,7 +153,7 @@ $(document).ready (function() {
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
         input.trigger('fileselect', [numFiles, label]);
-    });
+    }); 
 
     $('input[type=radio][name=modoSubida]').change(function(e) {
         if (this.value == 1) {
@@ -903,6 +888,15 @@ $(document).on('click', '.btnAvanzarAM', function(){
     }
 
     dataUpdateGeneral[0] = id_aut;
+    /*if(id_rol_general==17 || id_rol_general==70){
+        dataUpdateGeneral[1] = 5;
+        $('#tittleModalAM').text('¿Deseas autorizar los meses sin intereses?');
+        $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
+    }else{
+        dataUpdateGeneral[1] = 2;
+        $('#tittleModalAM').text('Avanzar autorización');
+    }*/
+
     $("#titleModalAM").text('¿Deseas autorizar los meses sin intereses?');
     $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
     dataUpdateGeneral[1] = 5;
