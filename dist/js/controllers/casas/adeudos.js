@@ -153,7 +153,7 @@ let columns = [
             // console.log(data)
 
             let pass_button = ''
-            if (data.adeudoOOAM && data.adeudoADM && data.adeudoGPH) {
+            if (data.adeudoOOAM && data.adeudoADM) {
                 pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a subir documentación del cliente', onClick: pass_to_docu_cliente, data })
             }
             let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorización', onClick: back_to_carta_auth, data })

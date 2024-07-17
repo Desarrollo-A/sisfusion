@@ -265,6 +265,8 @@ class Casas extends BaseController
 
             header("Content-type: $contentType");
 
+            print($file);
+
         } else {
             header("HTTP/1.1 404 Not Found");
 
@@ -846,7 +848,7 @@ class Casas extends BaseController
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: ' . $comentario);
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: ' . $comentario, 1);
 
             $this->json([]);
         } else {

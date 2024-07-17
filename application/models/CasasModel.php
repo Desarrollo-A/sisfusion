@@ -450,10 +450,6 @@ class CasasModel extends CI_Model
             WHEN pc.adeudoADM IS NULL THEN 'Sin registro'
             ELSE CONCAT('$', pc.adeudoADM) 
         END AS adADM,
-        CASE
-            WHEN pc.adeudoGPH IS NULL THEN 'Sin registro'
-            ELSE CONCAT('$', pc.adeudoGPH) 
-        END AS adGPH,
         lo.nombreLote,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
