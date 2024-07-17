@@ -192,7 +192,6 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 switch(id_rol_general){
                     case 17:
                     case 70:
-                        console.log("estatus_autorizacion: ", d.estatus_autorizacion);
                         if(d.estatus_autorizacion == 1) {
                             botones += botonesPermiso(1,1,1,0,1, d.id_autorizacion, d.estatus_autorizacion);
                         }                        
