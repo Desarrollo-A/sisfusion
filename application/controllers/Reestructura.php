@@ -4429,18 +4429,21 @@ class Reestructura extends CI_Controller{
     }
 
     public function getLotesAsignados(){
+        set_time_limit(600);
+        // para tener los datos de todos
         $getLotesTodo = $this->Reestructura_model->getLotesAsignadosTodos()->result();
         $getProceso6 = $this->Reestructura_model->getLotesAsignados6()->result();
-        // $getProcesoContraloria = $this->Reestructura_model->getLotesAsignadosContraloria()->result();
-        // $getProcesoJuridico = $this->Reestructura_model->getLotesAsignadosJuridico()->result();
+        $getProcesoContraloria = $this->Reestructura_model->getLotesAsignadosContraloria()->result();
+        $getProcesoJuridico = $this->Reestructura_model->getLotesAsignadosJuridico()->result();
 
         $sentFlag = true;
         
+        // envio de correos a gerentes
         foreach($getLotesTodo as $lote){
             $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista34@ciudadmaderas.com')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com')
             ->subject('Notificación de estatus de lotes')
             ->view($this->load->view('mail/reestructura/mailPendientes', [
                 'nombreGerente' => $lote->nombreGerente,
@@ -4449,16 +4452,59 @@ class Reestructura extends CI_Controller{
                 'cantidadProceso3' => $lote->cantidadProceso3,
                 'cantidadProceso6' => $lote->cantidadProceso6,
             ], true));
-
             $this->email->send();
-
-            if(!$this->email->send()){
-                $sentFlag = false;
-            }
         }
 
+        // sleep(10);
+        // envios de correos a asesores
+        foreach($getProceso6 as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com')
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesAsesor', [
+                'nombreAsesor' => $lote->nombreAsesor,
+                'cantidadProceso6' => $lote->cantidadProceso6,
+            ], true));
+            $this->email->send();
+        }
 
+        // sleep(10);
+        // envios de correos a contraloria
+        foreach($getProcesoContraloria as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Mariela Sanchez 
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Alejandro Santiago
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesContraloria', [
+                'nombre1' => "Mariela Sanchez Sanchez",
+                'nombre2' => "Alejando Santiago Gamez",
+                'cantidadProceso2' => $lote->cantidadProceso2,
+            ], true));
+            $this->email->send();            
+        }
 
+        // sleep(10);
+        // envios de correos a juridico
+        foreach($getProcesoJuridico as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Cinthya López
+            // ->to('programador.analista34@ciudadmaderas.com') // ?
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesJuridico', [
+                'nombre1' => "Cinthya López",
+                'cantidadProceso2' => $lote->cantidadProceso2,
+            ], true));
+
+            $this->email->send();
+        }
+
+        
         if($sentFlag){
             $response["result"] = true;
             $response["message"] = "Se han enviado los correos exitosamente";
