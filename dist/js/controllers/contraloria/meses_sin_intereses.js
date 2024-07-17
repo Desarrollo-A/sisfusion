@@ -118,8 +118,12 @@ $(document).ready (function() {
                 data:function(d){
                     $('[data-toggle="tooltip"]').tooltip();
                     let botones = '';
+                    console.log("data: ", d);
                     switch(id_rol_general) {
                         case 17:
+                            if (d.estatus_id == 1) {
+                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
+                            }
                             if (d.estatus_id == 2) {
                                 botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
@@ -128,6 +132,9 @@ $(document).ready (function() {
                             }
                             break;
                         case 70:
+                            if (d.estatus_id == 1) {
+                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
+                            }
                             if (d.estatus_id == 2) {
                                 botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
