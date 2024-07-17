@@ -2163,4 +2163,105 @@ class Reestructura_model extends CI_Model
 
         return $query;
     }
+
+    public function getLotesAsignadosTodos(){
+        $query = $this->db->query(
+            "WITH proceso0 AS(
+                SELECT
+	        	    usg.id_usuario,
+	        	    COUNT(lo.idLote) cantidadProceso0,
+	        	    CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
+	        	    usg.correo
+	        	    FROM 
+	        		    lotes lo
+	        	    INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
+	        	    INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
+	        	    WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 0
+	        	    AND lo.idLote NOT IN (SELECT idLote FROM propuestas_x_lote)
+	        	    AND lo.idLote NOT IN (SELECT idLotePvOrigen FROM lotesFusion)
+	        	    GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
+                ),
+            proceso1 AS(
+	            SELECT
+	            	usg.id_usuario,
+	            	COUNT(lo.idLote) cantidadProceso1,
+	            	CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
+	            	usg.correo
+	            	FROM 
+	            		lotes lo
+	            	INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
+	            	INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
+	            	WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 1
+	            	GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
+                ),
+            proceso3 AS(
+	            SELECT
+	        	    usg.id_usuario,
+	        	    COUNT(lo.idLote) cantidadProceso3,
+	        	    CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
+	        	    usg.correo
+	        	    FROM 
+	        		    lotes lo
+	        	    INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
+	        	    INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
+	        	    WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 3
+	        	    GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
+                ),
+            proceso6 AS(
+            	SELECT
+            		usg.id_usuario,
+            		COUNT(lo.idLote) cantidadProceso6,
+            		CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
+            		usg.correo
+            		FROM 
+            			lotes lo
+            		INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
+            		INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
+            		WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 6
+            		GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
+            )
+
+            SELECT 
+            	us.id_usuario,
+                us.correo,
+            	pr0.nombreGerente, pr0.cantidadProceso0,
+            	pr1.cantidadProceso1, pr3.cantidadProceso3,
+            	pr6.cantidadProceso6
+            	FROM
+            		usuarios us
+            	INNER JOIN proceso0 pr0 ON pr0.id_usuario = us.id_usuario
+            	INNER JOIN proceso1 pr1 ON pr1.id_usuario = us.id_usuario
+            	INNER JOIN proceso3 pr3 ON pr3.id_usuario = us.id_usuario
+            	INNER JOIN proceso6 pr6 ON pr6.id_usuario = us.id_usuario");
+
+        return $query;
+    }
+
+    public function getLotesAsignados6(){
+        $query = $this->db->query(
+            "WITH proceso6 AS(
+            	SELECT
+            		usg.id_usuario,
+            		COUNT(lo.idLote) cantidadProceso6,
+            		CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
+            		usg.correo
+            		FROM 
+            			lotes lo
+            		INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
+            		INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
+            		WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 6
+            		GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
+            )
+
+            SELECT 
+            	us.id_usuario,
+                us.correo,
+            	pr6.cantidadProceso6
+            	FROM
+            		usuarios us
+            	INNER JOIN proceso6 pr6 ON pr6.id_usuario = us.id_usuario"
+        );
+
+        return $query;
+    }
 }

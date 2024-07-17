@@ -4326,11 +4326,12 @@ class Reestructura extends CI_Controller{
                     }
                 }
             }
-        }else{// SI NO, SOLO SE HACE EL UPDATE DE LA COMISIÓN TOTAL DE LAS COMISIONES
-            for ($i=0; $i < count($dataNuevosCalculos) ; $i++) { 
-                $this->Reestructura_model->actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
-            }
         }
+        // else{// SI NO, SOLO SE HACE EL UPDATE DE LA COMISIÓN TOTAL DE LAS COMISIONES
+        //     for ($i=0; $i < count($dataNuevosCalculos) ; $i++) { 
+        //         $this->Reestructura_model->actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
+        //     }
+        // }
         else{
             $response["result"] = false;
             $response["message"] = "No hay historial preproceso para este lote";
@@ -4425,5 +4426,49 @@ class Reestructura extends CI_Controller{
 
     public function subirArchivosFusion() {
         print_r($this->input->post());
+    }
+
+    public function getLotesAsignados(){
+        $getLotesTodo = $this->Reestructura_model->getLotesAsignadosTodos()->result();
+        $getProceso6 = $this->Reestructura_model->getLotesAsignados6()->result();
+        // $getProcesoContraloria = $this->Reestructura_model->getLotesAsignadosContraloria()->result();
+        // $getProcesoJuridico = $this->Reestructura_model->getLotesAsignadosJuridico()->result();
+
+        $sentFlag = true;
+        
+        foreach($getLotesTodo as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista34@ciudadmaderas.com')
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientes', [
+                'nombreGerente' => $lote->nombreGerente,
+                'cantidadProceso0' => $lote->cantidadProceso0,
+                'cantidadProceso1' => $lote->cantidadProceso1,
+                'cantidadProceso3' => $lote->cantidadProceso3,
+                'cantidadProceso6' => $lote->cantidadProceso6,
+            ], true));
+
+            $this->email->send();
+
+            if(!$this->email->send()){
+                $sentFlag = false;
+            }
+        }
+
+
+
+        if($sentFlag){
+            $response["result"] = true;
+            $response["message"] = "Se han enviado los correos exitosamente";
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "Ha ocurrido un error al enviar los correos";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response)); 
     }
 }
