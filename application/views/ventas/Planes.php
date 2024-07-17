@@ -339,7 +339,7 @@
 																				<input type="radio" id="customRadio1" value="1" name="superficie"  onclick="selectSuperficie(1)">
 																				<label class="custom-control-label" for="customRadio1">Menor a 200</label>
 																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
-																				<label class="custom-control-label" for="customRadio2">Mayor a 200</label>
+																				<label class="custom-control-label" for="customRadio2">Mayor a 190</label>
 																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
 																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>	
 																				<input type="hidden" id="super" name="super" value="0">
