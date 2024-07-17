@@ -516,8 +516,47 @@ $("#tabla_nuevas_comisiones").ready(function () {
             }
         },
         {
+            visible: [12841].indexOf(parseInt(id_usuario_general)) >= 0 ? true : false,
+            "data": function (d) {
+                return '<p class="m-0">' + d.id_arcus + '</p>';
+            }
+        },
+        {
+            visible: [12841].indexOf(parseInt(id_usuario_general)) >= 0 ? true : false,
+            "data": function (d) {
+                return '<p class="m-0">' + d.nombreCliente + '</p>';
+            }
+        },
+        {
             "orderable": false,
             "data": function (data) {
+                let botones = ``;
+                let proceso = 0;
+                if(data.proceso == 6){
+                    botones += ` <button href="#" 
+                    value="${data.id_pago_i}"
+                    data-idLote="${data.idLote}"
+                    data-proceso="1"
+                    class="btn-data btn-violetBoots excedente1" 
+                    title="Excedente"
+                    data-toggle="tooltip_nuevas" 
+                    data-placement="top">
+                    <i class="fas fa-sitemap"></i>
+                    </button>`;
+                } else if(data.proceso == 7 || data.proceso == 4 ){
+                    botones += ` <button href="#" 
+                    value="${data.id_pago_i}"
+                    data-idLote="${data.idLote}"
+                    data-proceso="2"
+                    class="btn-data btn-violetBoots excedente1" 
+                    title="Excedente"
+                    data-toggle="tooltip_nuevas" 
+                    data-placement="top">
+                    <i class="fas fa-sitemap"></i>
+                    </button>`;
+                }
+                
+
                 return `<div class="d-flex justify-center">
                             <button href="#" 
                                     value="${data.id_pago_i}"
@@ -529,6 +568,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     data-placement="top">
                                 <i class="fas fa-info"></i>
                             </button>
+                            ${botones}
                         </div>`;
             }
         }],
@@ -600,6 +640,87 @@ $("#tabla_nuevas_comisiones").ready(function () {
         }
     });
 
+    //inicio de aqui empezamos con la nueva forma
+
+    $("#tabla_nuevas_comisiones tbody").on("click", ".excedente1", function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        $('#spiner-loader').removeClass('hide');
+
+
+        document.getElementById("origenes").innerHTML = '';
+        document.getElementById("destino").innerHTML = '';
+        document.getElementById("exceSup").innerHTML = '';
+        document.getElementById("exceMonto").innerHTML = '';
+        document.getElementById("ExcedenteDinero").innerHTML = '';
+        document.getElementById("porciento1").innerHTML = '';
+
+        // id_pago = $(this).val();
+        idLote = $(this).attr("data-idLote");
+        
+        proceso = $(this).attr("data-proceso");
+        $("#modalExcedente").modal();
+        var origenes = ``;
+        var destino = ``;
+        var exceSup = ``;
+        var exceMonto = ``;
+        var ExcedenteDinero = ``;
+        var porciento1 = ``;
+        if(proceso == 1){
+            $.getJSON("resumenIndividual/" + idLote+"/"+proceso).done(function (data) {
+            
+                
+                exceSup += `<div class="col-lg-12 col-md-12 ">  ${data[0].Excedente_sup} m. </div>`;
+                exceMonto += `<div class="col-lg-12 col-md-12 ">  ${formatMoney(data[0].total8P)} . </div>`;
+                ExcedenteDinero = formatMoney(data[0].ExcedenteDinero);
+                porciento1 = formatMoney(data[0].porciento1);
+                $.each(data, function (i, v) {
+                    console.log(v);
+                    v.destino == 0 ? origenes += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen} ) </div>` : ``;
+                    v.destino == 1 ? destino += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen}) </div>` :  `` ;
+    
+                    // v.destino == 0 ?  : ``;
+                });
+                document.getElementById("origenes").innerHTML = origenes;
+                document.getElementById("destino").innerHTML = destino;
+                document.getElementById("exceSup").innerHTML = exceSup;
+                document.getElementById("exceMonto").innerHTML = exceMonto;
+                document.getElementById("ExcedenteDinero").innerHTML = ExcedenteDinero;
+                document.getElementById("porciento1").innerHTML = porciento1;
+                $('#spiner-loader').addClass('hide');
+            });
+        }else{
+            $('#spiner-loader').removeClass('hide');
+
+
+            var origenes = ``;
+            var destino = ``;
+            $.getJSON("resumenIndividual/" + idLote+"/"+proceso).done(function (data) {
+                ExcedenteDinero = formatMoney(data[0].ExcedenteDinero);
+                destino = data[0].nombreDestino;
+                origenes = data[0].nombreOrigen ;
+                porciento1 = formatMoney(data[0].porciento1);
+                exceSup = data[0].Excedente_sup;
+                document.getElementById("exceSup").innerHTML = exceSup;
+                exceMonto += `<div class="col-lg-12 col-md-12 ">  ${formatMoney(data[0].montoExcedente)} . </div>`;
+                document.getElementById("origenes").innerHTML = origenes;
+                document.getElementById("destino").innerHTML = destino;
+                document.getElementById("exceMonto").innerHTML = exceMonto;
+                document.getElementById("ExcedenteDinero").innerHTML = ExcedenteDinero;
+                document.getElementById("porciento1").innerHTML = porciento1;
+                $('#spiner-loader').addClass('hide');
+            });
+
+            
+        }
+
+        
+    });
+
+    // fin de aqui empezamos con la nueva forma
+
+
+    
     $('#tabla_nuevas_comisiones').on('click', 'input', function () {
         tr = $(this).closest('tr');
         var row = tabla_nuevas.row(tr).data();
@@ -2015,3 +2136,12 @@ function asignarValorColumnasDT(nombre_datatable) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
 }
+
+
+
+
+
+
+
+
+

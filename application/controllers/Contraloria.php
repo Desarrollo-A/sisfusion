@@ -3055,6 +3055,9 @@ class Contraloria extends CI_Controller {
         $estatus_autorizacion = $this->input->post('estatus_autorizacion');
         $modo = $this->input->post('modo');
 
+        echo json_encode($_POST);
+        exit;
+
 
         $actualizar = array();
         $insert_historial = array();
@@ -3142,6 +3145,24 @@ class Contraloria extends CI_Controller {
         }
         echo json_encode($data_response);
         //avanzar o rechazar autorizacion
+    }
+
+
+    function actualizarMSI2() {
+        $id_autorizacion = $this->input->post('id_aut');
+        $comentario = $this->input->post('comentario');
+        $estatus_autorizacion = $this->input->post('estatus_autorizacion');
+        $modo = $this->input->post('modo');
+
+        $actualizar = array();
+        $insert_historial = array();
+        $update_lotes = array();
+        $fecha_insercion = date('Y-M-d H:i:s');
+        if ($modo == 1) {
+            $data_actualizar = array(
+                "estatus_autorizacion" => $estatus_autorizacion,
+            );
+        }
     }
 
 

@@ -31,9 +31,6 @@ $(document).ready(function () {
             var nombre_diRegional = diRegional[i5]['name_user'];
             $("#elegir_diRegional").append($('<option>').val(id_usuario_diRegional).attr('data-value',id_usuario_diRegional ).text(id_usuario_diRegional+ "- "+ nombre_diRegional));
         }
-        $("#add_gerente").selectpicker('refresh');
-        $("#elegir_gerente").selectpicker('refresh');
-
         subdirector = data.filter((subdi) => subdi.id_rol == parseInt(2));
         len4 = subdirector.length;
         for( let i4 = 0; i4<len4; i4++){
@@ -46,8 +43,6 @@ $(document).ready(function () {
             $("#elegir_subdirector").append($('<option>').val(id_usuario_subdirector).attr('data-value',id_usuario_subdirector ).text(id_usuario_subdirector+ "- "+ nombre_subdirecto));
            
         }
-        $("#add_subdirector").selectpicker('refresh');
-        $("#elegir_subdirector").selectpicker('refresh');
 
         gerente = data.filter((gere) => gere.id_rol == parseInt(3));
         len3 = gerente.length;
@@ -60,8 +55,6 @@ $(document).ready(function () {
             $("#add_gerente").append($('<option>').val(id3).attr('data-value',id_usario_gerente ).text(id_usario_gerente+ "- "+ nombre_gerente));
             $("#elegir_gerente").append($('<option>').val(id_usario_gerente).attr('data-value',id_usario_gerente ).text(id_usario_gerente+ "- "+ nombre_gerente));
         }
-        $("#add_gerente").selectpicker('refresh');
-        $("#elegir_gerente").selectpicker('refresh');
 
         coordinador = data.filter((coor) => coor.id_rol == parseInt(9));
         len2 = coordinador.length;
@@ -75,8 +68,6 @@ $(document).ready(function () {
             $("#elegir_coordinador").append($('<option>').val(id_opcion_coordinador).attr('data-value',id_opcion_coordinador ).text(id_opcion_coordinador+ "- "+ nombre_coordinador)); 
         }
 
-        $("#add_coordinador").selectpicker('refresh');
-        $("#elegir_coordinador").selectpicker('refresh');
 
         asesor = data.filter((ases) => ases.id_rol == parseInt(7));
         len = coordinador.length;
@@ -89,8 +80,8 @@ $(document).ready(function () {
             $("#add_asesor").append($('<option>').val(id).attr('data-value',id_usuario_asesor ).text(id_usuario_asesor+ "- "+ nombre_asesor));
              
         }
-        $("#elegir_asesor").selectpicker('refresh');
-        $("#add_asesor").selectpicker('refresh');
+        $("#add_coordinador, #add_asesor, #add_gerente, #add_subdirector").selectpicker('refresh');
+        $("#elegir_coordinador, #elegir_gerente, #elegir_subdirector, #elegir_asesor").selectpicker('refresh');
         
     });
 
@@ -115,12 +106,11 @@ $("#modal_avisos").draggable({
     handle: ".modal-header"
 }); 
 
-
+// ---------------------------Inicia funciones del botón con la clase Inventario-----------------------
 
 var rol  = id_rol_general;
-const id_usuariosPermisos = [1,2767,2826,4878,5957,2749,9775];
+const id_usuariosPermisos = [1,2767,2826,11947,5957,2749,9775];
 var id_user  = id_usuario_general;
-
 var banderaPermisos = id_usuariosPermisos.includes(id_usuario_general) ? 1 : 0;
 var idLote = 0;
 var banderaAgregarVenta=0;
@@ -143,6 +133,138 @@ $('#agregar_venta_compartida').on('click', function(){
 
 })
 
+var banderaBoton =0;
+$('.boton_usuario').click(function(ef) {
+    ef.preventDefault();
+    $("#boton_vCompartida").prop('disabled',false);
+    $('#add_subdirector, #add_coordinador, #add_gerente, #add_asesor').attr('required', true);
+    $('#puesto_usuario, #add_coordinador, #add_gerente, #add_subdirector, #add_asesor').val('');
+    $("#puesto_usuario, #add_coordinador, #add_gerente, #add_subdirector, #add_asesor").selectpicker("refresh");
+    $('#input_coordinador, #input_asesor, #input_gerente, #input_subdirector').addClass('hide');
+
+    var selectId = $(this).attr('data-target');
+                        
+    switch (selectId) {
+        case 'select1':
+            banderaBoton = 1;
+            $('#titulo_modal_cordi').text('AGREGAR COORDINADOR');                           
+            break;
+        case 'select2':
+            banderaBoton = 2;
+            $('#titulo_modal_cordi').text('AGREGAR GERENTE');
+            break;
+        case 'select3':
+            banderaBoton = 3;
+            $('#titulo_modal_cordi').text('AGREGAR SUBDIRECTOR');
+            break;
+        case 'select4':
+            banderaBoton = 4;
+            $('#titulo_modal_cordi').text('AGREGAR DIRECTOR REGIONAL');
+            break;
+        case 'select5':
+            banderaBoton = 5;
+            $('#titulo_modal_cordi').text('AGREGAR ASESOR');
+            break;
+        default:
+            $('#modal_coordinador').modal('hide');
+            alerts.showNotification("top", "right", "Ocurrio un error, intenta mas tarde.", "danger");
+            break;
+    }
+
+    $('#modal_coordinador').modal('show');
+});
+
+$('#puesto_usuario').change(function(){
+    var seleccionado = $('#puesto_usuario').val();
+
+    if(seleccionado == 2){
+        $('#input_subdirector').removeClass('hide');
+        $('#add_subdirector').attr('required', true);
+        $('#add_coordinador, #add_gerente, #add_asesor').removeAttr('required');
+        $('#input_asesor,#input_gerente,#input_coordinador').addClass('hide');
+        $("#add_coordinador, #add_gerente, #add_asesor").selectpicker("refresh");
+        $('#add_coordinador, #add_gerente, #add_asesor').val('');
+        $("#add_coordinador, #add_gerente, #add_asesor").trigger('change');
+
+    }else if(seleccionado == 3){
+        $('#input_gerente').removeClass('hide');
+        $('#add_gerente').attr('required', true);
+        $('#add_coordinador, #add_subdirector, #add_asesor').removeAttr('required');
+        $('#input_asesor, #input_subdirector, #input_coordinador').addClass('hide');
+        $("#add_coordinador, #add_subdirector, #add_asesor").selectpicker("refresh");
+        $('#add_coordinador, #add_subdirector, #add_asesor').val('');
+        $("#add_coordinador, #add_subdirector, #add_asesor").trigger('change');
+    }else if(seleccionado == 9){
+        $('#input_coordinador').removeClass('hide');
+        $('#add_coordinador').attr('required', true);
+        $('#add_gerente, #add_subdirector, #add_asesor').removeAttr('required');
+        $('#input_asesor, #input_gerente, #input_subdirector').addClass('hide');
+        $("#add_gerente, #add_subdirector, #add_asesor").selectpicker("refresh");
+        $('#add_gerente, #add_subdirector, #add_asesor').val('');
+        $("#add_gerente, #add_subdirector, #add_asesor").trigger('change');
+
+    }else if(seleccionado == 7){
+        $('#input_asesor').removeClass('hide');
+        $('#add_asesor').attr('required', true);
+        $('#add_gerente, #add_subdirector, #add_coordinador').removeAttr('required');
+        $('#input_gerente, #input_subdirector, #input_coordinador').addClass('hide');
+        $("#add_gerente, #add_subdirector, #add_coordinador").selectpicker("refresh");
+        $('#add_gerente, #add_subdirector, #add_coordinador').val('');
+        $("#add_gerente, #add_subdirector, #add_coordinador").trigger('change');
+    }
+       
+});
+
+$("#agregar_lider").on("submit", function(e){ 
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    $("#boton_vCompartida").prop('disabled',true);
+
+
+    var coordi = $('#add_coordinador').val();
+    var id1 = coordi.split(',');
+    var id_usuario1 = id1[0];
+    var name1 = id1[1];
+
+     var gere = $('#add_gerente').val();
+     var id2 = gere.split(',');
+     var id_usuario2 = id2[0];
+     var name2 = id2[1];
+
+     var subd = $('#add_subdirector').val();
+     var id3 = subd.split(',');
+     var id_usuario3 = id3[0];
+     var name3 = id3[1];
+
+     var asesor = $('#add_asesor').val();
+     var id4 = asesor.split(',');
+     var id_usuario4 = id4[0];
+     var name4 = id4[1];
+
+     if(banderaBoton == 1 ){
+        inputselect = 'elegir_coordinador';
+     }else if(banderaBoton == 2){
+        inputselect = 'elegir_gerente';
+     } else if(banderaBoton == 3){
+         inputselect = 'elegir_subdirector';
+     } else if(banderaBoton == 4){
+        inputselect = 'elegir_diRegional';
+     } else if(banderaBoton == 5){
+       inputselect = 'elegir_asesor';
+     }
+
+     id_usuario2 == 0 && id_usuario3 == 0 && id_usuario4 == 0 && id_usuario1 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario1).attr('data-value', id_usuario1).text(id_usuario1+' - '+name1))+ $('#'+inputselect+'').val(parseInt(id_usuario1)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
+     id_usuario1 == 0 && id_usuario3 == 0 && id_usuario4 == 0 && id_usuario2 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario2).attr('data-value', id_usuario2).text(id_usuario2+' - '+name2))+ $('#'+inputselect+'').val(parseInt(id_usuario2)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
+     id_usuario2 == 0 && id_usuario1 == 0 && id_usuario4 == 0 && id_usuario3 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario3).attr('data-value', id_usuario3).text(id_usuario3+' - '+name3))+ $('#'+inputselect+'').val(parseInt(id_usuario3)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
+     id_usuario2 == 0 && id_usuario1 == 0 && id_usuario3 == 0 && id_usuario4 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario4).attr('data-value', id_usuario4).text(id_usuario4+' - '+name4))+ $('#'+inputselect+'').val(parseInt(id_usuario4)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
+
+
+     $('#'+inputselect+'').selectpicker("refresh");
+
+    $('#modal_coordinador').modal('hide');
+
+});
+
 function selectOpcion(){
     banderaAgregarVenta = 0 ;
 
@@ -150,7 +272,6 @@ function selectOpcion(){
     idLote     = document.getElementById("lotes1").value;
     cuantos = document.getElementById("ventaCompartida").value;
     
-
     var parent = $('#opcion').val();
     $('#modal_avisitos').modal('hide');
     document.getElementById('UserSelect').innerHTML='';
@@ -158,8 +279,6 @@ function selectOpcion(){
     $("#usuarioid4").val('');
     $('#usuarioid4').val('default');
     $("#usuarioid4").selectpicker("refresh");
-
-   
 
     if(parent == 1){
         $.getJSON( general_base_url + "incidencias/getUserInventario/"+id_cliente).done( function( data ){
@@ -222,7 +341,6 @@ function selectOpcion(){
             $('[data-toggle="tooltip"]').tooltip();
             $('#miModalVcNew .vcnew').html('');
             $("#btn_vcnew").prop('disabled',false);
-            // let cuantos = data.length;
             if(cuantos == 0 || banderaAgregarVenta==1){
                 $('#form_vcNew')[0].reset();
 
@@ -230,210 +348,29 @@ function selectOpcion(){
                 $("#elegir_asesor, #elegir_coordinador, #elegir_gerente,#elegir_subdirector, #elegir_diRegional").selectpicker("refresh");
                 $("#elegir_asesor, #elegir_coordinador, #elegir_gerente,#elegir_subdirector, #elegir_diRegional").val('default');
                 
-
                 $('#miModalVcNew .vcnew').append(`
                 <input type="hidden" id="id_lote" value="${idLote}" name="id_lote" >
                 <input type="hidden" id="id_cliente" value="${id_cliente}" name="id_cliente" >`);
-
-                $('#puesto_usuario').change(function(){
-                    var seleccionado = $('#puesto_usuario').val();
-
-                    if(seleccionado == 2){
-                        $('#input_subdirector').removeClass('hide');
-                        $('#add_subdirector').attr('required', true);
-                        $('#add_coordinador').removeAttr('required');
-                        $("#add_gerente").removeAttr('required');
-                        $('#add_asesor').removeAttr('required');
-                        $('#input_asesor').addClass('hide');
-                        $('#input_gerente').addClass('hide');
-                        $('#input_coordinador').addClass('hide');
-                        $("#add_gerente").selectpicker("refresh");
-                        $('#add_coordinador').selectpicker("refresh");
-                        $('#add_asesor').selectpicker("refresh");
-                        $('#add_asesor').val('');
-                        $('#add_gerente').val('');
-                        $('#add_coordinador').val('');
-                        $("#add_gerente").trigger('change');
-                        $("#add_coordinador").trigger('change');
-                        $("#add_asesor").trigger('change');
-
-                    }else if(seleccionado == 3){
-                        $('#input_gerente').removeClass('hide');
-                        $('#add_gerente').attr('required', true);
-                        $('#add_coordinador').removeAttr('required');
-                        $("#add_subdirector").removeAttr('required');
-                        $('#add_asesor').removeAttr('required');
-                        $('#input_asesor').addClass('hide');
-                        $('#input_subdirector').addClass('hide');
-                        $('#input_coordinador').addClass('hide');
-                        $("#add_subdirector").selectpicker("refresh");
-                        $('#add_coordinador').selectpicker("refresh");
-                        $('#add_asesor').selectpicker("refresh");
-                        $('#add_asesor').val('');
-                        $('#add_subdirector').val('');
-                        $('#add_coordinador').val('');
-                        $("#add_subdirector").trigger('change');
-                        $("#add_coordinador").trigger('change');
-                        $("#add_asesor").trigger('change');
-
-                    }else if(seleccionado == 9){
-                        $('#input_coordinador').removeClass('hide');
-                        $('#add_coordinador').attr('required', true);
-                        $('#add_gerente').removeAttr('required');
-                        $("#add_subdirector").removeAttr('required');
-                        $('#add_asesor').removeAttr('required');
-                        $('#input_asesor').addClass('hide');
-                        $('#input_gerente').addClass('hide');
-                        $('#input_subdirector').addClass('hide');
-                        $("#add_gerente").selectpicker("refresh");
-                        $('#add_subdirector').selectpicker("refresh");
-                        $('#add_asesor').selectpicker("refresh");
-                        $('#add_gerente').val('');
-                        $('#add_subdirector').val('');
-                        $('#add_asesor').val('');
-                        $("#add_gerente").trigger('change');
-                        $("#add_subdirector").trigger('change');
-                        $("#add_asesor").trigger('change');
-                       
-                    }else if(seleccionado == 7){
-                        $('#input_asesor').removeClass('hide');
-                        $('#add_asesor').attr('required', true);
-                        $('#add_gerente').removeAttr('required');
-                        $("#add_subdirector").removeAttr('required');
-                        $("#add_coordinador").removeAttr('required');
-                        $('#input_gerente').addClass('hide');
-                        $('#input_subdirector').addClass('hide');
-                        $('#input_coordinador').addClass('hide');
-                        $("#add_gerente").selectpicker("refresh");
-                        $('#add_subdirector').selectpicker("refresh");
-                        $('#add_coordinador').selectpicker("refresh");
-                        $('#add_gerente').val('');
-                        $('#add_subdirector').val('');
-                        $('#add_coordinador').val('');
-                        $("#add_gerente").trigger('change');
-                        $("#add_subdirector").trigger('change');
-                        $("#add_coordinador").trigger('change');
-
-                    }
-                       
-                });
-
-                var banderaBoton =0;
-
-                $('.boton_usuario').click(function(ef) {
-                    
-                    ef.preventDefault();
-                    // $('#modal_coordinador').modal('show');
-                    $("#boton_vCompartida").prop('disabled',false);
-                    $('#modal_coordinador').modal('show');
-                    $('#add_subdirector').attr('required', true);
-                    $('#add_coordinador').attr('required', true);
-                    $('#add_gerente').attr('required', true);
-                    $('#puesto_usuario').val('');
-                    $('#add_coordinador').val('');
-                    $('#add_gerente').val('');
-                    $('#add_subdirector').val('');
-                    $("#puesto_usuario").selectpicker("refresh");
-                    $("#add_coordinador").selectpicker("refresh");
-                    $("#add_subdirector").selectpicker("refresh");
-                    $("#add_gerente").selectpicker("refresh");
-                    $('#input_coordinador').addClass('hide');
-                    $('#input_asesor').addClass('hide');
-                    $('#input_gerente').addClass('hide');
-                    $('#input_subdirector').addClass('hide')
-
-                    
-                    var selectId = $(this).attr('data-target');
-                                        
-                    switch (selectId) {
-                        case 'select1':
-                            banderaBoton = 1;
-                            $('#titulo_modal_cordi').text('AGREGAR COORDINADOR');                           
-                            break;
-                        case 'select2':
-                            banderaBoton = 2;
-                            $('#titulo_modal_cordi').text('AGREGAR GERENTE');
-                            break;
-                        case 'select3':
-                            banderaBoton = 3;
-                            $('#titulo_modal_cordi').text('AGREGAR SUBDIRECTOR');
-                            break;
-                        case 'select4':
-                            banderaBoton = 4;
-                            $('#titulo_modal_cordi').text('AGREGAR DIRECTOR REGIONAL');
-                            break;
-                        case 'select5':
-                            banderaBoton = 5;
-                            $('#titulo_modal_cordi').text('AGREGAR ASESOR');
-                            break;
-                        default:
-                            $('#modal_coordinador').modal('hide');
-                            alerts.showNotification("top", "right", "Ocurrio un error, intenta mas tarde.", "danger");
-                            break;
-                    }
-
-                    $('#modal_coordinador').modal('show');
-                });
-
-                $("#agregar_lider").on("submit", function(e){ 
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    $("#boton_vCompartida").prop('disabled',true);
-
-
-                    var coordi = $('#add_coordinador').val();
-                    var id1 = coordi.split(',');
-                    var id_usuario1 = id1[0];
-                    var name1 = id1[1];
-
-                     var gere = $('#add_gerente').val();
-                     var id2 = gere.split(',');
-                     var id_usuario2 = id2[0];
-                     var name2 = id2[1];
-
-                     var subd = $('#add_subdirector').val();
-                     var id3 = subd.split(',');
-                     var id_usuario3 = id3[0];
-                     var name3 = id3[1];
-
-                     var asesor = $('#add_asesor').val();
-                     var id4 = asesor.split(',');
-                     var id_usuario4 = id4[0];
-                     var name4 = id4[1];
-
-                     if(banderaBoton == 1 ){
-                        inputselect = 'elegir_coordinador';
-                     }else if(banderaBoton == 2){
-                        inputselect = 'elegir_gerente';
-                     } else if(banderaBoton == 3){
-                         inputselect = 'elegir_subdirector';
-                     } else if(banderaBoton == 4){
-                        inputselect = 'elegir_diRegional';
-                     } else if(banderaBoton == 5){
-                       inputselect = 'elegir_asesor';
-                     }
-
-                     id_usuario2 == 0 && id_usuario3 == 0 && id_usuario4 == 0 && id_usuario1 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario1).attr('data-value', id_usuario1).text(name1))+ $('#'+inputselect+'').val(parseInt(id_usuario1)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
-                     id_usuario1 == 0 && id_usuario3 == 0 && id_usuario4 == 0 && id_usuario2 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario2).attr('data-value', id_usuario2).text(name2))+ $('#'+inputselect+'').val(parseInt(id_usuario2)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
-                     id_usuario2 == 0 && id_usuario1 == 0 && id_usuario4 == 0 && id_usuario3 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario3).attr('data-value', id_usuario3).text(name3))+ $('#'+inputselect+'').val(parseInt(id_usuario3)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
-                     id_usuario2 == 0 && id_usuario1 == 0 && id_usuario3 == 0 && id_usuario4 != 0 ? $('#'+inputselect+'').append($('<option>').val(id_usuario3).attr('data-value', id_usuario4).text(name4))+ $('#'+inputselect+'').val(parseInt(id_usuario4)).trigger('change') + alerts.showNotification("top", "right", "Datos actualizados.", "success"): '';
-
-
-                     $('#'+inputselect+'').selectpicker("refresh");
-
-                    $('#modal_coordinador').modal('hide');
-
-                });
-                /**----------------------------------------------------------------------- */
+                
                 $('#miModalVcNew').modal('show');
 
             }
             else if(cuantos == 1){
 
                 $('#modal_vCompartida').modal('show');
+                $('#agregar_venta_compartida').prop('disabled', false);
+                $('#agregar_venta_compartida').removeClass('btn-gray');
+                
                 banderaAgregarVenta = 0;
 
                 $.getJSON( general_base_url + "Incidencias/getUserVC/"+id_cliente).done( function( data ){
+                    let cVentas = data.length;
+
+                    if(cVentas == 3){
+                        $('#agregar_venta_compartida').prop('disabled', true);
+                        $('#agregar_venta_compartida').addClass('btn-gray');
+                        alerts.showNotification("top", "right", "Esta lote ya alcanzó el limite de ventas compartidas.", "warning");
+                    }
 
                     $('#miModalVc .vc').html('');
                     $('#miModalVc .vc').append(`
@@ -457,9 +394,6 @@ function selectOpcion(){
                         <input type="hidden" value="${data[0].id_asesor}" id="asesor" name="asesor">
                         <input type="hidden" value="${data[0].id_coordinador}" id="coordinador" name="coordinador">
                         <input type="hidden" value="${data[0].id_gerente}" id="gerente" name="gerente">
-                
-                
-                
                         <input type="hidden" value="${data[0].asesor}" id="asesorname" name="asesorname">
                         <input type="hidden" value="${data[0].coordinador}" id="coordinadorname" name="coordinadorname">
                         <input type="hidden" value="${data[0].gerente}" id="gerentename" name="gerentename">
@@ -467,7 +401,6 @@ function selectOpcion(){
                         <input type="hidden" value="${id_cliente}" id="idCliente" name="idCliente">
                         
                         `);
-                        // $('#miModalVc').modal('show');
                 });
                 }
                 else if(cuantos == 2){
@@ -536,6 +469,7 @@ function selectOpcion(){
     }
     
 }
+// ---------------------------Termina funciones del botón con la clase Inventario-----------------------
 
 $("#form_roles").on("submit" , function(e){
     e.preventDefault();
@@ -1238,13 +1172,16 @@ $(".find_doc").click( function() {
         // 
         {data: function (d) {
             var labelEstatus;
+            if([64,65,66,84,85,86].indexOf(d.plan_comision) >= 0){
+                banderaPermisos = 0;
+            }
+            let textoReubicacion = [64,65,66].indexOf(d.plan_comision) >= 0 ? ' (Anterior)' :( [84,85,86].indexOf(d.plan_comision) >= 0 ? ' (Nuevo)' : '' );
             if(d.totalNeto2 == null) {
-                //labelEstatus ='<p class="m-0"><span>Sin Precio Lote</b></span>';
                 labelEstatus ='<label class="label lbl-azure btn-dataTable" data-toggle="tooltip" data-placement="top" style="cursor: pointer;"><span><b>Sin Precio Lote</b></span></label>';
             }else if(d.registro_comision == 2){
                 labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
             }else {
-             labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip" data-placement="top" title="VER MÁS DETALLES"><b><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"><b>${d.plan_descripcion} ${textoReubicacion}</b></label>`;
             }
             return labelEstatus;
         }},
@@ -1266,7 +1203,6 @@ $(".find_doc").click( function() {
             fechaNeodata = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_neodata+'</span>';
             rescisionLote = '';
             if(d.fecha_neodata <= '01 OCT 20' || d.fecha_neodata == null ) {
-                //fechaNeodata = '<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
                 fechaNeodata =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip" data-placement="top"><b><span style="cursor: pointer;">Sin Definir</span></label>`;
             } 
             if (d.registro_comision == 8){
@@ -1339,50 +1275,46 @@ $(".find_doc").click( function() {
             "data": function( data ){
                 $('[data-toggle="tooltip"]').tooltip();
 
-                    var saberCompartida;
-                if(data.compartida == null) {
-                    saberCompartida = 0;
-                } else{
-                    saberCompartida = 1;
-                }
+                var saberCompartida = data.compartida == null ? 0 : 1;
 
                 var BtnStats ='';
                 if(data.totalNeto2==null && data.idStatusContratacion > 8 ) {
-                    BtnStats += '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                     if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
-                        BtnStats += '<button data-toggle="tooltip" data-placement="top"href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
+                        BtnStats += '<button data-toggle="tooltip" data-placement="top" href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
                     }
                   
                 }
                 else {
                     if(data.registro_comision == 0 || data.registro_comision == 8) {
-                        BtnStats += '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip" data-placement="top"href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button>';
+                        BtnStats += '<button data-toggle="tooltip" data-placement="top"href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button>';
                         if(data.tipo_venta == 'null' || data.tipo_venta == 0 || data.tipo_venta == null){
                             BtnStats += '<button data-toggle="tooltip" data-placement="top"href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
                         }         
                     }
                     else if(data.registro_comision == 7 ) {
-                        BtnStats = '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip" data-placement="top"class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
+                        BtnStats = '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                     }
 
                     else if(data.registro_comision == 1 ) {
-                        BtnStats = '<button data-toggle="tooltip" data-placement="top"href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-lote="'+data.idLote+'" data-code="'+data.cbbtton+'" ' +
-                        'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button data-toggle="tooltip" data-placement="top"class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
-                        BtnStats += '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-green mensualidadTipo" title="Cambiar Mensualidad" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-mensualidad="'+data.opcion+'"><i class="fas fa-cog"></i></button>';
+                        
+                       // BtnStats += '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-green mensualidadTipo" title="Cambiar Mensualidad" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-mensualidad="'+data.opcion+'"><i class="fas fa-cog"></i></button>';
                     }
 
                     else {
-                        BtnStats = '<button data-toggle="tooltip" data-placement="top"href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-lote="'+data.idLote+'" data-code="'+data.cbbtton+'" ' +
-                        'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button data-toggle="tooltip" data-placement="top"class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip" data-placement="top"class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
+                       
                     
                     }
 
                     BtnStats += '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-proceso="'+data.proceso+'" data-ventaCompartida="'+saberCompartida+'"><i class="fas fa-user-edit"></i></button>';
                 }
-                BtnStats += data.estatus == 1 ? `<button data-toggle="tooltip" data-placement="top"data-lote="${data.idLote}" data-cliente="${data.id_cliente}" data-precioLote ="${data.totalNeto2}" class=" btn-data btn-sky agregar_usuario"  title="Agregar usuario" ><i class="fas fa-user-plus"></i></button>` : '';
+                BtnStats += data.registro_comision != 1 ? '' : `<button data-toggle="tooltip" data-placement="top"href="#" value="${data.idLote}" data-estatus="${data.idStatusContratacion}" data-tipo="I" data-precioAnt="${data.totalNeto2}"  data-value="${data.registro_comision}" data-cliente="${data.id_cliente}" data-lote="${data.idLote}" data-code="${data.cbbtton}" class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button>`;
 
-                BtnStats += (data.idStatusContratacion >= 9 && [64,65,66,84,85,86].indexOf(data.plan_comision) < 0) ? `<button data-toggle="tooltip" data-placement="top"data-estatus="${data.estatus}" data-idCliente="${data.id_cliente}" class=" btn-data btn-yellow cambiar_plan_comision"  title="Cambiar plan de comisión"><i class="fas fa-chart-bar"></i></button>` : '';
-                BtnStats +=  data.registro_comision ===0 || data.registro_comision ===8 && data.compartida!=null ? `<button data-toggle="tooltip" data-placement="top" value="${data.idLote}" data-lote="${data.idLote}" data-cliente="${data.id_cliente}" class=" btn-data btn-warning bajaVentaC"><i class="fas fa-trash"></i></button>`:'';
+               // BtnStats += data.estatus == 1 ? `<button data-toggle="tooltip" data-placement="top"data-lote="${data.idLote}" data-cliente="${data.id_cliente}" data-precioLote ="${data.totalNeto2}" class=" btn-data btn-sky agregar_usuario"  title="Agregar usuario" ><i class="fas fa-user-plus"></i></button>` : '';
+
+                //BtnStats += (data.idStatusContratacion >= 9 && [64,65,66,84,85,86].indexOf(data.plan_comision) < 0) ? `<button data-toggle="tooltip" data-placement="top"data-estatus="${data.estatus}" data-idCliente="${data.id_cliente}" class=" btn-data btn-yellow cambiar_plan_comision"  title="Cambiar plan de comisión"><i class="fas fa-chart-bar"></i></button>` : '';
+                BtnStats +=  (data.registro_comision == 0 || data.registro_comision == 8) && data.compartida !== null ? `<button data-toggle="tooltip" data-placement="top" value="${data.idLote}" data-lote="${data.idLote}" title="Baja venta compartida" data-cliente="${data.id_cliente}" class=" btn-data btn-warning bajaVentaC"><i class="fas fa-trash"></i></button>`:'';
+                BtnStats += `<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" data-planComision="${data.plan_comision}" value="${data.idLote}" data-precioAnt="${data.totalNeto2}"><i class="fas fa-pencil-alt"></i></button>`;
+                BtnStats += [64,65,66,84,85,86].indexOf(data.plan_comision) >= 0 ? '' : `<button class="btn-data btn-blueMaderas addEmpresa"  title="Agregar empresa" value="${data.idLote }" data-registro="${data.registro_comision}" data-cliente="${data.id_cliente}" data-precioAnt="${data.totalNeto2}"><i class="fas fa-building"></i></button>`;
 
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
@@ -1392,35 +1324,34 @@ $(".find_doc").click( function() {
 
 
 
-    $("#tabla_inventario_contraloria tbody").on("click", ".cambiar_precio", function(){
-        var tr = $(this).closest('tr');
-        var row = tabla_inventario.row( tr );
-        idLote = $(this).val();
-        precioAnt = $(this).attr("data-precioAnt");
-        if(precioAnt == 'null'){
-            precioAnt=0;
-        }
+   $("#tabla_inventario_contraloria tbody").on("click", ".cambiar_precio", function(){
+    var tr = $(this).closest('tr');
+    var row = tabla_inventario.row( tr );
+    idLote = $(this).val();
+    precioAnt = $(this).attr("data-precioAnt");
+    plan_comision = $(this).attr("data-planComision");
+    if(precioAnt == 'null'){
+        precioAnt=0;
+    }
+    $("#modal_pagadas .modal-body").html("");
+    $("#modal_pagadas .modal-footer").html("");
 
-        $("#modal_pagadas .modal-header").html("");
-        $("#modal_pagadas .modal-body").html("");
-        $("#modal_pagadas .modal-footer").html("");
+    $("#modal_pagadas .modal-body").append('<h4 class="modal-title">Cambiar precio del lote <b>'+row.data().nombreLote+'</b></h4><br><em>Precio actual: $<b>'+formatMoney(precioAnt)+'</b></em>');
+    $("#modal_pagadas .modal-body").append(`<input type="hidden" name="idLote" id="idLote" readonly="true" value="${idLote}"><input type="hidden" name="precioAnt" id="precioAnt" readonly="true" value="${precioAnt}"><input type="hidden" name="plan_comision" id="plan_comision" readonly="true" value="${plan_comision}">`);
+    $("#modal_pagadas .modal-body").append(`<div class="form-group">
+    <label class="control-label" >Nuevo precio</label>
+    <input type="text" name="precioL" onblur="verificar(${precioAnt})" required id="precioL" class="form-control input-gral">
+    <p id="msj" style="color:red;"></p>
+    </div>`);
 
-        $("#modal_pagadas .modal-header").append('<h4 class="card-title text-center"><b>Modificar precio</b></h4>');
-        $("#modal_pagadas .modal-body").append('<p class="modal-title">El lote <b>'+row.data().nombreLote+'</b>, tiene un costo actual de: <b>$'+formatMoney(precioAnt)+'</b> ¿Deseas cambiar el precio?</p>');
-        $("#modal_pagadas .modal-body").append('<input type="hidden" name="idLote" id="idLote" readonly="true" value="'+idLote+'"><input type="hidden" name="precioAnt" id="precioAnt" readonly="true" value="'+precioAnt+'">');
-        $("#modal_pagadas .modal-body").append(`<div class="form-group">
-        <label class="control-label" >Nuevo precio</label>
-        <input type="text" name="precioL" onblur="verificar(${precioAnt})" required id="precioL" class="form-control input-gral">
-        <p id="msj" style="color:red;"></p>
-        </div>`);
+    $("#modal_pagadas .modal-footer").append(`
+      
+        <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
+        <button type="submit" disabled id="btn-save" class="btn btn-gral-data" value="GUARDAR">GUARDAR</button>
+        `);
+    $("#modal_pagadas").modal();
+});
 
-        $("#modal_pagadas .modal-footer").append(`
-          
-            <button data-toggle="tooltip" data-placement="top"type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
-            <button data-toggle="tooltip" data-placement="top"type="submit" disabled id="btn-save" class="btn btn-gral-data" value="GUARDAR">GUARDAR</button>
-            `);
-        $("#modal_pagadas").modal();
-    });
     
     $("#tabla_inventario_contraloria tbody").on("click", ".tipo_venta", function(){
         var tr = $(this).closest('tr');
@@ -1609,6 +1540,72 @@ $(".find_doc").click( function() {
         });
     });
 
+
+/**--------------------------AGREGAR EMPRESA---------------------------- */
+$("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var tr = $(this).closest('tr');
+    var row = tabla_inventario.row( tr );
+    idLote = $(this).val();
+    $('#idLoteE').val(idLote);
+    id_cliente = $(this).attr("data-cliente");
+    precioAnt = $(this).attr("data-precioAnt");
+    $('#idClienteE').val(id_cliente);
+    $('#PrecioLoteE').val(precioAnt);
+    $("#addEmpresa").modal();
+           
+}); 
+$("#form_empresa").on('submit', function(e){ 
+    e.preventDefault();
+    e.stopImmediatePropagation();
+   document.getElementById('btn_add').disabled=true;
+
+   let formData = new FormData(document.getElementById("form_empresa"));
+   $.ajax({
+       url: 'Incidencias/AddEmpresa',
+       data: formData,
+       method: 'POST',
+       contentType: false,
+       cache: false,
+       processData:false,
+       success: function(data) {
+           console.log(data);
+           if (data == 1) {
+               $('#form_empresa')[0].reset();
+               $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+
+               $('#addEmpresa').modal('toggle');
+               alerts.showNotification("top", "right", "El registro se guardo correctamente.", "success");
+               document.getElementById('btn_add').disabled=false;
+
+           }if (data == 2) {
+               $('#form_empresa')[0].reset();
+               $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+
+               $('#addEmpresa').modal('toggle');
+               alerts.showNotification("top", "right", "EMPRESA YA SE ENCUENTRA REGISTRADA.", "warning");
+               document.getElementById('btn_add').disabled=false;
+
+           } else if (data == 0){
+               alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
+               $('#addEmpresa').modal('toggle');
+               document.getElementById('btn_add').disabled=false;
+               $('#form_empresa')[0].reset();
+
+           }
+       },
+       error: function(){
+           $('#form_empresa')[0].reset();
+           $('#addEmpresa').modal('toggle');
+           document.getElementById('btn_add').disabled=false;
+           $('#addEmpresa').modal('hide');
+           alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+       }
+   });
+});
+/**--------------------------------------------------------------------- */
+
     /**-------------------INVENTARIO------------------------------- */
     $("#tabla_inventario_contraloria tbody").on("click", ".inventario", function(e){
         e.preventDefault();
@@ -1631,7 +1628,7 @@ $(".find_doc").click( function() {
         if(registro_comision == 0){
             // $("#modal_inventario .seleccionar").html('');
             $('#modal_inventario .seleccionar').append(`
-                <h4><em>El lote seleccionado aún no está comisionando, por favor revisarlo con caja</em></h4>`);
+                <h4><em>El lote seleccionado aún no está comisionando</em></h4>`);
             $("#modal_inventario").modal();
         }
         else{ 
@@ -1726,7 +1723,7 @@ $(".find_doc").click( function() {
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
-        
+
         $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
             if(data.length > 0){
                 switch (data[0].Marca) {
@@ -1862,6 +1859,8 @@ $(".find_doc").click( function() {
                                             }
                                         }                   
                                         // boton guardar
+                                        $('[data-toggle="tooltip"]').tooltip();
+
                                         let boton = `
                                         <button data-toggle="tooltip" data-placement="top"type="button" id="btn_${i}" 
                                         ${(parseInt(banderaPermisos) != 1) ? 'style="display:none" ' : 'style="display:show" '} 

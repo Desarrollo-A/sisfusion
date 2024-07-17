@@ -163,7 +163,7 @@
     </div>
     <?php $this->load->view('template/footer_legend');?>
   </div>
-  </div>
+  </div><!--main-panel close-->
   <?php $this->load->view('template/footer');?>
   <script src="<?= base_url() ?>dist/js/controllers/pagos/bonos_historial.js"></script>
 </body>

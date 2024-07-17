@@ -73,7 +73,7 @@ function getDataXML(proyecto){
         {
             text: 'XMLS',
             action: function(){
-                if(id_rol_global == 17 || id_rol_global == 13 || id_rol_global == 31 || id_rol_global== 32){
+                if(id_rol_global == 17 || id_rol_global == 13 || id_rol_global == 31 || id_rol_global== 32 || id_rol_global== 70){
                     window.location = general_base_url+'XMLDownload/descargar_XML';
                 }
                 else{
