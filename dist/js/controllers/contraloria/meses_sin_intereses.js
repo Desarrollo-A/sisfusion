@@ -903,15 +903,6 @@ $(document).on('click', '.btnAvanzarAM', function(){
     }
 
     dataUpdateGeneral[0] = id_aut;
-    /*if(id_rol_general==17 || id_rol_general==70){
-        dataUpdateGeneral[1] = 5;
-        $('#tittleModalAM').text('¿Deseas autorizar los meses sin intereses?');
-        $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
-    }else{
-        dataUpdateGeneral[1] = 2;
-        $('#tittleModalAM').text('Avanzar autorización');
-    }*/
-
     $("#titleModalAM").text('¿Deseas autorizar los meses sin intereses?');
     $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
     dataUpdateGeneral[1] = 5;
