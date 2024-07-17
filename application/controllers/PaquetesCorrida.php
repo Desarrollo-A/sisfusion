@@ -392,7 +392,7 @@ class PaquetesCorrida extends CI_Controller
     $id_condicion = $this->input->post("id_condicion");
     $descuento = $this->input->post("descuento");
     //PERCENTAGES
-    if($id_condicion == 1 || $id_condicion == 2) {
+    if($id_condicion == 1 || $id_condicion == 2 ) {
       $replace = ["%"];
       $descuento = str_replace($replace, "", $descuento);
     }
