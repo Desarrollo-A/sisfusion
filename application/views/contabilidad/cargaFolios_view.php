@@ -148,5 +148,5 @@
     <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/Contabilidad/cargaFolios.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/contabilidad/cargaFolios.js"></script>
 </body>
