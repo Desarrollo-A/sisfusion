@@ -1409,6 +1409,5 @@ $(window).resize(function(){
 });
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-    console.log("tab shown");
     tablaAutorizacion.columns.adjust();
 });

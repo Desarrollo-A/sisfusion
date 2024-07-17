@@ -4,7 +4,6 @@ var tablaMsiVisualizar;
 var dataUpdateGeneral=[];
 var flagTipoUploadMeses;
 let titulos_intxt = [];
-console.log("I am here");
 
 $(document).ready (function() {
     flagTipoUploadMeses = 1; 
@@ -550,13 +549,10 @@ $(document).on('click', '.btnVerMA', function(e){
 
     if(accion == 1){
         let id = parseInt(id_aut);
-        console.log('id', id);
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
         data['edit'] = 0;
         $('.anclaClass2').attr('placeholder', 'ID LOTE');
     }else if(accion == 2){
-        console.log('id_aut', id_aut);
-
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
         data['edit'] = 0;
         $('.anclaClass2').attr('placeholder', 'ID CONDOMINIO');
@@ -569,7 +565,6 @@ $(document).on('click', '.btnVerMA', function(e){
 });
 
 function loadTableVAUT(data){
-    console.log("data: ", data);
     let button_excel = '';
     let dom;
 
