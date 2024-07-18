@@ -3551,7 +3551,8 @@ public $controller = 'Postventa';
                         "tipo_documento" => 0,
                         "id_autorizacion" => 0,
                         "tipo_doc" => 52,
-                        "estatus_validacion" => 0
+                        "estatus_validacion" => 0,
+                        'bucket' => 1,
                     );
                     $responseInsertHistorial = $this->General_model->addRecord('historial_documento', $arrayArbolDocumentos);
                 }

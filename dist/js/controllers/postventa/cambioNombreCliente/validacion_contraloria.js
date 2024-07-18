@@ -198,7 +198,7 @@ $(document).on('click', '.btn-avanzar', function () {
     if($(this).attr('data-tipoTramite') == 6){
         let escrituraNotariadaDiv = document.getElementById('escrituraNotariadaDiv');
         let contenidoHTML = '<h5>Escritura notariada</h5><hr>';
-        contenidoHTML    += '<iframe src="'+general_base_url+'static/documentos/cliente/escrituraNotariada/'+$(this).attr('data-escrituraNotariada')+'" width="100%" height="250px"></iframe>\n';
+        contenidoHTML    += '<iframe src="'+general_base_url+'documentacion/archivo/'+$(this).attr('data-escrituraNotariada')+'" width="100%" height="250px"></iframe>\n';
         contenidoHTML    += '<input type="hidden" name="escrituraNotariada" value="'+$(this).attr('data-escrituraNotariada')+'">';
 
         escrituraNotariadaDiv.innerHTML = contenidoHTML;
