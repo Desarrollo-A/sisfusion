@@ -888,17 +888,8 @@ $(document).on('click', '.btnAvanzarAM', function(){
     }
 
     dataUpdateGeneral[0] = id_aut;
-    /*if(id_rol_general==17 || id_rol_general==70){
-        dataUpdateGeneral[1] = 5;
-        $('#tittleModalAM').text('¿Deseas autorizar los meses sin intereses?');
-        $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
-    }else{
-        dataUpdateGeneral[1] = 2;
-        $('#tittleModalAM').text('Avanzar autorización');
-    }*/
-
     $("#titleModalAM").text('¿Deseas autorizar los meses sin intereses?');
-    $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
+    $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI.');
     dataUpdateGeneral[1] = 5;
     $('#avanzarAutAM').modal('show');
 });
@@ -928,7 +919,6 @@ $(document).on('click', '#enviarAutBtnAM', ()=>{
                 $('#spiner-loader').removeClass('hide');
             },
             success: function(data) {
-                console.log("data: ", data);
                 data = JSON.parse(data);
                 if(data.message == 'OK'){
                     $('#spiner-loader').addClass('hide');

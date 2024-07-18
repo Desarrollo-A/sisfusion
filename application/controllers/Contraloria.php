@@ -3050,17 +3050,17 @@ class Contraloria extends CI_Controller {
         echo json_encode($data_response);
     }
 
-    function actualizaAutMSI() {
+       function actualizaAutMSI() {
         //$modo 1: LOTE 2:CONDOMINIO
         $id_autorizacion = $this->input->post('id_aut');
-        echo json_encode($id_autorizacion);
         $comentario = $this->input->post('comentario');
         $estatus_autorizacion = $this->input->post('estatus_autorizacion');
         $modo = $this->input->post('modo');
-
         $actualizar = array();
         $insert_historial = array();
         $update_lotes = array();
+        $flagUpdate = 0;
+
         $fecha_insercion = date('Y-M-d H:i:s');
         if($modo == 1){
             $data_actualizar = array(
@@ -3087,7 +3087,7 @@ class Contraloria extends CI_Controller {
             $table_historial = 'historial_autorizacionesPMSI';
             $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_autorizacion);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
             $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
-            $response = $this->activaMSIListos($id_autorizacion);
+            if($actualizar && $insert_historial){$flagUpdate = 1;}
 
             //if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
             //    $array_update_lotes = $this->actualizaMSI($id_autorizacion, $modo);
@@ -3100,7 +3100,6 @@ class Contraloria extends CI_Controller {
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
             $fecha_insercion = date('Y-m-d H:i:s');
-
             foreach($arrayAutorizaciones as $id_aut){
                 $data_actualizar = array(
                     "estatus_autorizacion" => $estatus_autorizacion,
@@ -3119,14 +3118,18 @@ class Contraloria extends CI_Controller {
                     "estatus_autorizacion"  => $estatus_autorizacion,
                     "modoActualizacion" => $modo
                 );
+                
 
+                
+              
                 $table = 'autorizaciones_msi';
                 $key = 'id_autorizacion';
                 $table_historial = 'historial_autorizacionesPMSI';
-                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_aut);
+                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_aut);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
                 $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
-
-                $response = $this->activaMSIListos($id_autorizacion);
+                if($actualizar && $insert_historial){$flagUpdate = 1;}
+                
+                
 
 
                 //este proceso se debe dejar para que lo ejecute el servidor
@@ -3138,34 +3141,24 @@ class Contraloria extends CI_Controller {
                 }*/
             }
         }
-
-        if($actualizar && $insert_historial && $response){//esta variable es para el update de lotes: && $update_lotes
+        /*if($actualizar && $insert_historial){
             $data_response['message'] = 'OK';
         }else{
             $data_response['message'] = 'ERROR';
         }
         echo json_encode($data_response);
+        */
         //avanzar o rechazar autorizacion
-    }
 
-
-    function actualizarMSI2() {
-        $id_autorizacion = $this->input->post('id_aut');
-        $comentario = $this->input->post('comentario');
-        $estatus_autorizacion = $this->input->post('estatus_autorizacion');
-        $modo = $this->input->post('modo');
-
-        $actualizar = array();
-        $insert_historial = array();
-        $update_lotes = array();
-        $fecha_insercion = date('Y-M-d H:i:s');
-        if ($modo == 1) {
-            $data_actualizar = array(
-                "estatus_autorizacion" => $estatus_autorizacion,
-            );
+        if($flagUpdate == 1) {
+            $response = $this->activaMSIListos($id_autorizacion);
+            if($response) {
+                $data_response['message'] = 'OK';
+            }else {
+                $data_response['message'] = 'ERROR';
+            }
         }
     }
-
 
     function actualizaMSI($id_autorizacion, $modo) {//esta funcion obtiene los lotes con msi diferentes y los que no para -
         //mandarlos a actualizar definitivamente
@@ -3705,8 +3698,6 @@ class Contraloria extends CI_Controller {
     public function activaMSIListos($id_autorizacion) {
         //array  with the query data
         $autorizacionData = $this->db->query("SELECT * FROM autorizaciones_msi WHERE id_autorizacion IN ($id_autorizacion)")->result_array();
-        echo json_encode($autorizacionData);
-        exit;
         $actualizar = array();
         $insert_historial = array();
         $update_lotes = array();
@@ -3717,7 +3708,7 @@ class Contraloria extends CI_Controller {
                 if($autorizacion['modoActualizacion'] == 1) {
                     $data_actualizar = array(
                         "estatus_autorizacion" => 3,
-                        "coemntario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
                         "fecha_modificacion" => $fecha_insercion,
                         "modificado_por" => 1,
                         "modoActualizacion" => $autorizacion['modoActualizacion']
@@ -3736,7 +3727,7 @@ class Contraloria extends CI_Controller {
                     $table = 'autorizaciones_msi';
                     $key = 'id_autorizacion';
                     $table_historial = 'historiail_autorizacionesPSMI';
-                    $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autoriacion']);
+                    $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);
                     $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
                     $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
