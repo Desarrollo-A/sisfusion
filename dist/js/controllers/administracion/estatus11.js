@@ -149,6 +149,7 @@ $("#tabla_ingresar_11").ready(function () {
 									class="btn-data btn-warning rechazoReubicacion" data-toggle="tooltip" data-placement="top" title="Rechazo de estatus">
 									<i class="far fa-thumbs-down"></i></button>`;
 							}
+							cntActions += `${datatableButtons(d, 2)}`;
 						}
 						else
 							cntActions = 'N/A';
@@ -531,4 +532,47 @@ function formatCurrency(input, blur) {
 	var updated_len = input_val.length;
 	caret_pos = updated_len - original_len + caret_pos;
 	input[0].setSelectionRange(caret_pos, caret_pos);
+}
+
+$(document).on('click', '.btn-archivo', function() {
+    $('.btn-archivo').attr('disabled', true); // Lo vuelvo a activar
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+    Shadowbox.init();
+    const d = JSON.parse($(this).attr("data-data"));
+    let filePath = `${general_base_url}Documentacion/archivo/${d.expediente}`;
+    Shadowbox.open({
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${filePath}"></iframe></div>`,
+        player: "html",
+        title: `Visualizando archivo: ${d.movimiento}`,
+        width: 985,
+        height: 660
+    });
+
+    $('.btn-archivo').attr('disabled', false); // Lo vuelvo a activar
+    $('#spiner-loader').addClass('hide'); // Quito spinner  
+});
+
+const datatableButtons = (d, type) => {
+    const BTN_VER_DOC = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+
+    let NO_BTN = '';
+
+    if (type === 2) {
+        if (d.expediente) return BTN_VER_DOC;
+    }
+
+    return NO_BTN;
+}
+
+const newButton = (btnClass, title, action = '', data, icon) => {
+    const CUSTOM_BTN = `<button class='${btnClass}'
+        data-toggle='tooltip' 
+        data-placement='top'
+        title='${title.toUpperCase()}'
+        data-accion='${action}'
+        data-data='${JSON.stringify(data)}'>
+            <i class='${icon}'></i>
+        </button>`;
+
+    return CUSTOM_BTN;
 }

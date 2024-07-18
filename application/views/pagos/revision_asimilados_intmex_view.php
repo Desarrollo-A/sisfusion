@@ -77,7 +77,7 @@
                             <div class="tab-content p-2">
                                 <div class="tab-pane active" id="nuevas-1">
                                     <div class="card-content" style="justify-content: space-between">  
-                                        <div class="text-center">
+                                        <div class="text-center">  
                                             <div class="encabezadoBox">
                                                 <h3 class="card-title center-align">Comisiones nuevas <b>asimiliados</b></h3>
                                             </div>
@@ -145,7 +145,7 @@
                                                                     <th>PUESTO</th>
                                                                     <th>CÓDIGO POSTAL</th>
                                                                     <th>FECHA DE ENVÍO</th>
-                                                                    <th>ACCIONES</th>
+                                                                    <th>MÁS</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>
@@ -168,7 +168,6 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
-    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros_internomex/revision_asimilados_intmex_seguros.js"></script>
 </body>

@@ -19,6 +19,10 @@ var banderaFusionGlobal=0;
 var idsArchivos = [];
 var flagProcesoJuridicoGlobal = null;
 var flagProcesoContraloriaGlobal = null;
+var flagJuridicoFusionGlobal = null;
+var flagContraloriaFusionGlobal = null;
+let contenedorContenido = document.getElementById('contenedorCoprop');
+
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
         $("#fileElm1").val(null);
@@ -38,11 +42,15 @@ $(document).ready(function () {
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
     let banderaFusion = $(this).attr("data-banderaFusion");
-    console.log(banderaFusion)
     var flagProcesoContraloria = $(this).attr("data-flagProcesoContraloria");
     var flagProcesoJuridico = $(this).attr("data-flagProcesoJuridico");
-    flagProcesoJuridicoGlobal = flagProcesoJuridico;
+    var flagContraloriaFusion = $(this).attr("data-flagContraloriaFusion"); // asignacion de banderas de fusion
+    var flagJuridicoFusion = $(this).attr("data-flagJuridicoFusion");
+    $("#formularioOrigenEditar").html(""); // limpiar el apartado de los archivos de fusion elminar para revertir las ocpiones pro fusion
+    flagProcesoJuridicoGlobal = flagProcesoJuridico; // asignacion de banderas de fusion
     flagProcesoContraloriaGlobal = flagProcesoContraloria;
+    flagJuridicoFusionGlobal = flagContraloriaFusion;
+    flagContraloriaFusionGlobal = flagJuridicoFusion;
     banderaFusion = banderaFusion == null ? 0 : banderaFusion;
     banderaFusionGlobal = banderaFusion;
     nombreLote = $(this).attr("data-nombreLote");
@@ -53,6 +61,20 @@ $(document).on('click', '.btn-abrir-modal', function () {
     id_dxc = $(this).attr("data-id_dxc");
     contenedorTitulo.text(nombreLote);
     let flagEditar = $(this).attr("data-editar");
+
+    if(flagFusion == 1){
+        if (flagEditar == 1) {
+            $("#archivosFusionEditar").modal();
+        }
+        else{
+            $("#archivosReestructuraFusion").modal();
+        }
+    }
+    else{
+        $("#archivosReestructura").modal();
+    }
+
+
     var formData = new FormData();
     formData.append("idLote", idLote);
     formData.append("flagFusion", banderaFusion);
@@ -68,24 +90,25 @@ $(document).on('click', '.btn-abrir-modal', function () {
         success: function(data) {
             data = JSON.parse(data);
             if (data['copropietarios'].length > 0) {
-                loadCopropietarios(data['copropietarios']);
-                document.getElementById('co-propietarios').classList.remove('hide');
+                $('#co-propietarios').css("display", "block");
+                loadCopropietarios(data['copropietarios']);            
             } 
             else {
-                let copropietarios = document.getElementById('co-propietarios');
-                copropietarios.innerHTML = '';
-                document.getElementById('co-propietarios').classList.add('hide');
+                $('#co-propietarios').css("display", "none");
             }
-            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,banderaFusion,flagProcesoContraloria,flagProcesoJuridico)
+            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,banderaFusion,flagProcesoContraloria,flagProcesoJuridico, idLote, flagContraloriaFusion, flagJuridicoFusion);
+
+            
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 
-    $("#archivosReestructura").modal();
+    
 });
-function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusion = 0,flagProcesoContraloria,flagProcesoJuridico) {
+
+function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusion = 0,flagProcesoContraloria,flagProcesoJuridico, idLote, flagContraloriaFusion, flagJuridicoFusion) {
     archivosResicion = [];
     idsArchivos = [];
     id_dxcs = [];
@@ -95,6 +118,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     let label = '';
     let contenedorArchivos = document.getElementById('formularioArchivos');
     let contenidoHTML = '';
+    let htmlOrigen = ""; /// para los archivops de rescision y contrato en fusion    
     flagProceso = estatusProceso;
     let nombreCliente = datos[0]['nombreCliente'];
     let estadoCivil = datos[0]['estadoCivil'];
@@ -104,6 +128,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     let telefono1 = datos[0]['telefono1'];
     let ocupacion = datos[0]['ocupacion'];
     let infoClienteContenedor = document.getElementById('info-cliente');
+    let infoClienteFusion = document.getElementById('info-clienteFusion');
+    let infoClienteEditar = document.getElementById('info-clienteEditar');
     let contenidoHTMLinfoCL = `
     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
@@ -142,72 +168,77 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             hideButton = '';
             break;
     }
-    console.log(flagProceso);
-    console.log(flagProcesoJuridico);
-    console.log(id_rol_general)
+
     if (flagEditar == 0) {
         editarFile = 0;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
        let nuevosDatosDestino = banderaFusion != 0 ?  datos.filter(destino => destino.destino == 1) : datos;
-       console.log(nombreLote);
+
       /* nuevosDatosOrigenBack.map((elementoBack, index2) => {
        // elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16
         banderaFusion != 0  ?  nombreLotes.push(elementoBack.nombreLote) : nombreLotes.push(nombreLote);
-    });*/
+        });*/
 
     if(banderaFusion != 0){
         nuevosDatosOrigenBack.map((elementoBack, index2) => {
             nombreLotes.push(elementoBack.nombreLote)
         });
-    }else{
+    }
+    else{
         nombreLotes.push(nombreLote);
     }
-    console.log('nombreLotes', nombreLotes);
-       nuevosDatosDestino.map((elemento, index) => {
-        id_pxls.push(elemento.id_pxl);
-        banderaTipoProceso=elemento.tipo_proceso;
-       // elemento.idStatusLote == 17 || elemento.idStatusLote == 16  ? nombreLotes.push(elemento.nombreLote) : '';
-        
+    
+        if (flagFusion == 1) {
+            renderizar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles);
+        }
+        else {
+            nuevosDatosDestino.map((elemento, index) => {
+                id_pxls.push(elemento.id_pxl);
+                banderaTipoProceso = elemento.tipo_proceso;
+                // elemento.idStatusLote == 17 || elemento.idStatusLote == 16  ? nombreLotes.push(elemento.nombreLote) : '';
 
-            contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
-                '                            <h6 class="text-left">' + label + '<b>: </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
-                '                            <div class="" id="selectFileSection' + index + '">\n' +
-                '                                <div class="file-gph">\n' +
-                '                                    <input class="d-none" type="file" required accept="' + acceptFiles + '" id="fileElm' + index + '">\n' +
-                '                                    <input class="file-name" id="file-name' + index + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-                '                                    <label class="upload-btn m-0" for="fileElm' + index + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-                '                                </div>\n' +
-                '                            </div>\n' +
-                '                        </div>';
-            if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
-
-                let tooltip = flagProcesoContraloria == 0 ? 'Contraloría no ha cargado corridas' : 'Descargar excel';
-                let disabledBtn = flagProcesoContraloria == 0 ? 'disabled' : '';
-                contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
-                    '                           <div class="d-flex justify-center">' +
-                    '                               <button data-toggle="tooltip" '+disabledBtn+' data-placement="top" title="'+tooltip+'" ' +
-                    '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
-                    '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
-                    '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
-                    '                           </div>' +
+                contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
+                    '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
+                    '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
+                    '                            <h6 class="text-left">' + label + '<b>: </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
+                    '                            <div class="" id="selectFileSection' + index + '">\n' +
+                    '                                <div class="file-gph">\n' +
+                    '                                    <input class="d-none" type="file" required accept="' + acceptFiles + '" id="fileElm' + index + '">\n' +
+                    '                                    <input class="file-name" id="file-name' + index + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+                    '                                    <label class="upload-btn m-0" for="fileElm' + index + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+                    '                                </div>\n' +
+                    '                            </div>\n' +
                     '                        </div>';
-            }
-            arrayKeysArchivos.push(elemento);
-        });
+                if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15) {
+
+                    let tooltip = ((flagProcesoContraloria == 0 && flagFusion == 0) || (flagContraloriaFusion == 0 && flagFusion == 1))  ? 'Contraloría no ha cargado corridas' : 'Descargar excel';
+                    let disabledBtn = ((flagProcesoContraloria == 0 && flagFusion == 0) || (flagContraloriaFusion == 0 && flagFusion == 1))? 'disabled' : '';
+                    contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
+                        '                           <div class="d-flex justify-center">' +
+                        '                               <button data-toggle="tooltip" ' + disabledBtn + ' data-placement="top" title="' + tooltip + '" ' +
+                        '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
+                        '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
+                        '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
+                        '                           </div>' +
+                        '                        </div>';
+                }
+                arrayKeysArchivos.push(elemento);
+            });
+        }
+
         if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
             //se esta subiendo contrato se debe pedir uno adicional
             //cambiar el último número de la siguiente línea por datos[0]['tipo_proceso']
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
-            console.log(datos);
+
             nuevosDatosOrigen.map((elemento, index) => {
             nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
             idsArchivos.push(elemento.id_pxl);
             id_dxcs.push(elemento.id_pxl);
             rescisionArchivos.push(banderaFusion != 0 ? elemento.rescision : elemento.rescisionArchivo)
             const archivoLbl = elemento.tipo_proceso != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
-            contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2"><hr>\n' +
+           
+                contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2"><hr>\n' +
                 '                            <h6 class="text-left"><b>Subir '+archivoLbl+': </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion_'+elemento.id_pxl+'">\n' +
                 '                                <div class="file-gph">\n' +
@@ -218,12 +249,16 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 '                            </div>\n' +
                 '                        </div>';
             });
+
+            if(flagFusion == 1){
+                renderizarOrigen(nuevosDatosOrigen);
+            }            
         }
     }
     else if (flagEditar == 1) {
         editarFile = 1;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
-        console.log(datos);
+
         /*nuevosDatosOrigenBack.map((elementoBack, index2) => {
          elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
      });*/
@@ -235,41 +270,48 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             nombreLotes.push(nombreLote);
         }
         let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
-        nuevosDatosDestino.map((elemento, index) => {
-            arrayKeysArchivos.push(elemento);
-            id_pxls.push(elemento.id_pxl);
-
-            if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
-                nombreArchivo = elemento.contrato;
-            } else if (flagProceso == 2) {
-                nombreArchivo = elemento.corrida;
-            }
-            archivosAborrar.push(nombreArchivo);
-            contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9 mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
-                '                            <h6 class="text-left">' + label + ':' + elemento.nombreLote + '</h6>\n' +
-                '                            <div class="" id="selectFileSection' + index + '">\n' +
-                '                                <div class="file-gph">\n' +
-                '                                    <input class="d-none" type="file" required accept="' + acceptFiles + '" id="fileElm' + index + '">\n' +
-                '                                    <input class="file-name" id="file-name' + index + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-                '                                    <label class="upload-btn w-50 m-0" for="fileElm' + index + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-                '                                </div>\n' +
-                '                            </div>\n' +
-                '                        </div>';
-            contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 mt-4">\n' +
-                '                           <div class="d-flex justify-center">' +
-                '                               <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
-                '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
-                '                               data-nomArchivo="' + nombreArchivo + '" data-nombreOriginalLote="' + nombreLote + '"' +
-                '                               data-rescision="0"><i class="fas fa-eye"></i></button>' +
-                '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
-                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + elemento.id_pxl + '" ' +
-                '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
-                '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
-                '                           </div>' +
-                '                        </div>';
-        });
+        if(flagFusion == 1){
+            renderizarEditar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles, hideButton, flagProceso, flagProcesoJuridico, id_rol_general); // para renderizar el editar sobre las fusiones
+        }
+        else{
+            nuevosDatosDestino.map((elemento, index) => {
+                arrayKeysArchivos.push(elemento);
+                id_pxls.push(elemento.id_pxl);
+    
+                if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+                    nombreArchivo = elemento.contrato;
+                } else if (flagProceso == 2) {
+                    nombreArchivo = elemento.corrida;
+                }
+                archivosAborrar.push(nombreArchivo);
+    
+                contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9 mb-2">\n' +
+                    '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
+                    '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
+                    '                            <h6 class="text-left">' + label + ':' + elemento.nombreLote + '</h6>\n' +
+                    '                            <div class="" id="selectFileSection' + index + '">\n' +
+                    '                                <div class="file-gph">\n' +
+                    '                                    <input class="d-none" type="file" required accept="' + acceptFiles + '" id="fileElm' + index + '">\n' +
+                    '                                    <input class="file-name" id="file-name' + index + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+                    '                                    <label class="upload-btn w-50 m-0" for="fileElm' + index + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+                    '                                </div>\n' +
+                    '                            </div>\n' +
+                    '                        </div>';
+                contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 mt-4">\n' +
+                    '                           <div class="d-flex justify-center">' +
+                    '                               <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
+                    '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
+                    '                               data-nomArchivo="' + nombreArchivo + '" data-nombreOriginalLote="' + nombreLote + '"' +
+                    '                               data-rescision="0"><i class="fas fa-eye"></i></button>' +
+                    '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
+                    '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + elemento.id_pxl + '" ' +
+                    '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
+                    '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
+                    '                           </div>' +
+                    '                        </div>';
+            });
+        }
+        
         if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
             //se esta subiendo contrato se debe pedir uno adicional
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"id_dxc" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
@@ -284,7 +326,11 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 elemento.rescisionArchivo = banderaFusion != 0 ? elemento.rescision : elemento.rescisionArchivo;
                 rescisionArchivos.push(banderaFusion != 0 ? elemento.rescision : elemento.rescisionArchivo)
 
-                contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10 mb-2"><hr>\n' +
+                if(flagFusion == 1){
+                    renderizarEditar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles);
+                }
+                else{
+                    contenidoHTML += ' <div class="col col-xs-12 col-sm-12 col-md-10 col-lg-10 mb-2"><hr>\n' +
                 '                            <h6 class="text-left"><b>Subir '+archivoLbl+': </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSectionResicion">\n' +
                 '                                <div class="file-gph">\n' +
@@ -294,7 +340,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 '                                </div>\n' +
                 '                            </div>\n' +
                 '                        </div>';
-            contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2  "><hr>\n' +
+                contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2  "><hr>\n' +
                 '                           <div class="d-flex justify-center mt-4">' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
                 '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + idArchivo + '" ' +
@@ -302,11 +348,14 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 '                               data-rescision="1"><i class="fas fa-eye"></i></button>' +
                 '                           </div>' +
                 '                        </div>';
+                }
 
             });
         }
     }
     infoClienteContenedor.innerHTML = contenidoHTMLinfoCL;
+    infoClienteFusion.innerHTML = contenidoHTMLinfoCL; // se agrega cambio para la fusión
+    infoClienteEditar.innerHTML = contenidoHTMLinfoCL; // se agrega cambio para el editar de la fusión
     contenedorArchivos.innerHTML = contenidoHTML;
     //nombre de archivo en front
     $("input:file").on("change", function () {
@@ -327,8 +376,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
 function loadCopropietarios(datos){
     // cnt-headers //contenedor de las cabeceras
     let contenidoHTML = '';
-    let contenedorContenido = document.getElementById('contenedorCoprop');
-    if(datos.length>0){
+    
+    if(datos.length > 0) {
         datos.map((elemento, index)=>{
             let nombreCopropietario = elemento.nombre + ' ' + elemento.apellido_paterno+' '+elemento.apellido_materno;
             contenidoHTML += '<div class="card-body mb-3">';
@@ -376,7 +425,6 @@ function loadCopropietarios(datos){
     }else{
         contenidoHTML += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12"><center><h5 class="fs-2">Sin copropietarios</h5></center></div>';
     }
-
     contenedorContenido.innerHTML = contenidoHTML;
 }
 
@@ -386,7 +434,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     let arrayResicion = [];
     let validacionArray = [];
     let flagValidacion = 0;
-    console.log(idsArchivos);
+
     for (let m = 0; m < idsArchivos.length; m++) {
         if($(`#Resicion_${idsArchivos[m]}`)[0].files[0] != undefined){
             arrayResicion.push(1);
@@ -402,8 +450,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
     });
 
     if (editarFile == 1) {
-        console.log('arrayResicion')
-        console.log(arrayResicion);
         if (flagValidacion > 0 && banderaFusionGlobal == 0) {
             //hay al menos un archivo actualizado
             flagEnviar = true;
@@ -457,7 +503,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append('rescisionArchivo[]', rescisionArchivos);
             }
         }
-        console.log(flagEnviar);
+
         if (flagEnviar) {
             $.ajax({
                 type: 'POST',
@@ -527,7 +573,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append("id_pxls[]",id_pxls);
                 data.append("editarFile", editarFile);
                 data.append("flagFusion", flagFusion);
-                console.log(arrayKeysArchivos);
                 arrayKeysArchivos.map((elemento, index) => {
                     let idLotePR = (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
                     data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
@@ -590,6 +635,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
     }
 });
+
 $(document).on('click', '.ver-archivo', function () {
     let id_pxl = $(this).attr("data-idPxl");
     let nombreArchivo = $(this).attr("data-nomArchivo");
@@ -798,7 +844,6 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
             }else{
                 flagEnviar = true;
             }
-            console.log(flagEnviar);
             // return '';//test
         }else{
             if ($("#contratoFirmado")[0].files[0] == undefined) {
@@ -889,7 +934,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
             let flagEditarCF = ($("#contratoFirmado")[0].files[0] == undefined) ? 0 : 1;
             data.append("flagEditarCF", flagEditarCF);
         }
-console.log(arrayCF);
+
         //submit de la data, independientemente sea fusion o normal
         $.ajax({
             type: 'POST',
@@ -948,4 +993,346 @@ const dlotesFusionados = async (idLoteOriginal, tipoOrigenDestino) => {
             resolve(response);
         });
     });
+}
+
+function renderizar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles){
+    let contenidoHTML;
+    $("#formularioArchivosFusion").html("");
+
+    $.ajax({
+        url: 'obtenerOpcionesFusion',
+        method: 'POST',
+        datatype: 'JSON',
+        data: { 'idLoteOriginal': idLote },
+        success: function(response){
+            if(response.result){
+
+                for (let opcion of response.opciones) {
+                    let html = `<button class="accordion" type="button" onClick='verOpciones(${opcion.noOpcion})' style="border-radius: 1em; margin-top: 1em; background-color: #0a548b; color: white">Opción ${opcion.noOpcion}</button>
+                        <div class="panel" id="opcion${opcion.noOpcion}" style="border:1px; padding:1em; border-radius: 1em;">
+                    </div>`;
+                    
+                    html += `<input type='hidden' id='numOpciones' value='${nuevosDatosDestino.length}' />`
+                    
+                    $("#formularioArchivosFusion").append(html);
+
+                    let option = 0
+                    for(let lote of nuevosDatosDestino){
+                        // console.log(nuevosDatosDestino)
+
+                        if(lote.noOpcion == opcion.noOpcion){
+                            let htmlOpciones = `<input type='hidden' id='opcion_${option}' value='${lote.id_pxl}' />`
+                            htmlOpciones += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
+            '                            <input type="" name="data[' + lote.id_pxl + ']" id="idLotep' + lote.id_pxl + '" value="' + lote.id_pxl + '">\n' +
+            '                            <input type="" id="nombreLote_' + lote.id_pxl + '" value="' + lote.nombreLote + '">\n' +
+            '                            <h6 class="text-left">' + label + '<b>: </b>' + lote.nombreLote + '<span class="text-red">*</span></h6>\n' +
+            '                            <div class="" id="selectFileSection' + lote.id_pxl + '">\n' +
+            '                                <div class="file-gph">\n' +
+            '                                    <input class="d-none" type="file" required onchange="onChangeFile('+ lote.id_pxl +')" accept="' + acceptFiles + '" id="fileElm' + lote.id_pxl + '">\n' +
+            '                                    <input class="file-name" id="file-name' + lote.id_pxl + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+            '                                    <label class="upload-btn m-0" for="fileElm' + lote.id_pxl + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                        </div>';
+
+                            $("#opcion" + opcion.noOpcion).append(htmlOpciones);
+                        }
+
+                        option += 1
+                    }
+                }
+            }
+            else{
+                alerts.showNotification("top", "right", "Error al obtener los lotes de destino");
+            }
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "Ha ocurrido un error al enviar los datos", "danger");
+        }
+    });
+
+    
+    return contenidoHTML;
+}
+
+function verOpciones(noOpcion){
+    if( $("#opcion" + noOpcion).css("display") == 'none'){
+        $("#opcion" + noOpcion).css("display", "block")
+    }
+    else{
+        $("#opcion" + noOpcion).css("display", "none")
+    }
+}
+
+function onChangeFile(pxl){
+    var fileVal=document.getElementById("fileElm" + pxl);
+
+    document.getElementById("file-name" + pxl).value = fileVal.files[0].name;
+}
+
+
+$(document).on("click", "#sendRequestButtonFusion", function (e) { // este es unicamente usado en las fusiones de querer regresar se puede eliminar
+    e.preventDefault();
+    let data = new FormData();
+    $("#spiner-loader").removeClass('hide');
+    let flagSuccess = true;
+    let opciones = $('#numOpciones').val();
+
+    if($("#tipo").val() == 1){
+        let opcionOrigen = $("#cantidadOrigen").val();
+
+        for (let opcion = 0; opcion < opcionOrigen; opcion++) { // para trader documentos de resicion, esta linea sera ingnorada cuado sea el paso de contraloria
+            let idpxlRe = $(`#opcionRescision_${opcion}`).val();
+            let archivoRe = document.getElementById(`rescisionFile${idpxlRe}`);
+            
+
+            if(!idpxlRe || archivoRe.files.length == 0){
+                flagSuccess = false;
+                break;
+            }
+            else{
+                archivoRe = archivoRe.files[0];
+    
+                data.append(`${idpxl}[idpxl]`, idpxl);
+                data.append(`${idpxl}[tipo]`, "1"); // tipo 1 resicion en el back 
+            }
+        }
+
+        
+    }
+
+    for (let opcion = 0; opcion < opciones; opcion++) { // para trader documentos de contrato y corridas
+        let idpxl = $(`#opcion_${opcion}`).val();
+        let lote = $(`#nombreLote_${idpxl}`).val();
+        let archivo = document.getElementById(`fileElm${idpxl}`);
+        
+        if(!lote || archivo.files.length == 0){
+            flagSuccess = false;
+            break;
+        }
+        else{
+            archivo = archivo.files[0];
+
+            data.append(`${idpxl}[idpxl]`, idpxl);
+            data.append(`${idpxl}[tipo]`, "0"); // tipo 0 corridad en el back
+            data.append(`${idpxl}[lote]`, lote);
+            data.append(`${idpxl}[file]`, archivo);
+        }   
+    }
+
+    if(flagSuccess){
+        $.ajax({
+            type: 'POST',
+            url: 'subirArchivosFusion',
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (response) {
+                if(response.result){
+                    alerts.showNotification("top", "right", response.message, "success");
+                }
+                else{
+                    alerts.showNotification("top", "right", response.message, "danger");
+                }
+
+                $("#spiner-loader").addClass('hide');
+                $("#archivosReestructuraFusion").modal('hide');
+                reubicacionClientes.ajax.reload();
+            },
+        error: function(response){
+            $("#archivosReestructuraFusion").modal('hide');
+            $("#archivosFusionEditar").modal('hide');            
+            alerts.showNotification("top", "right", "Error al enviar el formulario", "danger");
+        }
+        })
+    }
+    else{
+        alerts.showNotification("top", "right", "Faltan subir archivos en el formulario", "danger");
+        $("#spiner-loader").addClass('hide');
+    } 
+});  
+
+function verOpcionesEditar(noOpcion){
+    if( $("#opcionEditar" + noOpcion).css("display") == 'none'){
+        $("#opcionEditar" + noOpcion).css("display", "block")
+    }
+    else{
+        $("#opcionEditar" + noOpcion).css("display", "none")
+    }
+}
+
+function onChangeFileEditar(pxl){
+    var fileVal=document.getElementById("fileElmEditar" + pxl);
+
+    document.getElementById("file-name-editar" + pxl).value = fileVal.files[0].name;
+}
+
+function renderizarEditar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles, hideButton, flagProceso, flagProcesoJuridico, id_rol_general){
+    let contenidoHTML;
+    let nombreArchivo = '';
+
+    $("#formularioEditarFusion").html("");
+
+    $.ajax({
+        url: 'obtenerOpcionesFusion',
+        method: 'POST',
+        datatype: 'JSON',
+        data: { 'idLoteOriginal': idLote },
+        success: function(response){
+            if(response.result){
+                for (let opcion of response.opciones) {
+                    let html = `<button class="accordion" type="button" onClick='verOpcionesEditar(${opcion.noOpcion})' style="border-radius: 1em; margin-top: 1em; background-color: #0a548b; color: white">Opción ${opcion.noOpcion}</button>
+                        <div class="panel" id="opcionEditar${opcion.noOpcion}" style="border:1px; padding:1em; border-radius: 1em;">
+                    </div>`;
+                    
+                    html += `<input type='hidden' id='numOpciones' value='${nuevosDatosDestino.length}' />`
+                    
+                    $("#formularioEditarFusion").append(html);
+
+                    let option = 0
+                    for(let lote of nuevosDatosDestino){
+                        if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+                            nombreArchivo = lote.contrato;
+                        } else if (flagProceso == 2) {
+                            nombreArchivo = lote.corrida;
+                        }
+
+                        if(lote.noOpcion == opcion.noOpcion){
+                            let htmlOpciones = `<input type='hidden' id='opcionEditar_${option}' value='${lote.id_pxl}' />`;
+                            
+                            htmlOpciones += '          <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9 mb-2">\n' +
+                            '                               <input type="hidden" name="data[' + lote.id_pxl + ']" id="idLotep' + lote.id_pxl + '" value="' + lote.id_pxl + '">\n' +
+                            '                               <input type="hidden" id="nombreLoteEditar_' + lote.id_pxl + '" value="' + lote.nombreLote + '">\n' +
+                            '                               <h6 class="text-left">' + label + ':' + lote.nombreLote + '</h6>\n' +
+                            '                               <div class="" id="selectFileSection' + lote.id_pxl + '">\n' +
+                            '                                   <div class="file-gph">\n' +
+                            '                                       <input class="d-none" type="file" required onchange="onChangeFileEditar('+ lote.id_pxl +')" accept="' + acceptFiles + '" id="fileElmEditar' + lote.id_pxl + '">\n' +
+                            '                                       <input class="file-name" id="file-name-editar' + lote.id_pxl + '" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+                            '                                       <label class="upload-btn w-50 m-0" for="fileElmEditar' + lote.id_pxl + '"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+                            '                                   </div>\n' +
+                            '                               </div>\n' +
+                            '                           </div>';
+
+                            htmlOpciones += '          <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 mt-4">\n' +
+                            '                               <div class="d-flex justify-center">' +
+                            '                                   <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
+                            '                                    class="btn-data btn-sky ver-archivo" data-idPxl="' + lote.id_pxl + '" ' +
+                            '                                    data-nomArchivo="' + nombreArchivo + '" data-nombreOriginalLote="' + lote.nombreLote + '"' +
+                            '                                    data-rescision="0"><i class="fas fa-eye"></i></button>' +
+                            '                                   <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
+                            '                                    class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + lote.id_pxl + '" ' +
+                            '                                    data-nomArchivo="' + lote.corrida + '" data-nombreOriginalLote="' + lote.nombreLote + '"' +
+                            '                                    data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
+                            '                               </div>' +
+                            '                           </div>'; 
+
+                            $("#opcionEditar" + opcion.noOpcion).append(htmlOpciones);
+                        }
+
+                        option += 1
+                    }
+                }
+            }
+            else{
+                alerts.showNotification("top", "right", "Error al obtener los lotes de destino");
+            }
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "Ha ocurrido un error al enviar los datos", "danger");
+        }
+    });
+
+    return contenidoHTML;
+}
+
+$(document).on("click", "#sendRequestButtonEditar", function (e) { // este es unicamente usado en las fusiones para editar, de querer regresar se puede eliminar
+    e.preventDefault();
+    let data = new FormData();
+    $("#spiner-loader").removeClass('hide');
+    let flagSuccess = true;
+    let opciones = $('#numOpciones').val()
+
+    for (let opcion = 0; opcion < opciones; opcion++) {
+        let idpxl = $(`#opcionEditar_${opcion}`).val();
+        let lote = $(`#nombreLoteEditar_${idpxl}`).val();
+        let archivo = document.getElementById(`fileElmEditar${idpxl}`);
+        
+        if(!lote || archivo.files.length == 0){
+            flagSuccess = false;
+            break;
+        }
+        else{
+            archivo = archivo.files[0];
+
+            data.append(`${idpxl}[idpxl]`, idpxl);
+            data.append(`${idpxl}[lote]`, lote);
+            data.append(`${idpxl}[file]`, archivo);
+        }   
+    }
+
+    if(flagSuccess){
+        $.ajax({
+            type: 'POST',
+            url: 'subirArchivosFusion',
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (response) {
+                if(response.result){
+                    alerts.showNotification("top", "right", response.message, "success");
+                }
+                else{
+                    alerts.showNotification("top", "right", response.message, "danger");
+                }
+
+                $("#spiner-loader").addClass('hide');
+                $("#archivosFusionEditar").modal('hide');
+                reubicacionClientes.ajax.reload();
+            },
+        error: function(response){
+            $("#archivosFusionEditar").modal('hide');
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Error al enviar el formulario", "danger");
+        }
+        })
+    }
+    else{
+        alerts.showNotification("top", "right", "Faltan subir archivos en el formulario", "danger");
+        $("#spiner-loader").addClass('hide');
+    } 
+});
+
+function renderizarOrigen(nuevosDatosOrigen){
+    let htmlOrigen = "";
+    htmlOrigen += '<input type="hidden" id="tipo" value="1" />';
+    htmlOrigen += '<input type="hidden" id="cantidadOrigen" value=' + nuevosDatosOrigen.length + ' />'
+    
+    nuevosDatosOrigen.map((elemento, index) => {
+        nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
+        idsArchivos.push(elemento.id_pxl);
+        id_dxcs.push(elemento.id_pxl);
+        const archivoLbl = elemento.tipo_proceso != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
+       
+            htmlOrigen += '<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2"><hr>\n' +
+            '                            <input type="hidden" id="opcionRescision_' + index + '" value=' + elemento.id_pxl + ' />' +
+            '                            <h6 class="text-left"><b>Subir ' + archivoLbl + ': </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
+            '                            <div class="" id="selectFileSectionResicion_'+elemento.id_pxl+'">\n' +
+            '                                <div class="file-gph">\n' +
+            '                                    <input class="d-none" type="file" required accept="application/pdf" onchange="onChangeFileRe(' + elemento.id_pxl + ')" id="rescisionFile'+elemento.id_pxl+'">\n' +
+            '                                    <input class="file-name" id="rescision-file-name'+elemento.id_pxl+'" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+            '                                    <label class="upload-btn m-0" for="rescisionFile'+elemento.id_pxl+'"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                        </div>';
+        });
+
+    $("#formularioOrigenEditar").append(htmlOrigen);
+}
+
+function onChangeFileRe(pxl){
+    var fileVal=document.getElementById("rescisionFile" + pxl);
+
+    document.getElementById("rescision-file-name" + pxl).value = fileVal.files[0].name;
 }

@@ -192,10 +192,10 @@ $("#Jtabla").ready(function () {
                             cntActions += `<li><button href="#" title= "Código de barras" data-lote="${data.cbbtton}" class="btn btn-primary btn-round btn-fab btn-fab-mini barcode" title="Ver código"> <span class="material-icons">select_all</span></button></li><br>`;
                         } else
                             cntActions = 'N/A';
-                        if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 2747, 13498, 15041, 15042, 15044, 15387, 15455).includes(user))
+                        if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 2747, 13498, 15041, 15042, 15044, 15387, 15455, 16265, 16266).includes(user))
                             cntActions += `<li><button href="#" title= "Cambio de sede" data-nomLote="${data.nombreLote}" data-lote="${data.idLote}" class="btn btn-secondary btn-round btn-fab btn-fab-mini change_sede"><span class="material-icons">pin_drop</span></button></li><br>`;
-                        if (Array(1, 2, 4, 5, 3, 12, 15, 16, 6, 8, 13, 11).includes(parseInt(data.ubicacion)) && Array(2762, 2845, 2747, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 13498, 15041, 15042, 15044, 15387, 15455).includes(user))
-                            cntActions += `<li><button href="#" title= "Reasignacion" data-nomLote="${data.nombreLote}" data-usuario="${data.juridico}" data-lote="${data.idLote}" class="btn btn-warning btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button></li><br>`;
+                        if (Array(1, 2, 4, 5, 3, 12, 15, 16, 6, 8, 13, 11, 10, 17).includes(parseInt(data.ubicacion)) && Array(2762, 2845, 2747, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 13498, 15041, 15042, 15044, 15387, 15455, 16265, 16266).includes(user))
+                            cntActions += `<li><button href="#" title= "Reasignacion" data-nomLote="${data.nombreLote}" data-usuario="${data.juridico}" data-lote="${data.idLote}" class="btn btn-violetBoots btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button></li><br>`;
                         var color = (data.idMovimiento == 36) ? '#58D68D' : (data.idMovimiento == 23) ? '#F39C12' : '#85929E';
                         var label = (data.idMovimiento == 36) ? 'NUEVO' :
                             (data.idMovimiento == 23) ? 'MODIFICACIÓN' : 'REVISIÓN';
@@ -411,7 +411,6 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("numContrato", getInfo1[7]);
-    console.log($("#comentario").val());
 
     if (validaComent == 0)
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
@@ -913,4 +912,3 @@ jQuery(document).ready(function () {
         jQuery(this).find('#comentario7').val('');
     })
 });
-

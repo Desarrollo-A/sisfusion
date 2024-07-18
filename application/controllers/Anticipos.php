@@ -73,6 +73,12 @@ class Anticipos extends CI_Controller {
 
         $creado_por = $this->session->userdata("id_rol");
 
+        if($procesoAnt == 7){
+
+            
+        }
+
+
         $result_2 = null;
         $result_3 = null;
         $success = false;
@@ -141,17 +147,10 @@ class Anticipos extends CI_Controller {
             $result_3 = 1;
             $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
     
-            if ($nombreSwitch == "false") {
-                $result_5 = $this->Anticipos_model->parcialidad_relacion_anticipo($id_anticipo, $catalogo, $numeroPagosParcialidad, $montoPEntero);
-            }
-    
             if($procesoAnt == 0){
                 
             } else {
 
-                if ($nombreSwitch != "true") {
-                    $result_6 = $this->Anticipos_model->mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagosParcialidad);
-                }
                 
                 if ($procesoTipo == 0 ) {
 
@@ -196,7 +195,36 @@ class Anticipos extends CI_Controller {
     
 
 
+    public function datosCatalogos(){
 
+        echo json_encode($this->Anticipos_model->datosCatalogos());
+        
+    }
+
+    public function addEmpresa(){
+        $id_anticipo = $this->input->post('id_anticipo');
+        $id_usuario = $this->input->post('id_usuario');
+        $empresa     = $this->input->post('empresaParcia');
+        
+        // $response = array(
+        //     'id_anticipo' => $id_anticipo,
+        //     'empresa' => $empresa
+        // );
+        $Anticipo_Respuesta   =  $this->Anticipos_model->addEmpresa($id_anticipo,$empresa);
+        if($Anticipo_Respuesta){
+            $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "Se agregó la empresa");
+        } else{
+            $respuesta =  array(
+            "response_code" => 411, 
+            "response_type" => 'error',
+            "message" => "Error en insertar en empresa, inténtalo más tarde ");
+        }
+        echo json_encode($respuesta);
+        
+    }
 
     public function fillAnticipos() {
         echo json_encode($this->Anticipos_model->getTipoAnticipo()->result_array());

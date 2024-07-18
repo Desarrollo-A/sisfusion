@@ -422,7 +422,7 @@ class Descuentos extends CI_Controller
             }else{
                
 
-              $dat =  $this->Descuentos_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli,$this->input->post("motivo"),$this->input->post("prestamos"),$this->input->post("descuento"),$expediente,$cuantos,$bandera);
+              $dat =  $this->Descuentos_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario') ,$valor,$usuario,$pagos_apli,$this->input->post("motivo"),$this->input->post("prestamos"),$this->input->post("descuento"),$expediente,$cuantos,$bandera);
               $dat =  $this->Descuentos_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
             //   $dat =  $this->Descuentos_model->update_estatus_prestamo();
     
@@ -465,7 +465,7 @@ class Descuentos extends CI_Controller
             "num_pagos" => $Numero_pagos,
             "pago_individual" => $montoPagos,
             "comentario" => $comentario,
-            "modificado_por" => 1,
+            "modificado_por" => $this->session->userdata('id_usuario'),
             "tipo" => $tipoD
         );
         

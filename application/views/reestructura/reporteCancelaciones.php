@@ -69,8 +69,10 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>ID LOTE</th>
+                                                    <th>ID LOTE </th>
+                                                    <th>SUPERFICIE</th>
+                                                    <th>PRECIO</th>
+                                                    <th>NOMBRE</th>
                                                     <th>COMENTARIO REUBICACIÓN</th>
                                                     <th>COMENTARIO</th>
                                                     <th>TIPO DE CANCELACIÓN</th>

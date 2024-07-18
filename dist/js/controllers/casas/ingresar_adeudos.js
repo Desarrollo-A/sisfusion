@@ -30,11 +30,41 @@ function set_adeudo(data) {
         })
     }
 
+    // console.log(data)
+
+    let adeudo
+    let value
+    let label
+    switch(idRol){
+        case 99:
+            adeudo = 'adeudoOOAM'
+            value = data.adeudoOOAM
+            label = 'Adeudo OOAM'
+            break
+        case 101:
+            adeudo = 'adeudoGPH'
+            value = data.adeudoGPH
+            label = 'Adeudo GPH'
+            break
+        case 33:
+            adeudo = 'adeudoADM'
+            value = data.adeudoADM
+            label = 'Adeudo ADM'
+            break
+    }
+
+    if([4512].includes(idUsuario)){
+        adeudo = 'adeudoGPH'
+        value = data.adeudoGPH
+        label = 'Adeudo GPH'
+    }
+
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new NumberField({ id: 'adeudoOoam', value: data.adeudoOOAM, label: 'Adeudo OOAM', placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
-        new NumberField({ id: 'adeudoAdm', value: data.adeudoADM, label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
-        new NumberField({ id: 'adeudoGph', value: data.adeudoGPH, label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
+        new HiddenField({ id: 'adeudo', value: adeudo }),
+        new NumberField({ id: 'cantidad', value, label, placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
+        // new NumberField({ id: 'adeudoAdm', value: data.adeudoADM, label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
+        // new NumberField({ id: 'adeudoGph', value: data.adeudoGPH, label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
     ]
 
     form.show()
@@ -54,20 +84,17 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        if(data.adeudoOOAM){
+        if([4512].includes(idUsuario)){
+            return formatter.format(data.adeudoGPH)
+        }
+        if(idRol === 99 && data.adeudoOOAM){
             return formatter.format(data.adeudoOOAM)
         }
-        return 'Sin ingresar'
-    } },
-    { data: function(data){
-        if(data.adeudoADM){
-            return formatter.format(data.adeudoADM)
-        }
-        return 'Sin ingresar'
-    } },
-    { data: function(data){
-        if(data.adeudoGPH){
+        if(idRol === 101 && data.adeudoGPH){
             return formatter.format(data.adeudoGPH)
+        }
+        if(idRol === 33 && data.adeudoADM){
+            return formatter.format(data.adeudoADM)
         }
         return 'Sin ingresar'
     } },

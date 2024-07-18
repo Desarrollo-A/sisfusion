@@ -508,8 +508,6 @@ $(document).ready(function () {
             $("#modal_NEODATA .modal-footer").html("");
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
                 var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
-                let adicional = 9000;
-                totalNeto2 = totalNeto2 +adicional;
                 if(data.length > 0){
                     switch (data[0].Marca) {
                         case 0:
@@ -522,7 +520,7 @@ $(document).ready(function () {
                                 let total = 0;
                                 let totalPivote=0;
                                 if(total0 > 0){
-                                    total = total0 +9000;
+                                    total = total0;
                                 }else{
                                     total = 0;
                                 }
@@ -576,7 +574,7 @@ $(document).ready(function () {
                                             </div>
 
                                             <div class="col-md-3 p-0">
-                                                <h5>NEODATA: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">${formatMoney(data[0].Aplicado +adicional)}</b></h5>
+                                                <h5>NEODATA: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">${formatMoney(data[0].Aplicado)}</b></h5>
                                             </div>
 
                                             <div class="col-md-3 p-0">
@@ -584,7 +582,7 @@ $(document).ready(function () {
                                             </div>
 
                                             <div class="col-md-3 p-0">
-                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0 +adicional)}</b></h5>
+                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5>
                                             </div>
                                                     ${cadena}
                                         </div>`);
@@ -770,7 +768,7 @@ $(document).ready(function () {
                                             case 0:// monto < 5% se dispersará solo lo proporcional
                                                     if(plan_comision == 56){
                                                         let nuevoPorcentaje = 0;
-                                                    let porcentajeMaderas = 0;
+                                            let porcentajeMaderas = 0;
                                                         //let porcentajeReferido = 0;
                                                         if(porcentajeAbonado < 2){ //ATICIPO MENOR AL 1%
                                                             let porcentajeRestante = 100 - porcentajeReferido;
@@ -809,7 +807,12 @@ $(document).ready(function () {
 
                                                             }
                                                         }
-                                                        
+                                                        /*if(plan_comision == 56 && [7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){ //MADERAS REWORDS
+                                                        porcentajeMaderas = 0;
+                                                    }
+                                                    else if(plan_comision == 56 && parseInt(v.id_usuario) == 12841){
+                                                        porcentajeMaderas = v.porcentaje_decimal + sumaAsesorCoor;
+                                                        } */
                                                             operacionValidar = (total*(0.125*nuevoPorcentaje));
                                                     }else{
                                                         operacionValidar = (total*(0.125*v.porcentaje_decimal));
@@ -923,7 +926,8 @@ $(document).ready(function () {
                             }
                             else{
                                 $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
-                                    
+                                    console.log('procesoReestructura '+procesoReestructura);
+                                    console.log('abonadoAnterior '+abonadoAnterior);
                                     let total0 = [2,3,4,7].includes(parseInt(procesoReestructura)) ? parseFloat((data[0].Aplicado - abonadoAnterior)) : parseFloat((data[0].Aplicado));
                                     let total = 0;
                                     if(total0 > 0){
@@ -935,6 +939,7 @@ $(document).ready(function () {
                                     var counts=0;
                                     let labelPenalizacion = '';
                                     // data1[0].abonado
+                                    console.log('total0 '+total0);
                                     if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">Lote con Penalización + 90 días</b>';}
                                     $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney([2,3,4,7].includes(parseInt(procesoReestructura)) ? total0 : (total0-(data1[0].abonado)))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
                                     $("#modal_NEODATA .modal-body").append(`
@@ -992,8 +997,47 @@ $(document).ready(function () {
                                                 console.log('pendiente: '+pendienteGlobal);
                                                 console.log('total: '+total);
                                                 //saldo =  ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                /* buscar el valor divisor segun el % del plan*/
+                                                const pivoteMultiplicador =  [
+                                                    {
+                                                        id_plan:65,
+                                                        valor:(100/0.5)
+                                                    },
+                                                    {
+                                                        id_plan:65,
+                                                        valor:(100/1)
+                                                    },
+                                                    {
+                                                        id_plan:66,
+                                                        valor:12.5
+                                                    },
+                                                    {
+                                                        id_plan:84,
+                                                        valor:(100/0.6)
+                                                    },
+                                                    {
+                                                        id_plan:85,
+                                                        valor:(100/1.2)
+                                                    },
+                                                    {
+                                                        id_plan:86,
+                                                        valor:12.5
+                                                    },
+                                                    {
+                                                        id_plan:93,
+                                                        valor:(100/8.5)
+                                                    }
+                                                    ];
+                                                    console.log(plan_comision);
+                                                    const busquedaPivote = pivoteMultiplicador.find((planes) => planes.id_plan == parseInt(plan_comision));
+                                                    console.log(busquedaPivote);
+                                                    let pivote = busquedaPivote == undefined ? 12.5 : busquedaPivote.valor;
+                                                    console.log(pivote);
+
+                                                /**/ 
+                                                console.log('TOTAL----------'+total);
                                                 v.porcentaje_decimal = idLote == 37629 && v.id_usuario == 13556 ? 2.5 : v.porcentaje_decimal;
-                                                saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total > 2262.71 ) ? ( pendienteGlobal > total ? ((12.5 *(v.porcentaje_decimal / 100)) * total)  :  ((12.5 *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal)) ) : ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                saldo = (([2,3,4,7].includes(parseInt(procesoReestructura)) && total > 2238.71) && idLote != 52454 ) ? ( pendienteGlobal > total ? ((pivote *(v.porcentaje_decimal / 100)) * total)  :  ((pivote *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal)) ) : ((pivote *(v.porcentaje_decimal / 100)) * total);
                                                 saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total <= 0) ? 0 : saldo;
                                                 v.porcentaje_decimal = idLote == 37629 && v.id_usuario == 13556 ? 3.5 : v.porcentaje_decimal;
                                             
@@ -1025,7 +1069,10 @@ $(document).ready(function () {
                                                         saldo = pending;
                                                     }
                                                     else{
-                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86].indexOf(plan_comision) >= 0 || [57154,48216,55933].indexOf(idLote)) >= 0) ? saldo : saldo-v.abono_pagado;
+                                                        console.log('entra hasta aca')
+                                                        console.log(saldo)
+                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933].indexOf(idLote)) >= 0) ? saldo : saldo-v.abono_pagado;
+                                                        console.log(saldo)
                                                     }
                                                 }
                                             }
