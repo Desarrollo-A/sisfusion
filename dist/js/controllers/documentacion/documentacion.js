@@ -4,8 +4,10 @@ const movimientosPermitidosEstatus7 = [36, 6, 23, 76, 83, 95, 97, 112];
 const rolesPermitidosContratoEspecial = [8];
 const rolesPermitidosEstatus7 = [15];
 const usuariosPermitidosContratoEspecial = [2762, 2747];
-const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106];
+const movimientosPermitidosContratoFirmado = [45];
+const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106, 45];
 const ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA = [17, 70, 71, 73];
+const rolesPermitidosEstatus6And15 = [17, 70];
 const movimientosPermitidosEstatus8 = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosEstatus8 = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
@@ -53,7 +55,8 @@ const TipoDoc = {
     NUEVO_CONTRATO_REESTRUCTURA_FIRMA_CLIENTE: 47,
     ANEXO_1: 48,
     VIDEO_FIRMA: 49,
-    ANEXO_VENTA_DE_PARTICULARES: 50
+    ANEXO_VENTA_DE_PARTICULARES: 50,
+    COMPLEMENTO_DE_PAGO: 55,
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -300,7 +303,7 @@ $('#idLote').change(function () {
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
                     
-                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
+                    if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO || data.tipo_doc == TipoDoc.COMPLEMENTO_DE_PAGO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
                                 includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
@@ -478,8 +481,12 @@ $('#idLote').change(function () {
 
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
-    let pathUrl = general_base_url + $itself.attr("data-expediente");
-    
+
+    let pathUrl = $itself.attr("data-expediente");
+    if($itself.attr("data-bucket") != 1){
+        pathUrl = general_base_url + $itself.attr("data-expediente");
+    }
+
     if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW || $itself.attr('data-tipoDocumento') === TipoDoc.DS_OLD) {
         const idCliente = $itself.attr('data-idCliente');
         const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
@@ -512,7 +519,7 @@ $(document).on('click', '.verDocumento', function () {
         Shadowbox.open({
             content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
             player: "html",
-            title: `Visualizando archivo: ${$itself.attr('data-titulodocumento')}`,
+            title: `Visualizando archivo: ${$itself.attr('data-nombre')}`,
             width: 985,
             height: 660
         });
@@ -577,8 +584,7 @@ $(document).on("click", ".addRemoveFile", function (e) {
     }
 });
 
-$(document).on("click", "#sendRequestButton", function (e) {
-    e.preventDefault();
+$(document).on("click", "#sendRequestButton", function () {
     const accion = parseInt($("#accion").val());
 
     if (accion === AccionDoc.DOC_NO_CARGADO) { // UPLOAD FILE
@@ -614,7 +620,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append('tituloDocumento', $('#tituloDocumento').val());
 
         $.ajax({
-            url: "subirArchivo",
+            //url: "subirArchivo",
+            url: `${general_base_url}Documentacion/subirArchivo`,
             data: data,
             cache: false,
             contentType: false,
@@ -624,11 +631,14 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 $('#uploadFileButton').prop('disabled', true);
             },
             success: function (response) {
+                console.log("response: ", response);
                 const res = JSON.parse(response);
 
                 if (res.code === 200) {
                     alerts.showNotification("top", "right", `El documento ${nombreDocumento} se ha cargado con éxito.`, "success");
+                    console.log("documentacionTable: ", documentacionLoteTabla);
                     documentacionLoteTabla.ajax.reload();
+                    
                     $("#addDeleteFileModal").modal("hide");
                 }
 
@@ -652,7 +662,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
 
         $.ajax({
-            url: "eliminarArchivo",
+            //url: "eliminarArchivo",
+            url: `${general_base_url}Documentacion/eliminarArchivo`,
             data: data,
             cache: false,
             contentType: false,
@@ -740,6 +751,10 @@ function getExtensionPorTipoDocumento(tipoDocumento) {
         return 'pdf';
     }
 
+    if (tipoDocumento === TipoDoc.COMPLEMENTO_DE_PAGO)  {
+        return 'pdf';
+    }
+
     return 'jpg, jpeg, png, pdf';
 }
 
@@ -769,6 +784,7 @@ function crearBotonAccion(type, data) {
     return `<button class="${buttonClassColor} ${buttonClassAccion}" 
                 title="${buttonTitulo}" 
                 data-expediente="${data.expediente}" 
+                data-bucket="${data.bucket}"
                 data-accion="${buttonTipoAccion}" 
                 data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
                 data-toggle="tooltip" 
