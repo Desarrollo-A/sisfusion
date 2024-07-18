@@ -289,6 +289,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>OBSERVACIONES</th>
 
                                                 <!--SOLO PARA POPEA Y EL OTRO SUJETO END-->
+                                                <th>PORCENTAJE ENGANCHE</th>
                                                 <th>ACCIONES</th><!--68-->
                                             </tr>
                                             </thead>
