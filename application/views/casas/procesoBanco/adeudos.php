@@ -32,7 +32,6 @@
                                             <th>GERENTE</th>
                                             <th>ADEUDO OOAM</th>
                                             <th>ADEUDO ADM</th>
-                                            <th>ADEUDO GPH</th>
                                             <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>

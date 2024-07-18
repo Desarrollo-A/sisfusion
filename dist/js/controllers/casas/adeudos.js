@@ -15,25 +15,25 @@ function sendToNext(data) {
     })
 }
 
-pass_to_docu_cliente = function (data) {
-
+pass_to_proyecto_ejecutivo = function(data) {
     let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a subir documentación cliente?`,
+        title: 'Continuar proceso', 
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a validación de proyecto?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
 
             $.ajax({
                 type: 'POST',
-                url: `to_documentacion_cliente`,
+                url: `to_valida_comite`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso para subir documentación del cliente.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de proyecto.", "success");
         
                     table.reload()
+
                     form.hide();
                 },
                 error: function () {
@@ -94,6 +94,10 @@ const formatter = new Intl.NumberFormat('es-MX', {
   currency: 'MXN',
 });
 
+go_to_documentos = function(data) {
+    window.location.href = `documentacion/${data.idProcesoCasas}`;
+}
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -111,12 +115,6 @@ let columns = [
     { data: function(data){
         if(data.adeudoADM){
             return formatter.format(data.adeudoADM)
-        }
-        return 'Sin ingresar'
-    } },
-    { data: function(data){
-        if(data.adeudoGPH){
-            return formatter.format(data.adeudoGPH)
         }
         return 'Sin ingresar'
     } },
@@ -153,12 +151,14 @@ let columns = [
             // console.log(data)
 
             let pass_button = ''
-            if (data.adeudoOOAM && data.adeudoADM && data.adeudoGPH) {
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a subir documentación del cliente', onClick: pass_to_docu_cliente, data })
+            if(data.documentos >= 13 && data.adeudoOOAM != null && data.adeudoADM){
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
             }
+
+            let docu_button = new RowButton({icon: 'toc', label: 'Editar documentos', onClick: go_to_documentos, data})
             let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorización', onClick: back_to_carta_auth, data })
 
-            return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
+            return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
         }
     },
 ]
@@ -183,7 +183,7 @@ let buttons = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/lista_adeudos',
+    url: 'casas/concentracion_adeudos',
     buttons:buttons,
     columns,
 })
