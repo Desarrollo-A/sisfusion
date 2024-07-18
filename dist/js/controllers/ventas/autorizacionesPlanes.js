@@ -32,7 +32,7 @@ $(document).ready(function(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            if(id  != 6) {
+            if(id != 6 && id != 4) {
                 $("#estatusAut").append($('<option>').val(id).text(name));
             }
             if(i == data.length -1) { 
@@ -192,7 +192,6 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 switch(id_rol_general){
                     case 17:
                     case 70:
-                        console.log("estatus_autorizacion: ", d.estatus_autorizacion);
                         if(d.estatus_autorizacion == 1) {
                             botones += botonesPermiso(1,1,1,0,1, d.id_autorizacion, d.estatus_autorizacion);
                         }                        
@@ -242,7 +241,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
             if(permisoEditar == 1){ botones += ``; }
             if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" data-opcion="1" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar Plan de ventas"><i class="fas fa-thumbs-up"></i></button>`;  }
-            if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="2" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
+            //if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="2" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
             if(permisoDesactivar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="3" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Desactivar plan de ventas"><i class="fas fa-trash"></i></button>`; }
         return  botones;
     }
@@ -307,17 +306,17 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let accion = $(this).attr('data-opcion');
         switch(accion) {
             case '1': 
-                $('#modalAutorizacion').addClass("modal-sm");
+                //$('#modalAutorizacion').addClass("modal-sm");
                 document.getElementById('titleAvance').innerHTML = '¿Estás seguro de avanzar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = '';
                 break;
             case '2':
-                $('#modalAutorizacion').addClass("modal-md");
+                //$('#modalAutorizacion').addClass("modal-md");
                 document.getElementById('titleAvance').innerHTML = '¿Estás seguro de rechazar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = `<textarea class="text-modal" scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value.toUpperCase();" placeholder="Escriba aqui su comentario"></textarea><b id="text-observations" class="text-danger"></b>`;
                 break;
             case '3':
-                $('#modalAutorizacion').addClass("modal-sm");
+                //$('#modalAutorizacion').addClass("modal-sm");
                 document.getElementById('titleAvance').innerHTML = '¿Estás seguro de desactivar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = '';
                 break;
@@ -347,7 +346,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
 
                 if (response.estatus == 1) {
                     $("#avanzarAut").modal("hide");
-                    tipo == 1  ? $('#modalAutorizacion').removeClass("modal-sm") : $('#modalAutorizacion').removeClass("modal-md") ;
+                    //tipo == 1  ? $('#modalAutorizacion').removeClass("modal-sm") : $('#modalAutorizacion').removeClass("modal-md") ;
                     $('#spiner-loader').addClass('hide');
                     alerts.showNotification("top", "right", response.respuesta, "success");
                     tablaAutorizacion.ajax.reload(null,false);    
@@ -1234,7 +1233,6 @@ function SavePaquete(){
 
     
     $("input:file").on("change", function () {
-        alert()
         var target = $(this);
         var relatedTarget = target.siblings(".file-name");
         if (target.val() == "") {
@@ -1406,5 +1404,9 @@ $("#btnPlantilla").click(function(e){
 });
 
 $(window).resize(function(){
+    tablaAutorizacion.columns.adjust();
+});
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
     tablaAutorizacion.columns.adjust();
 });
