@@ -266,7 +266,7 @@ $(document).on('click', '.iniciarTramite', async function () {
 
         if(tipoTramite == 6){
             let escrituraNotariadaINNER = '<h5>Escritura notariada</h5><hr>';
-            escrituraNotariadaINNER    += '<iframe src="'+general_base_url+'static/documentos/cliente/escrituraNotariada/'+escrituraNotariadaValor+'" width="100%" height="250px"></iframe>\n';
+            escrituraNotariadaINNER    += '<iframe src="'+general_base_url+'documentacion/archivo/'+escrituraNotariadaValor+'" width="100%" height="250px"></iframe>\n';
             escrituraNotariadaINNER    += '<br><br><p id="secondaryLabelDetail"> Sube la escritura con sellos de notaria para actualizar el registro actual</p>' +
                 '           <div class="" id="selectFileSection">\n' +
                 '                        <div class="file-gph">\n' +
