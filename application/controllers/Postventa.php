@@ -3316,7 +3316,9 @@ public $controller = 'Postventa';
 
 
                 $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
-                $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+                // $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+
+                
 
                 if ($movement) {
                     $dataParaInsertar['escrituraNotariada'] = $documentName;
