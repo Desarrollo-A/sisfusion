@@ -7,7 +7,6 @@ class Contraloria_model extends CI_Model {
         parent::__construct();
     }
 
-
     function get_proyecto_lista(){
         return $this->db->query("SELECT * FROM residenciales WHERE status = 1");
     }

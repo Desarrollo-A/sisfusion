@@ -928,6 +928,7 @@ $(document).on('click', '#enviarAutBtnAM', ()=>{
                 $('#spiner-loader').removeClass('hide');
             },
             success: function(data) {
+                console.log("data: ", data);
                 data = JSON.parse(data);
                 if(data.message == 'OK'){
                     $('#spiner-loader').addClass('hide');
