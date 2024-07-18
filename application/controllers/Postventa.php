@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Postventa extends CI_Controller
+
+require_once(APPPATH . "/controllers/BaseController.php");
+
+class Postventa extends BaseController
 {
 public $controller = 'Postventa';
     public function __construct()
@@ -3294,7 +3297,7 @@ public $controller = 'Postventa';
         $responseUpdateCliente = TRUE;
         $arrayPosiciones = $pieces = explode(",", $this->input->post('arrayPosiciones')); ;
         $banderaCoprop = $this->input->post('banderaCoprop');
-        $folder = 'static/documentos/cliente/escrituraNotariada/';
+        // $folder = 'static/documentos/cliente/escrituraNotariada/';
 
 
 
@@ -3311,15 +3314,23 @@ public $controller = 'Postventa';
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
             if($tipoTramite == 6){
-                $file = $_FILES["fileElm"];
-                $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+                // $file = $_FILES["fileElm"];
+                // $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
 
+                $file = $this->file('fileElm');
 
-                $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
-                $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+                if($file){
+                    $fileExt = pathinfo($file->name, PATHINFO_EXTENSION);
 
-                if ($movement) {
-                    $dataParaInsertar['escrituraNotariada'] = $documentName;
+                    $filename = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                    // $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                    // $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+
+                    $uploaded = $this->upload($file->tmp_name, $filename);
+
+                    if ($uploaded) {
+                        $dataParaInsertar['escrituraNotariada'] = $filename;
+                    }
                 }
             }
             $responseInsertCliente = $this->General_model->addRecord('clientes_x_lote', $dataParaInsertar);
@@ -3436,17 +3447,20 @@ public $controller = 'Postventa';
             );
 
             if($tipoTramite == 6){
-                $file = $_FILES["fileElm"];
-                $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $file = $this->file('fileElm');
 
+                if($file){
+                    $fileExt = pathinfo($file->name, PATHINFO_EXTENSION);
 
-                $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
-                //borrar el archivo actual
-                unlink('static/documentos/cliente/escrituraNotariada/'.$documentName);
-                $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+                    $filename = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                    // $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                    // $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
 
-                if ($movement) {
-                    $dataParaActualizar['escrituraNotariada'] = $documentName;
+                    $uploaded = $this->upload($file->tmp_name, $filename);
+
+                    if ($uploaded) {
+                        $dataParaActualizar['escrituraNotariada'] = $filename;
+                    }
                 }
             }
 
@@ -3556,7 +3570,8 @@ public $controller = 'Postventa';
                         "tipo_documento" => 0,
                         "id_autorizacion" => 0,
                         "tipo_doc" => 52,
-                        "estatus_validacion" => 0
+                        "estatus_validacion" => 0,
+                        'bucket' => 1,
                     );
                     $responseInsertHistorial = $this->General_model->addRecord('historial_documento', $arrayArbolDocumentos);
                 }
