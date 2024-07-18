@@ -34,7 +34,15 @@ $(document).ready (function() {
                         }
                     }
                 }
-            }]
+            },
+            {
+                className: 'btn btn-azure subir-msi',
+                text: '<i class="fas fa-plus"></i> Agregar MSI',
+                titleAttr: 'AGREGAR MSI',
+                title: 'Agregar MSI'
+            }
+        
+        ]
     }else{
         button_excel = [{
                 className: 'btn buttons-excel color-letter',
@@ -54,7 +62,6 @@ $(document).ready (function() {
             {
                 className: 'btn btn-azure subir-msi',
                 text: 'Agregar MSI',
-                title:'Agregar MSI'
             }];
 
     }
@@ -144,7 +151,7 @@ $(document).ready (function() {
         if (input.length) {
             input.val(log);
         } else {
-            if (log) alert(log);
+            if (log) console.log("log: ", log);
         }
     });
 

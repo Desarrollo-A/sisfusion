@@ -1233,7 +1233,6 @@ function SavePaquete(){
 
     
     $("input:file").on("change", function () {
-        alert()
         var target = $(this);
         var relatedTarget = target.siblings(".file-name");
         if (target.val() == "") {
