@@ -89,7 +89,7 @@
                         if($datos->hijos == 0)
                         {                    
             ?>
-                            <li class="nav-item <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista")){echo 'active';}elseif($url == base_url().$datos->pagina  && $datos->nombre == "Dashboard"){echo 'active';}?>">
+                            <li class="nav-item <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista" || $datos->nombre == "Carga de folios" )){echo 'active';}elseif($url == base_url().$datos->pagina  && $datos->nombre == "Dashboard"){echo 'active';}?>">
                                 <a class="nav-link" href="<?php if(in_array($datos->nombre, array('Aparta en línea', 'Pago de enganche'))){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if(in_array($datos->nombre, array('Aparta en línea', 'Pago de enganche'))){ echo ' target="_blank"';   } ?>>
                                     <i class="material-icons"><?=$datos->icono?></i>
                                     <p><?=$datos->nombre?></p>
@@ -97,7 +97,7 @@
                             </li>
                     <?php
                         }else{
-                            if($this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_rol') == 17)
+                            if($this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2855 || in_array($this->session->userdata('id_rol'), [17, 70]))
                             {
                     ?>
                                 <li class="nav-item <?php if (isset($datos4)) {   if($padreVal == $datos->orden) {  echo 'active';}} ?>">

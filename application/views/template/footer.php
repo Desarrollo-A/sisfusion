@@ -48,6 +48,7 @@
 <script src="<?=base_url()?>dist/js/fullcalendar/locales-all.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
@@ -64,10 +65,14 @@
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
+    let id_sede_general = '<?= (empty($this->session->userdata('id_sede')) ? 0 : $this->session->userdata('id_sede')) ?>';
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
     let tipoUsuarioGeneral =  <?=$this->session->userdata('tipo')?>;
     let sede_usuario_general_div = " <?= $this->session->userdata('id_sede') ?> ";
     let lider_general = "<?=$this->session->userdata('id_lider')?> ";
+
+    
+    let forma_de_pago_general = <?=$this->session->userdata('forma_pago');?>;
 
 
     let sede_usuario_general_array = sede_usuario_general_div.split(",");
@@ -89,3 +94,10 @@
 
     var id_rol_global = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
 </script>
+
+<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+
+<script src="<?= base_url() ?>dist/js/components/components.js"></script>
+<script src="<?= base_url() ?>dist/js/components/table.js"></script>
+<script src="<?= base_url() ?>dist/js/components/dialogs.js"></script>
+<script src="<?= base_url() ?>dist/js/components/forms.js?v=3"></script>

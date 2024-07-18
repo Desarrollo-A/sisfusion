@@ -55,6 +55,8 @@
                                                 <th>LOTE DESTINO</th>
                                                 <th>REFERENCIA DESTINO</th>                                                
                                                 <th>ID LOTE DESTINO</th>
+                                                <th>FECHA RECEPCIÓN EXPEDIENTE</th>
+                                                <th>FECHA DE VENCIMIENTO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

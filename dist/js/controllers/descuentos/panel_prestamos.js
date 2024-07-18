@@ -3,12 +3,26 @@ var tr;
 var valorGlobal = 3; 
 var banderaNewEvidencia = 2; 
 var datosDataTable = [];
+var banderaPermiso = 0;
 
 $(document).ready(function () {
     sp.initFormExtendedDatetimepickers();
     $(".datepicker").datetimepicker({ locale: "es" });
     setInitialValues();
     llenado();
+    var hoy = new Date(fechaServer);
+    var dia = hoy.getDate();
+    var mes = hoy.getMonth() + 1;
+    var hora = hoy.getHours();
+    if (
+        ((mes == fechaInicioCorteGlobal[1] && dia < fechaInicioCorteGlobal[2])  
+                        &&  (mes == fechaInicioCorteGlobal[1] && dia > 5)) //VALIDACION FECHA CORTE
+        ) {
+            alert()
+    }else{
+        // document.getElementById('abrir_ejecutar').display = none;
+    }
+    
 });
 
 function llenado(){
@@ -19,7 +33,7 @@ function llenado(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#tipo").append($('<option>').val(id).text(name));     
+            $("#tipo").append($('<option>').val(id).text(`${id} - ${name} `));     
         }
         $("#tipo").selectpicker('refresh');
     }, 'json');
@@ -341,7 +355,7 @@ function setDataTableDescuentos(beginDate, endDate){
                             <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
                             <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_prestamo}" 
                                 onclick="esconder(${d.id_prestamo})" aria-expanded="true" aria-controls="collapseOne${d.id_prestamo}">
-                                <span class="lbl-blueMaderas">Ver más</span> 
+                                <span style="font-weight: 900;text-transform: math-auto;">Ver más <i class="fas fa-chevron-down"></i></span>
                                 
                             </a>
                         </div>
@@ -350,7 +364,7 @@ function setDataTableDescuentos(beginDate, endDate){
                                 ${d.comentario}</p> 
                                 <a href='#'  data-toggle="collapse" data-target="#collapseOne${d.id_prestamo}" 
                                     onclick="mostrar(${d.id_prestamo})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
-                                    <span class="lbl-blueMaderas">Ver menos</span> 
+                                    <span style="font-weight: 900;text-transform: math-auto;">Ver menos <i class="fas fa-chevron-up"></i></span> 
                                 </a>
                             </div>
                         </div>
@@ -416,6 +430,31 @@ function setDataTableDescuentos(beginDate, endDate){
                             </i>
                         </button>`;
                 }
+                
+                if(d.id_opcion == 94 && d.estatus != 6){
+                    botonesModal += `
+                    <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
+                        data-estatusP="${d.estatus}"
+                        data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
+                        data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
+                        class="btn-data btn-yellow  pausar" title="Pausar">
+                        
+                        <i class="fas fa-pause"></i>
+                        </i>
+                    </button>`;
+                }
+                if(d.estatus == 6 ){
+                    botonesModal += `
+                    <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
+                        data-estatusP="${d.estatus}"
+                        data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
+                        data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
+                        class="btn-data btn-violetDeep  pausar" title="volver a activar">
+                        
+                        <i class="fas fa-rotate-left"></i>
+                        </i>
+                    </button>`;
+                }
 
                 if ((d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28)  ) {
                     if((d.estatus == 2  && d.total_pagado == null )){
@@ -425,7 +464,7 @@ function setDataTableDescuentos(beginDate, endDate){
                         <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
                             data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
                             data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
-                            class="btn-data btn-sky edit-prestamo" title="Editar">
+                            class="btn-data btn-sky  edit-prestamo" title="Editar">
                             <i class="fas fa-pen-nib">
                             </i>
                         </button>`;
@@ -438,21 +477,21 @@ function setDataTableDescuentos(beginDate, endDate){
                         <button href="#" value="${d.id_prestamo}"  id="preview" 
                         data-ruta="UPLOADS/EvidenciaGenericas"
                         data-doc="${d.relacion_evidencia}"   
-                        class="btn-data btn-orangeLight " title="Ver Evidencia">
+                        class="btn-data btn-orangeYellow" title="Ver Evidencia">
                             <i class="fas fa-folder-open">
                             </i>
                         </button>`; 
-                        }   else if(d.evidencia != null){
-                            botonesModal += `
-                            <button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  
-                            data-ruta="static/documentos/evidencia_prestamo_auto" 
-                            class="btn-data btn-violetDeep " title="Ver Evidencia">
-                                <i class="fas fa-folder-open">
-                                </i>
-                            </button>`; 
-                            }else{
-                                botonesModal += ``; 
-                            }
+                    }   else if(d.evidencia != null){
+                        botonesModal += `
+                        <button href="#" value="${d.id_prestamo}"  id="preview" data-doc="${d.evidencia}"  
+                        data-ruta="static/documentos/evidencia_prestamo_auto" 
+                        class="btn-data btn-violetDeep " title="Ver Evidencia">
+                            <i class="fas fa-folder-open">
+                            </i>
+                        </button>`; 
+                        }else{
+                            botonesModal += ``; 
+                        }
                     }
                 if (d.total_pagado != null || d.total_pagado > 0) {
                     botonesModal += `
@@ -511,6 +550,46 @@ $('#tabla_prestamos tbody').on('click', '.toparPrestamo', function () {
     datosDataTable = tablaPrestamos.row($(this).parents('tr')).data();
     $('#modalAlert').modal('show');
 });
+
+
+$('#PausarForma').on('submit', function (e) {
+    $('#spiner-loader').removeClass('hide');
+    document.getElementById('btnTopar').disabled = true;
+    e.preventDefault();
+    // if(datosDataTable.length == 0)
+        var com2 = new FormData(document.getElementById("PausarForma"));    
+        //  <div class="col-md-4"><div class="d-flex justify-center "  style="padding-top: 25px;">
+
+        // let formData = new FormData(document.getElementById("form_delete"));
+            
+                    $.ajax({
+                        url: general_base_url+'Descuentos/pausar_prestamo',
+                        data: com2,
+                        method: 'POST',
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType: 'JSON',
+                        success: function (data) {
+                            $('#spiner-loader').addClass('hide');
+                            $('#ModalPausar').modal('toggle');
+                            alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                            $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                        }, 
+                        error: function () {
+                            alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+                            $('#spiner-loader').addClass('hide');
+                            
+                        }
+                    });
+            
+
+
+
+        document.getElementById('addPausar').disabled = false;
+    });
+
+
 $('#formTopar').on('submit', function (e) {
     $('#spiner-loader').removeClass('hide');
     document.getElementById('btnTopar').disabled = true;
@@ -528,7 +607,31 @@ $('#formTopar').on('submit', function (e) {
     });
     document.getElementById('btnTopar').disabled = false;
 });
+    $('#tabla_prestamos tbody').on('click', '.pausar', function () {
+        const idPrestamo = $(this).val();
+        const estatus = $(this).attr("data-estatusP");
+        // const montoPagos = $(this).attr("data-individual");
+        // const nombreUsuario = $(this).attr("data-name");
+        // const numeroPagos = $(this).attr("data-npagos");
+        // const pagoEdit = $(this).attr("data-monto");
+        // const comentario = $(this).attr("data-comentario");
+        // const tipo = $(this).attr("data-tipo");
+        // const id_tipo = $(this).attr("data-idtipo");
 
+
+        // document.getElementById("prestamoIdPausar").value = '';
+
+        // $("#tipoD").val(id_tipo).selectpicker('refresh');
+        
+        document.getElementById("prestamoIdPausar").value = idPrestamo;
+        document.getElementById("estatusP").value = estatus;
+        // document.getElementById("numeroPagos").value = numeroPagos;
+        // document.getElementById("pagoEdit").value = montoPagos;
+        // document.getElementById("informacionText").value = comentario;
+        // document.getElementById("prestamoId").value = prestamoId;
+
+        $("#ModalPausar").modal();
+    });
 
     $('#tabla_prestamos tbody').on('click', '.edit-prestamo', function () {
         const idPrestamo = $(this).val();
@@ -580,9 +683,9 @@ $('#formTopar').on('submit', function (e) {
                     dataType: "json",
                     data: {
                         "tipoD":    tipoD,
-                        "pagoEdit": parseInt(pagoEdit),
-                        "numeroPagos": parseInt(numeroPagos),
-                        "montoPagos": parseInt(montoPagos),
+                        "pagoEdit": parseFloat(pagoEdit),
+                        "numeroPagos": parseFloat(numeroPagos),
+                        "montoPagos": parseFloat(montoPagos),
                         "comentario": comentario,
                         "prestamoId": prestamoId,
                     },
@@ -1064,7 +1167,7 @@ function mostrar(id){
 
             Modalheader.append(`
                 <input type="hidden" value="EDITAR" name="idPrestamo" id="idPrestamo"> 
-                    <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR 
+                    <h4>¿Desea editar o borrar la etiqueta del préstamo descuento? 
                     </h4>
             `);
             dataModal += ``; 
@@ -1122,7 +1225,7 @@ function mostrar(id){
                                     Para ver el cambio, es necesario que se cierre el modal y se vuelva abrir.
                             </span>
 							</div>
-                            <div class="col-md-8 hide" id="evidenciaNuevadiv_${idx.id_motivo}" name="evidenciaNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
+                            <div class="col-md-8 " id="evidenciaNuevadiv_${idx.id_motivo}" name="evidenciaNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
 								<div class="file-gph">
 									<input class="d-none" type="file" id="evidenciaNueva_${idx.id_motivo}" onchange="changeName(this)" name="evidenciaNueva_${idx.id_motivo}"  >
 									<input class="file-name overflow-text" id="evidenciaNueva_${idx.id_motivo}" type="text" placeholder="No has seleccionada nada aún" readonly="">
@@ -1348,3 +1451,8 @@ function mostrar(id){
     //$(document).on('input', '.monto', function () {
     //     verificar();
     // });
+
+
+
+
+    

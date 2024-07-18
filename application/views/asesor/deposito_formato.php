@@ -14,7 +14,7 @@
 <body>
 <div class="wrapper">
     <?php
-        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, )) AND $onlyView==0){
+        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532)) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form id="deposito-seriedad-form">';
@@ -27,7 +27,7 @@
             $html_action_end = '';
         }
 
-        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834){
+        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || in_array($this->session->userdata('id_usuario'), [2752, 2826, 2810, 5957, 6390, 4857, 2834])){
             $readonlyNameToAsesor = 'readonly';
         }
         else{
@@ -51,8 +51,8 @@
     </div>
     <div class="container" id="mainBoxDS">
         <div class="card">
-			<?php echo $html_action;?> 
-            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342)) AND $onlyView==0){?>
+            <?php echo $html_action;?> 
+            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532)) AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction" onclick="validaTipoVivienda();">GUARDAR CAMBIOS</button>
                 </section>
@@ -367,6 +367,146 @@
                                 <small class="pl-1" id="result"></small>
                             </label>
                             <input class="form-control input-gral" required="true" name="correo" id="correo" type="email" oninput="this.value = this.value.toUpperCase()" <?php echo $readOnly; ?> value="<?=$cliente[0]->correo?>"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">PAÍS(<small style="color: red;">*</small>)</label>
+                        <select name="pais" id="pais" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                <?php
+
+                                for($n=0; $n < count($paises) ; $n++){
+                                    if($paises[$n]['id_opcion'] == $cliente[0]->pais){
+                                        echo '<option value="'.$paises[$n]['id_opcion'].'" selected>'.$paises[$n]['nombre'].'</option>';
+                                    }
+                                    else{
+                                        echo '<option value="'.$paises[$n]['id_opcion'].'">'.$paises[$n]['nombre'].'</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group label-floating select-is-empty overflow-hidden">
+                            <label class="label-on-left m-0">ESTADO  (<small style="color: red;">*</small>)</label>
+                            <select name="estado" id="estado" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
+                                <?php
+                                    for($n=0; $n < count($estados) ; $n++){
+                                        if($estados[$n]['id_opcion'] == $cliente[0]->estado){
+                                            echo '<option value="'.$estados[$n]['id_opcion'].'" selected>'.$estados[$n]['nombre'].'</option>';
+                                        }
+                                        else{
+                                            echo '<option value="'.$estados[$n]['id_opcion'].'">'.$estados[$n]['nombre'].'</option>';
+                                        }
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">CIUDAD(<small style="color: red;">*</small>)</label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="ciudad" id="ciudad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ciudad?>"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">MUNICIPIO(<small style="color: red;">*</small>)</label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="municipio" id="municipio" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->municipio?>"/>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">COLONIA(<small style="color: red;">*</small>)</label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="colonia" id="colonia" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->colonia?>"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">
+                            LOCALIDAD
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="localidad" id="localidad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->localidad?>"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">
+                            CALLE
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="calle" id="calle" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->calle?>"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label class="label-on-left m-0">
+                                        GÉNERO
+                                        (<small style="color:red;">*</small>)
+                                    </label>
+                                    <select name="genero"  title="SELECCIONA UNA OPCIÓN" id="genero" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
+                                        <?php for($i = 0; $i < count($generos); $i++) {
+                                            if($generos[$i]['id_opcion'] == $cliente[0]->genero) {
+                                                echo '<option value="'.$generos[$i]['id_opcion'].'" selected>'.$generos[$i]['nombre'].'</option>';
+                                            }
+                                            else {
+                                                echo '<option value="'.$generos[$i]['id_opcion'].'">'.$generos[$i]['nombre'].'</option>';
+                                            }
+                                        }?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group m-0">
+                                    <label class="label-on-left m-0">
+                                        TIPO DE MONEDA
+                                        (<small style="color:red;">*</small>)
+                                    </label>
+                                    <select name="tipoMoneda" title="SELECCIONA UNA OPCIÓN" id="tipoMoneda" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-width="100%">
+                                        <?php 
+                                            for($i = 0; $i < count($tipoMoneda); $i++){
+                                                if($tipoMoneda[$i]['id_opcion'] == $cliente[0]->tipoMoneda) {
+                                                    echo '<option value="'.$tipoMoneda[$i]['id_opcion'].'" selected>'.$tipoMoneda[$i]['nombre'].'</option>';
+                                                }
+                                                else {
+                                                    echo '<option value="'.$tipoMoneda[$i]['id_opcion'].'">'.$tipoMoneda[$i]['nombre'].'</option>';
+                                                }
+                                            }?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                <label class="label-on-left m-0">CÓDIGO POSTAL(<small style="color: red;">*</small>)</label>
+                                   <select name="cp" required="true" title="SELECCIONA UNA OPCIÓN" id="cp" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-cp="<?=$cliente[0]->cp ?>" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                            <?php 
+                                                for($i = 0; $i < count($cp); $i++) {
+                                                    if($cp[$i]['codigo_postal'] == $cliente[0]->cp){
+                                                        echo '<option value="'.$cp[$i]['codigo_postal'].'" selected>'.$cp[$i]['codigo_postal'].'</option>';
+                                                    }
+                                                    else{
+                                                        echo '<option value="'.$cp[$i]['codigo_postal'].'">'.$cp[$i]['codigo_postal'].'</option>';
+                                                    }
+                                                }
+                                            ?>
+                                </select>    
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                <label class="label-on-left m-0">#INTERIOR(<small style="color: red;">*</small>)</label>
+                                <input type="text" required="true" class="form-control m-0 input-gral"  name="interior" id="interior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->interior?>"/>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                <label class="label-on-left m-0">#EXTERIOR(<small style="color: red;">*</small>)</label>
+                                <input type="text" required="true" class="form-control m-0 input-gral"  name="exterior" id="exterior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->exterior?>"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -741,7 +881,7 @@
                                                                 <label class="label-on-left m-0">EMPRESA EN LA QUE TRABAJA</label>
                                                                 <input  class="form-control input-gral letrasCaracteres" name="empresa_cop[]" id="empresa_cop[]" type="text" value="' . $copropiedad[$i]->empresa . '" '.$statsInput.'/>
                                                             </div>
-                                                        </div>	
+                                                        </div>  
                                                     </div>
 
                                                     <div class="row">
@@ -1102,7 +1242,7 @@
                             $gerenteFinal = ($asesor[0]->nombreGerente == $asesor2[0]->nombreGerente)?'':$asesor2[0]->nombreGerente;
 
                             $coordinador = ($asesor2[0]->nombreCoordinador =='')?'':' - '.$coordFinal.', ';
-                            $gerente 	 = ($asesor2[0]->nombreGerente ==  ''  )?'':$gerenteFinal;
+                            $gerente     = ($asesor2[0]->nombreGerente ==  ''  )?'':$gerenteFinal;
 
                             ($asesor2[0]->nombreAsesor=='') ? $asesoresVC .='' : $asesoresVC .= ' - '.$asesor2[$vc]->nombreAsesor;
 

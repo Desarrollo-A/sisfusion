@@ -101,7 +101,8 @@ class Asesor_model extends CI_Model {
         ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 
         ISNULL(tipo_correo_rech.total, 0) AS total_sol_correo_rech,
 	    ISNULL(tipo_sms_aut.total, 0) AS total_sol_sms_aut, ISNULL(tipo_sms_pend.total, 0) AS total_sol_sms_pend,
-	    ISNULL(tipo_sms_rech.total, 0) AS total_sol_sms_rech
+	    ISNULL(tipo_sms_rech.total, 0) AS total_sol_sms_rech,
+        lotes.tipo_estatus_regreso
 		FROM clientes as cl
         LEFT JOIN lotes as lotes ON lotes.idLote=cl.idLote
         LEFT JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
@@ -529,7 +530,19 @@ class Asesor_model extends CI_Model {
                                         cl.regimen_fac,
                                         cl.cp_fac,
                                         cl.venta_extranjero, 
-                                        cl.proceso
+                                        cl.proceso, 
+                                        cl.genero,
+                                        cl.tipoMoneda,
+                                        cl.cp, 
+                                        cl.estado, 
+                                        cl.ciudad,
+                                        cl.pais, 
+                                        cl.exterior, 
+                                        cl.interior, 
+                                        cl.municipio, 
+                                        cl.localidad, 
+                                        cl.calle, 
+                                        cl.colonia
                                 FROM clientes cl
                                 INNER JOIN lotes lot ON cl.idLote = lot.idLote
                                 INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
@@ -958,7 +971,7 @@ class Asesor_model extends CI_Model {
 		$query = $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
         cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,cl.fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
-        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, 1 estatus
+        cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, 1 estatus, lotes.tipo_estatus_regreso
         FROM clientes AS cl			
         INNER JOIN usuarios AS us ON cl.id_asesor = us.id_usuario
         INNER JOIN lotes AS lotes ON lotes.idLote = cl.idLote AND lotes.idCliente = cl.id_cliente AND lotes.idStatusLote = 3
@@ -1563,7 +1576,7 @@ class Asesor_model extends CI_Model {
     }
     function getCatalogs()
     {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 92) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 92, 142, 143, 144, 145, 146 ) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
     public function getAsesores($idUsuario)
     {
@@ -1782,5 +1795,16 @@ class Asesor_model extends CI_Model {
         WHERE lot.idLote = $idLote;");
         return $query->row();
 
+    }
+
+    function getCodigoPostales($valor, $option) {
+        
+        if($option == 'id_cliente') {
+            $query = $this->db->query("SELECT cl.pais, cl.estado, cp.codigo_postal FROM clientes cl LEFT JOIN codigo_postales cp ON cp.id_estado = cl.estado WHERE cl.id_cliente = $valor;");
+        }
+        if($option == 'select') {
+            $query = $this->db->query("SELECT * FROM codigo_postales WHERE id_estado = $valor;");
+        }
+        return $query->result_array();
     }
 }

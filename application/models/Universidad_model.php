@@ -29,18 +29,40 @@ class Universidad_model extends CI_Model {
                 $filtro = ' ';
         }
 
-        $query = $this->db->query("SELECT du.id_descuento, du.id_usuario, UPPER(CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno)) AS nombre, UPPER(opc.nombre) AS puesto, se.id_sede, UPPER(se.nombre) AS sede, ISNULL(pci3.saldo_comisiones, 0) saldo_comisiones, du.monto, ISNULL(pci2.total_descontado, 0) total_descontado, ISNULL(du.pagado_caja, 0) pagado_caja, ISNULL(du.monto-(ISNULL(pci2.total_descontado,0) + ISNULL(du.pagado_caja, 0)), 0) pendiente, du.pago_individual, du.estatus, us.estatus as estado_usuario, convert(nvarchar(20), du.fecha_modificacion, 113) fecha_modificacion, (CASE WHEN DAY(du.fecha_modificacion) BETWEEN 1 AND 10 AND du.estatus = 5 AND MONTH(du.fecha_modificacion) = MONTH(GETDATE()) AND YEAR(du.fecha_modificacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END ) banderaReactivado, convert(nvarchar(20), du.fecha_creacion, 113) fecha_creacion, convert(nvarchar(20), du.primer_descuento, 113) primer_descuento, ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.nombre END),0) as certificacion, ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.id_opcion END),0) as idCertificacion, opc1.color as colorCertificacion
+        $query = $this->db->query("SELECT du.id_descuento, du.id_usuario, 
+        UPPER(CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno)) AS nombre, 
+        UPPER(opc.nombre) AS puesto, se.id_sede, 
+        UPPER(se.nombre) AS sede, 
+        ISNULL(pci3.saldo_comisiones, 0) saldo_comisiones, du.monto, 
+        ISNULL(pci2.total_descontado, 0) total_descontado, ISNULL(du.pagado_caja, 0) pagado_caja, 
+        ISNULL(du.monto-(ISNULL(pci2.total_descontado,0) + ISNULL(du.pagado_caja, 0)), 0) pendiente, 
+        du.pago_individual, du.estatus, us.estatus as estado_usuario, 
+
+        DATEADD( MONTH , 3 ,du.fecha_creacion) AS fecha_modificada_3 ,
+		du.fecha_creacion AS fecha_creacion1, 
+
+        convert(nvarchar(20), du.fecha_modificacion, 113) fecha_modificacion, 
+        (CASE WHEN DAY(du.fecha_modificacion) BETWEEN 1 AND 10 AND du.estatus = 5 AND MONTH(du.fecha_modificacion) = MONTH(GETDATE()) AND YEAR(du.fecha_modificacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END ) banderaReactivado, 
+        convert(nvarchar(20), du.fecha_creacion, 113) fecha_creacion, convert(nvarchar(20), du.primer_descuento, 113) primer_descuento, 
+        ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.nombre END),0) as certificacion, 
+        ISNULL((CASE WHEN du.estatus_certificacion = '0' OR du.estatus_certificacion = NULL THEN NULL ELSE opc1.id_opcion END),0) as idCertificacion, opc1.color as colorCertificacion
         FROM descuentos_universidad du
         INNER JOIN usuarios us ON us.id_usuario = du.id_usuario
         INNER JOIN usuarios ua ON ua.id_usuario = du.creado_por
         INNER JOIN opcs_x_cats opc ON opc.id_opcion = us.id_rol AND opc.id_catalogo = 1
         LEFT JOIN opcs_x_cats opc1 ON opc1.id_opcion = du.estatus_certificacion AND opc1.id_catalogo = 79
-        LEFT JOIN (SELECT SUM(abono_neodata) total_descontado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
-        LEFT JOIN (SELECT SUM(pccom.abono_neodata) saldo_comisiones, pccom.id_usuario FROM pago_comision_ind pccom INNER JOIN comisiones com ON com.id_comision = pccom.id_comision WHERE pccom.estatus in (1) GROUP BY pccom.id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
+        LEFT JOIN (SELECT SUM(abono_neodata) total_descontado, id_usuario FROM pago_comision_ind WHERE estatus in (17)
+        GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario
+        LEFT JOIN (SELECT SUM(pccom.abono_neodata) saldo_comisiones, pccom.id_usuario 
+        FROM pago_comision_ind pccom INNER JOIN comisiones com ON com.id_comision = pccom.id_comision WHERE pccom.estatus in (1) GROUP BY pccom.id_usuario) pci3 
+        ON du.id_usuario = pci3.id_usuario 
 		LEFT JOIN sedes se ON se.id_sede = Try_Cast(us.id_sede  As int)
-        LEFT JOIN (SELECT COUNT(DISTINCT(CAST(fecha_abono AS DATE))) no_descuentos, id_usuario FROM pago_comision_ind WHERE estatus = 17 GROUP BY id_usuario) des ON des.id_usuario = du.id_usuario
+        LEFT JOIN (SELECT COUNT(DISTINCT(CAST(fecha_abono AS DATE))) no_descuentos, id_usuario FROM pago_comision_ind WHERE estatus = 17 GROUP BY id_usuario) des 
+        ON des.id_usuario = du.id_usuario
         $filtro 
-        GROUP BY du.id_descuento, du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.id_sede, se.nombre, pci3.saldo_comisiones, du.monto, pci2.total_descontado, du.pagado_caja, du.pago_individual, du.estatus, du.fecha_modificacion, du.fecha_creacion, opc1.nombre, opc1.color, du.primer_descuento, du.estatus_certificacion, us.estatus, opc1.id_opcion ORDER BY du.id_usuario ");
+        GROUP BY du.id_descuento, du.id_usuario, us.nombre, us.apellido_paterno, us.apellido_materno, opc.nombre, se.id_sede, se.nombre, 
+        pci3.saldo_comisiones, du.monto, pci2.total_descontado, du.pagado_caja, du.pago_individual, du.estatus, du.fecha_modificacion, 
+        du.fecha_creacion, opc1.nombre, opc1.color, du.primer_descuento, du.estatus_certificacion, us.estatus, opc1.id_opcion ORDER BY du.id_usuario ");
         return $query->result_array();
     }
     
@@ -65,7 +87,7 @@ class Universidad_model extends CI_Model {
     }
 
     function altaNuevoDescuentoUM($usuario, $montoFinalDescuento, $numeroMeses, $montoMensualidad, $descripcionAltaDescuento, $userdata){   
-        $respuesta = $this->db->query("INSERT INTO descuentos_universidad VALUES ($usuario, $montoFinalDescuento, 1, 'DESCUENTO UNIVERSIDAD MADERAS', '".$descripcionAltaDescuento."', $userdata, GETDATE(), 0, $montoMensualidad, $numeroMeses, 0, NULL, NULL, GETDATE())");       
+        $respuesta = $this->db->query("INSERT INTO descuentos_universidad VALUES ($usuario, $montoFinalDescuento, 1, 'DESCUENTO UNIVERSIDAD MADERAS', '".$descripcionAltaDescuento."', $userdata, GETDATE(), 0, $montoMensualidad, $numeroMeses, 0, NULL, NULL, GETDATE(), $numeroMeses, GETDATE())");       
         if (! $respuesta ) {
             return 0;
         } else {
@@ -95,19 +117,22 @@ class Universidad_model extends CI_Model {
     }
 
     function getLotesDescuentosUniversidad($user,$valor){
-        $datos =  $this->db->query("SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,u.id_sede,pci.pago_neodata
+        $datos =  $this->db->query("SELECT l.idLote, l.nombreLote, 
+        pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,
+        u.id_sede,
+        pci.pago_neodata
         FROM comisiones com 
         INNER JOIN lotes l ON l.idLote = com.id_lote
         INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
         INNER JOIN usuarios u on u.id_usuario=pci.id_usuario
-        WHERE com.estatus = 1 AND pci.estatus IN (1) AND pci.id_usuario = $user order by pci.abono_neodata desc")->result_array();
+        WHERE pci.estatus IN (1) AND pci.id_usuario = $user order by pci.abono_neodata desc")->result_array();
 
         if(!empty($datos)){ 
         $pagos =  $this->db->query(" SELECT sum(abono_neodata) as suma
         FROM comisiones com 
         INNER JOIN lotes l ON l.idLote = com.id_lote
         INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-        WHERE com.estatus = 1 AND pci.estatus IN (1) AND pci.id_usuario = $user ")->result_array();
+        WHERE pci.estatus IN (1) AND pci.id_usuario = $user ")->result_array();
 
         $maximo = $valor;
     
@@ -144,6 +169,7 @@ class Universidad_model extends CI_Model {
                         'id_pago_i'=> $datos[$i]['id_pago_i'],
                         'nombreLote'=> $datos[$i]['nombreLote'],
                         'suma'=>$pagos[0]['suma'],
+                        'id_sede'=>$datos[0]['id_sede'],
                         'pago_neodata' => $datos[$i]['pago_neodata']);
                         
                         if( $suma >= $valor){
@@ -167,20 +193,26 @@ class Universidad_model extends CI_Model {
     }
 
     function obtenerID($id){
-        return $this->db->query("SELECT id_comision from pago_comision_ind WHERE id_pago_i=$id");
+        return $this->db->query("SELECT id_comision from pago_comision_ind WHERE id_pago_i=$id")->row();
     }
 
-    function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$user){
+    function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$user,$id_descuento,$cmd){
         $estatus = 0;
         $uni = 'DESCUENTO';
         $estatus = 17;
-        $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", estatus = 2, primer_descuento = (CASE WHEN primer_descuento IS NULL THEN GETDATE() ELSE primer_descuento END) WHERE id_usuario = ".$user." AND estatus IN (1, 0)");
+        $respuesta = ('llegamos aqui sin pedos');
+
+        // $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", estatus = 2, primer_descuento = (CASE WHEN primer_descuento IS NULL THEN GETDATE() ELSE primer_descuento END) WHERE id_descuento = ".$id_descuento." AND estatus IN (1, 0)");
+        $respuesta =  $this->db->query($cmd);
         $uni='SALDO COMISIONES: $'.number_format($saldo_comisiones,2, '.', ',');
 
         if ($monto == 0) {
-            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
+                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
+                $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
+
         } else {
-            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
+                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
+                $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
         }
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
 
@@ -191,9 +223,10 @@ class Universidad_model extends CI_Model {
             }
     }
 
-    function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata){
+    function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$id_descuento){
         $estatus = $monto < 1 ? 0 : 1;
-        $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null)");
+        $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) 
+                    VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null)");
         $insert_id = $this->db->insert_id();
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'NUEVO PAGO, DISPONIBLE PARA COBRO')");
         if (! $respuesta ) {
@@ -302,6 +335,44 @@ class Universidad_model extends CI_Model {
         $query = $this->db->query($cmd);
         return $query->result_array();
     }
+
+
+
+
+    function updateCMD($cmd)
+    {
+        $respuesta =  $this->db->query($cmd);
+        if ($respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+    }
+
+    function update_descuento1($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$user,$id_descuento){
+        // 
+        
+        // $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", estatus = 2, primer_descuento = (CASE WHEN primer_descuento IS NULL THEN GETDATE() ELSE primer_descuento END) WHERE id_descuento = ".$id_descuento." AND estatus IN (1, 0)");
+        $respuesta =  $this->db->query($cmd);
+        $uni='SALDO COMISIONES: $'.number_format($saldo_comisiones,2, '.', ',');
+
+        if ($monto == 0) {
+                // $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
+                // $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
+
+        } else {
+                // $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
+                // $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
+        }
+                // $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
+
+        if (! $respuesta ) {
+            return 0;
+            } else {
+            return 1;
+            }
+    }
+
 
 
     }

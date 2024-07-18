@@ -1,13 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
 class Administracion_model extends CI_Model {
 
     public function __construct()
     {
         parent::__construct();
     }
-
-
 
 	public function get_datos_lote_11 () {
         $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
@@ -18,7 +15,7 @@ class Administracion_model extends CI_Model {
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
         cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede, hl.modificado ultimaFechaEstatus7,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso, hd.idDocumento, hd.movimiento, hd.expediente, hd.bucket 
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 AND ISNULL(cl.proceso, 0) <= 1
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -32,6 +29,7 @@ class Administracion_model extends CI_Model {
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes 
         WHERE idStatusContratacion IN (7, 8) AND idMovimiento IN (37, 7, 64, 77, 67, 38, 65) AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        LEFT JOIN historial_documento AS hd ON l.idLote = hd.idLote AND hd.idCliente = l.idCliente and hd.status = 1 AND hd.tipo_doc = 55 
         WHERE l.status = 1 AND l.idStatusContratacion IN (7, 8) AND  l.idMovimiento IN (38, 65, 37, 7, 64, 77, 67) AND ISNULL(l.validacionEnganche, 'NULL') NOT IN ('VALIDADO')
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar, l.modificado, 20), cl.rfc, l.totalNeto, l.totalValidado, CONVERT(varchar, l.fechaSolicitudValidacion, 20),
@@ -40,7 +38,7 @@ class Administracion_model extends CI_Model {
         concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre, hl.modificado, ISNULL(oxc0.nombre, 'Normal'), cl.proceso
+        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre, hl.modificado, ISNULL(oxc0.nombre, 'Normal'), cl.proceso, hd.idDocumento, hd.movimiento, hd.expediente, hd.bucket
         ORDER BY l.nombreLote");
         return $query->result();
     }
@@ -255,5 +253,64 @@ class Administracion_model extends CI_Model {
         LEFT JOIN opcs_x_cats opx ON opx.id_opcion=dml.formaPago AND opx.id_catalogo=112
 		WHERE cl.status = 1 $where
 		ORDER BY cl.id_cliente DESC")->result();
+    }
+    public function getDatosLotes($idLote){
+        $query = $this->db->query("SELECT UPPER(COALESCE(NULLIF(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), ''), 'SIN ESPECIFICAR')) AS nombreCliente, 
+        COALESCE(cl.id_cliente,0)idCliente,lo.idLote, UPPER(lo.nombreLote) nombreLote,ISNULL(CONVERT(VARCHAR, cl.fechaApartado, 103), 'SIN ESPECIFICAR') AS fechaApartado, 
+        UPPER(co.nombre) nombreCondominio, re.nombreResidencial,UPPER(COALESCE(opx.nombre, 'SIN ESPECIFICAR')) representante,
+        COALESCE(UPPER(tip.tipo_venta), 'SIN ESPECIFICAR') tipoVenta, 
+        CASE WHEN lo.idStatuslote = 6 THEN 1 ELSE 0 END cambioDisponible, lo.idStatusContratacion, lo.idMovimiento, lo.idStatusLote,
+        COALESCE(UPPER(sta.nombre), 'SIN ESPECIFICAR') as 'estatusLote', 
+        COALESCE(UPPER(mov.descripcion), 'SIN ESPECIFICAR') as 'movimientoEstatus', 
+        COALESCE(UPPER(sta.nombre), 'SIN ESPECIFICAR') as 'estatusContratacion',
+        CASE WHEN (lo.idMovimiento IN (39,45)) THEN comentario ELSE '' END AS comentario,
+        COALESCE(lo.tipo_venta, 0) idTipoVenta,
+        COALESCE(cl.tipo_casa,0) tipoCasa, 
+        COALESCE(co.idCondominio, 0) idCondominio
+        FROM lotes lo
+        LEFT JOIN condominios co ON co.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN movimientos mov ON mov.idMovimiento = lo.idMovimiento
+        LEFT JOIN statuslote sta ON sta.idStatusLote = lo.idStatusLote
+        LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+        LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+        LEFT JOIN opcs_x_cats opx ON opx.id_opcion = cl.rl AND opx.id_catalogo = 77
+        LEFT JOIN tipo_venta tip ON tip.id_tventa = lo.tipo_venta
+        WHERE lo.idLote = $idLote ");
+        return $query->result_array();
+    }
+
+    public function getCatalogoMaster() {   
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre, estatus
+        FROM (SELECT CAST(id_catalogo AS varchar(4)) id_catalogo,id_opcion, nombre, estatus
+        FROM opcs_x_cats WHERE id_catalogo IN (120,77, 35) AND estatus = 1
+        UNION ALL SELECT 'venta_tipo' id_catalogo, id_tventa id_opcion, tipo_venta nombre, NULL estatus FROM tipo_venta
+        UNION ALL SELECT 'sedes' id_catalogo, id_sede id_opcion, nombre, impuesto from sedes WHERE estatus = 1)t1 ORDER BY id_catalogo, nombre");
+    }
+    //Function to retrieve the lastId
+    public function getLastId($table, $where, $select) {
+        $this->db->select_max($select);
+        $this->db->where($where);
+        $query = $this->db->get($table);
+        if($query->num_rows() > 0) {
+            $row = $query->row();
+            return $row->$select;
+        }else {
+            return null;
+        }
+    }
+    public function updateMultiple($table, $where, $data){
+        $this->db->where($where);
+        $response = $this->db->update($table, $data);
+        return $response; 
+    }
+    public function getResultados($idLote, $idCliente) {
+        $filter = $idCliente == '' ? '' : " AND idCliente = $idCliente";
+        $query = $this->db->query("SELECT * FROM historial_lotes WHERE idLote = $idLote $filter ORDER BY idHistorialLote DESC");
+        return $query->result_array();
+    }
+
+    public function verifyPagos($idPago) {
+        //$query = $this->db->query("SELECT")
     }
 }

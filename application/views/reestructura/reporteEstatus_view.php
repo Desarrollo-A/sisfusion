@@ -1,5 +1,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+
 <body>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>  
@@ -30,6 +32,31 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modalDocumento" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" id="regresoLo">
+                        <h4 class="modal-title"><label><span>DOCUMENTACIÓN DE LOS LOTES: </span><b><span class="loteDocumento"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <table id="tablaDocumento" class="table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>DOCUMENTO</th>
+                                    <th>LOTE</th>
+                                    <th>ACCIONES</th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="saveRegreso" class="btn btn-primary">ACEPTAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <?php include 'historialMovimientos.php' ?>
         <div class="content boxContent">
             <div class="container-fluid">
@@ -45,19 +72,30 @@
                                         <thead>
                                             <tr>
                                                 <th>TIPO DE PROCESO</th>
+                                                <th>MOVIMIENTO</th>
                                                 <th>PROYECTO ORIGEN</th>
                                                 <th>CONDOMINIO ORIGEN</th>
                                                 <th>LOTE ORIGEN</th>
-                                                <th>REFERENCIA ORIGEN</th>                                                
+                                                <th>CLIENTE</th>
+                                                <th>REFERENCIA ORIGEN</th>                                           
                                                 <th>ID LOTE ORIGEN</th>
+                                                <th>TOTAL NETO</th>             
+                                                <th>PRECIO M2</th>              
+                                                <th>SUPERFICIE LOTE ORIGEN</th> 
                                                 <th>PROYECTO DESTINO</th>
                                                 <th>CONDOMINIO DESTINO</th>
                                                 <th>LOTE DESTINO</th>
-                                                <th>REFERENCIA DESTINO</th>                                                
+                                                <th>REFERENCIA DESTINO</th>
                                                 <th>ID LOTE DESTINO</th>
+                                                <th>SUPERFICIE LOTE DESTINO</th> 
                                                 <th>ESTATUS PROCESO</th>
-                                                <th>ESTATUS ADMINISTRACIÓN</th>
+                                                <th>ESTATUS ADMINISTRACIÓN</th> 
                                                 <th>FECHA ÚLTIMO MOVIMIENTO</th>
+                                                <th>ESTATUS 2 JURÍDICO</th>
+                                                <th>ESTATUS 2 CONTRALORÍA</th>
+                                                <th>ASESOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -73,5 +111,6 @@
     </div>
 </body>
 <?php $this->load->view('template/footer');?>
+<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/reestructura/reporteEstatus.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/reestructura/historialMovimientos.js"></script>

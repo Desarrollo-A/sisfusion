@@ -584,7 +584,7 @@ class Documentacion extends CI_Controller {
     
 
     public function documentacionPorClienteLote() {
-        $datos["residencial"]= $this->Registrolote_modelo->getResidencialQro();
+		$datos["residencial"]= $this->Registrolote_modelo->getResidencialQro();
         $this->load->view('template/header');
         $this->load->view("documentacion/documentacionClienteLote_view", $datos);
     }

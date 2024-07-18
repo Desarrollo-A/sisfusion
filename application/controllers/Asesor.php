@@ -4,7 +4,7 @@ class Asesor extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('asesor/Asesor_model');
-        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model'));
+        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model', 'Neodata_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
@@ -959,6 +959,7 @@ class Asesor extends CI_Controller {
             $data[$i]['telefono'] = $query[0]->telefono2;
             $data[$i]['tipo_proceso'] = $query[0]->tipo_proceso;
             $data[$i]['proceso'] = $query[0]->proceso;
+            //$data[$i]['tipo_estatus_regreso'] = $query[0]->tipo_estatus_regreso;
         }
         if ($data != null) {
             echo json_encode($data);
@@ -1067,6 +1068,7 @@ class Asesor extends CI_Controller {
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
+        $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
         $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
@@ -1094,12 +1096,36 @@ class Asesor extends CI_Controller {
             return $item['id_catalogo'] == 92;
         }));
 
+        $paises = array_merge(array_filter($catalogs, function($item) {
+            //PAISES
+            return $item['id_catalogo'] == 144;
+        }));
+
+        $estados = array_merge(array_filter($catalogs, function($item) {
+            //ESTADOS
+            return $item['id_catalogo'] == 143;
+        }));
+
+        $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 142;
+        }));
+
+        $generos = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 145;
+        }));
+
+        
         $datos["nacionalidades"] = $nacionalidades;
         $datos["edoCivil"] = $estadosCiviles;
         $datos["regMat"] = $regimenMatrimonial;
         $datos["parentescos"] = $parentesto;
         $datos["regFis"] = $regimenFiscal;
         $datos['onlyView'] = $onlyView;
+        $datos['paises'] = $paises;
+        $datos['estados'] = $estados;
+        $datos['tipoMoneda'] = $tipoMoneda;
+        $datos['generos'] = $generos;
+        $datos['cp'] =$cp;
 
         $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
         $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
@@ -1978,7 +2004,9 @@ class Asesor extends CI_Controller {
         $parentezco_select1 = $this->input->post('parentezco_select1');
         $parentezco_select2 = $this->input->post('parentezco_select2');
 
+
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
+        $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
@@ -1999,6 +2027,25 @@ class Asesor extends CI_Controller {
             // REGIMEN FISCAL
             return $item['id_catalogo'] == 92;
         }));
+
+        $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 142;
+        }));
+
+        $estados = array_merge(array_filter($catalogs, function($item) {
+            //ESTADOS
+            return $item['id_catalogo'] == 143;
+        }));
+        
+         $paises = array_merge(array_filter($catalogs, function($item) {
+            //PAISES
+            return $item['id_catalogo'] == 144;
+        }));
+
+        $generos = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 145;
+        }));
+    
 
         for ($n = 0; $n < count($nacionalidades); $n++) {
             if ($nacionalidades[$n]['id_opcion'] == $nac_select) {
@@ -2022,7 +2069,7 @@ class Asesor extends CI_Controller {
             if ($regFiscal2[$c]['id_opcion'] == $regifis_select) {
                 $reg_fis = $regFiscal2[$c]['nombre'];
             }
-        }
+        }        
 
         //DOCUMENTACIÓN
         //PERSONA FISICA
@@ -2047,9 +2094,23 @@ class Asesor extends CI_Controller {
         $correo = $this->input->post('correo');
         $fecha_nacimiento = $this->input->post('fecha_nacimiento');
         $nacionalidad = $this->input->post('nacionalidad');
+        
         $originario = $this->input->post('originario');
         $regimen_fac = $this->input->post('regimenFiscal');
         $cp_fac = $this->input->post('cp_fac');
+
+        $municipio = $this->input->post('municipio');
+        $calle = $this->input->post('calle');
+        $localidad = $this->input->post('localidad');
+        $pais = $this->input->post('pais');
+        $estado = $this->input->post('estado');
+        $genero = $this->input->post('genero');
+        $tipoMoneda = $this->input->post('tipoMoneda');
+        $ciudad = $this->input->post('ciudad');
+        $colonia = $this->input->post('colonia');
+        $interior = $this->input->post('interior');
+        $exterior = $this->input->post('exterior');
+        $cp = $this->input->post('cp');
         
         $estado_civil = $this->input->post('estado_civil');
         $nombre_conyuge = $this->input->post('nombre_conyuge');
@@ -2070,13 +2131,16 @@ class Asesor extends CI_Controller {
         $tipo_venta = $this->input->post('tipo_venta');
         $proceso= $this->input->post('proceso');
 
-
+        
         if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
             $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
-            if(!$validacionM2) {//si es diferente a true
-                echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
-                exit;
+            $procesoInt = intval($proceso);
+            if(in_array($procesoInt, array(0, 1))){
+                if(!$validacionM2) {//si es diferente a true
+                    echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
+                    exit;
+                }
             }
         }
 
@@ -2121,7 +2185,7 @@ class Asesor extends CI_Controller {
         //revisar si coloco que no quiere la carta, revisar si hay un registro en el arbol
         //si es así hayq ue borrar la rama ya que no la estará utilizando
 
-        if($tipo_comprobante == 2){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
+        if($tipo_comprobante == 0){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
             //$dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente,  29);
 
@@ -2140,6 +2204,63 @@ class Asesor extends CI_Controller {
                 }
             }
         }
+        $infoCliente = $this->caja_model_outside->getInformaciongGeneralPorCliente($id_cliente);
+        $Cliente = explode('-', $infoCliente->nombreLote);
+        $Cliente[2] = 0 . $Cliente[2];
+        $Cliente = implode('-', $Cliente);
+            $dataNeoData = array (
+            "accion" => "upd",
+            "Cliente" => $Cliente,
+            "IdProyecto" => $infoCliente->idProyectoNeoData,
+            "IdVivienda" => $infoCliente->idViviendaNeoData,
+            "IdCredito" => 2,
+            "IdEstado" => $this->input->post('estado'), // NO TENGO EL ESTADO SINO HASTA QUE SE REALIZA EL PRIMER GUARDADO DEL CLIENTE EN EL DS
+            "IdEtapaCliente" => 1, // CvEtapasClientes default 1
+            "IdMedio" => 11, // CvMedios default 11
+            "Nombre" => $this->input->post('nombre'),
+            "ApellidoPaterno" => $this->input->post('apellido_paterno'),
+            "ApellidoMaterno" => $this->input->post('apellido_materno'),
+            "Calle" => $this->input->post('calle'),
+            "Colonia" => $this->input->post('colonia'),
+            "CodPost" => ($this->input->post('cp') == '0' ? NULL : $this->input->post('cp')),
+            "MpioDeleg" => $this->input->post('municipio'),
+            "Localidad" => $this->input->post('localidad'),
+            "Telefono" => $this->input->post('telefono1'),
+            "Email" => $this->input->post('correo'),
+            "RFC" => ($this->input->post('rfc') == null ? 'XAXX010101000' : $this->input->post('rfc')), // SE MANDA RFC GENERICO CUANDO NO SE TIENE RFC DE CLIENTE
+            "FechaNacimiento" => $this->input->post('fecha_nacimiento'), // AAAA-MM-DD NO TENGO FECHA DE NACIMIENTO HASTA QUE NO SE REALIZA EL PRIMER GUARDADO DEL DS
+            "FechaIngreso" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "NumOficial" => $this->input->post('exterior'), // # EXTERIOR
+            "NumInterior" => $this->input->post('interior'), // # INTERIOR
+            "Sexo" => ($this->input->post('genero') == 1 ? 'M' : $this->input->post('genero') == 2 ? 'F' : NULL), // F / M NO TENGO EL GÉNERO DEL CLEINTE HASTA QUE NO SE REALIZA EL PRIMER GUARDADO DEL DS
+            "Notas" => '', // VA VACÍO
+            "IdCEtapa" => 7, // default 7
+            "FechaAsignacionVivienda" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "Cancelado" => 0, // default 0 - 0 PARA EL ALTA (ACTIVO) / 1 PARA LA BAJA (EN EL UPDATE DE ESTATUS)
+            "Escriturado" => 0, // default 0
+            "TelefonoCelular" => $this->input->post('telefono2'), // OTRO TELÉFONO
+            "FechaRegistro" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "TelefonosConfirmados" => 1, // default 1
+            "FechaUltimoContacto" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "Referencia" => $this->input->post('referencia'), // referencia del lote
+            "FechaFichaRapApartado" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "IdSofolSolicitada" => 4, // CvSofoles default 4
+            "IdCuentaMoratorios" => NULL, // 1198738, // van como vacío
+            "IdCuentaIntereses" => NULL, // 1180884, // van como vacío
+            "NoCuentaContable" => NULL, // van como vacío
+            "EscrituradoReal" => 0, // default 0
+            "IdTipoMoneda" => $this->input->post('tipoMoneda'), // default 1
+            "Lada" => $this->input->post('ladaTel1'), // NO TENGO LADA HASTA QUE SE GUARDA EL DS
+            "Pais" =>  $this->input->post('pais'), // default México (1142)
+            "MonedaSATDefault" => 'MXN', // default MXN
+            "IdCodigoPostalSAT" => ($this->input->post('cp') == '0' ? NULL : $this->input->post('cp')), // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
+            "IdPaisSAT" => $this->input->post('pais'), // default México (1142)
+            "IdCatRegimen" => $this->input->post('regimenFiscal'), // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
+            "CuentaClabeSTP" => NULL,
+            "Prospecto" => 0
+        );
+        
+        $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
 
         /*****MARTHA DEBALE OPTION*******/
         $des_casa = $this->input->post('des_hide');
@@ -2196,6 +2317,20 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["rfc"] = $rfc;
         $arreglo_cliente["fecha_nacimiento"] = $fecha_nacimiento;
         $arreglo_cliente["nacionalidad"] = $nacionalidad;
+        $arreglo_cliente["pais"] = $pais;
+        $arreglo_cliente['estado'] = $estado;
+        $arreglo_cliente['cp'] =$cp;
+        $arreglo_cliente['tipoMoneda'] = $tipoMoneda;
+        $arreglo_cliente['genero'] = $genero;
+        $arreglo_cliente['ciudad'] = $ciudad;
+        $arreglo_cliente['interior'] = $interior;
+        $arreglo_cliente['exterior'] = $exterior;
+        $arreglo_cliente['localidad'] = $localidad;
+        $arreglo_cliente['calle'] = $calle;
+        $arreglo_cliente['colonia'] = $colonia;
+        $arreglo_cliente['municipio'] = $municipio;
+
+
         $arreglo_cliente["regimen_fac"] = $regimen_fac;
         $arreglo_cliente["cp_fac"] = $cp_fac;
         $arreglo_cliente["originario_de"] = $originario;
@@ -2968,7 +3103,7 @@ class Asesor extends CI_Controller {
                 if (count($idCopArray) > 0) {
                     for ($i = 0; $i < sizeof($idCopArray); $i++) {
                         $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', 
-                                                            ladaTel = '" . $ladatelCop1[$i] . "', ladaCel = '" . $ladaCelCop2[$i] . "',
+                                                            ladaTel = '" . $ladaTelCop1[$i] . "', ladaCel = '" . $ladaCelCop2[$i] . "',
                                                             telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "',
                                                             nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "',
                                                             domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "',
@@ -3111,10 +3246,11 @@ class Asesor extends CI_Controller {
                             return;
                         }
                     }
-
                     echo json_encode(['code' => 200]);
-                } else {
-                    echo json_encode(['code' => 200]);
+                } else {   
+                   if ($responseInsertClienteNeoData['status'] == 1) {
+                        echo json_encode(['code' => 200]);
+                   } 
                 }
             } else {
                 if (count($idCopArray) > 0) {
@@ -4416,6 +4552,15 @@ class Asesor extends CI_Controller {
             $data[$i]['apellido_materno'] = $dato[$i]->apellido_materno;
             $data[$i]['personalidad_juridica'] = ($dato[$i]->personalidad_juridica == "") ? "N/A" : $dato[$i]->personalidad_juridica;
             $data[$i]['nacionalidad'] = ($dato[$i]->nacionalidad == "") ? "N/A" : $dato[$i]->nacionalidad;
+            $data[$i]['pais'] = ($dato[$i]->pais == "") ? "N/A" : $dato[$i]->pais;
+            $data[$i]['estado'] = ($dato[$i]->estado == "") ? "N/A": $data[$i]->estado;
+            $data[$i]['tipoMoneda'] = ($dato[$i]->tipoMoneda == "") ? "N/A" : $dato[$i]->tipoMoneda;
+            $data[$i]['genero'] = ($dato[$i]->genero == "") ? "N/A" : $dato[$i]->genero;
+            $data[$i]['cp'] = ($dato[$i]->cp == "") ? "N/A" : $dato[$i]->cp;
+            $data[$i]['ciudad'] = ($dato[$i]->ciudad == "") ? "N/A" : $dato[$i]->ciudad;
+            $data[$i]['interior'] = ($dato[$i]->interior == "")? "N/A" : $dato[$i]->interior;
+            $data[$i]['exterior'] = ($dato[$i]->exterior == "") ? "N/A" : $dato[$i]->exterior;
+
             $data[$i]['rfc'] = ($dato[$i]->rfc == "") ? "N/A" : $dato[$i]->rfc;
             $data[$i]['curp'] = ($dato[$i]->curp == "") ? "N/A" : $dato[$i]->curp;
             $data[$i]['correo'] = ($dato[$i]->correo == "") ? "N/A" : $dato[$i]->correo;
@@ -5537,6 +5682,16 @@ class Asesor extends CI_Controller {
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function getCodigoPostales($id_estado,  $option) {
+        $data = $this->Asesor_model->getCodigoPostales($id_estado, $option);
+        if($data != null) {
+            echo json_encode($data);
+        }
+        else {
+            echo json_encode(array());
+        }
     }
 }
 ?>

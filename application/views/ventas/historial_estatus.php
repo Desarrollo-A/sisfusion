@@ -50,6 +50,13 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group overflow-hidden">
+                                                    <label class="m-0" for="tipo_general">Tipo  (<span class="isRequired">*</span>)</label>
+                                                    <select class="selectpicker select-gral" id="tipo_general" name="tipo_general[]" data-style="btn " data-show-subtext="true" 
+                                                    data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+                                                <div class="form-group overflow-hidden">
                                                     <label class="m-0" for="proyecto">Proyecto (<span class="isRequired">*</span>)</label>
                                                     <select name="catalogo_general" id="catalogo_general" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                     <?php

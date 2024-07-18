@@ -57,7 +57,6 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#facturaComercializacion" role="tab" data-toggle="tab">Facturas lotes</a></li>
-                        <!-- <li><a href="#facturaOOAM" role="tab" data-toggle="tab">Facturas lotes</a></li> -->
                         <li><a href="#facturaSeguros" role="tab" data-toggle="tab">Facturas seguros</a></li>
                     </ul>
             

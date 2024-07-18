@@ -46,6 +46,18 @@
         </div>
     </div>
 
+    <div class="modal fade modal-alertas" id="modal_multiples_intmexA_seguros" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header"></div>
+                <form method="post" id="form_multiples_seguros">
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
         <div class="modal-dialog" style= "margin-top:20px;"></div>
     </div>
@@ -65,7 +77,7 @@
                             <div class="tab-content p-2">
                                 <div class="tab-pane active" id="nuevas-1">
                                     <div class="card-content" style="justify-content: space-between">  
-                                        <div class="text-center">
+                                        <div class="text-center">  
                                             <div class="encabezadoBox">
                                                 <h3 class="card-title center-align">Comisiones nuevas <b>asimiliados</b></h3>
                                             </div>
@@ -133,7 +145,7 @@
                                                                     <th>PUESTO</th>
                                                                     <th>CÓDIGO POSTAL</th>
                                                                     <th>FECHA DE ENVÍO</th>
-                                                                    <th>ACCIONES</th>
+                                                                    <th>MÁS</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>

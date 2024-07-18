@@ -49,7 +49,7 @@ function filltablaLista(beginDate, endDate) {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Tus ventas',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx] + ' ';
@@ -116,6 +116,7 @@ function filltablaLista(beginDate, endDate) {
                     return `<span class='label ${claseColor}' >${d.detalleEstatus}</span>`;
                 }
             },
+            { data: 'comentario' }
         ],
         ajax: {
             url: `${general_base_url}Reporte/getListadoDeVentas`,

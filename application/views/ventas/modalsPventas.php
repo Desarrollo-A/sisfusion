@@ -56,7 +56,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 id="titleAvance"></h4>
+                <h4 id="titleAvance" class="modal-title w-100 text-center"></h4>
             </div>
             
             <form id="avanceAutorizacion" name="avanceAutorizacion" method="post">
@@ -66,6 +66,7 @@
                 <input type="hidden" name="id_autorizacion" id="id_autorizacion">
                     <input type="hidden" name="estatus" id="estatus">
                     <input type="hidden" name="tipo" id="tipo">
+                    <input type="hidden" name="opcionAccion" id="opcionAccion">
                 <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn btn-primary">Aceptar</button>

@@ -2,145 +2,63 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 
 <style>
-    .modal-backdrop{
-        z-index:9;
+    .modal-backdrop {
+        z-index: 9;
+    }
+    .msj {
+        z-index: 9999999;
     }
 </style>
-	<!-- estilo para los lotes de origen -->
-		<style type="text/css">
-            .msj{
-                z-index: 9999999;
-            }
-        </style>
-<!-- fin para los estilos de lote de origen -->
-
-
 
 <body>
-	<div class="wrapper">
-		<?php $this->load->view('template/sidebar'); ?>
+    <div class="wrapper">
+        <?php $this->load->view('template/sidebar'); ?>
 
-		<div class="content boxContent">
-		<div class="card">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-						<div class="card">
-							<div class="card-content">
-								<h3 class="card-title center-align">Enviar evidencia</h3>
-								<div class="toolbar">
-                                    <div class="container-fluid p-0">
-											<div class="col-md-12"  style="display: none" >
-                                            	<div class="toggle-button-cover">
-													<div class="button-cover">
-                                                	    <div class="button b2" id="button-16"  >
-                                                	        <input type="checkbox" class="checkbox" id="checkbox"  />
-                                                	        <div class="knobs"></div>
-                                                	    	<div class="layer"></div>
-                                                	    </div>
-													</div>
-												</div>
-                                            </div>
-											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                <div class="form-group d-flex justify-center align-center">
-													<button type="button" id="mandarIncidencias" class="btn-gral-data" >
-														<i class="fas fa-arrow-circle-up"></i>
-														Enviar evidencia
-													</button>
+        <div class="content boxContent">
+                <div class="container-fluid">
+
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<ul class="nav nav-tabs nav-tabs-cm" role="tablist">
+							<li class="active"><a href="#anticipo_pago" role="tab" data-toggle="tab">Tabla</a></li>
+							<li ><a href="#anticipo_adelantos" role="tab" data-toggle="tab">Enviar evidencia</a></li>
+						</ul>
+
+                        <div class="card no-shadow m-0 border-conntent__tabs">
+                            <div class="card-content p-0">
+								<div class="nav-tabs-custom">
+									<div class="tab-content p-2">
+										<div class="tab-pane active" id="anticipo_pago">
+										<div class="text-center">
+                                            <h3 class="card-title center-align">Historial Adelantos</h3>
+                                        </div>
+											<div class="material-datatables">
+												<div class="form-group">
+													<table class="table-striped table-hover" id="tabla-anticipo" name="tabla-anticipo">
+														<thead>
+															<tr>
+																<th>ID</th>
+																<th>USUARIO</th>
+																<th>PUESTO</th>
+																<th>SEDE</th>
+															</tr>
+														</thead>
+													</table>
 												</div>
 											</div>
-											<div class="row">
-												<div class="col-xs-0 col-sm-0 col-md-0 col-lg-12 p-0" id="preview-div">
-                                       		</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-						</div>
-					</div>
-                    <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-						<div class="card">
-							<div class="card-content">
-								<h3 class="card-title center-align">Adelantos</h3>
-								<div class="toolbar">
-                                    <div class="container-fluid p-0">
-                                     
-										
-                                        <form method="post" id="formularioAdelantoNomina">
-                                            <div class="form-group">
-
-                                                <div class="col-md-5">
-                                                    <label class="control-label">Monto </label>
-                                                    <input class="form-control input-gral" id="montoSolicitado" type="number"  min="1" name="montoSolicitado"  required>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label class="control-label">Pago</label>
-                                                    <input class="form-control input-gral" id="pa" type="text"   name="pagoDescuento"  required>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label class="control-label">Pago</label>
-                                                    <input class="form-control input-gral" id="pagoDescuento23" type="text"  min="1" name="pagoDescuento"  required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="control-label">Pago</label>
-                                                    <input class="form-control input-gral" id="pagoDescuento34" type="text"  min="1" name="pagoDescuento"  required>
-                                                </div>
-										
-												<div class="col-md-6">
-												<label class="control-label"></label>
-													<div class="input-group">
-														
-														<label class="input-group-btn"></label>
-														<span class="btn btn-info btn-file">
-															<i class="fa fa-upload"></i> Subir archivo
-															<input id="file_adelanto" name="file_adelanto" required accept="application/pdf" type="file"/>
-														</span>
-														<p id="archivo-extranjero"></p>
-													</div>
-												</div>
-                                        </form>
 										</div>
-                                    </div>
-                                </div>
+										<?php $this->load->view('descuentos/anticipo_pago_evidencia_view'); ?>
+								 	</div>
+								</div>
                             </div>
-						</div>
-					</div>
-					<div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6">
-						
-					</div>
-					<div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
-						<div class="card">
-							<div class="card-content">
-							<div class="material-datatables">
-                                <div class="form-group">
-                                    <table class="table-striped table-hover" id="tabla-anticipo" name="tabla-anticipo">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>USUARIO</th>
-                                                <th>PUESTO</th>
-                                                <th>SEDE</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </div>
-							</div>
-						</div>
-					</div>
+                        </div>
+                    </div>
+                </div>
+            <?php $this->load->view('template/footer_legend');?>
+        </div>
+    </div>
 
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<?php $this->load->view('template/footer_legend');?>
-	</div>
-	</div>
-
-	
-	</div>
-	<?php $this->load->view('template/footer');?>
-	<script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo_pago.js"></script>
-	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo_pago.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 </body>
+

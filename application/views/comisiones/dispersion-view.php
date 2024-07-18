@@ -369,8 +369,13 @@
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
+                                                    <th>PRECIO FINAL LOTE</th>
+                                                    <th>% COMISION TOTAL</th>
+                                                    <th>IMPORTE COMISION PAGADA</th>
+                                                    <th>IMPORTE COMISION PENDIENTE</th>
                                                     <th>DETALLES</th>
                                                     <th>FECHA ACTUALIZACIÓN</th>
+                                                    <th>TIPO MENSUALIDAD</th> 
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
@@ -388,6 +393,6 @@
     <?php $this->load->view('template/footer');?>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersionPruebasProduccion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion.js"></script>
 
 </body>

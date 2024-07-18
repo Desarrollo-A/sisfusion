@@ -58,24 +58,19 @@ function validarCostos() {
     } else {
         const descuentoCostoListaM2 = (idDesarrollo == 5 || idDesarrollo == 6) ? costoListaM2 * 0.74 : costoListaM2 * 0.80; // Aplicar el descuento del 20%
 
-        if (![2, 3, 4].includes(clienteInfo.proceso)) {
+        if([0, 1].includes(clienteInfo.proceso)){
             if (costoFinalM2 > costoListaM2 || costoFinalM2 < descuentoCostoListaM2 || costoFinalM2 < 0) {
                 setTimeout(()=>{
                     $('#costom2f').val('');
                 }, 1000);
                 return 'danger_1';
-            } else {
+            } 
+            else {
                 return 'success';
             }
-        } else {
-            if (costoListaM2 > 0 && costoFinalM2 <= costoListaM2 && costoFinalM2 >= 0) {
-                return 'success';
-            } else {
-                setTimeout(()=>{
-                    $('#costom2f').val('');
-                }, 1000);
-                return 'danger_1';
-            }
+        }
+        else{
+            return 'success';
         }
     }
 }
@@ -518,3 +513,24 @@ function validateInputArray(input, campo) {
     }
     return result;
 }
+
+$('#estado').change(function(){
+    let value = $("#estado").val();
+    let option = 'select';
+    $.getJSON(`${general_base_url}Asesor/getCodigoPostales/${value}/${option}`)
+        .done(function(data) {
+            let options = data.length ? 
+                data.map(item => `<option value="${item.codigo_postal}" data-value="${item.codigo_postal}">${item.codigo_postal}</option>`)
+                : '<option selected="selected" disabled>No se han encontrado registros que mostrar</option>';
+            $("#cp").html(options);
+            $("#cp").selectpicker('refresh');
+            let selectedCP = $("#cp").data("cp");
+            if (selectedCP) {
+                $("#cp").val(selectedCP);
+                $("#cp").selectpicker('refresh');
+            }
+        })
+        .fail(function() {
+            console.error("Error fetching data");
+    });
+});

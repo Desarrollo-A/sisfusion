@@ -1,6 +1,8 @@
 let descuentosYCondiciones;
-$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
+//$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
 llenarTipoDescuentos();
+let count = 0;
+let titulosTables = [];
 
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -23,9 +25,6 @@ sp = {
 }
 
 $(document).ready(function(){
-
-
-
     $.post('getCatalogo', {
         id_catalogo: 90
     }, function (data) {        
@@ -33,10 +32,12 @@ $(document).ready(function(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#estatusAut").append($('<option>').val(id).text(name));
-                if(i == data.length -1) { 
-                    $("#estatusAut").append($('<option>').val(0).text('Todos'));
-                }
+            if(id  != 6) {
+                $("#estatusAut").append($('<option>').val(id).text(name));
+            }
+            if(i == data.length -1) { 
+                $("#estatusAut").append($('<option>').val(0).text('Todos'));
+            }
         } 
         if (len <= 0) {
             $("#estatusAut").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
@@ -189,28 +190,23 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 $('[data-toggle="tooltip"]').tooltip();
                 let botones = '';
                 switch(id_rol_general){
-                    case 5:
-                    case 4:
-                        if(d.estatus_autorizacion == 1){
-                            botones += botonesPermiso(1,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
-                        }
-                        if(d.estatus_autorizacion == 3){
-                            botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
-                        }
-                        if(d.estatus_autorizacion == 4){
-                            botones += botonesPermiso(1,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
-                        }
-                    break;
                     case 17:
                     case 70:
+                        console.log("estatus_autorizacion: ", d.estatus_autorizacion);
+                        if(d.estatus_autorizacion == 1) {
+                            botones += botonesPermiso(1,1,1,0,1, d.id_autorizacion, d.estatus_autorizacion);
+                        }                        
                         if(d.estatus_autorizacion == 2){
-                            botones += botonesPermiso(1,0,1,1,d.id_autorizacion,d.estatus_autorizacion);
+                            botones += botonesPermiso(1,0,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
                         if(d.estatus_autorizacion == 3){
-                            botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
+                            botones += botonesPermiso(1,0,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
                         if(d.estatus_autorizacion == 4){
-                            botones += botonesPermiso(1,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
+                            botones += botonesPermiso(1,0,0,0,0,d.id_autorizacion,d.estatus_autorizacion);
+                        }
+                        if (d.estatus_autorizacion == 6) {
+                            botones += botonesPermiso(1,0,0,0,0,d.id_autorizacion, d.estatus_autorizacion);
                         }
                     break;
                 }
@@ -240,12 +236,14 @@ $(document).on('click', '#btnLimpiar', function (e) {
     });
 }
 
-function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus_autorizacion){
+function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,permisoDesactivar,idAutorizacion,estatus_autorizacion){
+    //<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>
         let botones = '';
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
-            if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>`; }
-            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
-            if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
+            if(permisoEditar == 1){ botones += ``; }
+            if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" data-opcion="1" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar Plan de ventas"><i class="fas fa-thumbs-up"></i></button>`;  }
+            if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="2" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
+            if(permisoDesactivar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="3" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Desactivar plan de ventas"><i class="fas fa-trash"></i></button>`; }
         return  botones;
     }
 
@@ -296,7 +294,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         selectSuperficie(data.superficie);
         const scroll=document.querySelector(".ps-scrollbar-y-rail");
         scroll.scrollTop=0;
-        $('#btn_consultar').prop('disabled', true);
+       // $('#btn_consultar').prop('disabled', true);
         setTimeout(() => {
             ConsultarPlanes();
         }, 1000);
@@ -306,18 +304,34 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let idAutorizacion = $(this).attr('data-idAutorizacion');
         let estatus = $(this).attr('data-estatus');
         let tipo = $(this).attr('data-tipo');
-        tipo == 1  ? $('#modalAutorizacion').addClass("modal-sm") : $('#modalAutorizacion').addClass("modal-md") ;
-        document.getElementById('titleAvance').innerHTML = tipo == 1 ? '¿Estás seguro de avanzar está autorización?' : '¿Estás seguro de rechazar está autorización?';
+        let accion = $(this).attr('data-opcion');
+        switch(accion) {
+            case '1': 
+                $('#modalAutorizacion').addClass("modal-sm");
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de avanzar este plan de ventas?';
+                document.getElementById('modal-body').innerHTML = '';
+                break;
+            case '2':
+                $('#modalAutorizacion').addClass("modal-md");
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de rechazar este plan de ventas?';
+                document.getElementById('modal-body').innerHTML = `<textarea class="text-modal" scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value.toUpperCase();" placeholder="Escriba aqui su comentario"></textarea><b id="text-observations" class="text-danger"></b>`;
+                break;
+            case '3':
+                $('#modalAutorizacion').addClass("modal-sm");
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de desactivar este plan de ventas?';
+                document.getElementById('modal-body').innerHTML = '';
+                break;
+        }
         $('#id_autorizacion').val(idAutorizacion);
         $('#estatus').val(estatus);
         $('#tipo').val(tipo);
-        document.getElementById('modal-body').innerHTML = tipo == 2 ? `<textarea class="text-modal scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
-        <b id="text-observations" class="text-danger"></b>` : ''; 
+        $('#opcionAccion').val(accion);
         $("#avanzarAut").modal();
     });
     
     $(document).on('submit', '#avanceAutorizacion', function (e) {
         e.preventDefault();
+        
         let tipo = $('#tipo').val();
         let data = new FormData($(this)[0]);
         $('#spiner-loader').removeClass('hide');
@@ -330,6 +344,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             type: 'POST',
             success: function (response) {
                 response = JSON.parse(response);
+
                 if (response.estatus == 1) {
                     $("#avanzarAut").modal("hide");
                     tipo == 1  ? $('#modalAutorizacion').removeClass("modal-sm") : $('#modalAutorizacion').removeClass("modal-md") ;
@@ -382,8 +397,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $("#modalHistorial").modal();
     });
 
-
-
     $(document).on('click', '#btnVer', function () {
         $('#spiner-loader').removeClass('hide');
         var data = tablaAutorizacion.row($(this).parents('tr')).data();
@@ -393,18 +406,32 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let params = {'paquetes': data.paquetes};
         document.getElementById('contentView').innerHTML = '';  
         $('#contentView').append(`
-        <div style="line-height: 15px;padding-bottom: 10px;">
-            <p class="m-0"><small style="font-size:10px"><b>Rango de fechas: </b></small>${fecha_inicio} - ${fecha_fin}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Sede: </b></small>${data.sede}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Residencial(es): </b></small>${residenciales.map(function (element) { return `${element} </p>`})}
-            <p class="m-0"><small style="font-size:10px"><b>Tipo lote: </b></small>${data.tipoLote}</p>
-            <p class="m-0"><small style="font-size:10px"><b>Superficie: </b></small>${data.tipoSuperficie}</p>
-        </div>
-        <div class="row scroll-styles" style="height: 420px; overflow: auto">
-            <div class="col-lg-12" id="cards" style="padding: 0 40px"></div>
-        </div>
-        `);
-        
+            <div style="line-height: 15px; padding-bottom: 10px;">
+                <p class="m-0" style=">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Rango de fechas: </b></small>
+                    <span style="font-size: 13px;">${fecha_inicio} - ${fecha_fin}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Sede: </b></small>
+                    <span style="font-size: 13px;">${data.sede}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Residencial(es): </b></small>
+                    <span style="font-size: 13px;">${residenciales.map(function (element) { return `${element}` }).join(', ')}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Tipo lote: </b></small>
+                    <span style="font-size: 13px;">${data.tipoLote}</span>
+                </p>
+                <p class="m-0">
+                    <small style="font-size: 14px; font-weight: bold;"><b>Superficie: </b></small>
+                    <span style="font-size: 13px;">${data.tipoSuperficie}</span>
+                </p>
+            </div>
+            <div class="row scroll-styles" style="height: 420px; overflow: auto;">
+                <div class="col-lg-12" id="cards" style="padding: 0 40px;"></div>
+            </div>`);
+
         let tiposDescuentos = descuentosYCondiciones;
         $.post('paquetesView',params, function(data) {
             data = JSON.parse(data);
@@ -482,8 +509,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         sinPlanesDiv();
     });
 
-    
-
     async function llenarTipoDescuentos(){
         descuentosYCondiciones = await getDescuentosYCondiciones();
         descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
@@ -512,33 +537,44 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
-    function addDescuento(id_condicion, descripcion){
-        const arrayCondiciones = [1,2,13];
+    function addDescuento(id_condicion, descripcion) {
+        const currencyCondiciones = [4, 12];
+        const percentageCondiciones = [1,2]
         var desc = document.getElementById("descuento");
 
-        const found = arrayCondiciones.find((element) => element == id_condicion);
-        console.log(found)
-        found != undefined ? desc.setAttribute("data-type","") : desc.setAttribute("data-type","currency") ;
-        
+        const isCurrency = currencyCondiciones.includes(parseInt(id_condicion));
+        const isPercentage = percentageCondiciones.includes(parseInt(id_condicion));
+        if (isCurrency) {
+            desc.setAttribute("data-type", "currency");
+        } else if (isPercentage) {
+            desc.setAttribute("data-type", "percentage");
+        } else {
+            desc.setAttribute("data-type", "");
+        }
+
         $('#descuento').val('');
-        $('#label_descuento').html();
+        $('#label_descuento').html('');
         $('#id_condicion').val(id_condicion);
         $('#nombreCondicion').val(descripcion);
-        $('#label_descuento').html('Agregar descuento a "' + descripcion +'"');
+        $('#label_descuento').html('Agregar descuento a "' + descripcion + '"');
         $('#ModalFormAddDescuentos').modal();
-    };
-    
-    $("input[data-type='currency']").on({
+    }
+
+    $("input").on({
         keyup: function() {
-            let id_condicion = $('#id_condicion').val();
-            if(id_condicion == 12 || id_condicion == 4){
+            const dataType = $(this).attr('data-type');
+            if (dataType === 'currency'){
                 formatCurrency($(this));
+            } else if (dataType === 'percentage') {
+                formatPercentage($(this));
             }
         },
-        blur: function() { 
-            let id_condicion = $('#id_condicion').val();
-            if(id_condicion == 12 || id_condicion == 4){
+        blur: function() {
+            const dataType = $(this).attr('data-type');
+            if (dataType === 'currency') {
                 formatCurrency($(this), "blur");
+            } else if (dataType === 'percentage') {
+                formatPercentage($(this), "blur");
             }
         }
     });
@@ -573,6 +609,37 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
 
+    function formatPercentage(input, blur) {
+        var input_val = input.val();
+        if (input_val === "") { return; }
+        var original_len = input_val.length;
+        var caret_pos = input.prop("selectionStart");
+        input_val = input_val.replace(/[^\d.]/g, '');
+        var decimal_pos = input_val.indexOf(".");
+        if (decimal_pos >= 0) {
+            var left_side = input_val.substring(0, decimal_pos);
+            var right_side = input_val.substring(decimal_pos);
+            left_side = formatNumber(left_side);
+            right_side = formatNumber(right_side);
+            if (blur === "blur") {
+                right_side += "00";
+            }
+            right_side = right_side.substring(0, 2);
+            input_val = left_side + "." + right_side + "%";
+        } else {
+            input_val = formatNumber(input_val);
+            if (blur === "blur") {
+                input_val += ".00%";
+            } else {
+                input_val += "%";
+            }
+        }
+        input.val(input_val);
+        var updated_len = input_val.length;
+        caret_pos = updated_len - original_len + caret_pos;
+        input[0].setSelectionRange(caret_pos, caret_pos);
+    }
+
     function getDescuentosYCondiciones(){
         $('#spiner-loader').removeClass('hide');
         return new Promise ((resolve, reject) => {   
@@ -599,63 +666,112 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         //    descuentosYCondiciones = await getDescuentosYCondiciones(primeraCarga, 0);
         //    descuentosYCondiciones = JSON.parse(descuentosYCondiciones);
         //    primeraCarga = 0;
-        //}
-        
+        //}        
         descuentosYCondiciones.forEach(element => {
             let descripcion = element['condicion']['descripcion'];
             let id_condicion = element['condicion']['id_condicion'];
             let dataCondicion = element['data'];
-            let title = (descripcion.replace(/ /g,'')).replace(/[^a-zA-Z ]/g, "");
-            
-            $('#table'+title+' thead tr:eq(0) th').each( function (i) {
-                var subtitle = $(this).text();
-                $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>' );
-                $( 'input', this ).on('keyup change', function () {
-                    if ($('#table' + title).column(i).search() !== this.value ) {
-                        $('#table' + title).column(i).search(this.value).draw();
-                    }
+            let title = (descripcion.replace(/ /g, '')).replace(/[^a-zA-Z ]/g, "");
+            const currencyCondiciones = [4, 12];
+            const percentageCondiciones = [1, 2];
+            const isCurrency = currencyCondiciones.includes(parseInt(id_condicion));
+            const isPercentage = percentageCondiciones.includes(parseInt(id_condicion));
+            if ($.fn.DataTable.isDataTable('#table' + title)) {
+                $('#table' + title).DataTable().destroy();
+            }
+            if(count == 0) {
+                $('#table'+title+' thead tr:eq(0) th').each(function (i) {
+                    var subtitle = $(this).text();
+                    subtitleTable = subtitle;
+                    $(this).html('<input type="text" class="textoshead" placeholder="'+subtitle+'"/>');
+                    $('input', this).on('keyup change', function () {
+                        if ($('#table' + title).DataTable().column(i).search() !== this.value) {
+                            $('#table' + title).DataTable().column(i).search(this.value).draw();
+                        }
+                    });
+                    titulosTables.push({
+                        key: title,
+                        subtitle: subtitle
+                    });
                 });
-            });
-            
-            $("#table"+title).DataTable({
-                dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            }
+
+            let dataTable = $("#table" + title).DataTable({
+                dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
                 width: "auto",
                 buttons: [{
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Descargar archivo de Excel',
-                    title: 'DESCUENTOS AL '+ descripcion.toUpperCase()
-                },
-                {
-                    text: `<button  onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</button>`,
-                    className: 'btn btn-blueMaderas text-white',
-                }],
+                        extend: 'excelHtml5',
+                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                        className: 'btn buttons-excel',
+                        titleAttr: 'Descargar archivo de Excel',
+                        title: 'DESCUENTO AL ' + descripcion.toUpperCase(),
+                        exportOptions : {
+                            columns : [0,1],
+                            format: {
+                                header: function (d, columnIdx) {
+                                    const headers = titulosTables.filter(item => item.key === title).map(item => item.subtitle);
+                                    return headers[columnIdx];
+                                }
+                            }
+                        }
+                        
+                    },
+                    {
+                        text: `<i class="fas fa-plus"></i> Agregar descuento`,
+                        action: function () {
+                            addDescuento(id_condicion, descripcion);
+                        },
+                        attr: {
+                            class: 'btn btn-azure',
+                            style: 'position: relative;'
+                        }
+                    }
+                ],
                 pagingType: "full_numbers",
                 language: {
                     url: general_base_url + "static/spanishLoader_v2.json",
                     paginate: {
-                        previous: "<i class='fa fa-angle-left'>",
-                        next: "<i class='fa fa-angle-right'>"
+                        previous: "<i class='fa fa-angle-left'></i>",
+                        next: "<i class='fa fa-angle-right'></i>"
                     }
                 },
-                destroy: true,
                 ordering: false,
                 columns: [{
-                    data: 'id_descuento'
-                },
-                {
-                    data: function (d) {
-                        return d.porcentaje + '%';
+                        data: 'id_descuento'
+                    },
+                    {
+                        data: 'porcentaje',
+                        render: function (data, type, row) {
+                            if (type === 'display') {
+                                // Formatear $
+                                if (isPercentage) {
+                                    let formattedValue = parseFloat(data).toFixed(2);
+                                    formattedValue = formattedValue.replace(/\.00$/, '');
+                                    return formattedValue + '%';
+                                }
+                                // Formatear $
+                                else if (isCurrency) {
+                                    let formattedValue = parseFloat(data).toLocaleString('es-MX', {
+                                        style: 'currency',
+                                        currency: 'MXN',
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 2
+                                    });
+                                    formattedValue = formattedValue.replace(/(\.\d*?)0+$/, '$1').replace(/\sMXN$/, '');
+                                    return formattedValue;
+                                }
+                                else {
+                                    return parseFloat(data).toLocaleString('es-MX');
+                                }
+                            }
+                            return data;
+                        }
                     }
-                }
                 ],
                 data: dataCondicion,
                 columnDefs: [{
                     orderable: false,
-                    className: 'select-checkbox',
-                    targets:   0,
-                    searchable:false,
+                    targets: 0,
                     className: 'dt-body-center'
                 }],
                 order: [
@@ -663,8 +779,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 ]
             });
         });
-    
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip();   
+        count = 1;
     }
     
     //Fn para agregar nuevo descuento
@@ -799,11 +915,34 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     }
     
     //Guardar nuevo paquetes de planes de venta según attr seleccionados
-    function SavePaquete(){
-        let formData = new FormData(document.getElementById("form-paquetes"));
+function SavePaquete(){
+        //let formData = new FormData(document.getElementById("form-paquetes"));
+        let sendRequestPermission = 0;
+        let uploadedDocument = $("#uploadedDocument")[0].files[0];
+        console.log(uploadedDocument)
+        let allowedExtensions = /(\.xlsx)$/i;
+        let validateUploadedDocument = (uploadedDocument == undefined) || !allowedExtensions.exec(uploadedDocument.name) ? 0 : 1;
+    
+        // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
+        if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
+        else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
+     
+       
+
+        if (sendRequestPermission == 1) {
+            let data = new FormData(document.getElementById("form-paquetes"));
+            data.append("uploadedDocument", $("#uploadedDocument")[0].files[0]);
+            console.log(data);
+            $('#spiner-loader').removeClass('hide');
+            
+              if($("#uploadedDocument")[0].files[0].size > 50000000){
+                alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
+                return false;
+              }
+            
         $.ajax({
-            url: 'SavePaquete',
-            data: formData,
+            url: 'cargarPlantillaPlanes',
+            data: data,
             method: 'POST',
             contentType: false,
             cache: false,
@@ -817,11 +956,14 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 $('#ModalAlert .btnSave').css("opacity","1");
                 if(data == 1){
                     tablaAutorizacion.ajax.reload();
-                    tablaAutorizacion.columns.adjust();
                     ClearAll();
-                    alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");	
+                    alerts.showNotification("top", "right", "Planes almacenados correctamente.", "success");
+                    $('#spiner-loader').addClass('hide');
+                    tablaAutorizacion.columns.adjust();
+	
                 }else{
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    $('#spiner-loader').addClass('hide');
                 }
             
             },
@@ -833,6 +975,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             async: false
         });
     }
+}
     
     //Fn para consultar los planes de ventas existente según parametros seleccionados
     async function ConsultarPlanes(){
@@ -1088,13 +1231,55 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         }
         
     }
+
     
+    $("input:file").on("change", function () {
+        alert()
+        var target = $(this);
+        var relatedTarget = target.siblings(".file-name");
+        if (target.val() == "") {
+          var fileName = "No ha seleccionado nada aún";
+        } else {
+          var fileName = target[0].files[0].name;
+        }
+        relatedTarget.val(fileName);
+      });
     function selectSuperficie(tipoSup){
         $('#super').val(tipoSup);
         document.getElementById("printSuperficie").innerHTML ='';
-        validateAllInForm();
+        var select = document.getElementById("sede");
+        document.getElementById("showPackage").innerHTML ='';
+        // Obtener el texto seleccionado
+        var sedeText = select.options[select.selectedIndex].text;
+        //validateAllInForm();
+        $('#showPackage').append(`
+            <div class="emptyCards h-100 d-flex justify-center align-center pt-4">
+                <div class="h-100 text-center pt-4">
+                    <img src= '`+general_base_url+`dist/img/emptyFile.png' alt="Icono gráfica" class="h-50 w-auto">
+                    <h3 class="titleEmpty">CARGAR PLANTILLA PLANES DE VENTAS</h3>
+                    <div class="subtitleEmpty">Por favor cargue la plantilla de la sede <b>${sedeText}</b></div>
+                    
+                    <div class="file-gph" id="selectFileSection">
+                        <input class="d-none" type="file" onchange="changeName(this)" name="uploadedDocument" id="uploadedDocument">
+                        <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
+                        <label class="upload-btn m-0" for="uploadedDocument">
+                            <span>Seleccionar</span>
+                            <i class="fas fa-folder-open"></i>
+                        </label>
+                </div>
+
+                </div>
+            </div>`);
         $('[data-toggle="tooltip"]').tooltip();
     }
+
+    function changeName(e){
+        const fileName = e.files[0].name;
+        let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+        relatedTarget[0].value = fileName;
+        $("#btn_save").removeClass('d-none');
+    }
+
     
     function RemovePackage(){
         let divNum = $('#iddiv').val();
@@ -1147,12 +1332,12 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         var checkedSuper = containerSup.querySelectorAll('input[type="radio"]:checked').length;
     
         if(dinicio != '' && dfin != '' && sede != '' && proyecto != '' && checkedTipoLote != 0 && checkedSuper != 0){
-            $("#btn_generate").removeClass('d-none');
-            $("#btn_consultar").removeClass('d-none');
+            //$("#btn_generate").removeClass('d-none');
+            //$("#btn_consultar").removeClass('d-none');
         }
         else{
-            $("#btn_generate").addClass('d-none');
-            $("#btn_consultar").addClass('d-none');
+           // $("#btn_generate").addClass('d-none');
+            //$("#btn_consultar").addClass('d-none');
             $("#btn_save").addClass('d-none');
         }
     }
@@ -1201,6 +1386,24 @@ function setInitialValues() {
     $('#fechainicio').val(finalBeginDate);
     $('#fechafin').val(finalEndDate);
 }
+
+
+
+$("#btnPlantilla").click(function(e){
+    e.preventDefault();
+    var createXLSLFormatObj = [];
+    var xlsHeader = ["VALOR DESCUENTO", "APLICA A", 'NOMBRE DEL PLAN', "NÚMERO PLAN"];
+    xlsHeader.push($(this).data('name'));
+    createXLSLFormatObj.push(xlsHeader);
+    let date = new Date();
+    var filename = "PlantillaPlanes_" + date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + date.getMinutes() + date.getSeconds() + date.getMilliseconds() + ".xlsx";
+    var ws_name = "Plantilla";
+    var wb = XLSX.utils.book_new(),
+        ws = XLSX.utils.aoa_to_sheet(createXLSLFormatObj);
+    XLSX.utils.book_append_sheet(wb, ws, ws_name);
+    XLSX.writeFile(wb, filename);
+    $('#spiner-loader').addClass('hide');
+});
 
 $(window).resize(function(){
     tablaAutorizacion.columns.adjust();

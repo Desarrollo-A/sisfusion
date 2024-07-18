@@ -255,7 +255,19 @@ class Internomex_model extends CI_Model {
                 tbl.moneda_divisa,
                 tbl.concepto_pago,
                 tbl.fecha_pago,
-                tbl.monto_pago
+                tbl.monto_pago,
+                tbl.plan_pago,
+                tbl.nombre_notaria,
+                tbl.nombre_notario,
+                tbl.direccion_notaria, 
+                tbl.il_idLote,
+                tbl.il_calle,
+                tbl.il_colonia,
+                tbl.il_numExterior,
+                tbl.il_codigoPostal,
+                tbl.il_superficie,
+                tbl.il_regimen,
+                tbl.il_folio
             FROM (
                 SELECT lo.idlote,
                     oxc0.nombre tipo_persona,
@@ -287,7 +299,19 @@ class Internomex_model extends CI_Model {
                     ISNULL(oxc5.nombre, 'SIN ESPECIFICAR') moneda_divisa,
                     ISNULL(oxc6.nombre, 'SIN ESPECIFICAR') concepto_pago,
                     ISNULL(CAST(en.fechaPago AS varchar(55)), 'SIN ESPECIFICAR') fecha_pago,
-                    ISNULL(en.montoPago, 0.00) monto_pago
+                    ISNULL(en.montoPago, 0.00) monto_pago,
+                    ISNULL(oxc7.nombre, 'SIN ESPECIFICAR') plan_pago,
+                    ISNULL(nt.nombre_notaria, 'SIN ESPECIFICAR') nombre_notaria,
+                    ISNULL(nt.nombre_notario, 'SIN ESPECIFICAR') nombre_notario,
+                    ISNULL(nt.direccion, 'SIN ESPECIFICAR') direccion_notaria,
+                    ISNULL(CAST(il.idLote AS VARCHAR(250)), 'SIN ESPECIFICAR') il_idLote,
+                    ISNULL(il.calle, 'SIN ESPECIFICAR') il_calle,
+                    ISNULL(il.colonia, 'SIN ESPECIFICAR') il_colonia,
+                    ISNULL(il.numExterior, 'SIN ESPECIFICAR') il_numExterior,
+                    ISNULL(CAST(il.codigoPostal AS VARCHAR(250)), 'SIN ESPECIFICAR') il_codigoPostal,
+                    ISNULL(CAST(il.superficie AS VARCHAR(250)), 'SIN ESPECIFICAR') il_superficie,
+                    ISNULL(CAST(il.regimen AS VARCHAR(250)), 'SIN ESPECIFICAR') il_regimen,
+                    ISNULL(CAST(il.folio AS VARCHAR(250)), 'SIN ESPECIFICAR') il_folio
                             FROM clientes cl
                             INNER JOIN lotes lo ON lo.idcliente = lo.idcliente AND lo.idlote = cl.idlote AND lo.status = 1 --AND lo.idLote IN (855, 1512)
                             INNER JOIN condominios co ON co.idcondominio = lo.idcondominio
@@ -323,7 +347,11 @@ class Internomex_model extends CI_Model {
                             LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = en.formaPago AND oxc3.id_catalogo = 110
                             LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = en.instrumentoMonetario AND oxc4.id_catalogo = 111
                             LEFT JOIN opcs_x_cats oxc5 ON oxc5.id_opcion = en.monedaDivisa AND oxc5.id_catalogo = 112
-                            LEFT JOIN opcs_x_cats oxc6 ON oxc6.id_opcion = en.conceptoPago AND oxc6.id_catalogo = 119                                
+                            LEFT JOIN opcs_x_cats oxc6 ON oxc6.id_opcion = en.conceptoPago AND oxc6.id_catalogo = 119
+                            LEFT JOIN opcs_x_cats oxc7 ON oxc7.id_opcion = en.planPago AND oxc7.id_catalogo = 131
+                            LEFT JOIN solicitudes_escrituracion se ON se.id_lote = lo.idLote AND se.id_cliente = cl.id_cliente
+                            LEFT JOIN Notarias nt ON nt.idNotaria = se.id_notaria               
+                            LEFT JOIN informacion_lotes il ON il.idLote = lo.idLote AND il.estatus = 1                
                             WHERE cl.status = 1
                             GROUP BY lo.idlote,
                                     oxc0.nombre,
@@ -355,7 +383,19 @@ class Internomex_model extends CI_Model {
                                     oxc5.nombre,
                                     oxc6.nombre,
                                     en.fechaPago,
-                                    en.montoPago
+                                    en.montoPago,
+                                    ISNULL(oxc7.nombre, 'SIN ESPECIFICAR'),
+                                    ISNULL(nt.nombre_notaria, 'SIN ESPECIFICAR'),
+                                    ISNULL(nt.nombre_notario, 'SIN ESPECIFICAR'),
+                                    ISNULL(nt.direccion, 'SIN ESPECIFICAR'), 
+                                    ISNULL(CAST(il.idLote AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    ISNULL(il.calle, 'SIN ESPECIFICAR'),
+                                    ISNULL(il.colonia, 'SIN ESPECIFICAR'),
+                                    ISNULL(il.numExterior, 'SIN ESPECIFICAR'),
+                                    ISNULL(CAST(il.codigoPostal AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    ISNULL(CAST(il.superficie AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    ISNULL(CAST(il.regimen AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    ISNULL(CAST(il.folio AS VARCHAR(250)), 'SIN ESPECIFICAR')
                     ) tbl
             GROUP BY 
                     tbl.idlote,
@@ -383,7 +423,19 @@ class Internomex_model extends CI_Model {
                     tbl.moneda_divisa,
                     tbl.concepto_pago,
                     tbl.fecha_pago,
-                    tbl.monto_pago
+                    tbl.monto_pago,
+                    tbl.plan_pago,
+                    tbl.nombre_notaria,
+                    tbl.nombre_notario,
+                    tbl.direccion_notaria, 
+                    tbl.il_idLote, 
+                    tbl.il_calle, 
+                    tbl.il_colonia, 
+                    tbl.il_numExterior, 
+                    tbl.il_codigoPostal, 
+                    tbl.il_superficie, 
+                    tbl.il_regimen, 
+                    tbl.il_folio
             ORDER BY 
                     tbl.nombre_propiedad
             "

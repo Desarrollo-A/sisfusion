@@ -14,16 +14,6 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modalPausarRemanenteSeguros" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="formPausarRemanenteSeguros">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade modal-alertas" id="modalPausarRemanenteOOAM" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -33,7 +23,15 @@
                 </div>
             </div>
         </div>
-
+        <div class="modal fade modal-alertas" id="modalPausarRemanenteSeguros" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="formPausarRemanenteSeguros">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="modal fade bd-example-modal-sm" id="modalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -57,7 +55,6 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#remanenteComercializacion" role="tab" data-toggle="tab">Remanentes lotes</a></li>
-                        <!-- <li><a href="#remanenteOOAM" role="tab" data-toggle="tab">Remanentes lotes</a></li> -->
                         <li><a href="#remanenteSeguros" role="tab" data-toggle="tab">Remanentes lotes Seguros</a></li>
                     </ul>
             
@@ -156,7 +153,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php $this->load->view('pagos/seguros/revision_remanente_ooam_view'); ?>
                                     <?php $this->load->view('pagos/seguros/revision_remanente_seguros_view'); ?>
                                 </div>
                             </div>

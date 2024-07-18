@@ -35,13 +35,17 @@ class Usuarios_modelo extends CI_Model
                 UPPER(CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END) puesto,
                 CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre, 
                 (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, UPPER(correo) AS correo, usuarios.estatus, id_lider, id_lider_2, 0 nuevo, 
-                usuarios.fecha_creacion, UPPER(s.nombre) sede, usuarios.nueva_estructura, usuarios.simbolico, usuarios.tipo
+                usuarios.fecha_creacion, UPPER(s.nombre) sede, usuarios.nueva_estructura, usuarios.simbolico,
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                 usuarios.tipo,usuarios.fac_humano
                 FROM usuarios 
                 INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                 LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider 
                 LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid 
                 INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))  
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = usuarios.tipo AND tipoUser.id_catalogo = 124
                 WHERE (id_rol IN (7) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(correo, '') NOT LIKE '%CASA%') ORDER BY nombre");
                 break;
             case '19': // SUBDIRECTOR MKTD
@@ -50,13 +54,17 @@ class Usuarios_modelo extends CI_Model
                 u.telefono, 
                 CASE WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto,
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, s.nombre sede,
-                CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) jefe_directo2, 0 nuevo, u.fecha_creacion, u.nueva_estructura, u.simbolico, u.tipo
+                CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) jefe_directo2, 0 nuevo, u.fecha_creacion, u.nueva_estructura, u.simbolico,
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                 u.tipo,usuarios.fac_humano
                 FROM usuarios u 
                 INNER JOIN sedes s ON CAST(s.id_sede as VARCHAR(45)) = u.id_sede
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 LEFT JOIN usuarios us2 ON us2.id_usuario = us.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = u.id_rol AND oxcNE.id_catalogo = 83
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = u.tipo AND tipoUser.id_catalogo = 124
                 WHERE u.estatus = 1 AND u.id_rol IN (7, 9) AND u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%' AND oxc.id_catalogo = 1 ORDER BY s.nombre, nombre");
                 break;
             case '4': // ASISTENTE DIRECCIÓN
@@ -64,30 +72,35 @@ class Usuarios_modelo extends CI_Model
                 CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END puesto,
                 CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre, 
                 (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, id_lider, id_lider_2, 0 nuevo, 
-                usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico, usuarios.tipo
+                usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico, 
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                usuarios.tipo,usuarios.fac_humano
                 FROM usuarios 
                 INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                 LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider 
                 LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider_coord FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid 
                 INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))  
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
-                WHERE (id_rol IN (3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '') NOT LIKE '%CASA%') ORDER BY nombre");
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = usuarios.tipo AND tipoUser.id_catalogo = 124
+                WHERE (id_rol IN (3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') ORDER BY nombre");                        
                 break;
             case '5': // ASISTENTE SUBDIRECCIÓN
+                $correo = "AND ISNULL(correo, '') NOT LIKE '%OOAM%'";
                 if($this->session->userdata('id_usuario') == 4888 || $this->session->userdata('id_usuario') == 546) // ADRIANA PEREZ && DIRCE 3 (MÉRIDA) Y 11 (MONTERREY)
-                    $id_sede = "(usuarios.id_sede LIKE ('%3%') OR usuarios.id_sede LIKE '%11%')";
-                else if(in_array($this->session->userdata('id_usuario'), array(10924, 7097, 7096, 7324, 5620, 13094))) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
-                    $id_sede = "(usuarios.id_sede LIKE '%4%' OR usuarios.id_sede LIKE '%9%' OR usuarios.id_sede LIKE '%13%') AND usuarios.id_usuario != ".$this->session->userdata('id_lider_2')."";
+                    $id_sede = "(usuarios.id_sede LIKE ('%3%') OR usuarios.id_sede LIKE '%11%') AND";
                 else if($this->session->userdata('id_usuario') == 29 || $this->session->userdata('id_usuario') == 7934) // 29 FERNANDA MONJARAZ VE LO DE LEÓN Y GUADALAJARA
-                    $id_sede = "(usuarios.id_sede IN ('5', '12', '16'))";
+                    $id_sede = "(usuarios.id_sede IN ('5', '12', '16')) AND";
                 else if($this->session->userdata('id_usuario') == 28) // 28	ADRIANA RODRIGUEZ
-                    $id_sede = "(usuarios.id_sede IN ('2', '4', '13', '14', '15'))";
+                    $id_sede = "(usuarios.id_sede IN ('2', '4', '13', '14', '15')) AND";
                 else if (in_array($this->session->userdata('id_usuario'), [30, 7401])) // 30 VALERIA PALACIOS / CLAUDIA LORENA SERRATO VEGA
-                    $id_sede = "(usuarios.id_sede IN ('1', '8', '10', '11'))";
+                    $id_sede = "(usuarios.id_sede IN ('1', '8', '10', '11', '19')) AND";
                 else if (in_array($this->session->userdata('id_usuario'), [6627])) // 30 JUANA GUZMAN
                     $id_sede = "(usuarios.id_sede IN ('6', '12')) AND";
+                else if (in_array($this->session->userdata('id_usuario'), [7097, 7096, 13094, 15842])) // 30 GRISSEL, SAMANTHA Y LEONARDO
+                    $id_sede = "(usuarios.id_sede IN ('4', '13', '14')) AND";
                 else 
-                    $id_sede = "(usuarios.id_sede LIKE('%".$this->session->userdata('id_sede')."%'))";
+                    $id_sede = "(usuarios.id_sede LIKE('%".$this->session->userdata('id_sede')."%')) AND";
 
                 if($this->session->userdata('id_usuario') == 29 || $this->session->userdata('id_usuario') == 7934)
                     $id_usuario = " OR usuarios.id_usuario IN (10105, 9585, 9704, 9404, 10107, 10106)";
@@ -108,7 +121,10 @@ class Usuarios_modelo extends CI_Model
                     CASE WHEN usuarios.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END AS puesto, 
                     CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
                     AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
-                    id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico, usuarios.tipo 
+                    id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico,
+                    tipoUser.nombre tipoUsuario,
+                    tipoUser.color colorTipo,
+                     usuarios.tipo,usuarios.fac_humano 
                     FROM usuarios 
                     INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                     LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  
@@ -117,88 +133,111 @@ class Usuarios_modelo extends CI_Model
                     FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
                     LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
                     LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
-                    WHERE ($id_sede AND id_rol IN (2, 3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '') NOT LIKE '%test_%' AND ISNULL(correo, '') NOT LIKE '%OOAM%')
+                    LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = usuarios.tipo AND tipoUser.id_catalogo = 124
+                    WHERE ($id_sede id_rol IN (2, 3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '') NOT LIKE '%test_%' $correo)
                     $id_usuario
                     ORDER BY nombre");
                 break;
-                case '6': // ASISTENTE GERENCIA
-                    $id_lider = $this->session->userdata('id_lider');
-                    if ($this->session->userdata('id_usuario') == 895)
-                        $where = "((id_lider = $id_lider OR id_lider_2 = $id_lider) AND id_rol IN (7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR (usuarios.id_usuario = $id_lider OR usuarios.id_lider = 896)";
-                    else if ($this->session->userdata('id_usuario') == 11656) { // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
-                        $id_lider = $this->session->userdata('id_lider') . ', 106';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    }
-                    else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
-                        $id_lider = $this->session->userdata('id_lider') . ', 113';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    }
-                    else if ($this->session->userdata('id_usuario') == 479) { // ANDRES BARRERA VENEGAS
-                        $id_lider = $this->session->userdata('id_lider') . ', 4223';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    }
-                    else if ($this->session->userdata('id_usuario') == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ
-                        $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    }
-                    else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
-                        $id_lider = $this->session->userdata('id_lider') . ', 1916, 11196, 2599';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    }
-                    else if ($this->session->userdata('id_usuario') == 13418) { // MARIA FERNANDA RUIZ PEDROZA
-                        $id_lider = $this->session->userdata('id_lider') . ', 5604';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    }
-                    else if ($this->session->userdata('id_usuario') == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
-                        $id_lider = $this->session->userdata('id_lider') . ', 455';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    }
-                    else if ($this->session->userdata('id_usuario')  == 14449) { // ANALI MONSERRAT REYES ORTIZ
-                        $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
-                        $id_lider = $this->session->userdata('id_lider') . ', 12027, 13059, 2599, 609, 11680, 7435';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 14946) { // MELANI BECERRIL FLORES
-                        $id_lider = $this->session->userdata('id_lider') . ', 694, 4509';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-                        $id_lider = $this->session->userdata('id_lider') . ', 13295';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-                        $id_lider = $this->session->userdata('id_lider') . ', 3111';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 13348) { // VIRIDIANA ZAMORA ORTIZ
-                        $id_lider = $this->session->userdata('id_lider') . ', 10063';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 12576) { // DIANA EVELYN PALENCIA AGUILAR
-                        $id_lider = $this->session->userdata('id_lider') . ', 6942';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    }
-                    else
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    
-                    if($this->session->userdata('id_sede') == 6)
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR (usuarios.id_usuario IN (9827)) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    else if($this->session->userdata('id_sede') == 4)
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR (usuarios.id_usuario IN (9359)) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-    
-                    return $this->db->query("SELECT usuarios.id_usuario, id_rol, 
-                    CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END puesto,
-                    CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
-                    AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
-                    id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico, usuarios.tipo
-                    FROM usuarios 
-                    INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
-                    LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  
-                    FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider
-                    LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider_coord  
-                    FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
-                    INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
-                    LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
-                    WHERE $where
-                    ORDER BY nombre");
-                    break;
+            case '6': // ASISTENTE GERENCIA
+                $id_lider = $this->session->userdata('id_lider');
+                if ($this->session->userdata('id_usuario') == 895)
+                    $where = "((id_lider = $id_lider OR id_lider_2 = $id_lider) AND id_rol IN (7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') OR (usuarios.id_usuario = $id_lider OR usuarios.id_lider = 896)";
+                else if ($this->session->userdata('id_usuario') == 11656) { // Dulce María Facundo Torres VERÁ USUARIOS DE LA GERENCIA ACTUAL (7886 JESSIKA GUADALUPE NEAVES FLORES) Y LO DE SU ANTERIOR GERENCIA (106 ANA KARINA ARTEAGA LARA)
+                    $id_lider = $this->session->userdata('id_lider') . ', 106';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                }
+                else if ($this->session->userdata('id_usuario') == 10270) { // ANDRES BARRERA VENEGAS
+                    $id_lider = $this->session->userdata('id_lider') . ', 113';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                }
+                else if ($this->session->userdata('id_usuario') == 479) { // ANDRES BARRERA VENEGAS
+                    $id_lider = $this->session->userdata('id_lider') . ', 4223';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                }
+                else if ($this->session->userdata('id_usuario') == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                }
+                else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 1916, 11196, 2599';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                }
+				else if ($this->session->userdata('id_usuario') == 13418) { // MARIA FERNANDA RUIZ PEDROZA
+                    $id_lider = $this->session->userdata('id_lider') . ', 5604';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+				}
+				else if ($this->session->userdata('id_usuario') == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
+                    $id_lider = $this->session->userdata('id_lider') . ', 455';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+				}
+                else if ($this->session->userdata('id_usuario')  == 14449) { // ANALI MONSERRAT REYES ORTIZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+				} else if ($this->session->userdata('id_usuario') == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
+                    $id_lider = $this->session->userdata('id_lider') . ', 12027, 13059, 2599, 609, 11680, 7435';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+				} else if ($this->session->userdata('id_usuario') == 14946) { // MELANI BECERRIL FLORES
+                    $id_lider = $this->session->userdata('id_lider') . ', 694, 4509';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+				} else if ($this->session->userdata('id_usuario') == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
+                    $id_lider = $this->session->userdata('id_lider') . ', 13295';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+				} else if ($this->session->userdata('id_usuario') == 13348) { // VIRIDIANA ZAMORA ORTIZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 10063';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 12576) { // DIANA EVELYN PALENCIA AGUILAR
+                    $id_lider = $this->session->userdata('id_lider') . ', 6942';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 6661';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 80, 664';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 15110) { // IVONNE BRAVO VALDERRAMA
+                    $id_lider = $this->session->userdata('id_lider') . ', 495';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 15761) { // JACQUELINE GARCIA SOTELLO
+                    $id_lider = $this->session->userdata('id_lider') . ', 13016, 12027';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 15545) { // PAMELA IVONNE LEE MORENO
+                    $id_lider = $this->session->userdata('id_lider') . ', 13059, 11680';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 10251';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 10251';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                }
+                else
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                
+                if($this->session->userdata('id_sede') == 6)
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR (usuarios.id_usuario IN (9827)) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                else if($this->session->userdata('id_sede') == 4)
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR (usuarios.id_usuario IN (9359)) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+
+                return $this->db->query("SELECT usuarios.id_usuario, id_rol, 
+                CASE WHEN usuarios.nueva_estructura = 1 THEN oxcNE.nombre ELSE opcs_x_cats.nombre END puesto,
+                CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno)
+                AS nombre, (CASE id_rol WHEN 7 THEN lider ELSE lider_coord END) AS jefe_directo, telefono, correo, usuarios.estatus, 
+                id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico,
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                usuarios.tipo,usuarios.fac_humano
+                FROM usuarios 
+                INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
+                LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  
+                FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider
+                LEFT JOIN (SELECT id_usuario, id_lider AS id_lider3, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider_coord  
+                FROM usuarios) AS lider_3 ON lider_3.id_usuario = lider_2.id_lid
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
+                LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = usuarios.tipo AND tipoUser.id_catalogo = 124
+                WHERE $where
+                ORDER BY nombre");
+                break;
             case '41': // GENERALISTA
                 if($this->session->userdata('id_usuario') == 4585) // PAOLA HURTADO HERNANDEZ 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
                     $id_sede = "'4', '9'";
@@ -208,11 +247,15 @@ class Usuarios_modelo extends CI_Model
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, 
                 CASE WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto,
-                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.simbolico, u.tipo 
+                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.simbolico,
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                 u.tipo,u.fac_humano 
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
                 INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = u.tipo AND tipoUser.id_catalogo = 124
                 WHERE oxc.id_catalogo = 1 AND u.id_rol IN (7, 9, 3) AND u.id_sede IN ($id_sede) AND u.rfc NOT LIKE '%TSTDD%' AND ( u.correo IS NULL OR u.correo NOT LIKE '%test_%' ) ORDER BY nombre");
                 break;
             case '13': // CONTRALORÍA
@@ -230,7 +273,10 @@ class Usuarios_modelo extends CI_Model
                 u.telefono, 
                 UPPER(CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END) AS puesto, 
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, oxc2.nombre forma_pago, UPPER(s.nombre) AS sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, CONVERT(VARCHAR,u.fecha_creacion,20) AS fecha_creacion, u.ismktd, UPPER(oxcN.nombre) AS nacionalidad,
-                CASE WHEN oxcN.id_opcion = 0 THEN '2D572C' ELSE 'aeaeae' END AS color,oxcn.id_opcion as id_nacionalidad, u.forma_pago as id_forma_pago, u.nueva_estructura, u.simbolico, u.tipo
+                CASE WHEN oxcN.id_opcion = 0 THEN '2D572C' ELSE 'aeaeae' END AS color,oxcn.id_opcion as id_nacionalidad, u.forma_pago as id_forma_pago, u.nueva_estructura, u.simbolico, 
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                u.tipo,u.fac_humano
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
@@ -240,6 +286,7 @@ class Usuarios_modelo extends CI_Model
                 LEFT JOIN (SELECT SUM(abono_neodata) abono_pendiente, id_usuario FROM pago_comision_ind WHERE estatus=1 and ( descuento_aplicado is null or descuento_aplicado=0) 
                 GROUP BY id_usuario) pci2 ON pci2.id_usuario = u.id_usuario
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = u.id_rol AND oxcNE.id_catalogo = 83
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = u.tipo AND tipoUser.id_catalogo = 124
                 WHERE  u.id_rol IN (1, 2, 3, 7, 9, 25, 26, 27, 29, 30, 36) 
                 AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') 
                 AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 9623, 9624, 9625, 9626, 9627, 9628, 9629)
@@ -251,13 +298,17 @@ class Usuarios_modelo extends CI_Model
                 u.telefono, 
                 CASE WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto,
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, s.nombre sede,
-                CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) jefe_directo2, 0 nuevo, u.fecha_creacion, u.nueva_estructura, u.simbolico, u.tipo
+                CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) jefe_directo2, 0 nuevo, u.fecha_creacion, u.nueva_estructura, u.simbolico,
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                 u.tipo,u.fac_humano
                 FROM usuarios u 
                 INNER JOIN sedes s ON s.id_sede = u.id_sede
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 LEFT JOIN usuarios us2 ON us2.id_usuario = us.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = u.id_rol AND oxcNE.id_catalogo = 83
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = u.tipo AND tipoUser.id_catalogo = 124
                 WHERE u.estatus = 1 AND u.id_rol NOT IN (1, 2, 4, 5, 18, 19) AND u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '') NOT LIKE '%test_%' AND oxc.id_catalogo = 1 ORDER BY s.nombre, nombre");
                 break;
 
@@ -269,15 +320,19 @@ class Usuarios_modelo extends CI_Model
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, UPPER(oxc2.nombre) AS forma_pago,
                 UPPER(s.nombre) AS sede, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, 
                 u.fecha_creacion, CASE WHEN du.id_usuario <> 0 THEN 1 ELSE 0 END as usuariouniv,
-                (SELECT (MAX(fecha_creacion)) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus' and anterior='1' and (nuevo='0' OR nuevo='3')) as fecha_baja, u.nueva_estructura, u.simbolico, u.tipo
+                (SELECT (MAX(CONVERT(VARCHAR,fecha_creacion,20))) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus' and anterior='1' and (nuevo='0' OR nuevo='3')) as fecha_baja, u.nueva_estructura, u.simbolico,
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                 u.tipo,u.fac_humano
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u.forma_pago AND oxc2.id_catalogo = 16
                 INNER JOIN sedes s ON s.id_sede = (CASE WHEN LEN (u.id_sede) > 1 THEN 2 ELSE u.id_sede END)
                 LEFT JOIN descuentos_universidad du ON du.id_usuario = u.id_usuario
-                --LEFT JOIN  (SELECT id_usuario FROM descuentos_universidad GROUP BY id_usuario) du ON du.id_usuario = u.id_usuario
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = u.id_rol AND oxcNE.id_catalogo = 83
+                LEFT JOIN opcs_x_cats oxcN ON oxcN.id_opcion = u.nacionalidad AND oxcN.id_catalogo = 11
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = u.tipo AND tipoUser.id_catalogo = 124
                 WHERE u.id_usuario not in (select id_usuario_d from relacion_usuarios_duplicados) AND (u.id_rol IN (3, 7, 9, 2) 
                 AND (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') AND u.id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415, 3, 607, 13151)) OR u.id_usuario IN (9359, 9827)
                 ORDER BY nombre");
@@ -290,16 +345,19 @@ class Usuarios_modelo extends CI_Model
                     $id_rol = "";
                     
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
-                u.telefono,
-                CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre WHEN u.tipo = 2 THEN oxcTC.nombre ELSE oxc.nombre END puesto, 
-                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura, u.simbolico, u.tipo
+                u.telefono, 
+                CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto, 
+                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura, u.simbolico,
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                 u.tipo,u.fac_humano
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = u.id_rol AND oxcNE.id_catalogo = 83
-                LEFT JOIN opcs_x_cats oxcTC ON oxcTC.id_opcion = u.tipo AND oxcTC.id_catalogo = 106
-                WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%')  OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = u.tipo AND tipoUser.id_catalogo = 124
+                WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') $id_rol OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
                 break;
 
             default: // VE TODOS LOS REGISTROS
@@ -311,17 +369,20 @@ class Usuarios_modelo extends CI_Model
                 return $this->db->query("SELECT u.estatus, u.id_usuario, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre, u.correo,
                 u.telefono, 
                 CASE WHEN u.id_usuario IN (3, 5, 607, 4) THEN 'Director regional' WHEN u.nueva_estructura = 1 THEN oxcNE.nombre ELSE oxc.nombre END puesto, 
-                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura, u.simbolico, u.tipo
+                CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura, u.simbolico,
+                tipoUser.nombre tipoUsuario,
+                tipoUser.color colorTipo,
+                 u.tipo,u.fac_humano
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
                 LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = u.id_rol AND oxcNE.id_catalogo = 83
+                LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = usuarios.tipo AND tipoUser.id_catalogo = 124
                 WHERE (u.rfc NOT LIKE '%TSTDD%' AND ISNULL(u.correo, '' ) NOT LIKE '%test_%') $id_rol OR u.id_usuario IN (9359, 9827) ORDER BY nombre");
                 break;
         }
     }
-
     function getPaymentMethod()
     {
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 16 AND estatus = 1 ORDER BY id_opcion, nombre");
@@ -363,6 +424,7 @@ class Usuarios_modelo extends CI_Model
         $id_lider = $this->session->userdata('id_lider');
         switch ($type) {
             case '2': // SUBDIRECTOR
+                $validacionSede = '';
                 if ($headquarter == 12)
                     $validacionSede = " OR id_sede = '6'";
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios 
@@ -375,7 +437,7 @@ class Usuarios_modelo extends CI_Model
                     $sede = " OR id_sede='3'";
                 else if ($headquarter == 12)
                     $sede = " OR id_sede='5'";
-                else if ($headquarter == 15)
+                else if (in_array($headquarter, [15, 18]))
                     $sede = " OR id_sede='$headquarter'";*/
                     return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
                                             id_rol = 2 AND id_sede='$headquarter' AND estatus = 1 ORDER BY nombre");
@@ -682,30 +744,32 @@ class Usuarios_modelo extends CI_Model
     { 
         return $this->db->query("SELECT id_usuario, nombre, apellido_paterno, apellido_materno, correo, usuario, telefono, rfc, usuario, contrasena, forma_pago FROM usuarios WHERE id_usuario = " . $id . "");
     }
+    
     public function getChangeLogUsers($id_usuario){
-         $query = $this->db->query("SELECT CONVERT(varchar, fecha_creacion, 120) AS fecha_creacion, creador, col_afect,(
-          CASE 
-            WHEN col_afect = 'usuario' OR col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
-            WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
-            WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 16)
-            WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(nuevo AS VARCHAR(45)))
-            WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 1)
-            WHEN col_afect = 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
-            ELSE nuevo  
-          END) AS nuevo,(
-          CASE 
-            WHEN col_afect = 'usuario' OR col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
-            WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
-            WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 16)
-            WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(anterior AS VARCHAR(45)))
-            WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 1)
-            WHEN col_afect = 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
-            ELSE anterior   
-          END) AS anterior
-          FROM auditoria
-          INNER JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador AS VARCHAR(45)) = CAST(creado_por AS VARCHAR(45))
-          WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
-         return $query->result_array();
+        $query =  $this->db->query("SELECT CONVERT(varchar, fecha_creacion, 120) AS fecha_creacion, ISNULL(creador, 'SIN ESPECIFICAR') creador, col_afect,(
+            CASE 
+                WHEN col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = nuevo)
+                WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 10)
+                WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 16)
+                WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(nuevo AS VARCHAR(45)))
+                WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 1)
+                WHEN col_afect = 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = nuevo AND id_catalogo = 3)
+                ELSE nuevo  
+            END) AS nuevo,(
+            CASE 
+                WHEN col_afect = 'id_lider' THEN (SELECT CONCAT( apellido_paterno,' ',apellido_materno,' ',nombre) as nombre FROM usuarios WHERE id_usuario = anterior)
+                WHEN col_afect = 'personalidad_juridica' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 10)
+                WHEN col_afect = 'forma_pago' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 16)
+                WHEN col_afect = 'id_sede' THEN (SELECT nombre FROM sedes WHERE CAST(id_sede AS VARCHAR(45)) = CAST(anterior AS VARCHAR(45)))
+                WHEN col_afect = 'id_rol' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 1)
+                WHEN col_afect = 'estatus' THEN (SELECT nombre FROM opcs_x_cats WHERE id_opcion = anterior AND id_catalogo = 3)
+
+                ELSE anterior  
+            END) AS anterior
+            FROM auditoria
+            LEFT JOIN (SELECT id_usuario AS id_creador, CONCAT(nombre, ' ', apellido_paterno,' ',apellido_materno) AS creador  FROM usuarios) AS creadores ON CAST(id_creador AS VARCHAR(45)) = CAST(creado_por AS VARCHAR(45))
+            WHERE id_parametro = $id_usuario AND tabla = 'usuarios' ORDER BY fecha_creacion DESC");
+        return $query->result_array();
     }
 
     function getCatalogs()
@@ -1140,7 +1204,7 @@ class Usuarios_modelo extends CI_Model
         $query = $this->db->query("SELECT rxu.*,opc.nombre,s.nombre AS sede FROM roles_x_usuario rxu
         INNER JOIN opcs_x_cats opc ON opc.id_opcion=rxu.idRol AND opc.id_catalogo=1
         INNER JOIN sedes s ON s.id_sede = rxu.idSede
-        WHERE rxu.idUsuario = " . $id_usuario . " AND rxu.idRol=59 AND rxu.estatus=1");
+        WHERE rxu.idUsuario = " . $id_usuario . " AND rxu.idRol=59");
         return $query->result_array();
     }
     function borrarMulti($idRU,$modificado_por)

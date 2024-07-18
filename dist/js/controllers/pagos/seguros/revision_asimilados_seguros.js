@@ -213,7 +213,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
                 if( d.precio_lote == "" || d.precio_lote == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
+                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
             }
         },
         {
@@ -226,7 +226,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
                 if( d.comision_total == "" || d.comision_total == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
+                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
@@ -234,7 +234,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
                 if( d.pago_cliente == "" || d.pago_cliente == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
+                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
             }
         },
         {
@@ -242,7 +242,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
                 if( d.solicitado == "" || d.solicitado == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
+                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
             }
         },
         {
@@ -258,7 +258,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
                 if( d.dcto == "" || d.dcto == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
+                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
@@ -266,7 +266,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
                 if( d.impuesto == "" || d.impuesto == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
             }
         },
         {
@@ -402,7 +402,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
 
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $('#spiner-loader').removeClass('hide');
-        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Seguros/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
@@ -463,12 +463,12 @@ function getDataAsimiladosSeguros(proyecto, condominio){
             '<div class="row">'+
                 '<div class="d-flex justify-end">'+
                     '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>'+
-                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar">PAUSAR</button>'+
+                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar_seguro">PAUSAR</button>'+
                 '</div>'+
             '</div>'
         );
-        const buttonPausar = document.getElementById('btnPausar');
-        buttonPausar.addEventListener('click', function handleClick() {
+        const buttonPausar_seguro = document.getElementById('btnPausar_seguro');
+        buttonPausar_seguro.addEventListener('click', function handleClick() {
             $("#autorizarAsimilados_seguros").html(formatMoney(0));
         });
         $("#modalPausarAsimiladosSeguros").modal();

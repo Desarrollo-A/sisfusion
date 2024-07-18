@@ -51,7 +51,7 @@
                                     <th>CONDOMINIO</th>
                                     <th>LOTE</th>
                                     <th>REFERENCIA</th>
-                                    <th>PRECIO DEL LOTE</th>
+                                    <th>PRECIO DEL SEGURO</th>
                                     <th>EMPRESA</th>
                                     <th>TOTAL COMISIÓN</th>
                                     <th>PAGO DEL CLIENTE</th>

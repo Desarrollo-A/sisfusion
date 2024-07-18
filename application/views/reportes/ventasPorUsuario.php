@@ -54,7 +54,7 @@
                             <i class="fas fa-list fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Tus ventas</h3>
+                            <h3 class="card-title center-align">Listado general de ventas por estatus</h3>
                             <div class="toolbar">
                                 <div class="container-fluid">
                                     <div class="row">
@@ -98,6 +98,7 @@
                                             <th>ESTATUS LOTE</th>
                                             <th>ESTÁ CON ASESOR</th>
                                             <th>DETALLE ESTATUS</th>
+                                            <th>COMENTARIO</th>
                                         </tr>
                                         </thead>
                                     </table>

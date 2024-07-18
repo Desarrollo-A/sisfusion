@@ -53,7 +53,7 @@ function replaceAll(text, busca, reemplaza) {
 
 $("#form_prestamos").on('submit', function (e) {
     e.preventDefault();
-    let formData = new FormData(document.getElementById("form_prestamos"));
+    let formData = new FormData(document.getElementById("form_prestamos") );
     $.ajax({
         url: 'savePrestamo',
         data: formData,
@@ -409,9 +409,9 @@ $("#tabla_prestamos").ready(function () {
                     dataType: "json",
                     data: {
                         "tipoD":    tipoD,
-                        "pagoEdit": parseInt(pagoEdit),
-                        "numeroPagos": parseInt(numeroPagos),
-                        "montoPagos": parseInt(montoPagos),
+                        "pagoEdit": parsefloat(pagoEdit),
+                        "numeroPagos": parsefloat(numeroPagos),
+                        "montoPagos": parsefloat(montoPagos),
                         "comentario": comentario,
                         "prestamoId": prestamoId,
                     },
