@@ -2490,4 +2490,70 @@ class Casas extends BaseController
         $this->load->view('template/header');
         $this->load->view('casas/procesoBanco/reporte_casas_venta_view');
     }
+
+    public function ordenCompraFirma(){
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/orden_compra_view');
+    }
+
+    public function getLotesProcesoBanco(){
+        $data = $this->input->get();
+        $proceso = $data["proceso"];
+
+        $tipoDocumento = isset($data["tipoDocumento"]) ? $data["tipoDocumento"] : 0;
+        
+        if(!isset($proceso)){
+            $response["result"] = false;
+            $reponse["message"] = "Error al obtener los datos";
+        }
+
+        $getLotes = $this->CasasModel->getLotesProcesoBanco($proceso, $tipoDocumento)->result();
+
+        $this->json($getLotes);
+    }
+
+    public function uploadDocumentoCreditoBanco()
+    {
+        $idProceso = $this->form('idProcesoCasas');
+        $proceso = $this->form('proceso');
+        $nombre_lote = $this->form('nombre_lote');
+        $tipoDocumento = $this->form('tipoDocumento') ? $this->form('tipoDocumento') : 0;
+        $id_documento = $this->form('id_documento');
+        $file = $this->file('file_uploaded');
+
+        if (!isset($proceso) || !isset($nombre_lote) || !isset($id_documento)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        if (!$file) {
+            http_response_code(400);
+        } else {
+
+            // Consulta nombre tipo documento
+            $documento = $this->CasasModel->getDocumentoCreditoDirecto($id_documento);
+
+            $name_documento = $documento->result()[0]->nombre;
+
+            //  Nombre del archivo          
+            $filename = $this->generateFileName($name_documento, $nombre_lote, $idProceso, $file->name);
+
+            // Se sube archivo al buket
+            $uploaded = $this->upload($file->tmp_name, $filename);
+
+            if ($uploaded) {
+
+                $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento);
+
+                if ($created) {
+                    $motivo = "Se subio archivo: $name_documento";
+                    $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2);
+
+                    $this->json([]);
+                }
+            }
+        }
+
+        http_response_code(404);
+    }
 }

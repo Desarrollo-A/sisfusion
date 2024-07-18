@@ -151,7 +151,7 @@ let buttons = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/lista_adeudos',
+    url: 'casas/listaOrdenCompra',
     buttons:buttons,
     columns,
 })
