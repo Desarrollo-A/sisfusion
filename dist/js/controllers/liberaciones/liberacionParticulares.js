@@ -223,20 +223,9 @@ $(document).on("click", "#btn-accion", async function (e) {
     let archivo, proceso, estatusLib, rescision, autorizacionDG, concepto, precioLiberacion, plazo;
 
     //Validaciones en caso de tener
-    if ((d.enProcesoLiberacion === 1 || d.enProcesoLiberacion === 0)) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
-        if ($("#id_documento_liberacion").val() ==  53) tieneRescision = 1; // idOpcion en oxc catalogo 31
-        if ($("#id_documento_liberacion").val() ==  54) tieneAutorizacionDG = 1;
-        archivo = $("#archivo_liberacion");
-        
-        // Select de tipo de archivo vacio
-        if (tieneRescision === 0 && tieneAutorizacionDG === 0) return alerts.showNotification("top", "right", "Selecciona el tipo de archivo a adjuntar.", "warning");
-        
-        // Input sin archivo
-        if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
-
-        // Archivo incorrecto
-        if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "Adjunta un archivo con formato correcto", "warning");
-        
+    if ((d.enProcesoLiberacion === 1 || d.enProcesoLiberacion === 0) && (!d.expediente)) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
+        // No ha subido documento para avanzar
+        return alerts.showNotification("top", "right", "Primero debes cargar la RESCISIÓN o AUTORIZACIÓN DG para poder avanzar el lote.", "warning");
     }
     if ((d.enProcesoLiberacion === 3 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
         precioLiberacion = $('#costoM2').val().replace('$', '').replace(',', ''); // El precio del lote
@@ -307,78 +296,6 @@ $(document).on("click", "#btn-accion", async function (e) {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-
-    // Hacemos el registro de en historial_documento
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 && proceso === 2) {
-
-        // Borramos el archivo en caso de tener uno y actualizamos los registros de historial_documento 
-        if (d.expediente) {
-            const docData = new FormData();
-            docData.append("idDocumento", d.idDocumento);
-            docData.append("tipoDocumento", d.tipo_doc);
-            let rs1 = await $.ajax({
-                type: 'POST',
-                url: `${general_base_url}Documentacion/eliminarArchivo`,
-                data: docData,
-                contentType: false,
-                cache: false,
-                processData: false,
-            });
-
-            rs1 = JSON.parse(rs1);
-            console.log('Eliminar archivo', rs1);
-            
-            if (rs1.code == 500 ){
-                alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
-                return;
-            } 
-        }
-
-        const tipoDocumento = rescision ? 53 : 54; 
-        const movimiento = tipoDocumento === 53 ? 'RESCICIÓN DE CONTRATO' : 'AUTORIZACIÓN DG';
-        const expediente = generarTituloDocumento(d.nombreResidencial, d.nombreLote, d.idLote, d.idCliente, tipoDocumento);
-        const ndata = new FormData();
-        ndata.append("movimiento", movimiento); // Nombre del tipo de documento
-        ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
-        ndata.append("idCliente", d.idCliente);
-        ndata.append("idCondominio", d.idCondominio);
-        ndata.append("idLote", d.idLote);
-        ndata.append('tipo_doc', tipoDocumento); // TipoDocumento es el id del opc de mis archivos (53, 54)
-
-        let res = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Liberaciones/registrarDocumentoEnArbol`,
-            data: ndata,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-
-        res = JSON.parse(res);
-        console.log('Historial documento', res);
-
-        const xdata = new FormData();
-        xdata.append("idLote", d.idLote);
-        xdata.append("idDocumento", res.documentId);
-        xdata.append("tipoDocumento", tipoDocumento);
-        xdata.append("tituloDocumento", expediente);
-        xdata.append("uploadedDocument", archivo[0].files[0]);
-        let rs = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Documentacion/subirArchivo`,
-            data: xdata,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-
-        rs = JSON.parse(rs);
-        console.log('Subir archivo', rs);
-        if (rs.code == 500 ){
-            alerts.showNotification("top", "right", 'Surgió un error al registrar el archivo', "warning");
-            return;
-        } 
-    }
 
     // En caso de ser el ultimo proceso, ya se libera.
     if (d.enProcesoLiberacion === 4 && proceso === 5) {
@@ -459,9 +376,14 @@ $(document).on('click', '.btn-historico', async function(){
         },
         dataType: 'JSON',
         success: function (res) {
-          $.each( res, function(i, data){
-            fillChangelog(i, data);
-          });
+            if (res.length === 0) {
+                $("#changelog").append("No existen modificaciones.");
+            }else {
+                $.each( res, function(i, data){
+                    fillChangelog(i, data);
+                });
+            }
+            $("#seeInformationModal").modal('show')
           $("#seeInformationModal").modal('show')
         },
         error: function () {},
@@ -524,7 +446,7 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
     const d = JSON.parse($("#data").val());
     let tieneRescision = 0;
     let tieneAutorizacionDG = 0;
-    let archivo, proceso, estatusLib, rescision, autorizacionDG, concepto, precioLiberacion, plazo;
+    let archivo;
 
     //Validaciones en caso de tener
     if ((d.enProcesoLiberacion === 1 || d.enProcesoLiberacion === 0)) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
@@ -536,7 +458,7 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
         if (tieneRescision === 0 && tieneAutorizacionDG === 0) return alerts.showNotification("top", "right", "Selecciona el tipo de archivo a adjuntar.", "warning");
         
         // Input sin archivo
-        if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
+        if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Ingresa los archivos requeridos", "warning");
 
         // Archivo incorrecto
         if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "Adjunta un archivo con formato correcto", "warning");
@@ -564,12 +486,12 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
         console.log('Eliminar archivo', rs1);
         
         if (rs1.code == 500 ){
-            alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             return;
         } 
     }
     
-    const tipoDocumento = rescision ? 53 : 54; 
+    const tipoDocumento = tieneRescision ? 53 : 54; 
     const movimiento = tipoDocumento === 53 ? 'RESCICIÓN DE CONTRATO' : 'AUTORIZACIÓN DG';
     const expediente = generarTituloDocumento(d.nombreResidencial, d.nombreLote, d.idLote, d.idCliente, tipoDocumento);
     const ndata = new FormData();
@@ -605,33 +527,35 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
     });
     rs = JSON.parse(rs);
     console.log('Subir archivo', rs);
-    if (rs.code == 500 ){
-        alerts.showNotification("top", "right", 'Surgió un error al registrar el archivo', "warning");
-        return;
+    if (rs.code == 200 ) alerts.showNotification("top", "right", `El documento ${movimiento} se ha cargado con éxito.`, "success");
+    if (rs.code == 500 ) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+
+
+    /* VOLVEMOS A CARGAR LA TABLA */
+    if (d.enProcesoLiberacion === 0) {
+        const loteValue = $("#lote").val();
+        const values = { tipoVenta: TIPO_VENTA.PARTICULARES, idProcesoTipoLiberacion: LIBERACION.PARTICULARES, lotes: loteValue }
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
+            data: values,
+            cache: false,
+            success: function(rs) {
+                const res = JSON.parse(rs);
+                datatableFn(res, 1);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la petición AJAX:", error);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            }
+        });
+    }
+    if (d.enProcesoLiberacion === 1){
+        $('#pendientes').click();
     }
 
-    const loteValue = $("#lote").val();
-    if ($('.material-datatables').hasClass('hide')) $('.material-datatables').removeClass('hide');
-
-    const values = { tipoVenta: TIPO_VENTA.PARTICULARES, idProcesoTipoLiberacion: LIBERACION.PARTICULARES, lotes: loteValue }
-    
-    $.ajax({
-        type: 'POST',
-        url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
-        data: values,
-        cache: false,
-        success: function(rs) {
-            const res = JSON.parse(rs);
-            datatableFn(res, 1);
-            $('#spiner-loader').addClass('hide'); // Aparece spinner
-        },
-        error: function(xhr, status, error) {
-            console.error("Error en la petición AJAX:", error);
-            $('#spiner-loader').addClass('hide'); // Aparece spinner
-        }
-    });
-
-    $('#accion-modal').modal('hide');
+    $('#archivo-modal').modal('hide');
     $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
@@ -807,7 +731,7 @@ const datatableButtons = (d, type) => {
     const BTN_NO_LIBERA      = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
     const BTN_INFO           = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
     const BTN_SUBIR_DOC      = newButton('btn-data btn-blueMaderas btn-subir-archivo', 'SUBIR ARCHIVO', 'SUBIR-ARCHIVO', d, 'fas fa-upload');
-    const BTN_REMPLAZAR_DOC  = newButton('btn-data btn-blueMaderas btn-subir-archivo', 'REMPLAZAR ARCHIVO', 'SUBIR-ARCHIVO', d, 'fas fa-upload');
+    const BTN_REMPLAZAR_DOC  = newButton('btn-data btn-green btn-subir-archivo', 'REMPLAZAR ARCHIVO', 'SUBIR-ARCHIVO', d, 'fas fa-copy');
     const BTN_VER_DOC        = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
     
     let NO_BTN = '';
@@ -822,7 +746,7 @@ const datatableButtons = (d, type) => {
         if (id_rol_general == 55) { // POSTVENTA
             if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_REMPLAZAR_DOC + BTN_INFO ;
             if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_SUBIR_DOC + BTN_INFO;
-            if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
+            if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_REMPLAZAR_DOC + BTN_INFO;
             if (d.enProcesoLiberacion === 3 ) return BTN_AVANCE_P3 + BTN_VER_DOC + BTN_INFO;
             return BTN_INFO; 
         }

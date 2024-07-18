@@ -280,12 +280,14 @@ class Documentacion extends CI_Controller {
             return;
         }
 
-        $validaMail = $this->Registrolote_modelo->sendMailAdmin($nombreExp->idLote);
+        /* $validaMail = $this->Registrolote_modelo->sendMailAdmin($nombreExp->idLote);
 
         if (is_null($validaMail->idHistorialLote)) {
             echo json_encode($response);
             return;
         }
+        
+        */
 
         $contenido[0] = [
             'nombreResidencial' => $infoLote->nombreResidencial,
@@ -561,7 +563,6 @@ class Documentacion extends CI_Controller {
                 mkdir($folderBaseValidacion, 0777, true);
             }
             //termina la validación
-
 
             $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
             echo json_encode($res);
