@@ -1,8 +1,21 @@
+<link href="<?= base_url() ?>dist/css/depositoSeriedad.css" rel="stylesheet"/>
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <style>
-    .open{
-        max-width: -webkit-fill-available;
+    .radio_container input[type="radio"] {
+        appearance: none;
+        display: none;
+    }
+    .radio_container label {
+        width: 100%;
+        transition: linear 0.3s;
+        font-weight: 100;
+    }
+    .disabledClassRadio{
+        background-color: #103f7545 !important;
+        color: #fff !important;
+        transition: 0.3s !important;
+        cursor:not-allowed !important;
     }
 </style>
 <body>
@@ -22,6 +35,7 @@
     <?php include 'Modales/addPlanPagoModal.php' ?>
     <?php include 'Modales/verPlanPagoModal.php' ?>
     <?php include 'Modales/confirmarEnvioPlanModal.php' ?>
+    <?php include 'Modales/confirmarEnvioPlanModal2.php' ?>
     <?php include 'Modales/avisoModal.php' ?>
     <div class="content boxContent">
         <div class="container-fluid">

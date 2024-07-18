@@ -1456,6 +1456,7 @@ function checkBudgetInfo($idSolicitud){
                 co.nombre nombreCondominio, 
                 lo.nombreLote, 
                 lo.idLote, 
+                co.idResidencial as idProyecto,
                 UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
                 UPPER(CONCAT(cxl.nombre, ' ', cxl.apellido_paterno, ' ', cxl.apellido_materno)) nombreClienteNuevo, 
                 lo.idCliente,

@@ -91,6 +91,8 @@
                                 <input type="hidden" id="tipoTransaccionA" name="tipoTransaccionA">
                                 <input type="hidden" id="tipo" name="tipo">
                                 <input type="hidden" id="valorTramite" name="valorTramite">
+                                <input type="hidden" id="idCondominio" name="idCondominio">
+                                <input type="hidden" id="idProyecto" name="idProyecto">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                                 <button type="submit" class="btn btn-primary">Aceptar</button>
                             </div>

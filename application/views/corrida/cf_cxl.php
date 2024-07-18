@@ -1168,6 +1168,8 @@
 
         <div style="float: right;bottom: 2%;right: 3%;position: fixed;display: inline-flex;align-content: center;
                             flex-wrap: wrap;flex-direction: column;">
+            <button class="btn-circle green" ng-click="provFTRE()"
+                    data-toggle="tooltip" title="Recargar corrida"><i class="fas fa-print fa-history"></i></button>
             <button class="btn-circle blue" ng-click="exportc()"
                     data-toggle="tooltip" title="Guardar + Imprimir Carátula"><i class="fas fa-print fa-lg"></i></button>
             <button class="btn-circle dark-blue" ng-click="exportcf()"
@@ -1552,7 +1554,7 @@
                     return condicion.apply  == '0';
                 });
 
-                var orderEnganche = applyEnganche.sort((a, b) => a.prioridad - b.prioridad);
+
 
 
 
@@ -1595,27 +1597,32 @@
 
 ////////////////////////// FIN VARIABLES DESCRIPCION DE DESCUENTOS
 
+                // console.log("porcentajeDeEnganche", porcentajeDeEnganche);
+                // console.log("orderEnganche.length", orderEnganche.length);
+                // console.log("porcentajeDeEnganche", orderTotal.length);
 
-                if (porcentajeDeEnganche === 0 && orderEnganche.length === 0 && orderTotal.length === 0){
+                if (porcentajeDeEnganche === 0 && orderTotal.length === 0){
                     $scope.decFin = [];
                     if($scope.apartado>0){
                         r1 = (r1 - $scope.apartado);
                     }
 
                 } //OK
-                else if(porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length === 0){
+                else if(porcentajeDeEnganche != 0  && orderTotal.length === 0){
                     $scope.decFin = [];
-
+                    $scope.apartado = parseInt($scope.apartado);
                     console.log('r1->', r1);
                     console.log('porcentajeDeEnganche->', porcentajeDeEnganche);
                     console.log('$scope.apartado->', $scope.apartado);
+                    console.log("enganche:", enganche);
                     enganche = (r1 * (porcentajeDeEnganche / 100));
+
                     // enganche = parseFloat(cantidadEnganche);
                     r1 = (r1 - (enganche+$scope.apartado));
 
 
                 }
-                else if(porcentajeDeEnganche != 0 && orderEnganche.length > 0 && orderTotal.length === 0){
+                else if(porcentajeDeEnganche != 0 && orderTotal.length === 0){
                     console.log('AREA3');
                     //aqui entra cuando solo hay descuento al enganche
                     enganche = (r1 * (porcentajeDeEnganche / 100));
@@ -1655,7 +1662,7 @@
 
                 }
                 ////////////////////////////////////////////////////////////
-                else if(porcentajeDeEnganche === '0' && orderEnganche.length === 0 && orderTotal.length > 0){
+                else if(porcentajeDeEnganche === '0'  && orderTotal.length > 0){
                     console.log('AREA4');
 
                     angular.forEach(orderTotal, function(item, index) {
@@ -1699,7 +1706,7 @@
                     });
 
                 }
-                else if(porcentajeDeEnganche != 0 && orderEnganche.length === 0 && orderTotal.length > 0){
+                else if(porcentajeDeEnganche != 0  && orderTotal.length > 0){
                     angular.forEach(orderTotal, function(item, index) {
 
                         if(item.id_condicion == 1 || item.id_condicion == 2){
@@ -1829,7 +1836,7 @@
 
 
                 }
-                else if(porcentajeDeEnganche != 0 && orderEnganche.length > 0 && orderTotal.length > 0){
+                else if(porcentajeDeEnganche != 0  && orderTotal.length > 0){
                     console.log('AREA6');
                     // console.log('if1', r1);
                     let nuevoResultado=r1;
@@ -2125,9 +2132,9 @@
 
                     });
 
-                    if($scope.apartado>0){
+                    /*if($scope.apartado>0){
                         r1 = (r1 - $scope.apartado);
-                    }
+                    }*/
                 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2475,8 +2482,14 @@
                 }
 
 /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
-                if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == false || $scope.mensualidad_con_enganche == undefined)
+                if($scope.day!='' && $scope.apartado>0 && $scope.mesesdiferir > 0 && ($scope.mensualidad_con_enganche == false || $scope.mensualidad_con_enganche == undefined))
                 {
+                    console.log('$scope.day', $scope.day);
+                    console.log('$scope.apartado', $scope.apartado);
+                    console.log('$scope.mesesdiferir ', $scope.mesesdiferir );
+                    console.log('$scope.mensualidad_con_enganche ', $scope.mensualidad_con_enganche );
+
+
                     var engd = (enganche - $scope.apartado);
                     var engd2 = (engd/$scope.mesesdiferir);
                     var saldoDif = ($scope.precioFinal - $scope.apartado);
@@ -2616,7 +2629,8 @@
                     mesesDiferir = 0;
                     console.log('mad', mesesDiferir);
                     // msi = (mesesDiferir>msi) ? mesesDiferir - msi : msi - mesesDiferir;
-                }else{
+                }
+                else{
                     mesesDiferir = $scope.mesesdiferir;
                     console.log('mad', mesesDiferir);
                     // msi = (mesesDiferir>msi) ? mesesDiferir - msi : msi - mesesDiferir;
@@ -2640,7 +2654,7 @@
                     let indexDescArr = $scope.decFin.length;
                     let lastPrice;
                     if(indexDescArr==0){
-                        $scope.precioFinal = $scope.saldoFinal - apartadoSum;
+                        $scope.precioFinal = $scope.saldoFinal;// - apartadoSum
                     }else{
                         $scope.precioFinal = $scope.decFin[(indexDescArr-1)].pt;
                     }
@@ -2650,9 +2664,10 @@
                         r1 = (r1+apartadoSum);
                         r1_virtual = $scope.saldoFinal;
                         console.log('ENGANCHE 1', engancheSum);
-                    }else{
+                    }
+                    else{
                         // r1_virtual = r1;
-                        $scope.saldoFinal = (parseFloat(r1)+engancheSum) - apartadoSum;
+                        $scope.saldoFinal = (parseFloat(r1)+engancheSum);//(parseFloat(r1)+engancheSum) - apartadoSum
                         console.log('ENGANCHE 2', engancheSum);
                         console.log('precio final', $scope.precioFinal);
                         r1_virtual = r1;
@@ -2671,7 +2686,7 @@
                     $scope.saldoFinal = parseFloat(r1);
                     console.log($scope.decFin);
                     $scope.precioFinal = parseFloat(r1);
-                    $scope.precioFinal = ($scope.precioFinal + (engancheSum-apartadoSum));
+                    $scope.precioFinal = ($scope.precioFinal + (engancheSum-apartadoSum));// (engancheSum-apartadoSum)
                 }
 
 
@@ -4265,7 +4280,8 @@
                 if($scope.infoLote.meses >= 132 && $scope.infoLote.meses <= 240) {
                     var range=[];
 
-
+                    $scope.totalCuartoPlan = 0;//el cuarto plan de limpia
+                    $scope.finalMesesp4 = '';//el número de periodos del cuarto plan de elimina
                     // if($scope.descMSI == 0){
                     //     ini = ($scope.mesesdiferir > 0) ? $scope.mesesdiferir : $scope.infoLote.contadorInicial;
                     // } else if($scope.descMSI == 1){
@@ -6726,26 +6742,90 @@
 
             $scope.getAge = function(age) {
                 $scope.age_view = $scope.age.age;
+                console.log("$scope.age_view: ", $scope.age_view);
                 $('#yearplanID').attr('disabled', false);
-                if(age <= 60){
+                $scope.yearplan = '';//reiniciar
+                $('#yearplanID').select2();//reiniciar
 
+                if(age <= 50){
                     //{yearplan: 30}, {yearplan: 29},{yearplan: 28}, {yearplan: 27}, {yearplan: 26}, {yearplan: 25},{yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
                     $scope.yearsplan = [
-
+                        {yearplan: 30}, {yearplan: 29},{yearplan: 28}, {yearplan: 27}, {yearplan: 26}, {yearplan: 25},{yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
                         {yearplan: 20}, {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13}, {yearplan: 12}, {yearplan: 11},
                         {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
-
-                } else if(age == 61){
+                }
+                else if(age == 51){
+                    $scope.yearsplan = [
+                        {yearplan: 29},{yearplan: 28}, {yearplan: 27}, {yearplan: 26}, {yearplan: 25},{yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 52){
+                    $scope.yearsplan = [
+                        {yearplan: 28}, {yearplan: 27}, {yearplan: 26}, {yearplan: 25},{yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 53){
+                    $scope.yearsplan = [
+                        {yearplan: 27}, {yearplan: 26}, {yearplan: 25},{yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 54){
+                    $scope.yearsplan = [
+                        {yearplan: 26}, {yearplan: 25},{yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 55){
+                    $scope.yearsplan = [
+                        {yearplan: 25},{yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 56){
+                    $scope.yearsplan = [
+                        {yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 57){
+                    $scope.yearsplan = [
+                         {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 58){
+                    $scope.yearsplan = [
+                        {yearplan: 22}, {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 59){
+                    $scope.yearsplan = [
+                        {yearplan: 21},
+                        {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 60){
+                    $scope.yearsplan = [
+                        {yearplan: 20}, {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},{yearplan: 12}, {yearplan: 11},
+                        {yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
+                }
+                else if(age == 61){
 
                     $scope.yearsplan = [{yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},
                         {yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
-                } else if(age == 62){
+                }
+                else if(age == 62){
 
                     $scope.yearsplan = [{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},
                         {yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
-                } else if(age == 63){
+                }
+                else if(age == 63){
 
                     $scope.yearsplan = [{yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},
                         {yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
@@ -6756,30 +6836,36 @@
                     $scope.yearsplan = [{yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},
                         {yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
-                } else if(age == 65){
+                }
+                else if(age == 65){
 
                     $scope.yearsplan = [{yearplan: 15},{yearplan: 14}, {yearplan: 13},
                         {yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
-                } else if(age == 66){
+                }
+                else if(age == 66){
 
                     $scope.yearsplan = [{yearplan: 14}, {yearplan: 13},
                         {yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
-                } else if(age == 67){
+                }
+                else if(age == 67){
 
                     $scope.yearsplan = [{yearplan: 13},
                         {yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
-                } else if(age == 68){
+                }
+                else if(age == 68){
 
                     $scope.yearsplan = [{yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
-                } else if(age == 69){
+                }
+                else if(age == 69){
 
                     $scope.yearsplan = [{yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
 
-                } else if(age == 70){
+                }
+                else if(age == 70){
 
                     $scope.yearsplan = [{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
@@ -6796,26 +6882,31 @@
                     $scope.yearsplan = [{yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
 
-                } else if(age == 73){
+                }
+                else if(age == 73){
 
                     $scope.yearsplan = [{yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
 
-                } else if(age == 74){
+                }
+                else if(age == 74){
 
                     $scope.yearsplan = [{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
 
-                } else if(age == 75){
+                }
+                else if(age == 75){
 
                     $scope.yearsplan = [{yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
 
-                } else if(age == 76){
+                }
+                else if(age == 76){
 
                     $scope.yearsplan = [{yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
-                } else if(age == 77){
+                }
+                else if(age == 77){
 
                     $scope.yearsplan = [{yearplan: 3}, {yearplan: 2}, {yearplan: 1}]
 
@@ -6825,10 +6916,18 @@
 
                     $scope.yearsplan = [{yearplan: 2}, {yearplan: 1}]
 
-                } else if(age == 79 || age == 80){
+                }
+                else if(age == 79){
 
                     $scope.yearsplan = [{yearplan: 1}]
 
+                }
+                else if(age == 80){
+
+                    $scope.yearsplan = [{yearplan: 0}];
+                    $('#yearplanID').attr('disabled', true);
+                    $scope.plan = 'Crédito';
+                    $('#planSL').attr('readonly', true);
                 }
 
 
@@ -6957,7 +7056,7 @@
                 // $(plan_anios).select2('val', '');
                 // $(plan_anios).trigger('change');
 
-                $scope.yearplan = [];//se reinicia
+                /*$scope.yearplan = [];//se reinicia
 
                 if ([5, 6, 17, 28, 32].includes(residencial)) {
 
@@ -6970,7 +7069,7 @@
                 } else {
                     $scope.yearsplan = [{yearplan: 20}, {yearplan: 19},{yearplan: 18}, {yearplan: 17}, {yearplan: 16}, {yearplan: 15},{yearplan: 14}, {yearplan: 13},
                         {yearplan: 12}, {yearplan: 11},{yearplan: 10}, {yearplan: 9}, {yearplan: 8}, {yearplan: 7},{yearplan: 6}, {yearplan: 5}, {yearplan: 4}, {yearplan: 3}, {yearplan: 2}, {yearplan: 1}];
-                }
+                }*/
 
 
                 let contenedorPlanAnios = document.getElementById("contenedorPlanAnios");
