@@ -50,7 +50,7 @@
 </div>
 
 <div class="modal fade" id="avanzarAut" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" id="modalAutorizacion">
+    <div class="modal-dialog modal-sm" id="modalAutorizacion">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
