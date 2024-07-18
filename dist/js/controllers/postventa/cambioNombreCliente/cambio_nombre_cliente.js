@@ -467,7 +467,9 @@ $(document).on('change', '#tipoTramite', ()=>{
             const fileName = target[0].files[0].name;
             relatedTarget.val(fileName);
         });
-    }else{
-        contenedorInput.classList.add('hide');
+    }
+    else{
+        document.getElementById('fileEscrituraSellos').innerHTML = '';
+        document.getElementById('fileEscrituraSellos').classList.add = 'hide';
     }
 });

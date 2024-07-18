@@ -16,7 +16,8 @@
 		"phpoffice/phpspreadsheet": "^1.22",
 		"google/apiclient": "^2.0",
 		"vlucas/phpdotenv": "^5.5",
-		"google/cloud-core": "1.49.4"
+		"google/cloud-core": "1.49.4",
+		"google/cloud-storage": "1.30.0"
     },
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
