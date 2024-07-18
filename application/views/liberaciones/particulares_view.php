@@ -102,6 +102,25 @@
             </div>
         </div>
 
+        <!-- SUBIR ARCHIVOS -->
+        <div class="modal fade" id="archivo-modal" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header text-center" id="labelHeaderArchivoModal">
+                        <!-- <h4>¿Está seguro de <b>rechazar</b> el expediente de <b>'+nombreLote+'</b>?</h4> -->
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div id="extra-content-archivo-modal"></div>
+                        <div id="data-modal"></div>
+                    </div> 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btn-subir-archivo">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal de cambios -->
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">

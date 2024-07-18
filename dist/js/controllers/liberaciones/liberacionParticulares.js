@@ -182,25 +182,6 @@ $(document).on('click', '.btn-accion', async function(){
 
     // Declaramos el contenido extra que embeberemos
     let content = ``;
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) {
-        content = `
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 overflow-hidden">
-                <label class="control-label" for="id_documento_liberacion">Documento a adjuntar (*) ${d.expediente ? '<span style="color: red;">Se sustituirá el archivo previamente cargado</span>' : ''}</label>
-                <select id="id_documento_liberacion" name="id_documento_liberacion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
-            </div>
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-                <div id="selectFileSection">
-                    <div class="file-gph">
-                        <input type="file" accept=".pdf" id="archivo_liberacion">
-                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                        <label class="upload-btn m-0" for="archivo_liberacion">
-                            <span>Seleccionar</span>
-                            <i class="fas fa-folder-open"></i>
-                        </label>
-                    </div>
-                </div>
-            </div>`;
-    }
     if (d.enProcesoLiberacion === 3) {
         content = `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12" id="cambioPrecio">
@@ -211,7 +192,6 @@ $(document).on('click', '.btn-accion', async function(){
 
     // Embebemos el contenido extra
     $('#extra-content-accion-modal').html(content);
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) fillInputs(); //Cargamos los valores de los inputs
 
     // Limpiamos valores de los campos antes de abrir el modal.
     $('#comentarioAccionModal').val('');
@@ -491,6 +471,171 @@ $(document).on('click', '.btn-historico', async function(){
     $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
 
+$(document).on('click', '.btn-subir-archivo', async function(){
+    // Leemos los datos del registro
+    const d = JSON.parse($(this).attr("data-data"));
+    const accion = $(this).attr("data-accion");
+
+    // Declaramos el contenido extra que embeberemos
+    content = `
+        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <label class="control-label" for="id_documento_liberacion">Documento a adjuntar (*) ${d.expediente ? '<span style="color: red;">Se sustituirá el archivo previamente cargado</span>' : ''}</label>
+            <select id="id_documento_liberacion" name="id_documento_liberacion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+        </div>
+        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">
+            <div id="selectFileSection">
+                <div class="file-gph">
+                    <input type="file" accept=".pdf" id="archivo_liberacion">
+                    <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                    <label class="upload-btn m-0" for="archivo_liberacion">
+                        <span>Seleccionar</span>
+                        <i class="fas fa-folder-open"></i>
+                    </label>
+                </div>
+            </div>
+        </div>`;
+    
+    // Embebemos el contenido extra
+    $('#extra-content-archivo-modal').html(content);
+    fillInputs();
+
+    // Limpiamos valores de los campos antes de abrir el modal.
+    // $('#comentarioAccionModal').val('');
+
+    // Mostramos el modal y mostramos la info del lote en el modal
+    $('#archivo-modal').modal('show');
+
+    // Le agregamos la información que vallamos a usar en caso de confirmar el modal
+    const info = 
+        '<input type="hidden" id="accion"></input>' + 
+        '<input type="hidden" id="data"></input>' ;
+    $('#data-modal').append(info);
+    
+    // Asignación de valores a los inputs
+    $("#accion").val(accion);
+    $("#data").val(JSON.stringify(d));
+});
+
+$(document).on("click", "#btn-subir-archivo", async function (e) {
+    e.preventDefault();
+
+    // Obteniendo los valores para su proceso
+    const accion = $("#accion").val();
+    const d = JSON.parse($("#data").val());
+    let tieneRescision = 0;
+    let tieneAutorizacionDG = 0;
+    let archivo, proceso, estatusLib, rescision, autorizacionDG, concepto, precioLiberacion, plazo;
+
+    //Validaciones en caso de tener
+    if ((d.enProcesoLiberacion === 1 || d.enProcesoLiberacion === 0)) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
+        if ($("#id_documento_liberacion").val() ==  53) tieneRescision = 1; // idOpcion en oxc catalogo 31
+        if ($("#id_documento_liberacion").val() ==  54) tieneAutorizacionDG = 1;
+        archivo = $("#archivo_liberacion");
+        
+        // Select de tipo de archivo vacio
+        if (tieneRescision === 0 && tieneAutorizacionDG === 0) return alerts.showNotification("top", "right", "Selecciona el tipo de archivo a adjuntar.", "warning");
+        
+        // Input sin archivo
+        if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
+
+        // Archivo incorrecto
+        if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "Adjunta un archivo con formato correcto", "warning");
+        
+    }
+
+    // Loading y disables mientras hace la carga
+    $('#btn-accion').attr('disabled', true); // Deshabilita botón
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+
+    // Borramos el archivo en caso de tener uno y actualizamos los registros de historial_documento 
+    if (d.expediente) {
+        const docData = new FormData();
+        docData.append("idDocumento", d.idDocumento);
+        docData.append("tipoDocumento", d.tipo_doc);
+        let rs1 = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Documentacion/eliminarArchivo`,
+            data: docData,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+        rs1 = JSON.parse(rs1);
+        console.log('Eliminar archivo', rs1);
+        
+        if (rs1.code == 500 ){
+            alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
+            return;
+        } 
+    }
+    
+    const tipoDocumento = rescision ? 53 : 54; 
+    const movimiento = tipoDocumento === 53 ? 'RESCICIÓN DE CONTRATO' : 'AUTORIZACIÓN DG';
+    const expediente = generarTituloDocumento(d.nombreResidencial, d.nombreLote, d.idLote, d.idCliente, tipoDocumento);
+    const ndata = new FormData();
+    ndata.append("movimiento", movimiento); // Nombre del tipo de documento
+    ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
+    ndata.append("idCliente", d.idCliente);
+    ndata.append("idCondominio", d.idCondominio);
+    ndata.append("idLote", d.idLote);
+    ndata.append('tipo_doc', tipoDocumento); // TipoDocumento es el id del opc de mis archivos (53, 54)
+    let res = await $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Liberaciones/registrarDocumentoEnArbol`,
+        data: ndata,
+        contentType: false,
+        cache: false,
+        processData: false,
+    });
+    res = JSON.parse(res);
+    console.log('Historial documento', res);
+    const xdata = new FormData();
+    xdata.append("idLote", d.idLote);
+    xdata.append("idDocumento", res.documentId);
+    xdata.append("tipoDocumento", tipoDocumento);
+    xdata.append("tituloDocumento", expediente);
+    xdata.append("uploadedDocument", archivo[0].files[0]);
+    let rs = await $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Documentacion/subirArchivo`,
+        data: xdata,
+        contentType: false,
+        cache: false,
+        processData: false,
+    });
+    rs = JSON.parse(rs);
+    console.log('Subir archivo', rs);
+    if (rs.code == 500 ){
+        alerts.showNotification("top", "right", 'Surgió un error al registrar el archivo', "warning");
+        return;
+    }
+
+    const loteValue = $("#lote").val();
+    if ($('.material-datatables').hasClass('hide')) $('.material-datatables').removeClass('hide');
+
+    const values = { tipoVenta: TIPO_VENTA.PARTICULARES, idProcesoTipoLiberacion: LIBERACION.PARTICULARES, lotes: loteValue }
+    
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
+        data: values,
+        cache: false,
+        success: function(rs) {
+            const res = JSON.parse(rs);
+            datatableFn(res, 1);
+            $('#spiner-loader').addClass('hide'); // Aparece spinner
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la petición AJAX:", error);
+            $('#spiner-loader').addClass('hide'); // Aparece spinner
+        }
+    });
+
+    $('#accion-modal').modal('hide');
+    $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
+    $('#spiner-loader').addClass('hide'); // Quito spinner  
+});
+
 $(document).on('click', '.btn-archivo', function () {
     $('.btn-archivo').attr('disabled', true);  // Desactivo btn
     $('#spiner-loader').removeClass('hide'); // Aparece spinner
@@ -654,14 +799,16 @@ const newButton = (btnClass, title, action = '', data, icon) => {
 }
 
 const datatableButtons = (d, type) => {
-    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A POSTVENTA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
-    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
-    const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
-    const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
-    const BTN_VER_DOC    = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    const BTN_AVANCE_P1      = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P2      = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A POSTVENTA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_RECHAZO_P2     = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
+    const BTN_AVANCE_P3      = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_LIBERA         = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
+    const BTN_NO_LIBERA      = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
+    const BTN_INFO           = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
+    const BTN_SUBIR_DOC      = newButton('btn-data btn-blueMaderas btn-subir-archivo', 'SUBIR ARCHIVO', 'SUBIR-ARCHIVO', d, 'fas fa-upload');
+    const BTN_REMPLAZAR_DOC  = newButton('btn-data btn-blueMaderas btn-subir-archivo', 'REMPLAZAR ARCHIVO', 'SUBIR-ARCHIVO', d, 'fas fa-upload');
+    const BTN_VER_DOC        = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
     
     let NO_BTN = '';
 
@@ -673,8 +820,8 @@ const datatableButtons = (d, type) => {
 
     if (type === 1) {
         if (id_rol_general == 55) { // POSTVENTA
-            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
-            if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
+            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_REMPLAZAR_DOC + BTN_INFO ;
+            if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_SUBIR_DOC + BTN_INFO;
             if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
             if (d.enProcesoLiberacion === 3 ) return BTN_AVANCE_P3 + BTN_VER_DOC + BTN_INFO;
             return BTN_INFO; 
