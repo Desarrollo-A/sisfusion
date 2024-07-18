@@ -157,6 +157,7 @@ class Comisiones extends CI_Controller
     $datos = array();
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
     $this->load->view('template/header');
+    // $tipo_user = $this->session->userdata('tipo');
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
@@ -166,7 +167,14 @@ class Comisiones extends CI_Controller
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
       break;
       default:
+        if($this->session->userdata('tipo') == 3){
+
+          $this->load->view("casas_comisiones/solicitudes_casas_comisiones", $datos);
+
+        }else{
           $this->load->view("ventas/comisiones_colaborador", $datos);
+
+        }
       break;
     }
   }

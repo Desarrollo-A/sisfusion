@@ -6293,6 +6293,7 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
     return $this->db->query("SELECT mes,fechaInicio,corteOoam $filtro2 FROM fechasCorte WHERE estatus = 1 AND 
       corteOoam IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY corteOoam ASC")->result_array();
     }
+    
     public function get_condominios_lista($proyecto = '') {
         $filtro = $proyecto == '' ? '' : "AND idResidencial IN($proyecto)";
         return $this->db->query("SELECT * FROM condominios WHERE status = 1 $filtro ORDER BY nombre");
