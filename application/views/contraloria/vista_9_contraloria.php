@@ -128,6 +128,7 @@
                                             <th>GERENTE</th>
                                             <th>RESIDENCIA</th>
                                             <th>UBICACIÓN</th>
+                                            <th>PORCENTAJE ENGANCHE</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
