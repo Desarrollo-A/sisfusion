@@ -2556,4 +2556,59 @@ class Casas extends BaseController
 
         http_response_code(404);
     }
+
+    public function creditoBancoAvance()
+    {
+        $form = $this->form();
+
+        $idLote = $form->idLote;
+        $idProceso = $form->idProcesoCasas;
+        $proceso = $form->proceso;
+        $procesoNuevo = $form->procesoNuevo;
+        $comentario = $form->comentario;
+        $tipoMovimiento = $form->tipoMovimiento;
+        $banderaSuccess = true;
+
+        $dataHistorial = array(
+            "idProcesoCasas"  => $idProceso,
+            "procesoAnterior" => $proceso,
+            "procesoNuevo"    => $procesoNuevo,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "descripcion"     => "Se ha enviado al paso: " . $procesoNuevo . " | comentario: " . $comentario,
+            "esquemaCreditoProceso" => 1
+        );
+
+        $this->db->trans_begin();
+
+        $updateData = array(
+            "comentario"        => $comentario,
+            "proceso"           => $procesoNuevo,
+            "fechaProceso"      => date("Y-m-d H:i:s"),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "tipoMovimiento"    => ($proceso > $procesoNuevo) ? 1 : (($tipoMovimiento == 1 && $procesoNuevo >= $proceso) ? 2 : 0)
+        );
+
+        // paso 1: hacer update del proceso
+        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProceso);
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        // paso 2: guardar registro del movimiento
+        $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+        if (!$addHistorial) {
+            $banderaSuccess = false;
+        }
+
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+            $this->json([]);
+        } else {
+            $this->db->trans_rollback();
+            http_response_code(400);
+
+            $this->json([]);
+        }
+    }
 }

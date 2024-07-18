@@ -68,6 +68,52 @@ let table = new Table({
     columns,
 })
 
+
+function avanceProcesoBanco(data){
+    let form = new Form({
+        title: 'Avanzar proceso',
+        text: `Se avanzara el proceso del lote ${data.nombreLote}`,
+        onSubmit: function(data){
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    if(response.result){
+                        alerts.showNotification("top", "right", response.message)
+
+                        table.reload()
+                        form.hide()
+                    }
+                    else{
+                        alerts.showNotification("top", "right", response.message, "danger")
+                    }                    
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+
+                    form.loading(false)
+                }
+            })
+
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 5 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show();
+}
+
 function file_upload(data) {
     let form = new Form({
         title: 'Subir orden de compra firmada',
