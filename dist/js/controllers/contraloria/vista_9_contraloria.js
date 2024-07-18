@@ -100,6 +100,14 @@ $("#tabla_ingresar_9").ready(function () {
             }
         },
         {
+            data: function (d) {
+                if (d.tipoEnganche == 0 || d.tipoEnganche == null) {
+                    return `SIN ESPECIFICAR`;  
+                }
+                return `<center>${d.nombre}<center>`;
+            }
+        },
+        {
             orderable: false,
             data: function (d) {
                 var cntActions;

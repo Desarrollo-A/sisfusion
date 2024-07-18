@@ -235,10 +235,11 @@ class Contraloria_model extends CI_Model {
                 cl.lugar_prospeccion, 
                 pr.id_arcus, 
                 pr.id_prospecto,
-                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END validacionContratoFirmado
+                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END validacionContratoFirmado, cl.tipoEnganche, oxc.nombre
             FROM 
                 lotes l 
                 INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote 
+                LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
                 INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio 
                 INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial 
                 LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario 
@@ -296,7 +297,7 @@ class Contraloria_model extends CI_Model {
                 cl.lugar_prospeccion, 
                 pr.id_arcus, 
                 pr.id_prospecto,
-                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END
+                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END, cl.tipoEnganche, oxc.nombre
             ORDER BY 
                 l.nombreLote
             ")->result();

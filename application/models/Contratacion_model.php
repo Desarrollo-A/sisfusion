@@ -93,13 +93,14 @@ class Contratacion_model extends CI_Model {
       ds.aportMensualOfer, ds.fecha1erAport, ds.fechaLiquidaDepo, ds.fecha2daAport, 
 	  ISNULL(ref.nombreReferencias, 'SIN ESPECIFICAR') as referenciasPersonales, 
       ds.observacion, cl.personalidad_juridica, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaMatrimonio_pf, ds.actaConstitutiva_pm, ds.poder_pm, ds.idOficialApoderado_pm, ds.idDomicilio_pm,
-      cl.edadFirma, sds.nombre as sedeResidencial
+      cl.edadFirma, sds.nombre as sedeResidencial, cl.tipoEnganche, loxc.nombre
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
       INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
       LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
       LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente
+      LEFT JOIN opcs_x_cats loxc ON loxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
       LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
       LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
       LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente

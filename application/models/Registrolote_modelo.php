@@ -1586,9 +1586,10 @@
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, 
 				ISNULL(hd.expediente, 0) documentoCargado, 
 				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta,
-				cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
+				cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion, cl.tipoEnganche, oxc.nombre
 			FROM lotes lo 
-				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1 
+				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1
+				LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
 				LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
 				LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
 				INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -1639,7 +1640,7 @@
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), 
 				hd.expediente, 
 				tv.tipo_venta,
-				cl.sedeRecepcion, sed.nombre"
+				cl.sedeRecepcion, sed.nombre, cl.tipoEnganche, oxc.nombre"
 		)->result();
     }
 

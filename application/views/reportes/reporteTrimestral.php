@@ -66,6 +66,7 @@
                                                 <th>ENGANCHE</th>
                                                 <th>VENTA COMPARTIDA</th>
                                                 <th>NÚMERO COMPARTIDA</th>
+                                                <th>PORCENTAJE ENGANCHE</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
