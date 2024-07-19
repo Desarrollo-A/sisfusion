@@ -5328,11 +5328,15 @@ function getDatosGralInternomex(){
         else if($id_usuario == 15109)
             $id_lider .= ", 10251";
         else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
-            $id_lider .= ", 495";
+            $id_lider .= ", 12688";
         else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
             $id_lider .= ", 5604";
         else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
             $id_lider .= ", 80, 664";
+        else if ($id_usuario == 16186) // CAROLINA CORONADO YAÑEZ
+            $id_lider .= ", 6942";
+        else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
+            $id_lider .= ", 654, 697, 5604, 10251, 12688";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES

@@ -606,13 +606,14 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
         $filtroSede = '';
+        $validacionAsignacion = $this->session->userdata('id_rol') == 12 ? "AND lo.estatus_preproceso  = 0" : "";
         if (in_array($id_usuario, [2148, 13995]))
             $id_sede  = '3';
         else if ($id_usuario == 13549)
             $id_sede = '2, 5, 1';
         else
             $id_sede = $this->session->userdata('id_sede');
-        if (($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589)
+        if ((!in_array($this->session->userdata('id_rol'), [2, 5, 12])) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589)
             $filtroSede = "AND sede_residencial IN ($id_sede)";
         return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
