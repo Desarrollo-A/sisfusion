@@ -453,43 +453,41 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $('#spiner-loader').addClass('hide');
     });
 
-    function crearDivs(dataPaquete,tiposDescuentos,descuentosPorPlan){
-        $('#cards').append(`
-            <div class="card mb-0" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; border: 1px solid #eaeaea;">
-                <div class="box"> 
-                    <h6 class="overflow-text" style="color: #4e4e4e; border-bottom: 1px solid #eaeaea; padding: 10px 10px 5px 10px; margin-top: 0; border-radius: 5px 5px 0 0;" data-toggle="tooltip" data-placement="right" title="${dataPaquete.descripcion}"><b>${dataPaquete.descripcion}</b></h6>
-                    <span>
-                        <div style="padding-bottom: 15px" id="descuentosP_${dataPaquete.id_paquete}">
-                        </div>
-                    </span>
-                </div>
+    function crearDivs(dataPaquete, tiposDescuentos, descuentosPorPlan) {
+    $('#cards').append(`
+        <div class="card mb-0" style="box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; border: 1px solid #eaeaea;">
+            <div class="box"> 
+                <h6 class="overflow-text" style="color: #4e4e4e; border-bottom: 1px solid #eaeaea; padding: 10px 10px 5px 10px; margin-top: 0; border-radius: 5px 5px 0 0;" data-toggle="tooltip" data-placement="right" title="${dataPaquete.descripcion}"><b>${dataPaquete.descripcion}</b></h6>
+                <span>
+                    <div style="padding-bottom: 15px" id="descuentosP_${dataPaquete.id_paquete}">
+                    </div>
+                </span>
             </div>
-        `);
+        </div>
+    `);
 
-        for (let m = 0; m < tiposDescuentos.length; m++) {
-            
-            let existe = descuentosPorPlan.find(elementD => elementD.id_paquete == dataPaquete.id_paquete &&  elementD.id_condicion == tiposDescuentos[m].condicion.id_condicion);
-            
-            if(existe != undefined){
-                $(`#descuentosP_${dataPaquete.id_paquete}`).append(`
+    for (let m = 0; m < tiposDescuentos.length; m++) {
+        let existe = descuentosPorPlan.find(elementD => elementD.id_paquete == dataPaquete.id_paquete && elementD.id_condicion == tiposDescuentos[m].condicion.id_condicion);
+        
+        if (existe != undefined) {
+            $(`#descuentosP_${dataPaquete.id_paquete}`).append(`
                 <p class="m-0">${tiposDescuentos[m].condicion.descripcion}</p>
-                <div id="tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}"></div>
+                <div id="tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}" style="display: flex; flex-wrap: wrap;"></div>
             `);
-            let existe = descuentosPorPlan.find(elementD => elementD.id_paquete == dataPaquete.id_paquete &&  elementD.id_condicion == tiposDescuentos[m].condicion.id_condicion);
-            if(existe != undefined){
-                let descuentosByPlan = descuentosPorPlan.filter(desc => desc.id_paquete == dataPaquete.id_paquete);
-                for (let o = 0; o < descuentosByPlan.length; o++) {
-                    if(descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion){
-                        let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$'+formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%'  )
-                        $(`#tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}`).append(`
-                            <span class="label lbl-green" style="margin: 0 5px">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? ' +  '+descuentosByPlan[o].msi_descuento+'MSI' : '')}</span>`);
-                    }
+
+            let descuentosByPlan = descuentosPorPlan.filter(desc => desc.id_paquete == dataPaquete.id_paquete);
+            for (let o = 0; o < descuentosByPlan.length; o++) {
+                if (descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion) {
+                    let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$' + formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%');
+                    $(`#tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}`).append(`
+                        <span class="label lbl-green" style="margin-right: 5px; margin-bottom: 15px; margin-left: 5px;">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' : (descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? ' +  ' + descuentosByPlan[o].msi_descuento + 'MSI' : '')}</span>`);
                 }
-            }       
+            }
         }
-        $('[data-toggle="tooltip"]').tooltip()
     }
-} 
+    $('[data-toggle="tooltip"]').tooltip();
+}
+
     $(document).ready(function() {
         $.post(general_base_url+"PaquetesCorrida/lista_sedes", function (data) {
             $('[data-toggle="tooltip"]').tooltip()
@@ -548,7 +546,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         } else if (isPercentage) {
             desc.setAttribute("data-type", "percentage");
         } else {
-            desc.setAttribute("data-type", "");
+            desc.setAttribute("data-type", "numeric");
         }
 
         $('#descuento').val('');
@@ -566,6 +564,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 formatCurrency($(this));
             } else if (dataType === 'percentage') {
                 formatPercentage($(this));
+            }
+            else if(dataType === 'numeric') {
+                isNumber($(this));
             }
         },
         blur: function() {
@@ -657,6 +658,10 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 }
             });
         });
+    }
+    function isNumber(input) {
+        let input_val = input.val();
+        return !isNaN(input_val) && input_val.trim() !== "";
     }
     
     //Fn para construir las tablas según el número de condiciones existente, esto en la modal para ver condiciones
