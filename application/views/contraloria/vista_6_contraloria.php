@@ -5,7 +5,7 @@
 	<div class="wrapper ">
 		<?php $this->load->view('template/sidebar'); ?>
 
-		<style>
+	<style>
 		.form-group{
 			padding-bottom: 0!important;
     		margin: 0!important;
@@ -28,18 +28,8 @@
 								<br>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<label  class="control-label" id="tvLbl">Enganche / Cantidad traspaso</label>
+								<label  class="control-label" id="tvLbl">Enganche</label>
 								<input class="form-control input-gral m-0" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
-							</div>
-							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
-								<label class="control-label" id="tvLbl">Tipo de Enganche</label>
-								<select required="required" name="tipo_enganche" id="tipo_enganche" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="3">
-								</select>
-							</div>
-							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
-								<label class="control-label" id="tvLbl">Estatus del Enganche</label>
-								<select required="required" name="estatus_enganche" id="estatus_enganche" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="2">
-								</select>
 							</div>
 							<input type="hidden" name="idLote" id="idLoteregCor">
 							<input type="hidden" name="idCliente" id="idClienteregCor">

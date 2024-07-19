@@ -120,9 +120,9 @@ function show_upload_coti(data) {
         },
         fields: [
             new HiddenField({ id: 'id_proceso',      value: data.idProcesoCasas }),
-            new FileField({   id: 'file_cotizacion1',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] }),
+            new FileField({   id: 'file_cotizacion1',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf'] }),
             data.tipoCredito == 2 ?
-            new FileField({   id: 'file_cotizacion2',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] })
+            new FileField({   id: 'file_cotizacion2',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf'] })
             : ''
         ],
     })

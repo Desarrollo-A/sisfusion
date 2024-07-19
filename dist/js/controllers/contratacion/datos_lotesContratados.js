@@ -129,6 +129,14 @@ $(document).ready(function () {
                 }
             },
             { data: 'nombreSedeRecepcion' },
+            {
+                data: function (d) {
+                    if (d.tipoEnganche == 0 || d.tipoEnganche == null) {
+                        return `SIN ESPECIFICAR`;  
+                    }
+                    return `<center>${d.nombre}<center>`;
+                }
+            },
         ]
     });
 });

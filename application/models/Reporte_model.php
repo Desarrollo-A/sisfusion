@@ -1286,20 +1286,26 @@ class Reporte_model extends CI_Model {
     
     public function getReporteTrimestral($beginDate, $endDate) {  
         $query=$this->db->query("SELECT t.nombreResidencial as nombreResidencial, t.nombreCondominio as nombreCondominio, t.nombreLote as nombreLote, t.precioFinal as precioFinal, t.referencia as referencia,
-        t.nombreAsesor as nombreAsesor, CONVERT(VARCHAR,t.fechaApartado,20) AS fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, CONVERT(VARCHAR,t.fechaEstatus9,20) AS fechaEstatus9, t.estatusActual,
-        cliente, enganche, estatus, estatus, movimiento, colorEstatus, fondoEstatus, t.id_cliente, CASE WHEN vc.id_cliente IS NULL THEN 0 ELSE (vc.totalVc + 1) END numeroVC
+        t.nombreAsesor as nombreAsesor, t.nombreCoordinador as nombreCoordinador, t.nombreGerente as nombreGerente,
+		CONVERT(VARCHAR,t.fechaApartado,20) AS fechaApartado, t.nombreSede as nombreSede, t.tipo_venta as tipo_venta, CONVERT(VARCHAR,t.fechaEstatus9,20) AS fechaEstatus9, t.estatusActual,
+        cliente, enganche, estatus, estatus, movimiento, colorEstatus, fondoEstatus, t.id_cliente, CASE WHEN vc.id_cliente IS NULL THEN 0 ELSE (vc.totalVc + 1) END numeroVC, empresa, tipoEnganche, nombre
         FROM (
             SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
             lo.idLote, FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') precioFinal, lo.referencia, 
-            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+			CASE WHEN us.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) END nombreAsesor,
+			CASE WHEN us2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno)) END nombreCoordinador,
+			CASE WHEN us3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno)) END nombreGerente,
             cl.fechaApartado, se.nombre nombreSede, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta, st.nombre estatus, hl.modificado fechaEstatus9,
             sc.nombreStatus estatusActual, mo.descripcion movimiento, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente,
-            ISNULL(totalValidado, 0)enganche, st.color colorEstatus, st.background_sl fondoEstatus, cl.id_cliente
+            ISNULL(totalValidado, 0)enganche, st.color colorEstatus, st.background_sl fondoEstatus, cl.id_cliente, re.empresa, cl.tipoEnganche, oxc.nombre
             FROM lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+			INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
             INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
+			LEFT JOIN usuarios us2 ON us2.id_usuario = cl.id_coordinador
+			LEFT JOIN usuarios us3 ON us3.id_usuario = cl.id_gerente
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
             LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
             INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
@@ -1312,16 +1318,21 @@ class Reporte_model extends CI_Model {
 
             SELECT re.descripcion nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
             lo.idLote, FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') precioFinal, lo.referencia, 
-            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+            CASE WHEN us.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) END nombreAsesor,
+			CASE WHEN us2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno)) END nombreCoordinador,
+			CASE WHEN us3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno)) END nombreGerente,
             cl.fechaApartado, se.nombre nombreSede, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta, st.nombre estatus, hl.modificado fechaEstatus9,
             sc.nombreStatus estatusActual, mo.descripcion movimiento, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente,
-            ISNULL(totalValidado, 0)enganche, st.color colorEstatus, st.background_sl fondoEstatus, cl.id_cliente
+            ISNULL(totalValidado, 0)enganche, st.color colorEstatus, st.background_sl fondoEstatus, cl.id_cliente, re.empresa, cl.tipoEnganche, oxc.nombre
             FROM lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+			INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
             INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
             INNER JOIN usuarios us ON us.id_usuario = vc.id_asesor
+            LEFT JOIN usuarios us2 ON us2.id_usuario = vc.id_coordinador
+            LEFT JOIN usuarios us3 ON us3.id_usuario = vc.id_gerente
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
             LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
             INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 1 GROUP BY idLote, idCliente) 
@@ -1330,51 +1341,66 @@ class Reporte_model extends CI_Model {
             INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
             INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
             WHERE lo.idStatusLote IN (2, 3)
+
             UNION ALL
 
             SELECT CAST(re.descripcion AS VARCHAR(100)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
             lo.idLote, '$0.00' precioFinal, lo.referencia, 
-            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+            CASE WHEN us.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) END nombreAsesor,
+			CASE WHEN us2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno)) END nombreCoordinador,
+			CASE WHEN us3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno)) END nombreGerente,
             MAX (cl.fechaApartado) fechaApartado, se.nombre nombreSede, 'Sin especificar' tipo_venta, 'Cancelado' estatus, hl.modificado fechaEstatus9,
             sc.nombreStatus estatusActual, 'NA' movimiento, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente, 0 enganche,
-             '' colorEstatus, '' fondoEstatus, cl.id_cliente
+             '' colorEstatus, '' fondoEstatus, cl.id_cliente, re.empresa, cl.tipoEnganche, oxc.nombre
             FROM lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+			INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
             INNER JOIN usuarios us ON us.id_usuario = cl.id_asesor
+			LEFT JOIN usuarios us2 ON us2.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios us3 ON us3.id_usuario = cl.id_gerente
             INNER JOIN sedes se ON se.id_sede = cl.id_sede
             INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 0 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado 
             LEFT JOIN historial_lotes hl2 ON hl2.idLote = hl.idLote AND hl2.idCliente = hl.idCliente AND hl2.modificado = hl.modificado
 			INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = hl2.idStatusContratacion
             GROUP BY CAST(re.descripcion AS VARCHAR(100)), UPPER(co.nombre), UPPER(lo.nombreLote),
-            lo.idLote, lo.referencia, 
+            lo.idLote, lo.referencia, us.id_usuario, us2.id_usuario, us3.id_usuario,
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno),
-            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cl.id_cliente
+			CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno),
+			CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno),
+            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cl.id_cliente, re.empresa, cl.tipoEnganche, oxc.nombre
             UNION ALL
 
             SELECT CAST(re.descripcion AS VARCHAR(100)) nombreResidencial, UPPER(co.nombre) nombreCondominio, UPPER(lo.nombreLote) nombreLote,
             lo.idLote, '$0.00' precioFinal, lo.referencia, 
-            CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreAsesor,
+            CASE WHEN us.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) END nombreAsesor,
+			CASE WHEN us2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno)) END nombreCoordinador,
+			CASE WHEN us3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno)) END nombreGerente,
             MAX (cl.fechaApartado) fechaApartado, se.nombre nombreSede, 'Sin especificar' tipo_venta, 'Cancelado' estatus, hl.modificado fechaEstatus9,
             sc.nombreStatus estatusActual, 'NA' movimiento, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) cliente, 0 enganche,
-            '' colorEstatus, '' fondoEstatus, cl.id_cliente
+            '' colorEstatus, '' fondoEstatus, cl.id_cliente, re.empresa, cl.tipoEnganche, oxc.nombre
             FROM lotes lo
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+			INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 0 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00.000' AND '$endDate 23:59:59.999'
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
             INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
             INNER JOIN usuarios us ON us.id_usuario = vc.id_asesor
+			LEFT JOIN usuarios us2 ON us2.id_usuario = vc.id_coordinador
+            LEFT JOIN usuarios us3 ON us3.id_usuario = vc.id_gerente
             INNER JOIN sedes se ON se.id_sede = cl.id_sede  
             INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE status = 0 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
             INNER JOIN historial_liberacion hi ON hi.idLote = lo.idLote AND hi.modificado >= hl.modificado
             LEFT JOIN historial_lotes hl2 ON hl2.idLote = hl.idLote AND hl2.idCliente = hl.idCliente AND hl2.modificado = hl.modificado
 			INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = hl2.idStatusContratacion
             GROUP BY CAST(re.descripcion AS VARCHAR(100)), UPPER(co.nombre), UPPER(lo.nombreLote),
-            lo.idLote, lo.referencia, 
+            lo.idLote, lo.referencia, us.id_usuario, us2.id_usuario, us3.id_usuario,
             CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno),
-            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cl.id_cliente
+			CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno),
+			CONCAT(us3.nombre, ' ', us3.apellido_paterno, ' ', us3.apellido_materno),
+            cl.fechaApartado, se.nombre, hl.modificado, sc.nombreStatus, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cl.id_cliente, re.empresa, cl.tipoEnganche, oxc.nombre
         ) t
         LEFT JOIN (SELECT COUNT(*) totalVc, id_cliente FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = t.id_cliente
         ORDER BY t.fechaApartado");
@@ -1546,8 +1572,7 @@ class Reporte_model extends CI_Model {
                 CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
                 CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
                 CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
-                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.
-                nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
                 CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
                 CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
                 sc.nombreStatus estatusContratacion,

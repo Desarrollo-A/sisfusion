@@ -144,16 +144,16 @@ function getDataFacturaSeguros(proyecto, condominio){
                                 var fecha = new Date();
                                 tabla_factura_seguros.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>facturas</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
-                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
+                                modalInformation(data, mensaje);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
-                                modalInformation(RESPUESTA_MODAL.FAIL);
+                                modalInformation(data);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            modalInformation(RESPUESTA_MODAL.FAIL);
+                            modalInformation(data);
                         }
                     });
                 }else{
@@ -396,7 +396,7 @@ function getDataFacturaSeguros(proyecto, condominio){
 
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $('#spiner-loader').removeClass('hide');
-        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Seguros/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-factura").append('<li>\n' +
                 '  <div class="container-fluid">\n' +

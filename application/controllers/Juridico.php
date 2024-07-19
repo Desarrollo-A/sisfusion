@@ -38,18 +38,15 @@ class Juridico extends CI_Controller
 	}
 
 
-		public function getStatus7ContratacionJuridico() {
+	public function getStatus7ContratacionJuridico() {
 
-			if(isset($_POST) && !empty($_POST))
-			    $data = $this->Juridico_model->registroStatusContratacion7($this->input->post("typeTransaction"), $this->input->post("beginDate"), $this->input->post("endDate"), $this->input->post("idResidencial"),$this->input->post("idCondominio"));
-            else
-                $data = $this->Juridico_model->registroStatusContratacion7();
+		if(isset($_POST) && !empty($_POST))
+		$data = $this->Juridico_model->registroStatusContratacion7($this->input->post("typeTransaction"), $this->input->post("beginDate"), $this->input->post("endDate"), $this->input->post("idResidencial"),$this->input->post("idCondominio"));
+		else
+			$data = $this->Juridico_model->registroStatusContratacion7();
 
-		//$data = $this->Juridico_model->registroStatusContratacion7();
-  
 		$dataPer=array();
-		for($i=0;$i< count($data);$i++)
-		{
+		for($i=0;$i< count($data);$i++){
 			$dataPer[$i]['idLote']=$data[$i]->idLote;
 			$dataPer[$i]['idCondominio']=$data[$i]->idCondominio;
 			$dataPer[$i]['id_cliente']=$data[$i]->id_cliente;
@@ -73,10 +70,11 @@ class Juridico extends CI_Controller
 			$dataPer[$i]['coordinador']=$data[$i]->coordinador;
 			$dataPer[$i]['tipo_venta']=$data[$i]->tipo_venta;
 			$dataPer[$i]['vl']=$data[$i]->vl;
-  			$dataPer[$i]['etapa']=$data[$i]->etapa;
+			  $dataPer[$i]['etapa']=$data[$i]->etapa;
 			$dataPer[$i]['user']=$this->session->userdata('id_usuario');
 			$dataPer[$i]['juridico']=$data[$i]->juridico;
 			$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
+			$dataPer[$i]['tipo_proceso']=$data[$i]->tipo_proceso;
 
 			$proyecto = str_replace(' ', '',$data[$i]->nombreResidencial);
 			$cluster = strtoupper($data[$i]->nombreCondominio);
@@ -91,10 +89,10 @@ class Juridico extends CI_Controller
 			$horaActual = date('H:i:s');
 			$horaInicio = date("08:00:00");
 			$horaFin = date("16:00:00");
-			
+
 		
 			$arregloFechas = array();
-			
+
 			if ($horaActual > $horaInicio and $horaActual < $horaFin) {
 			
 			
@@ -102,16 +100,16 @@ class Juridico extends CI_Controller
 			$hoy_strtotime2 = strtotime($fechaAccion);
 			$sig_fecha_dia2 = date('D', $hoy_strtotime2);
 			  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-		
+			
 			
 			if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 	
 				 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
 				 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
 				 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
 				 $sig_fecha_feriado2 == "25-12") {
-			
 				
-	
+				
+
 			$fecha = $fechaAccion;		
 			$z = 0;
 				while($z <= 2) {
@@ -120,8 +118,8 @@ class Juridico extends CI_Controller
 			  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
 			  $sig_fecha_dia = date('D', $sig_strtotime);
 				$sig_fecha_feriado = date('d-m', $sig_strtotime);
-			
-	
+				
+
 			  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
 				 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
 				 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -137,12 +135,12 @@ class Juridico extends CI_Controller
 
 				$d= end($arregloFechas);
 				$dataPer[$i]['fechaVenc2']=$d;
-			
+				   
 				   }else{
 
-			
+				
 			$fecha = $fechaAccion;
-			
+				
 			$z = 0;
 				while($z <= 1) {
 			  $hoy_strtotime = strtotime($fecha);
@@ -150,8 +148,8 @@ class Juridico extends CI_Controller
 			  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
 			  $sig_fecha_dia = date('D', $sig_strtotime);
 				$sig_fecha_feriado = date('d-m', $sig_strtotime);
-	
-			
+
+				
 			  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
 				 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
 				 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -167,9 +165,9 @@ class Juridico extends CI_Controller
 
 			   $d= end($arregloFechas);
 				$dataPer[$i]['fechaVenc2']=$d;
-			
+				   
 				   }
-		
+			   
 			} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {			
 			
 			$fechaAccion = $data[$i]->modificado;
@@ -182,10 +180,10 @@ class Juridico extends CI_Controller
 				 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
 				 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
 				 $sig_fecha_feriado2 == "25-12") {
-			
+				
 				$fecha = $fechaAccion;
-			
-			
+				
+				
 			$z = 0;
 				while($z <= 2) {
 			  $hoy_strtotime = strtotime($fecha);
@@ -194,7 +192,7 @@ class Juridico extends CI_Controller
 			  $sig_fecha_dia = date('D', $sig_strtotime);
 				$sig_fecha_feriado = date('d-m', $sig_strtotime);
 
-			
+				
 			  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
 				 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
 				 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -207,25 +205,25 @@ class Juridico extends CI_Controller
 						  } 
 				$fecha = $sig_fecha;
 					   }
-			
+				   
 				$d= end($arregloFechas);
 				$dataPer[$i]['fechaVenc2']=$d;
 				   }else{
-			
-			
-			
+				
+				
+				
 			$fecha = $fechaAccion;
 
 			$z = 0;
-			
+				
 				while($z <= 2) {
 			  $hoy_strtotime = strtotime($fecha);
 			  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
 			  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
 			  $sig_fecha_dia = date('D', $sig_strtotime);
 				$sig_fecha_feriado = date('d-m', $sig_strtotime);
-			
-		
+				
+				
 			  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
 				 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
 				 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
@@ -242,16 +240,16 @@ class Juridico extends CI_Controller
 				$d= end($arregloFechas);
 				$dataPer[$i]['fechaVenc2']=$d;			
 				   }
-			
+			   
 			}
 
 
 
 			$data_c = $this->Juridico_model->getCop($data[$i]->id_cliente);
-			
-			
+
+
 			if (empty($data_c)) {
-				
+
 				 $dataPer[$i]['n_cop']= 0;			
 
 			} else {
@@ -260,15 +258,18 @@ class Juridico extends CI_Controller
 					foreach ($data_c as $cop){
 							$z.= '-'.$cop["nombre"].' '.$cop["apellido_paterno"].' '.$cop["apellido_materno"].'<br>';
 					}
-	 
+				
 					$dataPer[$i]['nombret']= $data[$i]->nombre.' '.$data[$i]->apellido_paterno.' '.$data[$i]->apellido_materno;
 					$dataPer[$i]['nombrec'] = $z;
 
-		
+				
 			}
 
+
+
+
 		}
-  
+
 		if($dataPer != null) {
 			echo json_encode($dataPer);
 		} else {
@@ -278,195 +279,201 @@ class Juridico extends CI_Controller
   
 
 
-	public function editar_registro_lote_juridico_proceceso7(){
+public function editar_registro_lote_juridico_proceceso7(){
 
-		$idLote=$this->input->post('idLote');
-		$idCondominio=$this->input->post('idCondominio');
-		$nombreLote=$this->input->post('nombreLote');
-		$idCliente=$this->input->post('idCliente');
-		$comentario=$this->input->post('comentario');
-		$modificado=date('Y-m-d H:i:s');
-		$fechaVenc=$this->input->post('fechaVenc');
-		$numContrato=$this->input->post('numContrato');
-	
-	
-		$arreglo=array();
-		$arreglo["idStatusContratacion"]= 7;
-		$arreglo["idMovimiento"]= 37;
-		$arreglo["comentario"]=$comentario;
-		$arreglo["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo["perfil"]=$this->session->userdata('id_rol');
-		$arreglo["modificado"]=date("Y-m-d H:i:s");
-		$arreglo["numContrato"]=$numContrato;
-		$arreglo["fechaSolicitudValidacion"] = date('Y-m-d H:i:s');
-	
-	
-	$horaActual = date('H:i:s');
-	$horaInicio = date("08:00:00");
-	$horaFin = date("16:00:00");
-	
-	if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-	
-	$fechaAccion = date("Y-m-d H:i:s");
-	$hoy_strtotime2 = strtotime($fechaAccion);
-	$sig_fecha_dia2 = date('D', $hoy_strtotime2);	
-	  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-	
-	if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-		 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-		 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-		 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-		 $sig_fecha_feriado2 == "25-12") {
-	
-	$fecha = $fechaAccion;
-	$i = 0;
-		while($i <= 16) {
-	  $hoy_strtotime = strtotime($fecha);
-	  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-	  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-	  $sig_fecha_dia = date('D', $sig_strtotime);
-		$sig_fecha_feriado = date('d-m', $sig_strtotime);
-	
-	  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-		 $sig_fecha_feriado == "25-12") {
-		   }
-			 else {
-					$fecha= $sig_fecha;
-					 $i++;
-				  } 
-		$fecha = $sig_fecha;
-			   }
-	
-		   $arreglo["fechaVenc"]= $fecha;
+	$idLote=$this->input->post('idLote');
+	$idCondominio=$this->input->post('idCondominio');
+	$nombreLote=$this->input->post('nombreLote');
+	$idCliente=$this->input->post('idCliente');
+	$comentario=$this->input->post('comentario');
+	$modificado=date('Y-m-d H:i:s');
+	$fechaVenc=$this->input->post('fechaVenc');
+	$numContrato=$this->input->post('numContrato');
 
-		   }else{	
-	
-	$fecha = $fechaAccion;
-	
-	$i = 0;
-
-		while($i <= 15) {
-	  $hoy_strtotime = strtotime($fecha);
-	  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-	  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-	  $sig_fecha_dia = date('D', $sig_strtotime);
-		$sig_fecha_feriado = date('d-m', $sig_strtotime);
-	
-
-	  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-		 $sig_fecha_feriado == "25-12") {
-		   }
-			 else {
-					$fecha= $sig_fecha;
-					 $i++;
-				  } 
-	
-		$fecha = $sig_fecha;
-			   }
-		   $arreglo["fechaVenc"]= $fecha;	
-		   }
-	} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-	
-	$fechaAccion = date("Y-m-d H:i:s");
-	$hoy_strtotime2 = strtotime($fechaAccion);
-	$sig_fecha_dia2 = date('D', $hoy_strtotime2);
-	  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-	
-
-	if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
-		 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-		 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-		 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-		 $sig_fecha_feriado2 == "25-12") {
-	
-	$fecha = $fechaAccion;
-	$i = 0;
-
-		while($i <= 16) {
-	  $hoy_strtotime = strtotime($fecha);
-	  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-	  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-	  $sig_fecha_dia = date('D', $sig_strtotime);
-		$sig_fecha_feriado = date('d-m', $sig_strtotime);
-	
-	  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
-		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-		 $sig_fecha_feriado == "25-12") {
-		   }
-			 else {
-					$fecha= $sig_fecha;
-					 $i++;
-				  } 
-		$fecha = $sig_fecha;
-			   }
-		   $arreglo["fechaVenc"]= $fecha;
-		   }else{
-	$fecha = $fechaAccion;
-	$i = 0;
-	
-		while($i <= 16) {
-	  $hoy_strtotime = strtotime($fecha);
-	  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-	  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-	  $sig_fecha_dia = date('D', $sig_strtotime);
-		$sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-	
-	  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 	
-		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-		 $sig_fecha_feriado == "25-12") {
-		   }
-			 else {
-					$fecha= $sig_fecha;
-					 $i++;
-				  } 
-		$fecha = $sig_fecha;
-			   }
-		 $arreglo["fechaVenc"]= $fecha;
-	   }
-	}
-	
-	
-		$arreglo2=array();
-		$arreglo2["idStatusContratacion"]= 7;
-		$arreglo2["idMovimiento"]=37;	
-		$arreglo2["nombreLote"]=$nombreLote;
-		$arreglo2["comentario"]=$comentario;
-		$arreglo2["usuario"]=$this->session->userdata('id_usuario');
-		$arreglo2["perfil"]=$this->session->userdata('id_rol');
-		$arreglo2["modificado"]=date("Y-m-d H:i:s");
-		$arreglo2["fechaVenc"]= $fechaVenc;
-		$arreglo2["idLote"]= $idLote;
-		$arreglo2["idCondominio"]= $idCondominio;          
-		$arreglo2["idCliente"]= $idCliente;          
-	
-
-	$validate = $this->Juridico_model->validateSt7($idLote);
-
-	if($validate == 1){
-		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
-				$data['message'] = 'OK';
-				echo json_encode($data);
-			}else{
-				$data['message'] = 'ERROR';
-				echo json_encode($data);
-		}
-	}else {
-		$data['message'] = 'FALSE';
+	$validarDocumentos = $this->validarDocumentacionEstatus7($idLote);
+	if (!$validarDocumentos['status']) {
+		$data['message'] = 'DOCUMENTS';
+		$data['documentos'] = "Asegúrate de incluir los documentos: ".$validarDocumentos['documentos'];
 		echo json_encode($data);
+		return;
 	}
-	
-	
+
+	$arreglo=array();
+	$arreglo["idStatusContratacion"]= 7;
+	$arreglo["idMovimiento"]= 37;
+	$arreglo["comentario"]=$comentario;
+	$arreglo["usuario"]=$this->session->userdata('id_usuario');
+	$arreglo["perfil"]=$this->session->userdata('id_rol');
+	$arreglo["modificado"]=date("Y-m-d H:i:s");
+	$arreglo["numContrato"]=$numContrato;
+	$arreglo["fechaSolicitudValidacion"] = date('Y-m-d H:i:s');
+
+$horaActual = date('H:i:s');
+$horaInicio = date("08:00:00");
+$horaFin = date("16:00:00");
+
+if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+
+$fechaAccion = date("Y-m-d H:i:s");
+$hoy_strtotime2 = strtotime($fechaAccion);
+$sig_fecha_dia2 = date('D', $hoy_strtotime2);	
+  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+	 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+	 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+	 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+	 $sig_fecha_feriado2 == "25-12") {
+
+$fecha = $fechaAccion;
+$i = 0;
+	while($i <= 16) {
+  $hoy_strtotime = strtotime($fecha);
+  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+  $sig_fecha_dia = date('D', $sig_strtotime);
+	$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+	 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+	 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+	 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+	 $sig_fecha_feriado == "25-12") {
+	   }
+		 else {
+				$fecha= $sig_fecha;
+				 $i++;
+			  } 
+	$fecha = $sig_fecha;
+		   }
+
+	   $arreglo["fechaVenc"]= $fecha;
+
+	   }else{	
+
+$fecha = $fechaAccion;
+
+$i = 0;
+
+	while($i <= 15) {
+  $hoy_strtotime = strtotime($fecha);
+  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+  $sig_fecha_dia = date('D', $sig_strtotime);
+	$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+	 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+	 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+	 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+	 $sig_fecha_feriado == "25-12") {
+	   }
+		 else {
+				$fecha= $sig_fecha;
+				 $i++;
+			  } 
+
+	$fecha = $sig_fecha;
+		   }
+	   $arreglo["fechaVenc"]= $fecha;	
+	   }
+} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+
+$fechaAccion = date("Y-m-d H:i:s");
+$hoy_strtotime2 = strtotime($fechaAccion);
+$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+  $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+
+if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+	 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+	 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+	 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+	 $sig_fecha_feriado2 == "25-12") {
+
+$fecha = $fechaAccion;
+$i = 0;
+
+	while($i <= 16) {
+  $hoy_strtotime = strtotime($fecha);
+  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+  $sig_fecha_dia = date('D', $sig_strtotime);
+	$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+	 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+	 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+	 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+	 $sig_fecha_feriado == "25-12") {
+	   }
+		 else {
+				$fecha= $sig_fecha;
+				 $i++;
+			  } 
+	$fecha = $sig_fecha;
+		   }
+	   $arreglo["fechaVenc"]= $fecha;
+	   }else{
+$fecha = $fechaAccion;
+$i = 0;
+
+	while($i <= 16) {
+  $hoy_strtotime = strtotime($fecha);
+  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+  $sig_fecha_dia = date('D', $sig_strtotime);
+	$sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+
+  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 	
+	 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+	 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+	 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+	 $sig_fecha_feriado == "25-12") {
+	   }
+		 else {
+				$fecha= $sig_fecha;
+				 $i++;
+			  } 
+	$fecha = $sig_fecha;
+		   }
+	 $arreglo["fechaVenc"]= $fecha;
+   }
+}
+
+
+	$arreglo2=array();
+	$arreglo2["idStatusContratacion"]= 7;
+	$arreglo2["idMovimiento"]=37;	
+	$arreglo2["nombreLote"]=$nombreLote;
+	$arreglo2["comentario"]=$comentario;
+	$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+	$arreglo2["perfil"]=$this->session->userdata('id_rol');
+	$arreglo2["modificado"]=date("Y-m-d H:i:s");
+	$arreglo2["fechaVenc"]= $fechaVenc;
+	$arreglo2["idLote"]= $idLote;
+	$arreglo2["idCondominio"]= $idCondominio;          
+	$arreglo2["idCliente"]= $idCliente;          
+
+
+$validate = $this->Juridico_model->validateSt7($idLote);
+
+if($validate == 1){
+	if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+			$data['message'] = 'OK';
+			echo json_encode($data);
+		}else{
+			$data['message'] = 'ERROR';
+			echo json_encode($data);
+	}
+}else {
+	$data['message'] = 'FALSE';
+	echo json_encode($data);
+}
+
+
 }
 
 public function editar_registro_loteRevision_juridico_proceceso7(){
@@ -481,9 +488,8 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 
 		$validarDocumentos = $this->validarDocumentacionEstatus7($idLote);
         if (!$validarDocumentos['status']) {
-			$documentsName = $validarDocumentos['documentos'];
             $data['message'] = 'DOCUMENTS';
-            $data['documentos'] = "Asegúrate de incluir los documentos: $documentsName.";
+            $data['documentos'] = "Asegúrate de incluir los documentos: ${$validarDocumentos['documentos']}";
             echo json_encode($data);
             return;
         }
@@ -527,10 +533,9 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
 	}
 
 
-}
-	
-	
-public function editar_registro_loteRevision_juridico_proceso7(){
+  }
+
+public function editar_registro_loteRechazo_juridico_proceceso7(){
 
     $idLote=$this->input->post('idLote');
     $idCondominio=$this->input->post('idCondominio');
@@ -538,36 +543,290 @@ public function editar_registro_loteRevision_juridico_proceso7(){
     $idCliente=$this->input->post('idCliente');
     $comentario=$this->input->post('comentario');
     $modificado=date("Y-m-d H:i:s");
-    $fechaVenc=$this->input->post('fechaVenc');
-	$arreglo["status8Flag"] = 0;
+
 
     $arreglo=array();
-    $arreglo["idStatusContratacion"]= 7;
-    $arreglo["idMovimiento"]=7;
+    $arreglo["idStatusContratacion"]= 5;
+    $arreglo["idMovimiento"]=22; 
     $arreglo["comentario"]=$comentario;
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
+    $arreglo["fechaVenc"]=$modificado;
 
 
     $arreglo2=array();
-    $arreglo2["idStatusContratacion"]= 7;
-    $arreglo2["idMovimiento"]=7;
+    $arreglo2["idStatusContratacion"]=5;
+    $arreglo2["idMovimiento"]=22;
     $arreglo2["nombreLote"]=$nombreLote;
     $arreglo2["comentario"]=$comentario;
     $arreglo2["usuario"]=$this->session->userdata('id_usuario');
     $arreglo2["perfil"]=$this->session->userdata('id_rol');
     $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $fechaVenc;
-    $arreglo2["idLote"]= $idLote; 
+    $arreglo2["fechaVenc"]= $modificado;
+    $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;          
-    $arreglo2["idCliente"]= $idCliente; 
+	$arreglo2["idCliente"]= $idCliente;    
+	
 
 
-	$validate = $this->Juridico_model->validateSt7($idLote);
+		$validate = $this->Juridico_model->validateSt7($idLote);
+
+		if($validate == 1){
+			if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+					$data['message'] = 'OK';
+					echo json_encode($data);
+				}else{
+					$data['message'] = 'ERROR';
+					echo json_encode($data);
+			}
+		}else {
+			$data['message'] = 'FALSE';
+			echo json_encode($data);
+		}
+
+
+}
+
+public function sendMailRechazoEst3() {
+
+    $idLote=$this->input->post('idLote');
+    $idCondominio=$this->input->post('idCondominio');
+    $nombreLote=$this->input->post('nombreLote');
+    $idCliente=$this->input->post('idCliente');
+    $comentario=$this->input->post('comentario');
+    $modificado=date("Y-m-d H:i:s");
+
+
+      $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+
+      if($valida_tl[0]['tipo_venta'] == 1){
+          $idStatusContratacion = 1;
+          $idMovimiento = 109;
+      }else{
+          $idStatusContratacion = 1;
+          $idMovimiento = 82;
+      }
+
+	$arreglo=array();
+	$arreglo["idStatusContratacion"]=$idStatusContratacion;
+	$arreglo["idMovimiento"]=$idMovimiento;
+	$arreglo["comentario"]=$comentario;
+	$arreglo["usuario"]=$this->session->userdata('id_usuario');
+	$arreglo["perfil"]=$this->session->userdata('id_rol');
+	$arreglo["modificado"]=date("Y-m-d H:i:s");
+  
+  
+	$horaActual = date('H:i:s');
+	$horaInicio = date("08:00:00");
+	$horaFin = date("16:00:00");
+	
+  
+	if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+	
+	$fechaAccion = date("Y-m-d H:i:s");
+	$hoy_strtotime2 = strtotime($fechaAccion);
+	$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+	$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+	
+	
+	
+	if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+		 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+		 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+		 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+		 $sig_fecha_feriado2 == "25-12") {
+	
+	$fecha = $fechaAccion;
+	$i = 0;
+	
+		while($i <= 0) {
+	  $hoy_strtotime = strtotime($fecha);
+	  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+	  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+	  $sig_fecha_dia = date('D', $sig_strtotime);
+	  $sig_fecha_feriado = date('d-m', $sig_strtotime);
+	
+  
+	  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+		 $sig_fecha_feriado == "25-12") {
+		   }
+			 else {
+					$fecha= $sig_fecha;
+					 $i++;
+				  } 
+		$fecha = $sig_fecha;
+	
+			   }
+		   $arreglo["fechaVenc"]= $fecha;
+  
+		   }else{
+			 
+	$fecha = $fechaAccion;
+	$i = 0;
+		while($i <= -1) {
+	  $hoy_strtotime = strtotime($fecha);
+	  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+	  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+	  $sig_fecha_dia = date('D', $sig_strtotime);
+	  $sig_fecha_feriado = date('d-m', $sig_strtotime);
+  
+	  if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+		 $sig_fecha_feriado == "25-12") {
+		   }
+			 else {
+					$fecha= $sig_fecha;
+					 $i++;
+				  } 
+		$fecha = $sig_fecha;
+			   }
+  
+		   $arreglo["fechaVenc"]= $fecha;
+	
+		   }
+	
+	} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+  
+	  $fechaAccion = date("Y-m-d H:i:s");
+	  $hoy_strtotime2 = strtotime($fechaAccion);
+	$sig_fecha_dia2 = date('D', $hoy_strtotime2);
+	$sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+	
+	if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" || 
+		 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
+		 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
+		 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
+		 $sig_fecha_feriado2 == "25-12") {
+	
+	$fecha = $fechaAccion;
+	$i = 0;
+	
+		while($i <= 0) {
+	  $hoy_strtotime = strtotime($fecha);
+	  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+	  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+	  $sig_fecha_dia = date('D', $sig_strtotime);
+	  $sig_fecha_feriado = date('d-m', $sig_strtotime);
+	
+	  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+		 $sig_fecha_feriado == "25-12") {
+		   }
+			 else {
+					$fecha= $sig_fecha;
+					 $i++;
+				  } 
+		$fecha = $sig_fecha;
+			   }
+  
+		   $arreglo["fechaVenc"]= $fecha;
+		  
+		   }else{
+	$fecha = $fechaAccion;
+	$i = 0;
+  
+		while($i <= 0) {
+	  $hoy_strtotime = strtotime($fecha);
+	  $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+	  $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+	  $sig_fecha_dia = date('D', $sig_strtotime);
+		$sig_fecha_feriado = date('d-m', $sig_strtotime);
+	
+	  if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" || 
+		 $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
+		 $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
+		 $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
+		 $sig_fecha_feriado == "25-12") {
+		   }
+			 else {
+					$fecha= $sig_fecha;
+					 $i++;
+				  } 
+		$fecha = $sig_fecha;
+			   }
+	
+		 $arreglo["fechaVenc"]= $fecha;
+		
+		   }
+	}
+	
+	
+	$arreglo2=array();
+	$arreglo2["idStatusContratacion"]=$idStatusContratacion;
+	$arreglo2["idMovimiento"]=$idMovimiento;
+	$arreglo2["nombreLote"]=$nombreLote;
+	$arreglo2["comentario"]=$comentario;
+	$arreglo2["usuario"]=$this->session->userdata('id_usuario');
+	$arreglo2["perfil"]=$this->session->userdata('id_rol');
+	$arreglo2["modificado"]=date("Y-m-d H:i:s");
+	$arreglo2["fechaVenc"]= date("Y-m-d H:i:s");
+	$arreglo2["idLote"]= $idLote;  
+	$arreglo2["idCondominio"]= $idCondominio;          
+	$arreglo2["idCliente"]= $idCliente;
+
+	$datos= $this->Juridico_model->getCorreoSt($idCliente);
+      $lp = $this->Juridico_model->get_lp($idLote);
+      $correosEntregar = [];
+
+      if(empty($lp)){
+         $correos = array_unique(explode(',', $datos[0]["correos"]));
+      } else {
+         $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
+      }
+
+      foreach($correos as $email)
+      {
+      	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+      		if (trim($email) != ''){
+                 if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+                     array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+                 } else {
+                     array_push($correosEntregar, $email);
+                 }
+      		}
+      	}
+      }
+
+	$infoLote = (array)$this->Juridico_model->getNameLote($idLote);
+
+    $encabezados = [
+        'nombreResidencial' =>  'PROYECTO',
+        'nombre'            =>  'CONDOMINIO',
+        'nombreLote'        =>  'LOTE',
+        'motivoRechazo'     =>  'MOTIVO DE RECHAZO',
+        'fechaHora'         =>  'FECHA/HORA'
+    ];
+
+    $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+
+    $this->email
+        ->initialize()
+        ->from('Ciudad Maderas')
+        ->to($correosEntregar)
+        ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
+        ->view($this->load->view('mail/juridico/rechazo-est3', [
+            'encabezados' => $encabezados,
+            'contenido' => $contenido,
+            'comentario' => $comentario
+        ], true));
+
+    $validate = $this->Juridico_model->validateSt7($idLote);
 
 	if($validate == 1){
-		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+				if($this->email->send()){
+					$data['message_email'] = 'OK';
+				}else{
+					$data['message_email'] = $this->email->print_debugger();
+				}
 				$data['message'] = 'OK';
 				echo json_encode($data);
 			}else{
@@ -578,77 +837,10 @@ public function editar_registro_loteRevision_juridico_proceso7(){
 		$data['message'] = 'FALSE';
 		echo json_encode($data);
 	}
-
-
-  }
-
-
-  public function editar_registro_loteRechazo_juridico_proceceso7(){
-
-	$idCliente=$this->input->post('idCliente');
-	$idCondominio=$this->input->post('idCondominio');
-	$nombreLote=$this->input->post('nombreLote');
-    $idLote=$this->input->post('idLote');
-    $comentario=$this->input->post('comentario');
-    $fechaVenc = $this->input->post('fechaVenc');
-	$idMovimiento = $this->input->post('idMovimiento');
-	$perfil = $this->input->post('perfil');
-	$idStatusContratacion = $this->input->post('idStatusContratacion');
-	$idMovNuevo = 0;
-
-	if(in_array($idMovimiento, [23, 95, 97]) && in_array($perfil, [3, 5, 6, 7, 9, 13, 17, 32, 70]))
-		$idMovNuevo = 94;
-
-	if($idMovimiento == 36 && in_array($perfil, [7, 13, 17, 32, 70]) || $idMovimiento == 6 && in_array($perfil, [13, 17, 32, 70]) || $idStatusContratacion ==7 && $idMovimiento == 83)
-		$idMovNuevo = 22;
-
-	if(in_array($idMovimiento, [76, 95, 97, 112]))
-		$idMovNuevo = 94;
-
-
-    $arreglo=array();
-    $arreglo["idStatusContratacion"]= 5;
-    $arreglo["idMovimiento"]=$idMovNuevo; 
-    $arreglo["comentario"]=$comentario;
-    $arreglo["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo["perfil"]=$this->session->userdata('id_rol');
-    $arreglo["modificado"]=date("Y-m-d H:i:s");
-    $arreglo["fechaVenc"]=$fechaVenc;
-
-
-    $arreglo2=array();
-    $arreglo2["idStatusContratacion"]=5;
-    $arreglo2["idMovimiento"]=$idMovNuevo;
-    $arreglo2["nombreLote"]=$nombreLote;
-    $arreglo2["comentario   "]=$comentario;
-    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-    $arreglo2["perfil"]=$this->session->userdata('id_rol');
-    $arreglo2["modificado"]=date("Y-m-d H:i:s");
-    $arreglo2["fechaVenc"]= $fechaVenc;
-    $arreglo2["idLote"]= $idLote;  
-    $arreglo2["idCondominio"]= $idCondominio;          
-	$arreglo2["idCliente"]= $idCliente;    
-
-
-	$validate = $this->Juridico_model->validateSt7($idLote);
-
-	if($validate == 1){
-		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-				$data['status'] = true;
-				$data['message'] = 'Estatus enviado';
-			}else{
-				$data['status'] = false;
-				$data['message'] = 'Error al enviar la solicitud';
-		}
-	}else {
-		$data['message'] = 'El estatus ya fue registrado';
-	}
-
-	echo json_encode($data);
-  }
+}
   
 
-  public function editar_registro_loteRevision_juridico7_Asistentes8(){
+public function editar_registro_loteRevision_juridico7_Asistentes8(){
 
     $idLote=$this->input->post('idLote');
     $idCondominio=$this->input->post('idCondominio');
@@ -658,6 +850,13 @@ public function editar_registro_loteRevision_juridico_proceso7(){
     $modificado=date('Y-m-d H:i:s');
     $fechaVenc=$this->input->post('fechaVenc');
 
+		$validarDocumentos = $this->validarDocumentacionEstatus7($idLote);
+        if (!$validarDocumentos['status']) {
+          $data['message'] = 'DOCUMENTS';
+          $data['documentos'] = "Asegúrate de incluir los documentos: ${$validarDocumentos['documentos']}";
+          echo json_encode($data);
+          return;
+        }
 
     $arreglo=array();
     $arreglo["idStatusContratacion"]=7;
@@ -666,7 +865,6 @@ public function editar_registro_loteRevision_juridico_proceso7(){
     $arreglo["usuario"]=$this->session->userdata('id_usuario');
     $arreglo["perfil"]=$this->session->userdata('id_rol');
     $arreglo["modificado"]=date("Y-m-d H:i:s");
-	$arreglo["status8Flag"] = 0;
 
     $arreglo2=array();
     $arreglo2["idStatusContratacion"]=7;
@@ -730,58 +928,87 @@ public function editar_registro_loteRevision_juridico_proceso7(){
 
   }
 
+  public function return1_jac(){
+
+    $idLote=$this->input->post('idLote');
+    $idCondominio=$this->input->post('idCondominio');
+    $nombreLote=$this->input->post('nombreLote');
+    $idCliente=$this->input->post('idCliente');
+    $comentario=$this->input->post('comentario');
+    $modificado=date('Y-m-d H:i:s');
+    $fechaVenc=$this->input->post('fechaVenc');
+
+
+    $arreglo=array();
+    $arreglo["idStatusContratacion"]=5;
+    $arreglo["idMovimiento"]=94;
+    $arreglo["comentario"]=$comentario;
+    $arreglo["usuario"]=$this->session->userdata('id_usuario');
+    $arreglo["perfil"]=$this->session->userdata('id_rol');
+    $arreglo["modificado"]=date("Y-m-d H:i:s");
+
+    $arreglo2=array();
+    $arreglo2["idStatusContratacion"]=5;
+    $arreglo2["idMovimiento"]=94;
+    $arreglo2["nombreLote"]=$nombreLote;
+    $arreglo2["comentario"]=$comentario;
+    $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+    $arreglo2["perfil"]=$this->session->userdata('id_rol');
+    $arreglo2["modificado"]=date("Y-m-d H:i:s");
+    $arreglo2["fechaVenc"]= $fechaVenc;
+    $arreglo2["idLote"]= $idLote;  
+    $arreglo2["idCondominio"]= $idCondominio;          
+	$arreglo2["idCliente"]= $idCliente;     
+	
+
+	$validate = $this->Juridico_model->validateSt7($idLote);
+
+	if($validate == 1){
+		if ($this->Juridico_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){ 
+				$data['message'] = 'OK';
+				echo json_encode($data);
+			}else{
+				$data['message'] = 'ERROR';
+				echo json_encode($data);
+		}
+	}else {
+		$data['message'] = 'FALSE';
+		echo json_encode($data);
+	}
+  }
+
   public function return2_jaa() {
-    $idLote=$this->input->post('idLote', true);
-    $idCondominio=$this->input->post('idCondominio', true);
-    $nombreLote=$this->input->post('nombreLote', true);
-    $idCliente=$this->input->post('idCliente', true);
-    $comentario=$this->input->post('comentario', true);
-	$idMovimiento = $this->input->post("idMovimiento", true);
-	$perfil = $this->input->post("perfil", true);
-	$idStatusContratacion = $this->input->post("idStatusContratacion");
-	$emailView = "return1-jaa";
-
-	$valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-
+    $idLote=$this->input->post('idLote');
+    $idCondominio=$this->input->post('idCondominio');
+    $nombreLote=$this->input->post('nombreLote');
+    $idCliente=$this->input->post('idCliente');
+    $comentario=$this->input->post('comentario');
+    $modificado=date("Y-m-d H:i:s");
+    $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
 	if($valida_tventa[0]['tipo_venta'] == 1 ){
 		if($valida_tventa[0]['idStatusContratacion'] == 6 && $valida_tventa[0]['idMovimiento']==112) {
-            $statusNuevo = 1;
-            $idMovNuevo = 109;
+            $statusContratacion = 1;
+            $idMovimiento = 109;
         }
 		else {
-			$statusNuevo = 1;
-			$idMovNuevo = 96;
+			$statusContratacion = 1;
+			$idMovimiento = 96;
 		}
-    } 
-	else {
-        $statusNuevo = 1;
-        $idMovNuevo = 96;
+    } else {
+        $statusContratacion = 1;
+        $idMovimiento = 96;
     }
-
-	if($idMovimiento == 36 && in_array($perfil, [7, 13, 17, 32, 70]) || $idMovimiento == 6 && in_array($perfil, [13, 17, 32, 70]) || $idStatusContratacion ==7 && $idMovimiento == 83){
-		$emailView = "rechazo-est3";
-		$valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
-
-		if($valida_tl[0]['tipo_venta'] == 1){
-			$statusNuevo = 1;
-			$idMovNuevo = 109;
-		}else{
-			$statusNuevo = 1;
-			$idMovNuevo = 82;
-		}
-	}
-	
 	$arreglo=array();
-	$arreglo["idStatusContratacion"]=$statusNuevo;
-	$arreglo["idMovimiento"]=$idMovNuevo;
+	$arreglo["idStatusContratacion"]=$statusContratacion;
+	$arreglo["idMovimiento"]=$idMovimiento;
 	$arreglo["comentario"]=$comentario;
 	$arreglo["usuario"]=$this->session->userdata('id_usuario');
 	$arreglo["perfil"]=$this->session->userdata('id_rol');
 	$arreglo["modificado"]=date("Y-m-d H:i:s");		
 	
 	$arreglo2=array();
-	$arreglo2["idStatusContratacion"]=$statusNuevo;
-	$arreglo2["idMovimiento"]=$idMovNuevo;
+	$arreglo2["idStatusContratacion"]=$statusContratacion;
+	$arreglo2["idMovimiento"]=$idMovimiento;
 	$arreglo2["nombreLote"]=$nombreLote;
 	$arreglo2["comentario"]=$comentario;
 	$arreglo2["usuario"]=$this->session->userdata('id_usuario');
@@ -791,6 +1018,31 @@ public function editar_registro_loteRevision_juridico_proceso7(){
 	$arreglo2["idLote"]= $idLote;  
 	$arreglo2["idCondominio"]= $idCondominio;          
 	$arreglo2["idCliente"]= $idCliente;          
+  
+
+	$datos= $this->Juridico_model->getCorreoSt($idCliente);
+
+	$lp = $this->Juridico_model->get_lp($idLote);
+    $correosEntregar = [];
+
+	if(empty($lp)){
+	   $correos = array_unique(explode(',', $datos[0]["correos"]));
+	} else {
+	   $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
+	}
+
+      foreach($correos as $email)
+      {
+      	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
+      		if (trim($email) != ''){
+                 if(trim($email) == 'diego.perez@ciudadmaderas.com'){
+                     array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
+                 } else {
+                     array_push($correosEntregar, $email);
+                 }
+      		}
+      	}
+      }
 
 	$infoLote = (array)$this->Juridico_model->getNameLote($idLote);
 
@@ -807,10 +1059,9 @@ public function editar_registro_loteRevision_juridico_proceso7(){
     $this->email
       ->initialize()
       ->from('Ciudad Maderas')
-      ->to('tester.ti2@ciudadmaderas.com')
-      // ->to($correosEntregar)
+      ->to($correosEntregar)
       ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
-      ->view($this->load->view('mail/juridico/' . $emailView, [
+      ->view($this->load->view('mail/juridico/return1-jaa', [
           'encabezados' => $encabezados,
           'contenido' => $contenido,
           'comentario' => $comentario
@@ -825,18 +1076,18 @@ public function editar_registro_loteRevision_juridico_proceso7(){
 			}else{
 				$data['message_email'] = $this->email->print_debugger();
 			}
-			$data['status'] = true;
-			$data['message'] = 'Estatus enviado';
+			$data['message'] = 'OK';
+			echo json_encode($data);
 		}else{
-			$data['status'] = false;
-			$data['message'] = 'Error al enviar la solicitud';
+			$data['message'] = 'ERROR';
+			echo json_encode($data);
 		}
 	}else {
-		$data['status'] = false;
-		$data['message'] = 'El estatus ya fue registrado';
+		$data['message'] = 'FALSE';
+		echo json_encode($data);
 	}
 
-	echo json_encode($data);
+  
   }
   
   
@@ -853,5 +1104,30 @@ public function editar_registro_loteRevision_juridico_proceso7(){
 	echo json_encode($data);
 
   }
+
+  public function validarDocumentacionEstatus7($idLote): array
+    {
+        $cliente = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+
+        if ($cliente[0]['proceso'] == 2 || $cliente[0]['proceso'] == 4) {
+            $totalDocumentosValidar = 2;
+            $documentosValidar = '8,33';
+            $nombreDocumentos = 'CONTRATO y DOCUMENTO DE REUBICACIÓN';
+        } else if ($cliente[0]['proceso'] == 3) {
+            $totalDocumentosValidar = 2;
+            $documentosValidar = '8,36';
+            $nombreDocumentos = 'CONTRATO y DOCUMENTO DE REESTRUCTURA';
+        } else {
+            $totalDocumentosValidar = 1;
+            $documentosValidar = '8';
+            $nombreDocumentos = 'CONTRATO';
+        }
+
+        $documentos = $this->Juridico_model->validateDocumentation($idLote, $documentosValidar);
+        return (count($documentos) < $totalDocumentosValidar)
+            ? ['status' => false, 'documentos' => $nombreDocumentos]
+            : ['status' => true];
+    }
+
 }
 ?>

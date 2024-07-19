@@ -225,6 +225,7 @@
             $this->db->query("UPDATE clientes SET status = 0 WHERE status = 1 and idLote IN (".$row['idLote'].") ");
             $this->db->query("UPDATE historial_enganche SET status = 0, comentarioCancelacion = 'LOTE LIBERADO' WHERE status = 1 and idLote IN (".$row['idLote'].") ");
             $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 and idLote IN (".$row['idLote'].") ");
+            $this->db->query("UPDATE informacion_lotes SET estatus = 0 WHERE estatus = 1 and idLote IN (".$row['idLote'].") ");
             $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total FROM comisiones where id_lote=".$row['idLote']."")->result_array();
             for ($i=0; $i <count($comisiones) ; $i++) {
                 $sumaxcomision=0;

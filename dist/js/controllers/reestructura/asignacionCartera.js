@@ -171,16 +171,6 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
                             data-idAsesorAsignado="${d.idAsesorAsignado}">
                             <i class="fas fa-exchange-alt"></i>
                     </button>
-                    <button class="btn-data btn-warning btn-quitarFusion"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="REMOVER LOTES DE LA FUSIÓN"
-                            data-idCliente="${d.idCliente}"
-                            data-LoteFusionado="1"
-                            data-idLote="${d.idLote}"
-                            data-idAsesorAsignado="${d.idAsesorAsignado}">
-                            <i class="fas fa-user-slash"></i>
-                    </button>
                     <button class="btn-data btn-warning btn-desFusionar"
                             data-toggle="tooltip" 
                             data-placement="left"
@@ -248,6 +238,7 @@ $(document).on('click', '.btn-quitarFusion', function () {
         $("#modalQuitarFusion").modal("show");
     }, 'json');
 });
+
 $(document).on("submit", "#formQuitarFusion", function(e){
     e.preventDefault();
     let data = new FormData($(this)[0]);
@@ -323,12 +314,11 @@ $(document).on('click', '.btn-desFusionar', function () {
 $(document).on("submit", "#formDesFusion", function(e){
     e.preventDefault();
     let data = new FormData($(this)[0]);
-    let index = document.getElementById('index').value;
-    let contador = 0;
+
     $("#spiner-loader").removeClass('hide');
     $.ajax({
         method: 'POST',
-        url: general_base_url + 'Reestructura/removeLoteFusion',
+        url: general_base_url + 'Reestructura/eliminarFusion',
         data: data,
         processData: false,
         contentType: false,
@@ -349,6 +339,7 @@ $(document).on("submit", "#formDesFusion", function(e){
         }
     });
 });
+
 $(document).on('click', '.btn-asignar-venta', function () {
     let flagFusionado = $(this).attr("data-lotefusionado");
 
@@ -485,6 +476,7 @@ function buscarValor(valor, array) {
     }
     return null;
 }
+
 $(document).on('click', '#fusionarLotes', ()=>{
     let dataFS = new FormData();
     dataFS.append("data", JSON.stringify(arrayValores));
