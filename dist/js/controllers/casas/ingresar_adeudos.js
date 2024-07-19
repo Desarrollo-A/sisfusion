@@ -1,4 +1,5 @@
 function set_adeudo(data) {
+    // console.log(data)
     let form = new Form({
         title: 'Ingresar adeudo',
         //text: 'Descripcion del formulario',
@@ -41,22 +42,17 @@ function set_adeudo(data) {
             value = data.adeudoOOAM
             label = 'Adeudo OOAM'
             break
-        case 101:
-            adeudo = 'adeudoGPH'
-            value = data.adeudoGPH
-            label = 'Adeudo GPH'
-            break
         case 33:
             adeudo = 'adeudoADM'
             value = data.adeudoADM
             label = 'Adeudo ADM'
             break
-    }
+        case 11:
+            adeudo = 'adeudoADM'
+            value = data.adeudoADM
+            label = 'Adeudo ADM'
+            break
 
-    if([4512].includes(idUsuario)){
-        adeudo = 'adeudoGPH'
-        value = data.adeudoGPH
-        label = 'Adeudo GPH'
     }
 
     form.fields = [
@@ -75,6 +71,208 @@ const formatter = new Intl.NumberFormat('es-MX', {
   currency: 'MXN',
 });
 
+back_to_carta_auth = function (data) {
+
+    let form = new Form({
+        title: 'Regresar proceso',
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a carta de autorización?`,
+        onSubmit: function(data){
+            //console.log(data)
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `back_to_carta_auth`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a carta de autorización.`, "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
+function replace_upload(data ) {
+
+    let accept = '';
+
+    switch (idRol) {
+        case 99:
+            accept = ['image/png','image/jpeg','application/pdf']
+            break;
+        case 33:
+            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            break;
+        case 11:
+            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            break;
+    }
+
+    let form = new Form({
+        title: 'Reemplazar archivo',
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `upload_documento`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+
+                    table.reload()
+
+                    form.hide()
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'id_documento', value: data.idDocumento }),
+            new HiddenField({ id: 'name_documento', value: data.documento }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: accept, required: true }),
+        ],
+    })
+
+    form.show()
+}
+
+function upload(data) {
+    // console.log(data)
+
+    let tipo = 0;
+    let nameFile = '';
+    let accept = '';
+
+    switch (idRol) {
+        case 99:
+            tipo = 27;
+            nameFile = 'Estado de cuenta'
+            accept = ['image/png','image/jpeg','application/pdf']
+            break;
+        case 33:
+            tipo = 26;
+            nameFile = 'Formas de pago administración'
+            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            break;
+        case 11:
+            tipo = 26;
+            nameFile = 'Formas de pago administración'
+            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            break;
+    }
+
+    let form = new Form({
+        title: 'Subir archivo',
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `upload_documento_new`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+
+                    table.reload()
+
+                    form.hide()
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'tipo', value: tipo }),
+            new HiddenField({ id: 'name_documento', value: nameFile }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: accept, required: true }),
+        ],
+    })
+
+    form.show()
+}
+
+
+function show_preview(data) {
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
+
+    Shadowbox.init();
+
+    Shadowbox.open({
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
+        player: "html",
+        title: `Visualizando archivo: ${data.documento}`,
+        width: 985,
+        height: 660
+    });
+}
+
+pass_to_proyecto_ejecutivo = function(data) {
+    let form = new Form({
+        title: 'Continuar proceso', 
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a validación de proyecto?`,
+        onSubmit: function(data){
+            //console.log(data)
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `to_valida_comite`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de proyecto.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -84,16 +282,13 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        if([4512].includes(idUsuario)){
-            return formatter.format(data.adeudoGPH)
-        }
         if(idRol === 99 && data.adeudoOOAM){
             return formatter.format(data.adeudoOOAM)
         }
-        if(idRol === 101 && data.adeudoGPH){
-            return formatter.format(data.adeudoGPH)
+        else if(idRol === 33 && data.adeudoADM){
+            return formatter.format(data.adeudoADM)
         }
-        if(idRol === 33 && data.adeudoADM){
+        else if(idRol === 11 && data.adeudoADM){
             return formatter.format(data.adeudoADM)
         }
         return 'Sin ingresar'
@@ -127,7 +322,45 @@ let columns = [
     { data: function(data){
         let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
 
-        return `<div class="d-flex justify-center">${adeudo_button}</div>`
+        let upload_button = '';
+
+        let nameFile = '';
+
+        let view_button = '';
+
+        switch (idRol) {
+            case 99:
+                nameFile = 'Estado de cuenta'
+                break;
+            case 33:
+                nameFile = 'Formas de pago administración'
+                break;
+            case 11:
+                nameFile = 'Formas de pago administración'
+                break;
+        }
+
+        if (data.archivo) {
+            let parts = data.archivo.split('.');
+            let extension = parts.pop();
+            if(extension == 'xlsx'){
+                view_button = new RowButton({icon: 'file_download', label: `Descargar ${nameFile}`, onClick: show_preview, data})
+            }else{
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${nameFile}`, onClick: show_preview, data})
+            }
+            upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar ${nameFile}`, onClick: replace_upload, data })
+        }else{
+            upload_button = new RowButton({ icon: 'file_upload', label: `Subir ${nameFile}`, onClick: upload, data })
+        }
+
+        let pass_button = ''
+        if(data.documentos >= 13 && data.adeudoOOAM != null && data.adeudoADM){
+             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
+        }
+
+        let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorización', onClick: back_to_carta_auth, data })
+
+        return `<div class="d-flex justify-center">${view_button}${upload_button}${adeudo_button}${back_button}${pass_button}</div>`
     } },
 ]
 
@@ -149,9 +382,17 @@ let buttons = [
     }
 ]
 
+var tipoDoc = 0;
+if(idRol === 99){
+    tipoDoc = 27;
+}
+if(idRol === 11 || idRol === 33){
+    tipoDoc = 26;
+}
+
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/listaOrdenCompra',
-    buttons:buttons,
+    url: `casas/lista_adeudos`,
+    params: { tipoDoc: tipoDoc },
     columns,
 })

@@ -440,7 +440,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getListaConcentradoAdeudos(){
+    public function getListaConcentradoAdeudos($tipoDoc){
         $query = "SELECT pc.*,
         CASE
             WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
@@ -462,7 +462,11 @@ class CasasModel extends CI_Model
 			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
-        oxc.nombre AS movimiento
+        oxc.nombre AS movimiento,
+		doc.archivo,
+        doc.documento,
+        doc.idDocumento,
+        doc2.documentos
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -471,7 +475,48 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        WHERE pc.proceso = 2 AND pc.status = 1 AND cli.status = 1";
+		LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = $tipoDoc
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        WHERE pc.proceso IN (2, 3) AND pc.status = 1 AND cli.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getConcentracionAdeudos(){
+        $query = "SELECT 
+        pc.*,
+        CASE
+            WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
+            ELSE CONCAT('$', pc.adeudoOOAM) 
+        END AS adOOAM,
+        lo.nombreLote,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END AS nombreAsesor,
+        CASE
+            WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+            ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+        END AS gerente,
+        oxc.nombre AS movimiento,
+        doc2.documentos
+    FROM 
+        proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+    WHERE 
+        pc.proceso IN (2, 3) 
+        AND pc.status = 1 
+        AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -517,7 +562,7 @@ class CasasModel extends CI_Model
         oxc.nombre AS movimiento
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15,27) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
@@ -525,7 +570,7 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
-            pc.proceso = 3
+            pc.proceso IN (2, 3) 
         AND pc.status = 1
         AND cli.status = 1
         AND pc.idGerente IN ($gerentes)";
@@ -1205,6 +1250,22 @@ class CasasModel extends CI_Model
         $query = "UPDATE proceso_casas
         SET $adeudo = $cantidad
         WHERE idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function setProceso3($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET proceso = 3
+        WHERE idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getAdeudosValid($idProcesoCasas){
+        $query = "SELECT adeudoOOAM, adeudoADM 
+        FROM proceso_casas 
+        WHERE idProcesoCasas = $idProcesoCasas AND adeudoOOAM IS NOT null AND adeudoADM IS NOT null";
 
         return $this->db->query($query);
     }
