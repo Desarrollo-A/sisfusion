@@ -2603,6 +2603,7 @@ class Casas extends BaseController
         $tipoDocumento = $this->form('tipoDocumento') ? $this->form('tipoDocumento') : 0;
         $id_documento = $this->form('id_documento');
         $file = $this->file('file_uploaded');
+        $id_usuario = $this->session->userdata('id_usuario');
 
         if (!isset($proceso) || !isset($nombre_lote) || !isset($id_documento)) {
             http_response_code(400);
@@ -2611,10 +2612,10 @@ class Casas extends BaseController
 
         if (!$file) {
             http_response_code(400);
-        } else {
-
+        } 
+        else {
             // Consulta nombre tipo documento
-            $documento = $this->CasasModel->getDocumentoCreditoDirecto($id_documento);
+            $documento = $this->CasasModel->getDocumentoCreditoBanco($id_documento);
 
             $name_documento = $documento->result()[0]->nombre;
 
@@ -2625,8 +2626,7 @@ class Casas extends BaseController
             $uploaded = $this->upload($file->tmp_name, $filename);
 
             if ($uploaded) {
-
-                $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento);
+                $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario);
 
                 if ($created) {
                     $motivo = "Se subio archivo: $name_documento";
@@ -2693,5 +2693,10 @@ class Casas extends BaseController
 
             $this->json([]);
         }
+    }
+
+    public function cierreCifras(){
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/cierre_cifras_view');
     }
 }

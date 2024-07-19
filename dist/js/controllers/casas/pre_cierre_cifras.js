@@ -28,13 +28,13 @@ let columns = [
         } 
     },
     { data: function(data){
-        let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir orden de compra', onClick: file_upload, data})
+        let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir archivo de pre cierre de cifras', onClick: file_upload, data})
         let btn_avance = '';
         let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: file_upload, data});
         let view_button = '';
         
         if(data.archivo != null){
-            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance al paso 5', onClick: avanceProcesoBanco, data})
+            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance al paso 6', onClick: avanceProcesoBanco, data})
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }
 
@@ -63,11 +63,10 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 4, tipoDocumento: 29 },
+    params: { proceso: 5, tipoDocumento: 25 },
     buttons: buttons,
     columns,
 })
-
 
 function avanceProcesoBanco(data){
     let form = new Form({
@@ -100,7 +99,7 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 5 }),
+            new HiddenField({ id: 'procesoNuevo', value: 6 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
@@ -138,7 +137,7 @@ function file_upload(data) {
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'tipoDocumento', value: data.tipo }),
-            new HiddenField({ id: 'id_documento', value: 29 }),
+            new HiddenField({ id: 'id_documento', value: 25 }),
             new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
             new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ]

@@ -1645,7 +1645,7 @@ class CasasModel extends CI_Model
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
 
-        $query = $this->db->query("SELECT 
+        $query = $this->db->query("SELECT
             pc.*,
             oxc.color,
             oxc.nombre AS nombreMovimiento,
@@ -1684,26 +1684,33 @@ class CasasModel extends CI_Model
         return $query;
     }
 
-    public function insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento){
-        
+    public function insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario){
         if($tipoDocumento === 0){
             $query = "INSERT INTO documentos_proceso_casas
             (
                 idProcesoCasas,
                 documento,
                 archivo,
-                tipo
+                tipo,
+                fechaCreacion,
+                idCreacion,
+                fechaModificacion,
+                idModificacion
             )
             VALUES
             (
                 $idProceso,
                 '$name_documento',
                 '$filename',
-                $id_documento
+                $id_documento,
+                GETDATE(),
+                $id_usuario,
+                GETDATE(),
+                $id_usuario
             )";
         }else{
             $query = "UPDATE documentos_proceso_casas
-            SET archivo = '$filename'
+            SET archivo = '$filename', fechaModificacion = GETDATE(), idModificacion = '$id_usuario'
             WHERE idProcesoCasas = $idProceso AND tipo = $id_documento";
         }
 
