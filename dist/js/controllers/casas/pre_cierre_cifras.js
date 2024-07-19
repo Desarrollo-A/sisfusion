@@ -38,7 +38,12 @@ let columns = [
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }
 
-        return `<div class="d-flex justify-center">${btn_avance}${view_button}${subir_archivo}${btn_rechazo}</div>`
+        if(data.proceso == 5){
+            return `<div class="d-flex justify-center">${btn_avance}${view_button}${subir_archivo}${btn_rechazo}</div>`
+        }
+        else{
+            return ''
+        }
     } },
 ]
 
@@ -63,7 +68,7 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 5, tipoDocumento: 25 },
+    params: { proceso: [5, 6], tipoDocumento: 25 },
     buttons: buttons,
     columns,
 })
