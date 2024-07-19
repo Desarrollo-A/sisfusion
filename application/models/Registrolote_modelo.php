@@ -3542,7 +3542,7 @@
 					$id_lider = $id_lider . ', 80, 664';
 					$sede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
-					$id_lider = $id_lider . ', 495';
+					$id_lider = $id_lider . ', 12688';
 					$sede = "";
 				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
 					$id_lider = $id_lider . ', 13016, 12027';
@@ -3555,6 +3555,9 @@
 					$sede = "";
 				} else if ($id_usuario == 16186) { // CAROLINA CORONADO YAÑEZ
 					$id_lider = $id_lider . ', 6942';
+					$sede = "";
+				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
+					$id_lider = $id_lider . ', 654, 697, 5604, 10251, 12688';
 					$sede = "";
 				}
 

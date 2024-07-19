@@ -366,7 +366,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13016)";
@@ -379,6 +379,9 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "";
 				} else if ($id_usuario == 16186) { // CAROLINA CORONADO YAÑEZ   
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6942)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 654, 697, 5604, 10251, 12688)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
