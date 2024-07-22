@@ -3456,7 +3456,9 @@ class Comisiones_model extends CI_Model {
     }
 
     public function getDirectivos(){
-        return $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS nombre FROM usuarios us WHERE us.id_rol in (1,2)");
+        $resultado = $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS nombre FROM usuarios us WHERE us.id_rol in (1,2)");
+
+         return  $resultado->result_array();
     }
 
     public function getDirectivos2(){
@@ -3704,7 +3706,9 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         if($opc == 2){
             $query = 'AND rc.estatus in(67)';
         }
+        
         return $this->db->query("SELECT rc.id_rc,CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario,rc.monto,rc.conceptos,rc.fecha_creacion,rc.estatus,CONCAT(u2.nombre,' ',u2.apellido_paterno,' ',u2.apellido_materno) AS creado_por,rc.estatus from usuarios us inner join resguardo_conceptos rc on rc.id_usuario=us.id_usuario inner join usuarios u2 on u2.id_usuario=rc.creado_por where rc.id_usuario=$user $query");
+        
     }
 
     function insertar_retiro($usuarioid,$monto,$comentario,$usuario,$opc){
@@ -6302,6 +6306,7 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
     return $this->db->query("SELECT mes,fechaInicio,corteOoam $filtro2 FROM fechasCorte WHERE estatus = 1 AND 
       corteOoam IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY corteOoam ASC")->result_array();
     }
+    
     public function get_condominios_lista($proyecto = '') {
         $filtro = $proyecto == '' ? '' : "AND idResidencial IN($proyecto)";
         return $this->db->query("SELECT * FROM condominios WHERE status = 1 $filtro ORDER BY nombre");
