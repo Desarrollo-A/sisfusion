@@ -3,6 +3,7 @@ let descuentosYCondiciones;
 llenarTipoDescuentos();
 let count = 0;
 let titulosTables = [];
+let elertTriggered = false;
 
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -613,7 +614,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
 
-    function formatPercentage(input, blur) {
+  function formatPercentage(input, blur) {
         var input_val = input.val();
         if (input_val === "") { return; }
         var original_len = input_val.length;
@@ -639,20 +640,24 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             input_val += "%";
         }
         var numericalValue = parseFloat(input_val.replace('%', ''));
-        if (numericalValue > 100) {
+        if (numericalValue > 100 && !alertTriggered) {
+            alertTriggered = true;
             $("#dispersar").attr("disabled", true);
-            //alerts.showNotification("top", "right", "El porcentaje no puede ser mayor a 100%", "warning");
-        } else {
+            alerts.showNotification("top", "right", "El porcentaje no puede ser mayor a 100%", "warning");
+        } else if (numericalValue <= 100) {
             $("#dispersar").attr("disabled", false);
+            alertTriggered = false;
         }
-
         input.val(input_val);
         var updated_len = input_val.length;
         caret_pos = updated_len - original_len + caret_pos;
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
+
     $("#ModalFormAddDescuentos").on('hide.bs.modal', function(){
         $("#dispersar").attr("disabled", false);
+        //Flas for the alert
+        alertTriggered = false; 
     });
 
 
