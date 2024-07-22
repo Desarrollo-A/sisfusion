@@ -1403,8 +1403,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           $this->email
           ->initialize()
           ->from('Ciudad Maderas')
-          ->to('mariela.sanchez@ciudadmaderas.com') // Mariela Sanchez 
-          ->to('asistente.contraloria@ciudadmaderas.com') // Alejandro Santiago
+          ->to(['mariela.sanchez@ciudadmaderas.com', 'asistente.contraloria@ciudadmaderas.com']) // Mariela Sanchez 
           ->subject('Notificación de estatus de lotes')
           ->view($this->load->view('mail/reestructura/mailPendientesContraloria', [
               'nombre1' => "Mariela Sanchez Sanchez",
@@ -1420,8 +1419,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           $this->email
           ->initialize()
           ->from('Ciudad Maderas')
-          ->to('cinthya.lopez@ciudadmaderas.com') // Cinthya López
-          ->to('asistente.juridico@ciudadmaderas.com') // extra
+          ->to(['cinthya.lopez@ciudadmaderas.com', 'asistente.juridico@ciudadmaderas.com']) // Cinthya López
           ->subject('Notificación de estatus de lotes')
           ->view($this->load->view('mail/reestructura/mailPendientesJuridico', [
               'nombre1' => "Cinthya López",
