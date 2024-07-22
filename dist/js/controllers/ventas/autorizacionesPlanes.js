@@ -236,12 +236,10 @@ $(document).on('click', '#btnLimpiar', function (e) {
 }
 
 function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,permisoDesactivar,idAutorizacion,estatus_autorizacion){
-    //<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>
         let botones = '';
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
             if(permisoEditar == 1){ botones += ``; }
             if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" data-opcion="1" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar Plan de ventas"><i class="fas fa-thumbs-up"></i></button>`;  }
-            //if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="2" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
             if(permisoDesactivar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" data-opcion="3" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Desactivar plan de ventas"><i class="fas fa-trash"></i></button>`; }
         return  botones;
     }
@@ -307,7 +305,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         switch(accion) {
             case '1': 
                 //$('#modalAutorizacion').addClass("modal-sm");
-                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de avanzar este plan de ventas?';
+                document.getElementById('titleAvance').innerHTML = '¿Estás seguro de aprobar este plan de ventas?';
                 document.getElementById('modal-body').innerHTML = '';
                 break;
             case '2':
@@ -346,7 +344,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
 
                 if (response.estatus == 1) {
                     $("#avanzarAut").modal("hide");
-                    //tipo == 1  ? $('#modalAutorizacion').removeClass("modal-sm") : $('#modalAutorizacion').removeClass("modal-md") ;
                     $('#spiner-loader').addClass('hide');
                     alerts.showNotification("top", "right", response.respuesta, "success");
                     tablaAutorizacion.ajax.reload(null,false);    
@@ -472,7 +469,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         if (existe != undefined) {
             $(`#descuentosP_${dataPaquete.id_paquete}`).append(`
                 <p class="m-0">${tiposDescuentos[m].condicion.descripcion}</p>
-                <div id="tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}" style="display: flex; flex-wrap: wrap;"></div>
+                <div id="tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}" style="display: flex; justify-content: center; flex-wrap: wrap;    "></div>
             `);
 
             let descuentosByPlan = descuentosPorPlan.filter(desc => desc.id_paquete == dataPaquete.id_paquete);
@@ -535,17 +532,20 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
     function addDescuento(id_condicion, descripcion) {
+        console.log("id_condicion: ", id_condicion);
         const currencyCondiciones = [4, 12];
         const percentageCondiciones = [1,2]
+        const numericCondiciones = [13];
         var desc = document.getElementById("descuento");
 
         const isCurrency = currencyCondiciones.includes(parseInt(id_condicion));
         const isPercentage = percentageCondiciones.includes(parseInt(id_condicion));
+        const isNumeric = numericCondiciones.includes(parseInt(id_condicion));
         if (isCurrency) {
             desc.setAttribute("data-type", "currency");
         } else if (isPercentage) {
             desc.setAttribute("data-type", "percentage");
-        } else {
+        } else if(isNumeric) {
             desc.setAttribute("data-type", "numeric");
         }
 
@@ -566,7 +566,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 formatPercentage($(this));
             }
             else if(dataType === 'numeric') {
-                isNumber($(this));
+                formatNumberInput($(this));
             }
         },
         blur: function() {
@@ -575,6 +575,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 formatCurrency($(this), "blur");
             } else if (dataType === 'percentage') {
                 formatPercentage($(this), "blur");
+            }
+            else if (dataType === 'numeric') {
+                formatNumberInput($(this), "blur");
             }
         }
     });
@@ -639,6 +642,22 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         caret_pos = updated_len - original_len + caret_pos;
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
+
+    function formatNumberInput(input) {
+        var input_val = input.val();
+        if (input_val === "") { return; }
+        var original_len = input_val.length;
+        var caret_pos = input.prop("selectionStart");
+        input_val = input_val.replace(/[^\d]/g, '');
+        if (input_val.length > 3) {
+            input_val = input_val.substring(0, 3);
+        }
+        input.val(input_val);
+        var updated_len = input_val.length;
+        caret_pos = updated_len - original_len + caret_pos;
+        input[0].setSelectionRange(caret_pos, caret_pos);
+    }
+
 
     function getDescuentosYCondiciones(){
         $('#spiner-loader').removeClass('hide');
