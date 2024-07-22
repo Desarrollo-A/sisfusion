@@ -1900,6 +1900,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
         else  if($id_usuario == 15580) // MJ: SANDRA MIRA SANCHEZ VE CIUDAD DE MÉXICO, ESTADO DE MÉXICO OCCIDENTE Y NORTE
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '13', '14')";
+        else  if($id_usuario == 14283) // MJ: JOSE RODRIGO HERMOCILLO GARCIA VE AGUACALIENTES (SEDE ACTUAL) + CIUDAD JUÁREZ Y TEXAS
+            $filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '17')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
