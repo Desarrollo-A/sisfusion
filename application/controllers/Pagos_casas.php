@@ -168,7 +168,157 @@ class Pagos_casas extends CI_Controller
             }
             echo json_encode( $datos );
           }
-
+          
+          public function lista_usuarios(){
+            $rol = $this->input->post("rol");
+            $forma_pago = $this->input->post("forma_pago");
+            $respuesta = $this->Pagos_casas_model->get_lista_usuarios($rol,$forma_pago);
+            echo json_encode($respuesta);
+          }
 
         
+          public function getPagosByProyect($proyect, $formap){
+    
+            if(empty($proyect)){
+              echo json_encode($this->Pagos_casas_model->getPagosByProyect());
+            }else{
+              echo json_encode($this->Pagos_casas_model->getPagosByProyect($proyect,$formap));
+            }
+          }
+
+
+          function IntMexPagadosByProyect(){
+            date_default_timezone_set('America/Mexico_City');
+            $idsessionado = $this->session->userdata('id_usuario');
+            $idsPagos = $this->input->post("ids");
+            $sep = ',';
+            $id_pago_i = '';
+            //$cadena_equipo = '';
+            $data = array();
+              for($i=0; $i <count($idsPagos) ; $i++) { 
+                $id_pago_i = implode(",", $idsPagos);
+                // $id_pago_i .= implode($sep, $idsPagos);
+                //  $id_pago_i .= $sep;
+                $row_arr=array(
+                  'id_pago_i' => $idsPagos[$i],
+                  'id_usuario' =>  $idsessionado,
+                  'fecha_movimiento' => date('Y-m-d H:i:s'),
+                  'estatus' => 1,
+                  'comentario' =>  'INTERNOMEX APLICO PAGO' 
+                );
+                array_push($data,$row_arr);
+              }
+              Ini_set('max_execution_time', 0);
+        
+              $up_b = $this->Seguros_comision_model->update_acepta_INTMEX($id_pago_i);
+              $ins_b = $this->Seguros_comision_model->insert_phc($data);
+        
+            if($up_b == true && $ins_b == true){
+              $data_response = 1;
+              echo json_encode($data_response);
+            } else {
+              $data_response = 0;
+              echo json_encode($data_response);
+            }
+          }
+        
+          public function getDesarrolloSelectINTMEX(){
+
+            $value = $this->input->post("desarrollo");
+            if($value == ''){
+            echo json_encode($this->Pagos_casas_model->getDesarrolloSelectINTMEX()->result_array());
+          }else{
+            echo json_encode($this->Pagos_casas_model->getDesarrolloSelectINTMEX($value)->result_array());
+          }
+        }
+
+        public function pago_internomex(){
+            $id_pago_is = $this->input->post('idcomision');  
+            $consulta_comisiones = $this->Pagos_casas_model->consultaComisiones($id_pago_is);
+        
+              if( $consulta_comisiones != 0 ){
+                $id_user_Vl = $this->session->userdata('id_usuario');
+                $sep = ',';
+                $id_pago_i = '';
+                $data=array();
+        
+                  foreach ($consulta_comisiones as $row) {
+                    $id_pago_i .= implode($sep, $row);
+                    $id_pago_i .= $sep;
+        
+                    $row_arr=array(
+                      'id_pago_i' => $row['id_pago_i'],
+                      'id_usuario' =>   $this->session->userdata('id_usuario'),
+                      'fecha_movimiento' => date('Y-m-d H:i:s'),
+                      'estatus' => 1,
+                      'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
+                    );
+                    array_push($data,$row_arr);
+                  }
+                  $id_pago_i = rtrim($id_pago_i, $sep);
+                    
+                    $up_b = $this->Pagos_casas_model->update_acepta_INTMEX($id_pago_i);
+                    $ins_b = $this->Pagos_casas_model->insert_phc($data);
+              
+              if($up_b == true && $ins_b == true){
+                $data_response = 1;
+                echo json_encode($data_response);
+              } else {
+                $data_response = 0;
+                echo json_encode($data_response);
+              }
+                    
+              }
+              else{
+                $data_response = 0;
+              echo json_encode($data_response);
+              }
+          }
+
+
+          function despausar_solicitud(){
+            $respuesta = array( FALSE );
+            // <input type="hidden" name="value_pago" value="2">
+            if($this->input->post("value_pago")){
+              $validate = $this->input->post("value_pago");
+          
+              switch($validate){
+                  case 1:
+                    $respuesta = array($this->Pagos_casas_model->update_estatus_pausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus") ));
+                  break;    
+                  case 2:
+                    $respuesta = array($this->Pagos_casas_model->update_estatus_despausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus")));
+                  break;
+                  case 3:
+                    $validate =  $this->Pagos_casas_model->registroComisionAsimilados();
+                  // echo $validate->row()->registro_comision.' *COMISION'.$validate->row()->registro_comision;
+                  if($validate->row()->registro_comision == 7){
+                    $respuesta = FALSE;
+                      // echo 'no entra';
+                  }else{
+                    // echo 'si entra';
+                  $respuesta = array($this->Pagos_casas_model->update_estatus_edit($this->input->post("id_pago_i"), $this->input->post("observaciones")));
+                  }
+                  break;
+              }  
+            }
+            echo json_encode( $respuesta );
+          }
+
+          function refresh_solicitud(){
+            $respuesta = array( FALSE );
+            if($this->input->post("id_pago_i")){
+              $respuesta = array( $this->Pagos_casas_model->update_estatus_refresh( $this->input->post("id_pago_i")));
+            }
+            echo json_encode( $respuesta );
+          }
+          function pausar_solicitud(){
+            $respuesta = array( FALSE );
+            if($this->input->post("id_pago")){
+              $respuesta = array( $this->Pagos_casas_model->update_estatus_pausa( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+            }
+            echo json_encode( $respuesta );
+          }
+        
+
 } //LLAVE FIN 
