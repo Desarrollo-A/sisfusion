@@ -56,6 +56,7 @@
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#remanenteComercializacion" role="tab" data-toggle="tab">Remanentes lotes</a></li>
                         <li><a href="#remanenteSeguros" role="tab" data-toggle="tab">Remanentes lotes Seguros</a></li>
+                        <li><a href="#remanenteCasas" role="tab" data-toggle="tab">Remanentes Casas</a></li>
                     </ul>
             
                     <div class="card no-shadow m-0 border-conntent__tabs">
@@ -154,6 +155,7 @@
                                         </div>
                                     </div>
                                     <?php $this->load->view('pagos/seguros/revision_remanente_seguros_view'); ?>
+                                    <?php $this->load->view('pagos/casas/revision_remanente_casas_view'); ?>
                                 </div>
                             </div>
                         </div>
@@ -167,4 +169,5 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_remanente.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros/revision_remanente_seguros.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/casas/revision_remanente_casas.js"></script>
 </body>
