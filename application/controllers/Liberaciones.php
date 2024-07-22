@@ -58,7 +58,11 @@ class Liberaciones extends CI_Controller{
     }
 
     public function lista_lotes($condominio, $tipoVenta) {
-        $data = $this->Liberaciones_model->lista_lotes($condominio, $tipoVenta)->result_array();
+        $condicion = '';
+        if ( $tipoVenta == 1 ) $condicion = ' AND (pl.idLote IS NULL OR pl.proceso_lib = 6 )';
+        if ( $tipoVenta == 2 ) $condicion = ' AND (pl.idLote IS NULL OR pl.proceso_lib = 7 )';
+
+        $data = $this->Liberaciones_model->lista_lotes($condominio, $tipoVenta, $condicion)->result_array();
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -93,10 +97,10 @@ class Liberaciones extends CI_Controller{
  
         $condicion = '';
         if ($idProcesoTipoLiberacion == 133) { // Filtro de acuerdo al concepto de liberación: En este caso Particulares.
-            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL)" .$filtroLotes; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL OR pl.proceso_lib = 6) " .$filtroLotes; // POSTVENTA
         }
         if ($idProcesoTipoLiberacion == 134) { // Filtro de acuerdo al concepto de liberación: En este caso Rescisión.
-            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL)" .$filtroLotes; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL OR pl.proceso_lib = 7) " .$filtroLotes; // POSTVENTA
         }
         $data = $this->Liberaciones_model->getLotesParaLiberacion($idProcesoTipoLiberacion, $tipoVenta, $condicion);
 

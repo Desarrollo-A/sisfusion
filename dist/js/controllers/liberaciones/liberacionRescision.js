@@ -7,6 +7,18 @@ const TIPO_VENTA = Object.freeze({
     PARTICULARES: 1,
     NORMALES: 2
 })
+
+const PROCESO = Object.freeze({
+    INICIO: 0,
+    CARGA_RESCISION: 1,
+    VOBO_DOC_CONTRALORIA: 2,
+    VOBO_ADMINISTRACION: 3,
+    ASIGNACION_PRECIO: 4,
+    VOBO_CAJAS: 5,
+    FINALIZADO_LIBERADO: 6,
+    FINALIZADO_NO_LIBERADO: 7,
+});
+
 let liberacionesDataTable;
 
 $(document).ready(function(){
@@ -164,7 +176,6 @@ $('#liberacionesDataTable thead tr:eq(0) th').each(function (i) {
 
 // ABRIR MODAL
 $(document).on('click', '.btn-accion', async function(){
-
     // Leemos los datos del registro
     const d = JSON.parse($(this).attr("data-data"));
     const accion = $(this).attr("data-accion");
@@ -185,22 +196,7 @@ $(document).on('click', '.btn-accion', async function(){
 
     // Declaramos el contenido extra que embeberemos
     let content = ``;
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) {
-        content = `
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-                <div id="selectFileSection">
-                    <div class="file-gph">
-                        <input type="file" accept=".pdf" id="archivo_liberacion">
-                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                        <label class="upload-btn m-0" for="archivo_liberacion">
-                            <span>Seleccionar</span>
-                            <i class="fas fa-folder-open"></i>
-                        </label>
-                    </div>
-                </div>
-            </div>`;
-    }
-    if (d.enProcesoLiberacion === 4) {
+    if (d.enProcesoLiberacion === PROCESO.ASIGNACION_PRECIO) {
         content = `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12" id="cambioPrecio">
                 <label class="control-label"> Precio por m<sup>2</sup> (<span class="isRequired">*</span>)</label>
@@ -240,17 +236,12 @@ $(document).on("click", "#btn-accion", async function (e) {
     let archivo, proceso, estatusLib, concepto, precioLiberacion;
 
     //Validaciones en caso de tener
-    if ((d.enProcesoLiberacion === 1 || d.enProcesoLiberacion === 0)) { // POSTVENTA: LIBERAR LOTE
-        archivo = $("#archivo_liberacion");
-        
-        // Input sin archivo
-        if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
-
-        // Archivo incorrecto
-        if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
-        
+    //Validaciones en caso de tener
+    if ((d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.CARGA_RESCISION) && (!d.expediente)) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
+        // No ha subido documento para avanzar
+        return alerts.showNotification("top", "right", "Primero debes cargar la RESCISIÓN para poder avanzar el lote.", "warning");
     }
-    if ((d.enProcesoLiberacion === 4 )) { // VENTAS: Generar las condiciones de venta (precio).
+    if ((d.enProcesoLiberacion === PROCESO.ASIGNACION_PRECIO )) { // VENTAS: Generar las condiciones de venta (precio).
         precioLiberacion = $('#costoM2').val().replace('$', '').replace(',', ''); // El precio del lote
         
         // Input de precio sin monto
@@ -259,22 +250,32 @@ $(document).on("click", "#btn-accion", async function (e) {
 
     // Asignación de valores dependiendo el proceso
     if (accion === 'AVANCE') {
-        proceso = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? 2 : d.enProcesoLiberacion + 1; // Avanza proceso
-        estatusLib = d.estatus_lib === 2 ? 3 : 1; // 1: avance normal, 2 rechazo y 3 correccion.
-        concepto = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? 3 : d.concepto;
-        if ( d.enProcesoLiberacion >=  5 ) { // Arrastramos el valor de precio en los registros ya una vez registrado.
-            precioLiberacion = d.precioLiberacion;
+        if (d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO) { // CAJAS
+            proceso = PROCESO.VOBO_DOC_CONTRALORIA;
+            estatusLib = d.estatus_lib === 2 ? 3 : 1; // NUEVO, RECHAZO, CORRECCIÓN.
+            rescision = 1;
+            concepto = 3;
+        }else {
+            proceso = d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.CARGA_RESCISION ? 2 : d.enProcesoLiberacion + 1; // Avanza proceso
+            estatusLib = d.estatus_lib === 2 ? 3 : 1; // 1: avance normal, 2 rechazo y 3 correccion.
+            concepto = d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.CARGA_RESCISION ? 3 : d.concepto;
+            if ( d.enProcesoLiberacion >=  PROCESO.VOBO_CAJAS ) { // Arrastramos el valor de precio en los registros ya una vez registrado.
+                precioLiberacion = d.precioLiberacion;
+            }
         }
     }
     if (accion === 'RECHAZO') {
-        if ( [3, 4, 5].includes(d.enProcesoLiberacion) ) { proceso = 7 } // Si [Administración(3), ventas(4), cajas(5)] rechazan, no se regresa si no se finaliza.
+        if ( [3, 4, 5].includes(d.enProcesoLiberacion) ) {
+            proceso = PROCESO.FINALIZADO_NO_LIBERADO 
+            rescision = 0;
+        } // Si [Administración(3), ventas(4), cajas(5)] rechazan, no se regresa si no se finaliza.
         else { proceso = d.enProcesoLiberacion - 1 } // Cualquier otro caso si se regresa al paso anterior. 
 
         if ( [3, 4, 5].includes(d.enProcesoLiberacion) ) { estatusLib = 1 } // Si el proceso se rechaza en esos procesos, no es rechazo ya que se finaliza pero no se libera.
         else { estatusLib = 2 } // Cualquier otro si es marcado como rechazo
         rescision = proceso === 1 ? 0 : d.rescision; // Si lo regresan para validar doc, se asigna 0 sino el que ya tenia registrado.
         concepto = d.concepto;
-        if ( d.enProcesoLiberacion >=  5 ) { // Arrastramos el valor de precio en los registros ya una vez registrado.
+        if ( d.enProcesoLiberacion >= PROCESO.VOBO_CAJAS ) { // Arrastramos el valor de precio en los registros ya una vez registrado.
             precioLiberacion = d.precioLiberacion;
         }
     }
@@ -310,80 +311,8 @@ $(document).on("click", "#btn-accion", async function (e) {
         }
     });
 
-    // Hacemos el registro de en historial_documento
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 && proceso === 2) {
-        
-        // Borramos el archivo en caso de tener uno y actualizamos los registros de historial_documento 
-        if (d.expediente) {
-            const docData = new FormData();
-            docData.append("idDocumento", d.idDocumento);
-            docData.append("tipoDocumento", d.tipo_doc);
-            let rs1 = await $.ajax({
-                type: 'POST',
-                url: `${general_base_url}Documentacion/eliminarArchivo`,
-                data: docData,
-                contentType: false,
-                cache: false,
-                processData: false,
-            });
-
-            rs1 = JSON.parse(rs1);
-            console.log('Eliminar archivo', rs1);
-            
-            if (rs1.code == 500 ){
-                alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
-                return;
-            } 
-        }
-
-        const tipoDocumento = 53;
-        const movimiento = 'RESCICIÓN DE CONTRATO';
-        const expediente = generarTituloDocumento(d.nombreResidencial, d.nombreLote, d.idLote, d.idCliente, tipoDocumento);
-        const ndata = new FormData();
-        ndata.append("movimiento", movimiento); // Nombre del tipo de documento
-        ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
-        ndata.append("idCliente", d.idCliente);
-        ndata.append("idCondominio", d.idCondominio);
-        ndata.append("idLote", d.idLote);
-        ndata.append('tipo_doc', tipoDocumento); // TipoDocumento es el id del opc de mis archivos (53, 54)
-
-        let res = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Liberaciones/registrarDocumentoEnArbol`,
-            data: ndata,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-
-        res = JSON.parse(res);
-        console.log('Historial documento', res);
-
-        const xdata = new FormData();
-        xdata.append("idLote", d.idLote);
-        xdata.append("idDocumento", res.documentId);
-        xdata.append("tipoDocumento", tipoDocumento);
-        xdata.append("tituloDocumento", expediente);
-        xdata.append("uploadedDocument", archivo[0].files[0]);
-        let rs = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Documentacion/subirArchivo`,
-            data: xdata,
-            contentType: false,
-            cache: false,
-            processData: false,
-        });
-
-        rs = JSON.parse(rs);
-        console.log('Subir archivo', rs);
-        if (rs.code == 500 ){
-            alerts.showNotification("top", "right", 'Surgió un error al registrar el archivo', "warning");
-            return;
-        } 
-    }
-
     // En caso de ser el ultimo proceso, ya se libera.
-    if (d.enProcesoLiberacion === 5 && proceso === 6) {
+    if (d.enProcesoLiberacion === PROCESO.VOBO_CAJAS && proceso === PROCESO.FINALIZADO_LIBERADO) {
         // Generamos el token para liberar el lote
         let res = await $.ajax({
             type: 'POST',
@@ -433,7 +362,35 @@ $(document).on("click", "#btn-accion", async function (e) {
         if (data.message != 'SUCCESS') return;
     }
 
-    await liberacionesDataTable.ajax.reload();
+    // Reiniciamos
+    if (proceso === PROCESO.FINALIZADO_NO_LIBERADO) {
+        const docData = new FormData();
+        docData.append("idDocumento", d.idDocumento);
+        docData.append("tipoDocumento", d.tipo_doc);
+        let rs1 = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Documentacion/eliminarArchivo`,
+            data: docData,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+        rs1 = JSON.parse(rs1);
+        console.log('Eliminar archivo', rs1);
+        
+        if (rs1.code == 500 ){
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+            return;
+        } 
+    }
+
+    /* VOLVEMOS A CARGAR LA TABLA */
+    if (d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.CARGA_RESCISION || d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO && proceso === 2) {
+        datatableFn([]);
+    }else {
+        $('#pendientes').click();
+    }
+
     $('#accion-modal').modal('hide');
     $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
@@ -457,9 +414,13 @@ $(document).on('click', '.btn-historico', async function(){
           },
         dataType: 'JSON',
         success: function (res) {
-          $.each( res, function(i, data){
-            fillChangelog(i, data);
-          });
+            if (res.length === 0) {
+                $("#changelog").append("No existen modificaciones.");
+            }else {
+                $.each( res, function(i, data){
+                    fillChangelog(i, data);
+                });
+            }
           $("#seeInformationModal").modal('show')
           $('#spiner-loader').addClass('hide'); // Quito spinner  
         },
@@ -471,8 +432,166 @@ $(document).on('click', '.btn-historico', async function(){
     $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
 
+$(document).on('click', '.btn-subir-archivo', async function(){
+    // Leemos los datos del registro
+    const d = JSON.parse($(this).attr("data-data"));
+    const accion = $(this).attr("data-accion");
+
+    // Declaramos el contenido extra que embeberemos
+    content = `
+            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
+                <div class="text-center">
+                    <h5>Selecciona el archivo que desees asociar a <b>RESCISIÓN</b></h5>
+                    <p>El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar.</i></p>
+                    <div class="file-gph">
+                        <input type="file" accept=".pdf" id="archivo_liberacion">
+                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionado nada aún" readonly="">
+                        <label class="upload-btn m-0" for="archivo_liberacion">
+                            <span>Seleccionar</span>
+                            <i class="fas fa-folder-open"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>`;
+
+    
+    // Embebemos el contenido extra
+    $('#extra-content-archivo-modal').html(content);
+
+    // Mostramos el modal y mostramos la info del lote en el modal
+    $('#archivo-modal').modal('show');
+
+    // Le agregamos la información que vallamos a usar en caso de confirmar el modal
+    const info = 
+        '<input type="hidden" id="accion"></input>' + 
+        '<input type="hidden" id="data"></input>' ;
+    $('#data-modal').append(info);
+    
+    // Asignación de valores a los inputs
+    $("#accion").val(accion);
+    $("#data").val(JSON.stringify(d));
+});
+
+$(document).on("click", "#btn-subir-archivo", async function (e) {
+    e.preventDefault();
+
+    // Obteniendo los valores para su proceso
+    const accion = $("#accion").val();
+    const d = JSON.parse($("#data").val());
+    let tieneRescision = 0;
+    let tieneAutorizacionDG = 0;
+    let archivo;
+
+    //Validaciones en caso de tener
+    if ((d.enProcesoLiberacion === PROCESO.CARGA_RESCISION || d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO)) { // POSTVENTA: LIBERAR LOTE
+        archivo = $("#archivo_liberacion");
+        
+        // Input sin archivo
+        if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Ingresa los archivos requeridos", "warning");
+
+        // Archivo incorrecto
+        if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "Adjunta un archivo con formato correcto", "warning");
+        
+    }
+
+    // Loading y disables mientras hace la carga
+    $('#btn-accion').attr('disabled', true); // Deshabilita botón
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+
+    // Borramos el archivo en caso de tener uno y actualizamos los registros de historial_documento 
+    if (d.expediente) {
+        const docData = new FormData();
+        docData.append("idDocumento", d.idDocumento);
+        docData.append("tipoDocumento", d.tipo_doc);
+        let rs1 = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Documentacion/eliminarArchivo`,
+            data: docData,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+
+        rs1 = JSON.parse(rs1);
+        console.log('Eliminar archivo', rs1);
+        
+        if (rs1.code == 500 ){
+            alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
+            return;
+        } 
+    }
+    
+    const tipoDocumento = 53;
+    const movimiento = 'RESCICIÓN DE CONTRATO';
+    const expediente = generarTituloDocumento(d.nombreResidencial, d.nombreLote, d.idLote, d.idCliente, tipoDocumento);
+    const ndata = new FormData();
+    ndata.append("movimiento", movimiento); // Nombre del tipo de documento
+    ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
+    ndata.append("idCliente", d.idCliente);
+    ndata.append("idCondominio", d.idCondominio);
+    ndata.append("idLote", d.idLote);
+    ndata.append('tipo_doc', tipoDocumento);// TipoDocumento es el id del opc de mis archivos (53, 54)
+    
+    let res = await $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Liberaciones/registrarDocumentoEnArbol`,
+        data: ndata,
+        contentType: false,
+        cache: false,
+        processData: false,
+    });
+    res = JSON.parse(res);
+    console.log('Historial documento', res);
+    const xdata = new FormData();
+    xdata.append("idLote", d.idLote);
+    xdata.append("idDocumento", res.documentId);
+    xdata.append("tipoDocumento", tipoDocumento);
+    xdata.append("tituloDocumento", expediente);
+    xdata.append("uploadedDocument", archivo[0].files[0]);
+    let rs = await $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Documentacion/subirArchivo`,
+        data: xdata,
+        contentType: false,
+        cache: false,
+        processData: false,
+    });
+    rs = JSON.parse(rs);
+    console.log('Subir archivo', rs);
+    if (rs.code == 200 ) alerts.showNotification("top", "right", `El documento ${movimiento} se ha cargado con éxito.`, "success");
+    if (rs.code == 500 ) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+
+    /* VOLVEMOS A CARGAR LA TABLA */
+    if (d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO) {
+        const loteValue = $("#lote").val();
+        const values = { tipoVenta: TIPO_VENTA.NORMALES, idProcesoTipoLiberacion: LIBERACION.RESCISION, lotes: loteValue }
+        
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
+            data: values,
+            cache: false,
+            success: function(rs) {
+                const res = JSON.parse(rs);
+                datatableFn(res, 1);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la petición AJAX:", error);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            }
+        });
+    }
+    if (d.enProcesoLiberacion === PROCESO.CARGA_RESCISION){
+        $('#pendientes').click();
+    }
+
+    $('#archivo-modal').modal('hide');
+    $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
+    $('#spiner-loader').addClass('hide'); // Quito spinner  
+});
+
 $(document).on('click', '.btn-archivo', function () {
-    $('.btn-archivo').attr('disabled', true);  // Lo vuelvo a activar
     $('#spiner-loader').removeClass('hide'); // Aparece spinner
     Shadowbox.init();
     const d = JSON.parse($(this).attr("data-data"));
@@ -484,7 +603,6 @@ $(document).on('click', '.btn-archivo', function () {
         width: 985,
         height: 660
     });
-    $('.btn-historico').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
 
@@ -552,7 +670,7 @@ const datatableFn = (ndata, type) => {
         columns: [
             {
                 data: (d) => {
-                    if (d.enProcesoLiberacion === 0 || d.estatus_lib === 1) return `<span class="label" style="color: #1B4F72; background: #1B4F7218;}">NUEVO</span>`;
+                    if (d.enProcesoLiberacion === PROCESO.INICIO || d.estatus_lib === 1) return `<span class="label" style="color: #1B4F72; background: #1B4F7218;}">NUEVO</span>`;
                     if (d.estatus_lib === 2) return `<span class="label" style="color: #B03A2E; background: #B03A2E18;}">RECHAZO</span>`;
                     if (d.estatus_lib === 3) return `<span class="label" style="color: #DF7314; background: #DF731418;}">CORRECCIÓN</span>`;
                     return 'SIN ESPECIFICAR';
@@ -594,7 +712,14 @@ const datatableFn = (ndata, type) => {
                     return d.precioLiberacion === null ? 'SIN ASIGNAR' : `${formatMoney(d.precioLiberacion)}`;
                 }
             },
-            { data: "comentario" },
+            {
+                data: function (d) {
+                    if (d.comentario === '' || d.comentario === ' ' || d.comentario === null) {
+                        return "SIN ESPECIFICAR"
+                    }
+                    return d.comentario;
+                }
+            },
             {
                 data: function (d) {
                     return `<div class="d-flex justify-center">${datatableButtons(d, type)}</div>`;
@@ -641,15 +766,17 @@ const newButton = (btnClass, title, action = '', data, icon) => {
 }
 
 const datatableButtons = (d, type) => {
-    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A ADMINISTRACIÓN', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A VENTAS', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P4  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
-    const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
-    const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
-    const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
-    const BTN_VER_DOC    = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    const BTN_AVANCE_P1      = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P2      = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A ADMINISTRACIÓN', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P3      = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A VENTAS', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P4      = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_RECHAZO_P2     = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
+    const BTN_LIBERA         = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
+    const BTN_NO_LIBERA      = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
+    const BTN_INFO           = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
+    const BTN_SUBIR_DOC      = newButton('btn-data btn-blueMaderas btn-subir-archivo', 'SUBIR ARCHIVO', 'SUBIR-ARCHIVO', d, 'fas fa-upload');
+    const BTN_REMPLAZAR_DOC  = newButton('btn-data btn-green btn-subir-archivo', 'REMPLAZAR ARCHIVO', 'SUBIR-ARCHIVO', d, 'fas fa-copy');
+    const BTN_VER_DOC        = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
     
     let NO_BTN = '';
 
@@ -661,25 +788,27 @@ const datatableButtons = (d, type) => {
 
     if (type === 1) {
         if (id_rol_general == 55) { // POSTVENTA
-            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
-            if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
-            if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
+            if (d.enProcesoLiberacion === PROCESO.INICIO && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_REMPLAZAR_DOC + BTN_INFO ;
+            if (d.enProcesoLiberacion === PROCESO.INICIO && !d.expediente) return BTN_AVANCE_P1 + BTN_SUBIR_DOC + BTN_INFO;
+            if (d.enProcesoLiberacion === PROCESO.CARGA_RESCISION ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_REMPLAZAR_DOC + BTN_INFO ;
+            if (d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO && !d.expediente ) return BTN_AVANCE_P1 + BTN_SUBIR_DOC + BTN_INFO;
+            if (d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO  && d.expediente ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_REMPLAZAR_DOC + BTN_INFO ;
             return BTN_INFO;
         }
         if (id_rol_general == 17) { // CONTRALORIA
-            if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
+            if (d.enProcesoLiberacion === PROCESO.VOBO_DOC_CONTRALORIA) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
             return BTN_INFO;
         }
         if (id_rol_general == 11 ) { // ADMINISTRACIÓN
-            if (d.enProcesoLiberacion === 3) return BTN_AVANCE_P3 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
+            if (d.enProcesoLiberacion === PROCESO.VOBO_ADMINISTRACION) return BTN_AVANCE_P3 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
             return BTN_INFO;
         }
         if (id_rol_general == 2) { // VENTAS
-            if (d.enProcesoLiberacion === 4) return BTN_AVANCE_P4 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
+            if (d.enProcesoLiberacion === PROCESO.ASIGNACION_PRECIO) return BTN_AVANCE_P4 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
             return BTN_INFO;
         }
         if (id_rol_general == 12) { // CAJAS
-            if (d.enProcesoLiberacion === 5) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;      
+            if (d.enProcesoLiberacion === PROCESO.VOBO_CAJAS) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;      
             return BTN_INFO;
         }
     }

@@ -13,16 +13,16 @@ class Liberaciones_model extends CI_Model {
         return $this->db->query("SELECT * FROM condominios WHERE status = 1 AND idResidencial = ".$proyecto."");
     }
 
-    function lista_lotes($condominio, $tipoVenta){
+    function lista_lotes($condominio, $tipoVenta, $condicion){
         return $this->db->query(
-            "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones)
+            "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones WHERE estatus = 1)
             SELECT lo.idLote, lo.nombreLote
             FROM lotes AS lo
                 LEFT JOIN clientes AS cl ON cl.id_cliente = lo.idCliente
                 LEFT JOIN condominios AS co ON lo.idCondominio = co.idCondominio
                 LEFT JOIN residenciales AS re ON co.idResidencial = re.idResidencial
                 LEFT JOIN proceso_liberacion_temp AS pl ON pl.idLote = lo.idLote AND rn = 1
-            WHERE lo.tipo_venta = ? AND cl.status = 1 AND lo.idStatusContratacion IN (9,10,13,14,15) AND lo.idCondominio = ? AND pl.idLote IS NULL
+            WHERE lo.tipo_venta = ? AND cl.status = 1 AND lo.idStatusContratacion IN (9,10,13,14,15) AND lo.idCondominio = ? $condicion
             ORDER BY pl.proceso_lib DESC;", array($tipoVenta, $condominio));
     }
 
@@ -30,7 +30,7 @@ class Liberaciones_model extends CI_Model {
     {
         ini_set('memory_limit', -1);
         $query = $this->db->query(
-        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones)
+        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones WHERE estatus = 1)
         SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,
 			CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
 			lo.precio, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, lo.referencia,
@@ -70,7 +70,7 @@ class Liberaciones_model extends CI_Model {
     {
         ini_set('memory_limit', -1);
         $query = $this->db->query(
-        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones)
+        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones WHERE estatus = 1)
         SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,
 			CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
 			lo.precio, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, lo.referencia,
@@ -110,7 +110,7 @@ class Liberaciones_model extends CI_Model {
     {
         ini_set('memory_limit', -1);
         $query = $this->db->query(
-        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones)
+        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones WHERE estatus = 1)
         SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,
 			CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
 			lo.precio, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, lo.referencia,
@@ -150,7 +150,7 @@ class Liberaciones_model extends CI_Model {
     {
         ini_set('memory_limit', -1);
         $query = $this->db->query(
-        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones)
+        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones WHERE estatus = 1)
         SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,
 			CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
 			lo.precio, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, lo.referencia,
@@ -190,7 +190,7 @@ class Liberaciones_model extends CI_Model {
     {
         ini_set('memory_limit', -1);
         $query = $this->db->query(
-        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones)
+        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones WHERE estatus = 1)
         SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,
 			CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
 			lo.precio, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, lo.referencia,
@@ -229,7 +229,7 @@ class Liberaciones_model extends CI_Model {
     {
         ini_set('memory_limit', -1);
         $query = $this->db->query(
-        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones)
+        "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones WHERE estatus = 1)
         SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,
 			CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
 			lo.precio, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, lo.referencia,

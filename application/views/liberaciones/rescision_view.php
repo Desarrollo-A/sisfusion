@@ -1,5 +1,6 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/documentTree.css" rel="stylesheet"/>
 <body>
     <style>
         #clienteConsulta .form-group {
@@ -96,7 +97,25 @@
                     </div> 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="btn-accion">Aceptar</button>
+                        <button type="button" class="btn btn-primary" id="btn-accion">GUARDAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBIR ARCHIVOS -->
+        <div class="modal fade" id="archivo-modal" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header text-center" id="labelHeaderArchivoModal">
+                    </div>
+                    <div class="modal-body pt-0">
+                        <div id="extra-content-archivo-modal"></div>
+                        <div id="data-modal"></div>
+                    </div> 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btn-subir-archivo">Aceptar</button>
                     </div>
                 </div>
             </div>

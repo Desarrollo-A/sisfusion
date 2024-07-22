@@ -96,7 +96,7 @@
                     </div> 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="btn-accion">Aceptar</button>
+                        <button type="button" class="btn btn-primary" id="btn-accion">GUARDAR</button>
                     </div>
                 </div>
             </div>
@@ -107,7 +107,6 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header text-center" id="labelHeaderArchivoModal">
-                        <!-- <h4>¿Está seguro de <b>rechazar</b> el expediente de <b>'+nombreLote+'</b>?</h4> -->
                     </div>
                     <div class="modal-body pt-0">
                         <div id="extra-content-archivo-modal"></div>
