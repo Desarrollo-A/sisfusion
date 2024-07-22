@@ -357,8 +357,9 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                     return 0;
                 } else {
                     $this->db->trans_commit();
-                    return array("respuesta" => $datosAvance[0]['comentario'],
-                                "estatus" => 1);
+                    /*return array("respuesta" => $datosAvance[0]['comentario'],
+                                "estatus" => 1);*/
+                    return array("respuesta" => "Se aprobó el plan de ventas","estatus" => 1);
                 }            
             }
             if($accion == 3) {
