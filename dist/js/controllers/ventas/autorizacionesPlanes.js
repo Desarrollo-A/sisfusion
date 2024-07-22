@@ -532,7 +532,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
     function addDescuento(id_condicion, descripcion) {
-        console.log("id_condicion: ", id_condicion);
         const currencyCondiciones = [4, 12];
         const percentageCondiciones = [1,2]
         const numericCondiciones = [13];
@@ -557,31 +556,33 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         $('#ModalFormAddDescuentos').modal();
     }
 
-    $("input").on({
+    $("#descuento").on({
         keyup: function() {
-            const dataType = $(this).attr('data-type');
-            if (dataType === 'currency'){
+            let id_condicion = $('#id_condicion').val();
+            if(id_condicion == 12 || id_condicion == 4) {
                 formatCurrency($(this));
-            } else if (dataType === 'percentage') {
+            }
+            else if(id_condicion == 1 || id_condicion == 2) {
                 formatPercentage($(this));
             }
-            else if(dataType === 'numeric') {
+            else if(id_condicion == 13) {
                 formatNumberInput($(this));
             }
         },
         blur: function() {
-            const dataType = $(this).attr('data-type');
-            if (dataType === 'currency') {
-                formatCurrency($(this), "blur");
-            } else if (dataType === 'percentage') {
-                formatPercentage($(this), "blur");
+            let id_condicion = $('#id_condicion').val();
+            if(id_condicion == 12 || id_condicion == 4) {
+                formatCurrency($(this));
             }
-            else if (dataType === 'numeric') {
-                formatNumberInput($(this), "blur");
+            else if(id_condicion == 1 || id_condicion == 2) {
+                formatPercentage($(this));
+            }
+            else if(id_condicion == 13) {
+                formatNumberInput($(this));
             }
         }
     });
-    
+
     function formatCurrency(input, blur) {
         var input_val = input.val();
         if (input_val === "") { return; }
@@ -621,27 +622,36 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         var decimal_pos = input_val.indexOf(".");
         if (decimal_pos >= 0) {
             var left_side = input_val.substring(0, decimal_pos);
-            var right_side = input_val.substring(decimal_pos);
-            left_side = formatNumber(left_side);
-            right_side = formatNumber(right_side);
-            if (blur === "blur") {
-                right_side += "00";
-            }
-            right_side = right_side.substring(0, 2);
-            input_val = left_side + "." + right_side + "%";
+            var right_side = input_val.substring(decimal_pos + 1);
+            left_side = left_side.substring(0, 3);
+            right_side = right_side.substring(0, 2); 
+
+            input_val = left_side + "." + right_side;
         } else {
-            input_val = formatNumber(input_val);
-            if (blur === "blur") {
-                input_val += ".00%";
-            } else {
-                input_val += "%";
-            }
+            input_val = input_val.substring(0, 3); 
         }
+
+        if (blur === "blur") {
+            if (decimal_pos === -1) {
+                input_val += ".00";
+            }
+        } else {
+            input_val += "%";
+        }
+        var numericalValue = parseFloat(input_val.replace('%', ''));
+        if (numericalValue > 100) {
+            $("#dispersar").attr("disabled", true);
+            alerts.showNotification("top", "right", "El porcentaje no puede ser mayor a 100%", "warning");
+        } else {
+            $("#dispersar").attr("disabled", false);
+        }
+
         input.val(input_val);
         var updated_len = input_val.length;
         caret_pos = updated_len - original_len + caret_pos;
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
+
 
     function formatNumberInput(input) {
         var input_val = input.val();
