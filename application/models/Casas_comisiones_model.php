@@ -21,14 +21,14 @@ class Casas_comisiones_model extends CI_Model {
             '' as procesoCl,
             '' as colorProcesoCl, 0 as proceso, 0 as id_cliente_reubicacion_2
 
-            FROM pago_comision_ind pci1 
-            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision 
+            FROM pago_casas_ind pci1
+            INNER JOIN comisiones_casas com ON pci1.id_comision = com.id_comision
             INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
-            INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
-            LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+            INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16
+            LEFT JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote
             /*INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23*/
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
             LEFT JOIN clientes  cl ON cl.id_cliente=com.idCliente
@@ -50,8 +50,8 @@ class Casas_comisiones_model extends CI_Model {
             (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
             (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0)
 
-            FROM pago_comision_ind pci1 
-            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+            FROM pago_casas_ind pci1 
+            INNER JOIN comisiones_casas com ON pci1.id_comision = com.id_comision
             INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -59,7 +59,7 @@ class Casas_comisiones_model extends CI_Model {
             LEFT JOIN prospectos pr ON pr.id_prospecto=cl.id_prospecto
             INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
             INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
-            LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            LEFT JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote
             /*INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23*/
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
             INNER JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
@@ -95,8 +95,8 @@ class Casas_comisiones_model extends CI_Model {
 
     public function getTotalComisionAsesor($idUsuario) {
         $query = $this->db->query("SELECT SUM(pci.abono_neodata) AS total
-        FROM pago_comision_ind pci 
-        INNER JOIN comisiones com ON pci.id_comision = com.id_comision 
+        FROM pago_casas_ind pci 
+        INNER JOIN comisiones_casas com ON pci.id_comision = com.id_comision 
         where pci.estatus = 1 and com.id_usuario = $idUsuario");
         return $query->row();
     }
@@ -131,12 +131,12 @@ class Casas_comisiones_model extends CI_Model {
     }
   
     function update_acepta_solicitante($idsol) {
-        $query = $this->db->query("UPDATE pago_comision_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
+        $query = $this->db->query("UPDATE pago_casas_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
         return true;
     }
 
     function insert_phc($data){
-        $this->db->insert_batch('historial_comisiones', $data);
+        $this->db->insert_batch('historial_comision_casas', $data);
         return true;
     }
 
@@ -158,8 +158,8 @@ class Casas_comisiones_model extends CI_Model {
         switch ($opc) {
             case 3:
                 $consulta = $this->db->query(" SELECT pci.id_pago_i
-                FROM pago_comision_ind pci
-                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+                FROM pago_casas_ind pci
+                INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
                 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
                 INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
@@ -170,11 +170,11 @@ class Casas_comisiones_model extends CI_Model {
                 AND contrato.expediente IS NOT NULL AND pci.id_usuario = $usuario AND res.idResidencial = $recidencial")->result_array();
 
                 for($i=0;$i < count($consulta); $i++){
-                    $this->db->query("INSERT INTO historial_comisiones VALUES (".$consulta[$i]['id_pago_i'].", ".$usuario.", GETDATE(), 1, 'COLABORADOR ENVÍO A CONTRALORÍA')");
+                    $this->db->query("INSERT INTO historial_comision_casas VALUES (".$consulta[$i]['id_pago_i'].", ".$usuario.", GETDATE(), 1, 'COLABORADOR ENVÍO A CONTRALORÍA')");
                 }
-                $respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
-                FROM pago_comision_ind pci
-                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+                $respuesta = $this->db->query(" UPDATE pago_casas_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
+                FROM pago_casas_ind pci
+                INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
                 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
                 INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
@@ -193,13 +193,13 @@ class Casas_comisiones_model extends CI_Model {
 
             case 4:
                 $consulta = $this->db->query("  SELECT pci.id_pago_i
-                FROM pago_comision_ind pci
-                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+                FROM pago_casas_ind pci
+                INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
                 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
                 INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
                 INNER JOIN clientes cl ON cl.idLote = lo.idLote
-                INNER JOIN facturas fac ON fac.id_comision = pci.id_pago_i
+                INNER JOIN factura_casas fac ON fac.id_comision = pci.id_pago_i
                 INNER JOIN (SELECT expediente, idCliente FROM historial_documento WHERE tipo_doc in (8)
                 AND status = 1 GROUP BY idCliente, expediente) contrato ON contrato.idCliente = cl.id_cliente
                 WHERE lo.status = 1 AND lo.registro_comision NOT IN (0) AND pci.estatus IN (1, 2)
@@ -207,16 +207,16 @@ class Casas_comisiones_model extends CI_Model {
                 echo print_r($consulta);
 
                 for($i=0;$i < count($consulta); $i++){
-                    $this->db->query("INSERT INTO historial_comisiones VALUES (".$consulta[$i]['id_pago_i'].", ".$usuario.", GETDATE(), 1, 'COLABORADOR ENVÍO A CONTRALORÍA')");
+                    $this->db->query("INSERT INTO historial_comision_casas VALUES (".$consulta[$i]['id_pago_i'].", ".$usuario.", GETDATE(), 1, 'COLABORADOR ENVÍO A CONTRALORÍA')");
                 }
-                $respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
-                FROM pago_comision_ind pci
-                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+                $respuesta = $this->db->query(" UPDATE pago_casas_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
+                FROM pago_casas_ind pci
+                INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
                 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
                 INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
                 INNER JOIN clientes cl ON cl.idLote = lo.idLote
-                INNER JOIN facturas fac ON fac.id_comision = pci.id_pago_i
+                INNER JOIN factura_casas fac ON fac.id_comision = pci.id_pago_i
                 INNER JOIN (SELECT expediente, idCliente FROM historial_documento WHERE tipo_doc in (8)
                 AND status = 1 GROUP BY idCliente, expediente) contrato ON contrato.idCliente = cl.id_cliente
                 WHERE lo.status = 1 AND lo.registro_comision NOT IN (0) AND pci.estatus IN (1, 2)
@@ -232,8 +232,8 @@ class Casas_comisiones_model extends CI_Model {
             case 1:
                 //ASIMILADOS TODAS
                 $consulta = $this->db->query("SELECT pci.id_pago_i
-                FROM pago_comision_ind pci
-                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+                FROM pago_casas_ind pci
+                INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
                 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
                 INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
@@ -244,12 +244,12 @@ class Casas_comisiones_model extends CI_Model {
                 AND contrato.expediente IS NOT NULL AND pci.id_usuario = $usuario  AND res.idResidencial > 0")->result_array();
 
                 for($i=0;$i < count($consulta); $i++){;
-                    $this->db->query("INSERT INTO historial_comisiones VALUES (".$consulta[$i]['id_pago_i'].", ".$usuario.", GETDATE(), 1, 'COLABORADOR ENVÍO A CONTRALORÍA')");
+                    $this->db->query("INSERT INTO historial_comision_casas VALUES (".$consulta[$i]['id_pago_i'].", ".$usuario.", GETDATE(), 1, 'COLABORADOR ENVÍO A CONTRALORÍA')");
                 }
 
-                $respuesta = $this->db->query(" UPDATE pago_comision_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
-                FROM pago_comision_ind pci
-                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+                $respuesta = $this->db->query(" UPDATE pago_casas_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
+                FROM pago_casas_ind pci
+                INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
                 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
                 INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
@@ -269,28 +269,28 @@ class Casas_comisiones_model extends CI_Model {
             case 2:
                 //FACTURAS TODAS
                 $consulta = $this->db->query("SELECT pci.id_pago_i
-                FROM pago_comision_ind pci
-                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+                FROM pago_casas_ind pci
+                INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
                 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
                 INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
                 INNER JOIN clientes cl ON cl.idLote = lo.idLote
-                INNER JOIN facturas fac ON fac.id_comision = pci.id_pago_i
+                INNER JOIN factura_casas fac ON fac.id_comision = pci.id_pago_i
                 INNER JOIN (SELECT expediente, idCliente FROM historial_documento WHERE tipo_doc in (8)
                 AND status = 1 GROUP BY idCliente, expediente) contrato ON contrato.idCliente = cl.id_cliente
                 WHERE lo.status = 1 AND lo.registro_comision NOT IN (0) AND pci.estatus IN (1, 2)
                 AND contrato.expediente IS NOT NULL AND pci.id_usuario = $usuario AND res.idResidencial > 0")->result_array();
                 for($i=0;$i < count($consulta); $i++){
-                    $this->db->query("INSERT INTO historial_comisiones VALUES (".$consulta[$i]['id_pago_i'].", ".$usuario.", GETDATE(), 1, 'COLABORADOR ENVÍO A CONTRALORÍA')");
+                    $this->db->query("INSERT INTO historial_comision_casas VALUES (".$consulta[$i]['id_pago_i'].", ".$usuario.", GETDATE(), 1, 'COLABORADOR ENVÍO A CONTRALORÍA')");
                 }
-                $respuesta = $this->db->query("UPDATE pago_comision_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
-                FROM pago_comision_ind pci
-                INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+                $respuesta = $this->db->query("UPDATE pago_casas_ind set estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."'
+                FROM pago_casas_ind pci
+                INNER JOIN comisiones_cassas com ON com.id_comision = pci.id_comision
                 INNER JOIN lotes lo ON lo.idLote = com.id_lote
                 INNER JOIN condominios cod ON cod.idCondominio = lo.idCondominio
                 INNER JOIN residenciales res ON res.idResidencial = cod.idResidencial
                 INNER JOIN clientes cl ON cl.idLote = lo.idLote
-                INNER JOIN facturas fac ON fac.id_comision = pci.id_pago_i
+                INNER JOIN factura_casas fac ON fac.id_comision = pci.id_pago_i
                 INNER JOIN (SELECT expediente, idCliente FROM historial_documento WHERE tipo_doc in (8)
                 AND status = 1 GROUP BY idCliente, expediente) contrato ON contrato.idCliente = cl.id_cliente
                 WHERE lo.status = 1 AND lo.registro_comision NOT IN (0) AND pci.estatus IN (1, 2)
@@ -312,8 +312,8 @@ class Casas_comisiones_model extends CI_Model {
             $id_user_V3 = $id_usuario;
         }
         return $this->db->query("SELECT pci.id_pago_i, pci.pago_neodata, pci.abono_neodata  ,res.idResidencial , lot.nombreLote, res.nombreResidencial , res.idResidencial
-        FROM pago_comision_ind pci
-        INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+        FROM pago_casas_ind pci
+        INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
         INNER JOIN lotes lot ON lot.idLote = com.id_lote
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
@@ -359,11 +359,11 @@ class Casas_comisiones_model extends CI_Model {
     }
 
     function verificar_uuid( $uuid ){
-        return $this->db->query("SELECT * FROM facturas WHERE uuid = '".$uuid."'");
+        return $this->db->query("SELECT * FROM factura_casas WHERE uuid = '".$uuid."'");
     }
 
     public function borrar_factura($id_comision){
-        return $this->db->query("DELETE FROM facturas WHERE id_comision =".$id_comision."");
+        return $this->db->query("DELETE FROM factura_casas WHERE id_comision =".$id_comision."");
     }
 
     function insertar_factura( $id_comision, $datos_factura,$usuarioid){
@@ -385,7 +385,239 @@ class Casas_comisiones_model extends CI_Model {
             "unidad" => $datos_factura['claveUnidad'],
             "claveProd" => $datos_factura['claveProdServ']
         );
-        return $this->db->insert("facturas", $data);
+        return $this->db->insert("factura_casas", $data);
+    }
+
+    public function resumenIndividual($idLote){
+
+        $usuario = $this->session->userdata('id_usuario');
+        $cmd = "
+
+        DECLARE @usuario INTEGER,
+                @lote INTEGER,
+                @rol INTEGER,
+                @plan_comisiON INTEGER,
+                @excedente FLOAT,
+                --@plan_comisiON INTEGER,
+            @porcentaje FLOAT; SET @usuario = $usuario; SET @lote = $idLote; SET @rol = (SELECT TOP 1 id_rol
+            FROM usuarios
+            WHERE id_usuario = @usuario); SET @plan_comisiON = (SELECT cl.plan_comision
+            FROM lotes lo
+            INNER JOIN clientes cl
+            ON cl.id_cliente = lo.idCliente
+            WHERE lo.idLote = @lote ); -- Uso de bloques BEGIN y
+            IF  @plan_comisiON = 66
+            BEGIN
+                IF @rol = 7 BEGIN SET @excedente = (SELECT comAs FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.5; END
+                ELSE IF @rol = 3 BEGIN SET @excedente = (SELECT comCo FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.2; END
+                ELSE IF @rol = 2 BEGIN SET @excedente = (SELECT comSu FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.2; END
+                ELSE IF @rol = 1 BEGIN SET @excedente = (SELECT comDi FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.1; END
+                ELSE BEGIN SET @excedente = (SELECT comSu FROM plan_comision WHERE id_plan = @plan_comisiON );  SET @porcentaje = 0.0; END;
+            END
+            ELSE IF @plan_comisiON = 86 
+            BEGIN 
+                IF @rol = 7 BEGIN SET @excedente = (SELECT comAs FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.5; END
+                ELSE IF @rol = 3 BEGIN SET @excedente = (SELECT comCo FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.2; END
+                ELSE IF @rol = 2 BEGIN SET @excedente = (SELECT comSu FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.2; END
+                ELSE IF @rol = 59 BEGIN SET @excedente = (SELECT comRe FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.2; END
+                ELSE IF @rol = 1 BEGIN SET @excedente = (SELECT comDi FROM plan_comision WHERE id_plan = @plan_comisiON ); SET @porcentaje = 0.1; END
+                ELSE BEGIN SET @excedente = (SELECT comSu FROM plan_comision WHERE id_plan = @plan_comisiON );  SET @porcentaje = 0.0; END;
+            END;
+        WITH UltimoValOR AS (SELECT *
+            FROM UltimoPrecioDeLote )SELECT cl.id_cliente_reubicacion_2,
+                cl.total8P,
+                @excedente AS porcentajePlan,
+                @plan_comisiON AS planC ,
+                supXloteOri.total_origen,
+                ContarDestino.numDestino,
+                cl.idLote AS idLoteDestino,
+                lo.sup AS superficieDestino,
+                lo.totalNeto2 AS totalNeto2Destino,
+                clReu.id_cliente AS clienteReubicado,
+                loReu.idLote AS idLoteOrigen,
+                lf1.idLote AS loteFuision,
+                lf1.destino AS destino,
+                lf.idLotePvOrigen AS pivote,
+                loReu.totalNeto2 AS totalNeto2Origen,
+                UPDL.anteriOR AS totalNeto2Origen,
+                loReu.sup AS superficieOrigen,
+                UPDL2.anteriOR AS totalnetoReal,
+                loFusi.idLote AS loteReal,
+                loFusi.nombreLote AS nombreOrigen,
+                loFusi.sup,
+                supXloteOri.superOrigen AS superficieOrigen,
+                supXloteDesti.superDestino AS superficieDestino,
+                ((cl.total8P * @excedente)/100 ) AS ExcedenteDinero,
+                ((((supXloteOri.total_origen) / (ContarDestino.numDestino)) * 0.01) *@porcentaje) AS porciento1,
+                ((((supXloteOri.total_origen) / (ContarDestino.numDestino)) * 0.01)) AS porciento10,
+                ((supXloteDesti.superDestino) - ((supXloteOri.superOrigen * 0.05) + (supXloteOri.superOrigen))) AS Excedente_sup
+            FROM lotes lo
+        INNER JOIN clientes cl
+            ON cl.idLote = lo.idLote
+        INNER JOIN clientes clReu
+            ON cl.id_cliente_reubicacion_2 = clReu.id_cliente
+        INNER JOIN lotes loReu
+            ON clReu.idLote = loReu.idLote
+        INNER JOIN lotesFusiON lf
+            ON lf.idLote = lo.idLote
+        LEFT JOIN lotesFusiON lf1
+            ON lf1.idLotePvOrigen = lf.idLotePvOrigen
+        INNER JOIN lotes loFusi
+            ON loFusi.idLote = lf1.idLote
+        LEFT JOIN UltimoValOR UPDL2
+            ON UPDL2.id_parametro = loFusi.idLote
+                AND UPDL2.rn = 1
+        LEFT JOIN UltimoValOR UPDL
+            ON UPDL.id_parametro = loReu.idLote
+                AND UPDL.rn = 1
+        LEFT JOIN (SELECT COUNT(idLote) AS numDestino,
+                idLotePvOrigen
+            FROM lotesFusion
+            WHERE destino = 1
+            GROUP BY  idLotePvOrigen) ContarDestino
+            ON lf1.idLotePvOrigen = ContarDestino.idLotePvOrigen
+        LEFT JOIN (SELECT SUM(sup) AS superOrigen,
+                SUM(lofusion.totalNeto2) AS total_origen,
+                lofusion.idLotePvOrigen
+            FROM lotesFusiON lofusion, lotes lote
+            WHERE lofusion.idLote = lote.idLote
+                AND destino = 0
+            GROUP BY  lofusion.idLotePvOrigen) supXloteOri
+            ON lf1.idLotePvOrigen = supXloteOri.idLotePvOrigen
+        LEFT JOIN (SELECT SUM(sup) AS superDestino,
+                lofusion.idLotePvOrigen
+            FROM lotesFusiON lofusion, lotes lote
+            WHERE lofusion.idLote = lote.idLote
+                AND destino = 1
+            GROUP BY  lofusion.idLotePvOrigen) supXloteDesti
+            ON lf1.idLotePvOrigen = supXloteDesti.idLotePvOrigen
+            WHERE lo.idLote = @lote;";
+        $query = $this->db->query($cmd);
+
+        return $query->result_array();
+    }
+
+    public function resumenIndividualExce($idLote){
+        
+        $usuario = $this->session->userdata('id_usuario');
+        $cmd = "DECLARE @usuario INTEGER,
+        @lote INTEGER,
+        @rol INTEGER,
+        @plan_comision INTEGER,
+        @excedente FLOAT,
+        @porcentaje FLOAT;
+
+        -- Asignar valores iniciales
+        SET @usuario = $usuario;
+        SET @lote = $idLote;
+
+        -- Obtener el rol del usuario
+        SET @rol = (SELECT TOP 1 id_rol
+                    FROM usuarios
+                    WHERE id_usuario = @usuario);
+
+        -- Obtener el plan de comisión del lote
+        SET @plan_comision = (SELECT cl.plan_comision
+                            FROM lotes lo
+                            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+                            WHERE lo.idLote = @lote);
+
+        -- Determinar excedente y porcentaje basado en el plan de comisión y el rol
+        IF @plan_comision = 66
+        BEGIN
+            IF @rol = 7 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comAs AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.5; 
+            END
+            ELSE IF @rol = 3 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comCo AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.2; 
+            END
+            ELSE IF @rol = 2 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comSu AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.2; 
+            END
+            ELSE IF @rol = 1 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comDi AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.1; 
+            END
+            ELSE 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comSu AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision);  
+                SET @porcentaje = 0.0; 
+            END;
+        END
+        ELSE IF @plan_comision = 86 
+        BEGIN 
+            IF @rol = 7 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comAs AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.5; 
+            END
+            ELSE IF @rol = 3 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comCo AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.2; 
+            END
+            ELSE IF @rol = 2 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comSu AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.2; 
+            END
+            ELSE IF @rol = 59 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comRe AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.2; 
+            END
+            ELSE IF @rol = 1 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comDi AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision); 
+                SET @porcentaje = 0.1; 
+            END
+            ELSE 
+            BEGIN 
+                SET @excedente = (SELECT CAST(comSu AS FLOAT) FROM plan_comision WHERE id_plan = @plan_comision);  
+                SET @porcentaje = 0.0; 
+            END;
+        END;
+
+        -- Definir la CTE para obtener el último valor
+        WITH UltimoValor AS (
+            SELECT * 
+            FROM UltimoPrecioDeLote
+        )
+
+        -- Consulta principal
+        SELECT cl.id_cliente_reubicacion_2,
+            cl.idLote AS idLoteDestino,
+            lo.nombreLote AS nombreDestino,
+            lo.sup AS superficieDestino,
+            lo.totalNeto2 AS totalNeto2Destino,
+            clReu.id_cliente AS clienteReubicado,
+            loReu.idLote AS idLoteOrigen,
+            loReu.nombreLote AS nombreOrigen,
+            cl.total8P AS montoExcedente,
+            ((lo.sup) - ((loReu.sup * 0.05) + (loReu.sup))) AS Excedente_sup,
+            
+                ((CAST(UPDL.anterior AS NUMERIC) * 0.01) * @porcentaje) AS porciento1,
+                
+
+                UPDL.anterior AS totalNeto2Origen,
+            ((cl.total8P * @excedente) / 100) AS ExcedenteDinero,
+            loReu.sup AS superficieOrigen
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.idLote = lo.idLote 
+        INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente		
+        INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
+        LEFT JOIN UltimoValor UPDL   ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
+        WHERE lo.idLote = @lote;";
+        $query = $this->db->query($cmd);
+
+        return $query->result_array();
     }
 
       // ----------------------------- modelo de historial_casas --------------------------------
@@ -420,9 +652,9 @@ class Casas_comisiones_model extends CI_Model {
         (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, oxcest.color,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2
-        FROM pago_comision_ind pci1 
+        FROM pago_casas_ind pci1 
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
-        FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
+        FROM pago_casas_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
         GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision and com.estatus = 1
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
@@ -431,7 +663,7 @@ class Casas_comisiones_model extends CI_Model {
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario $tipo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
-        INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+        INNER JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
         LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
@@ -469,18 +701,18 @@ class Casas_comisiones_model extends CI_Model {
         (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2
 
-        FROM pago_comision_ind pci1 
+        FROM pago_casas_ind pci1 
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
-        FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
+        FROM pago_casas_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
         GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
-        INNER JOIN comisiones com ON pci1.id_comision = com.id_comision and com.estatus = 8
+        INNER JOIN comisiones_casas com ON pci1.id_comision = com.id_comision and com.estatus = 8
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8 AND com.estatus = 1
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
-        INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+        INNER JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
         LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
@@ -495,14 +727,14 @@ class Casas_comisiones_model extends CI_Model {
 
     function update_estatus_pausa($id_pago_i, $obs, $estatus) {
         $id_user_Vl = $this->session->userdata('id_usuario');
-        $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
-        return $this->db->query("UPDATE pago_comision_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+        $this->db->query("INSERT INTO  historial_comision_casas VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
+        return $this->db->query("UPDATE pago_casas_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
     }
 
     function inforReporteAsesor($id_asesor){
         $query = $this->db->query("SELECT * FROM descuentos_universidad du 
-        INNER JOIN pago_comision_ind pci ON du.id_usuario = pci.id_usuario
-        INNER JOIN comisiones com ON com.id_comision = pci.id_comision
+        INNER JOIN pago_casas_ind pci ON du.id_usuario = pci.id_usuario
+        INNER JOIN comisiones_casas com ON com.id_comision = pci.id_comision
         INNER JOIN lotes l ON com.id_lote = l.idLote
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
         WHERE pci.estatus=17 AND pci.descuento_aplicado=1 AND com.id_usuario=".$id_asesor);
@@ -511,8 +743,8 @@ class Casas_comisiones_model extends CI_Model {
 
     function update_estatus_edit($id_pago_i, $obs) {
         $id_user_Vl = $this->session->userdata('id_usuario');
-        $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'ACTUALIZÓ CONTRALORIA CON NUEVO MONTO: ".$obs."')");
-        return $this->db->query("UPDATE pago_comision_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+        $this->db->query("INSERT INTO historial_comision_casas VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'ACTUALIZÓ CONTRALORIA CON NUEVO MONTO: ".$obs."')");
+        return $this->db->query("UPDATE pago_casas_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
     }
 
     function getHistorialDescuentosPorUsuario() {
@@ -536,8 +768,8 @@ class Casas_comisiones_model extends CI_Model {
         mrp.id_opcion as relacionPrestamo,
         oxc0.id_opcion as opcion,
         mrp.estatus
-        FROM pago_comision_ind pci  
-        INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.id_usuario = pci.id_usuario
+        FROM pago_casas_ind pci  
+        INNER JOIN comisiones_casas co ON co.id_comision = pci.id_comision AND co.id_usuario = pci.id_usuario
         INNER JOIN lotes lo ON lo.idLote = co.id_lote AND lo.status IN (0,1)
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial

@@ -61,11 +61,11 @@ class Casas_comisiones extends CI_Controller
   //   }
   // }
 
-  public function historial_casas_comisiones()
-  {
-    $this->load->view('template/header');
-    $this->load->view("casas_comisiones/historial_casas_comisiones");    
-  }
+  // public function historial_casas_comisiones()
+  // {
+  //   $this->load->view('template/header');
+  //   $this->load->view("casas_comisiones/historial_casas_comisiones");    
+  // }
 
   public function getTotalComisionAsesor()
     {
@@ -86,8 +86,7 @@ class Casas_comisiones extends CI_Controller
     echo json_encode($resolt);
   }
 
-  public function SubirPDFExtranjero($id = '')
-    {
+  public function SubirPDFExtranjero($id = ''){
         $id_usuario = $this->session->userdata('id_usuario');
         $nombre = $this->session->userdata('nombre');
         $opc = 0;
@@ -115,7 +114,7 @@ class Casas_comisiones extends CI_Controller
 
         $response = $this->Casas_comisiones_model->SaveCumplimiento($id_usuario, $newFileName, $opc);
         echo json_encode($response);
-    }
+  }
 
   public function getFechaCorteActual(){
     $tipoUsuario =  $this->session->userdata('tipo');
@@ -479,6 +478,18 @@ class Casas_comisiones extends CI_Controller
       echo json_encode(3);
     }
   }
+
+  public function resumenIndividual($idLote,$proceso){
+    // $idLote = $this->input->post('idLote');
+    if($proceso == 1){
+        // fusion
+        echo json_encode($this->Casas_comisiones_model->resumenIndividual($idLote));
+    }else  if ($proceso == 2){
+        // excedente
+        echo json_encode($this->Casas_comisiones_model->resumenIndividualExce($idLote));
+    }
+    
+}
 
   // ----------------------------- controlador de historial_casas --------------------------------
 

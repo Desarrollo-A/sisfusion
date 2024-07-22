@@ -304,14 +304,12 @@
     </div>
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>   
-    <!-- <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script> -->
-    <script src="<?= base_url() ?>dist/js/controllers/casas_comisiones/historial_casas.js"></script>
-
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
 
 
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-    <!-- Este controlador solo tiene una funcion para limpiar el elemento con id modal_vista_evidencias y después lo rellena con nueva información -->
-	<script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script>
+
+	<!-- <script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script> -->
 	<script type="text/javascript">
 		Shadowbox.init();
 	</script>

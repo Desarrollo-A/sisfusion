@@ -157,7 +157,6 @@ class Comisiones extends CI_Controller
     $datos = array();
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
     $this->load->view('template/header');
-    // $tipo_user = $this->session->userdata('tipo');
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
@@ -168,8 +167,7 @@ class Comisiones extends CI_Controller
       break;
       default:
         if($this->session->userdata('tipo') == 3){
-
-          $this->load->view("casas_comisiones/solicitudes_casas_comisiones", $datos);
+          $this->load->view("casas_comisiones/Solicitudes_casas_comisiones", $datos);
 
         }else{
           $this->load->view("ventas/comisiones_colaborador", $datos);
@@ -190,7 +188,14 @@ class Comisiones extends CI_Controller
   public function historial_colaborador()
   {
     $this->load->view('template/header');
-    $this->load->view("comisiones/colaborador/historial_comisiones_contraloria_view");    
+    if($this->session->userdata('tipo') == 3){
+      $this->load->view("casas_comisiones/historial_casas_comisiones");
+
+    }else{
+      $this->load->view("comisiones/colaborador/historial_comisiones_contraloria_view");
+
+    }
+        
   }
 
 
@@ -243,10 +248,11 @@ class Comisiones extends CI_Controller
     $this->load->view("resguardos/revision_resguardo_view");
  }
 
-  // public function retiros(){
-  //   $this->load->view('template/header');
-  //   $this->load->view("ventas/retiros");
-  // }
+  public function retiros(){
+    $this->load->view('template/header');
+    // $this->load->view("ventas/retiros");
+    $this->load->view("resguardos/retiros_comisiones_view");
+  }
 
 
   public function historial_retiros()
@@ -3533,7 +3539,7 @@ public function UpdateRetiro(){
         } else {
             echo json_encode(array());
         }
-        exit;
+        // exit;
 //      for ($i=0; $i < count($data['condominios']); $i++) {
 //          echo "<option idCondominio='".$data['condominios'][$i]['idCondominio']."' value='".$data['condominios'][$i]['idCondominio']."'>".$data['condominios'][$i]['nombre']." "."(".$data['condominios'][$i]['nombreResidencial'].")"."</option>";
 //      }
@@ -5692,11 +5698,6 @@ public function lista_usuarios($rol,$forma_pago){
     
     echo json_encode($this->Comisiones_model->getComisionInd($idLote, $idUsr)->result_array(),JSON_NUMERIC_CHECK);
 }
-
-
-
-
-
 
 public function resumenIndividual($idLote,$proceso){
     // $idLote = $this->input->post('idLote');
