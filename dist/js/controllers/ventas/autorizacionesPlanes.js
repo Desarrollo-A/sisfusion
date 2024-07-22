@@ -641,7 +641,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         var numericalValue = parseFloat(input_val.replace('%', ''));
         if (numericalValue > 100) {
             $("#dispersar").attr("disabled", true);
-            alerts.showNotification("top", "right", "El porcentaje no puede ser mayor a 100%", "warning");
+            //alerts.showNotification("top", "right", "El porcentaje no puede ser mayor a 100%", "warning");
         } else {
             $("#dispersar").attr("disabled", false);
         }
@@ -651,6 +651,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         caret_pos = updated_len - original_len + caret_pos;
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
+    $("#ModalFormAddDescuentos").on('hide.bs.modal', function(){
+        $("#dispersar").attr("disabled", false);
+    });
 
 
     function formatNumberInput(input) {
