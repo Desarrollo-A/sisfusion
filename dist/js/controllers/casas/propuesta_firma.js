@@ -40,6 +40,97 @@ go_to_cotizaciones = function(data) {
     window.location.href = `cotizaciones/${data.idProcesoCasas}`;
 }
 
+function replace_upload(data ) {
+
+    let form = new Form({
+        title: 'Reemplazar archivo',
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `upload_documento`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+
+                    table.reload()
+
+                    form.hide()
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'id_documento', value: data.idDocumento }),
+            new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+        ],
+    })
+
+    form.show()
+}
+
+function upload(data) {
+
+    let form = new Form({
+        title: 'Subir archivo',
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `upload_documento_new`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+
+                    table.reload()
+
+                    form.hide()
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'tipo', value: 28 }),
+            new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+        ],
+    })
+
+    form.show()
+}
+
+
+function show_preview(data) {
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
+
+    Shadowbox.init();
+
+    Shadowbox.open({
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
+        player: "html",
+        title: `Visualizando archivo: ${data.documento}`,
+        width: 985,
+        height: 660
+    });
+}
+
 back_to_documentos = function(proceso) {
     let form = new Form({
         title: 'Regresar proceso', 
@@ -150,18 +241,33 @@ let columns = [
         return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
     { data: function(data){
-        let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
-        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
+        let propuestas_button = ''
+        let upload_button = ''
+        let pass_button = '';
+        let back_button = '';
+        let view_button = '';
 
-        let pass_button = ''
+        if(idRol === 101){
+            if (data.constancia) {
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar constancia de no adeudo`, onClick: show_preview, data})
+                upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar constancia de no adeudo`, onClick: replace_upload, data })
+            }else{
+                upload_button = new RowButton({ icon: 'file_upload', label: `Subir constancia de no adeudo`, onClick: upload, data })
+            }
+        }
+
+        if(idRol === 57){
+        propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
+        upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
         
-        if(data.fechaFirma1 && data.cotizaciones && data.documentos){
+        if(data.fechaFirma1 && data.cotizaciones && data.documentos && data.constancia){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a elección de propuestas', onClick: pass_to_propuestas, data})
         }
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentos, data})
+        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentos, data})
+        }
 
-        return `<div class="d-flex justify-center">${propuestas_button}${upload_button}${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${view_button}${propuestas_button}${upload_button}${pass_button}${back_button}</div>`
     } },
 ]
 

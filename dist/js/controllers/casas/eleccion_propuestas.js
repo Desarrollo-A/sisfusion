@@ -119,48 +119,6 @@ function download_file(archivo) {
     window.location.href = `${general_base_url}casas/archivo/${archivo}`
 }
 
-/*
-function show_upload(data) {
-    //console.log(data)
-
-    let form = new Form({
-        title: `Subir depósito de anticipo`,
-        onSubmit: function(data){
-            //console.log(data)
-            form.loading(true);
-
-            $.ajax({
-                type: 'POST',
-                url: `${general_base_url}casas/upload_documento`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
-
-                    table.reload()
-
-                    form.hide()
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'id_proceso',      value: data.idProcesoCasas }),
-            new HiddenField({ id: 'id_documento',    value: data.idDocumento }),
-            new HiddenField({ id: 'name_documento',  value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['image/png','image/jpeg','application/pdf'] }),
-        ],
-    })
-
-    form.show()
-}
-*/
-
 back_to_propuesta_firma = function(data) {
 
     let form = new Form({

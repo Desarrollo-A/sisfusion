@@ -12,11 +12,11 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fa fa-list-alt fa-2x"></i>
+                                <i class="fas fa-check-square fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Paso 8 - propuesta de firma</h3>
+                                    <h3 class="card-title center-align">Paso 11 - Carga de kit bancario</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -49,9 +49,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script type="text/javascript">
-        const idRol = <?php echo $idRol ?>;
-        const idUsuario = <?php echo $idUsuario ?>;
-    </script>
-    <script src="<?= base_url() ?>dist/js/controllers/casas/propuesta_firma.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/carga_kit_bancario.js"></script>
 </body>

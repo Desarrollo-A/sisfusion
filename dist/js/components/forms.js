@@ -326,7 +326,7 @@ class TextField {
 }
 
 class TextAreaField {
-    constructor({ id, label, placeholder, width, required }) {
+    constructor({ id, label, placeholder, width, required, value }) {
         this.id = id
         this.field = $('<div />')
             .addClass(`col-lg-${width} mt-1`)
@@ -340,6 +340,7 @@ class TextAreaField {
                 $('<textarea />')
                     .addClass(`text-modal`)
                     .attr('id', id)
+                    .text(value)
                     .attr('name', id)
                     .prop('required', required)
                     .attr('placeholder', placeholder)
