@@ -120,7 +120,7 @@ select_lote = function(data){ // funcion para el avance del lote
                 data: data,
                 contentType: false,
                 processData: false,
-                success: function (response) {
+                success: function () {
                     alerts.showNotification("top", "right", "El lote ha sido avanzdo en su proceso.", "success");
         
                     table.reload();

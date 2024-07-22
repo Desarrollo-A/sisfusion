@@ -883,7 +883,7 @@ class Casas extends BaseController
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: ' . $comentario);
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: ' . $comentario, 1);
 
             $this->json([]);
         } else {
@@ -2653,5 +2653,131 @@ class Casas extends BaseController
         }
 
         http_response_code(404);
+    }
+
+    public function ordenCompraFirma(){
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/orden_compra_view');
+    }
+
+    public function getLotesProcesoBanco(){
+        $data = $this->input->get();
+        $proceso = $data["proceso"];
+
+        $tipoDocumento = isset($data["tipoDocumento"]) ? $data["tipoDocumento"] : 0;
+        
+        if(!isset($proceso)){
+            $response["result"] = false;
+            $reponse["message"] = "Error al obtener los datos";
+        }
+
+        $getLotes = $this->CasasModel->getLotesProcesoBanco($proceso, $tipoDocumento)->result();
+
+        $this->json($getLotes);
+    }
+
+    public function uploadDocumentoCreditoBanco()
+    {
+        $idProceso = $this->form('idProcesoCasas');
+        $proceso = $this->form('proceso');
+        $nombre_lote = $this->form('nombre_lote');
+        $tipoDocumento = $this->form('tipoDocumento') ? $this->form('tipoDocumento') : 0;
+        $id_documento = $this->form('id_documento');
+        $file = $this->file('file_uploaded');
+        $id_usuario = $this->session->userdata('id_usuario');
+
+        if (!isset($proceso) || !isset($nombre_lote) || !isset($id_documento)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        if (!$file) {
+            http_response_code(400);
+        } 
+        else {
+            // Consulta nombre tipo documento
+            $documento = $this->CasasModel->getDocumentoCreditoBanco($id_documento);
+
+            $name_documento = $documento->result()[0]->nombre;
+
+            //  Nombre del archivo          
+            $filename = $this->generateFileName($name_documento, $nombre_lote, $idProceso, $file->name);
+
+            // Se sube archivo al buket
+            $uploaded = $this->upload($file->tmp_name, $filename);
+
+            if ($uploaded) {
+                $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario);
+
+                if ($created) {
+                    $motivo = "Se subio archivo: $name_documento";
+                    $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2);
+
+                    $this->json([]);
+                }
+            }
+        }
+
+        http_response_code(404);
+    }
+
+    public function creditoBancoAvance()
+    {
+        $form = $this->form();
+
+        $idLote = $form->idLote;
+        $idProceso = $form->idProcesoCasas;
+        $proceso = $form->proceso;
+        $procesoNuevo = $form->procesoNuevo;
+        $comentario = $form->comentario;
+        $tipoMovimiento = $form->tipoMovimiento;
+        $banderaSuccess = true;
+
+        $dataHistorial = array(
+            "idProcesoCasas"  => $idProceso,
+            "procesoAnterior" => $proceso,
+            "procesoNuevo"    => $procesoNuevo,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "descripcion"     => "Se ha enviado al paso: " . $procesoNuevo . " | comentario: " . $comentario,
+            "esquemaCreditoProceso" => 1
+        );
+
+        $this->db->trans_begin();
+
+        $updateData = array(
+            "comentario"        => $comentario,
+            "proceso"           => $procesoNuevo,
+            "fechaProceso"      => date("Y-m-d H:i:s"),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "tipoMovimiento"    => ($proceso > $procesoNuevo) ? 1 : (($tipoMovimiento == 1 && $procesoNuevo >= $proceso) ? 2 : 0)
+        );
+
+        // paso 1: hacer update del proceso
+        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProceso);
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        // paso 2: guardar registro del movimiento
+        $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+        if (!$addHistorial) {
+            $banderaSuccess = false;
+        }
+
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+            $this->json([]);
+        } else {
+            $this->db->trans_rollback();
+            http_response_code(400);
+
+            $this->json([]);
+        }
+    }
+
+    public function cierreCifras(){
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/cierre_cifras_view');
     }
 }

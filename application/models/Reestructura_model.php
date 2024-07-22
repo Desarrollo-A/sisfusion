@@ -2241,27 +2241,50 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query(
             "WITH proceso6 AS(
             	SELECT
-            		usg.id_usuario,
+            		usa.id_usuario,
             		COUNT(lo.idLote) cantidadProceso6,
-            		CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
-            		usg.correo
+            		CONCAT(usa.nombre, ' ', usa.apellido_paterno, ' ', usa.apellido_materno) AS nombreAsesor,
+            		usa.correo
             		FROM 
             			lotes lo
             		INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
             		INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
             		WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 6
-            		GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
+            		GROUP BY usg.id_usuario, usa.correo, usa.id_usuario, usa.nombre, usa.apellido_paterno, usa.apellido_materno
             )
 
-            SELECT 
+            SELECT
             	us.id_usuario,
                 us.correo,
+				pr6.nombreAsesor,
             	pr6.cantidadProceso6
             	FROM
             		usuarios us
             	INNER JOIN proceso6 pr6 ON pr6.id_usuario = us.id_usuario"
         );
 
+        return $query;
+    }
+
+    public function getLotesAsignadosContraloria(){
+        $query = $this->db->query("SELECT
+            		COUNT(lo.idLote) cantidadProceso2
+            		FROM 
+            			lotes lo
+					INNER JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote AND dxc.flagProcesoContraloria = 0
+            		WHERE id_usuario_asignado != 0 AND lo.estatus_preproceso = 2");
+        
+        return $query;
+    }
+
+    public function getLotesAsignadosJuridico(){
+        $query = $this->db->query("SELECT
+            		COUNT(lo.idLote) cantidadProceso2
+            		FROM 
+            			lotes lo
+					INNER JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote AND dxc.flagProcesoContraloria = 1 AND dxc.flagProcesoJuridico = 0
+            		WHERE id_usuario_asignado != 0 AND lo.estatus_preproceso = 2");
+        
         return $query;
     }
 }
