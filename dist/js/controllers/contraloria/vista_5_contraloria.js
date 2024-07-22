@@ -764,6 +764,10 @@ jQuery(document).ready(function () {
         jQuery(this).find('#ubicacion').val(null).trigger('change');
         jQuery(this).find('#tipo_enganche').val(null).trigger('change');
         jQuery(this).find('#anexa_complemento').val(null).trigger('change');
+        $("#anexa_complemento").selectpicker('refresh');
+        $("#ubicacion").selectpicker('refresh');
+        $("#tipo_enganche").selectpicker('refresh');
+        $("#tipo_ventaenvARevCE").selectpicker('refresh');
     })
 
     jQuery('#envARev2').on('hidden.bs.modal', function (e) {
