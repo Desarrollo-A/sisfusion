@@ -833,9 +833,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		FORMAT(lotes.totalNeto, 'C') enganche, FORMAT(lotes.totalNeto2, 'C') total, CONVERT(VARCHAR,cl.fechaApartado,120) AS fechaApartado, CONVERT(VARCHAR,hd.modificado,120) AS modificado,
 		UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
 		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario, hd.comentario, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno )) nombreCliente,
-        cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
+        cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion, cl.tipoEnganche, oxc.nombre
 		FROM historial_lotes hd
 		INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente $filter
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
         LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
 		INNER JOIN lotes lotes ON hd.idLote = lotes.idLote AND lotes.status = 1
 		INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
