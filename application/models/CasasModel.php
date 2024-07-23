@@ -1716,4 +1716,10 @@ class CasasModel extends CI_Model
 
         return $this->db->query($query);
     }
+
+    public function setVoBoSaldos($columna, $idProcesoCasas, $idUsuario){
+        $query = $this->db->query("UPDATE proceso_casas SET ". $columna ." = ?, fechaProceso = GETDATE(), idModificacion = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
+
+        return $query;
+    }
 }
