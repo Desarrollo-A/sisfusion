@@ -674,7 +674,7 @@ class Seguro_model extends CI_Model {
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'lbl-violetBoots' ELSE 'lbl-gray' END) colorContratacion,
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'CONTRATADO' ELSE CONVERT(VARCHAR,l.idStatusContratacion) END) idStatusContratacion,pl.descripcion plan_comision,pl.id_plan,
             (CASE WHEN cl.estatusSeguro = 0 THEN 'PENDIENTE' ELSE opc.nombre END) estatusSeguro,
-			(CASE WHEN cl.estatusSeguro IN (0,1) THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
+			(CASE WHEN cl.estatusSeguro IN (0,1,4) THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
 			FROM lotes l
 			INNER JOIN clientes cl ON cl.id_cliente=l.idCliente
 			INNER JOIN condominios co ON co.idCondominio=l.idCondominio

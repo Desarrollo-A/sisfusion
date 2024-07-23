@@ -203,6 +203,7 @@ $(document).ready(function () {
                         }
 
                         disparador = 0;
+                        var precioDestino = d.totalNeto2;
                         d.totalNeto2Cl = ([65,85].indexOf(parseInt(d.plan_comision)) >= 0  && (parseFloat(d.totalNeto2Cl) < parseFloat(d.totalNeto2)) && (parseInt(d.proceso) == 2 || parseInt(d.proceso) == 4) ) ? ( d.totalNeto2Cl > d.totalNeto2 ? d.totalNeto2 : d.totalNeto2Cl ) :([65,85].indexOf(parseInt(d.plan_comision)) < 0 ? d.totalNeto2Cl : d.totalNeto2 );
                         d.totalNeto2Cl = (parseInt(d.proceso) == 6 || parseInt(d.proceso) == 5) ? ( ((parseFloat(d.sumaFusion) < parseFloat(d.totalNeto2) && d.cuantosDestinos == 1) || (d.cuantosDestinos > 1 && [41152,97660,3631,4479,4480].indexOf(parseInt(d.idLote)) < 0) )  ? parseFloat(d.sumaFusion / d.cuantosDestinos) :  parseFloat(d.totalNeto2)  ): d.totalNeto2Cl; 
                         if(d.bandera_dispersion == 1 && d.registro_comision == 9){//NUEVA VENTAS 1°
@@ -339,7 +340,8 @@ $(document).ready(function () {
                             value = "${d.idLote}" 
                             data-totalNeto2 = "${totalLote}"
                             data-totalNeto2Cl = "${d.totalNeto2Cl}" 
-                            data-total8P = "${d.total8P}" 
+                            data-total8P = "${d.total8P}"
+                            data-precioDestino= "${precioDestino}"
                             data-reubicadas = "${reubicadas}" 
                             data-penalizacion = "${d.penalizacion}"
                             data-nombreLote = "${nombreLote}" 
@@ -497,7 +499,7 @@ $(document).ready(function () {
         opcionMensualidad = $(this).attr("data-opcionMensualidad");
         nombreMensualidad = $(this).attr("data-nombreMensualidad");
 
-
+        precioDestino = $(this).attr("data-precioDestino");
         totalNeto2 = (plan_comision == 66 || plan_comision == 86) ? total8P : totalNeto2;
 
 
@@ -570,7 +572,7 @@ $(document).ready(function () {
                                             </div>
 
                                             <div class="col-md-3 p-0">
-                                                <h5>Precio Lote: <b>${formatMoney(totalNeto2)}</b></h5>
+                                                <h5>Precio Lote: <b>${(plan_comision == 66 || plan_comision == 86) ? formatMoney(precioDestino) : formatMoney(totalNeto2)}</b></h5>
                                             </div>
 
                                             <div class="col-md-3 p-0">
@@ -1000,7 +1002,7 @@ $(document).ready(function () {
                                                 /* buscar el valor divisor segun el % del plan*/
                                                 const pivoteMultiplicador =  [
                                                     {
-                                                        id_plan:65,
+                                                        id_plan:64,
                                                         valor:(100/0.5)
                                                     },
                                                     {
@@ -1021,7 +1023,7 @@ $(document).ready(function () {
                                                     },
                                                     {
                                                         id_plan:86,
-                                                        valor:12.5
+                                                        valor:(100/9.2)
                                                     },
                                                     {
                                                         id_plan:93,
@@ -1036,6 +1038,7 @@ $(document).ready(function () {
 
                                                 /**/ 
                                                 console.log('TOTAL----------'+total);
+                                                console.log('TOTAL----------'+AplicadoGlobal);
                                                 v.porcentaje_decimal = idLote == 37629 && v.id_usuario == 13556 ? 2.5 : v.porcentaje_decimal;
                                                 saldo = (([2,3,4,7].includes(parseInt(procesoReestructura)) && total > 2238.71) && idLote != 52454 ) ? ( pendienteGlobal > total ? ((pivote *(v.porcentaje_decimal / 100)) * total)  :  ((pivote *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal)) ) : ((pivote *(v.porcentaje_decimal / 100)) * total);
                                                 saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total <= 0) ? 0 : saldo;
@@ -1059,7 +1062,7 @@ $(document).ready(function () {
                                                 console.log('procesoReestructura::'+procesoReestructura);
                                                 console.log('plan_comision::'+plan_comision);
                                                 console.log('idLote::'+idLote);
-                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || ([64,65,66,84,85,86].indexOf(plan_comision) >= 0 || [57154,48216,55933].indexOf(idLote) >= 0)) ? saldo : ( saldo-v.abono_pagado );
+                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || ([64,65,66,84,85,86].indexOf(plan_comision) >= 0 || [57154,48216,55933,52454,54261].indexOf(parseInt(idLote)) >= 0)) ? saldo : ( saldo-v.abono_pagado );
                                                 console.log('RESTA'+resta_1);
                                                 if(parseFloat(resta_1) <= 0){
                                                     saldo = 0;
@@ -1071,7 +1074,7 @@ $(document).ready(function () {
                                                     else{
                                                         console.log('entra hasta aca')
                                                         console.log(saldo)
-                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933].indexOf(idLote)) >= 0) ? saldo : saldo-v.abono_pagado;
+                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933,52454,54261].indexOf(parseInt(idLote))) >= 0) ? saldo : saldo-v.abono_pagado;
                                                         console.log(saldo)
                                                     }
                                                 }
