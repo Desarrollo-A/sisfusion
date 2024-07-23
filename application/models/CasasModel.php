@@ -24,6 +24,33 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
+    public function getLastNotarias(){
+        $query = "SELECT TOP 1 * 
+        FROM opcs_x_cats 
+        WHERE id_catalogo = 129 
+        ORDER BY id_opcion DESC;";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function getNotarias(){
+        $query = "SELECT id_opcion AS value, nombre AS label, estatus  FROM opcs_x_cats WHERE id_catalogo = 129";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function updateNotaria($id_opcion, $estatus){
+        // $idModificacion = $this->session->userdata('id_usuario');
+
+        $query = "UPDATE opcs_x_cats
+        SET
+            estatus = $estatus
+        WHERE
+            id_opcion = $id_opcion AND id_catalogo = 129";
+
+        return $this->db->query($query);
+    }
+
     public function getAsesor($id){
         $query = "SELECT TOP 1
             nombre AS nombre,
@@ -1084,7 +1111,7 @@ class CasasModel extends CI_Model
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
-            pc.proceso = 10
+            pc.proceso = 12
         AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();

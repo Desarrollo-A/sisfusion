@@ -36,6 +36,203 @@ pass_to_propuestas = function(data) {
 
 }
 
+let items = []
+
+$.ajax({
+    type: 'GET',
+    url: 'getNotarias',
+    async: false,
+    success: function (response) {
+        items = response
+        gestorNotarias(items);
+    },
+    error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+})
+
+let itemsNot = []
+
+$.ajax({
+    type: 'GET',
+    url: 'options_notarias',
+    async: false,
+    success: function (response) {
+        itemsNot = response
+    },
+    error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+})
+
+selectNotarias = function(data) {
+    let form = new Form({
+        title: 'Selección de notaria',
+        onSubmit: function(data){
+            //console.log(data)
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `assignNotaria`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Notaria registrada", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new Button({id: 'btn-notaria', icon: 'edit', label: 'Gestionar notarias', onClick: gestorNotarias, data}),
+            new SelectField({ id: 'notaria', label: 'Notaria', value: data.notaria, placeholder: 'Selecciona una opción', data: itemsNot, required: true }),
+        ],
+     })
+
+    form.show()
+}
+
+gestorNotarias = function(data) {
+    let form2 = new Form2({
+        title: 'Gestión de notarias',
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HrTitle({text: 'Registro de notaria'}),
+            new CrudInput({ id: 'notaria', placeholder: 'Nombre de la notaria', width: '12', required: 'required', icon: 'add', title: 'Agregar', onClick: addNotaria }),
+            new HrTitle({text: 'Lista de notarias'}),
+            ...items.map(item => 
+                new CrudInput({
+                    id: `notaria${item.value}`,
+                    placeholder: item.label,
+                    width: '12',
+                    required: 'required',
+                    icon: item.estatus === 0 ? 'close' : 'check',
+                    color: item.estatus === 0 ? 'warning' : 'green',
+                    title: item.estatus === 0 ? 'Habilitar' : 'Inhabilitar',
+                    disabled: true,
+                    onClick: () => estatusNotaria(item)
+                })
+            ),
+        ],
+    });
+
+    form2.show();
+}
+
+estatusNotaria = function(data) {
+
+    if (!data) {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    } else {
+        let form = new FormConfirm({
+            title: `¿Estás seguro de ${data.estatus == 0 ? 'habilitar' : 'inhabilitar'} la notaria?`,
+            onSubmit: function (data) {
+                form.loading(true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'estatusNotaria',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        alerts.showNotification("top", "right", "Notaría actualizada.", "success");
+
+                        table.reload();
+
+                        $.ajax({
+                            type: 'GET',
+                            url: 'getNotarias',
+                            success: function (response) {
+                                items = response;
+
+                                gestorNotarias({ idProcesoCasas: data.id_opcion }); 
+                            },
+                            error: function () {
+                                alerts.showNotification("top", "right", "Oops, algo salió mal al obtener los datos.", "danger");
+                            }
+                        });
+
+                        form.hide();
+                    },
+                    error: function () {
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                        form.loading(false);
+                    }
+                });
+            },
+            fields: [
+                new HiddenField({ id: 'id_opcion', value: data.value }),
+                new HiddenField({ id: 'estatus', value: data.estatus }),
+            ],
+        });
+
+        form.show();
+    }
+}
+
+addNotaria = function(data) {
+
+    if(!data){
+        alerts.showNotification("top", "right", "El campo esta vacio.", "danger");
+    }else{
+        let form = new FormConfirm({
+            title: '¿Estás seguro de registrar la notaria?',
+            onSubmit: function (data) {
+                form.loading(true)
+    
+                $.ajax({
+                    type: 'POST',
+                    url: `addNotaria`,
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        alerts.showNotification("top", "right", "Notaria agregada.", "success");
+    
+                        table.reload()
+
+                        $.ajax({
+                            type: 'GET',
+                            url: 'getNotarias',
+                            success: function (response) {
+                                items = response;
+
+                                gestorNotarias({ idProcesoCasas: data.id_opcion }); 
+                            },
+                            error: function () {
+                                alerts.showNotification("top", "right", "Oops, algo salió mal al obtener los datos.", "danger");
+                            }
+                        });
+    
+                        form.hide()
+                    },
+                    error: function () {
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    
+                        form.loading(false)
+                    }
+                })
+            },
+            fields: [
+                new HiddenField({ id: 'nombre', value: data }),
+            ],
+        })
+    
+        form.show()
+    }
+}
+
 go_to_cotizaciones = function(data) {
     window.location.href = `cotizaciones/${data.idProcesoCasas}`;
 }
@@ -246,6 +443,7 @@ let columns = [
         let pass_button = '';
         let back_button = '';
         let view_button = '';
+        let notarias = '';
 
         if(idRol === 101){
             if (data.constancia) {
@@ -259,6 +457,7 @@ let columns = [
         if(idRol === 57){
         propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
         upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
+        notarias = new RowButton({icon: 'gavel', label: 'Selección de notarias', onClick: selectNotarias, data})
         
         if(data.fechaFirma1 && data.cotizaciones && data.documentos && data.constancia){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a elección de propuestas', onClick: pass_to_propuestas, data})
@@ -267,7 +466,7 @@ let columns = [
         back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentos, data})
         }
 
-        return `<div class="d-flex justify-center">${view_button}${propuestas_button}${upload_button}${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${view_button}${propuestas_button}${upload_button}${notarias}${pass_button}${back_button}</div>`
     } },
 ]
 

@@ -2655,6 +2655,84 @@ class Casas extends BaseController
         http_response_code(404);
     }
 
+    public function addNotaria()
+    {
+        $nombre = $this->form('nombre');
+
+        if (!isset($nombre)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        $ntLast = $this->CasasModel->getLastNotarias();
+
+        $newIdOpcion = $ntLast->id_opcion + 1;
+
+        $insertData = array(
+            "id_opcion"  => $newIdOpcion,
+            "id_catalogo"  => 129,
+            "nombre" => $nombre,
+            "estatus" => 1,
+            "fecha_creacion" => date("Y-m-d H:i:s"),
+            "creado_por" => $this->session->userdata('id_usuario')
+        );
+
+        $add = $this->General_model->addRecord('opcs_x_cats', $insertData);
+
+        if (!$add){
+            http_response_code(400);
+        } 
+            
+    }
+
+    public function estatusNotaria()
+    {
+        $id_opcion = $this->form('id_opcion');
+        $estatus = $this->form('estatus');
+
+        if (!isset($id_opcion) || !isset($estatus)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        $estatus = $estatus == 0 ? 1 : 0;
+
+        $update = $this->CasasModel->updateNotaria($id_opcion, $estatus);
+
+        if (!$update) {
+             http_response_code(400);
+        }
+            
+    }
+
+    public function assignNotaria(){
+        $idProcesoCasas = $this->form('idProcesoCasas');
+        $notaria = $this->form('notaria');
+
+        if (!isset($idProcesoCasas) || !isset($notaria)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        $updateData = array(
+            "notaria" => $notaria,
+            "idModificacion" => $this->session->userdata('id_usuario'),
+        );
+
+        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+
+        if (!$update) {
+             http_response_code(400);
+        }
+    }
+
+    public function getNotarias()
+    {
+        $nt = $this->CasasModel->getNotarias();
+
+        $this->json($nt);
+    }
+
     public function ordenCompraFirma(){
         $this->load->view('template/header');
         $this->load->view('casas/procesoBanco/orden_compra_view');
