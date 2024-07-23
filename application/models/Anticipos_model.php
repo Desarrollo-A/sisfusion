@@ -29,8 +29,10 @@ class Anticipos_model extends CI_Model {
         fa.nombre_archivo AS factura_nombre,
         ant.evidencia, ant.impuesto, ant.id_anticipo, ant.monto, ant.id_usuario, ant.estatus, 
         UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS nombreUsuario, 
+        
         ant.proceso, ant.comentario, 
         CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END AS prioridad_nombre, $filtroMonto as montoParcial,
+        pra.monto_parcialidad as montoParcial1 ,
         pra.mensualidades, ant.numero_mensualidades as mensualidadesBoton, 
         pra.monto_parcialidad as valorTexto
         FROM anticipo ant
@@ -73,16 +75,16 @@ class Anticipos_model extends CI_Model {
     public function autPrestamoAnticipo($id_usuario, $monto, $numeroPagos, $pago, $comentario, $creado_por, $procesoTipo) {
         $query = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente, evidenciaDocs) 
         VALUES ($id_usuario, $monto, $numeroPagos, $pago, '$comentario', 1, $pago, $creado_por, GETDATE(), 1, GETDATE(), 0, 94, NULL, NULL)");
-    
+        $ultimoId = $this->db->insert_id();
         if ($query) {
-            return 1;
+            return $ultimoId;
         } else {
             return 0;
         }
     }
 
-    public function relacion_anticipo_prestamo($id_anticipo, $procesoTipo){
-        $query = $this->db->query("INSERT INTO relacion_anticipo_prestamo (id_anticipo, tipo_prestamo) VALUES ($id_anticipo, $procesoTipo)");
+    public function relacion_anticipo_prestamo($id_anticipo, $ultimoId){
+        $query = $this->db->query("INSERT INTO relacion_anticipo_prestamo (id_anticipo, tipo_prestamo) VALUES ($id_anticipo, $ultimoId)");
 
         if ($query) {
             return 1;

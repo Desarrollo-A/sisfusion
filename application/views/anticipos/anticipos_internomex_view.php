@@ -104,13 +104,14 @@
                                                         <th>IMPUESTO</th>
                                                         <th>SEDE</th>
                                                         <th>ESQUEMA</th>
-                                                        <th>MONTO</th>
+                                                        <th>MONTO$$</th>
+                                                        <th>EMPRESA</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
-                                    </div>
+                                    </div> 
                                 </div>
                             </div>
                         </div>

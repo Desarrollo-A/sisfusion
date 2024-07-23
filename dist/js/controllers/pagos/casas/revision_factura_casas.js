@@ -1,26 +1,28 @@
-var tr1;
-var tabla_asimilados_casas ;
-var totaPago_asimilados_casas = 0;
+var trl;
+var tabla_factura_casas ;
+var totaPago_casas = 0;
 let titulos_casas = [];
 
 $(document).ready(function() {
-    $("#tabla_asimilados_casas").prop("hidden", true);
-    $.post(general_base_url+"Contratacion/lista_proyecto", function (datos) {
-        var len = datos.length;
+    $("#tabla_factura_casas").prop("hidden", true);
+    $.post(general_base_url+"Contratacion/lista_proyecto", function (data) {
+        var len = data.length;
         for (var i = 0; i < len; i++) {
-            var id = datos[i]['idResidencial'];
-            var name = datos[i]['descripcion'];
-            $("#proyectoAsimilados_casas").append($('<option>').val(id).text(name.toUpperCase()));
+            var id = data[i]['idResidencial'];
+            var name = data[i]['descripcion'];
+            $("#proyectoFactura_casas").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#proyectoAsimilados_casas").selectpicker('refresh');
+        $("#proyectoFactura_casas").selectpicker('refresh');
     }, 'json');
+
+
 });
 
-$('#proyectoAsimilados_casas').change(function(){
-residencial = $('#proyectoAsimilados_casas').val();
-$("#condominioAsimilados_casas").empty().selectpicker('refresh');
+$('#proyectoFactura_casas').change(function(){
+residencial = $('#proyectoFactura_casas').val();
+$("#condominioFactura_casas").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Pagos_casas/getCondominioDesc/'+residencial,
+        url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -29,44 +31,43 @@ $("#condominioAsimilados_casas").empty().selectpicker('refresh');
             {
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#condominioAsimilados_casas").append($('<option>').val(id).text(name));
+                $("#condominioFactura_casas").append($('<option>').val(id).text(name));
             }
-            $("#condominioAsimilados_casas").selectpicker('refresh');
+            $("#condominioFactura_casas").selectpicker('refresh');
         }
     });
 });
 
-$('#proyectoAsimilados_casas').change(function(){
-    // alert(4555545554);
-    proyecto = $('#proyectoAsimilados_casas').val();
-    condominio = $('#condominioAsimilados_casas').val();
+$('#proyectoFactura_casas').change(function(){
+    proyecto = $('#proyectoFactura_casas').val();
+    condominio = $('#condominioFactura_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getDataAsimiladosCasas(proyecto, condominio);
+    getDataFacturaCasas(proyecto, condominio);
 });
 
-$('#condominioAsimilados_casas').change(function(){
-    proyecto = $('#proyectoAsimilados_casas').val();
-    condominio = $('#condominioAsimilados_casas').val();
+$('#condominioFactura_casas').change(function(){
+    proyecto = $('#proyectoFactura_casas').val();
+    condominio = $('#condominioFactura_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getDataAsimiladosCasas(proyecto, condominio);
+    getDataFacturaCasas(proyecto, condominio);
 });
 
-$('#tabla_asimilados_casas thead tr:eq(0) th').each(function (i) {
+$('#tabla_factura_casas thead tr:eq(0) th').each(function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos_casas.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_asimilados_casas').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_asimilados_casas').DataTable().column(i).search(this.value).draw();
+            if ($('#tabla_factura_casas').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_factura_casas').DataTable().column(i).search(this.value).draw();
             }
         });
     }else {
-        $(this).html('<input id="all_seguros" type="checkbox" style="width:20px; height:20px;" onchange="selectAllSeguros(this)"/>');
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllFacturas(this)"/>');
     }
 });
 
@@ -84,24 +85,20 @@ function obtenerModoSeleccionado() {
     return modoSeleccionado;
 }
 
-function getDataAsimiladosCasas(proyecto, condominio){
+function getDataFacturaCasas(proyecto, condominio){
     
-    // $('#tabla_asimilados_casas').on('xhr.dt', function(e, settings, json, xhr) {
-    //     var total = 0;
-    //     $.each(json.data, function(i, v) {
-    //         total += parseFloat(v.impuesto);
-    //     });
-    //     var to = formatMoney(numberTwoDecimal(total));
-    //     document.getElementById("disponibleAsimilados_casas").textContent = to;
-    // });
-
-    // var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    //console.log("prueba");
-    //console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
+    $('#tabla_factura_casas').on('xhr.dt', function(e, settings, json, xhr) {
+        var total = 0;
+        $.each(json.data, function(i, v) {
+            total += parseFloat(v.impuesto);
+        });
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("disponibleFactura_casas").textContent = to;
+    });
     
 
-    $("#tabla_asimilados_casas").prop("hidden", false);
-    tabla_asimilados_casas = $("#tabla_asimilados_casas").DataTable({
+    $("#tabla_factura_casas").prop("hidden", false);
+    tabla_factura_casas = $("#tabla_factura_casas").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -111,7 +108,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title:'Comisiones Asimilados - Revisión Contraloría',
+                title:'Comisiones Factura - Revisión Contraloría',
                 exportOptions: {
                     columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
                     format: {
@@ -124,15 +121,15 @@ function getDataAsimiladosCasas(proyecto, condominio){
             {
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function() {
-                if ($('input[name="idPagoAsimilados[]"]:checked').length > 0) {
+                if ($('input[name="idPagoFactura[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_asimilados_casas.$('input[name="idPagoAsimilados[]"]:checked')).map(function() {
+                    var idcomision = $(tabla_factura_casas.$('input[name="idPagoFactura[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos_casas/updateRevisionaInternomex/',
+                        url : Pagos_casas + 'Pagos_casas/updateRevisionaInternomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -142,21 +139,21 @@ function getDataAsimiladosCasas(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#autorizarAsimilados_casas").html(formatMoney(0));
-                                $("#all_seguros").prop('checked', false);
+                                $("#autorizarFactura_seguros").html(formatMoney(0));
+                                $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                tabla_asimilados_casas.ajax.reload();
-                                var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
-                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
+                                tabla_factura_casas.ajax.reload();
+                                var mensaje = "Comisiones de esquema <b>facturas</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
+                                modalInformation(data, mensaje);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
-                                modalInformation(RESPUESTA_MODAL.FAIL);
+                                modalInformation(data);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            modalInformation(RESPUESTA_MODAL.FAIL);
+                            modalInformation(data);
                         }
                     });
                 }else{
@@ -211,7 +208,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.precio_lote == "" || d.precio_lote == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
             }
         },
         {
@@ -224,7 +221,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.comision_total == "" || d.comision_total == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
@@ -232,7 +229,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.pago_cliente == "" || d.pago_cliente == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
             }
         },
         {
@@ -240,7 +237,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.solicitado == "" || d.solicitado == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
             }
         },
         {
@@ -256,7 +253,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.dcto == "" || d.dcto == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
@@ -264,7 +261,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.impuesto == "" || d.impuesto == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
             }
         },
         {
@@ -324,9 +321,8 @@ function getDataAsimiladosCasas(proyecto, condominio){
             data: function( data ){
                 let btns = '';
 
-                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
+                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_factura" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
                 const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus_seguros" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
-
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;
 
@@ -342,7 +338,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                            return '<input type="checkbox" name="idPagoAsimilados[]" class="checkPagosIndividual" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            return '<input type="checkbox" name="idPagoFactura[]" class="checkPagosIndividual" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';
                     }
@@ -352,7 +348,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos_casas/getDatosNuevasAsimiladosSeguros/" ,
+            url: general_base_url + "Pagos_casas/getDatosNuevasFacturasSeguros/" ,
             type: "POST",
             cache: false,
             data :{
@@ -362,47 +358,47 @@ function getDataAsimiladosCasas(proyecto, condominio){
         },
     });
 
-    $('#tabla_asimilados_casas').on('draw.dt', function() {
+    $('#tabla_factura_casas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
-    $("#tabla_asimilados_casas tbody").on("click", ".consultar_logs_asimilados", function(e){
+    $("#tabla_factura_casas tbody").on("click", ".consultar_logs_factura", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
-        $('#comments-list-asimilados').html('');
+        $('#comments-list-factura').html('');
         $('#nameLote').html('');
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
 
         changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-body">
-            <div role="tabpanel">
-                <div id="nameLote"></div>
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-plain">
-                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                        <div role="tabpanel">
+                            <div id="nameLote"></div>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-factura"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
-        </div>`);
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+                    </div>`);
         showModal();
 
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $('#spiner-loader').removeClass('hide');
         $.getJSON(general_base_url+"Seguros/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li>\n' +
+                $("#comments-list-factura").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
@@ -424,27 +420,27 @@ function getDataAsimiladosCasas(proyecto, condominio){
         });
     });
 
-    $('#tabla_asimilados_casas').on('click', 'input', function() {
+    $('#tabla_factura_casas').on('click', 'input', function() {
         tr2 = $(this).closest('tr');
-        var row = tabla_asimilados_casas.row(tr2).data();
+        var row = tabla_factura_casas.row(tr2).data();
         if (row.monto == 0) {
             row.monto = row.impuesto;
-            totaPago_asimilados_casas += parseFloat(row.monto);
+            totaPago_casas += parseFloat(row.monto);
             tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
         } 
         else {
-            totaPago_asimilados_casas -= parseFloat(row.monto);
+            totaPago_casas -= parseFloat(row.monto);
             row.monto = 0;
         }
-        $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(totaPago_asimilados_casas)));
+        $("#autorizarFactura_seguros").html(formatMoney(numberTwoDecimal(totaPago_casas)));
     });
 
-    $("#tabla_asimilados_casas tbody").on("click", ".cambiar_estatus_seguros", function(){
-        var tr1 = $(this).closest('tr');
-        var row = tabla_asimilados_casas.row( tr1 );
+    $("#tabla_factura_casas tbody").on("click", ".cambiar_estatus_seguros", function(){
+        var trl = $(this).closest('tr');
+        var row = tabla_factura_casas.row( trl );
         id_pago_i = $(this).val();
-        $("#modalPausarAsimiladosSeguros .modal-body").html("");
-        $("#modalPausarAsimiladosSeguros .modal-body").append(
+        $("#modalPausarFacturaSeguros .modal-body").html("");
+        $("#modalPausarFacturaSeguros .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
                     '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
@@ -461,19 +457,19 @@ function getDataAsimiladosCasas(proyecto, condominio){
             '<div class="row">'+
                 '<div class="d-flex justify-end">'+
                     '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>'+
-                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar_seguro">PAUSAR</button>'+
+                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar">PAUSAR</button>'+
                 '</div>'+
             '</div>'
         );
-        const buttonPausar_seguro = document.getElementById('btnPausar_seguro');
-        buttonPausar_seguro.addEventListener('click', function handleClick() {
-            $("#autorizarAsimilados_casas").html(formatMoney(0));
+        const buttonPausar = document.getElementById('btnPausar');
+        buttonPausar.addEventListener('click', function handleClick() {
+            $("#autorizarFactura_seguros").html(formatMoney(0));
         });
-        $("#modalPausarAsimiladosSeguros").modal();
+        $("#modalPausarFacturaSeguros").modal();
     });
 }
 
-$("#formPausarAsimiladosSeguros").submit( function(e) {
+$("#formPausarFacturaSeguros").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -490,10 +486,10 @@ $("#formPausarAsimiladosSeguros").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modalPausarAsimiladosSeguros").modal('toggle' );
+                    $("#modalPausarFacturaSeguros").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
-                        tabla_asimilados_casas.ajax.reload();
+                        tabla_factura_casas.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -506,42 +502,42 @@ $("#formPausarAsimiladosSeguros").submit( function(e) {
 });
 
 $(document).on("click", ".checkPagosIndividual", function() {
-    totaPago_asimilados_casas = 0;
-    tabla_asimilados_casas.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_asimilados_casas.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_asimilados_casas.$('input[type="checkbox"]');
+    totaPago_casas = 0;
+    tabla_factura_casas.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_factura_casas.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_factura_casas.$('input[type="checkbox"]');
         if(this.checked){
-            tr1 = this.closest('tr');
-            row = tabla_asimilados_casas.row(tr1).data();
-            totaPago_asimilados_casas += parseFloat(row.impuesto); 
+            trl = this.closest('tr');
+            row = tabla_factura_casas.row(trl).data();
+            totaPago_casas += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
-            $("#all_seguros").prop("checked", true);
+            $("#all").prop("checked", true);
         else 
-            $("#all_seguros").prop("checked", false);
+            $("#all").prop("checked", false);
     });
-    $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(totaPago_asimilados_casas)));
+    $("#autorizarFactura_seguros").html(formatMoney(numberTwoDecimal(totaPago_casas)));
 });
     
-function selectAllSeguros(e) {
+function selectAllFacturas(e) {
     tota2 = 0;
     if(e.checked == true){
-        $(tabla_asimilados_casas.$('input[type="checkbox"]')).each(function (i, v) {
-            tr1 = this.closest('tr');
-            row = tabla_asimilados_casas.row(tr1).data();
+        $(tabla_factura_casas.$('input[type="checkbox"]')).each(function (i, v) {
+            trl = this.closest('tr');
+            row = tabla_factura_casas.row(trl).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizarFactura_seguros").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
-        $(tabla_asimilados_casas.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_factura_casas.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
                 $(v).prop("checked", false);
             }
         }); 
-        $("#autorizarAsimilados_casas").html(formatMoney(0));
+        $("#autorizarFactura_seguros").html(formatMoney(0));
     }
 }

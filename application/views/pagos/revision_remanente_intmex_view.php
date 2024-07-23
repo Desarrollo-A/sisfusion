@@ -94,6 +94,7 @@
                         <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
                         <!-- <li><a href="#proceso-1_ooam" role="tab" data-toggle="tab">Pagos ooam</a></li> -->
                         <li><a href="#remanenteSeguros" role="tab" data-toggle="tab">Pagos lotes seguros</a></li>
+                        <li><a href="#remanenteCasas" role="tab" data-toggle="tab">Pagos casas</a></li>
                     </ul>
                     <div class="card no-shadow m-0 border-conntent__tabs">
                         <div class="card-content p-0">
@@ -177,6 +178,7 @@
                                     </div>
                                     <?php $this->load->view('pagos/seguros_internomex/revision_remanente_intmex_ooam_view'); ?>
                                     <?php $this->load->view('pagos/seguros_internomex/revision_remanente_intmex_seguros_view'); ?>
+                                    <?php $this->load->view('pagos/casas_internomex/revision_remanente_intmex_casas_view'); ?>
                                 </div>
                             </div>
                         </div>
@@ -191,4 +193,5 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_remanente_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros_internomex/revision_remanente_intmex_seguros.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/casas_internomex/revision_remanente_intmex_casas.js"></script>
 </body>
