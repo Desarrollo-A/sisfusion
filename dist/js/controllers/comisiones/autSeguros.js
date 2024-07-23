@@ -120,7 +120,8 @@ $("#estatusSeguro").change(function() {
                     return formatMoney(d.Comisiones_pendientes);
                 }},
                 { data: function (d) {
-                        return `<span class="label lbl-azure">${moment(d.fecha_modificacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</span>`;
+                        let nuevoSaldo = d.numero_dispersion > 1 ? `<span class="label lbl-azure">Nuevo saldo</span>`  : '';
+                        return `<span class="label lbl-azure">${moment(d.fecha_modificacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</span> ${nuevoSaldo}`;
                     
                 }},
                 { data: function (d) {

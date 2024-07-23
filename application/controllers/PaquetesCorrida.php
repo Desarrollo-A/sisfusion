@@ -406,16 +406,14 @@ class PaquetesCorrida extends CI_Controller
       $descuento = $descuento;
     }
     $row = $this->PaquetesCorrida_model->ValidarDescuento($id_condicion, $descuento)->result_array();
-    if (count($row) > 1){    
-      echo(json_encode(array("status" => 403, "mensaje" => "Porcentaje existente duplicado, no se puede agregar otro.", "color" => "warning"), JSON_UNESCAPED_UNICODE));
-    } 
-    else{
+    if($row) {
+      echo (json_encode(array("status" => 403, "mensaje" => "Ya existe un porcentaje, no se puede agregar otro.", "color" => "warning"), JSON_UNESCAPED_UNICODE));
+    }
+    else {
       $response = $this->PaquetesCorrida_model->SaveNewDescuento($id_condicion, $descuento);
       $lastRecords = $this->PaquetesCorrida_model->getDescuentosYCondiciones($id_condicion);
-      $mensaje = count($row) == 1 ? "Segundo descuento almacenado correctamente." : "Primer descuento almacenado correctamente." ;
-      
-        echo(json_encode(array("status" => 402, "mensaje" => $mensaje, "detalle" => $lastRecords, "color" => "success"), JSON_UNESCAPED_UNICODE));
-
+      $mensaje = "Descuento almacenado correctamente";
+      echo (json_encode(array("status" => 402, "mensaje" => $mensaje, "detalle"  => $lastRecords, "color" => "success"), JSON_UNESCAPED_UNICODE));
     }
   }
    
