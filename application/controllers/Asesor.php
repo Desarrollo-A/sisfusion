@@ -42,6 +42,12 @@ class Asesor extends CI_Controller {
         $this->load->view('template/footer');
     }
 
+    public function panelNuevo ()
+    {
+        $this->load->view('template/header');
+        $this->load->view('contratacion/panelNuevo_view');
+    }
+
     public function deposito_seriedad_ds($idCliente, $onlyView){
         $this->validateSession();
         $datos["cliente"] = $this->registrolote_modelo->selectDS_ds($idCliente);
