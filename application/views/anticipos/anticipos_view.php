@@ -58,7 +58,7 @@
                                     <option value="1">Aceptar</option>
                                     <option value="0">Rechazar</option>
                                 </select>
-                                <input type="hidden" id="bandera_prestamo" name="bandera_prestamo" value="">
+                                <input type="hidden" id="bandera_prestamo" name="bandera_prestamo" value="0">
                                 <input type="hidden" id="id_usuario" name="id_usuario" value="">
                                 <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
                             </div>
@@ -91,15 +91,18 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group m-0 overflow-hidden">
                                     <label class="control-label" for="proyecto">Proceso</label>
-                                    <select class="selectpicker select-gral m-0" name="procesoAnt" id="procesoAnt" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+                                    <select class="selectpicker select-gral m-0" name="procesoAnt" id="procesoAnt" 
+                                    data-style="btn" data-show-subtext="true"  
+                                    title="SELECCIONA UNA OPCIÓN" data-size="7" 
+                                    data-live-search="true" data-container="body" required>
                                         <option value="7">Aceptar</option>
                                         <option value="0">Rechazar</option>
                                     </select>
-                                    <input type="hidden" id="id_usuario" name="id_usuario" value="">
-                                    <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
+                                    <input type="hidden" id="id_usuario_p" name="id_usuario" value="">
+                                    <input type="hidden" id="id_anticipo_p" name="id_anticipo" value="">
                                     <input type="hidden" id="proceso" name="proceso" value="">
                                     <input type="hidden" id="monto" name="monto" value="">
-                                    <input type="hidden" id="bandera_prestamo" name="bandera_prestamo" value="">
+                                    <input type="hidden" id="bandera_prestamo" name="bandera_prestamo" value="1">
                                 </div>
                             </div>
 
@@ -191,7 +194,8 @@
                                                         <th>PRIORIDAD</th>                                                        
                                                         <th>SEDE</th>
 
-                                                        <th>ESQUEMA</th>
+                                                        
+                                                        <th>Monto parcial</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>

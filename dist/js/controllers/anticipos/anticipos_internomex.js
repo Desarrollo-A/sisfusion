@@ -62,10 +62,21 @@ $("#tabla_anticipos_internomex").ready(function () {
             { data: 'impuesto' },
             { data: 'sede' },
             { data: 'esquema' },
+            { data: 'nombre_empresa' },
             {
-                data: function(d) {
-                    var montoAMostrar = (d.montoParcial !== null) ? d.montoParcial : d.monto;
-                    return '<p class="m-0">' + formatMoney(montoAMostrar) + '</p>';
+                data: function( d ){
+                    var infoModal = '';
+                    var Mensualidades = '';
+                    if(d.montoParcial1 != null ){
+                        infoModal =  '<p class="m-0">monto parcial: '+d.montoParcial1+'</p>'
+                        Mensualidades = '<p class="m-0"> mensualidades: '+d.mensualidades+'</p>' ;
+
+                    }else{
+                        Mensualidades = '<p class="m-0">monto actual:  '+d.monto+'</p>' ;
+                        // infoModal = d.montoParcial;
+                    }
+
+                    return infoModal+  Mensualidades;
                 }
             },
             {

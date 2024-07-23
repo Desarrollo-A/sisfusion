@@ -65,18 +65,20 @@ class Anticipos extends CI_Controller {
         $id_anticipo = $this->input->post('id_anticipo');
         $procesoAnt = $this->input->post('procesoAnt');
         $monto = $this->input->post('monto');
+        $montoPrestado = $this->input->post('montoPrestado');
+        
         $numeroPagos = $this->input->post('numeroPagos');
         $procesoTipo = $this->input->post('procesoTipo');
         $pago = $this->input->post('pago');
+
+        $bandera_prestamo = $this->input->post('bandera_prestamo');
+
         $montoP = $this->input->post('montoPrestadoParcialidad');
         $montoPEntero = intval($montoP);
 
         $creado_por = $this->session->userdata("id_rol");
 
-        if($procesoAnt == 7){
-
-            
-        }
+        
 
 
         $result_2 = null;
@@ -142,25 +144,37 @@ class Anticipos extends CI_Controller {
             $success = ($result != null); 
             
         } else {
+            // contraloria 
+            if($procesoAnt == 7){
+                if($bandera_prestamo == 1 ){
+                    // $id_usuario = $this->input->post('id_usuario_p');
+                    // $id_anticipo = $this->input->post('id_anticipo_p');
+                // viene con la infirmacion del prestamo
+                    $ultimoId = $this->Anticipos_model->autPrestamoAnticipo($id_usuario, $montoPrestado, $numeroPagos, $pago, $comentario, $pago, $creado_por, $procesoTipo);
+                    $result_4 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $ultimoId);                    
+                    $result = $this->Anticipos_model->updateEstatusD($procesoAnt, $id_anticipo);
+                    $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
+                
+                }else{
+                // solo viene por un apoyo
+                $id_usuario = $this->input->post('id_usuario');
+                $id_anticipo = $this->input->post('id_anticipo');
 
-            $result = $this->Anticipos_model->updateEstatusD($procesoAnt, $id_anticipo);
-            $result_3 = 1;
-            $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
-    
+
+                }
+                    
+            }
+
             if($procesoAnt == 0){
                 
             } else {
 
                 
-                if ($procesoTipo == 0 ) {
+                // if ($procesoTipo == 0 ) {
 
-                    $result_3 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
+                //     $result_3 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
 
-                } else {
-                    $result_3 = $this->Anticipos_model->autPrestamoAnticipo($id_usuario, $monto, $numeroPagos, $pago, $comentario, $pago, $creado_por, $procesoTipo);
-                    $result_4 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
-
-                }
+                // }
             }
             
             $success = ($result != null && $result_2 != null && $result_3 != null);
