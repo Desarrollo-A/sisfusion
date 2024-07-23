@@ -1241,16 +1241,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $rol_actual = $this->session->userdata('id_rol');
 
         switch($rol_actual){
-            /*case 5:
-            case 4:
-                $estatus_permitido='1, 3, 4';
-                break;
-                */
             case 17:
-                $estatus_permitido='1,2,3';
+                $estatus_permitido='1,2,3,5';
                 break;
             case 70:
-                $estatus_permitido='1,2,3';
+                $estatus_permitido='1,2,3,5';
 
         }
         $query = $this->db->query("SELECT STRING_AGG(au.id_autorizacion, ', ') id_autorizacion, au.idResidencial, STRING_AGG(au.idCondominio, ', ') idCondominio, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0') lote, 

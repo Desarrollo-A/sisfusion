@@ -275,7 +275,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         return $paquetes;
 }
     public function getAutorizaciones($id_rol,$opcion = 1,$anio = '',$estatus = ''){
-        $estatusWhere1 = $opcion == 2 ? ($estatus == 0 ? 'YEAR(aut.fecha_creacion) = '.$anio : 'aut.estatus_autorizacion in('.$estatus.') AND YEAR(aut.fecha_creacion) = '.$anio) : '' ;
+        $estatusWhere1 = $opcion == 2 ? ($estatus == 0 ? 'YEAR(aut.fecha_creacion) = '.$anio.' AND aut.estatus_autorizacion != 6' : 'aut.estatus_autorizacion in('.$estatus.') AND YEAR(aut.fecha_creacion) = '.$anio) : '' ;
         //$estatusWhere2 = $opcion == 1 ? ($id_rol == 17 ? ' aut.estatus_autorizacion in(1,2,3,4,6)' : ' aut.estatus_autorizacion in(1,3,4)') : '';
         $estatusWhere2 = $opcion == 1 ? 'aut.estatus_autorizacion in(1,2,3)' : '';
         return $this->db->query("SELECT aut.*,sd.nombre as sede,STRING_AGG((CONVERT(VARCHAR(MAX), RE.descripcion)), ',') nombreResidencial,
