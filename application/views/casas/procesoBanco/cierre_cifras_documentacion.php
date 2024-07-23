@@ -12,26 +12,21 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-usd fa-2x"></i>
+                                <i class="fas fa-check-square fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Paso 12 - Cierre de cifras</h3>
+                                    <h3 class="card-title center-align">Documentación del lote: <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID LOTE</th>
-                                            <th>LOTE</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>PROYECTO</th>
-                                            <th>NOMBRE CLIENTE</th>
-                                            <th>ASESOR</th>
-                                            <th>GERENTE</th>
-                                            <th>TIEMPO</th>
-                                            <th>MOVIMIENTO</th>
+                                            <th>ID DOC</th>
+                                            <th>DOCUMENTO</th>
+                                            <th>ARCHIVO</th>
+                                            <th>FECHA SUBIDO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -49,5 +44,8 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/cierre_cifras.js"></script>
+    <script type="text/javascript">
+        const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>
+    </script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/cierre_cifras_documentacion.js"></script>
 </body>

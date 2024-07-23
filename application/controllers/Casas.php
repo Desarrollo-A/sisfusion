@@ -136,6 +136,18 @@ class Casas extends BaseController
         $this->load->view("casas/procesoBanco/valida_documentacion", $data);
     }
 
+    public function cierre_cifras_documentacion($proceso)
+    {
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/procesoBanco/cierre_cifras_documentacion", $data);
+    }
+
     public function solicitar_contratos()
     {
         $this->load->view('template/header');
@@ -1463,7 +1475,7 @@ class Casas extends BaseController
             http_response_code(400);
         }
 
-        $new_status = 11;
+        $new_status = 13;
 
         $proceso = $this->CasasModel->getProceso($id);
 
@@ -1475,7 +1487,7 @@ class Casas extends BaseController
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: ' . $comentario);
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: ' . $comentario, 1);
 
             $this->json([]);
         } else {

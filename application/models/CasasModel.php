@@ -1089,6 +1089,7 @@ class CasasModel extends CI_Model
             doc.archivo,
             doc.documento,
             doc.idDocumento,
+            doc2.documentos AS kitBancario,
             con.nombre AS condominio,
 	        resi.descripcion AS proyecto,
 	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
@@ -1109,6 +1110,7 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (11) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
             pc.proceso = 12

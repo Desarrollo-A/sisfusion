@@ -1,22 +1,23 @@
-pass = function(data) {
+pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a subir contratos?`,
-        onSubmit: function(data){
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
+        onSubmit: function (data) {
             //console.log(data)
-            form.loading(true);
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
-                url: `to_cierre_cifras`,
+                url: `to_vobo_cifras`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de subir contratos.", "success");
-        
-                    table.reload();
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo. de cifras", "success");
+
+                    table.reload()
+
                     form.hide();
                 },
                 error: function () {
@@ -28,7 +29,7 @@ pass = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
@@ -189,7 +190,7 @@ let columns = [
         if (data.kit) {
             view_button = new RowButton({icon: 'visibility', label: `Visualizar kit bancario`, onClick: show_preview, data})
             upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar kit bancario`, onClick: replace_upload, data })
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a cierre de cifras', onClick: pass, data})
+            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
         }else{
             upload_button = new RowButton({ icon: 'file_upload', label: `Subir kit bancario`, onClick: upload, data })
         }

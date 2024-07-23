@@ -57,6 +57,11 @@ function show_upload(data) {
     form.show()
 }
 
+go_to_documentos = function(data) {
+    window.location.href = `cierre_cifras_documentacion/${data.idProcesoCasas}`;
+}
+
+
 pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
@@ -154,12 +159,14 @@ let columns = [
     } },
     {
         data: function (data) {
-            let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data })
+            /* let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data }) */
 
             let view_button = ''
             let pass_button = ''
 
-            if (data.archivo) {
+            let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
+
+            /* if (data.archivo) {
 
                 let parts = data.archivo.split('.');
                 let extension = parts.pop();
@@ -171,9 +178,15 @@ let columns = [
                 }
 
                 pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
+            } */
+
+            if (data.kitBancario) {
+
+            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
+
             }
 
-            return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}</div>`
+            return `<div class="d-flex justify-center">${docu_button}${view_button}${pass_button}</div>`
         }
     },
 ]
