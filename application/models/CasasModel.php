@@ -1641,7 +1641,6 @@ class CasasModel extends CI_Model
     }
 
     public function getLotesProcesoBanco($proceso, $tipoDocumento){
-
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
 
@@ -1718,7 +1717,7 @@ class CasasModel extends CI_Model
     }
 
     public function setVoBoSaldos($columna, $idProcesoCasas, $idUsuario){
-        $query = $this->db->query("UPDATE proceso_casas SET ". $columna ." = ?, fechaProceso = GETDATE(), idModificacion = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
+        $query = $this->db->query("UPDATE proceso_casas SET ". $columna ." = ?, fechaProceso = GETDATE(), fechaModificacion = GETDATE(), idModificacion = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
 
         return $query;
     }

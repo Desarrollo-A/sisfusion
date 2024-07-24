@@ -1,28 +1,3 @@
-switch(idRol){
-    case 33:
-    case 76: 
-    case 81: 
-    case 55: // portventa 
-        if(idUsuario == 5107){ // yolanda 
-            tipo = 1;
-        }
-        else if(idUsuario == 4512){
-            tipo = 3;
-        }
-        else{
-            tipo = 4;
-        }
-        break;
-    
-    case 99: // OOAM
-        tipo = 2;
-        break;
-    
-    case 101: // gph
-        tipo = 3;
-        break;
-}
-
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
 
@@ -79,7 +54,46 @@ function show_upload(data) {
     form.show()
 }
 
-pass_to_vobo_cifras = function (data) {
+avance_proceso = function (data) {
+    let form = new Form({
+        title: 'Continuar proceso',
+        text: `¿Desea avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 16 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
+rechazo = function (data) {
     let form = new Form({
         title: 'Continuar proceso',
         text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
@@ -124,36 +138,11 @@ pass_to_vobo_cifras = function (data) {
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 14 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
-            new HiddenField({ id: 'voboADM', value: data.voboADM }),
-            new HiddenField({ id: 'voboOOAM', value: data.voboOOAM }),
-            new HiddenField({ id: 'voboGPH', value: data.voboGPH }),
-            new HiddenField({ id: 'voboPV', value: data.voboPV }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show()
-}
-
-function avanceProceso(data, form){
-    $.ajax({
-        type: 'POST',
-        url: `${general_base_url}casas/creditoBancoAvance`,
-        data: data,
-        contentType: false,
-        processData: false,
-        success : function(response){
-            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-
-            table.reload()
-            form.hide()                             
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
-
-            form.loading(false)
-        }
-    })
 }
 
 let buttons = [
@@ -185,20 +174,7 @@ let columns = [
     { data: 'nombreCliente' },
     { data: 'nombreAsesor' },
     { data: 'nombreGerente' },
-    {
-        data: function (data) {
-            let inicio = new Date(data.fechaProceso)
-            let today = new Date()
-
-            let difference = today.getTime() - inicio.getTime()
-
-            let days = Math.floor(difference / (1000 * 3600 * 24))
-
-            let text = `Lleva ${days} día(s)`
-
-            return text
-        }
-    },
+    { data: 'tiempoProceso' },
     {
         data: function (data) {
             switch(data.tipoMovimiento){
@@ -217,31 +193,58 @@ let columns = [
     },
     {
         data: function (data) {
-            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
+            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avance_proceso, data })
+            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo, data })
+            let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver contrato', onClick: show_preview, data })
+            let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `subir documento`, onClick: file_upload, data })
 
-            if( tipo == 1 && data.voboADM == 0){
-                 return `<div class="d-flex justify-center">${pass_button}</div>`
-            }
-            if( tipo == 2 && data.voboOOAM == 0){
-                 return `<div class="d-flex justify-center">${pass_button}</div>`
-            }
-            if( tipo == 3 && data.voboGPH == 0){
-                 return `<div class="d-flex justify-center">${pass_button}</div>`
-            }
-            if( tipo == 4 && data.voboPV == 0){
-                 return `<div class="d-flex justify-center">${pass_button}</div>`
-            }
-            else{
-                return ''
-            }
+            return `<div class="d-flex justify-center">${pass_button}${decline_button}</div>`            
         }
-    },
+    }
 ]
 
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 13, tipoDocumento: 0 },
+    params: { proceso: 15, tipoDocumento: 0 }, // ver si de debe subir un documento aqui
     buttons: buttons,
     columns,
 })
+
+function file_upload(data) {
+    let form = new Form({
+        title: 'Subir orden de compra firmada',
+        onSubmit: function(data){
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/uploadDocumentoCreditoBanco`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(response){
+                    alerts.showNotification("top", "right", "Se ha subido el contrato", "success");
+                        
+                    table.reload()
+                    form.hide()
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Ha ocurrido un error al enviar el archivo", "danger");
+
+                    form.loading(false);
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'tipoDocumento', value: data.tipo }),
+            new HiddenField({ id: 'id_documento', value: documento }), // aqui se define con la variable dependiendo el tipo de rol
+            new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
+        ]
+    })
+
+    form.show()
+}
