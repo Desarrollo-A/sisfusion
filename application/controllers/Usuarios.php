@@ -556,10 +556,10 @@ class Usuarios extends CI_Controller
         $hoy = date("Y-m-d");
 
 
-        $fileTmpPath = $_FILES['file-uploadE']['tmp_name'];
-        $fileName = $_FILES['file-uploadE']['name'];
-        $fileSize = $_FILES['file-uploadE']['size'];
-        $fileType = $_FILES['file-uploadE']['type'];
+        $fileTmpPath = $_FILES['fileElm']['tmp_name'];
+        $fileName = $_FILES['fileElm']['name'];
+        $fileSize = $_FILES['fileElm']['size'];
+        $fileType = $_FILES['fileElm']['type'];
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
         $newFileName = $nombre . $hoy . md5(time() . $fileName) . '.' . $fileExtension;
