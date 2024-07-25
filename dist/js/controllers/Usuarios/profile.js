@@ -1,4 +1,3 @@
-
 Shadowbox.init();
 
 $(document).ready(function(){
@@ -12,11 +11,10 @@ $("#file-uploadE").on('change', function (e) {
 });
 
 $(document).on("click", ".update", function (e) {
+    console.log('IN');
     e.preventDefault();
     $('#archivoE').val('');
-    var id_usurio = $(this).attr("data-id_usuario");
     $('#addFile').modal('show');
-    console.log('alcuishe');
 });
 
 function Recargar() {
