@@ -455,4 +455,16 @@ class Api_model extends CI_Model
             ORDER BY 
                 co.nombre ASC")->result_array();
     }
+
+    public function saveValidacionSalesforce($data){
+        $query = "BEGIN
+            IF NOT EXISTS (SELECT * FROM prospectos WHERE id_salesforce = '$data->id_salesforce')
+            BEGIN
+                INSERT INTO prospectos (id_asesor, id_coordinador, id_gerente, id_sede, id_subdirector, id_regional, personalidad_juridica, nombre, apellido_paterno, apellido_materno, correo, telefono, lugar_prospeccion, otro_lugar, plaza_venta, fecha_creacion, creado_por, fecha_modificacion, modificado_por, fecha_vencimiento, observaciones, desarrollo, score, source, id_salesforce)
+                VALUES ($data->id_asesor, $data->id_coordinador, $data->id_gerente, $data->id_sede, $data->id_subdirector, $data->id_regional, $data->personalidad_juridica, $data->nombre, $data->apellido_paterno, $data->apellido_materno, $data->correo, $data->telefono, $data->lugar_prospeccion, $data->otro_lugar, $data->plaza_venta, $data->fecha_creacion, $data->creado_por, $data->fecha_modificacion, $data->modificado_por, $data->fecha_vencimiento, $data->observaciones, $data->desarrollo, $data->score, $data->source, $data->id_salesforce)
+            END
+        END";
+
+        $this->db->query($query);
+    }
 }

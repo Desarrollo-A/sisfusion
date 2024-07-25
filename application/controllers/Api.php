@@ -1334,7 +1334,39 @@ class Api extends CI_Controller
                                 if ($result->id_rol != 7)
                                     echo json_encode(array("status" => -1, "message" => "El valor ingresado para OWNER no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                                 else {
-                                    $validacionIdSalesforce = $this->Api_model->validacionIdSalesforce($data->IDSALESFORCE);
+                                    // $validacionIdSalesforce = $this->Api_model->validacionIdSalesforce($data->IDSALESFORCE);
+
+                                    $dataArray = (object) [
+                                        "id_asesor" => $data->Owner,
+                                        "id_coordinador" => $result->id_coordinador,
+                                        "id_gerente" => $result->id_gerente,
+                                        "id_sede" => $result->id_sede,    
+                                        "id_subdirector" => $result->id_subdirector,
+                                        "id_regional" => $result->id_regional,
+                                        "personalidad_juridica" => 2,
+                                        "nombre" => $data->NOMBRE,
+                                        "apellido_paterno" => $data->APELLIDOPATERNO,
+                                        "apellido_materno" => $data->APELLIDOMATERNO,
+                                        "correo" => $data->Mail,
+                                        "telefono" => $data->Phone,
+                                        "lugar_prospeccion" => 52, 
+                                        "otro_lugar" => $data->CampaignID,
+                                        "plaza_venta" => 0,
+                                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                                        "creado_por" => 1,
+                                        "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                        "modificado_por" => 1,
+                                        "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                        "observaciones" => $data->Comments,
+                                        "desarrollo" => $data->ProductID,
+                                        "score" => $data->iScore,
+                                        "source" => $data->Source,
+                                        "id_salesforce" => $data->IDSALESFORCE
+                                    ]
+
+                                    $is_ok = $this->Api_model->saveValidacionSalesforce($dataArray);
+
+                                    /*
                                     if (count($validacionIdSalesforce) <= 0) { // NO SE ENCONTRÓ NINGÚN CON EL ID SALESFORCE QUE VIENE INFORMADO (SE REALIZA INSERT)
                                         $dataArray = array(
                                             "id_asesor" => $data->Owner,
@@ -1392,10 +1424,15 @@ class Api extends CI_Controller
                                         );
                                         $dbTransaction = $this->General_model->updateRecord('prospectos', $dataArray, 'id_prospecto', $validacionIdSalesforce[0]['id_prospecto']);
                                     }
-                                    if ($dbTransaction) // SUCCESS TRANSACTION
+                                    */
+                                    if ($is_ok){
+                                        // SUCCESS TRANSACTION
                                         echo json_encode(array("status" => 1, "message" => count($validacionIdSalesforce) == 0 ? 'Registro guardado con éxito.' : 'Registro actualizado con éxito.'), JSON_UNESCAPED_UNICODE);
-                                    else // ERROR TRANSACTION
+                                    }else{
+                                        // ERROR TRANSACTION
                                         echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                    }
+
                                 }
                             }
                         }
