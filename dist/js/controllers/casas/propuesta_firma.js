@@ -102,7 +102,7 @@ selectNotarias = function(data) {
     form.show()
 }
 
-gestorNotarias = function(data) {
+function gestorNotarias(data) {
     let form2 = new Form2({
         title: 'Gestión de notarias',
         fields: [
@@ -181,7 +181,7 @@ estatusNotaria = function(data) {
     }
 }
 
-addNotaria = function(data) {
+function addNotaria (data) {
 
     if(!data){
         alerts.showNotification("top", "right", "El campo esta vacio.", "danger");

@@ -3305,4 +3305,14 @@ class Casas extends BaseController
             $this->json([]);
         }
     }
+
+    public function vobo_cierre_cifras(){
+        $data = [
+            'idRol' => $this->idRol,
+            'idUsuario' => $this->idUsuario,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/vobo_cierre_cifras', $data);
+    }
 }
