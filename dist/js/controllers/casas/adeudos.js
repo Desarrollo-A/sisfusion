@@ -184,6 +184,7 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/concentracion_adeudos',
+    params: {documentos: [2,3,4,5,6,7,8,10,11,12,13,14,15]},
     buttons:buttons,
     columns,
 })

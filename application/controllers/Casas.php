@@ -796,7 +796,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23]);
+            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
                 foreach ($documentos as $key => $documento) {
@@ -831,8 +831,11 @@ class Casas extends BaseController
     }
 
     public function concentracion_adeudos()
-    {   
-        $lotes = $this->CasasModel->getConcentracionAdeudos();
+    {
+        $data = $this->input->get();
+        $documentos = $data["documentos"];
+
+        $lotes = $this->CasasModel->getConcentracionAdeudos($documentos);
 
         $this->json($lotes);
     }
@@ -2656,7 +2659,11 @@ class Casas extends BaseController
                     "idProcesoCasas"  => $id_proceso,
                     "documento" => $name_documento,
                     "archivo" => $filename,
-                    "tipo" => $tipo
+                    "tipo" => $tipo,
+                    "fechaCreacion" => date("Y-m-d H:i:s"),
+                    "idCreacion" => $this->session->userdata('id_usuario'),
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                    "idModificacion" => $this->session->userdata('id_usuario'),
                 );
                 
                 $add = $this->General_model->addRecord('documentos_proceso_casas', $insertData);
@@ -3315,4 +3322,68 @@ class Casas extends BaseController
         $this->load->view('template/header');
         $this->load->view('casas/procesoBanco/vobo_cierre_cifras', $data);
     }
+
+    public function documentacionProveedor($proceso)
+    {
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        if(is_null($lote)){
+            $this->load->view('template/header');
+		    $this->load->view('template/home');
+		    $this->load->view('template/footer');
+        }
+        else{
+            $data = [
+                'lote' => $lote,
+            ];
+    
+            $this->load->view('template/header');
+            $this->load->view("casas/procesoBanco/documentacion_proveedor", $data);
+        }
+    }
+
+    public function getDocumentosProveedor($proceso)
+    {
+        $lotes = $this->CasasModel->getDocumentosProveedor($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function countDocumentos()
+    {
+        $data = $this->input->get();
+        $documentos = $data["documentos"];
+
+        $lotes = $this->CasasModel->countDocumentos($documentos);
+
+        $this->json($lotes);
+    }
+
+    public function documentacionCliente($proceso)
+    {
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        if(is_null($lote)){
+            $this->load->view('template/header');
+		    $this->load->view('template/home');
+		    $this->load->view('template/footer');
+        }
+        else{
+            $data = [
+                'lote' => $lote,
+            ];
+
+            $this->load->view('template/header');
+            $this->load->view("casas/procesoBanco/documentacion_cliente", $data);
+        }
+    }
+
+    public function getDocumentosCliente($proceso)
+    {
+        $lotes = $this->CasasModel->getListaDocumentosCliente($proceso);
+
+        $this->json($lotes);
+    }
+
+    
 }
