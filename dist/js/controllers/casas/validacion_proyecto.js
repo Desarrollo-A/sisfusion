@@ -3,6 +3,33 @@ const formatter = new Intl.NumberFormat('es-MX', {
   currency: 'MXN',
 });
 
+let tipoSaldo = 0; // se define el tipo de saldo 
+
+// switch(idRol){
+//     case 33:
+//     case 76: 
+//     case 81: 
+//     case 55: // portventa 
+//         if(idUsuario == 5107){ // yolanda 
+//             tipoSaldo = 1;
+//         }
+//         else if(idUsuario == 4512){
+//             tipoSaldo = 3;
+//         }
+//         else{
+//             tipoSaldo = 4;
+//         }
+//         break;
+    
+//     case 99: // OOAM
+//         tipoSaldo = 2;
+//         break;
+    
+//     case 101: // gph
+//         tipoSaldo = 3;
+//         break;
+// }
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -27,26 +54,19 @@ let columns = [
             return `<span class="label lbl-${clase}">${data.nombreMovimiento}</span>`
         } 
     },
-    {
-        data: function(data){
-            let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir archivo de pre cierre de cifras', onClick: file_upload, data})
-            let btn_avance = '';
-            // let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: file_upload, data});
-            let view_button = '';
-        
-            if(data.archivo != null){
-                btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance al paso 6', onClick: avanceProcesoBanco, data})
-                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
-            }
+    { data: function(data){
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: avanceProcesoBanco, data})
+        let btn_avance = ''
+        let view_button = '';
+        let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir archivo de pre cierre de cifras', onClick: file_upload, data})
 
-            if([5, 6].includes(data.proceso) && data.cierreContraloria == 0){
-                return `<div class="d-flex justify-center">${btn_avance}${view_button}${subir_archivo}</div>`
-            }
-            else{
-                return ''
-            }
-        } 
-    }
+        if(data.documento){
+            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Vo.Bo.', onClick: avanceProcesoBanco, data})
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+        }
+
+        return `<div class="d-flex justify-center">${btn_avance}${view_button}${subir_archivo}${btn_rechazo}</div>`
+    } },
 ]
 
 let buttons = [
@@ -70,7 +90,7 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: [5, 6], tipoDocumento: 25 },
+    params: { proceso: 7, tipoDocumento: 32 },
     buttons: buttons,
     columns,
 })
@@ -84,29 +104,19 @@ function avanceProcesoBanco(data){
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/avancePreCierre`,
+                url: `${general_base_url}casas/creditoBancoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success : function(response){
-                    if(response.result){
-                        if(response.avance == 1){
-                            avanceProceso(data, form);
-                        }
-                        else{
-                            alerts.showNotification("top", "right", response.message, "success")
-
-                            table.reload()
-                            form.hide()  
-                        }                        
-                    }
-                    else{
-                        alerts.showNotification("top", "right", response.message, "danger")
-                    }                          
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
                 },
                 error: function(){
                     alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
-
+        
                     form.loading(false)
                 }
             })
@@ -116,38 +126,19 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 7 }),
+            new HiddenField({ id: 'procesoNuevo', value: 8 }),
+            new HiddenField({ id: 'tipoSaldo', value: tipoSaldo }),
             new HiddenField({ id: 'saldoAdmon', value: data.saldoAdmon }),
             new HiddenField({ id: 'saldoOOAM', value: data.saldoOOAM }),
             new HiddenField({ id: 'saldoGPH', value: data.saldoGPH }),
             new HiddenField({ id: 'saldoPV', value: data.saldoPV }),
+            new HiddenField({ id: 'cierreContraloria', value: data.cierreContraloria }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
-            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show();
-}
-
-function avanceProceso(data, form){
-    $.ajax({
-        type: 'POST',
-        url: `${general_base_url}casas/creditoBancoAvance`,
-        data: data,
-        contentType: false,
-        processData: false,
-        success : function(response){
-            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-
-            table.reload()
-            form.hide()        
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
-
-            form.loading(false)
-        }
-    })
 }
 
 function file_upload(data) {
@@ -179,7 +170,7 @@ function file_upload(data) {
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'tipoDocumento', value: data.tipo }),
-            new HiddenField({ id: 'id_documento', value: 25 }),
+            new HiddenField({ id: 'id_documento', value: 32 }),
             new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
             new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ]

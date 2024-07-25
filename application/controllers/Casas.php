@@ -2801,7 +2801,7 @@ class Casas extends BaseController
 
                 if ($created) {
                     $motivo = "Se subio archivo: $name_documento";
-                    $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2);
+                    $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 1);
 
                     $this->json([]);
                 }
@@ -2869,5 +2869,185 @@ class Casas extends BaseController
     public function cierreCifras(){
         $this->load->view('template/header');
         $this->load->view('casas/procesoBanco/cierre_cifras_view');
+    }
+
+    public function congelacionSaldos(){
+        $data = [
+            'idRol' => $this->idRol,
+            'idUsuario' => $this->idUsuario,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/congelacion_saldos_view', $data);
+    }
+
+    public function setVoBoSaldos(){
+        $form = $this->form();
+
+        $saldoAdmon = $form->saldoAdmon;
+        $saldoOOAM = $form->saldoOOAM;
+        $saldoGPH = $form->saldoGPH;
+        $saldoPV = $form->saldoPV;
+        $comentario = $form->comentario;
+        $idProcesoCasas = $form->idProcesoCasas;
+        $cierreContraloria = $form->cierreContraloria;
+
+        $tipoSaldo = $form->tipoSaldo;
+        $columna = '';
+        $avance = 0;
+        $banderaSuccess = true;
+        $depto = '';
+        $idUsuario = $this->session->userdata("id_usuario");
+
+        switch($tipoSaldo){
+            case 1: // admon
+                if($saldoOOAM == 1 && $saldoGPH == 1 && $saldoPV == 1 && $cierreContraloria == 1){
+                    $avance = 1;                    
+                }
+
+                $columna = 'saldoAdmon';
+                $depto = 'administración';
+                break;
+                
+            case 2: // ooam
+                if($saldoAdmon && $saldoGPH == 1 && $saldoPV == 1 && $cierreContraloria == 1){
+                    $avance = 1;                    
+                }
+
+                $columna = 'saldoOOAM';
+                $depto = 'administración OOAM';
+                break;
+            
+            case 3: // gph
+                if($saldoAdmon && $saldoOOAM == 1 && $saldoPV == 1 && $cierreContraloria == 1){
+                    $avance = 1;                    
+                }
+
+                $columna = 'saldoGPH';
+                $depto = 'GPH';
+                break;
+
+            case 4: // pv
+                if($saldoAdmon && $saldoOOAM == 1 && $saldoGPH == 1 && $cierreContraloria == 1){
+                    $avance = 1;                    
+                }
+
+                $columna = 'saldoPV';
+                $depto = 'PV';
+                break;
+        }
+
+        $this->db->trans_begin();
+        $insertData = array(
+            "idProcesoCasas"  => $idProcesoCasas,
+            "procesoAnterior" => 6,
+            "procesoNuevo"    => 6,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $idUsuario,
+            "descripcion"     => "Se dio vo.Bo. de " . $depto . " | Comentario: " . $comentario,
+            "esquemaCreditoProceso" => 1  
+        );
+
+        $update = $this->CasasModel->setVoBoSaldos($columna, $idProcesoCasas, $idUsuario);
+        if(!$update) $banderaSuccess = false;
+
+        $insertHistorial = $this->General_model->addRecord("historial_proceso_casas", $insertData);
+        if(!$insertHistorial) $banderaSuccess = false;
+
+        if($banderaSuccess){
+            $this->db->trans_commit();
+            $response["result"] = true;
+            $response["message"] = "Se avanzado el proceso";
+            $response["avance"] = $avance;
+        }
+        else{
+            $this->db->trans_rollback();
+            $response["result"] = false;
+            $response["message"] = "Erro al avanzar el proceso";
+            $response["avance"] = 0;
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
+    }
+
+    public function congelacionSaldosOOAM(){
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/saldos_ooam_view');
+    }
+
+    public function avancePreCierre(){
+        $form = $this->form();
+
+        $saldoAdmon = $form->saldoAdmon;
+        $saldoOOAM = $form->saldoOOAM;
+        $saldoGPH = $form->saldoGPH;
+        $saldoPV = $form->saldoPV;
+        $idProcesoCasas = $form->idProcesoCasas;
+        $comentario = $form->comentario;
+        $avance = 0;
+        $idUsuario = $this->session->userdata("id_usuario");
+        
+        $banderaSuccess = true;
+
+        if($saldoAdmon == 1 && $saldoOOAM == 1 && $saldoGPH == 1 && $saldoPV == 1){
+            $avance = 1;
+        }
+
+        $updateData = array(
+            "cierreContraloria" => 1,
+            "fechaProceso"      => date("Y-m-d H:i:s"),
+            "idModificacion"    => $idUsuario
+        );
+
+        $insertData = array(
+            "idProcesoCasas"  => $idProcesoCasas,
+            "procesoAnterior" => 6,
+            "procesoNuevo"    => 6,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $idUsuario,
+            "descripcion"     => "Se dio pre cierre de contraloría | Comentario: " . $comentario,
+            "esquemaCreditoProceso" => 1  
+        );
+
+        $this->db->trans_begin();
+
+        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        if(!$update){
+            $banderaSuccess = false;
+        }
+
+        $insert = $this->General_model->addRecord("historial_proceso_casas", $insertData);
+        if(!$insert){
+            $banderaSuccess = false;
+        }
+
+        if($banderaSuccess){
+            $this->db->trans_commit();
+            
+            $response["result"] = true;  
+            $response["messsage"] = "Se ha avanzado el proceso";
+            $response["avance"] = $avance;
+        }
+        else{
+            $this->db->trans_rollback();
+
+            $response["result"] = false;  
+            $response["messsage"] = "Error al avanzar el proceso";
+            $response["avance"] = 0;
+        }
+
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($response));
+    }
+
+    public function validacionProyecto(){
+        $data = [
+            'idRol' => $this->idRol,
+            'idUsuario' => $this->idUsuario,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view('casas/procesoBanco/validacion_proyecto_view', $data);
     }
 }
