@@ -23,9 +23,39 @@ $(document).ready(function () {
         $("#sedes").selectpicker('refresh');
     }, 'json');
 });
+sp = { 
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
+
+$(document).ready(function () {
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setIniDatesXMonth('#beginDate','#endDate');
+});
+
+$(document).on('click', '#date-label', function() {   
+    $('#date-picker-input').datepicker('show');
+})
+
 
 $('#idResidencial').change(function () {
-    $('#spiner-loader').removeClass('hide');
+    $('#spiner-loader').removeClass('hide'); 
     $('#tablaInventario').removeClass('hide');
     index_idResidencial = $(this).val();
     $("#idCondominioInventario").html("");
@@ -99,8 +129,9 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                 }
             }],
         columnDefs: [{
-            targets: [22, 23, 24, 32],
+            /*targets: [22, 23, 24, 32],
             visible: coordinador = ((id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70) || (id_usuario_general == 2748 || id_usuario_general == 5957)) ? true : false
+            */
         }],
         pagingType: "full_numbers",
         language: {
@@ -298,8 +329,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             },
             {
                 data: function (d) {
-                    //return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
-                    return `<center><button class="btn-data btn-blueMaderas btn_accion" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left"</center>`
+                    return `<center><button class="btn-data btn-blueMaderas btn_accion" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-idCliente="${d.idCliente}" data-fecha-apertura="${d.fecha_creacion}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
                 }
             }],
         initComplete: function() {
@@ -308,7 +338,42 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
     });
 });
 
+/*$(window).resize(function () {
+    tabla_inventario.columns.adjust();
+});
+*/
+$(document).on("click", ".btn_accion", function(){
+    let idLote = $(this).attr('value');
+    let idCliente = $(this).data('idcliente');
+    let fechaApertura = $(this).data('fechaApertura');
+    /*let beginDate = document.getElementById('beginDate').value;
+    document.getElementById("titleAceptar").innerHTML = 'Elegir la fecha';*/
+    $("#aceptarFecha").addClass("modal-sm");
+    $("#fechaModal").modal();
+    $("#idLote").val(idLote);
+    $("#idCliente").val(idCliente);
+    $("#fechaApertura").val(fechaApertura);
+});
 
-    $(window).resize(function () {
-        tabla_inventario.columns.adjust();
-    });
+$(document).on('submit', '#fechaEntrega', function(e){
+    e.preventDefault();
+    console.log("I was executed");
+    let data = new FormData($(this)[0]);
+    $.ajax({
+        url: `${general_base_url}/Contratacion/editFechaApertura`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+            console.log("response: ", response);
+        }
+    })
+});
+
+$('#beginDate').datepicker({
+    onselect: function (dateText) {
+        console.log("dateText: ", dateText);
+    }
+});

@@ -93,7 +93,7 @@ class Contratacion_model extends CI_Model {
       ds.aportMensualOfer, ds.fecha1erAport, ds.fechaLiquidaDepo, ds.fecha2daAport, 
 	  ISNULL(ref.nombreReferencias, 'SIN ESPECIFICAR') as referenciasPersonales, 
       ds.observacion, cl.personalidad_juridica, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaMatrimonio_pf, ds.actaConstitutiva_pm, ds.poder_pm, ds.idOficialApoderado_pm, ds.idDomicilio_pm,
-      cl.edadFirma, sds.nombre as sedeResidencial
+      cl.edadFirma, sds.nombre as sedeResidencial, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE cl.id_cliente END idCliente
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
@@ -343,5 +343,9 @@ class Contratacion_model extends CI_Model {
 
    public function getNombreTipo(){
       return $this->db->query("SELECT DISTINCT u.tipo, o.nombre AS nombre_tipo FROM usuarios u INNER JOIN opcs_x_cats o ON o.id_opcion = u.tipo WHERE o.id_catalogo = 124");
+   }
+
+   public function loteAccion() {
+      
    }
 }

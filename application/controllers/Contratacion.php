@@ -214,4 +214,8 @@ class Contratacion extends CI_Controller
        $this->validateSession();
        echo json_encode($this->Contratacion_model->getNombreTipo()->result_array());
     }
+
+    public function editFechaApertura() {
+        
+    }
 }
