@@ -1,6 +1,10 @@
 
 Shadowbox.init();
 
+$(document).ready(function(){
+    ocultarBtnActualizar();
+});
+
 $("#file-uploadE").on('change', function (e) {
     $('#archivoE').val('');
     v2 = document.getElementById("file-uploadE").files[0].name;
@@ -95,3 +99,10 @@ $("#formDelete").on('submit', function (e) {
     });
 
 });
+
+function ocultarBtnActualizar(){
+    if(id_usuario_general == 12874){
+        document.getElementById('btn-actualizar').classList.add('hide');
+        $('#contrasena').prop('disabled', true);
+    }
+}

@@ -1083,11 +1083,7 @@ class Usuarios_modelo extends CI_Model
 
     function getUserPassword()
     {
-        switch ($this->session->userdata('id_rol')) {
-            case '4': //ASISTENTE DIRECCION
-                return $this->db->query("SELECT usuario, contrasena FROM usuarios WHERE id_rol = 61");
-                break;
-        }
+        return $this->db->query("SELECT usuario, contrasena FROM usuarios WHERE id_usuario IN (12874, 10252)");        
     }
 
     function updatePersonalPassword($data)
