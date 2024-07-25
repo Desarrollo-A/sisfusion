@@ -11,7 +11,8 @@ class Contratacion extends CI_Controller
         parent::__construct();
         $this->load->model('Contratacion_model');
         $this->load->model('registrolote_modelo');
-         $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
+        $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
+        $this->load->model('General_model');
         //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
         $this->load->library(array('session', 'form_validation'));
@@ -215,7 +216,9 @@ class Contratacion extends CI_Controller
        echo json_encode($this->Contratacion_model->getNombreTipo()->result_array());
     }
 
-    public function editFechaApertura() {
-        
+    public function loteAccion() {
+        $data = $_POST;
+        $response = $this->Contratacion_model->loteAccion();
+        return json_encode($response);
     }
 }

@@ -35,6 +35,7 @@
                     </div>
                     <input type="hidden" id="idCliente" name="idCliente"/>
                     <input type="hidden" id="idLote" name="idLote" />
+                    <input type="hidden" id="idAccion" name="idAccion" />
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Aceptar</button>
