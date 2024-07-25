@@ -207,14 +207,13 @@ $(document).on("click", "#btn-accion", async function (e) {
     // Obteniendo los valores para su proceso
     const accion = $("#accion").val();
     const d = JSON.parse($("#data").val());
+    // console.log('datos', d);
     let comentario = $('#comentarioAccionModal').val();
-    let tieneRescision = 0;
-    let tieneAutorizacionDG = 0;
-    let archivo, proceso, estatusLib, rescision, autorizacionDG, concepto, precioLiberacion, plazo;
+    let proceso, estatusLib, rescision, autorizacionDG, concepto, precioLiberacion, plazo;
     let res; // Dato para saber los dias bloqueados de un lote.
 
     // VALIDACIONES: En caso de tener
-    if ( d.enProcesoLiberacion === PROCESO.INICIO ) { // VENTAS O CAJA: LIBERAR LOTE O AL COLOCAR PLAZO. 
+    if ( d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO ) { // VENTAS O CAJA: LIBERAR LOTE O AL COLOCAR PLAZO. 
         // Loading y disables mientras hace la carga
         $('#btn-accion').attr('disabled', true); // Deshabilita botón
         $('#spiner-loader').removeClass('hide'); // Aparece spinner
@@ -249,12 +248,12 @@ $(document).on("click", "#btn-accion", async function (e) {
         if (precioLiberacion === '') return alerts.showNotification("top", "right", `Digita el nuevo precio por m<sup>2</sup> del lote.`, "warning");
     }
     if ((d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
-        // Poner la validación
+        // No existe validación alguna...
     }
 
     // CAMBIO DE PROCESO: se dirige al proceso
     if (accion === 'AVANCE') {
-        if ( d.enProcesoLiberacion === PROCESO.INICIO ) { // CUANDO INICIA EL PROCESO.
+        if ( d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO) { // CUANDO INICIA EL PROCESO.
             if (res.days >= 30) proceso = PROCESO.CAMBIO_PRECIO;
             if (res.days < 30) proceso = PROCESO.SOLICITUD_LIBERACION;
 
@@ -271,15 +270,30 @@ $(document).on("click", "#btn-accion", async function (e) {
             autorizacionDG = 0; // NO APLICA PARA BLOQUEADOS
             concepto = CONCEPTO.BLOQUEO;
         }
+        if ( d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION ) { // CUANDO INICIA EL PROCESO.
+
+            proceso = PROCESO.FINALIZADO_LIBERADO;
+            estatusLib = AVANCE.NORMAL;
+            rescision = 0; // NO APLICA PARA BLOQUEADOS
+            autorizacionDG = 0; // NO APLICA PARA BLOQUEADOS
+            concepto = CONCEPTO.BLOQUEO;
+        }
     }
     if (accion === 'RECHAZO') {
+        if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION) {
+            proceso = PROCESO.FINALIZADO_NO_LIBERADO // Rechaza proceso, si proceso = 4 entonces se finaliza y es otro estatus.
+            estatusLib = AVANCE.NORMAL;// NUEVO, RECHAZO, CORRECCIÓN.
+            rescision = 0;
+            autorizacionDG = 0; 
+            concepto = CONCEPTO.BLOQUEO;
+        }
         // NO HAY RECHAZOS EN BLOQUEOS SEGÚN EL DIAGRAMA 🤷‍♀️​
     }
 
     // Datos a envíar al endpoint para su registro.
     const data = new FormData();
     data.append("idLote", d.idLote);
-    data.append("id_cliente", d.idCliente);
+    data.append("id_cliente", d.idCliente || 0);
     data.append("rescision", rescision);
     data.append("autorizacion_DG", autorizacionDG);
     data.append("proceso_lib", proceso);
@@ -297,7 +311,7 @@ $(document).on("click", "#btn-accion", async function (e) {
         processData: false,
         success: function (data) {
             const res = JSON.parse(data);
-            console.log('Actualiza proceso', res);
+            // console.log('Actualiza proceso', res);
             alerts.showNotification("top", "right", res.msg, res.code === 200 ? "success" : "warning");
             if (res.code === 500) return;
         },
@@ -307,77 +321,36 @@ $(document).on("click", "#btn-accion", async function (e) {
     });
 
     // En caso de ser el ultimo proceso, ya se libera.
-    if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION && proceso === FINALIZADO_LIBERADO) {
+    if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION && proceso === PROCESO.FINALIZADO_LIBERADO) {
         // Generamos el token para liberar el lote
-        let res = await $.ajax({
+        const data = new FormData();
+        data.append("idLote", d.idLote);
+        data.append("precioNuevo", d.precioLiberacion);
+        await $.ajax({
             type: 'POST',
-            url: `${general_base_url}Api/getToken`,
-            data: JSON.stringify({"id": 6489}),
-            contentType: 'application/json',
+            url: `${general_base_url}Liberaciones/desbloqueoDeLote`,
+            data: data,
+            contentType: false,
             cache: false,
             processData: false,
-        });
-
-        res = JSON.parse(res);
-        console.log('getToken', res);
-
-        // Realizamos la acción de la función que libera el lote!
-        // PD TENGO QUE USAR ESA FUNCIÓN DE CAJA MODULES -> SOLO TENGO QUE ACTUALIZAR EL LOTE DE ESTATUS.
-        /*
-        let data = await $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Caja_outside/caja_modules`,
-            headers: {
-                'Authorization': res.id_token
+            success: function (res) {
+                // console.log(res);
+                // const res = JSON.parse(data);
+                // console.log('Proceso liberación final', res);
+                alerts.showNotification("top", "right", res.msg, res.result === true ? "success" : "warning");
+                if (res.result === false) return;
             },
-            data: JSON.stringify({
-                "accion": 3,
-                "activeLE": false,
-                "activeLP": false,
-                "id_proy": d.idResidencial,
-                "idCondominio": d.idCondominio,
-                "id_usuario": id_usuario_general,
-                "tipo": "1",
-                "lotes": [
-                    {
-                        "nombreLote": d.nombreLote,
-                        "idLote": d.idLote,
-                        "precio": precioLiberacion,
-                        "tipo_lote": "1"
-                    }
-                ]
-            }),
-            contentType: 'application/json',
-            cache: false,
-            processData: false,
+            error: function () {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
         });
-        */
-
-        // Notificamos al usuario
-        data = JSON.parse(data);
-        console.log('Proceso liberación final', data);
-        alerts.showNotification("top", "right", data.message === 'SUCCESS' ? 'La liberación se ha completado' : 'Surgió un error al intentar liberar el lote', data.message === 'SUCCESS' ? "success" : "warning");
-        if (data.message != 'SUCCESS') return;
     }
 
     $('#accion-modal').modal('hide');
     $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
-    if (d.enProcesoLiberacion === 0) {
-        $.ajax({
-            type: 'POST',
-            url: `${general_base_url}Liberaciones/getLotesBloqueados`,
-            cache: false,
-            success: function(rs) {
-                const res = JSON.parse(rs);
-                datatableFn(res, 1);
-                $('#spiner-loader').addClass('hide'); // Aparece spinner
-            },
-            error: function(xhr, status, error) {
-                console.error("Error en la petición AJAX:", error);
-                $('#spiner-loader').addClass('hide'); // Aparece spinner
-            }
-        });
+    if (d.enProcesoLiberacion === PROCESO.INICIO) {
+        $('#liberar').click();
     }else {
         $('#pendientes').click();
     }
@@ -392,19 +365,23 @@ $(document).on('click', '.btn-historico', async function(){
 
     // ACTION
     await $.ajax({
-        url: general_base_url + 'Liberaciones/historialLiberacionLote',
+        url: general_base_url + 'Liberaciones/historialLiberacionLoteBloqueado',
         type: 'POST',
         data: {
           "idLote": d.idLote,
-          "tipoVenta" : 1,
-          "idProcesoTipoLiberacion": LIBERACION.PARTICULARES
+          "idProcesoTipoLiberacion": LIBERACION.BLOQUEADOS
         },
         dataType: 'JSON',
         success: function (res) {
-          $.each( res, function(i, data){
-            fillChangelog(i, data);
-          });
-          $("#seeInformationModal").modal('show')
+            if (res.length === 0) {
+                $("#changelog").append("No existen modificaciones.");
+            }else {
+                $.each( res, function(i, data){
+                    fillChangelog(i, data);
+                });
+            }
+            $("#seeInformationModal").modal('show')
+            $('#spiner-loader').addClass('hide'); // Quito spinner  
         },
         error: function () {},
         catch: function () {},
@@ -590,13 +567,10 @@ const newButton = (btnClass, title, action = '', data, icon) => {
 const datatableButtons = (d, type) => {
     const BTN_AVANCE_P0  = newButton('btn-data btn-green btn-accion', 'AVANZAR LOTE', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR A CAJA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_RECHAZO_P1 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fas fa-thumbs-down');
-    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR DESBLOQUEO', 'AVANCE', d, 'fa fa-check');
     const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR DESBLOQUEO', 'RECHAZO', d, 'fa fa-times-circle');
     const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
     const BTN_VER_DOC    = newButton('btn-data btn-sky btn-ins-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
-    const BTN_DEL_DOC    = newButton('btn-data btn-danger btn-del-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-trash');
     
     let NO_BTN = '';
 
@@ -607,16 +581,16 @@ const datatableButtons = (d, type) => {
     }
 
     if (type === 1) { // PARTICIPAN EN LOS PASOS
-        if (id_rol_general == ROLES.VENTAS ) { 
-            if (d.enProcesoLiberacion === 0 ) return BTN_AVANCE_P0 +  BTN_INFO ;
+        if (id_rol_general == ROLES.VENTAS ) {
+            if (d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO) return BTN_AVANCE_P0 +  BTN_INFO ;
             return BTN_INFO; 
         }
         if (id_rol_general == ROLES.SUBDIRECCION) { // CONTRALORIA
-            if ( d.enProcesoLiberacion === 1) return BTN_AVANCE_P1 + /* BTN_RECHAZO_P1 + */ BTN_INFO;
+            if ( d.enProcesoLiberacion === PROCESO.CAMBIO_PRECIO) return BTN_AVANCE_P1 + /* BTN_RECHAZO_P1 + */ BTN_INFO;
             return BTN_INFO;
         }
         if (id_rol_general == ROLES.CAJAS) { // CAJAS
-            if (d.enProcesoLiberacion === PROCESO.INICIO ) return BTN_AVANCE_P0 +  BTN_INFO ;
+            if (d.enProcesoLiberacion === PROCESO.INICIO || d.enProcesoLiberacion === PROCESO.FINALIZADO_NO_LIBERADO ) return BTN_AVANCE_P0 +  BTN_INFO ;
             if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION) return BTN_LIBERA + BTN_NO_LIBERA + BTN_INFO;
             return NO_BTN;
         }

@@ -324,7 +324,7 @@ $(document).on("click", "#btn-accion", async function (e) {
         });
 
         res = JSON.parse(res);
-        console.log('getToken', res);
+        // console.log('getToken', res);
 
         // Realizamos la acción de la función que libera el lote!
         let data = await $.ajax({
@@ -357,7 +357,7 @@ $(document).on("click", "#btn-accion", async function (e) {
 
         // Notificamos al usuario
         data = JSON.parse(data);
-        console.log('Proceso liberación final', data);
+        // console.log('Proceso liberación final', data);
         alerts.showNotification("top", "right", data.message === 'SUCCESS' ? 'La liberación se ha completado' : 'Surgió un error al intentar liberar el lote', data.message === 'SUCCESS' ? "success" : "warning");
         if (data.message != 'SUCCESS') return;
     }
@@ -376,7 +376,7 @@ $(document).on("click", "#btn-accion", async function (e) {
             processData: false,
         });
         rs1 = JSON.parse(rs1);
-        console.log('Eliminar archivo', rs1);
+        // console.log('Eliminar archivo', rs1);
         
         if (rs1.code == 500 ){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
@@ -421,8 +421,8 @@ $(document).on('click', '.btn-historico', async function(){
                     fillChangelog(i, data);
                 });
             }
-          $("#seeInformationModal").modal('show')
-          $('#spiner-loader').addClass('hide'); // Quito spinner  
+            $("#seeInformationModal").modal('show')
+            $('#spiner-loader').addClass('hide'); // Quito spinner  
         },
         error: function () {},
         catch: function () {},
@@ -513,7 +513,7 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
         });
 
         rs1 = JSON.parse(rs1);
-        console.log('Eliminar archivo', rs1);
+        // console.log('Eliminar archivo', rs1);
         
         if (rs1.code == 500 ){
             alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
@@ -541,7 +541,7 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
         processData: false,
     });
     res = JSON.parse(res);
-    console.log('Historial documento', res);
+    // console.log('Historial documento', res);
     const xdata = new FormData();
     xdata.append("idLote", d.idLote);
     xdata.append("idDocumento", res.documentId);
@@ -557,7 +557,7 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
         processData: false,
     });
     rs = JSON.parse(rs);
-    console.log('Subir archivo', rs);
+    // console.log('Subir archivo', rs);
     if (rs.code == 200 ) alerts.showNotification("top", "right", `El documento ${movimiento} se ha cargado con éxito.`, "success");
     if (rs.code == 500 ) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
 

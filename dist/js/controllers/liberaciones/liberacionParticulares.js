@@ -301,7 +301,7 @@ $(document).on("click", "#btn-accion", async function (e) {
             concepto = d.concepto; // QUE TIPO DE 
         }
         else if (d.enProcesoLiberacion === PROCESO.SOLICITUD_LIBERACION) {
-            proceso = PROCESO.FINALIZADO_NO_LIBERADO // Rechaza proceso, si proceso = 4 entonces se finaliza y es otro estatus.
+            proceso = PROCESO.FINALIZADO_NO_LIBERADO; // Rechaza proceso, si proceso = 4 entonces se finaliza y es otro estatus.
             estatusLib = 1;// NUEVO, RECHAZO, CORRECCIÓN.
             rescision = 0;
             autorizacionDG = 0; 
@@ -340,7 +340,7 @@ $(document).on("click", "#btn-accion", async function (e) {
         processData: false,
         success: function (data) {
             const res = JSON.parse(data);
-            console.log('Actualiza proceso', res);
+            // console.log('Actualiza proceso', res);
             alerts.showNotification("top", "right", res.msg, res.code === 200 ? "success" : "warning");
             if (res.code === 500) return;
         },
@@ -362,7 +362,7 @@ $(document).on("click", "#btn-accion", async function (e) {
         });
 
         res = JSON.parse(res);
-        console.log('getToken', res);
+        // console.log('getToken', res);
 
         // Realizamos la acción de la función que libera el lote!
         let data = await $.ajax({
@@ -395,7 +395,7 @@ $(document).on("click", "#btn-accion", async function (e) {
 
         // Notificamos al usuario
         data = JSON.parse(data);
-        console.log('Proceso liberación final', data);
+        // console.log('Proceso liberación final', data);
         alerts.showNotification("top", "right", data.message === 'SUCCESS' ? 'La liberación se ha completado' : 'Surgió un error al intentar liberar el lote', data.message === 'SUCCESS' ? "success" : "warning");
         if (data.message != 'SUCCESS') return;
     }
@@ -413,7 +413,7 @@ $(document).on("click", "#btn-accion", async function (e) {
             processData: false,
         });
         rs1 = JSON.parse(rs1);
-        console.log('Eliminar archivo', rs1);
+        // console.log('Eliminar archivo', rs1);
         
         if (rs1.code == 500 ){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
@@ -553,7 +553,7 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
             processData: false,
         });
         rs1 = JSON.parse(rs1);
-        console.log('Eliminar archivo', rs1);
+        // console.log('Eliminar archivo', rs1);
         
         if (rs1.code == 500 ){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
@@ -580,7 +580,7 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
         processData: false,
     });
     res = JSON.parse(res);
-    console.log('Historial documento', res);
+    // console.log('Historial documento', res);
     const xdata = new FormData();
     xdata.append("idLote", d.idLote);
     xdata.append("idDocumento", res.documentId);
@@ -596,7 +596,7 @@ $(document).on("click", "#btn-subir-archivo", async function (e) {
         processData: false,
     });
     rs = JSON.parse(rs);
-    console.log('Subir archivo', rs);
+    // console.log('Subir archivo', rs);
     if (rs.code == 200 ) alerts.showNotification("top", "right", `El documento ${movimiento} se ha cargado con éxito.`, "success");
     if (rs.code == 500 ) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
 

@@ -78,8 +78,8 @@ class Liberaciones extends CI_Controller{
         if (isset($lotes)) $filtroLotes = "AND lo.idLote IN (".$lotes.")";
  
         $condicion = '';
-        if ($this->session->userdata('id_rol') == 3 )  $condicion = "AND (pl.proceso_lib IS NULL)"; // GERENTES
-        if ($this->session->userdata('id_rol') == 12 ) $condicion = "AND (pl.proceso_lib IS NULL)"; // CAJAS
+        if ($this->session->userdata('id_rol') == 3 )  $condicion = "AND (pl.proceso_lib IS NULL OR pl.proceso_lib = 4)"; // GERENTES
+        if ($this->session->userdata('id_rol') == 12 ) $condicion = "AND (pl.proceso_lib IS NULL OR pl.proceso_lib = 4)"; // CAJAS
 
         $data = $this->Liberaciones_model->getLotesBloqueados($condicion, $filtroLotes);
 
@@ -276,6 +276,18 @@ class Liberaciones extends CI_Controller{
         }
     }
 
+    public function historialLiberacionLoteBloqueado(){
+        if (isset($_POST) && !empty($_POST)) {
+            $idLote = $_POST['idLote'];
+            $idProcesoTipoLiberacion = $_POST['idProcesoTipoLiberacion'];
+
+            $response = $this->Liberaciones_model->historialLiberacionLoteBloqueado($idProcesoTipoLiberacion, $idLote)->result_array();
+            echo json_encode($response);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
     public function getDiasBloqueosDeLote(){
         $idLote = $_POST['idLote'];
 
@@ -286,35 +298,39 @@ class Liberaciones extends CI_Controller{
     }
 
     public function desbloqueoDeLote(){
-        $idLote = $_POST['idLote'];
-        $precioNuevo = $_POST['precioNuevo'];
+        $idLote = $this->input->post('idLote');
+		$precioNuevo = $this->input->post('precioNuevo');
 
-        $lote = $this->Liberaciones_model->getDatosLoteParaDesbloqueo($idLote)->row();
+		if (isset($idLote, $precioNuevo)) {
+            $lote = $this->Liberaciones_model->getDatosLoteParaDesbloqueo($idLote)->row();
 
-        // if ($lote.length ) 
+            $precio = $precioNuevo;
+            $total = $precioNuevo * $lote->sup;
+            $enganche = $total * 0.1;
+            $saldo = $total - $enganche;
+    
+            $updateData['precio'] = $precio;
+            $updateData['total'] = $total;
+            $updateData['enganche'] = $enganche;
+            $updateData['saldo'] = $saldo;
+            $updateData['idStatusLote'] = 1; // ESTATUS DISPONIBLE c
+            $updateData['usuario'] = $this->session->userdata('id_usuario'); // Para auditoria
+            $updateData['modificado'] = date('Y-m-d H:i:s'); // Para auditoria
+    
+            $res = $this->General_model->updateRecord("lotes", $updateData, "idLote", $idLote);
+            if ($res){
+                $response['result'] = true;
+                $response['msg'] = "Se ha desbloqueado el lote de manera exitosa.";
+            } else {
+                $response['result'] = false;
+                $response['msg'] = "Surgió un error al intentar liberar, comunícate con sistemas.";
+            }
+        }else {
+            $response['result'] = false;
+            $response['msg'] = "Surgió un error al intentar liberar, comunícate a sistemas.";
+        }
 
-        $precio = $precioNuevo;
-        $total = $precioNuevo * $lote->sup;
-        $enganche = $total * 0.1;
-        $saldo = $total - $enganche;
-        $idStatusLote = 1; 
-
-        $updateData['precio'] = $precio;
-        $updateData['total'] = $total;
-        $updateData['enganche'] = $enganche;
-        $updateData['saldo'] = $saldo;
-        $updateData['idStatusLote'] = 1; // ESTATUS DISPONIBLE
-        $updateData['usuario'] = $this->session->userdata('id_usuario');
-        $updateData['modificado'] = date('Y-m-d h:i:s');
-
-        
-        /* array(
-            "registro_comision" => 2,
-            "usuario" => $this->session->userdata('id_usuario')
-        ); */
-        $response = $this->Cobranza_model->updateRecord("lotes", $update_lotes_data, "idLote", $this->input->post("idLote")); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
-        
-        $response = elapsedDaysBetweenTwoDates($rs->fecha_creacion, (new DateTime())->format('Y-m-d'));
-        echo json_encode($response);
+        $this->output->set_content_type("application/json");
+		$this->output->set_output(json_encode($response, JSON_NUMERIC_CHECK));
     }
 }

@@ -290,9 +290,34 @@ class Liberaciones_model extends CI_Model {
             LEFT JOIN opcs_x_cats AS oxc2 ON pl.estatus_lib = oxc2.id_opcion AND oxc2.id_catalogo = 108
             LEFT JOIN opcs_x_cats AS oxc3 ON pl.concepto = oxc3.id_opcion AND oxc3.id_catalogo = 132
             LEFT JOIN usuarios AS us ON us.id_usuario = pl.modificado_por
-        WHERE lo.tipo_venta = ? AND cl.status = 1 AND pl.estatus = 1 AND lo.idStatusContratacion IN (9,10,13,14,15)
+        WHERE lo.status = 1 AND lo.tipo_venta = ? AND cl.status = 1 AND pl.estatus = 1 AND lo.idStatusContratacion IN (9,10,13,14,15)
             AND pl.idLote= ?
         ORDER BY pl.id_proceso_lib DESC;", array($idProcesoTipoLiberacion, $tipoVenta, $idLote));
+        return $query;
+    }
+
+    public function historialLiberacionLoteBloqueado($idProcesoTipoLiberacion, $idLote) 
+    {
+        $query = $this->db->query(
+            "SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,  CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado,
+            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, lo.precio, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
+            CASE WHEN pl.idLote IS NOT NULL THEN pl.proceso_lib ELSE '0' END enProcesoLiberacion, CASE WHEN oxc.nombre IS NOT NULL THEN oxc.nombre ELSE 'Lote por liberar' END nombreProcesoLiberacion, 
+            pl.id_proceso_lib,  pl.rescision, pl.autorizacion_DG, pl.estatus_lib, CASE WHEN oxc2.nombre IS NOT NULL THEN oxc2.nombre ELSE 'Nuevo' END nombreEstatusLiberacion,
+            CASE WHEN oxc2.color IS NOT NULL THEN oxc2.color ELSE '#1B4F72' END colorMovimiento, pl.concepto, 
+            CASE WHEN oxc3.nombre IS NOT NULL THEN oxc3.nombre ELSE 'Sin concepto' END nombreConceptoLiberacion, CASE WHEN pl.comentario = '' THEN 'Sin comentarios.' ELSE pl.comentario END comentario, pl.precioLiberacion, pl.plazo,
+            us.nombre AS nombreMod, us.apellido_paterno AS ap1_mod, us.apellido_materno AS ap2_mod, pl.estatus, pl.modificado_por, pl.fecha_modificacion, pl.creado_por, pl.fecha_creacion
+        FROM proceso_liberaciones AS pl
+            LEFT JOIN lotes AS lo ON lo.idLote = pl.idLote
+            LEFT JOIN clientes AS cl ON cl.id_cliente = lo.idCliente
+            LEFT JOIN condominios AS co ON lo.idCondominio = co.idCondominio
+            LEFT JOIN residenciales AS re ON co.idResidencial = re.idResidencial
+            LEFT JOIN opcs_x_cats AS oxc ON pl.proceso_lib = oxc.id_opcion AND oxc.id_catalogo = ?
+            LEFT JOIN opcs_x_cats AS oxc2 ON pl.estatus_lib = oxc2.id_opcion AND oxc2.id_catalogo = 108
+            LEFT JOIN opcs_x_cats AS oxc3 ON pl.concepto = oxc3.id_opcion AND oxc3.id_catalogo = 132
+            LEFT JOIN usuarios AS us ON us.id_usuario = pl.modificado_por
+        WHERE lo.status = 1 AND pl.estatus = 1 AND lo.idStatusLote = (8)
+            AND pl.idLote= ?
+        ORDER BY pl.id_proceso_lib DESC;", array($idProcesoTipoLiberacion, $idLote));
         return $query;
     }
 
