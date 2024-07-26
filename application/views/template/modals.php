@@ -56,7 +56,7 @@
     </div>
 </div>
 
-<div id="form-modal2" class="modal fade" role="dialog" tabindex='-1'>
+<div id="form-modal2" class="modal fade" role="dialog" tabindex='-1' style="overflow-y: auto;">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="form-form-modal2" method="post" novalidate>

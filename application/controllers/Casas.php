@@ -1885,22 +1885,42 @@ class Casas extends BaseController
     public function save_propuestas()
     {
         $idProcesoCasas = $this->form('idProcesoCasas');
-        $idPropuesta = $this->form('idPropuesta');
         $fechaFirma1 = $this->form('fechaFirma1');
-        $fechaFirma2 = $this->form('fechaFirma2');
-        $fechaFirma3 = $this->form('fechaFirma3');
+        $fechaFirma2 = $this->form('fechaFirma2') ? $this->form('fechaFirma2') : null;
+        $fechaFirma3 = $this->form('fechaFirma3') ? $this->form('fechaFirma3') : null;
 
-        if (!$idProcesoCasas || !$idPropuesta || !$fechaFirma1) {
+        if (!$idProcesoCasas || !$fechaFirma1) {
             http_response_code(400);
             $this->json([]);
         }
 
         $proceso = $this->CasasModel->getProceso($idProcesoCasas);
 
-        $is_ok = $this->CasasModel->updatePropuesta($idPropuesta, $fechaFirma1, $fechaFirma2, $fechaFirma3);
+        $getProuesta = $this->CasasModel->getProuesta($idProcesoCasas);
+
+        if($getProuesta->num_rows() > 0){
+
+            $is_ok = $this->CasasModel->updatePropuesta($idProcesoCasas, $fechaFirma1, $fechaFirma2, $fechaFirma3);
+
+        }else{
+
+            $dataPropuesta = array(
+                "idProcesoCasas"  => $idProcesoCasas,
+                "fechaFirma1" => $fechaFirma1,
+                "fechaFirma2"    => $fechaFirma2,
+                "fechaFirma3" => $fechaFirma3,
+                "fechaCreacion" => date("Y-m-d H:i:s"),
+                "idCreacion"    => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+                "idModificacion"    => $this->session->userdata('id_usuario'),
+            );
+
+            $is_ok = $this->General_model->addRecord("propuestas_proceso_casas", $dataPropuesta);
+
+        }
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se actualizo propuesta: $idPropuesta", 1);
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se actualizo propuesta del proceso: $idProcesoCasas", 1);
         } else {
             http_response_code(404);
         }
@@ -2852,6 +2872,13 @@ class Casas extends BaseController
         // paso 2: guardar registro del movimiento
         $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
         if (!$addHistorial) {
+            $banderaSuccess = false;
+        }
+
+        $cotizacion = $this->CasasModel->insertCotizacion($idProceso);
+        $tituloPropiedad = $this->CasasModel->inserDocumentsToProceso($idProceso, 17, 'Titulo de propiedad');
+
+        if (!$cotizacion && !$tituloPropiedad) {
             $banderaSuccess = false;
         }
 
