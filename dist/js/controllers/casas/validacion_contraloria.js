@@ -304,7 +304,9 @@ let columns = [
         let view_button = '';
         let pass_button = '';
 
-        if (data.distribucion) {
+        console.log(data)
+
+        if (data.archivo) {
             view_button = new RowButton({icon: 'visibility', label: `Visualizar distribución de pagos`, onClick: show_preview, data})
             upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar distribución de pagos`, onClick: replace_upload, data })
             if(data.tesoreria && data.serviciosArquitectonicos && data.obra){
@@ -320,7 +322,7 @@ let columns = [
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentación del cliente', onClick: back_to_adeudos, data})
 
-        return `<div class="d-flex justify-center">${docu_button}${view_button}${upload_button}${contratos}${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${docu_button}${view_button}${upload_button}${contratos}${back_button}</div>`
     } },
 ]
 

@@ -564,6 +564,21 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
+    public function insertCotizacion($idProcesoCasas){
+        $idCreacion = $this->session->userdata('id_usuario');
+
+        $query = "BEGIN
+            IF NOT EXISTS (SELECT * FROM cotizacion_proceso_casas
+                           WHERE idProcesoCasas = $idProcesoCasas)
+            BEGIN
+                INSERT INTO cotizacion_proceso_casas (idProcesoCasas, nombre, status, fechaCreacion, idModificacion)
+                VALUES ($idProcesoCasas, 'Cotización', 1, GETDATE(), $idCreacion)
+            END
+        END";
+
+        return $this->db->query($query);
+    }
+
     public function getListaProcesoDocumentos(){
         $gerentes = implode(',', [$this->idUsuario]);
 
@@ -926,7 +941,6 @@ class CasasModel extends CI_Model
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc2.nombre AS nombreArchivo,
-        doc.documentos AS distribucion,
         doc2.idDocumento,
         doc2.documento,
         doc2.archivo,
@@ -940,7 +954,7 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (30) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
-        LEFT JOIN documentos_proceso_casas doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas AND doc2.tipo = 30
+        LEFT JOIN documentos_proceso_casas doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas AND doc2.tipo = 28
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 30 AND oxc2.id_catalogo = 126
         WHERE
             pc.proceso = 10
@@ -1089,7 +1103,7 @@ class CasasModel extends CI_Model
             doc.archivo,
             doc.documento,
             doc.idDocumento,
-            doc2.documentos AS kitBancario,
+            doc3.archivo AS kitBancario,
             con.nombre AS condominio,
 	        resi.descripcion AS proyecto,
 	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
@@ -1112,8 +1126,9 @@ class CasasModel extends CI_Model
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (11) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+        LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 31
         WHERE
-            pc.proceso = 12
+            pc.proceso IN (11, 12)
         AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
@@ -1434,14 +1449,22 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function updatePropuesta($idPropuesta, $fechaFirma1, $fechaFirma2, $fechaFirma3){
+    public function getProuesta($idProcesoCasas){
+
+        $query = "SELECT * FROM propuestas_proceso_casas WHERE idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function updatePropuesta($idProcesoCasas, $fechaFirma1, $fechaFirma2, $fechaFirma3){
+        
         $query = "UPDATE propuestas_proceso_casas
         SET
             fechaFirma1 = NULLIF('$fechaFirma1', ''),
             fechaFirma2 = NULLIF('$fechaFirma2', ''),
             fechaFirma3 = NULLIF('$fechaFirma3', '')
         WHERE
-            idPropuesta = $idPropuesta";
+            idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
     }
@@ -1559,7 +1582,7 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (17, 28, 29, 30, 31, 32)";
+        AND tipo IN (17)";
 
         return $this->db->query($query)->result();
     }

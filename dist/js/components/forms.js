@@ -1262,6 +1262,8 @@ class Form2 {
         $('#text-form-modal2').html(this.text)
         $("#ok-button-form-modal2").prop('disabled', false)
         $("#form-modal2").modal();
+
+        $('body').addClass('modal-open');
     }
 
     submit(event) {

@@ -82,7 +82,7 @@ function show_upload(data) {
 }
 
 backPage = function() {
-    window.location.href = `${general_base_url}casas/ordenCompraFirma`
+    window.location.href = ps === 4 ? `${general_base_url}casas/ordenCompraFirma` : `${general_base_url}casas/cierre_cifras`;
 }
 
 let buttons = [

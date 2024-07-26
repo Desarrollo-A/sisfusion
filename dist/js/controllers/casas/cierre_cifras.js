@@ -1,28 +1,3 @@
-switch(idRol){
-    case 33:
-    case 76: 
-    case 81: 
-    case 55: // portventa 
-        if(idUsuario == 5107){ // yolanda 
-            tipo = 1;
-        }
-        else if(idUsuario == 4512){
-            tipo = 3;
-        }
-        else{
-            tipo = 4;
-        }
-        break;
-    
-    case 99: // OOAM
-        tipo = 2;
-        break;
-    
-    case 101: // gph
-        tipo = 3;
-        break;
-}
-
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
 
@@ -43,9 +18,12 @@ function download_file(data) {
 }
 
 function show_upload(data) {
+    //console.log(data)
+
     let form = new Form({
         title: 'Subir cierre de cifras',
         onSubmit: function (data) {
+            //console.log(data)
             form.loading(true)
 
             $.ajax({
@@ -80,40 +58,34 @@ function show_upload(data) {
 }
 
 go_to_documentos = function(data) {
-    window.location.href = `cierre_cifras_documentacion/${data.idProcesoCasas}`;
+    window.location.href = `documentacionProveedor/${data.idProcesoCasas}`;
+}
+go_to_documentos_cliente = function(data) {
+    window.location.href = `documentacionCliente/${data.idProcesoCasas}`;
 }
 
 
 pass_to_vobo_cifras = function (data) {
+
     let form = new Form({
         title: 'Continuar proceso',
         text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
         onSubmit: function (data) {
+            //console.log(data)
             form.loading(true)
 
             $.ajax({
                 type: 'POST',
-                url: `setCierreCifras`,
+                url: `to_vobo_cifras`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    if(response.result){
-                        if(response.avance == 1){
-                            avanceProceso(data, form);
-                        }
-                        else{
-                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-                            table.reload()
-                            form.hide() 
-                        }
-                       
-                    }
-                    else{
-                        alerts.showNotification("top", "right", response.message, "danger");
-                        table.reload()
-                        form.hide();
-                    }                
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo. de cifras", "success");
+
+                    table.reload()
+
+                    form.hide();
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -123,42 +95,12 @@ pass_to_vobo_cifras = function (data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'idLote', value: data.idLote }),
-            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'tipo', value: tipo }),
-            new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 14 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
-            new HiddenField({ id: 'voboADM', value: data.voboADM }),
-            new HiddenField({ id: 'voboOOAM', value: data.voboOOAM }),
-            new HiddenField({ id: 'voboGPH', value: data.voboGPH }),
-            new HiddenField({ id: 'voboPV', value: data.voboPV }),
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show()
-}
-
-function avanceProceso(data, form){
-    $.ajax({
-        type: 'POST',
-        url: `${general_base_url}casas/creditoBancoAvance`,
-        data: data,
-        contentType: false,
-        processData: false,
-        success : function(response){
-            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-
-            table.reload()
-            form.hide()                             
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
-
-            form.loading(false)
-        }
-    })
 }
 
 let buttons = [
@@ -187,9 +129,9 @@ let columns = [
     { data: 'nombreLote' },
     { data: 'condominio' },
     { data: 'proyecto' },
-    { data: 'nombreCliente' },
+    { data: 'cliente' },
     { data: 'nombreAsesor' },
-    { data: 'nombreGerente' },
+    { data: 'gerente' },
     {
         data: function (data) {
             let inicio = new Date(data.fechaProceso)
@@ -220,26 +162,11 @@ let columns = [
     } },
     {
         data: function (data) {
-            /* let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data }) */
 
-            let view_button = ''
             let pass_button = ''
 
-            let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
-
-            /* if (data.archivo) {
-
-                let parts = data.archivo.split('.');
-                let extension = parts.pop();
-
-                if (extension == 'xlsx') {
-                    view_button = new RowButton({ icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data })
-                } else {
-                    view_button = new RowButton({ icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data })
-                }
-
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
-            } */
+            let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Documentos de proveedor', onClick: go_to_documentos, data});
+            let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Documentos de cliente', onClick: go_to_documentos_cliente, data});
 
             if (data.kitBancario) {
 
@@ -247,15 +174,14 @@ let columns = [
 
             }
 
-            return `<div class="d-flex justify-center">${docu_button}${view_button}${pass_button}</div>`
+            return `<div class="d-flex justify-center">${pass_button}${subir_proveedor}${subir_cliente}</div>`
         }
     },
 ]
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 13, tipoDocumento: 0 },
+    url: 'casas/lista_cierre_cifras',
     buttons: buttons,
     columns,
 })
