@@ -47,5 +47,8 @@
     <script type="text/javascript">
         const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>
     </script>
+    <script type="text/javascript">
+        const ps = <?php echo $lote->proceso ?>;
+    </script>
     <script src="<?= base_url() ?>dist/js/controllers/casas/documentacion_proveedor.js?v=2"></script>
 </body>

@@ -1103,7 +1103,7 @@ class CasasModel extends CI_Model
             doc.archivo,
             doc.documento,
             doc.idDocumento,
-            doc2.documentos AS kitBancario,
+            doc3.archivo AS kitBancario,
             con.nombre AS condominio,
 	        resi.descripcion AS proyecto,
 	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
@@ -1126,8 +1126,9 @@ class CasasModel extends CI_Model
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (11) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+        LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 31
         WHERE
-            pc.proceso = 12
+            pc.proceso IN (11, 12)
         AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
