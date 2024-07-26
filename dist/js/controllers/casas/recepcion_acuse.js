@@ -94,7 +94,7 @@ let table = new Table({
     // url: 'casas/lista_envio_a_firma',
     url: 'casas/getLotesProcesoBanco',
     buttons:buttons,
-    params: { proceso: 17, documento: 0 },
+    params: { proceso: 19, documento: 0 },
     columns,
 })
 
@@ -107,7 +107,7 @@ avance_proceso = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/creditoBancoFinalizar`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -128,7 +128,7 @@ avance_proceso = function (data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 18 }),
+            new HiddenField({ id: 'procesoNuevo', value: 20 }),            
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],

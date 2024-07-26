@@ -634,7 +634,7 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15,26,23,27)";
+        AND tipo IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15,26,23,27,36,37,38)";
 
         return $this->db->query($query)->result();
     }
@@ -1747,7 +1747,6 @@ class CasasModel extends CI_Model
     }
 
     public function getLotesProcesoBanco($proceso, $tipoDocumento){
-
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
 
@@ -1824,8 +1823,83 @@ class CasasModel extends CI_Model
     }
 
     public function setVoBoSaldos($columna, $idProcesoCasas, $idUsuario){
-        $query = $this->db->query("UPDATE proceso_casas SET ". $columna ." = ?, fechaProceso = GETDATE(), idModificacion = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
+        $query = $this->db->query("UPDATE proceso_casas SET ". $columna ." = ?, fechaProceso = GETDATE(), fechaModificacion = GETDATE(), idModificacion = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
 
         return $query;
     }
+
+    public function getDocumentosProveedor($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            CASE
+                WHEN archivo IS NULL THEN 'Sin archivo'
+                ELSE archivo
+            END AS archivo,
+            documento,
+            tipo,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND tipo IN (39,40,41,42,43,44,45,46,47,48)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function countDocumentos($documentos){
+        $documentosArray = explode(',', $documentos);
+        $placeholders = implode(',', array_fill(0, count($documentosArray), '?'));
+
+        $query = $this->db->query("SELECT 
+        pc.*,
+        oxc.color,
+        oxc.nombre AS nombreMovimiento,
+        CASE
+            WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT('LLEVA', ' ', 0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+        END AS tiempoProceso,
+        CASE
+            WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
+            ELSE CONCAT('$', pc.adeudoOOAM) 
+        END AS adOOAM,
+        lo.nombreLote,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END AS nombreAsesor,
+        CASE
+            WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+            ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+        END AS gerente,
+        oxc.nombre AS movimiento,
+        doc2.documentos,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombreCliente,
+        CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
+        CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
+        pc.tipoMovimiento
+    FROM 
+        proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor 
+        INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (".$placeholders.") AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+    WHERE 
+        pc.proceso IN (4)
+        AND pc.status = 1 
+        AND cli.status = 1", $documentosArray);
+
+        return $query->result();
+    }
 }
+
+
+   

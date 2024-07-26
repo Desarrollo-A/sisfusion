@@ -204,50 +204,41 @@ let columns = [
             return text
         }
     },
-    { data: function (data) {
-        switch(data.tipoMovimiento){
-        case 1:
-            clase = 'warning'
-            break
-        case 2:
-            clase = 'orange'
-            break
-        default:
-            clase = 'blueMaderas'
-        }
-
-        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
-    } },
     {
         data: function (data) {
-            /* let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data }) */
-
-            let view_button = ''
-            let pass_button = ''
-
-            let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
-
-            /* if (data.archivo) {
-
-                let parts = data.archivo.split('.');
-                let extension = parts.pop();
-
-                if (extension == 'xlsx') {
-                    view_button = new RowButton({ icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data })
-                } else {
-                    view_button = new RowButton({ icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data })
-                }
-
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
-            } */
-
-            if (data.kitBancario) {
-
-            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
-
+            switch(data.tipoMovimiento){
+            case 1:
+                clase = 'warning'
+                break
+            case 2:
+                clase = 'orange'
+                break
+            default:
+                clase = 'blueMaderas'
             }
 
-            return `<div class="d-flex justify-center">${docu_button}${view_button}${pass_button}</div>`
+            return `<span class="label lbl-${clase}">${data.nombreMovimiento}</span>`
+        } 
+    },
+    {
+        data: function (data) {
+            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
+
+            if( tipo == 1 && data.voboADM == 0){
+                 return `<div class="d-flex justify-center">${pass_button}</div>`
+            }
+            if( tipo == 2 && data.voboOOAM == 0){
+                 return `<div class="d-flex justify-center">${pass_button}</div>`
+            }
+            if( tipo == 3 && data.voboGPH == 0){
+                 return `<div class="d-flex justify-center">${pass_button}</div>`
+            }
+            if( tipo == 4 && data.voboPV == 0){
+                 return `<div class="d-flex justify-center">${pass_button}</div>`
+            }
+            else{
+                return ''
+            }
         }
     },
 ]

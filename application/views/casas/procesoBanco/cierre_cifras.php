@@ -49,5 +49,10 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
+    <script type="text/javascript">
+        const idRol = <?php echo $idRol ?>;
+        const idUsuario = <?php echo $idUsuario ?>;
+    </script>
+
     <script src="<?= base_url() ?>dist/js/controllers/casas/cierre_cifras.js"></script>
 </body>

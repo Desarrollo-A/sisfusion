@@ -205,6 +205,7 @@ class Reestructura extends CI_Controller{
         $idAsesor = $this->session->userdata('id_usuario');
         $nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
         $idLider = $this->session->userdata('id_lider');
+        $idRol = $this->session->userdata('id_rol');
 		$clienteAnterior = $this->General_model->getClienteNLote($idCliente)->row();
         $idClienteAnterior = $clienteAnterior->id_cliente;
         $loteAOcupar = $clienteAnterior->idLote;
@@ -214,6 +215,7 @@ class Reestructura extends CI_Controller{
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
         if( $fechaUltimoEstatus2 >= $fechaCambio){
+            $idLider = $idRol == 3 ? $this->session->userdata('id_usuario') : $idLider;
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
         else{
@@ -236,7 +238,7 @@ class Reestructura extends CI_Controller{
         $proceso = 3;
 
         $qry = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
-        if ( $qry['result'] = false ) {
+        if ( $qry['result'] == false ) {
             $this->db->trans_rollback();
             echo json_encode(array(
                 'titulo' => 'ERROR',
@@ -1299,7 +1301,8 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave => 0], $dataCliente);
                 continue;
             } else if ($clave == 'id_gerente') {
-                $dataCliente = array_merge([$clave => $idLider], $dataCliente);
+                    $idLider = $idAsesor == $idLider ? 0 : $idLider;
+                    $dataCliente = array_merge([$clave => $idLider], $dataCliente);
                 continue;
             } else if ($clave == 'idLote' && $proceso != 3) {
                 $dataCliente = array_merge([$clave => $loteSelected], $dataCliente);

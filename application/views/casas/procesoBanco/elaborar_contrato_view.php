@@ -12,11 +12,11 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-money fa-2x"></i>
+                                <i class="fas fa-usd fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Paso 3 - Concentración de adeudos</h3>
+                                    <h3 class="card-title center-align">Paso 14 - Solicitud de elaboración de contratos</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -24,20 +24,19 @@
                                     <thead>
                                         <tr>
                                             <th>ID LOTE</th>
-                                            <th>NOMBRE LOTE</th>
+                                            <th>LOTE</th>
                                             <th>CONDOMINIO</th>
                                             <th>PROYECTO</th>
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>ADEUDO OOAM</th>
-                                            <th>ADEUDO ADM</th>
                                             <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -50,5 +49,10 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/adeudos.js?=v3"></script>
+    <script type="text/javascript">
+        const idRol = <?php echo $idRol ?>;
+        const idUsuario = <?php echo $idUsuario ?>;
+    </script>
+
+    <script src="<?= base_url() ?>dist/js/controllers/casas/elaborar_contrato.js"></script>
 </body>

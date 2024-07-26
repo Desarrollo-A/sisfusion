@@ -3,6 +3,10 @@ const formatter = new Intl.NumberFormat('es-MX', {
   currency: 'MXN',
 });
 
+let opcionRegreso = 0
+
+let formRegreso = $("#modalRegreso")
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -30,15 +34,16 @@ let columns = [
     { data: function(data){
         let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir orden de compra', onClick: file_upload, data})
         let btn_avance = '';
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: file_upload, data});
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: funcionRechazo, data});
+        let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Subir documentos de proveedor', onClick: go_to_documentos, data});
+        let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Subir documentos de cliente', onClick: go_to_documentos_cliente, data});
         let view_button = '';
         
-        if(data.archivo != null){
+        if(data.documentos == 24){
             btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance al paso 5', onClick: avanceProcesoBanco, data})
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }
 
-        return `<div class="d-flex justify-center">${btn_avance}${view_button}${subir_archivo}${btn_rechazo}</div>`
+        return `<div class="d-flex justify-center">${btn_avance}${subir_proveedor}${subir_cliente}${btn_rechazo}</div>`
     } },
 ]
 
@@ -62,8 +67,9 @@ let buttons = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 4, tipoDocumento: 29 },
+    // url: 'casas/getLotesProcesoBanco',
+    url: 'casas/countDocumentos',
+    params: { documentos: [ 2,3,4,5,6,7,8,10,11,12,14,15,36,38,39,40,41,42,43,44,45,46,47,48 ] },
     buttons: buttons,
     columns,
 })
@@ -147,6 +153,13 @@ function file_upload(data) {
     form.show()
 }
 
+go_to_documentos = function(data) {
+    window.location.href = `documentacionProveedor/${data.idProcesoCasas}`;
+}
+go_to_documentos_cliente = function(data) {
+    window.location.href = `documentacionCliente/${data.idProcesoCasas}`;
+}
+
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
 
@@ -160,3 +173,34 @@ function show_preview(data) {
         height: 660
     });
 }
+
+function funcionRechazo(){
+    formRegreso.modal("show")
+}
+
+function seleccionOpcion(opcion){
+    
+    if(opcion.value == 3){
+        opcionRegreso = opcion.value
+        $("#paso2").prop("checked", false);
+    }
+    else if(opcion.value == 2){
+        opcionRegreso = opcion.value
+        $("#paso3").prop("checked", false);
+    }
+    
+}
+
+$("#rechazarForm").submit(function(e){
+    e.preventDefault()
+
+    let paso3 = document.getElementById("paso3")
+    let paso2 = document.getElementById("paso2")
+    
+    if(!paso3.checked && !paso2.checked){
+        alerts.showNotification("top", "right", "Se debe seleccionar una opción para avanzar", "danger");   
+    }
+    else{
+        console.log(opcionRegreso);
+    }
+})
