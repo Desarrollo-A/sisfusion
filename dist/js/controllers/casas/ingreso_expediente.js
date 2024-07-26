@@ -93,58 +93,6 @@ avance_proceso = function (data) {
     form.show()
 }
 
-rechazo = function (data) {
-    let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
-        onSubmit: function (data) {
-            form.loading(true)
-
-            $.ajax({
-                type: 'POST',
-                url: `setCierreCifras`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    if(response.result){
-                        if(response.avance == 1){
-                            avanceProceso(data, form);
-                        }
-                        else{
-                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-                            table.reload()
-                            form.hide() 
-                        }
-                       
-                    }
-                    else{
-                        alerts.showNotification("top", "right", response.message, "danger");
-                        table.reload()
-                        form.hide();
-                    }                
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'idLote', value: data.idLote }),
-            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'tipo', value: tipo }),
-            new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 14 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
-            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
-        ],
-    })
-
-    form.show()
-}
-
 let buttons = [
     {
         extend: 'excelHtml5',
@@ -194,7 +142,7 @@ let columns = [
     {
         data: function (data) {
             let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avance_proceso, data })
-            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo, data })
+            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
             let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver contrato', onClick: show_preview, data })
             let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `subir documento`, onClick: file_upload, data })
 
@@ -248,3 +196,69 @@ function file_upload(data) {
 
     form.show()
 }
+
+rechazo_proceso = function (data) {
+    let form = new Form({
+        title: 'Rechazar proceso',
+        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function (data) {
+            form.loading(true)
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/rechazoPaso15`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    if(response.result){
+                        finalizar_rechazo(data, form)
+                        form.hide()
+                    }
+                    else{
+                        alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                        table.reload()
+                        form.hide()  
+                    }                                               
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
+                    form.loading(false)
+                }
+            })
+            
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 14 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
+finalizar_rechazo = function(data){
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}casas/creditoBancoAvance`,
+        data: data,
+        contentType: false,
+        processData: false,
+        success : function(response){
+            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+
+            table.reload()
+            form.hide()                             
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+
+            form.loading(false)
+        }
+    })
+} 

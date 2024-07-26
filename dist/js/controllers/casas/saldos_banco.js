@@ -55,7 +55,7 @@ let columns = [
         } 
     },
     { data: function(data){
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: avanceProcesoBanco, data});
+        let btn_rechazo = ''
         let btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Vo.Bo.', onClick: avanceProcesoBanco, data})
 
         if( tipoSaldo == 1 && data.saldoAdmon == 0){
@@ -68,6 +68,9 @@ let columns = [
             return `<div class="d-flex justify-center">${btn_avance}${btn_rechazo}</div>`
         }
         if( tipoSaldo == 4 && data.saldoPV == 0){
+            if(idUsuario == 2896 && data.cierreContraloria == 1){ // solo si el usaurio es Patricia Maya y si se ha dado un avance en el cierre de contraloria
+                btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data});
+            }
             return `<div class="d-flex justify-center">${btn_avance}${btn_rechazo}</div>`
         }
         else{
@@ -177,4 +180,43 @@ function avanceProceso(data, form){
             form.loading(false)
         }
     })
+}
+
+rechazo_proceso = function (data) {
+    let form = new Form({
+        title: 'Rechazar proceso',
+        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/rechazoPaso6`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 12 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
 }

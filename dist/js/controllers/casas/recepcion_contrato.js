@@ -1,41 +1,3 @@
-back_to_expediente_cliente = function(data) {
-
-    let form = new Form({
-        title: 'Regresar proceso', 
-        text: `¿Regresar el proceso del lote <b>${data.nombreLote}</b>?`,
-        onSubmit: function(data){
-            //console.log(data)
-            form.loading(true);
-
-            $.ajax({
-                type: 'POST',
-                url: `back_to_expediente_cliente`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado.`, "success");
-        
-                    table.reload()
-
-                    form.hide();
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-        ],
-    })
-
-    form.show()
-}
-
 let buttons = [
     {
         extend: 'excelHtml5',
@@ -83,7 +45,7 @@ let columns = [
     { data: function(data){
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a recepción de contrato', onClick: avance_proceso, data})
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_expediente_cliente, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: rechazo_proceso, data})
 
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },
@@ -129,6 +91,45 @@ avance_proceso = function (data) {
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 18 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
+rechazo_proceso = function (data) {
+    let form = new Form({
+        title: 'Rechazar proceso',
+        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 16 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],

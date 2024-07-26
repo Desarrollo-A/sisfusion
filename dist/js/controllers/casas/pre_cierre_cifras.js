@@ -25,7 +25,7 @@ let columns = [
             }
 
             return `<span class="label lbl-${clase}">${data.nombreMovimiento}</span>`
-        } 
+        }
     },
     {
         data: function(data){
@@ -33,6 +33,7 @@ let columns = [
             let btn_avance = '';
             // let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: file_upload, data});
             let view_button = '';
+            let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data});;
         
             if(data.archivo != null){
                 btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance al paso 6', onClick: avanceProcesoBanco, data})
@@ -40,7 +41,7 @@ let columns = [
             }
 
             if([5, 6].includes(data.proceso) && data.cierreContraloria == 0){
-                return `<div class="d-flex justify-center">${btn_avance}${view_button}${subir_archivo}</div>`
+                return `<div class="d-flex justify-center">${btn_avance}${view_button}${subir_archivo}${btn_rechazo}</div>`
             }
             else{
                 return ''
@@ -200,4 +201,66 @@ function show_preview(data) {
         width: 985,
         height: 660
     });
+}
+
+rechazo_proceso = function (data) {
+    let form = new Form({
+        title: 'Rechazar proceso',
+        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/rechazoPaso7`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    if(response.result){
+                        finalizar_rechazo(data, form)
+                    }
+                    else{                
+                        alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")                           
+                    }
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 4 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
+function finalizar_rechazo(data, form){
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}casas/creditoBancoAvance`,
+        data: data,
+        contentType: false,
+        processData: false,
+        success : function(response){
+            alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "success")
+
+            table.reload()
+            form.hide()                             
+        },
+        error: function(){
+            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+
+            form.loading(false)
+        }
+    })
 }

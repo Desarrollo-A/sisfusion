@@ -190,20 +190,7 @@ let columns = [
     { data: 'nombreCliente' },
     { data: 'nombreAsesor' },
     { data: 'nombreGerente' },
-    {
-        data: function (data) {
-            let inicio = new Date(data.fechaProceso)
-            let today = new Date()
-
-            let difference = today.getTime() - inicio.getTime()
-
-            let days = Math.floor(difference / (1000 * 3600 * 24))
-
-            let text = `Lleva ${days} día(s)`
-
-            return text
-        }
-    },
+    { data: 'tiempoProceso' },
     {
         data: function (data) {
             switch(data.tipoMovimiento){
@@ -223,6 +210,7 @@ let columns = [
     {
         data: function (data) {
             let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
+            let decline_button = ''
 
             if( tipo == 1 && data.voboADM == 0){
                  return `<div class="d-flex justify-center">${pass_button}</div>`
@@ -234,7 +222,11 @@ let columns = [
                  return `<div class="d-flex justify-center">${pass_button}</div>`
             }
             if( tipo == 4 && data.voboPV == 0){
-                 return `<div class="d-flex justify-center">${pass_button}</div>`
+                if(idUsuario == 2896){
+                    decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
+                }
+
+                 return `<div class="d-flex justify-center">${pass_button}${decline_button}</div>`
             }
             else{
                 return ''
@@ -250,3 +242,42 @@ let table = new Table({
     buttons: buttons,
     columns,
 })
+
+rechazo_proceso = function (data) {
+    let form = new Form({
+        title: 'Rechazar proceso',
+        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 12 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
