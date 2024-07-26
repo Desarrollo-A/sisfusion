@@ -74,7 +74,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             titleAttr: 'Descargar archivo de Excel',
             title: 'Inventario lotes',
             exportOptions: {
-                columns: coordinador = (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31]  : ((id_usuario_general==9495) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 5, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31])),
+                columns: coordinador = (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31, 35]  : ((id_usuario_general==9495) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 5, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31, 32])),
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx] + ' ';
@@ -547,10 +547,20 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             },
             /***********/
             {
+                data: function(d) {
+                    if(d.fechaEntrega == null || d.fechaEntrega == '') {
+                        return 'SIN ESPECIFICAR'
+                    } else {
+                        return d.fechaEntrega;
+                    }
+                }
+            },
+            {
                 data: function (d) {
                     return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
                 }
-            }],
+            },
+        ],
         initComplete: function() {
             $('[data-toggle="tooltip"]').tooltip();
         }
@@ -1098,6 +1108,16 @@ function fillTableInventario(sede) {
                     data: function (d) {
                         return `<span class="label lbl-oceanGreen">${d.sedeResidencial}</span>`;
                     }
+                },
+                {
+                    data: function(d) {
+                        console.log("fechaEntega: ", d.fechaEntrega);
+                        if(d.fechaEntrega == null || d.fechaEntrega == '') {
+                            return 'SIN ESPECIFICAR'
+                        } else {
+                            return d.fechaEntrega;
+                    }
+                }
                 }
             ],
         ajax: {

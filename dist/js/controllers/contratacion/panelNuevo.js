@@ -38,7 +38,8 @@ sp = {
                 clear: 'fa fa-trash',
                 close: 'fa fa-remove',
                 inline: true
-            }
+            },
+            defaultDate: new Date()
         });
     }
 }
@@ -52,7 +53,6 @@ $(document).ready(function () {
 $(document).on('click', '#date-label', function() {   
     $('#date-picker-input').datepicker('show');
 })
-
 
 $('#idResidencial').change(function () {
     $('#spiner-loader').removeClass('hide'); 
@@ -103,7 +103,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             titleAttr: 'Descargar archivo de Excel',
             title: 'Inventario lotes',
             exportOptions: {
-                columns: coordinador = (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31]  : ((id_usuario_general==9495) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 5, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31])),
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx] + ' ';
@@ -120,7 +120,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22, 23],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx]  + ' ';
@@ -324,21 +324,32 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             },
             {
                 data: function (d) {
+                    if(d.fechaEntrega == null || d.fechaEntrega == '') {
+                        return 'SIN ESPECIFICAR';
+                    } else {
+                        return d.fechaEntrega;
+                    }
+                }
+            },
+            {
+                data: function (d) {
                     $('[data-toggle="tooltip"]').tooltip();
                     let botones = '';
                     if(d.idLoteFechaApertura == null || d.idLoteFechaApertura == ''){
-                        botones += accionesBoton(1,0,0, d.idLote, d.idCliente);
+                        botones += accionesBoton(1,0,0, d.idLote, d.idCliente, d.fechaEntrega);
                     }
                     if(d.idLoteFechaApertura != null && d.idLoteFechaApertura != '') {
-                        botones += accionesBoton(0, 1, 1, d.idLote, d.idCliente);
+                        botones += accionesBoton(0, 1, 1, d.idLote, d.idCliente, d.fechaEntrega);
                     }
 
                     return '<div class="d-flex justify-center">' + botones + '</div>';
                 }
             }],
-        initComplete: function() {
-            $('[data-toggle="tooltip"]').tooltip();
-        }
+    });
+    $('#tablaInventario').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        })
     });
 });
 
@@ -346,6 +357,28 @@ $(document).on("click", ".btn_accion", function(){
     let idLote = $(this).data('idlote');
     let idCliente = $(this).data('idcliente');
     let idAccion = $(this).data('accion');
+    let fechaEntrega = $(this).data('fechaentrega');
+    switch (idAccion) {
+        case 1: 
+            document.getElementById('titleFecha').innerHTML = 'Elije la fecha';
+            document.getElementById('titleConfirmar').innerHTML = '¿Estás seguro de agregar la fecha de entrega?';
+            $('#fechaEntrega').removeClass('hide');
+            $('#fechaEntrega').datetimepicker("setDate", new Date());
+            break;
+        case 2: 
+            document.getElementById('titleFecha').innerHTML = 'Elije la nueva fecha';
+            document.getElementById('titleConfirmar').innerHTML = '¿Estás seguro de actualizar la fecha de entrega?';
+            $('#fechaEntrega').removeClass('hide');
+            let formattedDate = moment(fechaEntrega, 'YYYY-MM-DD').format('DD/MM/YYYY');
+            $('#fechaEntrega').val(formattedDate) ;
+            $('#fechaEntrega').datetimepicker("setDate", formattedDate);
+            break;  
+        case 3: 
+            document.getElementById('titleFecha').innerHTML = '¿Deseas borrar la fecha de entrega?';
+            document.getElementById('titleConfirmar').innerHTML = '¿Estás seguro de eliminar la fecha de entrega?';
+            $('#fechaEntrega').addClass('hide');
+            break;
+    }
     $("#aceptarFecha").addClass("modal-sm");
     $("#fechaModal").modal();
     $("#idLote").val(idLote);
@@ -353,41 +386,50 @@ $(document).on("click", ".btn_accion", function(){
     $("#idAccion").val(idAccion);
 });
 
-    $(document).on('submit', '#fechaEntrega', function(e){
-        let fechaApertura = document.getElementById('fechaApertura').value;
-        $("#fechaApertura").val(fechaApertura);
-        console.log("fechaApertura: ", fechaApertura);
-        e.preventDefault();
-        console.log("I was executed");
-        let data = new FormData($(this)[0]);
-        $.ajax({
-            url: `${general_base_url}/Contratacion/loteAccion`,
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (response) {
-                response = JSON.parse(response);
-                
-                console.log(response);
-            },
-            error: function () {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                $('#spiner-loader').addClass('hide');
+$(document).on('submit', '#fechaEntrega', function(e){
+    e.preventDefault();
+    let fechaEntrega = document.getElementById('fechaEntrega').value;
+    $('#fechaEntrega').val(fechaEntrega);
+    let data = new FormData($(this)[0]);
+    data.append("fechaEntrega", fechaEntrega);
+    $.ajax({
+        url: `${general_base_url}/Contratacion/loteAccion`,
+        data: data, 
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        beforeSend: function() {
+            $('#btnEntrega').attr('disabled', true);
+        },
+        success: function(response) {
+            const res = JSON.parse(response);
+            $('#btnEntrega').attr('disabled', false);
+            if(res.estatus == 1) {
+                tabla_inventario.ajax.reload(null, false);
+                alerts.showNotification("top", "right", res.respuesta, "success");
+                $('#confirmarModal').modal('hide');
+                $('#fechaModal').modal('hide');
+                $('.datepicker').datepicker('setDate', null);
             }
-        });
-    });
+        },
+        error: function() {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            $('#btnEntrega').attr('disabled', false);
+            $('#confirmarModal').modal("hide");
+        }
+    })
+});
 
-
-
-
-
-function accionesBoton(permisoIngresar, permisoEditar,permisoBorrar, idLote, idCliente) {
+function accionesBoton(permisoIngresar, permisoEditar,permisoBorrar, idLote, idCliente, fechaEntrega) {
     let botones = '';
-    if(permisoIngresar == 1) {botones += `<button id="btnAgregar" data-accion="1" class="btn-data btn-green btn_accion" data-idLote="${idLote}" data-idCliente="${idCliente}" data-toggle="tooltip" data-placement="top" title="Agregar fecha de entrega"><i class="fas fa-thumbs-up"></i></button>`; }
-    if(permisoEditar == 1) {botones += `<button id="btnEditar" data-accion="2" class="btn-data btn-yellow btn_accion" data-idLote="${idLote}" data-idCliente="${idCliente}" data-toggle="tooltip" data-placement="top" title="Editar fecha de entrega"><i class="fas fa-edit"></i></button>`; }
-    if(permisoBorrar == 1) {botones += `<button id="btnDesactivar" data-accion="3" class="btn-data btn-warning btn_accion" data-idLote="${idLote}" data-idCliente="${idCliente}" data-toggle="tooltip" data-placement="top" title="Eliminar fecha de entrega"><i class="fas fa-trash"></i></button>`; }
+    if(permisoIngresar == 1) {botones += `<button id="btnAgregar" data-accion="1" class="btn-data btn-green btn_accion" data-idLote="${idLote}" data-idCliente="${idCliente}" data-fechaEntrega="${fechaEntrega}" data-toggle="tooltip" data-placement="top" title="Agregar fecha de entrega"><i class="fas fa-thumbs-up"></i></button>`; }
+    if(permisoEditar == 1) {botones += `<button id="btnEditar" data-accion="2" class="btn-data btn-yellow btn_accion" data-idLote="${idLote}" data-idCliente="${idCliente}" data-fechaEntrega="${fechaEntrega}" data-toggle="tooltip" data-placement="top" title="Editar fecha de entrega"><i class="fas fa-edit"></i></button>`; }
+    if(permisoBorrar == 1) {botones += `<button id="btnDesactivar" data-accion="3" class="btn-data btn-warning btn_accion" data-idLote="${idLote}" data-idCliente="${idCliente}" data-fechaEntrega="${fechaEntrega}" data-toggle="tooltip" data-placement="top" title="Eliminar fecha de entrega"><i class="fas fa-trash"></i></button>`; }
     
     return botones;
 }
+
+$(window).resize(function() {
+    tabla_inventario.columns.adjust();
+});

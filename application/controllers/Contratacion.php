@@ -219,6 +219,6 @@ class Contratacion extends CI_Controller
     public function loteAccion() {
         $data = $_POST;
         $response = $this->Contratacion_model->loteAccion();
-        return json_encode($response);
+        echo json_encode($response);
     }
 }

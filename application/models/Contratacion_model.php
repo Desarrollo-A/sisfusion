@@ -93,7 +93,7 @@ class Contratacion_model extends CI_Model {
       ds.aportMensualOfer, ds.fecha1erAport, ds.fechaLiquidaDepo, ds.fecha2daAport, 
 	  ISNULL(ref.nombreReferencias, 'SIN ESPECIFICAR') as referenciasPersonales, 
       ds.observacion, cl.personalidad_juridica, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaMatrimonio_pf, ds.actaConstitutiva_pm, ds.poder_pm, ds.idOficialApoderado_pm, ds.idDomicilio_pm,
-      cl.edadFirma, sds.nombre as sedeResidencial, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE cl.id_cliente END idCliente, lotE.idLote AS idLoteFechaApertura
+      cl.edadFirma, sds.nombre as sedeResidencial, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE cl.id_cliente END idCliente, entrega.idLote AS idLoteFechaApertura, entrega.fechaEntrega
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
@@ -128,7 +128,7 @@ class Contratacion_model extends CI_Model {
 	  LEFT JOIN opcs_x_cats catRegMat ON catRegMat.id_opcion = cl.regimen_matrimonial AND catRegMat.id_catalogo = 19
 	  LEFT JOIN opcs_x_cats catEdoCivil ON catEdoCivil.id_opcion = cl.estado_civil AND catEdoCivil.id_catalogo = 18
 	  LEFT JOIN opcs_x_cats catNaci ON catNaci.id_opcion = cl.nacionalidad AND catNaci.id_catalogo = 11
-     LEFT JOIN loteEntrega lotE ON lotE.idLote = lot.idLote
+     LEFT JOIN loteEntrega entrega ON entrega.idLote = lot.idLote
 	  INNER JOIN sedes sds ON sds.id_sede = res.sede_residencial
       --nuevo 
       WHERE lot.status = 1 $filtroEstatus $whereProceso
@@ -285,7 +285,7 @@ class Contratacion_model extends CI_Model {
       CONCAT(cl.nombre, ' ', cl.apellido_paterno,' ', cl.apellido_materno ) as nombreCliente,
       ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, sed.nombre as ubicacion,
       ISNULL(oxc0.nombre, 'Normal') tipo_proceso, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
-      sds.nombre as sedeResidencial
+      sds.nombre as sedeResidencial, entrega.idLote AS idLoteFechaApertura, entrega.fechaEntrega
       FROM lotes lot 
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = $sede_residencial
@@ -307,6 +307,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto    
       LEFT JOIN statusContratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion 
       LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
+      LEFT JOIN loteEntrega entrega ON entrega.idLote = lot.idLote
       LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
       FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
       LEFT JOIN (SELECT nombreLote, STRING_AGG(CAST(comAdmon AS varchar(250)), ' | ') comAdmon FROM comentarios_administracion GROUP BY nombreLote) ca ON ca.nombreLote = lot.nombreLote
@@ -349,46 +350,53 @@ class Contratacion_model extends CI_Model {
    public function loteAccion() {
       $idLote = $this->input->post('idLote');
       $idCliente = $this->input->post('idCliente');
-      $fechaApertura = $this->input->post('fechaApertura');
-      $accion = $this->input->post('accion');
+      $accion = $this->input->post('idAccion');
+      $message = '';
+      $response = false;
 
       //ACCION 1 -> CREAR
       if($accion == 1) {
+         $fechaEntrega = $this->input->post('fechaEntrega');
+         $fechaEntrega = str_replace('/', '-', $fechaEntrega);
+         $fechaEntrega = DateTime::createFromFormat('d-m-Y', $fechaEntrega)->format('Y-m-d');
+      
          $data_insert = array(
                'idLote' => $idLote, 
                "idCliente" => $idCliente,
                'fecha_creacion' => date('Y-m-d H:i:s'), 
                'fecha_modificacion' => date('Y-m-d H:i:s'), 
-               'fechaEntrega' => $fechaApertura,
-               'creado_por' => $this->userdata('id_usuario'), 
-               'modificado_por' => $this->userdata('id_usuario')
+               'fechaEntrega' => $fechaEntrega,
+               'creado_por' => $this->session->userdata('id_usuario'), 
+               'modificado_por' => $this->session->userdata('id_usuario')
             );
          $response = $this->General_model->addRecord('loteEntrega', $data_insert);
-         //return $response ? array("respuesta" => "Se agregó la fecha correctamente.", "estatus" => 1) : 0;
+         $message = "Se agregó la fecha correctamente." ;
       }
 
       //ACCION 2 -> EDITAR
       if($accion == 2) {
+         $fechaEntrega = $this->input->post('fechaEntrega');
+         $fechaEntrega = str_replace('/', '-', $fechaEntrega);
+         $fechaEntrega = DateTime::createFromFormat('d-m-Y', $fechaEntrega)->format('Y-m-d');
          $data_update = array(
                'idLote' => $idLote,
                'fecha_modificacion' => date('Y-m-d H:i:s'),
-               'fechaApertura' => $fechaApertura,
-               'modificado_por' => $this->userdata('id_usuario')
+               'fechaEntrega' => $fechaEntrega,
+               'modificado_por' => $this->session->userdata('id_usuario')
          );            
          $response = $this->General_model->updateRecord('loteEntrega', $data_update, 'idLote', $idLote);
-        // return $response ? array("respuesta" => "Se actualizó la fecha correctamente.", "estatus" => 1) : 0;
+         $message = "Se actualizó la fecha correctamente." ;
       }
       
       //ACCION 3 -> BORRAR
       if($accion == 3) {
          $response = $this->db->query("DELETE FROM loteEntrega WHERE idLote = $idLote");
-      //   return $response ? array("respuesta" => "Se eliminó la fecha correctamente.", "estatus" => 1) : 0;
+         $message = "Se eliminó la fecha correctamente." ;
       }
-   }
-
-   if($response) {
-      return array('respuesta' => 'Se ejecutó correctamente')
-   }else {
-      
+      if ($response) {
+         return array("respuesta" => $message, "estatus" => 1);
+      } else {
+         return 0;
+      }
    }
 }

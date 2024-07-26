@@ -288,6 +288,8 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>REFERENCIAS PERSONALES</th>
                                                 <th>OBSERVACIONES</th>
 
+                                                <!--NEW HEADER -->
+                                                <th>FECHA ENTREGA</th>
                                                 <!--SOLO PARA POPEA Y EL OTRO SUJETO END-->
                                                 <th>ACCIONES</th><!--68-->
                                             </tr>
@@ -357,6 +359,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>REUBICACIÓN</th>
                                                 <th>FECHA DE REUBICACIÓN</th>
                                                 <th>SEDE</th>
+                                                <th>FECHA ENTREGA</th>
                                             </tr>
                                             </thead>
                                         </table>

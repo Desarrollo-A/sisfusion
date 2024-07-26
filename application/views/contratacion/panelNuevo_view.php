@@ -5,16 +5,12 @@
 <body>
     <div class="wrapper"> 
         <?php  $this->load->view('template/sidebar'); ?>
-      <div class="modal fade" id="fechaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" id="aceptarFecha">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        <i class="material-icons">clear</i>
-                    </button>
-                    <h4 id="titleAceptar" class="modal-title w-100 text-center"></h4>
-                </div>
-                <form id="fechaEntrega" name="fechaEntrega" method="post">
+        <div class="modal fade" id="fechaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" id="aceptarFecha">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="titleFecha" class="modal-title w-100 text-center"></h4>
+                    </div>
                     <div class="modal-body">
                         <div class="content boxContent">
                             <div class="container-fluid">
@@ -23,8 +19,7 @@
                                         <div class="card no-shadow m-0">
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <label class="label-gral">Elige la fecha</label> 
-                                                    <input type="text" class="form-control datepicker fechaApertura" id="fechaApertura"/> 
+                                                    <input type="text" class="form-control datepicker fechaEntrega" id="fechaEntrega"/> 
                                                 </div>
                                             </div>
                                         </div>
@@ -33,18 +28,38 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" id="idCliente" name="idCliente"/>
-                    <input type="hidden" id="idLote" name="idLote" />
-                    <input type="hidden" id="idAccion" name="idAccion" />
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmarModal">Aceptar</button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-        </div>
 
+        <div class="modal fade" id="confirmarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h4 id="titleConfirmar" class="modal-title w-100 text-center"></h4>
+                    </div>
+
+                    <form id="fechaEntrega" name="fechaEntrega" method="post">
+                        <div class="modal-body" id="modal-body">
+                        </div>
+                        <input type="hidden" id="idCliente" name="idCliente"/>
+                        <input type="hidden" id="idLote" name="idLote" />
+                        <input type="hidden" id="idAccion" name="idAccion" />
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" id="btnEntrega">Aceptar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -117,6 +132,7 @@
                                                             <th>UBICACIÓN DE LA VENTA</th>
                                                             <th>TIPO DE PROCESO</th>
                                                             <th>SEDE</th>
+                                                            <th>FECHA ENTREGA</th>
                                                             <th>ACCIONES</th>
                                                         </tr>
                                                     </thead>
