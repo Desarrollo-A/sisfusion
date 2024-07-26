@@ -220,7 +220,7 @@ function upload(data) {
         },
         fields: [
             new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'tipo', value: 28 }),
+            new HiddenField({ id: 'tipo', value: 30 }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
         ],
