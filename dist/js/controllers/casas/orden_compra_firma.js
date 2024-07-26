@@ -4,6 +4,7 @@ const formatter = new Intl.NumberFormat('es-MX', {
 });
 
 let opcionRegreso = 0
+let datos = "";
 
 let formRegreso = $("#modalRegreso")
 
@@ -74,8 +75,48 @@ let table = new Table({
     columns,
 })
 
-
 function avanceProcesoBanco(data){
+    let form = new Form({
+        title: 'Avanzar proceso',
+        text: `Se avanzara el proceso del lote ${data.nombreLote}`,
+        onSubmit: function(data){
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+
+                    table.reload()
+                    form.hide()        
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+
+                    form.loading(false)
+                }
+            })
+
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 5 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show();
+}
+
+
+function rechazoProcesoBanco(data){
     let form = new Form({
         title: 'Avanzar proceso',
         text: `Se avanzara el proceso del lote ${data.nombreLote}`,
@@ -174,12 +215,12 @@ function show_preview(data) {
     });
 }
 
-function funcionRechazo(){
+function funcionRechazo(data){
     formRegreso.modal("show")
+    datos = data
 }
 
 function seleccionOpcion(opcion){
-    
     if(opcion.value == 3){
         opcionRegreso = opcion.value
         $("#paso2").prop("checked", false);
@@ -188,7 +229,6 @@ function seleccionOpcion(opcion){
         opcionRegreso = opcion.value
         $("#paso3").prop("checked", false);
     }
-    
 }
 
 $("#rechazarForm").submit(function(e){
@@ -196,11 +236,48 @@ $("#rechazarForm").submit(function(e){
 
     let paso3 = document.getElementById("paso3")
     let paso2 = document.getElementById("paso2")
+
+    let comentario = $("#comentarioRechazo").val()
+    if(comentario == null || comentario.trim() === ''){
+        comentario = 'Sin comentario'
+    }
+
+    let formData = new FormData();
+    formData.append("idLote", datos.idLote)
+    formData.append("idProcesoCasas", datos.idProcesoCasas)
+    formData.append("proceso", datos.proceso)
+    formData.append("procesoNuevo", opcionRegreso)
+    formData.append("tipoMovimiento",  datos.tipoMovimiento)
+    formData.append("nombreLote", datos.nombreLote)
+    formData.append("comentario", comentario)
     
     if(!paso3.checked && !paso2.checked){
         alerts.showNotification("top", "right", "Se debe seleccionar una opción para avanzar", "danger");   
     }
     else{
-        console.log(opcionRegreso);
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}casas/creditoBancoAvance`,
+            data: formData,
+            contentType: false,
+            processData: false,
+            success : function(response){
+                alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+
+                table.reload()
+                formRegreso.modal("hide")        
+            },
+            error: function(){
+                alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+            }
+        })
     }
 })
+
+$(".modal").on("hidden.bs.modal", function(){
+    $("#paso3").prop("checked", false);
+    $("#paso2").prop("checked", false);
+
+    opcionRegreso = 0
+    datos = ''
+});

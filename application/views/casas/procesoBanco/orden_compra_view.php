@@ -108,6 +108,11 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
                                 <h4>Seleccione el paso al que se quiere rechazar</h4>
                             </div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label class="control-label">Comentario (Opcional)</label>
+                                <textarea class="text-modal" id="comentarioRechazo" name="comentarioRechazo" rows="3"></textarea>
+                            </div>
                             <br>
                             <div id="opcionesRechazo">
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
