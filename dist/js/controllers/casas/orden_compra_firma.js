@@ -3,6 +3,10 @@ const formatter = new Intl.NumberFormat('es-MX', {
   currency: 'MXN',
 });
 
+let opcionRegreso = 0
+
+let formRegreso = $("#modalRegreso")
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -30,7 +34,7 @@ let columns = [
     { data: function(data){
         let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir orden de compra', onClick: file_upload, data})
         let btn_avance = '';
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: file_upload, data});
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: funcionRechazo, data});
         let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Subir documentos de proveedor', onClick: go_to_documentos, data});
         let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Subir documentos de cliente', onClick: go_to_documentos_cliente, data});
         let view_button = '';
@@ -169,3 +173,34 @@ function show_preview(data) {
         height: 660
     });
 }
+
+function funcionRechazo(){
+    formRegreso.modal("show")
+}
+
+function seleccionOpcion(opcion){
+    
+    if(opcion.value == 3){
+        opcionRegreso = opcion.value
+        $("#paso2").prop("checked", false);
+    }
+    else if(opcion.value == 2){
+        opcionRegreso = opcion.value
+        $("#paso3").prop("checked", false);
+    }
+    
+}
+
+$("#rechazarForm").submit(function(e){
+    e.preventDefault()
+
+    let paso3 = document.getElementById("paso3")
+    let paso2 = document.getElementById("paso2")
+    
+    if(!paso3.checked && !paso2.checked){
+        alerts.showNotification("top", "right", "Se debe seleccionar una opción para avanzar", "danger");   
+    }
+    else{
+        console.log(opcionRegreso);
+    }
+})
