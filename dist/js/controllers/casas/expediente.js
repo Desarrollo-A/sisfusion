@@ -16,9 +16,9 @@ let columns = [
     { data: 'tiempoProceso' },
     { data: function(data)
         {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 18', onClick: select_lote, data})
+            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 19', onClick: select_lote, data})
             let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Subir archivo', onClick: upload_archivo, data})
-            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar al paso 16', onClick: return_process, data})
+            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar al paso 17', onClick: return_process, data})
             let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
 
             return '<div class="d-flex justify-center">' + pass_button + return_button + '</div>'

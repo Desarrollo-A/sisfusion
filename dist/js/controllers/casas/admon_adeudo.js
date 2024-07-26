@@ -18,13 +18,12 @@ let columns = [
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 18', onClick: select_lote, data})
             let edit_button = new RowButton({icon: 'edit', color: '', label: 'Capturar adeudo', onClick: update_adeudo, data})
-            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar al paso 16', onClick: return_process, data})
 
             if(data.adeudo != 0 && data.voBoAdeudoTerreno == 0){
-                return '<div class="d-flex justify-center">' + pass_button + edit_button + return_button + '</div>'
+                return '<div class="d-flex justify-center">' + pass_button + edit_button + '</div>'
             }
             else if(data.adeudo == 0 && data.voBoAdeudoTerreno == 0){
-                return '<div class="d-flex justify-center">' + edit_button + return_button + '</div>'
+                return '<div class="d-flex justify-center">' + edit_button + '</div>'
             }
             else{
                 return ''
