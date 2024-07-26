@@ -461,10 +461,39 @@ class Api_model extends CI_Model
             IF NOT EXISTS (SELECT * FROM prospectos WHERE id_salesforce = '$data->id_salesforce')
             BEGIN
                 INSERT INTO prospectos (id_asesor, id_coordinador, id_gerente, id_sede, id_subdirector, id_regional, personalidad_juridica, nombre, apellido_paterno, apellido_materno, correo, telefono, lugar_prospeccion, otro_lugar, plaza_venta, fecha_creacion, creado_por, fecha_modificacion, modificado_por, fecha_vencimiento, observaciones, desarrollo, score, source, id_salesforce)
-                VALUES ($data->id_asesor, $data->id_coordinador, $data->id_gerente, $data->id_sede, $data->id_subdirector, $data->id_regional, $data->personalidad_juridica, $data->nombre, $data->apellido_paterno, $data->apellido_materno, $data->correo, $data->telefono, $data->lugar_prospeccion, $data->otro_lugar, $data->plaza_venta, $data->fecha_creacion, $data->creado_por, $data->fecha_modificacion, $data->modificado_por, $data->fecha_vencimiento, $data->observaciones, $data->desarrollo, $data->score, $data->source, $data->id_salesforce)
+                VALUES ($data->id_asesor, $data->id_coordinador, $data->id_gerente, $data->id_sede, $data->id_subdirector, $data->id_regional, $data->personalidad_juridica, '$data->nombre', '$data->apellido_paterno', '$data->apellido_materno', '$data->correo', '$data->telefono', $data->lugar_prospeccion, '$data->otro_lugar', $data->plaza_venta, '$data->fecha_creacion', $data->creado_por, '$data->fecha_modificacion', $data->modificado_por, '$data->fecha_vencimiento', '$data->observaciones', $data->desarrollo, $data->score, '$data->source', '$data->id_salesforce')
+            END
+            ELSE
+            BEGIN
+                UPDATE prospectos SET
+                    id_asesor = $data->id_asesor,
+                    id_coordinador = $data->id_coordinador, 
+                    id_gerente = $data->id_gerente, 
+                    id_sede = $data->id_sede, 
+                    id_subdirector = $data->id_subdirector, 
+                    id_regional = $data->id_regional, 
+                    personalidad_juridica = $data->personalidad_juridica, 
+                    nombre = '$data->nombre', 
+                    apellido_paterno = '$data->apellido_paterno', 
+                    apellido_materno = '$data->apellido_materno', 
+                    correo = '$data->correo', 
+                    telefono = '$data->telefono', 
+                    lugar_prospeccion = $data->lugar_prospeccion, 
+                    otro_lugar = '$data->otro_lugar', 
+                    plaza_venta = $data->plaza_venta, 
+                    fecha_creacion = '$data->fecha_creacion', 
+                    creado_por = $data->creado_por, 
+                    fecha_modificacion = '$data->fecha_modificacion', 
+                    modificado_por = $data->modificado_por, 
+                    fecha_vencimiento = '$data->fecha_vencimiento', 
+                    observaciones = '$data->observaciones', 
+                    desarrollo = $data->desarrollo, 
+                    score = $data->score, 
+                    source = '$data->source'
+                WHERE id_salesforce = '$data->id_salesforce'
             END
         END";
 
-        $this->db->query($query);
+        return $this->db->query($query);
     }
 }

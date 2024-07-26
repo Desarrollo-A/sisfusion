@@ -1362,7 +1362,7 @@ class Api extends CI_Controller
                                         "score" => $data->iScore,
                                         "source" => $data->Source,
                                         "id_salesforce" => $data->IDSALESFORCE
-                                    ]
+                                    ];
 
                                     $is_ok = $this->Api_model->saveValidacionSalesforce($dataArray);
 
@@ -1427,7 +1427,7 @@ class Api extends CI_Controller
                                     */
                                     if ($is_ok){
                                         // SUCCESS TRANSACTION
-                                        echo json_encode(array("status" => 1, "message" => count($validacionIdSalesforce) == 0 ? 'Registro guardado con éxito.' : 'Registro actualizado con éxito.'), JSON_UNESCAPED_UNICODE);
+                                        echo json_encode(array("status" => 1, "message" => 'Registro guardado con éxito.'), JSON_UNESCAPED_UNICODE);
                                     }else{
                                         // ERROR TRANSACTION
                                         echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
