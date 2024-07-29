@@ -48,10 +48,12 @@ let titulos = [];
 var datosProyectos = [], datosCondominios = [], datosFechaCorte = [], datosSumaPagos = [], datosOpinion = [];
 $(document).ready(function() {
     $('#spiner-loader').removeClass('hide');
-    $.post(general_base_url + "Comisiones/getDatosFechasProyecCondm",{tipoUsuario:tipoUsuarioGeneral}, function (data) {
+    $.post(general_base_url + "Casas_comisiones/getDatosFechasProyecCondm",{tipoUsuario:tipoUsuarioGeneral}, function (data) {
         data = JSON.parse(data);
         datosFechaCorte = data.fechasCorte;
         datosSumaPagos = data.sumaPagos;
+        console.log(datosSumaPagos);
+
         datosOpinion = data.opinion;
         //[0]año [1]mes [2]dia
         fechaInicioCorteGlobal = datosFechaCorte[0].fechaInicio.split(' ')[0].split('-');
@@ -85,11 +87,13 @@ $(document).ready(function() {
 });
 function llenarSumas(){
     //FUNCIÓN PARA MOSTRAR SALDOS EN CADA TAPS
-    document.getElementById('sumPagosNuevas').innerHTML = formatMoney(datosSumaPagos[0].nuevas);
-    document.getElementById('sumPagosResguardo').innerHTML = formatMoney(datosSumaPagos[0].resguardo);
-    document.getElementById('sumPagosRevision').innerHTML = formatMoney(datosSumaPagos[0].revision);
-    document.getElementById('sumPagosIntmex').innerHTML = formatMoney(datosSumaPagos[0].internomex);
-    document.getElementById('sumPagosPausadas').innerHTML = formatMoney(datosSumaPagos[0].pausadas);
+    
+    (datosSumaPagos[0].nuevas == undefined) || (datosSumaPagos[0].nuevas == null) ? document.getElementById('sumPagosNuevas').innerHTML = formatMoney(0) :document.getElementById('sumPagosNuevas').innerHTML = formatMoney(datosSumaPagos[0].nuevas);
+    (datosSumaPagos[0].resguardo == undefined) || (datosSumaPagos[0].resguardo == null)? document.getElementById('sumPagosResguardo').innerHTML = formatMoney(0) :document.getElementById('sumPagosResguardo').innerHTML = formatMoney(datosSumaPagos[0].resguardo);
+    (datosSumaPagos[0].revision == undefined) || (datosSumaPagos[0].revision == null) ? document.getElementById('sumPagosRevision').innerHTML = formatMoney(0) :document.getElementById('sumPagosRevision').innerHTML = formatMoney(datosSumaPagos[0].revision);
+    (datosSumaPagos[0].internomex == undefined) || (datosSumaPagos[0].internomex == null) ? document.getElementById('sumPagosIntmex').innerHTML = formatMoney(0) :document.getElementById('sumPagosIntmex').innerHTML = formatMoney(datosSumaPagos[0].internomex);
+    (datosSumaPagos[0].pausadas == undefined) || (datosSumaPagos[0].pausadas == null) ? document.getElementById('sumPagosPausadas').innerHTML = formatMoney(0) :document.getElementById('sumPagosPausadas').innerHTML = formatMoney(datosSumaPagos[0].pausadas);
+    
 }
 
 function getPagosComisiones(idProyecto,idCondominio,estatus){
@@ -98,7 +102,7 @@ function getPagosComisiones(idProyecto,idCondominio,estatus){
     var datosRespuesta = [];
     $.ajax({
         type: 'POST',
-        url: general_base_url + "Comisiones/getDatosComisionesRigel",
+        url: general_base_url + "Casas_comisiones/getDatosComisionesRigel",
         data: {idProyecto:idProyecto,idCondominio:idCondominio,estatus:estatus},
         
         success: function(result) {
@@ -154,11 +158,11 @@ for (let m = 0; m < datosTablas.length; m++) {
 
 
 async function crearTabla(idTabla,data2,estatus){
-    console.log(idTabla)
-    console.log(data2);
-    console.log(estatus)
+    // console.log(idTabla)
+    // console.log(data2);
+    // console.log(estatus
     let datosTbActual = datosTablas.filter(datos => datos.estatus == estatus);
-    console.log(datosTbActual);
+    // console.log(datosTbActual);
     // console.log(datosTbActual[0].id)
     let idProyecto = $(`#${datosTbActual[0].idSelect}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelect}`).val() ,idCondominio = $(`#${datosTbActual[0].idSelectCond}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelectCond}`).val();  
     // console.log(idSelect);
@@ -175,7 +179,7 @@ async function crearTabla(idTabla,data2,estatus){
                     var dia = hoy.getDate();
                     var mes = hoy.getMonth()+1;
                     var hora = hoy.getHours();
-                    if([1,2,3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                    if([1,2,3].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                                 ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION VENTAS NORMAL
                         || (id_usuario_general == 7689)
                         ){
@@ -187,7 +191,7 @@ async function crearTabla(idTabla,data2,estatus){
                             var com2 = new FormData();
                             com2.append("idcomision", idcomision); 
                             $.ajax({
-                                url : general_base_url + 'Comisiones/acepto_comisiones_user/',
+                                url : general_base_url + 'Casas_comisiones/acepto_comisiones_user/',
                                 data: com2,
                                 cache: false,
                                 contentType: false,
@@ -195,16 +199,22 @@ async function crearTabla(idTabla,data2,estatus){
                                 type: 'POST', 
                                 success: function(data){
                                     data = JSON.parse(data);
-                                    if(data.respuesta == 1) {
+                                    console.log(data);
+                                    if(data.respuesta === 1) {
                                         $('#spiner-loader').addClass('hide');
                                         $("#total_solicitar").html(formatMoney(0));
                                         $("#all").prop('checked', false);
                                         datosSumaPagos = data.data;
+                                        console.log(data.data);
                                         llenarSumas();
+
                                         let datosPagos = getPagosComisiones(idProyecto,idCondominio,1);
+                                        console.log(datosPagos);
                                         crearTabla(datosTbActual[0].id,datosPagos,estatus);
                                         alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
-                                        $(`#tabla_nuevas_comisiones`).DataTable().ajax.reload()
+                                       
+
+
                                     }
                                     else {
                                         $('#spiner-loader').addClass('hide');
@@ -219,6 +229,8 @@ async function crearTabla(idTabla,data2,estatus){
                         }
                     }
                     else{
+                        console.log(datosFechaCorte);
+
                         $('#spiner-loader').addClass('hide');
                         alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al lunes y martes de la semana de corte", "warning");      
                     }
@@ -235,7 +247,7 @@ async function crearTabla(idTabla,data2,estatus){
                 var mes = hoy.getMonth()+1;
                 var hora = hoy.getHours();
                 //PARA RESGUARDO SIEMPRE SON LOS DOS DIAS SIGUIENTES AL CORTE NORMAL DE COMISIONES
-                if([3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                if([3].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                          ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
                 )
                 {
@@ -248,7 +260,7 @@ async function crearTabla(idTabla,data2,estatus){
                         var com2 = new FormData();
                         com2.append("idcomision", idcomision); 
                         $.ajax({
-                            url : general_base_url + 'Comisiones/acepto_comisiones_resguardo/',
+                            url : general_base_url + 'Casas_comisiones/acepto_comisiones_resguardo/',
                             data: com2,
                             cache: false,
                             contentType: false,
@@ -261,9 +273,9 @@ async function crearTabla(idTabla,data2,estatus){
                                     $("#total_solicitar").html(formatMoney(0));
                                     $("#all").prop('checked', false);
                                     var fecha = new Date();
-
+                                    
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Resguardo.", "success");
-                                    $(`#tabla_nuevas_comisiones`).DataTable().ajax.reload()
+                                    $('#tabla_nuevas_comisiones').DataTable().ajax.reload();
 
                                 } else {
                                     $('#spiner-loader').addClass('hide');
@@ -544,7 +556,7 @@ function guardar2() {
     formData.append("xmlfile", documento_xml);
     formData.append("pagos",pagos);
     $.ajax({
-        url: general_base_url + 'Comisiones/guardar_solicitud2',
+        url: general_base_url + 'Casas_comisiones/guardar_solicitud2',
         data: formData,
         cache: false,
         contentType: false,
@@ -654,7 +666,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
             c=0;    
             var valorSeleccionado = $(this).val();
             $("#modal_multiples .modal-body").html("");
-            $.getJSON(general_base_url + "Comisiones/getDatosProyecto/" + valorSeleccionado).done(function(data) {
+            $.getJSON(general_base_url + "Casas_comisiones/getDatosProyecto/" + valorSeleccionado).done(function(data) {
                 let sumaComision = 0;
 
                 if (!data) {

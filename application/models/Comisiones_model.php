@@ -6329,11 +6329,11 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
                 WHEN 9629 THEN 2
                 WHEN 9471 THEN 1
                 ELSE u.id_sede END) AND sed.estatus = 1
-        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) nuevas FROM pago_comision_ind WHERE estatus=1 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciN ON pciN.id_usuario=u.id_usuario
-        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) resguardo FROM pago_comision_ind WHERE estatus=3 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciR ON pciR.id_usuario=u.id_usuario
-        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) revision FROM pago_comision_ind WHERE estatus=4 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciRe ON pciRe.id_usuario=u.id_usuario
-        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) internomex FROM pago_comision_ind WHERE estatus=8 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciI ON pciI.id_usuario=u.id_usuario
-        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) pausadas FROM pago_comision_ind WHERE estatus=6 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciP ON pciP.id_usuario=u.id_usuario
+        LEFT JOIN ( SELECT id_usuario,SUM(abono_neodata) nuevas FROM pago_comision_ind WHERE estatus=1 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciN ON pciN.id_usuario=u.id_usuario
+        LEFT JOIN ( SELECT id_usuario,SUM(abono_neodata) resguardo FROM pago_comision_ind WHERE estatus=3 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciR ON pciR.id_usuario=u.id_usuario
+        LEFT JOIN ( SELECT id_usuario,SUM(abono_neodata) revision FROM pago_comision_ind WHERE estatus=4 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciRe ON pciRe.id_usuario=u.id_usuario
+        LEFT JOIN ( SELECT id_usuario,SUM(abono_neodata) internomex FROM pago_comision_ind WHERE estatus=8 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciI ON pciI.id_usuario=u.id_usuario
+        LEFT JOIN ( SELECT id_usuario,SUM(abono_neodata) pausadas FROM pago_comision_ind WHERE estatus=6 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciP ON pciP.id_usuario=u.id_usuario
         WHERE u.id_usuario= $idUsuario
         ");
      }
