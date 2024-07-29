@@ -401,7 +401,7 @@ $(document).on("click", "#verifyNeodata", function () {
     let nombreLote = $(this).attr("data-nombreLote");
     $('#spiner-loader').removeClass('hide');
     $.ajax({
-        url: "getMensualidadAbonoNeo",
+        url: "Reporte/getMensualidadAbonoNeo",
         data: {empresa: empresa, nombreLote: nombreLote},
         type: 'POST',
         dataType: 'json',
@@ -423,7 +423,8 @@ $(document).on("click", "#verifyNeodata", function () {
                                 <i class="fas fa-hand-holding fa-lg mr-2" style="color:#666"></i></i><p>Pendientes <b>${response[0]['MenPendientes']}</b></p>
                             </div>
                             <div class="d-flex align-center">
-                                <i class="fas fa-coins fa-lg mr-2" style="color:#666"></i><p>Totales ${response[0]['MenPagadas'] + response[0]['MenPendientes']}</p>
+                                <i class="fas fa-receipt" style="color:#666"></i>
+                                <p>Totales  ${parseInt(response[0]['MenPagadas']) + parseInt(response[0]['MenPendientes'])}</p>
                             </div>
                         </div>
                     </div>`);
