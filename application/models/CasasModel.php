@@ -271,18 +271,20 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function addLoteToAsignacion($idLote, $idGerente, $comentario){
+    public function addLoteToAsignacion($idLote, $idGerente, $comentario, $idUsuario){
         $query = "INSERT INTO proceso_casas
         (
             idLote,
             idGerente,
-            comentario
+            comentario,
+            idCreacion
         )
         VALUES
         (
             $idLote,
             $idGerente,
-            '$comentario'
+            '$comentario',
+            $idUsuario
         )";
 
         $result = $this->db->query($query);

@@ -393,7 +393,6 @@ class Casas extends BaseController
 
     public function to_asignacion()
     {
-
         $form = $this->form();
 
         $idLote = $this->form('idLote');
@@ -417,7 +416,7 @@ class Casas extends BaseController
         $this->db->trans_begin();
 
         if ($esquemaCredito == 1) { // se agrega un condicion para saber que esquema de credito se usara
-            $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $gerente, $comentario);
+            $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $gerente, $comentario, $idUsuario);
         } else if ($esquemaCredito == 2) {
             $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idLote, $gerente, $comentario, $idUsuario);
         }
@@ -3564,6 +3563,94 @@ class Casas extends BaseController
         else {
             $this->db->trans_rollback();
             $response["result"] = false;
+        }
+
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($response));
+    }
+
+    public function to_asignacion_varios()
+    {
+        $form = $this->form();
+
+        $idLote = $this->form('idLote');
+        $comentario = $this->form('comentario');
+        $gerente = $this->form('gerente');
+        $idUsuario = $this->session->userdata('id_usuario');
+        $idLotes = json_decode($this->form('idLotes'));
+        $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crdito - 1: bancario - 2: directo
+        $banderaSuccess = true;
+
+        $dataHistorial = array();
+        $dataUpdate = array();
+
+        $this->db->trans_begin();
+
+        if (!isset($idLote) || !isset($gerente) || !isset($esquemaCredito)) {
+            $banderaSuccess = false;
+        }
+
+        foreach($idLotes as $id){
+            foreach($id as $idValue){
+                $dataUpdate[] = array(
+                    "idLote" => $idValue,
+                    "esquemaCreditoCasas" => $esquemaCredito
+                );
+            }
+        }            
+
+        if ($esquemaCredito == 1){ // se agrega un condicion para saber que esquema de credito se usara
+            foreach($idLotes as $id){
+                foreach($id as $idValue){  
+                    $proceso = $this->CasasModel->addLoteToAsignacion($idValue, $gerente, $comentario, $idUsuario);
+                
+                    $dataHistorial[] = array(
+                        "idProcesoCasas"  => $proceso->idProcesoCasas,
+                        "procesoAnterior" => NULL,
+                        "procesoNuevo"    => 0,
+                        "idMovimiento"    => $idUsuario,       
+                        "descripcion"     => 'Se inicio proceso | Comentario: ' . $proceso->comentario,
+                        "esquemaCreditoProceso" => 1
+                    );                    
+                }                                        
+            }
+        }
+        else if ($esquemaCredito == 2){
+            foreach($idLotes as $id){
+                foreach($id as $idValue){  
+                    $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idValue, $gerente, $comentario, $idUsuario);
+                
+                    $dataHistorial[] = array(
+                        "idProcesoCasas"  => $proceso->idProceso,
+                        "procesoAnterior" => NULL,
+                        "procesoNuevo"    => 0,
+                        "idMovimiento"    => $idUsuario,       
+                        "descripcion"     => 'Se inicio proceso | Comentario: ' . $proceso->comentario,
+                        "esquemaCreditoProceso" => 2
+                    );
+                }                
+            }
+        }
+
+        // se hace el insert en el historial
+        $insert = $this->General_model->insertBatch("historial_proceso_casas", $dataHistorial);
+        if(!$insert){
+            $banderaSuccess = false;
+        }
+
+        // se hace update del esquema de los lotes
+        $update = $this->General_model->updateBatch('lotes', $dataUpdate, 'idLote');
+        if(!$update){
+            $banderaSuccess = false;
+        }
+
+        if($banderaSuccess){
+            $this->db->trans_commit();
+            $response["result"] = true;   
+        }
+        else{
+            $this->db->trans_commit();
+            $response["result"] = true;  
         }
 
         $this->output->set_content_type("application/json");
