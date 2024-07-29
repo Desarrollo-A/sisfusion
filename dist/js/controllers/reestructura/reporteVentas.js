@@ -401,7 +401,7 @@ $(document).on("click", "#verifyNeodata", function () {
     let nombreLote = $(this).attr("data-nombreLote");
     $('#spiner-loader').removeClass('hide');
     $.ajax({
-        url: "Reporte/getMensualidadAbonoNeo",
+        url: `${general_base_url}Reporte/getMensualidadAbonoNeo`,
         data: {empresa: empresa, nombreLote: nombreLote},
         type: 'POST',
         dataType: 'json',
