@@ -5710,6 +5710,10 @@ public function resumenIndividual($idLote,$proceso){
     }
     
 }
+    public function getComments($pago){
+        echo json_encode($this->Comisiones_model->getComments($pago)->result_array());
+    }
+
 
 
 }

@@ -9,8 +9,6 @@ class Pagos_casas_model extends CI_Model {
         parent::__construct();
     }
 
-
-
     public function update_acepta_contraloria($data , $clave){
         try {
             $id_user_Vl = $this->session->userdata('id_usuario');
@@ -115,7 +113,6 @@ class Pagos_casas_model extends CI_Model {
         }
         return $respuesta;
     }
-
 
 
     function getDatosNuevasFacturasSeguros($proyecto,$condominio){
