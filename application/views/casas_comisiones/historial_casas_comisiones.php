@@ -304,7 +304,7 @@
     </div>
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>   
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas_comisiones/historial_casas.js"></script>
 
 
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>

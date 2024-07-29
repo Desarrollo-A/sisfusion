@@ -42,18 +42,9 @@ $(document).ready(function () {
    
 });
 
-function validarEspacios(e){
-    if (e.target.value.trim() == ""){
-        alerts.showNotification("top", "right", "Debes ingresar un motivo valido.", "warning");
-    }else{
-        
-    }
-}
 
 $("#form_descuentos").on('submit', function(e) {
     e.preventDefault();
-    validarEspacios();
-
     document.getElementById('btn_abonar').disabled = true;
     let userid = $('#usuarioid').val();
 
@@ -149,6 +140,25 @@ $('#aplicar_retiro').on('click', function(){
     // $("#users").trigger('change');
 
 
+});
+
+$('#monto1').change(function(){
+    var monto = $(this).val();
+
+    var fechaActual = new Date();
+    var dia = fechaActual.getDate();
+    var mes = fechaActual.getMonth() + 1;
+    var año = fechaActual.getFullYear();
+    var fechaDescuento= `${dia}/${mes}/${año}`;
+
+    var opcion = $('#opc').val();
+
+    if(opcion == 1){
+        $('#comentario').val("Monto a dscontar de: $" +monto+" con fecha: " + fechaDescuento+". Por motivo de: ");
+    }else{
+        $('#comentario').val("Ingreso extra de: $" +monto+" con fecha: " + fechaDescuento+". Por motivo de: ");
+
+    }
 });
 
 function DescuentosxDirectivos(user) {

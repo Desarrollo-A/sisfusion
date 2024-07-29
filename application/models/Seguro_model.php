@@ -668,7 +668,7 @@ class Seguro_model extends CI_Model {
             ini_set('memory_limit', -1);  
             $cadena = $estatus != '' ? ( $estatus == 1 ? "WHERE  cl.estatusSeguro IN(".$estatus.",0)" : "WHERE  cl.estatusSeguro IN(".$estatus.")" ): "";  
     
-            $query = $this->db->query("SELECT re.descripcion nombreResidencial,l.referencia,co.nombre nombreCondominio,l.nombreLote,l.idLote,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+            $query = $this->db->query("SELECT pg.numero_dispersion,re.descripcion nombreResidencial,l.referencia,co.nombre nombreCondominio,l.nombreLote,l.idLote,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
 			tv.tipo_venta,st.nombreStatus,pg.totalLote Precio_Total,(pg.porcentaje_abono * 100) porcentaje,pg.total_comision Comision_total,pg.abonado Comisiones_Pagadas,pg.pendiente Comisiones_pendientes,pg.fecha_modificacion,
             (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'lbl-violetBoots' ELSE 'lbl-gray' END) colorContratacion,

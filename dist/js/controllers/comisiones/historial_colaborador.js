@@ -48,21 +48,21 @@ $('#catalogo_historial, #tipo_historial').change(function(){
         proyecto = $('#ano_historial').val();
         condominio = $('#catalogo_historial').val();
         tipo = $('#tipo_historial').val();
-
-        $('#tabla_historialGral').removeClass('hide');
-
+        
+    $('#tabla_historialGral').removeClass('hide');
+    
         if (condominio == '' || condominio == null || condominio == undefined) {
-            condominio = 0;
-        }
-
+        condominio = 0;
+    }
+    
         if (tipo == '' || tipo == null || tipo == undefined) {
             tipo = 0;
         }
 
         if (tabla_historialGral2) {
-            tabla_historialGral2.destroy();
-        }
-        getAssimilatedCommissions(proyecto, condominio, tipo);
+        tabla_historialGral2.destroy();
+    }
+    getAssimilatedCommissions(proyecto, condominio, tipo);
 
     }
 });
@@ -131,11 +131,9 @@ function modalHistorial(){
 }
 
 function getAssimilatedCommissions(proyecto, condominio, tipo){
-
     var Comisiones;
-
-    if(tipo == 1 || tipo == 2){
-        
+    if(tipo == 1 || tipo == 2 || tipo == 0){
+        tipo =  tipo == 0 ? 1 : tipo;
         Comisiones = "Comisiones/getDatosHistorialPago/";
 
     }else if(tipo == 4){
@@ -144,7 +142,7 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
 
     }else{
         alerts.showNotification("top", "right", "Tipo aún no existente en el sistema.", "alert");
-        return false;p
+        return false;
     }
 
 
@@ -308,14 +306,14 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
         {
             "data": function( d ){
                 var etiqueta;
-
+                var descuento = d.descuento_aplicado == 1 ? `<p class="m-0"><span class="label lbl-gray" style=""> DESCUENTO</span></p>` : '';
                     if(d.pago_neodata < 1){
                         etiqueta = '<p class="m-1">'+'<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span>'+'</p>'+'<p class="m-1">'+'<span class="label lbl-green">IMPORTACIÓN</span></p>';
                     }else{
                         etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color: '+d.color+'; ">'+d.estatus_actual+'</span></p>';
                     }
 
-                return etiqueta;
+                return etiqueta + descuento;
             }
         },
         { 
@@ -958,7 +956,7 @@ function consultarHistorialDescuentos() {
                 
                 var botonesMostrar = ``;
 
-            if(d.relacion_evidencia != '' ){
+            if(d.relacion_evidencia != '' && d.relacion_evidencia !== null){
                 if(d.relacion_evidencia != 'true' ){
                     botonesMostrar += `
                     <button href="#" value="${d.id_pago_i}"  id="preview" 
@@ -990,48 +988,7 @@ function consultarHistorialDescuentos() {
                     }
             
             }
-            //     botonesMostrar += `
-            //         <div class="d-flex justify-center">
-            //             <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VeER MÁS DETALLES" data-toggle="tooltip" data-placement="top">
-            //                 <i class="fas fa-info">
-            //                 </i>
-            //             </button></div>`;
-            // if(d.RelacionMotivo == 'Sin préstamo relacionado'){
-
-            // }else if(d.RelacionMotivo == 'NA'){
-            //     if(d.evidenciaDocs != null ){
-            //         botonesMostrar += `
-            //                 <button href="#" value="${d.id_pago_i}"  
-            //                     id="preview" data-doc="${d.evidenciaDocs}"  
-            //                     data-ruta="static/documentos/evidencia_prestamo_auto" 
-            //                     class="btn-data btn-violetDeep " title="Ver Evidencia">
-            //                     <i class="fas fa-folder-open">
-            //                     </i>
-            //                 </button>`;
-            //         }else{
-            //            botonesMostrar += ``; 
-            //         }
-            // }else if(d.RelacionMotivo != null && d.evidenciaDocs == null ) {
-            //     botonesMostrar += `
-            //                 <button href="#" value="${d.id_pago_i}"  
-            //                     id="preview" data-doc="${d.RelacionMotivo}"  
-            //                     data-ruta="UPLOADS/EvidenciaGenericas" 
-            //                     class="btn-data lbl-melon " title="Ver Evidencia">
-            //                     <i class="fas fa-folder-open">
-            //                     </i>
-            //                 </button>`;
-                    
-            // }
-                // botonesMostrar += `
-                //     <button href="#" value="${d.id_prestamo}"  
-                //         id="preview" data-doc="${d.evidencia}"  
-                //         data-ruta="static/documentos/evidencia_prestamo_auto" 
-                //         class="btn-data btn-violetDeep " title="Ver Evidencia">
-                //         <i class="fas fa-folder-open">
-                //         </i>
-                //     </button>`;
-                        
-                return '<div class="d-flex justify-center">'+ botonesMostrar + '<div>';;
+                return `<div class="d-flex justify-center">${botonesMostrar} <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VER MÁS DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button><div>`;
             }
         }],
         columnDefs: [{
@@ -1052,6 +1009,7 @@ function consultarHistorialDescuentos() {
 }
 
 $(document).on('click', '.consultarDetalleDelPago', function(e) {
+    let ruta = $('#tipo_historial').val() == 4 ? 'Seguros' : 'Pagos';
     $("#comments-list-asimilados").html('');
     $("#nameLote").html('');
     $('#spiner-loader').removeClass('hide');
@@ -1061,7 +1019,7 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
     lote = $(this).attr("data-value");
     modalHistorial();
     $("#nameLote").append(`<p><h5>HISTORIAL DEL PAGO DE: <b>${lote}</b></h5></p>`);
-    $.getJSON(`${general_base_url}Pagos/getComments/${id_pago}`).done( function( data ){
+    $.getJSON(`${general_base_url}${ruta}/getComments/${id_pago}`).done( function( data ){
         $.each( data, function(i, v){
             $("#comments-list-asimilados").append(`<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Usuario: </small><b>${v.nombre_usuario}</b></a><br></div><div class="float-end text-right"><a>${v.fecha_movimiento}</a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>${v.comentario}</b></p></div><h6></h6></div></div></li>`);
             $('#spiner-loader').addClass('hide');

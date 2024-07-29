@@ -14,11 +14,11 @@
 	</style>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); 
-        header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
+            header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+            header("Cache-Control: no-store, no-cache, must-revalidate");
+            header("Cache-Control: post-check=0, pre-check=0", false);
+            header("Pragma: no-cache");
         ?>
         <style>
             .abc {
@@ -56,6 +56,7 @@
                             <div class="active tab-pane" id="generar_solicitud">
                                 <div class="row">
                                     <div class="col-lg-12">
+
                                         <div class="row">
                                             <div class="col-lg-5">
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
@@ -66,68 +67,84 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-7 d-flex justify-center">
-                                                    <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
+                                                <button class="btn btn-warning" type="button" id="cargar_xml"><i class="fa fa-upload"></i> CARGAR</button>
                                             </div>
                                         </div>
+
                                         <form id="frmnewsol" method="post" action="#">
                                             <div class="row">
+
                                                 <div class="col-lg-4 form-group">
                                                     <label for="emisor">Emisor:<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required>
                                                 </div>
+
                                                 <div class="col-lg-4 form-group">
                                                     <label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required>
                                                 </div>
+
                                                 <div class="col-lg-4 form-group">
                                                     <label for="receptor">Receptor:<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required>
                                                 </div>
+
                                                 <div class="col-lg-4 form-group">
                                                     <label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required>
                                                 </div>
+
                                                 <div class="col-lg-3 form-group">
                                                     <label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required>
                                                 </div>
+
                                                 <div class="col-lg-3 form-group">
                                                     <label for="total">Monto:<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required>
                                                 </div>
+
                                                 <div class="col-lg-3 form-group">
                                                     <label for="formaPago">Forma Pago:</label>
                                                     <input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
                                                 </div>
+
                                                 <div class="col-lg-3 form-group">
                                                     <label for="cfdi">Uso del CFDI:</label>
                                                     <input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value="">
                                                 </div>
+
                                                 <div class="col-lg-3 form-group">
                                                     <label for="metodopago">Método de Pago:</label>
                                                     <input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
                                                 </div>
+
                                                 <div class="col-lg-3 form-group">
                                                     <label for="unidad">Unidad:</label>
                                                     <input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly>
                                                 </div>
+
                                                 <div class="col-lg-3 form-group">
                                                     <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required>
                                                 </div>
+
                                             </div>
+
                                             <div class="row">
                                                 <div class="col-lg-12 form-group">
                                                     <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br>
                                                     <textarea class="form-control" rows='1' data-min-rows='1' id="obse" name="obse" placeholder="Observaciones"></textarea>
                                                 </div>
                                             </div>
+
                                             <div class="row">
                                                 <div class="col-lg-4 form-group"></div>
                                                 <div class="col-lg-4 form-group">
                                                     <button type="submit" class="btn btn-primary btn-block">GUARDAR</button>
                                                 </div>
                                             </div>
+
                                         </form>
                                     </div>
                                 </div>
@@ -144,7 +161,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas</a>
+                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas Vista Rigel </a>
                             </li>
                             <li>
                                 <a href="#resguardo-1" role="tab" data-toggle="tab">RESGUARDO</a>
@@ -464,7 +481,7 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div>
+        </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
     <script>
@@ -474,7 +491,7 @@
     </script>
     
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>                                                        
-    <!-- <script src="<?=base_url()?>dist/js/controllers/ventas/comisionesColaboradorSubDir.js"></script> -->
+    <script src="<?=base_url()?>dist/js/controllers/casas_comisiones/casas_colaboradorRigel.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/ventas/filtrosProCond.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/ventas/sinPagoNeodata.js"></script>
 
