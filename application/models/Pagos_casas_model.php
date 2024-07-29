@@ -73,7 +73,7 @@ class Pagos_casas_model extends CI_Model {
         LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (3)
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
-        INNER JOIN pago_seguro pac ON pac.id_lote = com.id_lote
+        INNER JOIN pago_casas pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci2.estatus AND oxcest.id_catalogo = 23
         INNER JOIN cp_usuarios cp ON cp.id_usuario = u.id_usuario AND cp.estatus = 1
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
@@ -205,7 +205,7 @@ class Pagos_casas_model extends CI_Model {
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente 
             INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (4) 
             INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1 
-            INNER JOIN pago_seguro pac ON pac.id_lote = com.id_lote 
+            INNER JOIN pago_casas pac ON pac.id_lote = com.id_lote 
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci2.estatus AND oxcest.id_catalogo = 23 LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83 
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision 
             LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
@@ -405,6 +405,18 @@ class Pagos_casas_model extends CI_Model {
         $this->db->query("INSERT INTO  historial_seguro VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
         return $this->db->query("UPDATE pago_seguro_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
     }
+
+    function getComments($pago){
+        $cmd = "SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, convert(nvarchar(20), hc.fecha_movimiento, 113) date_final, hc.fecha_movimiento, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+        FROM historial_comision_casas hc 
+        INNER JOIN pago_casas_ind pci ON pci.id_pago_i = hc.id_pago_i
+        INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        WHERE hc.id_pago_i = $pago
+        ORDER BY hc.fecha_movimiento DESC";
+        $query = $this->db->query($cmd);
+        return $query->result();
+    }
+
 
 
 }

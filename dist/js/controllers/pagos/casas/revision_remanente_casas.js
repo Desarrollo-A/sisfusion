@@ -68,15 +68,31 @@ $('#tabla_remanente_casas thead tr:eq(0) th').each(function (i) {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllRemanenteSeguros(this)"/>');
     }
 });
+// function obtenerModoSeleccionado() {
+//     var radioButtons = document.getElementsByName("modoSubida");
+//     var modoSeleccionado = "";
+
+//     for (var i = 0; i < radioButtons.length; i++) {
+//         if (radioButtons[i].checked) {
+//             modoSeleccionado = radioButtons[i].value;
+//             break;
+//         }
+//     }
+
+//     return modoSeleccionado;
+// }
 
 function getDataRemanente_casas(proyecto, condominio){
     
     $('#tabla_remanente_casas').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
+        
         $.each(json.data, function(i, v) {
+            console.log(v);
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(numberTwoDecimal(total));
+        console.log(to);
         document.getElementById("disponibleRemanente_casas").textContent = to;
     });
 
@@ -108,9 +124,9 @@ function getDataRemanente_casas(proyecto, condominio){
             {
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function() {
-                if ($('input[name="idPagoRemanente[]"]:checked').length > 0) {
+                if ($('input[name="idPagoRemanente_casas[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_remanente_casas.$('input[name="idPagoRemanente[]"]:checked')).map(function() {
+                    var idcomision = $(tabla_remanente_casas.$('input[name="idPagoRemanente_casas[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
                     var com2 = new FormData();
@@ -326,7 +342,7 @@ function getDataRemanente_casas(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                            return '<input type="checkbox" name="idPagoRemanente[]" class="checkPagosIndividual" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            return '<input type="checkbox" name="idPagoRemanente_casas[]" class="checkPagosIndividual_casas" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';
                     }
@@ -386,7 +402,7 @@ function getDataRemanente_casas(proyecto, condominio){
 
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $('#spiner-loader').removeClass('hide');
-        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Pagos_casas/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-remanente").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
@@ -491,7 +507,7 @@ $("#formPausarRemanenteSeguros").submit( function(e) {
     }
 });
 
-$(document).on("click", ".checkPagosIndividual", function() {
+$(document).on("click", ".checkPagosIndividual_casas", function() {
     totaPago_casas = 0;
     tabla_remanente_casas.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_remanente_casas.$('input[type="checkbox"]:checked') ;
