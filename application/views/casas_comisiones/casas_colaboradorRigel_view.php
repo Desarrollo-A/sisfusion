@@ -161,7 +161,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas Vista Rigel </a>
+                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas</a>
                             </li>
                             <li>
                                 <a href="#resguardo-1" role="tab" data-toggle="tab">RESGUARDO</a>

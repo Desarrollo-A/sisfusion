@@ -611,39 +611,39 @@ public function getDatosFechasProyecCondm(){
         $consulta_comisiones = $consulta_comisiones->result_array();
         $id_user_Vl = $this->session->userdata('id_usuario');
         
-          $sep = ',';
-          $id_pago_i = '';
+        $sep = ',';
+        $id_pago_i = '';
 
-          $data=array();
+        $data=array();
 
-          foreach ($consulta_comisiones as $row) {
-            $id_pago_i .= implode($sep, $row);
-            $id_pago_i .= $sep;
+        foreach ($consulta_comisiones as $row) {
+          $id_pago_i .= implode($sep, $row);
+          $id_pago_i .= $sep;
 
-            $row_arr=array(
-              'id_pago_i' => $row['id_pago_i'],
-              'id_usuario' =>  $id_user_Vl,
-              'fecha_movimiento' => date('Y-m-d H:i:s'),
-              'estatus' => 1,
-              'comentario' =>  'ENVÍO A SU RESGUARDO PERSONAL' 
-            );
-             array_push($data,$row_arr);
+          $row_arr=array(
+            'id_pago_i' => $row['id_pago_i'],
+            'id_usuario' =>  $id_user_Vl,
+            'fecha_movimiento' => date('Y-m-d H:i:s'),
+            'estatus' => 1,
+            'comentario' =>  'ENVÍO A SU RESGUARDO PERSONAL' 
+          );
+
+          array_push($data,$row_arr);
 
 
-          }
-          $id_pago_i = rtrim($id_pago_i, $sep);
+        }
+        $id_pago_i = rtrim($id_pago_i, $sep);
+        $up_b = $this->Casas_comisiones_model->update_acepta_resguardo($id_pago_i);
+        $ins_b = $this->Casas_comisiones_model->insert_phc($data);
+
+        if ($up_b === FALSE || $this->db->trans_status() === FALSE){
+          $this->db->trans_rollback();
+          echo json_encode(array("respuesta" => 0));
+        }else{
+          $this->db->trans_commit();
+          echo json_encode(array("respuesta" => 1, "data" => $this->Casas_comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array()));
+        } 
       
-            $up_b = $this->Casas_comisiones_model->update_acepta_resguardo($id_pago_i);
-            $ins_b = $this->Casas_comisiones_model->insert_phc($data);
-      
-      if($up_b == true && $ins_b == true){
-        $data_response = 1;
-        echo json_encode($data_response);
-      } else {
-        $data_response = 0;
-        echo json_encode($data_response);
-      }
-            
       }
       else{
         $data_response = 0;
