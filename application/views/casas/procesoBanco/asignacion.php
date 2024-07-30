@@ -23,6 +23,7 @@
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
                                             <th>CONDOMINIO</th>

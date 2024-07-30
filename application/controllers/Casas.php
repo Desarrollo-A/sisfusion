@@ -417,6 +417,7 @@ class Casas extends BaseController
 
         if ($esquemaCredito == 1) { // se agrega un condicion para saber que esquema de credito se usara
             $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $gerente, $comentario, $idUsuario);
+            $copiarDs = $this->copiarDS($idLote);
         } else if ($esquemaCredito == 2) {
             $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idLote, $gerente, $comentario, $idUsuario);
         }
@@ -3655,5 +3656,16 @@ class Casas extends BaseController
 
         $this->output->set_content_type("application/json");
         $this->output->set_output(json_encode($response));
+    }
+
+    public function copiarDS($idLote){
+        // // paso 1: obtener el cliente del lote y el dato del deposito de seriedes
+        // // $getClientes = $this->General_model->getClientes($idLote);
+
+        // // paso 2: se hacen la copia de los datos del deposito seriedad en la nueva tabla
+        // foreach($getClientes as $cliente){
+
+        // }     
+
     }
 }

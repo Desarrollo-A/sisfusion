@@ -22,6 +22,11 @@ function cambio(option) {
 
 filtro_proyectos.onChange(function(option){
     // console.log(option)
+    arrayValores = []
+    arrayIdLotes = []
+
+    let btn = document.getElementsByClassName("btn-asignar")
+    btn[0].classList.add('hide');
 
     $.ajax({
         type: 'GET',
@@ -39,6 +44,11 @@ filtro_proyectos.onChange(function(option){
 
 filtro_condominios.onChange(function(option){
     // console.log(option)
+    arrayValores = []
+    arrayIdLotes = []
+    
+    let btn = document.getElementsByClassName("btn-asignar")
+    btn[0].classList.add('hide');
 
     table.setParams({condominio: option.value})
     table.reload()
@@ -89,11 +99,15 @@ select_lote = function(data) {
                     table.reload();
 
                     form.hide();
+                    arrayValores = []
+                    arrayIdLotes = []
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
+                    
                     form.loading(false)
+                    arrayValores = []
+                    arrayIdLotes = []
                 }
             })
         },
@@ -127,8 +141,8 @@ let buttons = [
     {
         text: '<i class="fas fa-user-plus"></i>',
         className: 'btn-large btn-sky btn-asignar botonEnviar hide',
-        titleAttr: 'Fusionar lotes',
-        title:"Fusionar lotes",
+        titleAttr: 'Asignar lotes',
+        title:"Asignar lotes",
     }
 ]
 
@@ -164,7 +178,7 @@ let table = new Table({
 })
 
 
-function verificarCheck(valorActual){    
+function verificarCheck(valorActual){
     const tr = $(this).closest('tr');
         const row = $('#tablaAsignacionCartera').DataTable().row(tr);
         let botonEnviar = document.getElementsByClassName('botonEnviar');
@@ -208,35 +222,35 @@ function buscarValor(valor, array) {
     return null;
 }
 
-$(document).on('click', '#fusionarLotes', ()=>{
-    let dataFS = new FormData();
-    dataFS.append("data", JSON.stringify(arrayValores));
-    $.ajax({
-        url: `${general_base_url}Reestructura/setFusionLotes`,
-        data: dataFS,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: "POST",
-        success: function (response) {
-            response = JSON.parse(response);
-            $("#fusionarLotes").prop("disabled", false);
-            if (response.status==200) {
-                alerts.showNotification("top", "right", response.message, "success");
-                $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
-                $('#preguntaConfirmacion').modal('toggle');
-                document.getElementsByClassName('btn-asignar-ventaML')[0].classList.add('hide');
-                arrayValores=[]; //resetea el array que guarda los lotes que se fusionaron
-            }
-            else
-                alerts.showNotification("top", "right", response.status, "warning");/**/
-        },
-        error: function () {
-            $("#fusionarLotes").prop("disabled", false);
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
+// $(document).on('click', '#fusionarLotes', ()=>{
+//     let dataFS = new FormData();
+//     dataFS.append("data", JSON.stringify(arrayValores));
+//     $.ajax({
+//         url: `${general_base_url}Reestructura/setFusionLotes`,
+//         data: dataFS,
+//         cache: false,
+//         contentType: false,
+//         processData: false,
+//         type: "POST",
+//         success: function (response) {
+//             response = JSON.parse(response);
+//             $("#fusionarLotes").prop("disabled", false);
+//             if (response.status==200) {
+//                 alerts.showNotification("top", "right", response.message, "success");
+//                 $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
+//                 $('#preguntaConfirmacion').modal('toggle');
+//                 document.getElementsByClassName('btn-asignar-ventaML')[0].classList.add('hide');
+//                 arrayValores=[]; //resetea el array que guarda los lotes que se fusionaron
+//             }
+//             else
+//                 alerts.showNotification("top", "right", response.status, "warning");/**/
+//         },
+//         error: function () {
+//             $("#fusionarLotes").prop("disabled", false);
+//             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+//         }
+//     });
+// });
 
 $(document).on('click', '.btn-asignar', () => {
     let nombresLot = '';
@@ -263,7 +277,7 @@ $(document).on('click', '.btn-asignar', () => {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "lol", "success");
+                    alerts.showNotification("top", "right", "Se han asignado los lotes correctamente", "success");
         
                     table.reload();
                     form.hide();
