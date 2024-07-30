@@ -564,4 +564,16 @@ class Casas_comisiones extends CI_Controller
     echo json_encode(array( "data" => $this->Casas_comisiones_model->getHistorialDescuentosPorUsuario()));
   }
 
+  public function getDataDispersionPago() {
+    $data['data'] = $this->Casas_comisiones_model->getDataDispersionPago()->result_array();
+    echo json_encode($data);
+  }
+
+  public function porcentajes(){
+    $plan_comision = $this->input->post("plan_comision");
+    $totalNeto2 = $this->input->post("totalNeto2");
+    $cliente = $this->input->post("idCliente");
+    echo json_encode($this->Casas_comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
+  }
+
 }

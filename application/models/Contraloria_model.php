@@ -1258,7 +1258,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         WHERE op.id_catalogo=90 AND au.estatus_autorizacion IN (".$estatus_permitido.")
         GROUP BY au.idResidencial, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0'), CAST(au.comentario AS VARCHAR(MAX)), au.estatus_autorizacion, 
         au.estatus, au.fecha_creacion, au.creado_por, au.fecha_modificacion, au.modificado_por,
-        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0')");
+        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0') ORDER BY au.fecha_creacion DESC");
 
 
         return $query->result_array();

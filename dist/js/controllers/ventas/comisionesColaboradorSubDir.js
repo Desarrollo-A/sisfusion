@@ -151,7 +151,7 @@ async function crearTabla(idTabla,data2,estatus){
     console.log(datosTbActual[0].id)
     let idProyecto = $(`#${datosTbActual[0].idSelect}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelect}`).val() ,idCondominio = $(`#${datosTbActual[0].idSelectCond}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelectCond}`).val();  
 
-    $(`#${idTabla}`).prop("hidden", false);
+    //$(`#${idTabla}`).prop("hidden", false);
 
    $(`#${idTabla}`).DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -224,7 +224,7 @@ async function crearTabla(idTabla,data2,estatus){
                 var mes = hoy.getMonth()+1;
                 var hora = hoy.getHours();
                 //PARA RESGUARDO SIEMPRE SON LOS DOS DIAS SIGUIENTES AL CORTE NORMAL DE COMISIONES
-                if([3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                if([0,1,3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                          ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
                 )
                 {
@@ -301,7 +301,8 @@ async function crearTabla(idTabla,data2,estatus){
         },
         destroy: true,
         ordering: false,
-        "data":data2,
+        data:data2,
+        info: false,
         columns: [{
         },
         {
@@ -373,8 +374,8 @@ async function crearTabla(idTabla,data2,estatus){
         },
         {
             "data": function(d) {
-                        let td = d.estatus == 1 ? `<br><span class="label ${d.forma_pago.split('/')[2]}">${d.forma_pago.split('/')[3]}  ${d.estatus_actual}</span></p>` : ``;
-                        return `<p class="m-0"><span class="label ${d.forma_pago.split('/')[0]}">${d.forma_pago.split('/')[1]}</span>` + td;
+                        //let td = d.estatus == 1 ? `<br><span class="label ${d.forma_pago.split('/')[2]}">${d.forma_pago.split('/')[3]}  ${d.estatus_actual}</span></p>` : ``;
+                        return '';// `<p class="m-0"><span class="label ${d.forma_pago.split('/')[0]}">${d.forma_pago.split('/')[1]}</span>` + td;
             }
         },
         {

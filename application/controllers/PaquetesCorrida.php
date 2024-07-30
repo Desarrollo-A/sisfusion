@@ -326,7 +326,7 @@ class PaquetesCorrida extends CI_Controller
             'id_paquete' => $id_paquete,
             'id_descuento' => $datosDescuento[0]['id_descuento'],
             'prioridad' => $m - 1,
-            'msi_descuento' => 0,
+            'msi_descuento' => $dataExcel[$m]["B"] == 5 ? $valorDescuento : 0,
             'fecha_creacion' => $hoy2,
             'creado_por' => $this->session->userdata('id_usuario'),
             'fecha_modificacion' => $hoy2,
@@ -469,6 +469,8 @@ class PaquetesCorrida extends CI_Controller
 
     $data = array();
     if (count($row) == 0) {
+      echo json_encode(array());
+      exit;
 
     } else if (count($row) == 1) {
       $dataPaquetes = $this->PaquetesCorrida_model->getPaquetesById($row[0]['id_paquete']);

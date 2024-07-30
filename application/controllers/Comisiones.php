@@ -827,10 +827,13 @@ function update_estatus(){
 
 
 
-  public function getDatosComisionesRigel($proyecto,$condominio,$estado)
+  public function getDatosComisionesRigel()
   {
+    $proyecto = $this->input->post('idProyecto');
+    $condominio = $this->input->post('idCondominio');
+    $estado= $this->input->post('estatus'); 
     $dat =  $this->Comisiones_model->getDatosComisionesRigel($proyecto,$condominio,$estado)->result_array();
-    echo json_encode(array("data" => $dat));
+    echo json_encode($dat);
   }
 
 
@@ -882,13 +885,13 @@ function update_estatus(){
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
-    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+    $consultaTipoUsuario = $this->db->query("SELECT tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 
     if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
       $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-      $filtro = ($consultaTipoUsuario[0]['tipo'] == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($consultaTipoUsuario[0]['forma_pago'] == 2 && $consultaTipoUsuario[0]['tipo'] == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
-      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND mes = $mesActual  $filtro")->result_array();
+      //$filtro = ($consultaTipoUsuario[0]['tipo'] == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($consultaTipoUsuario[0]['forma_pago'] == 2 && $consultaTipoUsuario[0]['tipo'] == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
+      $consultaFechasCorte = $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$diaActual); //$this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND mes = $mesActual  $filtro")->result_array();
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
       
       if( $consulta_comisiones->num_rows() > 0 && $consultaFechasCorte ){
@@ -4407,7 +4410,6 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
 }
  
 
-
 public function InsertNeo(){
   $lote_1 =  $this->input->post("idLote");
   $bonificacion =  $this->input->post("bonificacion");
@@ -4459,11 +4461,17 @@ public function InsertNeo(){
       }
     }
     // 1.- validar tipo venta
-    if($tipo_venta_insert != 64 || $tipo_venta_insert != 65 || $tipo_venta_insert != 66){
+    if(!in_array($plan_comision,array(64,65,66,84,85,86))){
       if($porcentaje_abono < 8){
         $PorcentajeAsumar = 8 - $porcentaje_abono;
-        $banderita=1;
-        $porcentaje_abono =8;
+        if($PorcentajeAsumar > 7){
+          $banderita=0;
+          $porcentaje_abono = $porcentaje_abono;
+        }else{
+          $banderita=1;
+          $porcentaje_abono =8;
+        }
+        
       }
     }
     $tipo_venta_insert = $plan_comision;
@@ -4492,7 +4500,7 @@ public function InsertNeo(){
     $respuesta = $this->Comisiones_model->UpdateLoteDisponible($lote_1);
     $respuesta = $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
     
-    $banderita = in_array($plan_comision,array(64,65,66)) ? 0 : $banderita;
+    $banderita = in_array($plan_comision,array(64,65,66,84,85,86)) ? 0 : $banderita;
     if($banderita == 1){
       $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
       $respuesta = $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
@@ -5630,8 +5638,7 @@ public function lista_usuarios($rol,$forma_pago){
   }
   public function getDatosFechasProyecCondm(){
     
-    $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
-    //var_dump(date('N') );
+    $tipoUsuario = $this->session->userdata('tipo');// == 1 ? 0 : ($this->session->userdata('tipo') == 2 ? 1: $this->session->userdata('tipo'));    //var_dump(date('N') );
     //$fechaFin = $this->session->userdata('id_sede') == 8 ? 'fechaTijuana' : 'fechaFinGeneral';
     $diaActual = date('d'); 
     $data = array(

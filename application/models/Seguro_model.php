@@ -205,9 +205,13 @@ class Seguro_model extends CI_Model {
             $query = $this->db->query("UPDATE pago_seguro_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
             return true;
         }
-        function insertComisionSeguroAbono($dataIndividual,$banderaAbono , $comision) {
+        function insertComisionSeguroAbono($dataIndividual,$banderaAbono , $comision,$dataHistorialSeguros) {
             if ($dataIndividual != '' && $dataIndividual != null){
                 $response = $this->db->insert('pago_seguro_ind', $dataIndividual);
+                $insertComision = $this->db->insert_id();
+                $dataHistorialSeguros['id_pago_i'] = $insertComision;
+
+                $response = $this->db->insert('historial_seguro', $dataHistorialSeguros);
                 if (!$response) {
                     return 0;
                 } else {
