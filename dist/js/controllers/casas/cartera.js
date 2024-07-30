@@ -72,7 +72,7 @@ $.ajax({
 select_lote = function(data) {
     let form = new Form({
         title: 'Iniciar proceso', 
-        text: `¿Iniciar proceso de asignación del lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas iniciar el proceso de asignación del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             // console.log(data)
             form.loading(true)
