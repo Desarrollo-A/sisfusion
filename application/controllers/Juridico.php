@@ -140,7 +140,7 @@ class Juridico extends CI_Controller
 
 				
 			$fecha = $fechaAccion;
-				
+
 			$z = 0;
 				while($z <= 1) {
 			  $hoy_strtotime = strtotime($fecha);
@@ -169,7 +169,7 @@ class Juridico extends CI_Controller
 				   }
 			   
 			} elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {			
-			
+
 			$fechaAccion = $data[$i]->modificado;
 			$hoy_strtotime2 = strtotime($fechaAccion);
 			$sig_fecha_dia2 = date('D', $hoy_strtotime2);

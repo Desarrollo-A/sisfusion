@@ -1393,7 +1393,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
         LEFT JOIN (SELECT idCliente FROM comisiones GROUP BY idCliente) com ON com.idCliente=cl.id_cliente
-        WHERE lot.status = 1 $filter
+        WHERE lot.c = 1 $filter
         ORDER BY lot.nombreLote");
         return $query->result_array();
      }

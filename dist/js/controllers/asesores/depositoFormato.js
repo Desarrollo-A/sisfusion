@@ -103,7 +103,63 @@ function esPersonaMoralDocs() {
 function resizeInput() {
     $(this).attr('size', $(this).val().length);
 }
+function validaLadas(){
+    if($('#telefono1').val() != '' || $('#telefono1').val() == undefined){
+        if($('#ladaTelN').val()=='' || $('#ladaTelN').val() == undefined){
+            alerts.showNotification('top', 'right', 'Debes seleccionar la lada para el teléfono 1', 'danger');
+        }
+    }
 
+    if($('#telefono2').val() != '' || $('#telefono2').val() != undefined){
+        if($('#ladaTel2').val()=='' || $('#ladaTel2').val() == undefined){
+            alerts.showNotification('top', 'right', 'Debes seleccionar la lada para el teléfono 2', 'danger');
+        }
+    }
+}
+
+function validaTipoVivienda()
+{
+    validaLadas();
+    if (!$("input[name='tipo_vivienda']").is(':checked')) {
+        alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+    }
+    else {
+        if (!$("input[name='tipoNc_valor']").is(':checked')) {
+            alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
+            $('#tipoNc_valor').focus();
+            $('#label1').addClass('hover_focus');
+            $('#label2').addClass('hover_focus');
+            setTimeout(()=>{
+                $('#label1').removeClass('hover_focus');
+                $('#label2').removeClass('hover_focus');
+            },1500)
+        }
+        else{
+            if(!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+                alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
+                $('.imprimePagare').focus();
+                $('#labelSi1').addClass('hover_focus');
+                $('#labelNo1').addClass('hover_focus');
+                setTimeout(() => {
+                    $('#labelSi1').removeClass('hover_focus');
+                    $('#labelNo1').removeClass('hover_focus');
+                }, 1500)
+            }
+            else{
+                if(!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+                    alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
+                    $('.tipo_comprobante').focus();
+                    $('#labelSi2').addClass('hover_focus');
+                    $('#labelNo2').addClass('hover_focus');
+                    setTimeout(() => {
+                        $('#labelSi2').removeClass('hover_focus');
+                        $('#labelNo2').removeClass('hover_focus');
+                    }, 1500)
+                }
+            }
+        }
+    }
+}
 $('input[name="letraCantidad"]').keyup(resizeInput).each(resizeInput);
 
 function estaEnRango(valor, minimo = 1, maximo = 31) {

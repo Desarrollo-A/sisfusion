@@ -1,12 +1,15 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Postventa extends CI_Controller
+
+require_once(APPPATH . "/controllers/BaseController.php");
+
+class Postventa extends BaseController
 {
 public $controller = 'Postventa';
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model', 'caja_model_outside'));
+        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model', 'caja_model_outside', 'PaquetesCorrida_model'));
         $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'email','permisos_sidebar'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
@@ -3281,7 +3284,7 @@ public $controller = 'Postventa';
 
 
         $idLote = $this->input->post('idLote');
-        $idCliente = $this->input->post('idCliente');
+        $idCliente = ($this->input->post('idCliente') == null) ? 0 : $this->input->post('idCliente');
         $tipoTramite = $this->input->post('tipoTramite');
         $tipoTransaccion = $this->input->post('tipoTransaccion');
         $idRegistro = $this->input->post('idRegistro');
@@ -3294,7 +3297,7 @@ public $controller = 'Postventa';
         $responseUpdateCliente = TRUE;
         $arrayPosiciones = $pieces = explode(",", $this->input->post('arrayPosiciones')); ;
         $banderaCoprop = $this->input->post('banderaCoprop');
-        $folder = 'static/documentos/cliente/escrituraNotariada/';
+        // $folder = 'static/documentos/cliente/escrituraNotariada/';
 
 
 
@@ -3311,24 +3314,32 @@ public $controller = 'Postventa';
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
             if($tipoTramite == 6){
-                $file = $_FILES["fileElm"];
-                $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+                // $file = $_FILES["fileElm"];
+                // $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
 
+                $file = $this->file('fileElm');
 
-                $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
-                $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+                if($file->size > 0){
+                    $fileExt = pathinfo($file->name, PATHINFO_EXTENSION);
 
-                if ($movement) {
-                    $dataParaInsertar['escrituraNotariada'] = $documentName;
+                    $filename = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                    // $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                    // $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+
+                    $uploaded = $this->upload($file->tmp_name, $filename);
+
+                    if ($uploaded) {
+                        $dataParaInsertar['escrituraNotariada'] = $filename;
+                    }
                 }
             }
             $responseInsertCliente = $this->General_model->addRecord('clientes_x_lote', $dataParaInsertar);
             $reponseUpdateLote = $this->General_model->updateRecord("lotes", array("estatusCambioNombre" => 2, "usuario" => 1), "idLote", $idLote); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
 
             #insercion de los coprop
-                if($banderaCoprop>0){
-                    foreach ($arrayPosiciones as $index_array){
-                        $dataInsertCoprop = array(
+            if($banderaCoprop>0){
+                foreach ($arrayPosiciones as $index_array){
+                    $dataInsertCoprop = array(
                         "id_cliente" => $idCliente,
                         "nombre" => $this->input->post('nomCopro'.$index_array),
                         "apellido_paterno" => $this->input->post('app'.$index_array),
@@ -3361,9 +3372,9 @@ public $controller = 'Postventa';
                         "ladaTel" => null,
                         "ladaCel" => null
                     );
-                        $responseInsertCliente = $this->General_model->addRecord('copropietarios', $dataInsertCoprop);
-                    }
+                    $responseInsertCliente = $this->General_model->addRecord('copropietarios', $dataInsertCoprop);
                 }
+            }
             #termino de los coprop
 
 
@@ -3436,18 +3447,21 @@ public $controller = 'Postventa';
             );
 
             if($tipoTramite == 6){
-                $file = $_FILES["fileElm"];
-                $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $file = $this->file('fileElm');
 
+                if($file->error == 0 && $file->size > 0){
+                    $fileExt = pathinfo($file->name, PATHINFO_EXTENSION);
+                    $filename = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                    // $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                    // $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
 
-                $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
-                //borrar el archivo actual
-                unlink('static/documentos/cliente/escrituraNotariada/'.$documentName);
-                $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+                    $uploaded = $this->upload($file->tmp_name, $filename);
 
-                if ($movement) {
-                    $dataParaActualizar['escrituraNotariada'] = $documentName;
+                    if ($uploaded) {
+                        $dataParaActualizar['escrituraNotariada'] = $filename;
+                    }
                 }
+
             }
 
             $responseUpdateCliente = $this->General_model->updateRecord("clientes_x_lote", $dataParaActualizar, "id_registro", $idRegistro); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
@@ -3458,8 +3472,24 @@ public $controller = 'Postventa';
             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
     }
 
-    public function setAvance () {
 
+    public function setAvance () {
+/*
+        print_r($this->input->post());
+        echo '<br><br><br>';
+        $datosCondominio = $this->caja_model_outside->getDatosCondominio($this->input->post('idCondominio'));
+        if($datosCondominio[0]['tipo_lote'] == 1 ){ //1 - Comercial
+            //si el condominio es comercial solo consultar sin importar la superficie
+            $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =1","",$data->id_proy, "", "");
+            $datos["descuentoComerciales"] = count($getPaquetesDescuentos) == 0 ? NULL :  $getPaquetesDescuentos[0]['id_descuento'] ;
+        }else{ //0 - Habitacional"
+            $paquetesMenores200 = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =0","AND sup < 200",$data->id_proy, "", "");
+            $paquetesMayores200 = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =0","AND sup > 200",$data->id_proy, "", "");
+            $datos["descuentoHabMenores"] = count($paquetesMenores200) == 0 ? NULL : $paquetesMenores200[0]['id_descuento'];
+            $datos["descuentoHabMayores"] = count($paquetesMayores200) == 0 ? NULL : $paquetesMayores200[0]['id_descuento'];
+        }
+        print_r($datos);
+        exit;*/
         $idLote = $this->input->post('idLoteA');
         $idCliente = $this->input->post('idClienteA');
         $tipoTransaccion = $this->input->post('tipoTransaccionA');
@@ -3484,6 +3514,8 @@ public $controller = 'Postventa';
             $estatusCambioNombre = 3;
 
         if ($tipoTransaccion == 3 && $this->input->post('tipo') == 1) { // ACEPTÓ EL CAMBIO DE NOMBRE
+
+
             // SE ARMA EL ARRAY DE DATOS PARA ENVIAR A LA FUNCIÓN QUE LO VA A LIBERAR
             $datosLiberacion = array (
                 "idCondominio" => $informacionCliente[0]->idCondominio,
@@ -3497,7 +3529,10 @@ public $controller = 'Postventa';
                 "modificado" => date('Y-m-d H:i:s'),
                 "status" => 1,
                 "userLiberacion" => $this->session->userdata('id_usuario'),
-                "tipo" => 6
+                "tipo" => 6,
+                "tipo_lote" => null,
+                "descuentoHabMenores" => null,
+                "descuentoHabMayores" => null
             );
             $responseLiberacion = $this->caja_model_outside->aplicaLiberacion($datosLiberacion);
             if ($responseLiberacion) {
@@ -3537,7 +3572,8 @@ public $controller = 'Postventa';
                         "tipo_documento" => 0,
                         "id_autorizacion" => 0,
                         "tipo_doc" => 52,
-                        "estatus_validacion" => 0
+                        "estatus_validacion" => 0,
+                        'bucket' => 1,
                     );
                     $responseInsertHistorial = $this->General_model->addRecord('historial_documento', $arrayArbolDocumentos);
                 }
@@ -3692,6 +3728,19 @@ public $controller = 'Postventa';
         else
             echo json_encode(array());
 
+    }
+
+    public function historial_estatus3(){
+        $this->load->view('template/header');
+        $this->load->view("postventa/reportes/historial_estatus3");
+    }
+
+    public function getHistorialEstatus3(){
+        $data = $this->Postventa_model->getHistorialEstatus3();
+        if($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
     }
 
 }

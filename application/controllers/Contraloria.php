@@ -2249,7 +2249,7 @@ class Contraloria extends CI_Controller {
 				if (COUNT($validacionContratoFirmado) == 0) { // NO EXISTE LA RAMA ACTIVA DE CONTRATO FIRMADO, SE LLEVA A CABO LA INSERCIÓN
 					$insertToData = array(
 						"movimiento" => 'CONTRATO FIRMADO',
-						"expediente" => '',
+						"expediente" => null,
 						"modificado" => date('Y-m-d H:i:s'),
 						"status" => 1,
 						"idCliente" => $idCliente,

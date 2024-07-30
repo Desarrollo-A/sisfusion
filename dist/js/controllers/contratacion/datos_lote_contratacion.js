@@ -52,6 +52,7 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     });
 });
 
+let roles_excluidos = [1, 2, 3, 4, 5, 6, 7, 9];
 $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
     let maxPopea = 67;
     ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
@@ -70,7 +71,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
+            className: (roles_excluidos.includes(id_rol_general)) ? 'hide' : 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
             title: 'Inventario lotes',
             exportOptions: {
@@ -85,7 +86,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
-                className: 'btn buttons-pdf',
+                className: (roles_excluidos.includes(id_rol_general)) ? 'hide' : 'btn buttons-pdf',
                 titleAttr: 'PDF',
                 title: 'Inventario lotes',
                 orientation: 'landscape',
@@ -864,7 +865,7 @@ function fillTableInventario(sede) {
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
+            className: (roles_excluidos.includes(id_rol_general)) ? 'hide' : 'btn buttons-excel',
             titleAttr: 'Inventario Lotes',
             title: "Inventario Lotes",
             exportOptions: {
