@@ -230,26 +230,25 @@
             for ($i=0; $i <count($comisiones) ; $i++) {
                 $sumaxcomision=0;
                 $pagos_ind = $this->db->query("select * from pago_comision_ind where id_comision=".$comisiones[$i]['id_comision']."")->result_array();
-                
-                for ($j=0; $j <count($pagos_ind) ; $j++) { 
+                for ($j=0; $j <count($pagos_ind) ; $j++) {
                     $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
                 }
                 $this->db->query("UPDATE comisiones set  modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
             }
             $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  where id_lote=".$row['idLote']." ");
-           //PAQUETES CF
-           if($datos['tipo_lote'] == 1 ){ //1 - Comercial
+            //PAQUETES CF
+            if($datos['tipo_lote'] == 1 ){ //1 - Comercial
                 //si el condominio es comercial solo consultar sin importar la superficie
-               $descuentos=$datos['descuentosComerciales'];
-              }else{ //0 - Habitacional
-                      $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMayores'];
-                      //var_dump($datos['descuentoHabMenores']);
-             }
-             $descuento = $descuentos != NULL ? "id_descuento='$descuentos'," : "id_descuento=NULL,";
-            
-        /**----------------------------------------------- */
-           
-           
+                $descuentos=$datos['descuentosComerciales'];
+            }else{ //0 - Habitacional
+                $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMayores'];
+                //var_dump($datos['descuentoHabMenores']);
+            }
+            $descuento = $descuentos != NULL ? "id_descuento='$descuentos'," : "id_descuento=NULL,";
+
+            /**----------------------------------------------- */
+
+
             $data_l = array(
                 'nombreLote'=> $datos['nombreLote'],
                 'comentarioLiberacion'=> $datos['comentarioLiberacion'],
@@ -264,12 +263,11 @@
                 'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
             );
             $this->db->insert('historial_liberacion',$data_l);
-            
+
             $tventa = ($row['tipo_venta'] == 1) ? 1 : ($datos['activeLP'] == 1 ? 1 : 0);
             if ($datos['activeLE'] == 0) {
                 $st = ($datos['activeLP'] == 1) ? 1 : 1;
                 $tv = ($datos['activeLP'] == 1) ? 1 : 0;
-                
                 if ($tv == 1) { // LIBERACIÓN VENTA DE PARTICULAES
                     $data_lp = array(
                         'id_lote'=> $row['idLote'],
@@ -316,7 +314,7 @@
                 WHERE idLote IN (".$row['idLote'].") and status = 1 ");
             } else if ($datos['activeLE'] == 1) {
                 $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
-                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
+                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = '".$userLiberacion."', perfil = 'NULL ', 
                 fechaVenc = null, modificado = null, status8Flag = 0,
                 ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
                 totalValidado = 0, validacionEnganche = 'NULL', 
@@ -336,13 +334,13 @@
                 saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1)),
                 asig_jur = 0
                 WHERE idLote IN (".$row['idLote'].") and status = 1 ");
-            }         
+            }
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 return false;
             } else {
                 $this->db->trans_commit();
-                if (intval($row['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+                if (intval($row['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS
                     $arcusData = array(
                         "propiedadRelacionada" => $row['idLote'],
                         "uid" => $row['id_arcus'],
@@ -352,9 +350,8 @@
                 }
                 return true;
             }
-        }      
+        }
     }
-
 
     public function uploadSup($datos)
     {

@@ -12,17 +12,15 @@
   </tbody>
 </table>
 
-<table id="u_content_heading_3" class="tabla" style="font-family:'Raleway',sans-serif; font-size: 14px;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="1">
-  <tr class="tr-encabezados">
-    <th>Cantidad</th>
-    <th>Concepto</th>
-  </tr>
+<table id="u_content_heading_3" style="font-family:'Raleway',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="1">
+  <th>Cantidad</th>
+  <th>Concepto</th>
 
   <tbody>
 
     <tr>
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:3px 3px 3px 3px;font-family:'Raleway',sans-serif; " align="center">
-        <?= $cantidadProceso0; ?>
+        <b><?= $cantidadProceso0; ?></b>
       </td>
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:3px 3px 3px 3px;font-family:'Raleway',sans-serif;" align="center">
         Lote(s) sin asignar propuestas

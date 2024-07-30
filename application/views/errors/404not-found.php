@@ -1,3 +1,4 @@
+
 <link href="<?= base_url() ?>dist/css/notFound.css" rel="stylesheet"/>
 <body class="m-0">
 	<div class="wrapper">
@@ -15,7 +16,8 @@
 					<br>
 					<br>
 					<br>
-					<a href="<?=base_url()?>" class="enfasis"> <i class="fa fa-chevron-left"></i> Regresar </a>
+<!--					<a href="--><?//=base_url()?><!--" class="enfasis"> <i class="fa fa-chevron-left"></i> Regresar </a>-->
+					<a onClick="validateFunction(); backAction();" class="enfasis hide" id="backHistory"> <i class="fa fa-chevron-left" style="cursor: pointer"></i> Regresar </a>
 				</div>
 			</div>
 		</div>
@@ -23,5 +25,31 @@
 	</div><!--main-panel close-->
 	
 	<?php $this->load->view('template/footer');?>
+
+    <script>
+        $(document).ready(()=>{
+            validateFunction();
+        });
+        function validateFunction(){
+            let rutaActual = window.location.href;
+            let palabrasCoincidencia = 'documentos/cliente/expediente/';
+            // let palabrasCoincidencia = 'Documentacion/archivo/';
+
+            console.log(
+                `La palabra "${palabrasCoincidencia}" ${
+                    rutaActual.includes(palabrasCoincidencia) ? 'si está' : 'NO está'
+                } en el string`,
+            );
+
+            if(!rutaActual.includes(palabrasCoincidencia)){
+                $('#backHistory').removeClass('hide');
+            }
+//
+        }
+
+        function backAction(){
+            window.history.back();
+        }
+
 	</script>
 </body>

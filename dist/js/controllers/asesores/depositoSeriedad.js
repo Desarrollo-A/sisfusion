@@ -726,7 +726,7 @@ $(document).on('click', '#save1', function(e) {
     dataExp1.append('tipo_comprobante', tipo_comprobante);
     dataExp1.append('idMovimiento', getInfoData[7]);
 
-    if(getInfoData[7] == 99)
+    if(getInfoData[7] == 99 || getInfoData[7] == 102)
         complementoUrl = 'Postventa/enviarLoteARevisionPostVenta3/';
 
     if (validaComent == 0) {
