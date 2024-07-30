@@ -3284,7 +3284,7 @@ public $controller = 'Postventa';
 
 
         $idLote = $this->input->post('idLote');
-        $idCliente = $this->input->post('idCliente');
+        $idCliente = ($this->input->post('idCliente') == null) ? 0 : $this->input->post('idCliente');
         $tipoTramite = $this->input->post('tipoTramite');
         $tipoTransaccion = $this->input->post('tipoTransaccion');
         $idRegistro = $this->input->post('idRegistro');
@@ -3319,7 +3319,7 @@ public $controller = 'Postventa';
 
                 $file = $this->file('fileElm');
 
-                if($file){
+                if($file->size > 0){
                     $fileExt = pathinfo($file->name, PATHINFO_EXTENSION);
 
                     $filename = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
@@ -3337,9 +3337,9 @@ public $controller = 'Postventa';
             $reponseUpdateLote = $this->General_model->updateRecord("lotes", array("estatusCambioNombre" => 2, "usuario" => 1), "idLote", $idLote); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
 
             #insercion de los coprop
-                if($banderaCoprop>0){
-                    foreach ($arrayPosiciones as $index_array){
-                        $dataInsertCoprop = array(
+            if($banderaCoprop>0){
+                foreach ($arrayPosiciones as $index_array){
+                    $dataInsertCoprop = array(
                         "id_cliente" => $idCliente,
                         "nombre" => $this->input->post('nomCopro'.$index_array),
                         "apellido_paterno" => $this->input->post('app'.$index_array),
@@ -3372,9 +3372,9 @@ public $controller = 'Postventa';
                         "ladaTel" => null,
                         "ladaCel" => null
                     );
-                        $responseInsertCliente = $this->General_model->addRecord('copropietarios', $dataInsertCoprop);
-                    }
+                    $responseInsertCliente = $this->General_model->addRecord('copropietarios', $dataInsertCoprop);
                 }
+            }
             #termino de los coprop
 
 
@@ -3449,9 +3449,8 @@ public $controller = 'Postventa';
             if($tipoTramite == 6){
                 $file = $this->file('fileElm');
 
-                if($file){
+                if($file->error == 0 && $file->size > 0){
                     $fileExt = pathinfo($file->name, PATHINFO_EXTENSION);
-
                     $filename = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
                     // $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
                     // $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
@@ -3462,6 +3461,7 @@ public $controller = 'Postventa';
                         $dataParaActualizar['escrituraNotariada'] = $filename;
                     }
                 }
+
             }
 
             $responseUpdateCliente = $this->General_model->updateRecord("clientes_x_lote", $dataParaActualizar, "id_registro", $idRegistro); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
@@ -3471,6 +3471,7 @@ public $controller = 'Postventa';
         else
             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
     }
+
 
     public function setAvance () {
 /*
@@ -3530,7 +3531,8 @@ public $controller = 'Postventa';
                 "userLiberacion" => $this->session->userdata('id_usuario'),
                 "tipo" => 6,
                 "tipo_lote" => null,
-                "descuentoHabMenores" => null
+                "descuentoHabMenores" => null,
+                "descuentoHabMayores" => null
             );
             $responseLiberacion = $this->caja_model_outside->aplicaLiberacion($datosLiberacion);
             if ($responseLiberacion) {
@@ -3726,6 +3728,19 @@ public $controller = 'Postventa';
         else
             echo json_encode(array());
 
+    }
+
+    public function historial_estatus3(){
+        $this->load->view('template/header');
+        $this->load->view("postventa/reportes/historial_estatus3");
+    }
+
+    public function getHistorialEstatus3(){
+        $data = $this->Postventa_model->getHistorialEstatus3();
+        if($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
     }
 
 }

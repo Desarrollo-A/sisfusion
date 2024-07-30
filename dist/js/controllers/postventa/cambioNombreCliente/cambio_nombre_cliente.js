@@ -15,6 +15,31 @@ $(document).ready(function () {
         }
         $("#tipoTramite").selectpicker('refresh');
     }, 'json');
+
+    $('#txtNombre').on('input', function() {
+        var texto = $(this).val();
+        var regex = /[^a-zA-Z\s]/g; // Expresión regular que acepta solo letras
+        if (regex.test(texto)) {
+            var cleaned = texto.replace(regex, ''); // Elimina caracteres no permitidos
+            $(this).val(cleaned); // Actualiza el valor del input solo con letras
+        }
+    });
+    $('#txtApellidop').on('input', function() {
+        var texto = $(this).val();
+        var regex = /[^a-zA-Z\s]/g; // Expresión regular que acepta solo letras
+        if (regex.test(texto)) {
+            var cleaned = texto.replace(regex, ''); // Elimina caracteres no permitidos
+            $(this).val(cleaned); // Actualiza el valor del input solo con letras
+        }
+    });
+    $('#txtApellidom').on('input', function() {
+        var texto = $(this).val();
+        var regex = /[^a-zA-Z\s]/g; // Expresión regular que acepta solo letras
+        if (regex.test(texto)) {
+            var cleaned = texto.replace(regex, ''); // Elimina caracteres no permitidos
+            $(this).val(cleaned); // Actualiza el valor del input solo con letras
+        }
+    });
 });
 
 $('#proyecto').change(function () {
@@ -118,6 +143,8 @@ function fillTable(index_proyecto, index_condominio) {
             {
                 data: function (d) {
                     let classStatus = '';
+                    let labelProceso = '';
+
                     if(d.estatusProceso == 'Rechazado'){
                         classStatus = 'lbl-warning';
                     }else if(d.estatusProceso == 'Aceptado'){
@@ -125,7 +152,14 @@ function fillTable(index_proyecto, index_condominio) {
                     }else if(d.estatusProceso = 'Sin iniciar proceso'){
                         classStatus = 'lbl-gray';
                     }
-                    return `<span class="label ${classStatus}">${d.estatusProceso}</span>`;
+                    labelProceso = d.estatusProceso;
+
+                    if(d.estatusCambioNombre == 3){
+                        classStatus = 'lbl-brown';
+                        labelProceso = "En revisión Contraloría";
+                    }
+
+                    return `<span class="label ${classStatus}">${labelProceso}</span>`;
                 },
             },
             {
@@ -207,7 +241,7 @@ $(document).on('click', '.iniciarTramite', async function () {
         $('#txtNombre').val('');
         $('#txtApellidop').val('');
         $('#txtApellidom').val('');
-    } 
+    }
     else if ($(this).attr('data-tipoTransaccion') == 2 || $(this).attr('data-tipoTransaccion') == 5) {
         $("#tipoTramite").val($(this).attr('data-idTipoTramite')).selectpicker('refresh');
         $('#txtNombre').val($(this).attr('data-nombreCteNuevo'));
@@ -395,33 +429,33 @@ function agregarCoprop(){
 
     $('#banderaCoprop').val(contador);
     let divInternoInner  = '<div class="row mt-4" id="campoDinamico'+contador+'">';
-        divInternoInner += '  <div class="row">';
-        divInternoInner += '    <div class="col-lg-12">';
-        divInternoInner += '        <div class="form-group text-left m-0">';
-        divInternoInner += '            <label class="control-label label-gral">Nombre (<small style="color: red;">*</small>)</label>';
-        divInternoInner += '            <input id="nomCopro'+contador+'" name="nomCopro'+contador+'" class="form-control input-gral" type="text">';
-        divInternoInner += '        </div>';
-        divInternoInner += '    </div>';
-        divInternoInner += '    <div class="col-lg-6">';
-        divInternoInner += '        <div class="form-group text-left m-0">';
-        divInternoInner += '            <label class="control-label label-gral">Apellido paterno (<small style="color: red;">*</small>)</label>';
-        divInternoInner += '            <input id="appCopro'+contador+'" name="app'+contador+'" class="form-control input-gral" type="text">';
-        divInternoInner += '        </div>';
-        divInternoInner += '    </div>';
-        divInternoInner += '    <div class="col-lg-6">';
-        divInternoInner += '        <div class="form-group text-left m-0">';
-        divInternoInner += '            <label class="control-label label-gral">Apellido materno (<small style="color: red;">*</small>)</label>';
-        divInternoInner += '            <input id="apmCopro'+contador+'" name="apm'+contador+'" class="form-control input-gral" type="text">';
-        divInternoInner += '        </div>';
-        divInternoInner += '    </div>';
+    divInternoInner += '  <div class="row">';
+    divInternoInner += '    <div class="col-lg-12">';
+    divInternoInner += '        <div class="form-group text-left m-0">';
+    divInternoInner += '            <label class="control-label label-gral">Nombre (<small style="color: red;">*</small>)</label>';
+    divInternoInner += '            <input id="nomCopro'+contador+'" name="nomCopro'+contador+'" class="form-control input-gral" type="text">';
+    divInternoInner += '        </div>';
+    divInternoInner += '    </div>';
+    divInternoInner += '    <div class="col-lg-6">';
+    divInternoInner += '        <div class="form-group text-left m-0">';
+    divInternoInner += '            <label class="control-label label-gral">Apellido paterno (<small style="color: red;">*</small>)</label>';
+    divInternoInner += '            <input id="appCopro'+contador+'" name="app'+contador+'" class="form-control input-gral" type="text">';
+    divInternoInner += '        </div>';
+    divInternoInner += '    </div>';
+    divInternoInner += '    <div class="col-lg-6">';
+    divInternoInner += '        <div class="form-group text-left m-0">';
+    divInternoInner += '            <label class="control-label label-gral">Apellido materno (<small style="color: red;">*</small>)</label>';
+    divInternoInner += '            <input id="apmCopro'+contador+'" name="apm'+contador+'" class="form-control input-gral" type="text">';
+    divInternoInner += '        </div>';
+    divInternoInner += '    </div>';
 
-        divInternoInner += '    <div class="col-lg-2 col-lg-offset-9 center-align text-center justify-center">';
-        divInternoInner += '            <button type="button" class="btn btn-danger btn-simple" onClick="eliminarCopropDiv('+contador+')">eliminar</button>';
-        divInternoInner += '    </div>';
+    divInternoInner += '    <div class="col-lg-2 col-lg-offset-9 center-align text-center justify-center">';
+    divInternoInner += '            <button type="button" class="btn btn-danger btn-simple" onClick="eliminarCopropDiv('+contador+')">eliminar</button>';
+    divInternoInner += '    </div>';
 
-        divInternoInner += '  </div>';
-        divInternoInner += '  <hr>';
-        divInternoInner += '</div>';
+    divInternoInner += '  </div>';
+    divInternoInner += '  <hr>';
+    divInternoInner += '</div>';
     divAddCoprop.innerHTML += divInternoInner;
 
     banderasPosiciones.push(contador);
@@ -473,3 +507,4 @@ $(document).on('change', '#tipoTramite', ()=>{
         document.getElementById('fileEscrituraSellos').classList.add = 'hide';
     }
 });
+
