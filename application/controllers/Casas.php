@@ -393,7 +393,6 @@ class Casas extends BaseController
 
     public function to_asignacion()
     {
-        $form = $this->form();
 
         $idLote = $this->form('idLote');
         $comentario = $this->form('comentario');
@@ -403,9 +402,7 @@ class Casas extends BaseController
         $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crdito - 1: bancario - 2: directo
 
         if (!isset($idLote) || !isset($gerente) || !isset($esquemaCredito)) {
-            $this->db->trans_rollback();
             http_response_code(400);
-
             $this->json([]);
         }
 
@@ -421,11 +418,8 @@ class Casas extends BaseController
             $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idLote, $gerente, $comentario, $idUsuario);
         }
 
-        if ($proceso && $esquemaCredito == 1) { // esquema de banco
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso | Comentario: ' . $proceso->comentario, 1);
-            $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
-        } else if ($proceso && $esquemaCredito == 2) { // esquema de credito
-            $this->CasasModel->addHistorial($proceso->idProceso, 'NULL', 0, 'Se inicio proceso | Comentario: ' . $proceso->comentario, 2);
+        if ($proceso) {
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso | Comentario: ' . $proceso->comentario, $esquemaCredito == 1 ? 1 : 2);
             $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
         } else {
             $this->db->trans_rollback();

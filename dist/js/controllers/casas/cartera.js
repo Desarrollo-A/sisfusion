@@ -16,10 +16,6 @@ $.ajax({
     }
 })
 
-function cambio(option) {
-    // console.log(option)
-}
-
 filtro_proyectos.onChange(function(option){
     // console.log(option)
 
@@ -54,8 +50,8 @@ let filtros = new Filters({
 
 let gerentes = []
 let tipoEsquema = [];
-tipoEsquema[0] = {label: "Credito de banco", value: 1}; // credito de banco
-tipoEsquema[1] = {label: "Credito directo", value: 2}; // credito directo
+tipoEsquema[0] = {label: "Crédito de banco", value: 1}; // credito de banco
+tipoEsquema[1] = {label: "Crédito directo", value: 2}; // credito directo
 
 $.ajax({
     type: 'GET',
@@ -100,7 +96,7 @@ select_lote = function(data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de credito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
+            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -281,7 +277,7 @@ $(document).on('click', '.btn-asignar', () => {
         },
         fields: [
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de credito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
+            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
