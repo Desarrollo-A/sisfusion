@@ -310,6 +310,6 @@
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     <!-- <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script> -->
-    <script src="<?=base_url()?>dist/js/controllers/Casas_comisiones/solicitudes_casas.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/casas_comisiones/solicitudes_casas.js"></script>
 
 </body>

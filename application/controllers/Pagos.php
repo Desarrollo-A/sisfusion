@@ -157,10 +157,10 @@ class Pagos extends CI_Controller
     echo json_encode( $respuesta );
   }
 
-  public function getComments($id_pago ){
-    // $id_pago = $this->input->post("id_pago");
-    echo json_encode($this->Pagos_model->getComments($id_pago));
-  }
+    public function getComments($id_pago ){
+        // $id_pago = $this->input->post("id_pago");
+        echo json_encode($this->Pagos_model->getComments($id_pago));
+    }
   
   public function revision_remanente(){
     switch($this->session->userdata('id_rol')){

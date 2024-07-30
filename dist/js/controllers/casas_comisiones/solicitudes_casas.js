@@ -304,26 +304,27 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             type: 'POST',
                             success: function (data) {
                                 response = JSON.parse(data);
-                                if (data == 1) {
+                                console.log(response.respuesta);
+                                if (response.respuesta == 1) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#totpagarPen").html(formatMoney(0));
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
                                     tabla_nuevas.ajax.reload();
                                     tabla_revision.ajax.reload();
-                                } else if (data == 2) {
+                                } else if (data.respuesta == 2) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
-                                } else if (data == 3) {
+                                } else if (response.respuesta == 3) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "NO HAS INGRESADO TU CÓDIGO POSTAL", "warning");
-                                } else if (data == 4) {
+                                } else if (response.respuesta == 4) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "NO HAS ACTUALIZADO CORRECTAMENTE TU CÓDIGO POSTAL", "warning");
-                                } else if (data == 5) {
+                                } else if (response.respuesta == 5) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "NO CUENTAS CON UNA FORMA DE PAGO VÁLIDA", "warning");
@@ -387,27 +388,27 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {

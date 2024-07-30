@@ -157,17 +157,30 @@ class Comisiones extends CI_Controller
     $datos = array();
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
     $this->load->view('template/header');
+    $tipo = $this->session->userdata('tipo');
+
     switch($this->session->userdata('id_rol')){
       case '1':
+
+        if($tipo == 3){
+          $this->load->view("casas_comisiones/casas_colaboradorRigel_view", $datos);
+        }
+
       case '2':
-        if (in_array($this->session->userdata('id_usuario'),[13546, 13549, 13589])) // ALEJANDRO GONZÁLEZ DÁVALOS
+        if (in_array($this->session->userdata('id_usuario'),[13546, 13549, 13589])){ // ALEJANDRO GONZÁLEZ DÁVALOS
           $this->load->view("ventas/comisiones_colaborador", $datos);
-        else
+        }else if($tipo == 3){
+          $this->load->view("casas_comisiones/casas_colaboradorRigel_view", $datos);
+        }else{
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
+        }
       break;
       default:
-        if($this->session->userdata('tipo') == 3){
-          $this->load->view("casas_comisiones/Solicitudes_casas_comisiones", $datos);
+         $rol = $this->session->userdata('id_rol');
+         $tipo = $this->session->userdata('tipo');
+
+        if($tipo == 3){
+          $this->load->view("casas_comisiones/solicitudes_casas_comisiones", $datos);
 
         }else{
           $this->load->view("ventas/comisiones_colaborador", $datos);
@@ -1608,6 +1621,9 @@ if( isset( $_FILES ) && !empty($_FILES) ){
       }
     }
 
+    public function getComments($pago){
+      echo json_encode($this->Comisiones_model->getComments($pago)->result_array());
+    }
 
     public function getCommentsDU($user){
         echo json_encode($this->Comisiones_model->getCommentsDU($user)->result_array());
@@ -5636,9 +5652,12 @@ public function lista_usuarios($rol,$forma_pago){
     );
     echo json_encode($data);
   }
+
   public function getDatosFechasProyecCondm(){
+    $tipoUsuario = ($this->session->userdata('tipo') == 1 ? 0 : ($this->session->userdata('tipo') == 2 ? 1: $this->session->userdata('tipo')));
     
-    $tipoUsuario = $this->session->userdata('tipo');// == 1 ? 0 : ($this->session->userdata('tipo') == 2 ? 1: $this->session->userdata('tipo'));    //var_dump(date('N') );
+    //$tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
+    //var_dump(date('N') );
     //$fechaFin = $this->session->userdata('id_sede') == 8 ? 'fechaTijuana' : 'fechaFinGeneral';
     $diaActual = date('d'); 
     $data = array(
@@ -5651,6 +5670,7 @@ public function lista_usuarios($rol,$forma_pago){
     echo json_encode($data);
     
   }
+
   public function getYears(){
     $result = $this->Comisiones_model->getYears();
     echo json_encode($result);
@@ -5717,6 +5737,5 @@ public function resumenIndividual($idLote,$proceso){
     }
     
 }
-
 
 }

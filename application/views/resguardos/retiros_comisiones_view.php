@@ -216,7 +216,7 @@
 
                             <div class="form-group" id="div_motivo">
                                 <label class="label" id="texto_motivo">Mótivo</label>
-                                <textarea id="comentario" name="comentario" class="form-control" rows="3" onchange="validarEspacios(event)" ></textarea> 
+                                <textarea id="comentario" name="comentario" class="form-control" rows="3" ></textarea> 
                             </div>
 
                         </div>
