@@ -4,7 +4,7 @@
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 45px;font-family:'Raleway',sans-serif;" align="left">
 
         <div class="v-text-align v-font-size" style="font-size: 14px; line-height: 140%; text-align: center; word-wrap: break-word;">
-          <p style="line-height: 140%;">Hola usuario, se han encontrado que la siguiente cantidad de lotes necesitan atención: </p>
+          <p style="line-height: 140%;">Hola usuario, se ha encontrado que la siguiente cantidad de lotes necesitan atención: </p>
         </div>
 
       </td>
@@ -16,7 +16,6 @@
   <th>Cantidad</th>
   <th>Concepto</th>
   <tbody>
-
     <tr>
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:3px 3px 3px 3px;font-family:'Raleway',sans-serif;" align="center">
         <?= $cantidadProceso2; ?>

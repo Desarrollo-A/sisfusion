@@ -34,7 +34,15 @@ $(document).ready (function() {
                         }
                     }
                 }
-            }]
+            },
+            {
+                className: 'btn btn-azure subir-msi',
+                text: '<i class="fas fa-plus"></i> Agregar MSI',
+                titleAttr: 'AGREGAR MSI',
+                title: 'Agregar MSI'
+            }
+        
+        ]
     }else{
         button_excel = [{
                 className: 'btn buttons-excel color-letter',
@@ -54,7 +62,6 @@ $(document).ready (function() {
             {
                 className: 'btn btn-azure subir-msi',
                 text: 'Agregar MSI',
-                title:'Agregar MSI'
             }];
 
     }
@@ -117,36 +124,17 @@ $(document).ready (function() {
                 data:function(d){
                     $('[data-toggle="tooltip"]').tooltip();
                     let botones = '';
-                    switch(id_rol_general) {
-                        case 5:
-                            if (d.estatus_id == 1) {
-                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 3) {
-                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 4) {
-                                botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            break;
-                        case 17:
-                            if (d.estatus_id == 2) {
-                                botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 4) {
-                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            break;
-                        case 70:
-                            if (d.estatus_id == 2) {
-                                botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            if (d.estatus_id == 4) {
-                                botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
-                            }
-                            break;
-                        default:
-                            break;
+                    
+                    if(id_rol_general == 17 || id_rol_general == 70) {
+                        if (d.estatus_id == 1) {
+                            botones += botonesPermisoMSI(1, 1, 1, 0, d.id_autorizacion, d.estatus, d.lote);
+                        }
+                        if (d.estatus_id == 2) {
+                            botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
+                        }
+                        if (d.estatus_id == 4) {
+                            botones += botonesPermisoMSI(1, 0, 0, 0, d.id_autorizacion, d.estatus, d.lote);
+                        }
                     }
                     let autTipo = isNum(d.lote);
                     let valor = (autTipo) ? 2 : 1;
@@ -163,7 +151,7 @@ $(document).ready (function() {
         if (input.length) {
             input.val(log);
         } else {
-            if (log) alert(log);
+            if (log) console.log("log: ", log);
         }
     });
 
@@ -172,7 +160,7 @@ $(document).ready (function() {
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
             label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
         input.trigger('fileselect', [numFiles, label]);
-    });
+    }); 
 
     $('input[type=radio][name=modoSubida]').change(function(e) {
         if (this.value == 1) {
@@ -537,7 +525,7 @@ function botonesPermisoMSI(permisoVista,permisoEditar,permisoAvanzar,permisoRech
     if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}"  class="btn-data btn-sky btnVerMA" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
     if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}" class="btn-data btn-yellow btnEditarMA" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-edit"></i></button>`; }
     if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus}" class="btn-data btn-green btnAvanzarAM" data-toggle="tooltip" data-placement="top" title="Avanzar"><i class="fas fa-thumbs-up"></i></button>`;  }
-    if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazarAM" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
+    //if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus}" class="btn-data btn-warning btnRechazarAM" data-toggle="tooltip" data-placement="top" title="Rechazar"><i class="fas fa-thumbs-down"></i></button>`;  }
     return  botones;
 }
 function isNum(val){
@@ -553,13 +541,10 @@ $(document).on('click', '.btnVerMA', function(e){
 
     if(accion == 1){
         let id = parseInt(id_aut);
-        console.log('id', id);
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
         data['edit'] = 0;
         $('.anclaClass2').attr('placeholder', 'ID LOTE');
     }else if(accion == 2){
-        console.log('id_aut', id_aut);
-
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
         data['edit'] = 0;
         $('.anclaClass2').attr('placeholder', 'ID CONDOMINIO');
@@ -646,7 +631,7 @@ function loadTableVAUT(data){
         {
             data: function(d){
                 let action_return = '';
-                if(id_rol_general==5 && data['edit'] == 1){
+                if(data['edit'] == 1) {
                     action_return = '<input type="text" class="form-control"  name="msi" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="'+d.msi+'">';
                 }else{
                     action_return = d.msi;
@@ -810,12 +795,6 @@ $(document).on('click', '.btnHistorial', function () {
     $("#modalHistorialAM").modal();
 });
 
-
-$(".testing").on( "click", function() {
-    console.log("perro");
-});
-
-
 $(document).on('submit', '#cambiosMSIF', function(e) {
     e.preventDefault();
     var params = tablaMsiVisualizar.$('input').serialize();
@@ -916,14 +895,9 @@ $(document).on('click', '.btnAvanzarAM', function(){
     }
 
     dataUpdateGeneral[0] = id_aut;
-    if(id_rol_general==17 || id_rol_general==70){
-        dataUpdateGeneral[1] = 5;
-        $('#tittleModalAM').text('¿Deseas autorizar los meses sin intereses?');
-        $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
-    }else{
-        dataUpdateGeneral[1] = 2;
-        $('#tittleModalAM').text('Avanzar autorización');
-    }
+    $("#titleModalAM").text('¿Deseas autorizar los meses sin intereses?');
+    $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI.');
+    dataUpdateGeneral[1] = 5;
     $('#avanzarAutAM').modal('show');
 });
 

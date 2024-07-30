@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $("#tabla_lotes").addClass('hide');
     $('#spiner-loader').removeClass('hide');
-    $.post(`${general_base_url}Reestructura/lista_proyecto`, function (data) {
+    $.post(general_base_url+'Reestructura/lista_proyecto', function (data) {
         const ids = data.map((row) => {
             return row.idResidencial;
         }).join(',');
@@ -43,31 +43,35 @@ $('#tabla_lotes thead tr:eq(0) th').each(function (i) {
 $(document).on('click', '.cancel', function () {
     $('#idLote').val($(this).attr('data-idLote'));
     $('#nombreLote').val($(this).attr('data-nombreLote'));
+    $('#idCliente').val($(this).attr('data-idCliente'));
     $('#obsSolicitudCancel').val('');
     $('#tipoCancelacion').val('').selectpicker('refresh');
     $('#cancelarLote').modal();
 });
 
 $(document).on('click', '#saveCancel', function () {
-    let idLote = $("#idLote").val();
-    let nombreLote = $("#nombreLote").val();
-    let obsSolicitudCancel = $("#obsSolicitudCancel").val();
-    let tipoCancelacion = $("#tipoCancelacion").val();
-    let tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
+    const idLote = $("#idLote").val();
+    const idCliente = $("#idCliente").val();
+    const obsSolicitudCancel = $("#obsSolicitudCancel").val();
+    const tipoCancelacion = $("#tipoCancelacion").val();
+    const tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
     if (obsSolicitudCancel.trim() == '' || tipoCancelacion == '') {
         alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación..", "warning");
         return false;
     }
-    var datos = new FormData();
+    
     $("#spiner-loader").removeClass('hide');
+    
+    const datos = new FormData();
     datos.append("idLote", idLote);
-    datos.append("nombreLote", nombreLote);
-    datos.append("obsSolicitudCancel", obsSolicitudCancel);
+    datos.append("idCliente", idCliente);
     datos.append("tipoCancelacion", tipoCancelacion);
     datos.append("tipoCancelacionNombre", tipoCancelacionNombre);
+    datos.append("obsLiberacion", obsSolicitudCancel);
+    datos.append("tipoLiberacion", 3);
     $.ajax({
         method: 'POST',
-        url: `${general_base_url}Reestructura/setSolicitudCancelacion`,
+        url: `${general_base_url}Reestructura/aplicarLiberacion`,
         data: datos,
         processData: false,
         contentType: false,
@@ -78,7 +82,12 @@ $(document).on('click', '#saveCancel', function () {
                 $('#cancelarLote').modal('hide');
                 alerts.showNotification("top", "right", "Opción editada correctamente.", "success");
                 $('#idLote').val('');
+                $('#nombreLote').val('');
+                $('#idCliente').val('');
                 $('#obsSolicitudCancel').val('');
+            }
+            else{
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         },
         error: function () {
@@ -150,7 +159,7 @@ function fillTable(index_proyecto) {
             {
                 data: function (d) {
                     if (d.consulta == 1) {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-yellow cancel" data-toggle="tooltip" data-placement="top" title= "SOLICITUD DE CANCELACIÓN" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-comment-dots"></i></button>`;
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELACIÓN DE CONTRATO" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-nombreLote="${d.nombreLote}"><i class="fas fa-times"></i></button>`;
                     }
                     return ``;
                 }

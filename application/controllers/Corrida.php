@@ -1,8 +1,8 @@
 <?php
-    require_once 'static/autoload.php';//linea debe descomentarse en PROD
+    // require_once 'static/autoload.php';//linea debe descomentarse en PROD
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-//    require '../../vendor/autoload.php'; //linea debe descomentarse en local
+//require '../../vendor/autoload.php'; //linea debe descomentarse en local
 
 class Corrida extends CI_Controller
 {

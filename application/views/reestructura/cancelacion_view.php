@@ -16,6 +16,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <input type="hidden" name="idLote" id="idLote">
                                 <input type="hidden" name="nombreLote" id="nombreLote">
+                                <input type="hidden" name="idCliente" id="idCliente">
                                 <label class="control-label overflow-hidden" for="proyecto">Observaciones</label>
                                 <textarea name="obsSolicitudCancel" id="obsSolicitudCancel" placeholder="Ingresa aquí tus comentarios" class="text-modal" required row="4"></textarea>
                             </div>

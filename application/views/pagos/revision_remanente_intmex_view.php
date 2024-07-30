@@ -46,6 +46,16 @@
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" id="modal_refresh_seguros" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="form_refresh_seguros">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -58,8 +68,8 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade modal-alertas" id="modal_multiples_intmexR_seguros" role="dialog">
+    
+<div class="modal fade modal-alertas" id="modal_multiples_intmexR_seguros" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header"></div>
@@ -91,14 +101,14 @@
                                 <div class="tab-content p-2">
                                     <div class="tab-pane active" id="nuevas-1">
                                         <div class="card-content" style="justify-content: space-between">  
-                                        <div class="text-center">
-                                                <div class="encabezadoBox">
-                                                    <h3 class="card-title center-align" >Comisiones nuevas <b>remanente</b></h3>
+                                                <div class="text-center">  
+                                                    <div class="encabezadoBox">
+                                                        <h3 class="card-title center-align" >Comisiones nuevas <b>remanente</b></h3>
+                                                    </div>
+                                                    <div>
+                                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
-                                                </div>
-                                        </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                 <div class="row">

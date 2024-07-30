@@ -1167,7 +1167,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 'nohemi.castillo@ciudadmaderas.com',
                 'lorena.serrato@ciudadmaderas.com',
                 'yaretzi.rosales@ciudadmaderas.com',
-                'esmeralda.vega@ciudadmaderas.com')*/
+                'esmeralda.vega@ciudadmaderas.com',
+                'analilia.hernandez@ciudadmaderas.com')*/
             ->subject('Cambio de contraseña ASESOR COMODÍN.')
             ->view($this->load->view('mail/schedule-tasks-cl/change-password', [
                 'encabezados' => $encabezados,
@@ -1203,7 +1204,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         //token autorizado para esta operación
         //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4MTAzNTgsImV4cCI6MTcwNDg5Njc1OCwiZGF0YSI6eyJ1c2VybmFtZSI6IjAwNE1fQ09NNTAyIiwicGFzc3dvcmQiOiIyMjM1JjgzMlNEVlcifX0.bqVjnDZeaHVvFQdDoTN8zxhvNOt5owMOYqdG1jCf6k4
 
-        if (!isset(apache_request_headers()["Authorization"])) //solicitud de autorización
+        if (!isset(apache_request_headersxxx()["Authorization"])) //solicitud de autorización
             echo json_encode(array("status" => 360, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
             if (apache_request_headers()["Authorization"] == "") // validar headers autorización
@@ -1353,6 +1354,93 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             return $updateData;
         }
     }
+
+    public function getLotesAsignados(){
+      set_time_limit(600);
+      // para tener los datos de todos
+      $getLotesTodo = $this->scheduleTasks_model->getLotesAsignadosTodos()->result();
+      $getProceso6 = $this->scheduleTasks_model->getLotesAsignados6()->result();
+      $getProcesoContraloria = $this->scheduleTasks_model->getLotesAsignadosContraloria()->result();
+      $getProcesoJuridico = $this->scheduleTasks_model->getLotesAsignadosJuridico()->result();
+
+      $sentFlag = true;
+      
+      // envio de correos a gerentes
+      foreach($getLotesTodo as $lote){
+          $this->email
+          ->initialize()
+          ->from('Ciudad Maderas')
+          ->to($lote->correo)
+          ->subject('Notificación de estatus de lotes')
+          ->view($this->load->view('mail/reestructura/mailPendientes', [
+              'nombreGerente' => $lote->nombreGerente,
+              'cantidadProceso0' => $lote->cantidadProceso0,
+              'cantidadProceso1' => $lote->cantidadProceso1,
+              'cantidadProceso3' => $lote->cantidadProceso3,
+              'cantidadProceso6' => $lote->cantidadProceso6,
+          ], true));
+          $this->email->send();
+      }
+
+      // sleep(10);
+      // envios de correos a asesores
+      foreach($getProceso6 as $lote){
+          $this->email
+          ->initialize()
+          ->from('Ciudad Maderas')
+          ->to($lote->correo)
+          ->subject('Notificación de estatus de lotes')
+          ->view($this->load->view('mail/reestructura/mailPendientesAsesor', [
+              'nombreAsesor' => $lote->nombreAsesor,
+              'cantidadProceso6' => $lote->cantidadProceso6,
+          ], true));
+          $this->email->send();
+      }
+
+      // sleep(10);
+      // envios de correos a contraloria
+      foreach($getProcesoContraloria as $lote){
+          $this->email
+          ->initialize()
+          ->from('Ciudad Maderas')
+          ->to(['mariela.sanchez@ciudadmaderas.com', 'asistente.contraloria@ciudadmaderas.com']) // Mariela Sanchez 
+          ->subject('Notificación de estatus de lotes')
+          ->view($this->load->view('mail/reestructura/mailPendientesContraloria', [
+              'nombre1' => "Mariela Sanchez Sanchez",
+              'nombre2' => "Alejando Santiago Gamez",
+              'cantidadProceso2' => $lote->cantidadProceso2,
+          ], true));
+          $this->email->send();            
+      }
+
+      // sleep(10);
+      // envios de correos a juridico
+      foreach($getProcesoJuridico as $lote){
+          $this->email
+          ->initialize()
+          ->from('Ciudad Maderas')
+          ->to(['cinthya.lopez@ciudadmaderas.com', 'asistente.juridico@ciudadmaderas.com']) // Cinthya López
+          ->subject('Notificación de estatus de lotes')
+          ->view($this->load->view('mail/reestructura/mailPendientesJuridico', [
+              'nombre1' => "Cinthya López",
+              'cantidadProceso2' => $lote->cantidadProceso2,
+          ], true));
+
+          $this->email->send();
+      }
+      
+      if($sentFlag){
+          $response["result"] = true;
+          $response["message"] = "Se han enviado los correos exitosamente";
+      }
+      else{
+          $response["result"] = false;
+          $response["message"] = "Ha ocurrido un error al enviar los correos";
+      }
+
+      $this->output->set_content_type('application/json');
+      $this->output->set_output(json_encode($response)); 
+  }
 
 }
 ?>

@@ -3,6 +3,35 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
+        <!-- Modals -->
+        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <div id="nameLote"></div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -30,20 +59,20 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="catalogoInter">Proyecto</label>
-                                                    <select name="catalogoInter" id="catalogoInter" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="control-label" for="id_proyecto_ei">Proyecto</label>
+                                                    <select name="id_proyecto_ei" id="id_proyecto_ei" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="condominioInter">Condominio</label>
-                                                    <select class="selectpicker select-gral m-0" id="condominioInter" name="condominioInter[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="control-label" for="id_condominio_ei">Condominio</label>
+                                                    <select class="selectpicker select-gral m-0" id="id_condominio_ei" name="id_condominio_ei[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="formaPagoInter">Forma de pago</label>
-                                                    <select name="formaPagoInter" id="formaPagoInter" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="control-label" for="forma-pago-filtro">Forma de pago</label>
+                                                    <select name="forma-pago-filtro" id="forma-pago-filtro" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -86,5 +115,4 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/enviadas_internomex.js"></script>
-    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
 </body>

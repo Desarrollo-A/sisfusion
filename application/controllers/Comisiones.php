@@ -226,11 +226,14 @@ class Comisiones extends CI_Controller
       $this->load->view("ventas/validate_region");
   }
 
-   public function resguardos(){
-     $this->load->view('template/header');
-     $this->load->view("ventas/revision_resguardo");
-  }
-
+//    public function resguardos(){
+//      $this->load->view('template/header');
+//      $this->load->view("ventas/revision_resguardo");
+//   }
+  public function resguardos(){
+    $this->load->view('template/header');
+    $this->load->view("resguardos/revision_resguardo_view");
+ }
 
   // public function retiros(){
   //   $this->load->view('template/header');
@@ -5681,5 +5684,23 @@ public function lista_usuarios($rol,$forma_pago){
     
     echo json_encode($this->Comisiones_model->getComisionInd($idLote, $idUsr)->result_array(),JSON_NUMERIC_CHECK);
 }
+
+
+
+
+
+
+public function resumenIndividual($idLote,$proceso){
+    // $idLote = $this->input->post('idLote');
+    if($proceso == 1){
+        // fusion
+        echo json_encode($this->Comisiones_model->resumenIndividual($idLote));
+    }else  if ($proceso == 2){
+        // excedente
+        echo json_encode($this->Comisiones_model->resumenIndividualExce($idLote));
+    }
+    
+}
+
 
 }

@@ -16,7 +16,6 @@
   <th>Cantidad</th>
   <th>Concepto</th>
   <tbody>
-
     <tr>
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:3px 3px 3px 3px;font-family:'Raleway',sans-serif;" align="center">
         <?= $cantidadProceso2; ?>
