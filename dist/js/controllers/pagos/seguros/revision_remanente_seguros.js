@@ -447,12 +447,12 @@ function getDataRemanente_seguros(proyecto, condominio){
             '<div class="row">'+
                 '<div class="d-flex justify-end">'+
                     '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>'+
-                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar">PAUSAR</button>'+
+                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar_seguros">PAUSAR</button>'+
                 '</div>'+
             '</div>'
         );
-        const buttonPausar = document.getElementById('btnPausar');
-        buttonPausar.addEventListener('click', function handleClick() {
+        const btnPausar_seguros = document.getElementById('btnPausar');
+        btnPausar_seguros.addEventListener('click', function handleClick() {
             $("#autorizarRemanente_seguros").html(formatMoney(0));
         });
         $("#modalPausarRemanenteSeguros").modal();

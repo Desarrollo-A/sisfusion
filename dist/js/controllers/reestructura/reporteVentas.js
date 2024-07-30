@@ -97,8 +97,29 @@ $('#tablaReporteVentas').DataTable({
         // { data: "nombreSedeRecepcion" },
         {
             data: function (d) {
-                if (d.tipoV == 1) return `<div class="d-flex justify-center"> <button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + construirBotonCambio(d, 'getInfoRe2') + `</div>`;
-                if (d.tipoV == 2) return `<div class="d-flex justify-center"> <button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + `</div>`;
+                if(d.id_cliente_reubicacion_2 != 0 ) {
+                    if((d.bandera_dispersion == 1 && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 2 && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 2  && d.registro_comision != 9) ||
+                    (d.bandera_dispersion == 1  && d.registro_comision != 9 && d.validaLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
+                       return '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
+                    } else if((d.bandera_dispersion == 3  && d.registro_comision == 9) ||
+                    (d.bandera_dispersion == 3 && d.registro_comision != 9) ||
+                    ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
+                        return '<br><span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
+                    }
+            }
+            return '<br><span class="label lbl-gray">SIN DISPERSIÓN</span>';
+        },
+        },
+        {
+            data: function (d) {
+                if (d.tipoV == 1) return `<div class="d-flex justify-center"> <button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + 
+                                         `<div class="d-flex justify-center"><button id="verifyNeodata" class="btn-data btn-violetBoots" data-toggle="tooltip" data-placement="left" title="Verificar montos" data-nombreLote="${d.nombreLote}" data-empresa="${d.empresa}"><i class="fas fa-glasses"></i></button><div>` +
+                                         construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + construirBotonCambio(d, 'getInfoRe2') + `</div>`;
+                if (d.tipoV == 2) return `<div class="d-flex justify-center"> <button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + 
+                                         `<div class="d-flex justify-center"><button id="verifyNeodata" class="btn-data btn-violetBoots" data-toggle="tooltip" data-placement="left" title="Verificar montos" data-nombreLote="${d.nombreLote}" data-empresa="${d.empresa}"><i class="fas fa-glasses"></i></button><div>`+
+                                         `</div>`;
             }
         },
     ],
@@ -373,3 +394,52 @@ $(document).on("click", ".ver_historial", function () {
     consultarHistoriaContratacion(idLote);
     $("#seeInformationModal").modal();
 });
+
+
+$(document).on("click", "#verifyNeodata", function () {
+    let empresa = $(this).attr("data-empresa");
+    let nombreLote = $(this).attr("data-nombreLote");
+    $('#spiner-loader').removeClass('hide');
+    $.ajax({
+        url: `${general_base_url}Reporte/getMensualidadAbonoNeo`,
+        data: {empresa: empresa, nombreLote: nombreLote},
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        success: function (response) {
+            $("#detailPayments .modal-body").empty();
+            $("#detailPayments .modal-header").empty();
+            $("#detailPayments .modal-header").append('<div class="d-flex align-center titleCustom" style="background: white; border-radius:25px; justify-content: space-around"><h3 class="text-center fw-600"><b>lote</b></h3><h3 class="text-center fw-600">'+nombreLote+'</h3><i class="fas fa-times-circle fa-lg cursor-point" data-dismiss="modal" aria-hidden="true"></i></div>');
+            if(response.length != 0){
+                $("#detailPayments .modal-body").append(`
+                    <div class="d-flex align-center justify-center">
+                        <div>
+                            <h3 class="text-center fw-600">Detalle de mensualidades</h3>
+                            <br>
+                            <div class="d-flex align-center">
+                                <i class="fas fa-money-bill-wave-alt fa-lg mr-2" style="color:#6da36f"></i><p>Pagadas <b>${response[0]['MenPagadas']}</b></p>
+                            </div>
+                            <div class="d-flex align-center">
+                                <i class="fas fa-hand-holding fa-lg mr-2" style="color:#666"></i></i><p>Pendientes <b>${response[0]['MenPendientes']}</b></p>
+                            </div>
+                            <div class="d-flex align-center">
+                                <i class="fas fa-receipt" style="color:#666"></i>
+                                <p>Totales  ${parseInt(response[0]['MenPagadas']) + parseInt(response[0]['MenPendientes'])}</p>
+                            </div>
+                        </div>
+                    </div>`);
+            }
+            else{
+                $("#detailPayments .modal-body").append(`<div class="h-100 text-center pt-4"><img src= '${general_base_url}dist/img/empty.png' alt="Icono vacío" class="w-60"></div><h3 class="titleEmpty">`);
+            }
+            
+            $('#spiner-loader').addClass('hide');
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            $('#btn_change_lp').prop('disabled', false);
+        }
+    });
+    
+    $("#detailPayments").modal();
+  });

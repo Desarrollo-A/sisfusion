@@ -1586,9 +1586,10 @@
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, 
 				ISNULL(hd.expediente, 0) documentoCargado, 
 				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta,
-				cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
+				cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion, cl.tipoEnganche, oxc.nombre
 			FROM lotes lo 
-				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1 
+				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1
+				LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
 				LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
 				LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
 				INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -1639,7 +1640,7 @@
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), 
 				hd.expediente, 
 				tv.tipo_venta,
-				cl.sedeRecepcion, sed.nombre"
+				cl.sedeRecepcion, sed.nombre, cl.tipoEnganche, oxc.nombre"
 		)->result();
     }
 
@@ -3520,9 +3521,6 @@
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
 					$sede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-					$id_lider = $id_lider . ', 21, 1545';
-					$sede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
 					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
 					$sede = "";
@@ -3530,7 +3528,7 @@
 					$id_lider = $id_lider . ', 694, 4509';
 					$sede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-					$id_lider = $id_lider . ', 13295';
+					$id_lider = $id_lider . ', 13295, 7970';
 					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
@@ -3541,7 +3539,7 @@
 				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
 					$id_lider = $id_lider . ', 6661';
 					$sede = "";
-				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
 					$id_lider = $id_lider . ', 80, 664';
 					$sede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
@@ -3659,7 +3657,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
+        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso, hd.bucket
 		FROM historial_documento hd
 		INNER JOIN lotes lo ON lo.idLote = hd.idLote
 		INNER JOIN clientes cl ON  lo.idCliente = cl.id_cliente AND cl.idLote = lo.idLote AND cl.status = 1

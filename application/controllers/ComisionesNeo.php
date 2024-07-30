@@ -14,6 +14,7 @@ class ComisionesNeo extends CI_Controller{
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->gphsis = $this->load->database('GPHSIS', TRUE);
+        $this->programacion = $this->load->database('programacion', TRUE);
     }
 
     public function index(){
