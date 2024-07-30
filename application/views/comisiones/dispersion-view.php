@@ -301,89 +301,103 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-chart-pie fa-2x"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Dispersión de pago</h3>
-                                    <p class="card-title pl-1 center-align">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta.</p>
-                                </div>
-                                <div class="toolbar">
-                                    <div class="container-fluid">
-                                        <div class="row aligned-row">
-                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                                <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Monto hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="monto_label">
-                                                        <!-- monto o -->
-                                                    </p>
+                        <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
+                            <li class="active"><a href="#tabComer" role="tab" data-toggle="tab">Comercialización</a></li>
+                            <li ><a href="#tabCasas" role="tab" data-toggle="tab">Casas</a></li>
+                        </ul>                          
+
+                        <div class="card no-shadow m-0 border-conntent__tabs">
+                            <div class="card-content p-0">
+                                <div class="nav-tabs-custom">
+                                    <div class="tab-content p-2">
+                                        <div class="tab-pane active" id="tabComer">
+                                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                                                <i class="fas fa-chart-pie fa-2x"></i>
+                                            </div>
+                                            <div class="card-content">
+                                                <div class="encabezadoBox">
+                                                    <h3 class="card-title center-align" >Dispersión de pago</h3>
+                                                    <p class="card-title pl-1 center-align">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta.</p>
+                                                </div>
+                                                <div class="toolbar">
+                                                    <div class="container-fluid">
+                                                        <div class="row aligned-row">
+                                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                                                <div class="form-group text-center">
+                                                                    <h4 class="title-tot center-align m-0">Monto hoy: </h4>
+                                                                    <p class="category input-tot pl-1" id="monto_label">
+                                                                        <!-- monto o -->
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                                                <div class="form-group text-center">
+                                                                    <h4 class="title-tot center-align m-0">Pagos hoy: </h4>
+                                                                    <p class="category input-tot pl-1" id="pagos_label">
+                                                                            <!-- PAGOS HOY  -->
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2">
+                                                                <div class="form-group text-center">
+                                                                    <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
+                                                                    <p class="category input-tot pl-1" id="lotes_label">
+                                                                        <!-- lOTES HOY -->
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <br>
+                                                            <br><br>
+                                                            <div class="col-xs-4 col-sm-3 col-md-4 col-lg-4 d-flex align-end text-center">
+                                                                    <button type="sum" data-toggle="modal" class="btn-gral-data" id="planllenado" style="color:white" onclick="llenado()"> Llenado de plan</button>
+                                                            </div>
+                                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
+                                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 
+                                                                href="#myModal" style="color:white"> Reporte dispersión</a>
+                                                            </div>
+                                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
+                                                                <button class="btn-gral-data" id="btn-detalle-plan" style="color:white; ">Planes</button>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                        <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>PROYECTO</th>
+                                                                    <th>CONDOMINIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>ID LOTE</th>
+                                                                    <th>CLIENTE</th>
+                                                                    <th>TIPO DE VENTA</th>
+                                                                    <th>MODALIDAD</th>
+                                                                    <th>CONTRATACIÓN</th>
+                                                                    <th>PLAN DE VENTA</th>
+                                                                    <th>PRECIO FINAL LOTE</th>
+                                                                    <th>% COMISION TOTAL</th>
+                                                                    <th>IMPORTE COMISION PAGADA</th>
+                                                                    <th>IMPORTE COMISION PENDIENTE</th>
+                                                                    <th>DETALLES</th>
+                                                                    <th>FECHA ACTUALIZACIÓN</th>
+                                                                    <th>TIPO MENSUALIDAD</th>
+                                                                    <th>ACCIONES</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                                <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Pagos hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="pagos_label">
-                                                            <!-- PAGOS HOY  -->
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2">
-                                                <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="lotes_label">
-                                                        <!-- lOTES HOY -->
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <br>
-                                            <br><br>
-                                            <div class="col-xs-4 col-sm-3 col-md-4 col-lg-4 d-flex align-end text-center">
-                                                    <button type="sum" data-toggle="modal" class="btn-gral-data" id="planllenado" style="color:white" onclick="llenado()"> Llenado de plan</button>
-                                            </div>
-                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
-                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 
-                                                href="#myModal" style="color:white"> Reporte dispersión</a>
-                                            </div>
-                                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
-                                                <button class="btn-gral-data" id="btn-detalle-plan" style="color:white; ">Planes</button>
-                                            </div>
-                                            
                                         </div>
                                     </div>
-                                </div>
-                                <div class="material-datatables">
-                                    <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>ID LOTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>TIPO DE VENTA</th>
-                                                    <th>MODALIDAD</th>
-                                                    <th>CONTRATACIÓN</th>
-                                                    <th>PLAN DE VENTA</th>
-                                                    <th>PRECIO FINAL LOTE</th>
-                                                    <th>% COMISION TOTAL</th>
-                                                    <th>IMPORTE COMISION PAGADA</th>
-                                                    <th>IMPORTE COMISION PENDIENTE</th>
-                                                    <th>DETALLES</th>
-                                                    <th>FECHA ACTUALIZACIÓN</th>
-                                                    <th>TIPO MENSUALIDAD</th> 
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                </div>
+                                </div>      
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
