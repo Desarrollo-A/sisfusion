@@ -851,12 +851,8 @@ class Contraloria extends CI_Controller {
 	  }
     }
 
-    public function get_sede() {
-        echo json_encode($this->Contraloria_model->get_sede()->result_array());
-    }
-
-    public function get_tventa() {
-        echo json_encode($this->Contraloria_model->get_tventa()->result_array());
+    public function selectores() {
+        echo json_encode($this->Contraloria_model->selectores()->result_array());
     }
 
     public function editar_registro_loteRechazo_contraloria_proceso5() {
