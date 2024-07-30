@@ -1,4 +1,5 @@
 let chart, rolOnReport, idUserOnReport;
+let optiontable = "";
 
 document.querySelector(".c-filter__toggle").addEventListener("click", function () {
     this.classList.toggle("c-filter__toggle--active");
@@ -185,6 +186,7 @@ function changeIcon(anchor) {
 function createAccordions(option, render, rol){
     let tittle = getTitle(option);
     let html = '';
+    optionTable = option;
     html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
                 <div class="d-flex justify-between align-center boxTabla">   
                     <div class="cursor-point accordionToggle">
@@ -210,12 +212,10 @@ function createAccordions(option, render, rol){
                             <th>MONTO</th>
                             <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
-                            <th>SEDE APARTADOS</th>
                             <th>CANCELADOS</th>
                             <th>PORCENTAJE DE CANCELADOS</th>
                             <th>NÚMERO DE LOTES CONTRATADOS</th>
                             <th>CONTRATADOS</th>
-                            <th>SEDE CONTRATADOS</th>
                             <th>CANCELADOS</th>
                             <th>PORCENTAJE DE CANCELADOS</th>
                             <th>ACCIONES</th>                            
@@ -240,6 +240,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
 
     createAccordions(option, render, rolEspecial);
     let newRol = newRoles(option);
+    optiontable = option;
     $(".js-accordion-title").addClass('open');
     $(".accordion-content").css("display", "block");
     if(render == 1){
@@ -275,7 +276,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte de ventas por '+option ,
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -295,27 +296,21 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                                     return 'APARTADO';
                                     break;
                                 case 6:
-                                    return 'SEDE APARTADOS'
+                                    return 'CANCELADOS';
                                     break;
                                 case 7:
-                                    return 'CANCELADOS';
-                                    break;
-                                case 8:
                                     return 'PORCENTAJE DE CANCELADOS';
                                     break;
-                                case 9:
+                                case 8:
                                     return 'NÚMERO DE LOTES CONTRATADOS';
                                     break;
-                                case 10:
+                                case 9:
                                     return 'CONTRATADOS';
                                     break;
-                                case 11:
-                                    return 'SEDE CONTRATADOS';
-                                    break;
-                                case 12:
+                                case 10:
                                     return 'CANCELADOS';
                                     break;
-                                case 13:
+                                case 11:
                                     return 'PORCENTAJE DE CANCELADOS';
                                     break;
                             }
@@ -376,11 +371,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 }
             },
             {
-                data: function(d) {
-                    return d.apartadasSede;
-                }
-            },
-            {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-contId="${d.cont_arr}" data-aptid="${d.apt_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
@@ -400,11 +390,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     return "<b>" + d.sumaConT +"</b>"; //SUMA CONTRATADOS
-                }
-            },
-            {
-                data: function (d) {
-                    return d.contratadasSede;
                 }
             },
             {
@@ -447,10 +432,10 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 "subdirector": leadersList[4],
                 "regional": leadersList[5],
                 "filters" : filters,
-                "aptid":aptId,
+                "aptid": aptId,
                 "contid": contId,
                 "cancontid": canConId,
-                "canaptid": canApt,
+                "canaptid": canApt
             },
         },
         
@@ -713,12 +698,7 @@ $(document).on('click', '.btnSub', function () {
         coordinador: $(this).data("co"),
         gerente: $(this).data("ge"),
         subdirector: $(this).data("su"),
-        regional: $(this).data("dr"),
-        sede:  $(this).data("sede"),
-        aptid : $(this).data('aptid'),
-        contid: $(this).data('contid'),
-        canaptid : $(this).data('canaptid'),
-        cancontid: $(this).data('cancontid')
+        regional: $(this).data("dr")
     }
     //initDetailRow(data);
     initDetailRow($(this).closest('tr'), data);
@@ -1156,12 +1136,6 @@ function createDetailRow(row, tr, dataObj){
         subdirector: dataObj.subdirector,
         regional: dataObj.regional,
         filters: filters,
-        sede:dataObj.sede,
-        contid: dataObj.contid,
-        aptid: dataObj.aptid,
-        canaptid: dataObj.canaptid,
-        cancontid: dataObj.cancontid
-        
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
@@ -1194,18 +1168,18 @@ function buildTableDetail(data, dataObj) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${[v.id_sede]}" data-aptid="${[v.apt_arr]}" data-contid="${[v.cont_arr]}" data-canaptid="${[v.canapar_arr]}" data-cancontid="${[v.cancon_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
         sedes += '<td> ' + v.gran_total + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${[v.id_sede]}" data-aptid="${[v.apt_arr]}"  data-rol="${dataObj.rol}"  data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${[v.id_sede]}" data-canaptid="${[v.canapar_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${[v.id_sede]}" data-contid="${[v.cont_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalConT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${[v.id_sede]}" data-cancontid="${[v.cancon_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + '% </td>';
         sedes += '</tr>';
@@ -1310,10 +1284,6 @@ $(document).on('click', '.btnModalDetails', function () {
     let dataObject = {
         type: $(this).data("type"),
         sede: $(this).data("sede"),
-        aptid : $(this).attr("data-aptid"),
-        contid : $(this).attr("data-contid"),
-        cancontid : $(this).attr("data-cancontid"),
-        canaptid : $(this).attr("data-canaptid"),
         leader: $(this).data("leader"),
         transaction: $(this).data("transaction"),
         user: $(this).data("iduser"),
@@ -1360,7 +1330,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1427,9 +1397,8 @@ function fillTableReport(dataObject) {
                                     case 20:
                                         return 'APARTADO';
                                         break;
-                                    case 21:
-                                        return 'MODALIDAD';
-                                        break;
+                                    case 21: 
+                                    return 'SEDE'
                                 }
                             }
                         }
@@ -1489,12 +1458,16 @@ function fillTableReport(dataObject) {
                             return 'ESTÁNDAR';
                     }
                 },
-                {
+                { data: 'sedeNombre'},
+                { 
                     data: function (d) {
-                        return d.modalidad;
+                        if (d.idClienteCompartida == null) {
+                            return 'NORMAL';
+                        } else {
+                            return 'COMPARTIDA';
+                        }
                     }
                 }
-                
             ],
             columnDefs: [{
                 visible: false,
@@ -1507,10 +1480,6 @@ function fillTableReport(dataObject) {
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                    "aptid":dataObject.aptid,
-                    "contid":dataObject.contid,
-                  //  "canaptid":dataObject.canaptid,
-                    //"cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1624,9 +1593,11 @@ function fillTableReport(dataObject) {
                                         return 'APARTADO';
                                         break;
                                     case 22:
+                                        return 'SEDE';
+                                        break;
+                                    case 23: 
                                         return 'MODALIDAD';
                                         break;
-                                    
                                 }
                             }
                         }
@@ -1776,8 +1747,17 @@ function fillTableReport(dataObject) {
                     }
                 },
                 {
-                    data: function(d) {
-                        return d.modalidad;
+                    data: function (d) {
+                        return d.sedeNombre;
+                    }
+                },
+                {
+                    data: function (d) {
+                        if (d.idClienteCompartida == null) {
+                            return 'NORMAL';
+                        } else {
+                            return 'COMPARTIDA';
+                        }
                     }
                 }
             ],
@@ -1793,10 +1773,6 @@ function fillTableReport(dataObject) {
                     
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                   // "aptid": dataObject.aptid,
-                    //"contid":dataObject.contid,
-                    "canaptid":dataObject.canaptid,
-                    "cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1847,3 +1823,8 @@ function setListEstatus(){
         $("#estatusContratacion").selectpicker('refresh');
     });
 }
+
+$(window).resize(function(){
+    console.log("I was toggled");
+    $(`#table${optionTable}`).DataTable().columns.adjust();
+});
