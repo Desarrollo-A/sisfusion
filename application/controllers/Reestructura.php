@@ -196,6 +196,7 @@ class Reestructura extends CI_Controller{
         $idAsesor = $this->session->userdata('id_usuario');
         $nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
         $idLider = $this->session->userdata('id_lider');
+        $idRol = $this->session->userdata('id_rol');
 		$clienteAnterior = $this->General_model->getClienteNLote($idCliente)->row();
         $idClienteAnterior = $clienteAnterior->id_cliente;
         $loteAOcupar = $clienteAnterior->idLote;
@@ -205,6 +206,7 @@ class Reestructura extends CI_Controller{
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
         if( $fechaUltimoEstatus2 >= $fechaCambio){
+            $idLider = $idRol == 3 ? $this->session->userdata('id_usuario') : $idLider;
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
         else{
@@ -227,7 +229,7 @@ class Reestructura extends CI_Controller{
         $proceso = 3;
 
         $qry = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
-        if ( $qry['result'] = false ) {
+        if ( $qry['result'] == false ) {
             $this->db->trans_rollback();
             echo json_encode(array(
                 'titulo' => 'ERROR',
@@ -1290,7 +1292,8 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave => 0], $dataCliente);
                 continue;
             } else if ($clave == 'id_gerente') {
-                $dataCliente = array_merge([$clave => $idLider], $dataCliente);
+                    $idLider = $idAsesor == $idLider ? 0 : $idLider;
+                    $dataCliente = array_merge([$clave => $idLider], $dataCliente);
                 continue;
             } else if ($clave == 'idLote' && $proceso != 3) {
                 $dataCliente = array_merge([$clave => $loteSelected], $dataCliente);
@@ -4248,21 +4251,7 @@ class Reestructura extends CI_Controller{
                     }
                 }
             }
-        }else{// SI NO, SOLO SE HACE EL UPDATE DE LA COMISIÓN TOTAL DE LAS COMISIONES
-            for ($i=0; $i < count($dataNuevosCalculos) ; $i++) { 
-                $this->Reestructura_model->actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
-            }
         }
-        // MJ: NO HAY UN IF PRINCIPAL AL QUE ESTE ELSE HAGA REFERENCIA
-        /*else{
-            $response["result"] = false;
-            $response["message"] = "No hay historial preproceso para este lote";
-            $response["idLote"] = 0;
-            $response["proceso"] = 0;
-        }*/
-
-        // $this->output->set_content_type('application/json');
-        // $this->output->set_output(json_encode($response));
     }
 
     function getDocumentos(){
@@ -4556,5 +4545,95 @@ class Reestructura extends CI_Controller{
     public function getMensualidadAbonoNeo(){
         $datos = $this->ComisionesNeo_model->getMensualidadAbonoNeo()->result_array();
         echo json_encode($datos);
+    }
+
+    public function getLotesAsignados(){
+        set_time_limit(600);
+        // para tener los datos de todos
+        $getLotesTodo = $this->Reestructura_model->getLotesAsignadosTodos()->result();
+        $getProceso6 = $this->Reestructura_model->getLotesAsignados6()->result();
+        $getProcesoContraloria = $this->Reestructura_model->getLotesAsignadosContraloria()->result();
+        $getProcesoJuridico = $this->Reestructura_model->getLotesAsignadosJuridico()->result();
+
+        $sentFlag = true;
+        
+        // envio de correos a gerentes
+        foreach($getLotesTodo as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com')
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientes', [
+                'nombreGerente' => $lote->nombreGerente,
+                'cantidadProceso0' => $lote->cantidadProceso0,
+                'cantidadProceso1' => $lote->cantidadProceso1,
+                'cantidadProceso3' => $lote->cantidadProceso3,
+                'cantidadProceso6' => $lote->cantidadProceso6,
+            ], true));
+            $this->email->send();
+        }
+
+        // sleep(10);
+        // envios de correos a asesores
+        foreach($getProceso6 as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com')
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesAsesor', [
+                'nombreAsesor' => $lote->nombreAsesor,
+                'cantidadProceso6' => $lote->cantidadProceso6,
+            ], true));
+            $this->email->send();
+        }
+
+        // sleep(10);
+        // envios de correos a contraloria
+        foreach($getProcesoContraloria as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Mariela Sanchez 
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Alejandro Santiago
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesContraloria', [
+                'nombre1' => "Mariela Sanchez Sanchez",
+                'nombre2' => "Alejando Santiago Gamez",
+                'cantidadProceso2' => $lote->cantidadProceso2,
+            ], true));
+            $this->email->send();            
+        }
+
+        // sleep(10);
+        // envios de correos a juridico
+        foreach($getProcesoJuridico as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Cinthya López
+            // ->to('programador.analista34@ciudadmaderas.com') // ?
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesJuridico', [
+                'nombre1' => "Cinthya López",
+                'cantidadProceso2' => $lote->cantidadProceso2,
+            ], true));
+
+            $this->email->send();
+        }
+
+        
+        if($sentFlag){
+            $response["result"] = true;
+            $response["message"] = "Se han enviado los correos exitosamente";
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "Ha ocurrido un error al enviar los correos";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response)); 
     }
 }

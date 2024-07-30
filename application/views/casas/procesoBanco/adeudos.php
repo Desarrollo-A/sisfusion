@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Concentración de adeudos</h3>
+                                    <h3 class="card-title center-align">Paso 3 - Concentración de adeudos</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -32,14 +32,12 @@
                                             <th>GERENTE</th>
                                             <th>ADEUDO OOAM</th>
                                             <th>ADEUDO ADM</th>
-                                            <th>ADEUDO GPH</th>
                                             <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                 </table>
-
                             </div>
                         </div>
                     </div>

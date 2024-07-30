@@ -46,7 +46,53 @@ class DateField {
 
     load() { }
 }
+class Button {
+    constructor({id, label, icon, color = 'blueMaderas', onClick, data}) {
+        this.id = id || '';
+        this.label = label || '';
+        this.icon = icon || '';
+        this.color = color;
+        this.onClick = onClick;
+        this.data = data;
 
+        this.field = $('<div />')
+            .addClass('col-lg-12 col-md-12 text-end')
+            .append(
+                $('<label />')
+                    .addClass('control-label label-gral')
+                    .attr('for', id)
+            );
+
+        let button = $('<button />')
+            .addClass(`btn-data btn-${this.color} pull-right`)
+            .attr('id', this.id)
+            .attr('type', 'button')
+            .attr('data-toggle', 'tooltip')
+            .attr('data-placement', 'top')
+            .attr('title', this.label.toUpperCase())
+            .append(
+                $('<i />')
+                    .addClass('material-icons')
+                    .text(this.icon)
+            );
+
+        if (this.onClick) {
+            button.on('click', () => this.onClick(this.data));
+        }
+
+        this.field.append(button);
+
+        this.value = () => {
+            return $(`#${id}`).val();
+        }
+    }
+
+    get() {
+        return this.field;
+    }
+
+    load() { }
+}
 class HiddenField {
     constructor({ id, value }) {
         this.id = id
@@ -326,7 +372,7 @@ class TextField {
 }
 
 class TextAreaField {
-    constructor({ id, label, placeholder, width, required }) {
+    constructor({ id, label, placeholder, width, required, value }) {
         this.id = id
         this.field = $('<div />')
             .addClass(`col-lg-${width} mt-1`)
@@ -340,6 +386,7 @@ class TextAreaField {
                 $('<textarea />')
                     .addClass(`text-modal`)
                     .attr('id', id)
+                    .text(value)
                     .attr('name', id)
                     .prop('required', required)
                     .attr('placeholder', placeholder)
@@ -673,6 +720,104 @@ class OptionFieldAndView {
     }
 }
 
+class CrudInput {
+    constructor({ id, label, placeholder, width, required = false, icon, color = 'blueMaderas', title, disabled = false, onClick, data }) {
+        this.id = id;
+        this.required = required;
+        this.onClick = onClick;
+        this.data = data;
+        this.inputId = `${id}-input`; // Define inputId aquí
+
+        let button = $('<button />')
+            .addClass(`btn-data btn-${color} m-0 ml-1`)
+            .attr('id', id + '-button')
+            .attr('type', 'button')
+            .attr('title', title)
+            .append(
+                $('<i class="material-icons"></i>')
+                    .text(icon)
+            );
+
+        if (this.onClick) {
+            button.on('click', () => this.handleButtonClick());
+        }
+
+        this.field = $('<div />')
+            .addClass(`col-lg-${width} col-md-12 mb-1`)
+            .append(
+                $('<label />')
+                    .addClass('control-label label-gral')
+                    .attr('for', this.inputId)
+                    .text(label)
+            )
+            .append(
+                $('<div />')
+                    .addClass('d-flex justify-content-between align-items-center mb-0')
+                    .append(
+                        $('<input />')
+                            .addClass(`form-control input-gral`)
+                            .attr('id', this.inputId)
+                            .attr('disabled', disabled)
+                            .attr('name', id)
+                            .attr('type', 'text')
+                            .prop('required', required)
+                            .attr('placeholder', placeholder)
+                            .on('keyup', () => this.validate())
+                    )
+                    .append(
+                        $('<span />')
+                            .attr('id', `${id}_warning`)
+                            .addClass('text-danger h7 ml-1')
+                            .text('Debes ingresar un texto')
+                            .hide()
+                    )
+                    .append(button)
+            );
+    }
+
+    handleButtonClick() {
+        const currentValue = this.getData();
+        if (this.onClick) {
+            this.onClick(currentValue); 
+        }
+        this.updateButtonData(currentValue); 
+    }
+
+    updateButtonData(value) {
+        $(`#${this.id}-button`).data('value', value);
+    }
+
+    getData() {
+        return $(`#${this.inputId}`).val(); 
+    }
+
+    validate() {
+        let pass = true;
+
+        if (this.required) {
+            let val = $(`#${this.inputId}`).val(); 
+
+            if (!val) {
+                pass = false;
+            }
+
+            if (pass) {
+                $(`#${this.id}_warning`).hide();
+            } else {
+                $(`#${this.id}_warning`).show();
+            }
+        }
+
+        return pass;
+    }
+
+    get() {
+        return this.field;
+    }
+
+    load() { }
+}
+
 
 class DateDelete {
     constructor({ id, label, placeholder, value, width, required = false }) {
@@ -979,6 +1124,29 @@ constructor({ title, back, next, description, date }) {
     }
 }
 
+class HrTitle {
+    constructor({ text }) {
+        this.field = $('<div />')
+            .append(
+                $('<strong/> ')
+                    .addClass('control-label')
+                    .text(text)
+            )
+            .append(
+                $('<hr/>')
+            )
+        this.value = () => {
+            return $(``).val()
+        }
+    }
+
+    get() {
+        return this.field
+    }
+
+    load() { }
+}
+
 class Form {
     constructor({ title, text, fields, onSubmit }) {
         this.title = title || ''
@@ -1052,6 +1220,162 @@ class Form {
             $("#ok-button-form-modal").prop('disabled', true)
         } else {
             $("#ok-button-form-modal").prop('disabled', false)
+        }
+    }
+}
+
+class Form2 {
+    constructor({ title, text, fields, onSubmit }) {
+        this.title = title || ''
+        this.text = text || ''
+        this.fields = fields || []
+        this.onSubmit = onSubmit || undefined
+
+        /* if(!text){
+            $('#text-form-modal').hide()
+        } */
+
+        $("#ok-button-form-modal2").prop('disabled', false)
+    }
+
+    show() {
+        $('#fields-form-modal2').html('')
+
+        for (var i = 0; i < this.fields.length; i++) {
+
+            let field = this.fields[i]
+
+            if (field) {
+                $('#fields-form-modal2').append(field.get())
+
+                field.load()
+            }
+        }
+
+        $('.selectpicker').selectpicker('refresh')
+
+        $('#form-form-modal2').unbind('submit')
+
+        $('#form-form-modal2').submit((event) => this.submit(event))
+
+        $('#title-form-modal2').text(this.title)
+        $('#text-form-modal2').html(this.text)
+        $("#ok-button-form-modal2").prop('disabled', false)
+        $("#form-modal2").modal();
+
+        $('body').addClass('modal-open');
+    }
+
+    submit(event) {
+        event.preventDefault()
+
+        let pass = true
+        let data = new FormData()
+        for (var i = 0; i < this.fields.length; i++) {
+            let field = this.fields[i]
+
+            if (typeof field.validate === 'function') {
+                if (!field.validate()) {
+                    pass = false
+                }
+            }
+
+            if (field.value() != null || field.value() != undefined) {
+                data.append(field.id, field.value())
+            }
+        }
+
+        if (pass) {
+            this.onSubmit(data)
+        }
+    }
+
+    hide() {
+        $("#form-modal2").modal('hide')
+    }
+
+    loading(load) {
+        if (load) {
+            $("#ok-button-form-modal2").prop('disabled', true)
+        } else {
+            $("#ok-button-form-modal2").prop('disabled', false)
+        }
+    }
+}
+
+class FormConfirm {
+    constructor({ title, text, fields, onSubmit }) {
+        this.title = title || ''
+        this.text = text || ''
+        this.fields = fields || []
+        this.onSubmit = onSubmit || undefined
+
+        /* if(!text){
+            $('#text-form-modal').hide()
+        } */
+
+        $("#ok-button-form-modal3").prop('disabled', false)
+    }
+
+    show() {
+        $('#fields-form-modal3').html('')
+
+        for (var i = 0; i < this.fields.length; i++) {
+
+            let field = this.fields[i]
+
+            if (field) {
+                $('#fields-form-modal3').append(field.get())
+
+                field.load()
+            }
+        }
+
+        $('.selectpicker').selectpicker('refresh')
+
+        $('#form-form-modal3').unbind('submit')
+
+        $('#form-form-modal3').submit((event) => this.submit(event))
+
+        $('#title-form-modal3').text(this.title)
+        $('#text-form-modal3').html(this.text)
+        $("#ok-button-form-modal3").prop('disabled', false)
+        $("#form-modal3").modal();
+    }
+
+    submit(event) {
+        event.preventDefault()
+
+        let pass = true
+        let data = new FormData()
+        for (var i = 0; i < this.fields.length; i++) {
+            let field = this.fields[i]
+
+            if (typeof field.validate === 'function') {
+                if (!field.validate()) {
+                    pass = false
+                }
+            }
+
+            if (field.value() != null || field.value() != undefined) {
+                data.append(field.id, field.value())
+            }
+        }
+
+        if (pass) {
+            this.onSubmit(data)
+        }
+    }
+
+    hide() {
+        $("#form-modal3").modal('hide')
+    }
+
+    loading(load) {
+        if (load) {
+            $("#ok-button-form-modal3").prop('disabled', true)
+        } else {
+            $("#ok-button-form-modal3").prop('disabled', false)
         }
     }
 }

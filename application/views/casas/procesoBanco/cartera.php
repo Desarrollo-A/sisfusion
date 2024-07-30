@@ -5,7 +5,21 @@
 <body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
+        <div class="modal fade" id="preguntaConfirmacion" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <div class="modal-body text-center">
+                        <h5 id="mainLabelText">¿Desea fusionar los siguientes lotes para proceso de reubicación?</h5>
+                        <p id="txtLotes"></p>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="fusionarLotes" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -23,6 +37,7 @@
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th></th>
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
                                             <th>CONDOMINIO</th>

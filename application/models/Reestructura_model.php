@@ -2311,7 +2311,6 @@ class Reestructura_model extends CI_Model
 
     public function eliminarFusion($pvLote){
         $query = $this->db->query("DELETE FROM lotesFusion WHERE idLotePvOrigen = ?", $pvLote);
-
         return $query;
     }
 }
