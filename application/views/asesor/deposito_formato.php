@@ -27,7 +27,7 @@
             $html_action_end = '';
         }
 
-        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || in_array($this->session->userdata('id_usuario'), [2752, 2826, 2810, 5957, 6390, 4857, 2834])){
+        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || in_array($this->session->userdata('id_usuario'), [2752, 2826, 2810, 5957, 6390, 4857, 2834, 11655])){
             $readonlyNameToAsesor = 'readonly';
         }
         else{
@@ -1291,7 +1291,7 @@
                     <div class="col-xs-12 col-sm-2 col-md-1 col-lg-1 checkbox checkbox-inline pt-0 m-0" style="padding-left:15px!important">
 
                         
-                            <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_usuario') == 2752  || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834 AND $onlyView==0){?>
+                            <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || in_array($this->session->userdata('id_usuario'), [2752, 2826, 2810, 5957, 6390, 4857, 2834, 11655] AND $onlyView==0){?>
                                 <h4 class="label-on-left mb-0">ENVIAR DS AL CLIENTE</h4>
                                 <input id="pdfOK" name="pdfOK" type="checkbox">
                                 <label class="switch" for="pdfOK"></label>
