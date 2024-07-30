@@ -54,7 +54,7 @@
             <?php echo $html_action;?> 
             <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655)) AND $onlyView==0){?>
                 <section id="sectionBtns">
-                    <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction">GUARDAR CAMBIOS</button>
+                    <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction" onclick="validaTipoVivienda();">GUARDAR CAMBIOS</button>
                 </section>
             <?php } else { ?>
                 <section id="sectionBtns">

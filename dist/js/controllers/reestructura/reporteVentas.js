@@ -415,16 +415,17 @@ $(document).on("click", "#verifyNeodata", function () {
                     <div class="d-flex align-center justify-center">
                         <div>
                             <h3 class="text-center fw-600">Detalle de mensualidades</h3>
-                            <br>
                             <div class="d-flex align-center">
-                                <i class="fas fa-money-bill-wave-alt fa-lg mr-2" style="color:#6da36f"></i><p>Pagadas <b>${response[0]['MenPagadas']}</b></p>
+                                <i class="fas fa-money-bill-wave-alt fa-lg mr-2" style="color:#6da36f"></i>
+                                <p class="m-0">Pagadas<b>${response[0]['MenPagadas']}</b></p>
                             </div>
                             <div class="d-flex align-center">
-                                <i class="fas fa-hand-holding fa-lg mr-2" style="color:#666"></i></i><p>Pendientes <b>${response[0]['MenPendientes']}</b></p>
+                                <i class="fas fa-hand-holding fa-lg mr-2" style="color:#666"></i></i>
+                                <p class="m-0">Pendientes <b>${response[0]['MenPendientes']}</b></p>
                             </div>
                             <div class="d-flex align-center">
                                 <i class="fas fa-receipt" style="color:#666"></i>
-                                <p>Totales  ${parseInt(response[0]['MenPagadas']) + parseInt(response[0]['MenPendientes'])}</p>
+                                <p class="m-0">Totales  ${parseInt(response[0]['MenPagadas']) + parseInt(response[0]['MenPendientes'])}</p>
                             </div>
                         </div>
                     </div>`);

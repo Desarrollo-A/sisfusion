@@ -201,6 +201,14 @@ function fillTable(index_proyecto, index_condominio) {
             },
             {
                 data: function (d) {
+                    let informacionEnganche = (d.registroEstatus == 0) ? 'SIN INFORMACIÓN' : "CON INFORMACIÓN";
+                    let classLabl = (d.registroEstatus == 0) ? 'lbl-warning' : "lbl-green";
+                    return `<span class='label ${classLabl}'>${informacionEnganche}</span>`;
+
+                }
+            },
+            {
+                data: function (d) {
                     return `<button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "DETALLE ENGANCHE" data-idLote="${d.idLote}" data-idEnganche="${d.idEnganche}" data-idCliente="${d.idCliente}"><i class="material-icons">attach_money</i></button>`;
                 }
             }
@@ -287,11 +295,13 @@ function cerrarModalDetEnganche() {
     $("#cmbInsMonetario").html("");
     $("#cmbMonedaDiv").html("");
     $("#cdpplote").html("");
+    $("#cmbPlanPago").html("");
     $("#txtIdLote").attr("data-idDetEnganche", "0");
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
     $("#cdpplote").selectpicker('refresh');
+    $("#cmbPlanPago").selectpicker('refresh');
     $('#verDetalles').modal('hide');
     $("#pila-carrito").html("");
     objEnganche = { enganchesGuardados: [], nuevoEnganche: [] };
@@ -312,6 +322,8 @@ function generarInputCatalogos(dto) {
             $("#cmbMonedaDiv").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
         if (catalogoOpciones.id_catalogo == 119) // CONCEPTO DEL PRIMER PAGO
             $("#cdpplote").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+        if (catalogoOpciones.id_catalogo == 131) // Plan de pago
+            $("#cmbPlanPago").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
     });
 
 
@@ -320,6 +332,7 @@ function generarInputCatalogos(dto) {
         $("#cmbInsMonetario").val(dto.dtoEnganches[0].instrumentoMonetario);
         $("#cmbFormaPago").val(dto.dtoEnganches[0].formaPago);
         $("#cdpplote").val(dto.dtoEnganches[0].conceptoPago);
+        $("#cmbPlanPago").val(dto.dtoEnganches[0].planPago);
         let fechaBase = dto.dtoEnganches[0].fechaPago.split("-");
         $('#txtFechaPago').val(fechaBase[2]+'/'+fechaBase[1]+'/'+fechaBase[0]);
         // Create our number formatter.
@@ -335,6 +348,7 @@ function generarInputCatalogos(dto) {
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
     $("#cdpplote").selectpicker('refresh');
+    $("#cmbPlanPago").selectpicker('refresh');
 
     if (dto.dtoEnganches.length > 0)
         agregarEngancheT(dto.dtoEnganches);

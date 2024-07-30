@@ -91,7 +91,7 @@
         	$validacionStatusMov = ' AND idStatusContratacion= 1 AND (idMovimiento = 31 OR idMovimiento = 0)';
         }
 		else if (in_array($this->session->userdata('id_rol'), [33, 17, 70, 71, 73])) {
-            $statusLoteVar = '2, 3';
+            $statusLoteVar = '1, 2, 3';
             $idAsesor = "";
         } else if (in_array($this->session->userdata('id_rol'), [11, 32]) || $this->session->userdata('id_usuario') == 2755) {
             $statusLoteVar = '1, 2, 3';
@@ -127,7 +127,7 @@
 				lotes lo 
 			WHERE 
 				lo.status = 1 
-				AND idStatusLote IN (1) 
+				AND idStatusLote IN (1, 2, 3) 
 				AND lo.idCondominio IN ($condominio)"
 		)->result();
     }

@@ -1,85 +1,10 @@
-pass_to_finalizar = function(data) {
-    
-    let form = new Form({
-        title: 'Continuar proceso', 
-        text: `¿Enviar el lote <b>${data.nombreLote}</b> a finalizar proceso?`,
-        onSubmit: function(data){
-            //console.log(data)
-            form.loading(true);
-
-            $.ajax({
-                type: 'POST',
-                url: `to_finalizar`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al siguiente proceso.", "success");
-        
-                    table.reload()
-
-                    form.hide();
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-        ],
-    })
-
-    form.show()
-}
-
-back_to_firma_contrato = function(data) {
-
-    let form = new Form({
-        title: 'Regresar proceso', 
-        text: `¿Regresar el proceso del lote <b>${data.nombreLote}</b>?`,
-        onSubmit: function(data){
-            //console.log(data)
-            form.loading(true);
-
-            $.ajax({
-                type: 'POST',
-                url: `back_to_firma_contrato`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado.`, "success");
-        
-                    table.reload()
-                    form.hide();
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-        ],
-    })
-
-    form.show()
-}
-
 let buttons = [
     {
         extend: 'excelHtml5',
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
         titleAttr: 'Descargar archivo excel',
-        title:"Recepcion de contrato",
+        title:"Envio a firma de R.L.",
         exportOptions: {
             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
             format: {
@@ -99,21 +24,10 @@ let columns = [
     { data: 'nombreLote' },
     { data: 'condominio' },
     { data: 'proyecto' },
-    { data: 'cliente' },
+    { data: 'nombreCliente' },
     { data: 'nombreAsesor' },
-    { data: 'gerente' },
-    { data: function(data){
-        let inicio = new Date(data.fechaProceso)
-        let today = new Date()
-
-        let difference = today.getTime() - inicio.getTime()
-
-        let days = Math.floor(difference / (1000 * 3600 * 24))
-
-        let text = `Lleva ${days} día(s)`
-
-        return text
-    } },
+    { data: 'nombreGerente' },
+    { data: 'tiempoProceso' },
     { data: function (data) {
         switch(data.tipoMovimiento){
         case 1:
@@ -126,12 +40,12 @@ let columns = [
             clase = 'blueMaderas'
         }
 
-        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+        return `<span class="label lbl-${clase}">${data.nombreMovimiento}</span>`
     } },
     { data: function(data){
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a finalizar proceso', onClick: pass_to_finalizar, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a recepción de contrato', onClick: avance_proceso, data})
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_firma_contrato, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: rechazo_proceso, data})
 
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },
@@ -139,7 +53,87 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/lista_recepcion_contrato',
+    // url: 'casas/lista_envio_a_firma',
+    url: 'casas/getLotesProcesoBanco',
     buttons:buttons,
+    params: { proceso: 17, documento: 0 },
     columns,
 })
+
+avance_proceso = function (data) {
+    let form = new Form({
+        title: 'Continuar proceso',
+        text: `¿Desea avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 18 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
+rechazo_proceso = function (data) {
+    let form = new Form({
+        title: 'Rechazar proceso',
+        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success : function(response){
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
+                },
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 16 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}

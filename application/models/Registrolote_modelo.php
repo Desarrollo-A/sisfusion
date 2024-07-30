@@ -3257,6 +3257,7 @@
             $filter = "";
             $filterTwo = " AND hl.modificado = $where";
         }
+        //del laboratorio, entonces, me mencionaba Mariel que quieren pasar todo al servidor nuevo, le comentaba pero primero necesito , en el servidor nuevo instalar todo lo que se ocupa
         $query = $this->db->query("SELECT idHistorialLote, hd.nombreLote, hd.idStatusContratacion, hd.idMovimiento, CONVERT(VARCHAR,hd.modificado,120) as modificado, 
 		CONVERT(VARCHAR,hd.fechaVenc,120) as fechaVenc, l.idLote, CONVERT(VARCHAR,cl.fechaApartado,120) as fechaApartado, cond.nombre as nombreCondominio,
 		l.comentario, res.nombreResidencial, l.referencia,

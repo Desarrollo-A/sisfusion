@@ -57,6 +57,14 @@ function show_upload(data) {
     form.show()
 }
 
+go_to_documentos = function(data) {
+    window.location.href = `documentacionProveedor/${data.idProcesoCasas}`;
+}
+go_to_documentos_cliente = function(data) {
+    window.location.href = `documentacionCliente/${data.idProcesoCasas}`;
+}
+
+
 pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
@@ -154,26 +162,19 @@ let columns = [
     } },
     {
         data: function (data) {
-            let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data })
 
-            let view_button = ''
             let pass_button = ''
 
-            if (data.archivo) {
+            let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Documentos de proveedor', onClick: go_to_documentos, data});
+            let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Documentos de cliente', onClick: go_to_documentos_cliente, data});
 
-                let parts = data.archivo.split('.');
-                let extension = parts.pop();
+            if (data.kitBancario) {
 
-                if (extension == 'xlsx') {
-                    view_button = new RowButton({ icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data })
-                } else {
-                    view_button = new RowButton({ icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data })
-                }
+            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
 
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
             }
 
-            return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}</div>`
+            return `<div class="d-flex justify-center">${pass_button}${subir_proveedor}${subir_cliente}</div>`
         }
     },
 ]
