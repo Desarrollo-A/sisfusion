@@ -169,8 +169,16 @@ let buttons = [
 let columns = [
     { data: function (data)
         {
-            return `<center><input type="checkbox" onChange="verificarCheck(this)"
-            data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required></center>` 
+            let check = ''
+
+            if(!data.idAsesor){
+                check = `<label class="container">
+                            <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <div class="checkmark"></div>
+                        </label>`
+            }
+
+            return check
         }        
     },
     { data: 'idLote' },
@@ -292,14 +300,14 @@ $(document).on('click', '.btn-asignar', () => {
     });
 
     let form = new Form({
-        title: 'Iniciar proceso',
+        title: 'Asignar lotes a asesor',
         text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
             data.append("idLotes", JSON.stringify(arrayIdLotes))
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/to_asignacion_varios`,
+                url: `${general_base_url}casas/to_asignacion_asesor`,
                 data: data,
                 contentType: false,
                 processData: false,
