@@ -3956,7 +3956,7 @@ legend {
 //            echo '<br><br>';
         }
         if ($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -4192,7 +4192,7 @@ legend {
     function getPlanPago($idPlanPago){
         $data = $this->Corrida_model->getPlanPago($idPlanPago);
         if ($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -4203,7 +4203,7 @@ legend {
         $data->monedaLista = $this->Corrida_model->getMonedaTipos();
         $data->periodicidadLista = $this->Corrida_model->getPeriodicidad();
         if ($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }

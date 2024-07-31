@@ -188,6 +188,17 @@ $('#idLote').change(function () {
                 data: function (d) {
                     let BTN_EDIT;
                     let BTN_SEND;
+                    let BTN_DELETE;
+                    // if(d.idStatusContratacion == 0 && d.idMovimiento == 0){ //validacion de estatus apra poder eliminar
+                        if(d.estatusPlan == 2){
+                            BTN_DELETE = `<button class="btn-data btn-warning cancelarPlanPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-toggle="tooltip" data-placement="left" title="Eliminar Plan"><i class="fas fa-trash"></i></button>`;
+                        }else{
+                            BTN_DELETE = ``;
+                        }
+
+                    // }
 
                     let BTN_VER = `<button class="btn-data btn-blueMaderas ver_planPago" value="${d.idLote}" 
                     data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
@@ -219,7 +230,7 @@ $('#idLote').change(function () {
 
 
 
-                    let buttonValidado = (d.tipoPlanPago == 1) ? BTN_SEND : '';
+                    let buttonValidado = (d.tipoPlanPago == 1) ? BTN_SEND + BTN_DELETE: '';
                     return `<center>${BTN_VER} ${BTN_EDIT} ${buttonValidado}</center>`;
                 }
             }],
@@ -1224,4 +1235,6 @@ $(document).on('change','#tazaInteresPP', function(){
 
 });
 
-
+$(document).on('click', '.cancelarPlanPago', function(){
+   console.log('alaberga');
+});

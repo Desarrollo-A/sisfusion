@@ -1610,7 +1610,6 @@ function checkBudgetInfo($idSolicitud){
         lo.ubicacion, sede.nombre as nombreSede, CAST(lo.comentario AS varchar(MAX)) comentario, hl.modificado, 
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) as nombreGerente
         FROM lotes lo
-        --INNER JOIN historial_lotes hl ON lo.idLote = hl.idLote
         INNER JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes hl
         WHERE hl.idStatusContratacion IN (2) AND hl.idMovimiento IN (4, 74, 101, 103)
         AND status = 1 GROUP BY idLote, idCliente) hl 
@@ -1622,7 +1621,6 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN historial_lotes hl2 ON hl2.idLote = hl.idLote AND hl2.idCliente = hl.idCliente AND hl2.modificado = hl.modificado AND hl2.status = 1
         INNER JOIN usuarios us ON us.id_usuario = cl.id_gerente
         WHERE lo.tipo_venta = 1 AND lo.status = 1 
-        --AND lo.idStatusContratacion IN (2) AND lo.idMovimiento IN (4, 74, 101, 103)
         GROUP BY res.abreviatura, co.nombre, lo.nombreLote, lo.idLote, lo.nombreLote, lo.referencia, cl.nombre,
         cl.apellido_paterno, cl.apellido_materno,  lo.ubicacion, sede.nombre, CAST(lo.comentario AS varchar(MAX)), hl.modificado,
         us.nombre, us.apellido_paterno, us.apellido_materno;")->result_array();

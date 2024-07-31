@@ -56,6 +56,14 @@ class Contratacion_model extends CI_Model {
       $filtroProyecto = "";
       $filtroCondominio = "";
       $filtroEstatus = "";
+      $filtroEstatusLote = "";
+      $unionCliente = "LEFT";
+
+      if(in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9))){
+          $filtroEstatusLote = "AND lot.idStatusLote IN (2, 3)";
+          $unionCliente = "INNER";
+      }
+
 
       $filtroClientesPropios = "";
       $id_usuario = $this->session->userdata('id_usuario');
@@ -78,7 +86,8 @@ class Contratacion_model extends CI_Model {
       else if (in_array($id_rol, [5])) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
          $filtroClientesPropios = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
 
-      return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, CONVERT(varchar, CONVERT(money, lot.sup), 1) as superficie, lot.sup, lot.totalNeto2,
+
+      return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, CONVERT(varchar, CONVERT(money, lot.sup), 1) as superficie, lot.sup, lot.totalNeto2,
       lot.total, lot.referencia, ISNULL(lot.comentario, 'SIN ESPECIFICAR') comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
       CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, lot.msi as msni,
       CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
@@ -114,7 +123,7 @@ class Contratacion_model extends CI_Model {
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
       INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
       LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
-      LEFT JOIN clientes cl ON cl.id_cliente = lot.idCliente $filtroClientesPropios
+      $unionCliente JOIN clientes cl ON cl.id_cliente = lot.idCliente $filtroClientesPropios
       LEFT JOIN opcs_x_cats loxc ON loxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
       LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
       LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
@@ -146,7 +155,7 @@ class Contratacion_model extends CI_Model {
 	  LEFT JOIN opcs_x_cats catNaci ON catNaci.id_opcion = cl.nacionalidad AND catNaci.id_catalogo = 11
 	  INNER JOIN sedes sds ON sds.id_sede = res.sede_residencial
       --nuevo 
-      WHERE lot.status = 1 $filtroEstatus $whereProceso
+      WHERE lot.status = 1 $filtroEstatusLote $filtroEstatus $whereProceso
       ORDER BY lot.nombreLote")->result_array();
     }
 
