@@ -277,7 +277,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
     public function getAutorizaciones($id_rol,$opcion = 1,$anio = '',$estatus = ''){
         $estatusWhere1 = $opcion == 2 ? ($estatus == 0 ? 'YEAR(aut.fecha_creacion) = '.$anio : 'aut.estatus_autorizacion in('.$estatus.') AND YEAR(aut.fecha_creacion) = '.$anio) : '' ;
         //$estatusWhere2 = $opcion == 1 ? ($id_rol == 17 ? ' aut.estatus_autorizacion in(1,2,3,4,6)' : ' aut.estatus_autorizacion in(1,3,4)') : '';
-        $estatusWhere2 = $opcion == 1 ? 'aut.estatus_autorizacion in(1,2,3,4)' : '';
+        $estatusWhere2 = $opcion == 1 ? 'aut.estatus_autorizacion in(1,2,3)' : '';
         return $this->db->query("SELECT aut.*,sd.nombre as sede,STRING_AGG((CONVERT(VARCHAR(MAX), RE.descripcion)), ',') nombreResidencial,
         (CASE WHEN opc.id_opcion = 1 THEN 'Comercial' WHEN opc.id_opcion = 0 THEN 'Habitacional' ELSE 'Ambos' END) tipoLote,
         opc2.nombre as estatusA,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno) creadoPor,
@@ -345,7 +345,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                 WHERE a.estatus = $estatus AND a.tipo = $tipo AND pv.id_autorizacion = $id_autorizacion")->result_array();       
                 $siguienteEstatus = $datosAvance[0]['estatus_siguiente'];
                 $estatusRegistro = $tipo == 1 ? 1 : 2; 
-                $comentario  = $this->session->userdata['nombre']. " ".$this->session->userdata['apellido_paterno'] . " ".$this->session->userdata['apellido_materno'] . " avanzó el plan de ventas";
+                $comentario = "Aprobó el plan de ventas";
                 $this->db->trans_begin();
                 $query_tipo_lote = $datosAvance[0]['tipo_lote'] == 2 ? '' : 'AND co.tipo_lote='.$datosAvance[0]['tipo_lote'];
                 $query_superdicie = $datosAvance[0]['superficie'] == 3 ? '' :($datosAvance[0]['superficie'] == 1 ? 'AND lo.sup < 200' : 'AND lo.sup >= 190');
@@ -357,8 +357,9 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                     return 0;
                 } else {
                     $this->db->trans_commit();
-                    return array("respuesta" => $datosAvance[0]['comentario'],
-                                "estatus" => 1);
+                    /*return array("respuesta" => $datosAvance[0]['comentario'],
+                                "estatus" => 1);*/
+                    return array("respuesta" => "Se aprobó el plan de ventas","estatus" => 1);
                 }            
             }
             if($accion == 3) {
@@ -374,7 +375,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                     return 0;
                 }else {
                     $this->db->trans_commit();
-                    return array("respuesta" => "Se ha desactivado la autorización.", "estatus" => 1);
+                    return array("respuesta" => "Se ha desactivado el plan de ventas.", "estatus" => 1);
                 }
             }
     }

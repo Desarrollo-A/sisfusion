@@ -546,6 +546,14 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     return myFunctions.validateEmptyField(d.observacion); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
                 }
             },
+            {
+                data: function (d) {
+                    if (d.tipoEnganche == 0 || d.tipoEnganche == null) {
+                        return `SIN ESPECIFICAR`;  
+                    }
+                    return `<center>${d.nombre}<center>`;
+                }
+            },
             /***********/
             {
                 data: function (d) {

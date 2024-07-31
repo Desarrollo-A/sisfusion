@@ -7,7 +7,6 @@ class Contraloria_model extends CI_Model {
         parent::__construct();
     }
 
-
     function get_proyecto_lista(){
         return $this->db->query("SELECT * FROM residenciales WHERE status = 1");
     }
@@ -235,10 +234,11 @@ class Contraloria_model extends CI_Model {
                 cl.lugar_prospeccion, 
                 pr.id_arcus, 
                 pr.id_prospecto,
-                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END validacionContratoFirmado
+                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END validacionContratoFirmado, cl.tipoEnganche, oxc.nombre
             FROM 
                 lotes l 
                 INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote 
+                LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
                 INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio 
                 INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial 
                 LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario 
@@ -296,7 +296,7 @@ class Contraloria_model extends CI_Model {
                 cl.lugar_prospeccion, 
                 pr.id_arcus, 
                 pr.id_prospecto,
-                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END
+                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END, cl.tipoEnganche, oxc.nombre
             ORDER BY 
                 l.nombreLote
             ")->result();
@@ -660,7 +660,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $query = $this->db->query("SELECT * FROM condominios WHERE status = 1 AND nombre = '".$insert_csv['PROYECTO']."' AND idResidencial =".$idResidencial)->result_array();
             if (!empty($query)){
                 foreach ($query as $row) {
-                    $this->db->query("UPDATE condominios SET msni = ".$insert_csv['MSNI']." WHERE status = 1 AND idCondominio = ".$row['idCondominio']." ");
+                    $this->db->query("UPDATEe condominios SET msni = ".$insert_csv['MSNI']." WHERE status = 1 AND idCondominio = ".$row['idCondominio']." ");
                 }
             }
         }
@@ -1892,7 +1892,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function setFilters($id_usuario, $id_sede) {
-        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799, 10088, 2827, 6012, 12931, 13053, 2875, 14342, 14481)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799, 10088, 2827, 6012, 12931, 13053, 2875, 14342, 14481, 12276, 16679)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
 		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
@@ -1900,6 +1900,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
         else  if($id_usuario == 15580) // MJ: SANDRA MIRA SANCHEZ VE CIUDAD DE MÉXICO, ESTADO DE MÉXICO OCCIDENTE Y NORTE
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '13', '14')";
+        else  if($id_usuario == 14283) // MJ: JOSE RODRIGO HERMOCILLO GARCIA VE AGUACALIENTES (SEDE ACTUAL) + CIUDAD JUÁREZ Y TEXAS
+            $filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '17')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA

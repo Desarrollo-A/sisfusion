@@ -132,6 +132,14 @@ function fillTrimestral(beginDate, endDate) {
                     }
                 },
                 {
+                    data: function (n) {
+                        if (n.tipoEnganche == 0 || n.tipoEnganche == null) {
+                            return `SIN ESPECIFICAR`;  
+                        }
+                        return `<center>${n.nombre}<center>`;
+                    }
+                },
+                {
                     data: function (n){
                         return `<div class="d-flex justify-center"><button id="verifyNeodata" class="btn-data btn-violetBoots" data-toggle="tooltip" data-placement="left" title="Verificar montos" data-nombreLote="${n.nombreLote}" data-empresa="${n.empresa}"><i class="fas fa-glasses"></i></button><div>`;
                     }
