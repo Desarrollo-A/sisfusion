@@ -890,11 +890,11 @@ function fillFields (v) {
         $("#sedech").empty();
         document.getElementById("sucursal").removeAttribute("required");
         $("#sucursal").empty();
-        if(v.sedech == null) {
+        /*if(v.sedech == null) {
             getSedesCH();
         } else {
             getSedesCH(v.sedech,v.sucursalch);
-        }
+        }*/
         $('#sedech').selectpicker('refresh');
         if (v.nueva_estructura == 1) {
             $("#member_type option[value=7]").text("ASESOR FINANCIERO");
