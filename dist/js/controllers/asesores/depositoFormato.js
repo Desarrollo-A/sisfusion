@@ -21,7 +21,7 @@ $(document).ready(function() {
     personaFisicaMoralOnChange();
 
 
-    let idPermitidos = [2752, 2826, 2810, 2855, 2815, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 11655];
+    let idPermitidos = [2752, 2826, 2810, 2855, 2815, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 11655, 16679];
     if(!idPermitidos.includes(id_usuario_general)){//si el id usuario no está aqui va a hacer la validación de M2 final
         $('#costoM2, #costom2f').on('change', function() {
             const tipoMensaje = validarCostos();

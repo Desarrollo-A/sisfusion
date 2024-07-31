@@ -14,7 +14,7 @@
 <body>
 <div class="wrapper">
     <?php
-        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655)) AND $onlyView==0){
+        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655, 16679)) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form id="deposito-seriedad-form">';
@@ -52,7 +52,7 @@
     <div class="container" id="mainBoxDS">
         <div class="card">
             <?php echo $html_action;?> 
-            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655)) AND $onlyView==0){?>
+            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655, 16679)) AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction">GUARDAR CAMBIOS</button>
                 </section>
@@ -1291,7 +1291,7 @@
                     <div class="col-xs-12 col-sm-2 col-md-1 col-lg-1 checkbox checkbox-inline pt-0 m-0" style="padding-left:15px!important">
 
                         
-                            <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || in_array($this->session->userdata('id_usuario'), [2752, 2826, 2810, 5957, 6390, 4857, 2834, 11655] AND $onlyView==0){?>
+                            <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || in_array($this->session->userdata('id_usuario'), [2752, 2826, 2810, 5957, 6390, 4857, 2834, 11655]) AND $onlyView==0){?>
                                 <h4 class="label-on-left mb-0">ENVIAR DS AL CLIENTE</h4>
                                 <input id="pdfOK" name="pdfOK" type="checkbox">
                                 <label class="switch" for="pdfOK"></label>
