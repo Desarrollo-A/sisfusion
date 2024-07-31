@@ -670,7 +670,7 @@ class Reporte_model extends CI_Model {
             contratadas.sumaConT, contratadas.nombreUsuario,apartadas.sumaAT, cancontratadas.sumaCanC, canapartadas.sumaCanA, contratadas.totalConT, apartadas.totalAT, cancontratadas.totalCanC, canapartadas.totalCanA,
             apartadas.nombreUsuario, contratadas.nombreUsuario, general.userID, canapartadas.nombreUsuario, cancontratadas.nombreUsuario, contratadas.sedeNombre, apartadas.sedeNombre
             , apartadas.id_sede, contratadas.id_sede, cancontratadas.id_sede, canapartadas.id_sede,apartadas.id_array,  contratadas.id_array, cancontratadas.id_array, canapartadas.id_array
-            ORDER BY apartadas.nombreUsuarios
+            ORDER BY apartadas.nombreUsuario
         ");
         return $query;
     }
