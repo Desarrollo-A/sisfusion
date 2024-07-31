@@ -2,6 +2,8 @@ let form = new Form({
     title: 'Asignar asesor',
     //text: 'Descripcion del formulario',
 })
+let arrayValores = []
+let arrayIdLotes = []
 
 form.onSubmit = function (data) {
     form.loading(true);
@@ -155,10 +157,30 @@ let buttons = [
                 }
             }
         }
+    },
+    {
+        text: '<i class="fas fa-user-plus"></i>',
+        className: 'btn-large btn-sky btn-asignar botonEnviar hide',
+        titleAttr: 'Asignar lotes',
+        title:"Asignar lotes",
     }
 ]
 
 let columns = [
+    { data: function (data)
+        {
+            let check = ''
+
+            if(!data.idAsesor){
+                check = `<label class="container">
+                            <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <div class="checkmark"></div>
+                        </label>`
+            }
+
+            return check
+        }        
+    },
     { data: 'idLote' },
     { data: 'nombreLote' },
     { data: 'condominio' },
@@ -168,16 +190,31 @@ let columns = [
     { data: 'gerente' },
     {
         data: function (data) {
-            switch(data.tipoMovimiento){
-            case 1:
-                clase = 'warning'
-                break
-            case 2:
-                clase = 'orange'
-                break
-            default:
-                clase = 'blueMaderas'
+            if(data.esquemaCreditoCasas == 1){
+                switch(data.tipoMovimiento){
+                    case 1:
+                        clase = 'warning'
+                        break
+                    case 2:
+                        clase = 'orange'
+                        break
+                    default:
+                        clase = 'blueMaderas'
+                    }
             }
+            else{
+                switch(data.tipoMovimiento){
+                    case 2:
+                        clase = 'warning'
+                        break
+                    case 3:
+                        clase = 'orange'
+                        break
+                    default:
+                        clase = 'blueMaderas'
+                    }
+            }
+            
     
             return `<span class="label lbl-${clase}">${data.movimiento}</span>`
         }
@@ -205,3 +242,96 @@ let table = new Table({
     columns,
     buttons,
 })
+
+function verificarCheck(valorActual){
+    const tr = $(this).closest('tr');
+        const row = $('#tablaAsignacionCartera').DataTable().row(tr);
+        let botonEnviar = document.getElementsByClassName('botonEnviar');
+        let arrayInterno = [];
+        let arrayId = [];
+    
+        if (valorActual.checked){
+            arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
+            arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
+
+            arrayId.push($(valorActual).attr('data-idLote'));//[1]
+    
+            arrayValores.push(arrayInterno);
+            arrayIdLotes.push(arrayId);
+        }
+        else{
+            let indexDelete = buscarValor($(valorActual).val(),arrayValores);
+            let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
+
+            arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
+            arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
+        }
+
+        if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
+         //se seleccionó más de uno, se habilita el botón para hacer el multiple
+            botonEnviar[0].classList.remove('hide');
+            $('#btn_'+$(valorActual).val()).prop("disabled", true);        
+        }
+        else{
+            botonEnviar[0].classList.add('hide');
+        }
+}
+
+function buscarValor(valor, array) {
+    for (let i = 0; i < array.length; i++) {
+        const subArray = array[i];
+        if (subArray.includes(valor)) {
+            return i;
+        }
+    }
+    return null;
+}
+
+$(document).on('click', '.btn-asignar', () => {
+    let nombresLot = '';
+    let separador = '';
+
+    arrayValores.map((elemento, index) => {
+        if(arrayValores.length == (index+1))
+            separador = '';
+        else
+            separador = '<br>';
+        nombresLot += elemento[0]+separador;
+    });
+
+    let form = new Form({
+        title: 'Asignar lotes a asesor',
+        text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
+        onSubmit: function(data){
+            form.loading(true)
+            data.append("idLotes", JSON.stringify(arrayIdLotes))
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/to_asignacion_asesor`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Se han asignado los lotes correctamente", "success");
+        
+                    table.reload();
+                    form.hide();
+                    arrayValores = []
+                    arrayIdLotes = []
+                    let btn = document.getElementsByClassName("btn-asignar")
+                    btn[0].classList.add('hide');
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new SelectField({ id: 'asesor', label: 'Asesor', placeholder: 'Selecciona una opción', data: items, required: true })
+        ],
+    })
+
+    form.show()
+ });
