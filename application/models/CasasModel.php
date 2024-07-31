@@ -40,8 +40,6 @@ class CasasModel extends CI_Model
     }
 
     public function updateNotaria($id_opcion, $estatus){
-        // $idModificacion = $this->session->userdata('id_usuario');
-
         $query = "UPDATE opcs_x_cats
         SET
             estatus = $estatus
@@ -71,7 +69,7 @@ class CasasModel extends CI_Model
             comentario = '$comentario',
             fechaProceso = GETDATE(),
             fechaModificacion = GETDATE(),
-            idModificacion = $idModificacion,
+            modificadoPor = $idModificacion,
             tipoMovimiento = $tipoMovimiento
         WHERE
             idProcesoCasas = $idProcesoCasas";
@@ -87,7 +85,7 @@ class CasasModel extends CI_Model
             idProcesoCasas,
             procesoAnterior,
             procesoNuevo,
-            idMovimiento,
+            creadoPor,
             descripcion,
             esquemaCreditoProceso
         )
@@ -277,7 +275,7 @@ class CasasModel extends CI_Model
             idLote,
             idGerente,
             comentario,
-            idCreacion
+            creadoPor
         )
         VALUES
         (
@@ -1826,7 +1824,7 @@ class CasasModel extends CI_Model
     }
 
     public function setVoBoSaldos($columna, $idProcesoCasas, $idUsuario){
-        $query = $this->db->query("UPDATE proceso_casas SET ". $columna ." = ?, fechaProceso = GETDATE(), fechaModificacion = GETDATE(), idModificacion = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
+        $query = $this->db->query("UPDATE proceso_casas SET ". $columna ." = ?, fechaProceso = GETDATE(), fechaModificacion = GETDATE(), modificadoPor = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
 
         return $query;
     }

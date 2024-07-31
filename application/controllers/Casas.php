@@ -469,7 +469,7 @@ class Casas extends BaseController
             "procesoAnterior"       => $proceso,
             "procesoNuevo"          => $proceso,
             "fechaMovimiento"       => date("Y-m-d H:i:s"),
-            "idMovimiento"          => $this->session->userdata('id_usuario'),
+            "creadoPor"             => $this->session->userdata('id_usuario'),
             "descripcion"           => "Se asigno el asesor: " . $asesor->nombre . " - con id: " . $asesor->idUsuario,
             "esquemaCreditoProceso" => $esquemaCreditoCasas
         );
@@ -573,7 +573,7 @@ class Casas extends BaseController
                 "procesoAnterior" => $proceso,
                 "procesoNuevo"    => 16,
                 "fechaMovimiento" => date("Y-m-d H:i:s"),
-                "idMovimiento"    => $this->session->userdata("id_usuario"),
+                "creadoPor"       => $this->session->userdata("id_usuario"),
                 "descripcion"     => $comentario,
                 "esquemaCreditoProceso" => 2
             );
@@ -635,7 +635,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => 0,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata("id_usuario"),
+            "creadoPor"       => $this->session->userdata("id_usuario"),
             "descripcion"     => $comentario
         );
 
@@ -1921,7 +1921,7 @@ class Casas extends BaseController
                 "fechaFirma2"    => $fechaFirma2,
                 "fechaFirma3" => $fechaFirma3,
                 "fechaCreacion" => date("Y-m-d H:i:s"),
-                "idCreacion"    => $this->session->userdata('id_usuario'),
+                "creadoPor"    => $this->session->userdata('id_usuario'),
                 "fechaModificacion" => date("Y-m-d H:i:s"),
                 "idModificacion"    => $this->session->userdata('id_usuario'),
             );
@@ -2074,7 +2074,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -2180,7 +2180,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -2234,7 +2234,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -2333,7 +2333,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $voBoAdeudoTerreno == 1 ? $procesoNuevo : $proceso,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -2393,7 +2393,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $voBoOrdenCompra == 1 ? $procesoNuevo : $proceso,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -2465,7 +2465,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -2544,7 +2544,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $finalizado,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => "Se ha finalizado el proceso del lote",
             "esquemaCreditoProceso" => 2
         );
@@ -2683,7 +2683,7 @@ class Casas extends BaseController
                     "archivo" => $filename,
                     "tipo" => $tipo,
                     "fechaCreacion" => date("Y-m-d H:i:s"),
-                    "idCreacion" => $this->session->userdata('id_usuario'),
+                    "creadoPor" => $this->session->userdata('id_usuario'),
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                     "idModificacion" => $this->session->userdata('id_usuario'),
                 );
@@ -2763,7 +2763,7 @@ class Casas extends BaseController
 
         $updateData = array(
             "notaria" => $notaria,
-            "idModificacion" => $this->session->userdata('id_usuario'),
+            "modificadoPor" => $this->session->userdata('id_usuario'),
         );
 
         $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
@@ -2863,7 +2863,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
         );
@@ -2985,7 +2985,7 @@ class Casas extends BaseController
             "procesoAnterior" => 6,
             "procesoNuevo"    => 6,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $idUsuario,
+            "creadoPor"       => $idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1  
         );
@@ -3039,7 +3039,7 @@ class Casas extends BaseController
         $updateData = array(
             "cierreContraloria" => 1,
             "fechaProceso"      => date("Y-m-d H:i:s"),
-            "idModificacion"    => $idUsuario
+            "modificadoPor"    => $idUsuario
         );
 
         $insertData = array(
@@ -3047,7 +3047,7 @@ class Casas extends BaseController
             "procesoAnterior" => 6,
             "procesoNuevo"    => 6,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $idUsuario,
+            "creadoPor"       => $idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1  
         );
@@ -3154,7 +3154,7 @@ class Casas extends BaseController
             "procesoAnterior" => 13,
             "procesoNuevo"    => 13,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $idUsuario,
+            "creadoPor"       => $idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1  
         );
@@ -3243,7 +3243,7 @@ class Casas extends BaseController
             "procesoAnterior" => 14,
             "procesoNuevo"    => 14,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $idUsuario,
+            "creadoPor"       => $idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1  
         );
@@ -3303,7 +3303,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
         );
@@ -3542,7 +3542,7 @@ class Casas extends BaseController
             "procesoAnterior" => 6,
             "procesoNuevo"    => 5,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
         );
@@ -3611,7 +3611,7 @@ class Casas extends BaseController
                         "idProcesoCasas"  => $proceso->idProcesoCasas,
                         "procesoAnterior" => NULL,
                         "procesoNuevo"    => 0,
-                        "idMovimiento"    => $idUsuario,       
+                        "creadoPor"    => $idUsuario,       
                         "descripcion"     => $proceso->comentario,
                         "esquemaCreditoProceso" => 1
                     );                    
@@ -3627,7 +3627,7 @@ class Casas extends BaseController
                         "idProcesoCasas"  => $proceso->idProceso,
                         "procesoAnterior" => NULL,
                         "procesoNuevo"    => 0,
-                        "idMovimiento"    => $idUsuario,       
+                        "creadoPor"    => $idUsuario,       
                         "descripcion"     => $proceso->comentario,
                         "esquemaCreditoProceso" => 2
                     );
