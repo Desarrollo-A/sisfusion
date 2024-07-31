@@ -4,10 +4,7 @@ switch ($idRol) {
     case 99:
         $adeudo = 'OOAM';
         break;
-    case 101:
-        $adeudo = 'GPH';
-        break;
-    case 33:
+    case 33 || 11:
         $adeudo = 'ADM';
         break;
 }

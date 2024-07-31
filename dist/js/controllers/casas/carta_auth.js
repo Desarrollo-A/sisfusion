@@ -188,7 +188,7 @@ let columns = [
 
             let cancel_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_process, data })
 
-            return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}${cancel_button}</div>`
+            return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${cancel_button}</div>`
         }
     },
 ]

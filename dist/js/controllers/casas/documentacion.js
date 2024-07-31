@@ -82,7 +82,7 @@ function show_upload(data) {
 }
 
 backPage = function() {
-    window.location.href = `${general_base_url}casas/docu_cliente`
+    window.location.href = `${general_base_url}casas/adeudos`
 }
 
 let buttons = [

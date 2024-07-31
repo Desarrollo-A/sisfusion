@@ -167,11 +167,19 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     {
-        data: (d) => {
-            return `<span class="label" 
-                style="color: ${d.color}; background: ${d.color}18;}">
-                ${d.movimiento}
-            </span>`;
+        data: function (data) {
+            switch(data.tipoMovimiento){
+            case 1:
+                clase = 'warning'
+                break
+            case 2:
+                clase = 'orange'
+                break
+            default:
+                clase = 'blueMaderas'
+            }
+    
+            return `<span class="label lbl-${clase}">${data.movimiento}</span>`
         }
     },
     {

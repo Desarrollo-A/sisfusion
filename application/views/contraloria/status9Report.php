@@ -70,6 +70,7 @@
                                                 <th>REUBICACIÓN</th>
                                                 <th>FECHA DE REUBICACIÓN</th>
                                                 <th>RECEPCIÓN CONTRATO</th>
+                                                <th>PORCENTAJE ENGANCHE</th>
                                             </tr>
                                         </thead>
                                     </table>
