@@ -65,24 +65,14 @@ $(document).ready(()=>{
             { data: 'nombreResidencial' },
             { data: 'nombreCondominio' },
             { data: 'nombreLote' },
+            { data: 'nombreCliente' },
             { data: 'referencia' },
             { data: 'nombreGerente' },
-            { data: 'nombreCliente' },
-            {
-                data: function (d) {
-                    return d.modificado;
-                }
-            },
-            {
-                data: function (d) {
-                    return `<span class="label lbl-azure">${d.nombreSede}</span>`;
-                }
-            },
             {
                 data: function (d) {
                     return d.comentario;
                 }
-            },
+            }
         ],
         columnDefs: [
             {
