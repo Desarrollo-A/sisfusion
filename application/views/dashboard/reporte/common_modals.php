@@ -213,6 +213,7 @@
                       <th>DÍAS EN ESTATUS 9</th>
                       <th>ESTATUS DEL LOTE</th>
                       <th>APARTADO</th>
+                      <th>SEDE NOMBRE</th>
                       <th>MODALIDAD</th>
                     </tr>
                 </thead>
@@ -265,6 +266,7 @@
                         <th>FECHA DE LIBERACIÓN</th>
                         <th>MOTIVO</th>
                         <th>APARTADO</th>
+                        <th>SEDE</th>
                         <th>MODALIDAD</th>
                     </tr>
                 </thead>

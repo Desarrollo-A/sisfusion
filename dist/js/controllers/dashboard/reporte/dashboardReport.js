@@ -1432,6 +1432,9 @@ function fillTableReport(dataObject) {
                                         return 'APARTADO';
                                         break;
                                     case 21:
+                                        return 'SEDE';
+                                        break;
+                                    case 22:
                                         return 'MODALIDAD';
                                         break;
                                 }
@@ -1493,12 +1496,18 @@ function fillTableReport(dataObject) {
                             return 'ESTÁNDAR';
                     }
                 },
+                { data: 'modalidad'},
                 {
                     data: function (d) {
-                        return d.modalidad;
+                        if(d.sedeNombre == null || d.sedeNombre == 'null') {
+                            return 'SIN ESPECIFICAR';
+                        }
+                        else{
+                            return d.sedeNombre;
+                        }
+                        
                     }
                 }
-                
             ],
             columnDefs: [{
                 visible: false,
