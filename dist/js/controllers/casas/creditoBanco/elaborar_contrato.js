@@ -21,7 +21,7 @@ switch(idRol){
     case 55: // postventa 
         tipo = 3
         documento = 35
-        tipoContrato = 'contrato de servicios arquitectonicos';
+        tipoContrato = 'contrato de servicios arquitectónicos';
         break;
 }
 
@@ -57,7 +57,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -83,7 +83,7 @@ function show_upload(data) {
 
 avance_contratos = function (data) {
     let form = new Form({
-        title: 'Continuar proceso',
+        title: 'Avanzar proceso',
         text: `¿Desea avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
@@ -186,20 +186,7 @@ let columns = [
     { data: 'nombreCliente' },
     { data: 'nombreAsesor' },
     { data: 'nombreGerente' },
-    {
-        data: function (data) {
-            let inicio = new Date(data.fechaProceso)
-            let today = new Date()
-
-            let difference = today.getTime() - inicio.getTime()
-
-            let days = Math.floor(difference / (1000 * 3600 * 24))
-
-            let text = `Lleva ${days} día(s)`
-
-            return text
-        }
-    },
+    { data: 'tiempoProceso' },
     {
         data: function (data) {
             switch(data.tipoMovimiento){
@@ -269,7 +256,7 @@ let table = new Table({
 
 function file_upload(data) {
     let form = new Form({
-        title: 'Subir orden de compra firmada',
+        title: `Subir ${tipoContrato}`,
         onSubmit: function(data){
             form.loading(true)
 
@@ -280,7 +267,7 @@ function file_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function(response){
-                    alerts.showNotification("top", "right", "Se ha subido el contrato", "success");
+                    alerts.showNotification("top", "right", "Se ha cargado el archivo", "success");
                         
                     table.reload()
                     form.hide()
@@ -308,7 +295,7 @@ function file_upload(data) {
 rechazo_proceso = function (data) {
     let form = new Form({
         title: 'Rechazar proceso',
-        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 

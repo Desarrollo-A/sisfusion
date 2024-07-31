@@ -136,7 +136,7 @@ function replace_upload(data ) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -197,7 +197,7 @@ function upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -358,7 +358,7 @@ let columns = [
              pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
         }
 
-        let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorización', onClick: back_to_carta_auth, data })
+        let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: back_to_carta_auth, data })
 
         return `<div class="d-flex justify-center">${view_button}${upload_button}${adeudo_button}${back_button}${pass_button}</div>`
     } },

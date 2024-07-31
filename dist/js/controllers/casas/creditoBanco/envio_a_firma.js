@@ -43,7 +43,7 @@ let columns = [
         return `<span class="label lbl-${clase}">${data.nombreMovimiento}</span>`
     } },
     { data: function(data){
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a recepción de contrato', onClick: avance_proceso, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avance_proceso, data})
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: rechazo_proceso, data})
 
@@ -62,8 +62,8 @@ let table = new Table({
 
 avance_proceso = function (data) {
     let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Marcar contrato como enviado a firma por R.L. del lote <b>${data.nombreLote}</b>?`,
+        title: 'Avanzar proceso',
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -102,7 +102,7 @@ avance_proceso = function (data) {
 rechazo_proceso = function (data) {
     let form = new Form({
         title: 'Rechazar proceso',
-        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -113,7 +113,7 @@ rechazo_proceso = function (data) {
                 contentType: false,
                 processData: false,
                 success : function(response){
-                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+                    alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "success")
         
                     table.reload()
                     form.hide()                             

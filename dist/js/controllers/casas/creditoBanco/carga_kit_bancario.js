@@ -50,7 +50,7 @@ function replace_upload(data ) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -88,7 +88,7 @@ function upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -190,7 +190,7 @@ let columns = [
         if (data.kit) {
             view_button = new RowButton({icon: 'visibility', label: `Visualizar kit bancario`, onClick: show_preview, data})
             upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar kit bancario`, onClick: replace_upload, data })
-            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
+            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_vobo_cifras, data })
         }else{
             upload_button = new RowButton({ icon: 'file_upload', label: `Subir kit bancario`, onClick: upload, data })
         }

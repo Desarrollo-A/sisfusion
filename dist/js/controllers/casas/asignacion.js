@@ -230,7 +230,7 @@ let columns = [
 
             let cancel_button = new RowButton({ icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data })
 
-            return `<div class="d-flex justify-center">${asesor_button}${pass_button}${cancel_button}</div>`
+            return `<div class="d-flex justify-center">${pass_button}${asesor_button}${cancel_button}</div>`
         }
     },
 ]

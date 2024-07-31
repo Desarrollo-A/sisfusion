@@ -17,8 +17,8 @@ function sendToNext(data) {
 
 pass_to_proyecto_ejecutivo = function(data) {
     let form = new Form({
-        title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a validación de proyecto?`,
+        title: 'Avanzar proceso', 
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b> ?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -30,7 +30,7 @@ pass_to_proyecto_ejecutivo = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de proyecto.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente.", "success");
         
                     table.reload()
 
@@ -56,7 +56,7 @@ back_to_carta_auth = function (data) {
 
     let form = new Form({
         title: 'Regresar proceso',
-        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a carta de autorización?`,
+        text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a carta de autorización?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -152,7 +152,7 @@ let columns = [
 
             let pass_button = ''
             if(data.documentos >= 13 && data.adeudoOOAM != null && data.adeudoADM){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_proyecto_ejecutivo, data})
             }
 
             let docu_button = new RowButton({icon: 'toc', label: 'Editar documentos', onClick: go_to_documentos, data})

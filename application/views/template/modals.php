@@ -40,7 +40,7 @@
                 </div>
                 <div class="modal-body">
                     <span id="text-form-modal"></span>
-                    <div id="fields-form-modal" class="col-md-12">
+                    <div id="fields-form-modal" class="row">
 
                     </div>
                     <div class="mt-4">ㅤ</div>
@@ -48,7 +48,7 @@
                 <div class="modal-footer">
                     <button id="cancel-button-form-modal" type="button" class="btn btn-danger btn-simple" data-dismiss="modal">cerrar</button>
                     <button id="ok-button-form-modal" type="submit" class="btn btn-primary">
-                        enviar
+                        aceptar
                     </button>
                 </div>
             </form>
@@ -65,7 +65,7 @@
                 </div>
                 <div class="modal-body">
                     <span id="text-form-modal2"></span>
-                    <div id="fields-form-modal2" class="col-md-12">
+                    <div id="fields-form-modal2" class="row">
 
                     </div>
                     <div class="mt-4">ㅤ</div>

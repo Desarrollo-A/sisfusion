@@ -33,15 +33,13 @@ let columns = [
         } 
     },
     { data: function(data){
-        let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir orden de compra', onClick: file_upload, data})
         let btn_avance = '';
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: funcionRechazo, data});
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: funcionRechazo, data});
         let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Subir documentos de proveedor', onClick: go_to_documentos, data});
         let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Subir documentos de cliente', onClick: go_to_documentos_cliente, data});
-        let view_button = '';
         
         if(data.documentos == 24){
-            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance al paso 5', onClick: avanceProcesoBanco, data})
+            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avanceProcesoBanco, data})
         }
 
         return `<div class="d-flex justify-center">${btn_avance}${subir_proveedor}${subir_cliente}${btn_rechazo}</div>`
@@ -78,7 +76,7 @@ let table = new Table({
 function avanceProcesoBanco(data){
     let form = new Form({
         title: 'Avanzar proceso',
-        text: `Se avanzara el proceso del lote ${data.nombreLote}`,
+        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             form.loading(true);
 

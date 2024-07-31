@@ -30,13 +30,13 @@ let columns = [
         } 
     },
     { data: function(data){
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data})
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data})
         let btn_avance = ''
         let view_button = '';
-        let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir archivo de pre cierre de cifras', onClick: file_upload, data})
+        let subir_archivo = new RowButton({icon: 'file_upload', label: `Subir archivo ${data.documento}`, onClick: file_upload, data})
 
         if(data.documento){
-            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Vo.Bo.', onClick: avanceProcesoBanco, data})
+            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avanceProcesoBanco, data})
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }
 
@@ -73,7 +73,7 @@ let table = new Table({
 function avanceProcesoBanco(data){
     let form = new Form({
         title: 'Avanzar proceso',
-        text: `Se avanzara el proceso del lote ${data.nombreLote}`,
+        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             form.loading(true);
 
@@ -118,7 +118,7 @@ function avanceProcesoBanco(data){
 
 function file_upload(data) {
     let form = new Form({
-        title: 'Subir orden de compra firmada',
+        title: 'Subir anexos',
         onSubmit: function(data){
             form.loading(true)
 
@@ -129,7 +129,7 @@ function file_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function(response){
-                    alerts.showNotification("top", "right", "Se ha subido la orden de compra", "success");
+                    alerts.showNotification("top", "right", "Se ha cargado el archivo", "success");
                         
                     table.reload()
                     form.hide()
@@ -171,7 +171,7 @@ function show_preview(data) {
 rechazo_proceso = function (data) {
     let form = new Form({
         title: 'Rechazar proceso',
-        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 

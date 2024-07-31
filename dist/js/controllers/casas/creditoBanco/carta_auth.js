@@ -63,7 +63,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -116,7 +116,7 @@ pass_to_adeudos = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de concentrar adeudos.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
 
                     table.reload();
 
@@ -183,10 +183,10 @@ let columns = [
             let pass_button = ''
             if (data.archivo) {
                 view_button = new RowButton({ icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data })
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a concentrar adeudos', onClick: pass_to_adeudos, data })
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_adeudos, data })
             }
 
-            let cancel_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_process, data })
+            let cancel_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: back_process, data })
 
             return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${cancel_button}</div>`
         }

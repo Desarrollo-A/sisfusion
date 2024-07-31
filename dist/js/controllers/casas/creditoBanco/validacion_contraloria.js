@@ -167,7 +167,7 @@ function replace_upload(data ) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -205,7 +205,7 @@ function upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -310,7 +310,7 @@ let columns = [
             view_button = new RowButton({icon: 'visibility', label: `Visualizar distribución de pagos`, onClick: show_preview, data})
             upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar distribución de pagos`, onClick: replace_upload, data })
             if(data.tesoreria && data.serviciosArquitectonicos && data.obra){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a subir contratos', onClick: pass_to_solicitud_contratos, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_solicitud_contratos, data})
             }
         }else{
             upload_button = new RowButton({ icon: 'file_upload', label: `Subir distribución de pagos`, onClick: upload, data })

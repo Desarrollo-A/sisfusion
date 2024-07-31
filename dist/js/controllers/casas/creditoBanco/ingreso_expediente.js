@@ -30,7 +30,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -56,8 +56,8 @@ function show_upload(data) {
 
 avance_proceso = function (data) {
     let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Desea avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
+        title: 'Avanzar proceso',
+        text: `¿Deseas avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -172,7 +172,7 @@ function file_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function(response){
-                    alerts.showNotification("top", "right", "Se ha subido el contrato", "success");
+                    alerts.showNotification("top", "right", "Se ha cargado el contrato", "success");
                         
                     table.reload()
                     form.hide()
@@ -200,7 +200,7 @@ function file_upload(data) {
 rechazo_proceso = function (data) {
     let form = new Form({
         title: 'Rechazar proceso',
-        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
             $.ajax({
@@ -215,7 +215,7 @@ rechazo_proceso = function (data) {
                         form.hide()
                     }
                     else{
-                        alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+                        alerts.showNotification("top", "right", "Error al rechazar el proceso", "danger")
         
                         table.reload()
                         form.hide()  
@@ -250,7 +250,7 @@ finalizar_rechazo = function(data){
         contentType: false,
         processData: false,
         success : function(response){
-            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+            alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "success")
 
             table.reload()
             form.hide()                             

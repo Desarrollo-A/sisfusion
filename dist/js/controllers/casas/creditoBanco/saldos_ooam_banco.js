@@ -29,7 +29,7 @@ let columns = [
     },
     { data: function(data){
         let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: avanceProcesoBanco, data});
-        let btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Vo.Bo.', onClick: avanceProcesoBanco, data})
+        let btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avanceProcesoBanco, data})
 
         if([5, 6].includes(data.proceso) && data.saldoOOAM == 0){
             return `<div class="d-flex justify-center">${btn_avance}${btn_rechazo}</div>`

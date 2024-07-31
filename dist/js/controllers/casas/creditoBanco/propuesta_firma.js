@@ -59,7 +59,7 @@ estatusNotaria = function(data) {
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     } else {
         let form = new FormConfirm({
-            title: `¿Estás seguro de ${data.estatus == 0 ? 'habilitar' : 'inhabilitar'} la notaria?`,
+            title: `¿Estás seguro de ${data.estatus == 0 ? 'habilitar' : 'inhabilitar'} la notaría?`,
             onSubmit: function (data) {
                 form.loading(true);
 
@@ -122,7 +122,7 @@ selectNotarias = function(data) {
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        alerts.showNotification("top", "right", "Notaria registrada", "success");
+                        alerts.showNotification("top", "right", "Notaría registrada", "success");
 
                         table.reload();
                         form.hide();
@@ -163,7 +163,7 @@ addNotaria = function(data) {
                     contentType: false,
                     processData: false,
                     success: function (response) {
-                        alerts.showNotification("top", "right", "Notaria agregada.", "success");
+                        alerts.showNotification("top", "right", "Notaría agregada.", "success");
     
                         table.reload()
 
@@ -218,12 +218,12 @@ let items = []
 
 gestorNotarias = function(data) {
     let form2 = new Form2({
-        title: 'Gestión de notarias',
+        title: 'Gestión de notarías',
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new HrTitle({text: 'Registro de notaria'}),
+            new HrTitle({text: 'Registro de notaría'}),
             new CrudInput({ id: 'notaria', placeholder: 'Nombre de la notaria', width: '12', required: 'required', icon: 'add', title: 'Agregar', onClick: addNotaria }),
-            new HrTitle({text: 'Lista de notarias'}),
+            new HrTitle({text: 'Lista de notarías'}),
             ...items.map(item => 
                 new CrudInput({
                     id: `notaria${item.value}`,
@@ -273,7 +273,7 @@ function replace_upload(data ) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -311,7 +311,7 @@ function upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -479,13 +479,13 @@ let columns = [
         if(idRol === 57){
         propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
         upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
-        notarias = new RowButton({icon: 'gavel', label: 'Selección de notarias', onClick: selectNotarias, data})
+        notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
         
         if(data.fechaFirma1 && data.cotizaciones && data.documentos && data.constancia && data.notarias != 0){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a elección de propuestas', onClick: pass_to_propuestas, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_propuestas, data})
         }
 
-        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentos, data})
+        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: back_to_documentos, data})
         }
 
         return `<div class="d-flex justify-center">${pass_button}${view_button}${propuestas_button}${upload_button}${notarias}${back_button}</div>`

@@ -55,7 +55,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -86,8 +86,8 @@ go_to_documentos = function(data) {
 
 pass_to_vobo_cifras = function (data) {
     let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
+        title: 'Avanzar proceso',
+        text: `¿Deseas realizar el avance de proceso del lote<b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -209,7 +209,7 @@ let columns = [
     },
     {
         data: function (data) {
-            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
+            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_vobo_cifras, data })
             let decline_button = ''
 
             if( tipo == 1 && data.voboADM == 0){
@@ -246,7 +246,7 @@ let table = new Table({
 rechazo_proceso = function (data) {
     let form = new Form({
         title: 'Rechazar proceso',
-        text: `¿Desea rechazar el lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 

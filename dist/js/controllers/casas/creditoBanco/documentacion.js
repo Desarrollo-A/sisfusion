@@ -32,10 +32,6 @@ function show_upload(data) {
             accept = ['image/png','image/jpeg','application/pdf']
         break;
 
-        case 14:
-            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        break;
-
         case 25:
             accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf']
         break;
@@ -45,7 +41,7 @@ function show_upload(data) {
     }
 
     let form = new Form({
-        title: `Subir ${data.documento}`,
+        title: 'Subir ' + data.documento.toLowerCase(),
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -57,7 +53,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
 
                     table.reload()
 
@@ -125,7 +121,7 @@ let columns = [
         if(data.fechaModificacion){
             return data.fechaModificacion.substring(0, 16)
         }
-        return 'aun no subido'
+        return 'Sin fecha de carga'
     } },
     { data: function(data){
         let view_button = '';
