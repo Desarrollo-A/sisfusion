@@ -172,10 +172,11 @@ let columns = [
             let check = ''
 
             if(!data.idAsesor){
-                check = `<label class="container">
+                check = `<div class="d-flex justify-center">
+                        <label class="cont">
                             <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required>
-                            <div class="checkmark"></div>
-                        </label>`
+                            <span></span>
+                        </label></div>`
             }
 
             return check
