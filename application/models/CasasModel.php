@@ -24,6 +24,14 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
+    public function getCliente($idLote){
+        $query = "SELECT cl.id_cliente FROM clientes cl
+        INNER JOIN lotes lt ON lt.idCliente = cl.id_cliente 
+        WHERE lt.idLote = $idLote AND cl.status = 1";
+
+        return $this->db->query($query)->row();
+    }
+
     public function getLastNotarias(){
         $query = "SELECT TOP 1 * 
         FROM opcs_x_cats 
@@ -205,13 +213,14 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us_regi2 On us_regi2.id_usuario = cli.id_regional_2
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
         WHERE
         lo.idMovimiento = 45
         AND lo.idStatusContratacion = 15
         AND lo.idCondominio = $idCondominio
         AND pc.status IS NULL
         AND cli.status = 1
-        AND lo.esquemaCreditoCasas = 0";
+        AND (cl.esquemaCreditoCasas = 0 OR cl.esquemaCreditoCasas IS NULL)";
 
         return $this->db->query($query)->result();
     }
@@ -225,7 +234,7 @@ class CasasModel extends CI_Model
         pc.idAsesor,
         pc.tipoMovimiento,
         lo.nombreLote,
-        lo.esquemaCreditoCasas,
+        cli.esquemaCreditoCasas,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
@@ -261,7 +270,7 @@ class CasasModel extends CI_Model
         pcd.idAsesor,
         pcd.tipoMovimiento,
         lo.nombreLote,
-        lo.esquemaCreditoCasas,
+        cli.esquemaCreditoCasas,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
@@ -484,7 +493,7 @@ class CasasModel extends CI_Model
         SET
             archivo = '$archivo',
             fechaModificacion = GETDATE(),
-            idModificacion = $idModificacion
+            modificadoPor = $idModificacion
         WHERE
             idDocumento = $idDocumento";
 
@@ -1804,7 +1813,7 @@ class CasasModel extends CI_Model
                 fechaCreacion,
                 creadoPor,
                 fechaModificacion,
-                idModificacion
+                modificadoPor
             )
             VALUES
             (
@@ -1819,7 +1828,7 @@ class CasasModel extends CI_Model
             )";
         }else{
             $query = "UPDATE documentos_proceso_casas
-            SET archivo = '$filename', fechaModificacion = GETDATE(), idModificacion = '$id_usuario'
+            SET archivo = '$filename', fechaModificacion = GETDATE(), modificadoPor = '$id_usuario'
             WHERE idProcesoCasas = $idProceso AND tipo = $id_documento";
         }
 

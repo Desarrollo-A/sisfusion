@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header d-flex d-wrap">
-                <h4 class="modal-title"><b id="title-alert-modal" class="text-center"></b></h4>
+                <h4 class="modal-title text-center"><b id="title-alert-modal"></b></h4>
             </div>
             <div class="modal-body">
                 <span id="text-alert-modal"></span>
@@ -18,7 +18,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header d-flex d-wrap">
-                <h4 class="modal-title"><b id="title-ask-modal" class="text-center"></b></h4>
+                <h4 class="modal-title text-center"><b id="title-ask-modal"></b></h4>
             </div>
             <div class="modal-body">
                 <span id="text-ask-modal"></span>
@@ -36,7 +36,7 @@
         <div class="modal-content">
             <form id="form-form-modal" method="post" novalidate>
                 <div class="modal-header">
-                    <h4 class="modal-title"><b id="title-form-modal" class="text-center"></b></h4>
+                    <h4 class="modal-title text-center"><b id="title-form-modal"></b></h4>
                 </div>
                 <div class="modal-body">
                     <span id="text-form-modal"></span>
@@ -61,7 +61,7 @@
         <div class="modal-content">
             <form id="form-form-modal2" method="post" novalidate>
                 <div class="modal-header">
-                    <h4 class="modal-title"><b id="title-form-modal2" class="text-center"></b></h4>
+                    <h4 class="modal-title text-center"><b id="title-form-modal2"></b></h4>
                 </div>
                 <div class="modal-body">
                     <span id="text-form-modal2"></span>

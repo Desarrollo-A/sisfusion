@@ -411,6 +411,8 @@ class Casas extends BaseController
             "esquemaCreditoCasas" => $esquemaCredito
         );
 
+        $cliente = $this->CasasModel->getCliente($idLote);
+
         $this->db->trans_begin();
 
         if ($esquemaCredito == 1) { // se agrega un condicion para saber que esquema de credito se usara
@@ -422,7 +424,7 @@ class Casas extends BaseController
 
         if ($proceso) {
             $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso | Comentario: ' . $proceso->comentario, $esquemaCredito == 1 ? 1 : 2);
-            $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
+            $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $cliente->id_cliente);
         } else {
             $this->db->trans_rollback();
             http_response_code(404);
@@ -622,6 +624,8 @@ class Casas extends BaseController
             "esquemaCreditoCasas" => 0
         );
 
+        $cliente = $this->CasasModel->getCliente($idLote);
+
         $insertHistorialData = array(
             "idProcesoCasas"  => $id,
             "procesoAnterior" => $proceso,
@@ -632,7 +636,7 @@ class Casas extends BaseController
         );
 
         // paso general 1: se regresa el esquema de credito del lote a 0 
-        $updateLote = $this->General_model->updateRecord("lotes", $updateLoteData, "idLote", $idLote);
+        $updateLote = $this->General_model->updateRecord("clientes", $updateLoteData, "id_cliente", $cliente->id_cliente);
         if (!$updateLote) {
             $banderaSuccess = false;
         }
@@ -693,7 +697,7 @@ class Casas extends BaseController
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: ' . $comentario);
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: ' . $comentario, 1);
 
             $this->json([]);
         } else {
@@ -2832,7 +2836,7 @@ class Casas extends BaseController
                     "fechaCreacion" => date("Y-m-d H:i:s"),
                     "creadoPor" => $this->session->userdata('id_usuario'),
                     "fechaModificacion" => date("Y-m-d H:i:s"),
-                    "idModificacion" => $this->session->userdata('id_usuario'),
+                    "modificadoPor" => $this->session->userdata('id_usuario'),
                 );
                 
                 $add = $this->General_model->addRecord('documentos_proceso_casas', $insertData);
