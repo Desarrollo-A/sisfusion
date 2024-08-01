@@ -3666,52 +3666,50 @@ class Casas extends BaseController
 
         $asesor = $this->form('asesor');
         $idLotes = json_decode($this->form('idLotes'));
-        $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crdito - 1: bancario - 2: directo
+        $idUsuario = $this->session->userdata('id_usuario');        
         $banderaSuccess = true;
 
+        // idLotes[0] -- es el idLote
+        // idLotes[1] -- es el tipo de esquema 
+        // idLotes[2] -- es el idProceso de su tabla
+
         $dataHistorial = array();
-        $dataUpdate = array();
+        $dataUpdateBanco = array();
+        $dataUpdateDirecto = array();
 
         $this->db->trans_begin();
         
         $getAsesor = $this->CasasModel->getAsesor($asesor);
 
-        // if (!isset($idLote) || !isset($gerente) || !isset($esquemaCredito)) {
-        //     $banderaSuccess = false;
-        // }       
+        if (!isset($idLotes) || !isset($asesor)) {
+            $banderaSuccess = false;
+        }
 
-        // if ($esquemaCredito == 1){ // se agrega un condicion para saber que esquema de credito se usara
-        //     foreach($idLotes as $id){
-        //         foreach($id as $idValue){  
-        //             $proceso = $this->CasasModel->addLoteToAsignacion($idValue, $gerente, $comentario, $idUsuario);
+        foreach($idLotes as $id){          
+                $dataHistorial[] = array(
+                    "idProcesoCasas"  => 1,
+                    "procesoAnterior" => 0,
+                    "procesoNuevo"    => 0,
+                    "modificadoPor"    => $idUsuario,       
+                    "descripcion"     => "Se asigno el asesor " . $getAsesor->label . " con el ID: " . $getAsesor->id_usuario,
+                    "esquemaCreditoProceso" => $id[1]
+                );
                 
-        //             $dataHistorial[] = array(
-        //                 "idProcesoCasas"  => $proceso->idProcesoCasas,
-        //                 "procesoAnterior" => NULL,
-        //                 "procesoNuevo"    => 0,
-        //                 "idMovimiento"    => $idUsuario,       
-        //                 "descripcion"     => 'Se asigno el lote al asesor',
-        //                 "esquemaCreditoProceso" => 1
-        //             );                    
-        //         }                                        
-        //     }
-        // }
-        // else if ($esquemaCredito == 2){
-        //     foreach($idLotes as $id){
-        //         foreach($id as $idValue){  
-        //             $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idValue, $gerente, $comentario, $idUsuario);
-                
-        //             $dataHistorial[] = array(
-        //                 "idProcesoCasas"  => $proceso->idProceso,
-        //                 "procesoAnterior" => NULL,
-        //                 "procesoNuevo"    => 0,
-        //                 "idMovimiento"    => $idUsuario,       
-        //                 "descripcion"     => 'Se inicio proceso | Comentario: ' . $proceso->comentario,
-        //                 "esquemaCreditoProceso" => 2
-        //             );
-        //         }                
-        //     }
-        // }
+                if($id[1] == 1){ // para guardar en distintos arreglos y saber si son de banco o directo
+                    $dataUpdateBanco[] = array(
+                        "idProcesoCasas" => $id[2],
+                        ""
+                    );
+                }
+                else{
+                    $dataUpdateDirecto[] = array(
+                        "idProceso" => $id[2],
+                        ""
+                    );
+                }                
+        }
+
+        
 
         // // se hace el insert en el historial
         // $insert = $this->General_model->insertBatch("historial_proceso_casas", $dataHistorial);

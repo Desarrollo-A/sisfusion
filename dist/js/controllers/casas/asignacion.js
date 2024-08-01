@@ -173,7 +173,8 @@ let columns = [
 
             if(!data.idAsesor){
                 check = `<label class="container">
-                            <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <input type="checkbox" onChange="verificarCheck(this)" data-idProcesoCasas="${data.idProcesoCasas}" 
+                                data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-tipoEsquema="${data.tipoEsquema}" name="lotesOrigen[]" value="${data.idLote}" required>
                             <div class="checkmark"></div>
                         </label>`
             }
@@ -252,9 +253,11 @@ function verificarCheck(valorActual){
     
         if (valorActual.checked){
             arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
-            arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
+            arrayInterno.push($(valorActual).attr('data-idLote'));//[1]
 
-            arrayId.push($(valorActual).attr('data-idLote'));//[1]
+            arrayId.push($(valorActual).attr('data-idLote'));//[0]
+            arrayId.push($(valorActual).attr('data-tipoEsquema'));//[1]
+            arrayId.push($(valorActual).attr('data-idProcesoCasas'));//[2]
     
             arrayValores.push(arrayInterno);
             arrayIdLotes.push(arrayId);

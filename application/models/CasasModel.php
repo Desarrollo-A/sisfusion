@@ -196,6 +196,7 @@ class CasasModel extends CI_Model
 
     public function getListaAsignacion(){
         $query = "SELECT
+        1 AS tipoEsquema,
         pc.proceso,
         pc.idProcesoCasas,
         pc.idLote,
@@ -231,8 +232,9 @@ class CasasModel extends CI_Model
             AND cli.status = 1
         UNION ALL
         SELECT
+        2 AS tipoEsquema,
         pcd.proceso,
-        pcd.idProceso as idProcesoCasas,
+        pcd.idProceso AS idProcesoCasas,
         pcd.idLote,
         pcd.idAsesor,
         pcd.tipoMovimiento,
