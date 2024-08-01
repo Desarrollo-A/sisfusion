@@ -215,11 +215,14 @@ addNotaria = function(data) {
 
 let items = []
 
-gestorNotarias = function(data) {
+$(document).on('click', '.btn-gestion', () => {
+    gestorNotarias();
+})
+
+function gestorNotarias() {
     let form2 = new Form2({
         title: 'Gestión de notarías',
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HrTitle({text: 'Registro de notaría'}),
             new CrudInput({ id: 'notaria', placeholder: 'Nombre de la notaria', width: '12', required: 'required', icon: 'add', title: 'Agregar', onClick: addNotaria }),
             new HrTitle({text: 'Lista de notarías'}),
@@ -506,6 +509,15 @@ let buttons = [
                 }
             }
         },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    },
+    {
+        text: '<i class="fas fa-edit"></i>',
+        className: 'btn-large btn-sky btn-gestion',
+        titleAttr: 'Gestionar notarías',
+        title:"Gestionar notarías",
         attr: {
             style: 'position: relative; float: left; margin: 5px',
         }
