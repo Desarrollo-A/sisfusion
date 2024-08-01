@@ -102,6 +102,28 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
+    public function insertVobo($idProcesoCasas, $paso){
+
+        $query = "INSERT INTO vobos_proceso_casas
+        (
+            idProceso,
+            paso,
+            adm,
+            ooam,
+            proyectos
+        )
+        VALUES
+        (
+            $idProcesoCasas,
+            $paso,
+            0,
+            0,
+            0
+        )";
+
+        return $this->db->query($query);
+    }
+
     public function getDocumentos($docs){
         $documents = implode(",", $docs);
 
@@ -469,7 +491,23 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getListaConcentradoAdeudos($tipoDoc){
+    public function getVobos($idProceso, $paso){
+
+        $id = (int) $idProceso;
+
+        $query = "SELECT * FROM vobos_proceso_casas WHERE idProceso =$id AND paso = $paso";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function getListaConcentradoAdeudos($tipoDoc, $rol){
+
+        if($rol == 99){
+			$vobo  = "AND vb.ooam = 0";
+		}else if($rol == 11 || $rol == 33){
+			$vobo = "AND vb.adm = 0";
+		}
+
         $query = "SELECT pc.*,
         CASE
             WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
@@ -505,8 +543,9 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
 		LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = $tipoDoc
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
-        WHERE pc.proceso IN (2, 3) AND pc.status = 1 AND cli.status = 1";
+        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 1
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        WHERE pc.proceso IN (2, 3) AND pc.status = 1 AND cli.status = 1 $vobo";
 
         return $this->db->query($query)->result();
     }
@@ -541,11 +580,13 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 1
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
     WHERE 
         pc.proceso IN (2, 3) 
         AND pc.status = 1 
-        AND cli.status = 1";
+        AND cli.status = 1
+        AND vb.proyectos != 1";
 
         return $this->db->query($query)->result();
     }
@@ -636,7 +677,7 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15,26,23,27,36,37,38)";
+        AND tipo IN (13, 14, 15)";
 
         return $this->db->query($query)->result();
     }

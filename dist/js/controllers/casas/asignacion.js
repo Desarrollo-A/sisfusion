@@ -172,11 +172,11 @@ let columns = [
             let check = ''
 
             if(!data.idAsesor){
-                check = `<label class="container">
-                            <input type="checkbox" onChange="verificarCheck(this)" data-idProcesoCasas="${data.idProcesoCasas}" 
-                                data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-tipoEsquema="${data.tipoEsquema}" name="lotesOrigen[]" value="${data.idLote}" required>
-                            <div class="checkmark"></div>
-                        </label>`
+                check = `<div class="d-flex justify-center">
+                        <label class="cont">
+                            <input type="checkbox" onChange="verificarCheck(this)" data-idProcesoCasas="${data.idProcesoCasas}" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-tipoEsquema="${data.tipoEsquema}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <span></span>
+                        </label></div>`
             }
 
             return check

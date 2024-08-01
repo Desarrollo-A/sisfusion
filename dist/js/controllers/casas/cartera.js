@@ -104,7 +104,7 @@ select_lote = function(data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de credito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
+            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

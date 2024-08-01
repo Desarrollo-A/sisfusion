@@ -46,6 +46,7 @@ pass_to_proyecto_ejecutivo = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'documentos', value: data.documentos }),
         ],
     })
 
@@ -151,8 +152,8 @@ let columns = [
             // console.log(data)
 
             let pass_button = ''
-            if(data.documentos >= 13 && data.adeudoOOAM != null && data.adeudoADM){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_proyecto_ejecutivo, data})
+            if(data.documentos == 3){
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
             }
 
             let docu_button = new RowButton({icon: 'toc', label: 'Editar documentos', onClick: go_to_documentos, data})
@@ -184,7 +185,7 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/concentracion_adeudos',
-    params: {documentos: [2,3,4,5,6,7,8,10,11,12,13,14,15]},
+    params: {documentos: [13,14,15]},
     buttons:buttons,
     columns,
 })
