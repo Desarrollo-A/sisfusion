@@ -60,10 +60,6 @@ input[type="checkbox"]:checked::before {
 input[type="checkbox"]:checked::after {
  opacity: 100%;
 }
-
-span {
- font-size: 2.5rem;
-}
 </style>
 <body class="">
     <div class="wrapper">

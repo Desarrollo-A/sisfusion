@@ -159,7 +159,7 @@ let columns = [
             let docu_button = new RowButton({icon: 'toc', label: 'Editar documentos', onClick: go_to_documentos, data})
             let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorización', onClick: back_to_carta_auth, data })
 
-            return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
+            return `<div class="d-flex justify-center">${pass_button}${docu_button}${back_button}</div>`
         }
     },
 ]

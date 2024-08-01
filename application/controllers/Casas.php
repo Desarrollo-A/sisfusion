@@ -1023,13 +1023,11 @@ class Casas extends BaseController
 
             $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
 
-            if ($update) {
-                $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, $comentario, 1);
-
-                $this->json([]);
-            } else {
+            if (!$update) {
                 http_response_code(404);
             }
+
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, $comentario, 1);
 
             $new_status = 4;
 
@@ -3876,49 +3874,60 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
-        foreach($idLotes as $id){          
-                $dataHistorial[] = array(
-                    "idProcesoCasas"  => 1,
-                    "procesoAnterior" => 0,
-                    "procesoNuevo"    => 0,
-                    "modificadoPor"    => $idUsuario,       
-                    "descripcion"     => "Se asigno el asesor " . $getAsesor->label . " con el ID: " . $getAsesor->id_usuario,
-                    "esquemaCreditoProceso" => $id[1]
+        foreach ($idLotes as $id) {
+            $dataHistorial[] = array(
+                "idProcesoCasas"  => 1,
+                "procesoAnterior" => 0,
+                "procesoNuevo"    => 0,
+                "creadoPor"       => $idUsuario,
+                "descripcion"     => "Se asigno el asesor " . $getAsesor->nombre . " con el ID: " . $getAsesor->idUsuario,
+                "esquemaCreditoProceso" => $id[1]
+            );
+
+            if ($id[1] == 1) { // para guardar en distintos arreglos y saber si son de banco o directo
+                $dataUpdateBanco[] = array(
+                    "idProcesoCasas" => $id[2],
+                    "idAsesor"       => $asesor,
+                    "modificadoPor" => $idUsuario
                 );
-                
-                if($id[1] == 1){ // para guardar en distintos arreglos y saber si son de banco o directo
-                    $dataUpdateBanco[] = array(
-                        "idProcesoCasas" => $id[2],
-                        ""
-                    );
-                }
-                else{
-                    $dataUpdateDirecto[] = array(
-                        "idProceso" => $id[2],
-                        ""
-                    );
-                }                
+            } 
+            else {
+                $dataUpdateDirecto[] = array(
+                    "idProceso" => $id[2],
+                    "idAsesor"  => $asesor
+                );
+            }
+        }
+        
+        // se hace insert en el historial
+        $insert = $this->General_model->insertBatch("historial_proceso_casas", $dataHistorial);
+        if(!$insert) $banderaSuccess = false;
+
+        // se hace insert en la tabla de credito de banco si hay datos en el arreglo
+        if(count($dataUpdateBanco) > 0){
+            $update = $this->General_model->updateBatch("proceso_casas", $dataUpdateBanco, "idProcesoCasas");
+
+            if(!$update) $banderaSuccess = false;
+        }
+        
+        // se hace insert en la tabla de credito directo si hay datos en el arreglo
+        if(count($dataUpdateDirecto) > 0){
+            $update = $this->General_model->updateBatch("proceso_casas_directo", $dataUpdateDirecto, "idProceso");
+
+            if(!$update) $banderaSuccess = false;
         }
 
-        
+        if($banderaSuccess){
+            $this->db->trans_commit();
+            $response["result"] = true;   
+        }
+        else{
+            $this->db->trans_commit();
+            $response["result"] = true;  
+        }
 
-        // // se hace el insert en el historial
-        // $insert = $this->General_model->insertBatch("historial_proceso_casas", $dataHistorial);
-        // if(!$insert){
-        //     $banderaSuccess = false;
-        // }
-
-        // if($banderaSuccess){
-        //     $this->db->trans_commit();
-        //     $response["result"] = true;   
-        // }
-        // else{
-        //     $this->db->trans_commit();
-        //     $response["result"] = true;  
-        // }
-
-        // $this->output->set_content_type("application/json");
-        // $this->output->set_output(json_encode($response));
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($response));
     }
 
     public function copiarDS($idLote){ // función para copiar el deposito de seriedad una vez que se asigna al tipo de credito

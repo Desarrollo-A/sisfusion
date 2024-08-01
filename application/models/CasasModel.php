@@ -599,7 +599,7 @@ class CasasModel extends CI_Model
                            WHERE tipo = $tipo
                            AND idProcesoCasas = $idProcesoCasas)
             BEGIN
-                INSERT INTO documentos_proceso_casas (idProcesoCasas, tipo, documento, idCreacion)
+                INSERT INTO documentos_proceso_casas (idProcesoCasas, tipo, documento, creadoPor)
                 VALUES ($idProcesoCasas, $tipo, '$documento', $idCreacion)
             END
         END";
