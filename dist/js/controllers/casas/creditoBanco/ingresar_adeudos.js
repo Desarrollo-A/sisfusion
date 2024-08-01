@@ -75,7 +75,7 @@ back_to_carta_auth = function (data) {
 
     let form = new Form({
         title: 'Regresar proceso',
-        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a carta de autorización?`,
+        text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a carta de autorización?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -239,7 +239,7 @@ function show_preview(data) {
 pass_to_proyecto_ejecutivo = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a validación de proyecto?`,
+        text: `¿Deseas avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -267,6 +267,8 @@ pass_to_proyecto_ejecutivo = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'rol', value: idRol }),
+            new HiddenField({ id: 'documentos', value: data.documentos }),
         ],
     })
 
@@ -354,13 +356,16 @@ let columns = [
         }
 
         let pass_button = ''
-        if(data.documentos >= 13 && data.adeudoOOAM != null && data.adeudoADM){
-             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
+
+        if(idRol === 99 && data.adeudoOOAM && data.archivo){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
+        }else if((idRol === 11 || idRol === 33) && data.adeudoADM && data.archivo){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
         }
 
-        let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorización', onClick: back_to_carta_auth, data })
+        let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data })
 
-        return `<div class="d-flex justify-center">${view_button}${upload_button}${adeudo_button}${back_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${adeudo_button}${back_button}</div>`
     } },
 ]
 
@@ -393,6 +398,6 @@ if(idRol === 11 || idRol === 33){
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_adeudos`,
-    params: { tipoDoc: tipoDoc },
+    params: { tipoDoc: tipoDoc, rol: idRol},
     columns,
 })
