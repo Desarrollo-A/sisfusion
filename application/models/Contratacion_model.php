@@ -76,11 +76,13 @@ class Contratacion_model extends CI_Model {
           $filtroCondominio = "AND con.idCondominio = $condominio";
       if ($estatus != 0)
          $filtroEstatus = "AND lot.idStatusLote = $estatus";
+      
+      $idsGerente = $this->getIdsGerente($id_lider, $id_usuario);
 
       if (in_array($id_rol, [7, 9, 3])) // LO CONSULTA UN USUARIO TIPO ASESOR, COORDINADOR O GERENTE
          $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario)";
       else if (in_array($id_rol, [6])) // LO CONSULTA UN USUARIO TIPO ASISTNTE GERENTE
-         $filtroClientesPropios = "AND (cl.id_gerente = $id_lider)";
+         $filtroClientesPropios = "AND (cl.id_gerente IN ($idsGerente))";
       else if (in_array($id_rol, [2])) // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
          $filtroClientesPropios = "AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario)";
       else if (in_array($id_rol, [5])) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
@@ -369,4 +371,46 @@ class Contratacion_model extends CI_Model {
    public function getNombreTipo(){
       return $this->db->query("SELECT DISTINCT u.tipo, o.nombre AS nombre_tipo FROM usuarios u INNER JOIN opcs_x_cats o ON o.id_opcion = u.tipo WHERE o.id_catalogo = 124");
    }
+
+   function getIdsGerente($id_lider, $id_usuario) {
+      $idsGerente = "";
+      if ($id_usuario == 13770) // ITAYETZI PAULINA CAMPOS GONZALEZ	
+         $idsGerente = $id_lider . ", 21, 1545";
+      else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMIREZ
+         $idsGerente = $id_lider . ", 1916, 11196";
+      else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
+         $idsGerente = $id_lider . ", 5604";
+      else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
+         $idsGerente = $id_lider . ", 455";
+      else if ($id_usuario == 14649) // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
+         $idsGerente = $id_lider . ", 12027, 13059, 2599, 609, 11680, 7435";
+      else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
+         $idsGerente = $id_lider . ", 694, 4509";
+      else if ($id_usuario == 14952) // GUILLERMO HELI IZQUIERDO VIEYRA
+         $idsGerente = $id_lider . ", 13295, 7970";
+      else if ($id_usuario == 13348) // VIRIDIANA ZAMORA ORTIZ
+         $idsGerente = $id_lider . ", 10063";
+      else if ($id_usuario == 12576) // DIANA EVELYN PALENCIA AGUILAR
+         $idsGerente = $id_lider . ", 6942";
+      else if ($id_usuario == 12292) // REYNALDO HERNANDEZ SANCHEZ
+         $idsGerente = $id_lider . ", 6661";
+      else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
+         $idsGerente = $id_lider . ", 80, 664";
+      else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
+         $idsGerente = $id_lider . ", 12688";
+      else if ($id_usuario == 15761) // JACQUELINE GARCIA SOTELLO
+         $idsGerente = $id_lider . ", 13016, 12027";
+      else if ($id_usuario == 15545) // PAMELA IVONNE LEE MORENO
+         $idsGerente = $id_lider . ", 13059, 11680";
+      else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
+         $idsGerente = $id_lider . ", 10251";
+      else if ($id_usuario == 16186) // CAROLINA CORONADO YAÑEZ   
+         $idsGerente = $id_lider . ", 6942";
+      else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
+         $idsGerente = $id_lider . ", 654, 697, 5604, 10251, 12688";
+      else
+         $idsGerente = $id_lider;
+      return $idsGerente;
+   }
+   
 }
