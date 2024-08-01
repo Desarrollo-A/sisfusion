@@ -41,7 +41,7 @@ function show_upload(data) {
     }
 
     let form = new Form({
-        title: `Subir ${data.documento}`,
+        title: `Subir ${data.documento.toLowerCase()}`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -146,7 +146,7 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: `casas/getDocumentosCliente/${idProcesoCasas}`,
+    url: ps === 4 ? `casas/getDocumentosClienteCompleto/${idProcesoCasas}` : `casas/getDocumentosCliente/${idProcesoCasas}`,
     buttons: buttons,
     columns,
 })

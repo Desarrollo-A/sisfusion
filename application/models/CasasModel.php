@@ -784,46 +784,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    /*
-    public function getListaCargaTitulos(){
-        $query = "SELECT
-        pc.*,
-        lo.nombreLote,
-        doc.archivo,
-        doc.documento,
-        doc.idDocumento,
-        pro.propuestas,
-        con.nombre AS condominio,
-	        resi.descripcion AS proyecto,
-	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-	        (CASE
-	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
-	            ELSE 'Sin asignar'
-	        END) AS nombreAsesor,
-	        CASE
-				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
-				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
-			END AS gerente
-        FROM proceso_casas pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 17
-        LEFT JOIN 
-            (SELECT COUNT(*) AS propuestas, idProcesoCasas 
-            FROM propuestas_proceso_casas 
-            GROUP BY idProcesoCasas) pro ON pro.idProcesoCasas = pc.idProcesoCasas
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
-        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
-        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
-        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
-        WHERE
-            pc.proceso = 5
-        AND pc.status = 1 AND cli.status = 1";
-
-        return $this->db->query($query)->result();
-    }
-    */
-
     public function getListaEleccionPropuestas(){
         $query = "SELECT
         pc.*,
@@ -1842,7 +1802,7 @@ class CasasModel extends CI_Model
                 archivo,
                 tipo,
                 fechaCreacion,
-                idCreacion,
+                creadoPor,
                 fechaModificacion,
                 idModificacion
             )
@@ -1942,6 +1902,25 @@ class CasasModel extends CI_Model
         AND cli.status = 1", $documentosArray);
 
         return $query->result();
+    }
+
+    public function getListaDocumentosClienteCompleto($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            CASE
+                WHEN archivo IS NULL THEN 'Sin archivo'
+                ELSE archivo
+            END AS archivo,
+            documento,
+            tipo,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND tipo IN (2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36, 37, 38)";
+
+        return $this->db->query($query)->result();
     }
 }
 

@@ -3603,6 +3603,13 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
+    public function getDocumentosClienteCompleto($proceso)
+    {
+        $lotes = $this->CasasModel->getListaDocumentosClienteCompleto($proceso);
+
+        $this->json($lotes);
+    }
+
     public function rechazoPaso15(){
         $form = $this->form();
 

@@ -43,7 +43,6 @@ function updateItemsNot() {
             url: 'options_notarias',
             success: function(response) {
                 itemsNot = response;
-                console.log("itemsNot actualizado:", itemsNot); 
                 resolve(itemsNot);
             },
             error: function() {
@@ -135,7 +134,7 @@ selectNotarias = function(data) {
             },
             fields: [
                 new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-                new Button({id: 'btn-notaria', icon: 'edit', label: 'Gestionar notarias', onClick: gestorNotarias, data}),
+                new Button({id: 'btn-notaria', icon: 'edit', label: 'Gestionar notarías', onClick: gestorNotarias, data}),
                 new SelectField({ id: 'notaria', label: 'Notaria', value: data.notaria, placeholder: 'Selecciona una opción', data: itemsNot, required: true }),
             ],
         });
