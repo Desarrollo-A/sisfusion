@@ -267,9 +267,12 @@
                     <form method="post" class="row" id="modalPrioridad" autocomplete="off">
                         <div class="modal-body pb-0 pt-0"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary"> Aceptar </button>
+                            <div class="col-lg-12">
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" id="btnSubmit" class="btn btn-primary">Aceptar</button>
+                            </div>
                         </div>
+                        <input type="hidden" id="prioridad" name="prioridad">
                     </form>
                 </div>
             </div>

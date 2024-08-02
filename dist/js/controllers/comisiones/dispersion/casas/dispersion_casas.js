@@ -294,7 +294,8 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         data-opcionMensualidad = "${d.opcionMensualidad}"
                         data-nombreMensualidad = "${d.nombreMensualidad}"
                         class = "btn-data ${varColor} verify_neodataCasas" data-toggle="tooltip"  data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
-                        BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-prioridad" data-toggle="tooltip"  data-placement="top" title="Prioridad"> <i class="material-icons">group</i></button>`;
+                        
+                        BtnStats += `<button href="#" value="${d.idLote}" data-prioridad="${d.prioridadComision}" data-nombreLote="${d.nombreLote}" class="btn-data btn-blueMaderas btn-prioridad" data-toggle="tooltip"  data-placement="top" title="Prioridad"> <i class="material-icons">group</i></button>`;
                         //BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
                     
             }
@@ -315,12 +316,12 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
 });
 
 $("#tabla_dispersion_casas tbody").on("click", ".btn-prioridad", async function(){
+    nombreLote = $(this).attr("data-nombreLote");
+
     $("#modalPrioridad .modal-header").html("");
     $("#modalPrioridad .modal-body").html("");
-    $("#modalPrioridad .modal-footer").html("");
 
-    $("#modalPrioridad .modal-body").append(`<h1>¿Estas seguro que deseas marcar prioridad para asesor y gerente?</h1>`);
-    $("#modalPrioridad .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
+    $("#modalPrioridad .modal-header").append('<h4 class="modal-title">¿Estas seguro de madar cambiar la priodad para el asesor y gerente de <b>'+nombreLote+'</b>?</h4>');
     $("#modalPrioridad").modal();
 });
 $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async function(){

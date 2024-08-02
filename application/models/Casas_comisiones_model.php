@@ -892,7 +892,7 @@ class Casas_comisiones_model extends CI_Model {
 
 public function getDataDispersionPago() {
     $this->db->query("SET LANGUAGE Español;");
-    $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
+    $query = $this->db->query("SELECT DISTINCT(l.idLote),procs.prioridadComision,procs.registroComision, res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
     (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' ELSE ' SIN DEFINIR' END) tipo_venta,
     (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
     (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,cl.estructura,
