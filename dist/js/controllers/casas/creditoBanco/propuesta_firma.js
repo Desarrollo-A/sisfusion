@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Deseas realizar el avance de proceso del lote ${proceso.nombreLote}?`,
+        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -355,7 +355,7 @@ function show_preview(data) {
 back_to_documentos = function(proceso) {
     let form = new Form({
         title: 'Rechazar proceso', 
-        text: `¿Deseas realizar el rechazar de proceso del lote ${proceso.nombreLote}`,
+        text: `¿Deseas realizar el rechazar de proceso del lote ${data.nombreLote}`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -367,7 +367,7 @@ back_to_documentos = function(proceso) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido rechazado.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido rechazado.`, "success");
         
                     table.reload()
                     form.hide()
