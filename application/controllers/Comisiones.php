@@ -4532,47 +4532,47 @@ public function InsertNeo(){
     }
   
   } else if($responses->row()->bandera == 0 && ($disparador == '2' || $disparador == 2)){
-    $this->db->trans_begin();
-    $lote_1 =  $this->input->post("idLote");
-    $pending_1 =  $this->input->post("pending");
-    $abono_nuevo = $this->input->post("abono_nuevo[]");
-    $val_rol = $this->input->post("id_rol[]");
-    $id_usuario = $this->input->post("id_usuario[]");
-    $id_comision = $this->input->post("id_comision[]");
-    $pago = $this->input->post("pago_neo");
-    $idCliente = $this->input->post("idCliente");
+        $this->db->trans_begin();
+        $lote_1 =  $this->input->post("idLote");
+        $pending_1 =  $this->input->post("pending");
+        $abono_nuevo = $this->input->post("abono_nuevo[]");
+        $val_rol = $this->input->post("id_rol[]");
+        $id_usuario = $this->input->post("id_usuario[]");
+        $id_comision = $this->input->post("id_comision[]");
+        $pago = $this->input->post("pago_neo");
+        $idCliente = $this->input->post("idCliente");
 
-    $suma = 0;
-    $replace = [",","$"];
-    
-    for($i=0;$i<sizeof($id_comision);$i++){
-      $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-      
-      if($penalizacion == 1 && ($val_rol[$i] == 3 || $val_rol[$i] == 7 || $val_rol[$i] == 9)){
-        $respuesta = $this->Comisiones_model->insert_penalizacion_individual($id_comision[$i], $id_usuario[$i], $val_rol[$i], $var_n, $pago, $idCliente);
-      }else{
-        $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
-      }
-    }
-    
-    for($i=0;$i<sizeof($abono_nuevo);$i++){
-      $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-      $suma = $suma + $var_n;
-    }
-    
-    $resta = $pending_1 - $pago;
-    if($suma > 0){
-      $respuesta = $this->Comisiones_model->UpdateLoteDisponible($lote_1);
-      $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
-    }
+        $suma = 0;
+        $replace = [",","$"];
+        
+        for($i=0;$i<sizeof($id_comision);$i++){
+        $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+        
+        if($penalizacion == 1 && ($val_rol[$i] == 3 || $val_rol[$i] == 7 || $val_rol[$i] == 9)){
+            $respuesta = $this->Comisiones_model->insert_penalizacion_individual($id_comision[$i], $id_usuario[$i], $val_rol[$i], $var_n, $pago, $idCliente);
+        }else{
+            $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
+        }
+        }
+        
+        for($i=0;$i<sizeof($abono_nuevo);$i++){
+        $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+        $suma = $suma + $var_n;
+        }
+        
+        $resta = $pending_1 - $pago;
+        if($suma > 0){
+        $respuesta = $this->Comisiones_model->UpdateLoteDisponible($lote_1);
+        $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
+        }
 
-    if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
-      $this->db->trans_rollback();
-      $respuesta = false;
-    }else{
-      $this->db->trans_commit();
-      $respuesta = true;
-    }
+        if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
+        $this->db->trans_rollback();
+        $respuesta = false;
+        }else{
+        $this->db->trans_commit();
+        $respuesta = true;
+        }
   }
   else if($responses->row()->bandera != 0) {
     $respuesta[0] = 2;
@@ -5737,5 +5737,163 @@ public function resumenIndividual($idLote,$proceso){
     }
     
 }
+
+
+
+
+public function datps() {
+
+    $lote_1 =  $this->input->post("idLote");
+
+    $id_usuario = $this->input->post("id_usuario[]");
+    $comision_total = $this->input->post("comision_total[]");
+    $porcentaje = $this->input->post("porcentaje[]");
+    $id_rol = $this->input->post("id_rol[]");
+    $comision_abonada = $this->input->post("comision_abonada[]");
+    $comision_pendiente = $this->input->post("comision_pendiente[]");
+
+
+
+    // Datos a insertar
+    $data = array(
+        1 => 'dato 010',
+        2 => 'dato 020',
+        3 => 'dato 030'
+    );
+
+
+    $usuarios = array(
+        'id_usuario' => '7',
+        'id_lote' => '547',
+        'dinero' => '50000'
+    );
+
+    for ($i=0; $i <count($id_usuario) ; $i++) { 
+
+    //     if($banderita == 1 && $id_rol[$i] == 45){
+    //         $banderita=0;
+    //         $comision_total[$i] = $totalNeto2 * (($porcentaje[$i] + $PorcentajeAsumar) / 100 );  
+    //         $porcentaje[$i] = $porcentaje[$i] + $PorcentajeAsumar;
+    //     }    
+    //     if($id_rol[$i] == 1){
+    //         $pivote=str_replace($replace,"",$comision_total[$i]);
+    //     }
+
+
+            $respuesta = $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
+     // echo '<br>'.$respuesta.'<br>';
+    
+    }
+
+    // Construir la parte de la consulta SQL para la inserción
+    $insertValues = array();
+    foreach ($data as $id => $nombre) {
+        $insertValues[] = "($id, '$nombre', 31)";
+    }
+
+    // Unir los valores para la inserción en una cadena
+    $insertValuesString = implode(', ', $insertValues);
+
+    // Query SQL completo
+    $cmd = "
+
+    IF OBJECT_ID('MiProcedimiento', 'P') IS NOT NULL
+    DROP PROCEDURE MiProcedimiento;
+GO
+-- Crear el procedimiento almacenado
+
+CREATE PROCEDURE MiProcedimiento
+	
+	-- inicio variables pago_comision_ind
+	@abonoNeodata FLOAT,
+	@pagoNeodata FLOAT,
+	@comentario varchar(max),
+	@abonoFinal INT,
+	-- fin variables pago_comision_ind
+	@porcentajes FLOAT,	
+	@DispersadoPor INT ,
+	@idLote INT ,
+  
+	@idUsuario INT ,	
+	@ComisionTotal FLOAT,
+	@estatus INT,
+	@observaciones VARCHAR(MAX),
+	@porcentajeDecimal FLOAT,
+	@rolGenerado INT ,
+	@cliente INT
+
+
+AS
+BEGIN
+    -- Eliminar la tabla temporal si existe
+
+    -- Verificar si @porcentajes es mayor que 0 y no es nulo
+    IF (@porcentajes > 0 AND @porcentajes IS NOT NULL)
+    BEGIN
+
+	DECLARE @valorDatos INT;
+		--  EXEC porcentajesCom @idCliente = 13133,@precioTotal = 100,@planComision = 1;   
+   
+		-- Insertar datos en la tabla comisiones 
+        INSERT INTO comisiones_casas  VALUES 
+		(@idLote, @idUsuario, 
+		@ComisionTotal ,1, 
+		@observaciones, @DispersadoPor,
+		GETDATE(), @porcentajeDecimal, 
+		GETDATE() , @rolGenerado , 
+		0 , @cliente, 
+		@DispersadoPor, 0 
+		) ;
+
+		DECLARE @ultimoID_COMISIONES INT;
+		SET @ultimoID_COMISIONES = IDENT_CURRENT('comisiones_casas');
+
+		INSERT INTO pago_casas_ind VALUES
+		(
+		@ultimoID_COMISIONES,@idUsuario,
+		@abonoNeodata, GETDATE(),GETDATE(),
+		@pagoNeodata, 1, @DispersadoPor, @comentario,
+		0,@abonoFinal , GETDATE(), @DispersadoPor
+		);
+
+		DECLARE @ultimoID_PCI INT;
+		SET @ultimoID_PCI = IDENT_CURRENT('pago_casas_ind');
+
+		INSERT INTO historial_comision_casas VALUES
+		(
+			@ultimoID_PCI , @DispersadoPor,
+			GETDATE(), 1, @comentario
+		);
+
+
+
+        -- Seleccionar los datos insertados desde la tabla temporal 
+        --SELECT * FROM #pago_casas_temp;
+    END
+    ELSE
+    BEGIN
+        -- Código a ejecutar si la condición es falsa
+        PRINT 'El valor de @porcentajes no es válido';
+    END
+END;
+GO
+    ";
+
+    // Ejecutar el comando SQL
+    $query = $this->db->query($cmd);
+    // echo json_encode($query->result());
+    echo json_encode( $this->db->query("SELECT * FROM #pago_casas_temp")->result());
+    
+    // Obtener los resultados
+    $resultado = $query->result();
+    // echo json_encode($this->db->query("SELECT * FROM @miTabla"));
+    // var_dump($resultado);
+    // echo json_encode($resultado);
+    // Imprimir resultados
+    // foreach ($resultado as $row) {
+    //     echo "Id: " . $row->Id . ", Nombre: " . $row->Nombre . "<br>";
+    // }
+}
+
 
 }

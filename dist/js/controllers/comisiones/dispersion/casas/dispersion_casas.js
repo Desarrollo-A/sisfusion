@@ -205,18 +205,18 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
             var reactivo;
             rescisionLote = '';
             reactivo = '';
-            if (d.registro_comision == 8){
+            if (d.registroComision == 8){
                 rescisionLote = '<br><span class="label lbl-warning">Recisión Nueva Venta</span>';
             }
             if(d.id_cliente_reubicacion_2 != 0 ) {
-                if((d.bandera_dispersion == 1 && d.registro_comision == 9) ||
-                (d.bandera_dispersion == 2 && d.registro_comision == 9) ||
-                (d.bandera_dispersion == 2  && d.registro_comision != 9) ||
-                (d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
+                if((d.bandera_dispersion == 1 && d.registroComision == 9) ||
+                (d.bandera_dispersion == 2 && d.registroComision == 9) ||
+                (d.bandera_dispersion == 2  && d.registroComision != 9) ||
+                (d.bandera_dispersion == 1  && d.registroComision != 9 && validarLiquidadas == 0 || (d.registroComision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
                     reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
-                } else if((d.bandera_dispersion == 3  && d.registro_comision == 9) ||
-                (d.bandera_dispersion == 3 && d.registro_comision != 9) ||
-                ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
+                } else if((d.bandera_dispersion == 3  && d.registroComision == 9) ||
+                (d.bandera_dispersion == 3 && d.registroComision != 9) ||
+                ((d.registroComision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registroComision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
                     reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
                 } 
             }
@@ -240,7 +240,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
             varColor2  = 'btn-gray';
             var RegresaActiva = '';
 
-            if(d.fecha_sistema != null && d.registro_comision != 8 && d.registro_comision != 0) {
+            if(d.fecha_sistema != null && d.registroComision != 8 && d.registroComision != 0) {
                 RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
             }
 
