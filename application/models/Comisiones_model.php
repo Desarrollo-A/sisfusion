@@ -5337,6 +5337,8 @@ function getDatosGralInternomex(){
             $id_lider .= ", 6942";
         else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
             $id_lider .= ", 654, 697, 5604, 10251, 12688";
+        else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
+            $id_lider .= ", 24";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES

@@ -383,6 +383,9 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 654, 697, 5604, 10251, 12688)";
                     $filtroSede = "";
+				} else if ($id_usuario == 14556) { // KATTYA GUADALUPE CADENA CRUZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 24)";
+                    $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";

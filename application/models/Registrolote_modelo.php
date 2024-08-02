@@ -3561,6 +3561,9 @@
 				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
 					$id_lider = $id_lider . ', 654, 697, 5604, 10251, 12688';
 					$sede = "";
+				} else if ($id_usuario == 14556) { // KATTYA GUADALUPE CADENA CRUZ
+					$id_lider = $id_lider . ', 24';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
