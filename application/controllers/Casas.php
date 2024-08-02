@@ -3647,8 +3647,15 @@ class Casas extends BaseController
         $data = $this->input->get();
         $documentos = $data["documentos"];
         $proceso = $data["proceso"];
+        $validacionExtra = "";
 
-        $lotes = $this->CasasModel->countDocumentos($documentos, $proceso);
+        if(isset($data["campo"]) ){
+            $campo = $data["campo"];
+
+            $validacionExtra = "AND " .$campo. " = 0";
+        }
+
+        $lotes = $this->CasasModel->countDocumentos($documentos, $proceso, $validacionExtra);
 
         $this->json($lotes);
     }

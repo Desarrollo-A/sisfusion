@@ -1894,7 +1894,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function countDocumentos($documentos, $proceso){
+    public function countDocumentos($documentos, $proceso, $validacionExtra){
         $documentosArray = explode(',', $documentos);
         $placeholders = implode(',', array_fill(0, count($documentosArray), '?'));
 
@@ -1942,7 +1942,8 @@ class CasasModel extends CI_Model
     WHERE 
         pc.proceso IN (". $proceso .")
         AND pc.status = 1 
-        AND cli.status = 1", $documentosArray);
+        AND cli.status = 1
+        $validacionExtra", $documentosArray);
 
         return $query->result();
     }

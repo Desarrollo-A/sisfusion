@@ -254,7 +254,7 @@ let columns = [
     let table = new Table({
         id: '#tableDoct',
         url: tipo == 1 ? 'casas/countDocumentos' : 'casas/getLotesProcesoBanco',
-        params: tipo == 1 ? { documentos: documentos, proceso: 14 } : { proceso: 14, tipoDocumento: documentos, tipoSaldo: tipo, campo: campo },
+        params: tipo == 1 ? { documentos: documentos, proceso: 14, campo: campo } : { proceso: 14, tipoDocumento: documentos, tipoSaldo: tipo, campo: campo },
         buttons: buttons,
         columns,
     })
