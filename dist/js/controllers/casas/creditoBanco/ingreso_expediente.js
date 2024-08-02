@@ -141,8 +141,8 @@ let columns = [
     },
     {
         data: function (data) {
-            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avance_proceso, data })
-            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
+            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avance_proceso, data })
+            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data })
             let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver contrato', onClick: show_preview, data })
             let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `subir documento`, onClick: file_upload, data })
 

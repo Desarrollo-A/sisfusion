@@ -60,7 +60,7 @@ select_asesor = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea asignar a <b>${data.nombreAsesor}</b> al lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas asignar a <b>${data.nombreAsesor}</b> al lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -71,7 +71,7 @@ select_asesor = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido puesto para ingresar carta de autorización.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
 
                     table.reload();
 
@@ -226,7 +226,7 @@ let columns = [
 
             let pass_button = ''
             if (data.idAsesor) {
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Aceptar asignación', onClick: select_asesor, data })
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_asesor, data })
             }
 
             let cancel_button = new RowButton({ icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data })

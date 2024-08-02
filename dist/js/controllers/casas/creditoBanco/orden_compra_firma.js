@@ -34,12 +34,12 @@ let columns = [
     },
     { data: function(data){
         let btn_avance = '';
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: funcionRechazo, data});
-        let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Subir documentos de proveedor', onClick: go_to_documentos, data});
-        let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Subir documentos de cliente', onClick: go_to_documentos_cliente, data});
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: funcionRechazo, data});
+        let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de proveedor', onClick: go_to_documentos, data});
+        let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de cliente', onClick: go_to_documentos_cliente, data});
         
         if(data.documentos == 21){
-            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avanceProcesoBanco, data})
+            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
         }
 
         return `<div class="d-flex justify-center">${btn_avance}${subir_proveedor}${subir_cliente}${btn_rechazo}</div>`

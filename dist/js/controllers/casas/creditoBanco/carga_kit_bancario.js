@@ -2,7 +2,7 @@ pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
         title: 'Avanzar proceso',
-        text: `¿Deseas enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
+        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
         onSubmit: function (data) {
             //console.log(data)
             form.loading(true)
@@ -39,7 +39,7 @@ pass_to_vobo_cifras = function (data) {
 function replace_upload(data ) {
 
     let form = new Form({
-        title: 'Reemplazar archivo',
+        title: 'Cargar documento',
         onSubmit: function (data) {
             form.loading(true)
 
@@ -50,7 +50,7 @@ function replace_upload(data ) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
 
                     table.reload()
 
@@ -77,7 +77,7 @@ function replace_upload(data ) {
 function upload(data) {
 
     let form = new Form({
-        title: 'Subir archivo',
+        title: 'Cargar Documento',
         onSubmit: function (data) {
             form.loading(true)
 
@@ -88,7 +88,7 @@ function upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
 
                     table.reload()
 
@@ -120,7 +120,7 @@ function show_preview(data) {
     Shadowbox.open({
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
         player: "html",
-        title: `Visualizando archivo: ${data.documento}`,
+        title: `Visualizando documento: ${data.documento}`,
         width: 985,
         height: 660
     });
@@ -188,11 +188,11 @@ let columns = [
         let pass_button = '';
 
         if (data.kit) {
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar kit bancario`, onClick: show_preview, data})
-            upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar kit bancario`, onClick: replace_upload, data })
-            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_vobo_cifras, data })
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
+            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_vobo_cifras, data })
         }else{
-            upload_button = new RowButton({ icon: 'file_upload', label: `Subir kit bancario`, onClick: upload, data })
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
         }
 
         return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}</div>`

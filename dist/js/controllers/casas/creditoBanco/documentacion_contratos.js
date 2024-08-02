@@ -45,7 +45,7 @@ function show_upload(data) {
     }
 
     let form = new Form({
-        title: `Subir ${data.documento.toLowerCase()}`,
+        title: `Cargar ${data.documento.toLowerCase()}`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -57,7 +57,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
+                    alerts.showNotification("top", "right", "Se ha cargado el documento", "success");
 
                     table.reload()
 
@@ -135,14 +135,14 @@ let columns = [
         if(data.archivo != 'Sin archivo'){
 
             if(extension == 'xlsx'){
-                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+                view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: download_file, data})
             }else{
-                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
             }
 
         }
 
-        let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
+        let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
         
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },

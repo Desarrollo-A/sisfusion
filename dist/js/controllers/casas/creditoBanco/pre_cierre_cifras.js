@@ -29,14 +29,14 @@ let columns = [
     },
     {
         data: function(data){
-            let subir_archivo = new RowButton({icon: 'file_upload', label: 'Subir archivo de pre cierre de cifras', onClick: file_upload, data})
+            let subir_archivo = new RowButton({icon: 'file_upload', label: 'Cargar documento', onClick: file_upload, data})
             let btn_avance = '';
             // let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: file_upload, data});
             let view_button = '';
-            let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data});;
+            let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data});;
         
             if(data.archivo != null){
-                btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avanceProcesoBanco, data})
+                btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
             }
 
@@ -71,7 +71,7 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: [5, 6], tipoDocumento: 25 },
+    params: { proceso: [5, 6], tipoDocumento: 25, tipoSaldo: 1, campo: "cierreContraloria" },
     buttons: buttons,
     columns,
 })
@@ -153,7 +153,7 @@ function avanceProceso(data, form){
 
 function file_upload(data) {
     let form = new Form({
-        title: 'Subir pre cierre de cifras',
+        title: 'Cargar pre cierre de cifras',
         onSubmit: function(data){
             form.loading(true)
 
@@ -164,7 +164,7 @@ function file_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function(response){
-                    alerts.showNotification("top", "right", "Se ha subido el archivo", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
                         
                     table.reload()
                     form.hide()

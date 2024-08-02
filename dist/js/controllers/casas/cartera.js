@@ -84,7 +84,7 @@ select_lote = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a asignación.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
         
                     table.reload();
 
@@ -154,7 +154,7 @@ let columns = [
     { data: 'cliente' },
     { data: function(data)
         {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
+            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
             return '<div class="d-flex justify-center">' + pass_button + '</div>'
         } 
     },
