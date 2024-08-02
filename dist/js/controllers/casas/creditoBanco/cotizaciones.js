@@ -107,7 +107,13 @@ function show_upload(data) {
 let columns = [
     { data: 'idCotizacion' },
     { data: 'nombre' },
-    { data: 'archivo' },
+    { data: function(data){
+        if(data.archivo){
+            return data.archivo
+        }else{
+            return 'Sin archivo'
+        }
+    } },
     { data: function(data){
         let view_button = ''
         if(data.archivo){
@@ -157,56 +163,4 @@ let table = new Table({
     url: `casas/lista_cotizaciones/${idProcesoCasas}`,
     buttons,
     columns,
-})
-
-let titulos_columns = [
-    { data: 'idDocumento' },
-    { data: 'documento' },
-    { data: function(data){
-        if(data.archivo){
-            return data.archivo
-        }else{
-            return 'Sin archivo'
-        }
-    } },
-    { data: function(data){
-        let view_button = ''
-
-        if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
-        }
-
-        let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
-        
-        return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
-    } },
-]
-
-let titulos_buttons = [
-    {
-        extend: 'excelHtml5',
-        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-        className: 'btn buttons-excel',
-        titleAttr: 'Descargar archivo excel',
-        title:"Títulos de propiedad y anexos",
-        exportOptions: {
-            columns: [0, 1, 2],
-            format: {
-                header: function (d, columnIdx) {
-                    return $(d).attr('placeholder');
-                }
-            }
-        },
-        attr: {
-            style: 'position: relative; float: left; margin: 5px',
-        }
-    }
-
-]
-
-let table_titulos = new Table({
-    id: '#tableTitulos',
-    url: `casas/lista_archivos_titulos/${idProcesoCasas}`,
-    columns: titulos_columns,
-    buttons: titulos_buttons,
 })

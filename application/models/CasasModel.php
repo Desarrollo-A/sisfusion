@@ -849,54 +849,110 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getListaPropuestaFirma(){
-        $query = "SELECT
-        pc.*,
-        lo.nombreLote,
-        pro.idPropuesta,
-        pro.fechaFirma1,
-        pro.fechaFirma2,
-        pro.fechaFirma3,
-        CASE
-            WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
-        END AS tiempoProceso,
-        CASE WHEN cpc.archivos_faltantes > 0 THEN 0 ELSE 1 END AS cotizaciones,
-        con.nombre AS condominio,
-            resi.descripcion AS proyecto,
-            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-            (CASE
-                WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
-                ELSE 'Sin asignar'
-            END) AS nombreAsesor,
+    public function getListaPropuestaFirma($rol){
+
+        if($rol == 57){
+            $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            pro.idPropuesta,
+            pro.fechaFirma1,
+            pro.fechaFirma2,
+            pro.fechaFirma3,
             CASE
-                    WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
-                    ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
-            END AS gerente,
-        oxc.nombre AS movimiento,
-        doc.documentos,
-        doc2.documentos AS constancia,
-        doc3.idDocumento,
-        doc3.documento,
-        doc3.archivo,
-        oxc2.nombre AS nombreArchivo,
-        coti.cotizacionCargada
-        FROM proceso_casas pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
-        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
-        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
-        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
-        LEFT JOIN (SELECT count(*) AS archivos_faltantes, idProcesoCasas FROM cotizacion_proceso_casas WHERE status = 1 AND archivo IS NULL GROUP BY idProcesoCasas) cpc ON cpc.idProcesoCasas = pc.idProcesoCasas
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (28) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
-        LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 28
-        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 28 AND oxc2.id_catalogo = 126
-        LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
-        WHERE pc.proceso = 8
-        AND pc.status = 1 AND cli.status = 1";
+                WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
+            CASE WHEN cpc.archivos_faltantes > 0 THEN 0 ELSE 1 END AS cotizaciones,
+            con.nombre AS condominio,
+                resi.descripcion AS proyecto,
+                CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+                (CASE
+                    WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+                    ELSE 'Sin asignar'
+                END) AS nombreAsesor,
+                CASE
+                        WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                        ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+                END AS gerente,
+            oxc.nombre AS movimiento,
+            doc.documentos,
+            doc2.documentos AS titulacion,
+            doc3.idDocumento,
+            doc3.documento,
+            doc3.archivo,
+            oxc2.nombre AS nombreArchivo,
+            coti.cotizacionCargada
+            FROM proceso_casas pc
+            LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+            LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
+            INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+            LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+            INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+            INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+            LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+            LEFT JOIN (SELECT count(*) AS archivos_faltantes, idProcesoCasas FROM cotizacion_proceso_casas WHERE status = 1 AND archivo IS NULL GROUP BY idProcesoCasas) cpc ON cpc.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17, 28) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 17
+            LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 17 AND oxc2.id_catalogo = 126
+            LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
+            WHERE pc.proceso = 8
+            AND pc.status = 1 AND cli.status = 1";
+
+        }else if($rol == 101){
+
+            $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            pro.idPropuesta,
+            pro.fechaFirma1,
+            pro.fechaFirma2,
+            pro.fechaFirma3,
+            CASE
+                WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
+            CASE WHEN cpc.archivos_faltantes > 0 THEN 0 ELSE 1 END AS cotizaciones,
+            con.nombre AS condominio,
+                resi.descripcion AS proyecto,
+                CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+                (CASE
+                    WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+                    ELSE 'Sin asignar'
+                END) AS nombreAsesor,
+                CASE
+                        WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                        ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+                END AS gerente,
+            oxc.nombre AS movimiento,
+            doc.documentos,
+            doc2.documentos AS constancia,
+            doc3.idDocumento,
+            doc3.documento,
+            doc3.archivo,
+            oxc2.nombre AS nombreArchivo,
+            coti.cotizacionCargada
+            FROM proceso_casas pc
+            LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+            LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
+            INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+            LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+            INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+            INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+            LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+            LEFT JOIN (SELECT count(*) AS archivos_faltantes, idProcesoCasas FROM cotizacion_proceso_casas WHERE status = 1 AND archivo IS NULL GROUP BY idProcesoCasas) cpc ON cpc.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17, 28) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (28) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 28
+            LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 28 AND oxc2.id_catalogo = 126
+            LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
+            WHERE pc.proceso = 8
+            AND pc.status = 1 AND cli.status = 1";
+
+        }
+
+        
 
         return $this->db->query($query)->result();
     }

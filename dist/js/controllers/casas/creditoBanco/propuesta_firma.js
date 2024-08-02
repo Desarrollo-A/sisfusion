@@ -328,7 +328,7 @@ function upload(data) {
         },
         fields: [
             new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'tipo', value: 28 }),
+            new HiddenField({ id: 'tipo', value: rol == 57 ? 17 : 28 }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
         ],
@@ -452,13 +452,14 @@ let columns = [
     } },
     { data: function(data){
         let propuestas_button = ''
+        let upload_cotizacion = ''
         let upload_button = ''
         let pass_button = '';
         let back_button = '';
         let view_button = '';
         let notarias = '';
 
-        if(idRol === 101){
+        if(idRol == 101){
             if (data.constancia) {
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar constancia de no adeudo`, onClick: show_preview, data})
                 upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar constancia de no adeudo`, onClick: replace_upload, data })
@@ -467,19 +468,28 @@ let columns = [
             }
         }
 
-        if(idRol === 57){
-        propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
-        upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
+        if(idRol == 57){
+
+        propuestas_button = new RowButton({icon: 'event', label: 'Propuestas de fechas', onClick: show_propuestas, data})
+        upload_cotizacion = new RowButton({icon: 'list', label: 'Cargar cotizaciones', onClick: go_to_cotizaciones, data})
         notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
+
+            if (data.titulacion) {
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar títulos de propiedad`, onClick: show_preview, data})
+                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: replace_upload, data })
+            }else{
+                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
+            }
+
+        }
         
-        if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos && data.constancia && data.notarias != 0 && idRol === 57){
+        if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos == 2 && data.notarias != 0 && idRol === 57){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_propuestas, data})
         }
 
         back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: back_to_documentos, data})
-        }
 
-        return `<div class="d-flex justify-center">${pass_button}${view_button}${propuestas_button}${upload_button}${notarias}${back_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${upload_cotizacion}${propuestas_button}${notarias}${back_button}</div>`
     } },
 ]
 
@@ -516,6 +526,7 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_propuesta_firma',
+    params: { rol: idRol },
     columns,
     buttons:buttons,
 })

@@ -34,24 +34,6 @@
                                         </tr>
                                     </thead>
                                 </table>
-
-                                <br />
-
-                                <div class="toolbar">
-                                    <h4 class="card-title center-align">Títulos de propiedad</h4>
-                                </div>
-
-                                <table id="tableTitulos" class="table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>NOMBRE</th>
-                                            <th>ARCHIVO</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-
                             </div>
                         </div>
                     </div>

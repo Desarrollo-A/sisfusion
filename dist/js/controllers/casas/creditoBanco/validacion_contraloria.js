@@ -69,6 +69,7 @@ capturaContratos = function(data) {
             new NumberField({  id: 'obra', value: data.obra, label: 'Contrato de obra a mano alzada', width: '12', required:true, mask: "#,##0.00" }),
             new NumberField({  id: 'tesoreria', value: data.tesoreria, label: 'Contrato de tesoreria', width: '12', required:true, mask: "#,##0.00" }),
             new NumberField({  id: 'serviciosArquitectonicos', value: data.serviciosArquitectonicos, label: 'Contrato de servicios arquitectónicos', width: '12', required:true, mask: "#,##0.00" }),
+            new NumberField({  id: 'costoConstruccion', value: data.costoConstruccion, label: 'Costo total de construcción', width: '12', required:true, mask: "#,##0.00" }),
         ],
     })
 
@@ -309,7 +310,7 @@ let columns = [
         if (data.archivo) {
             view_button = new RowButton({icon: 'visibility', label: `Visualizar distribución de pagos`, onClick: show_preview, data})
             upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar distribución de pagos`, onClick: replace_upload, data })
-            if(data.tesoreria && data.serviciosArquitectonicos && data.obra){
+            if(data.tesoreria && data.serviciosArquitectonicos && data.obra && data.costoConstruccion){
                 pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_solicitud_contratos, data})
             }
         }else{

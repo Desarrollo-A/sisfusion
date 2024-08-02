@@ -1376,7 +1376,11 @@ class Casas extends BaseController
 
     public function lista_propuesta_firma()
     {
-        $lotes = $this->CasasModel->getListaPropuestaFirma();
+
+        $data = $this->input->get();
+        $rol = $data["rol"];
+
+        $lotes = $this->CasasModel->getListaPropuestaFirma($rol);
 
         $this->json($lotes);
     }
@@ -1462,6 +1466,7 @@ class Casas extends BaseController
         $obra = $this->form('obra');
         $tesoreria = $this->form('tesoreria');
         $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
+        $costoConstruccion = $this->form('costoConstruccion');
 
         if (!isset($id)) {
             http_response_code(400);
@@ -1471,6 +1476,7 @@ class Casas extends BaseController
             "obra"  => $obra,
             "tesoreria" => $tesoreria,
             "serviciosArquitectonicos"    => $serviciosArquitectonicos,
+            "costoConstruccion" => $costoConstruccion
         );
 
         $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $id);
