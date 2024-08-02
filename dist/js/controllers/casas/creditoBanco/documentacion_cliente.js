@@ -36,6 +36,10 @@ function show_upload(data) {
             accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf']
         break;
 
+        case 38:
+            accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+            break;
+
         default:
             accept = ['application/pdf'];
     }

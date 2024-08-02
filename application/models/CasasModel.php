@@ -1905,8 +1905,7 @@ class CasasModel extends CI_Model
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombreCliente,
         CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
         CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
-        pc.tipoMovimiento,
-        doc2.archivo
+        pc.tipoMovimiento
     FROM 
         proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
@@ -1917,9 +1916,8 @@ class CasasModel extends CI_Model
         INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor 
         INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
-
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas, archivo FROM documentos_proceso_casas WHERE tipo IN (".$placeholders.") AND archivo IS NOT NULL GROUP BY idProcesoCasas, archivo) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (".$placeholders.") AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
     WHERE 
         pc.proceso IN (". $proceso .")
         AND pc.status = 1 

@@ -15,6 +15,7 @@ switch(idRol){
         documento = 49
         tipoContrato = 'solicitud de elaboración de contrato';
         documentos = [ 49 ]
+        campo = "contratoOOAM"
         break;
 
     case 33:
@@ -25,6 +26,7 @@ switch(idRol){
         documento = 50
         tipoContrato = 'solicitud de medidor';
         documentos = [ 50 ]
+        campo = "contratoPV"
         break;
 }
 
@@ -223,7 +225,7 @@ let columns = [
                 }                 
             }
             if( tipo == 2 && data.contratoOOAM == 0){
-                if(data.documentos != null){
+                if(data.documento != null){
                     return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>`
                 }
                 else{
@@ -234,8 +236,12 @@ let columns = [
                 if(idUsuario == 2896){
                     decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
                 }
-
-                return `<div class="d-flex justify-center">${pass_button}${upload_button}${decline_button}</div>` 
+                if(data.documento != null){
+                    return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>` 
+                }
+                else{
+                    return `<div class="d-flex justify-center">${pass_button}${upload_button}${decline_button}</div>` 
+                }       
             }
             else{
                 return ''
@@ -244,13 +250,14 @@ let columns = [
     }
 ]
 
-let table = new Table({
-    id: '#tableDoct',
-    url: 'casas/countDocumentos',
-    params: { documentos: documentos, proceso: 14 },
-    buttons: buttons,
-    columns,
-})
+    let table = new Table({
+        id: '#tableDoct',
+        url: tipo == 1 ? 'casas/countDocumentos' : 'casas/getLotesProcesoBanco',
+        params: tipo == 1 ? { documentos: documentos, proceso: 14 } : { proceso: 14, tipoDocumento: documentos, tipoSaldo: tipo, campo: campo },
+        buttons: buttons,
+        columns,
+    })
+
 
 function file_upload(data) {
     let form = new Form({
