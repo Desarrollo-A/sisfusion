@@ -412,7 +412,7 @@ class CasasModel extends CI_Model
             cpc.archivo AS archivo
         FROM cotizacion_proceso_casas cpc
         WHERE
-            idProcesoCasas = $idProcesoCasas
+            idProcesoCasas = $idProcesoCasas AND cpc.archivo IS NOT NULL
         AND status = 1";
 
         return $this->db->query($query)->result();
@@ -620,13 +620,12 @@ class CasasModel extends CI_Model
         $idCreacion = $this->session->userdata('id_usuario');
 
         $query = "BEGIN
-            IF NOT EXISTS (SELECT * FROM cotizacion_proceso_casas
-                           WHERE idProcesoCasas = $idProcesoCasas)
-            BEGIN
-                INSERT INTO cotizacion_proceso_casas (idProcesoCasas, nombre, status, fechaCreacion, idModificacion)
-                VALUES ($idProcesoCasas, 'Cotización', 1, GETDATE(), $idCreacion)
-            END
-        END";
+            IF (SELECT COUNT(*) FROM cotizacion_proceso_casas WHERE idProcesoCasas = $idProcesoCasas) < 3
+                BEGIN
+                    INSERT INTO cotizacion_proceso_casas (idProcesoCasas, nombre, status, fechaCreacion, idModificacion)
+                    VALUES ($idProcesoCasas, '', 1, GETDATE(), $idCreacion)
+                END
+            END";
 
         return $this->db->query($query);
     }
@@ -876,7 +875,8 @@ class CasasModel extends CI_Model
         doc3.idDocumento,
         doc3.documento,
         doc3.archivo,
-        oxc2.nombre AS nombreArchivo
+        oxc2.nombre AS nombreArchivo,
+        coti.cotizacionCargada
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
@@ -891,8 +891,8 @@ class CasasModel extends CI_Model
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (28) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 28
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 28 AND oxc2.id_catalogo = 126
-        WHERE
-            pc.proceso = 8
+        LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
+        WHERE pc.proceso = 8
         AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
@@ -930,9 +930,11 @@ class CasasModel extends CI_Model
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (31) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN documentos_proceso_casas doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas AND doc2.tipo = 31
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 31 AND oxc2.id_catalogo = 126
+        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
         WHERE
-            pc.proceso = 11
-        AND pc.status = 1 AND cli.status = 1";
+            pc.proceso IN (11, 12)
+        AND pc.status = 1 AND cli.status = 1
+        AND vb.comercializacion != 1";
 
         return $this->db->query($query)->result();
     }
@@ -1127,7 +1129,8 @@ class CasasModel extends CI_Model
 				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
-            oxc.nombre AS movimiento
+            oxc.nombre AS movimiento,
+            oxc2.nombre AS nombreArchivo
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1135,13 +1138,16 @@ class CasasModel extends CI_Model
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 38
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (11) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 31
+        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
+         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 38 AND oxc2.id_catalogo = 126
         WHERE
             pc.proceso IN (11, 12)
-        AND pc.status = 1 AND cli.status = 1";
+        AND pc.status = 1 AND cli.status = 1
+        AND vb.contraloria != 1";
 
         return $this->db->query($query)->result();
     }

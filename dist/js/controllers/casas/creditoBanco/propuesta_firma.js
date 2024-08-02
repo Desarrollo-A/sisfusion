@@ -352,7 +352,7 @@ function show_preview(data) {
 back_to_documentos = function(proceso) {
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote <b>${proceso.nombreLote}</b> a documentación cliente?`,
+        text: `¿Desea regresar el proceso del lote <b>${proceso.nombreLote}</b> a validación de proyectos?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -480,7 +480,7 @@ let columns = [
         upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
         notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
         
-        if(data.fechaFirma1 && data.cotizaciones && data.documentos && data.constancia && data.notarias != 0){
+        if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos && data.constancia && data.notarias != 0 && idRol === 57){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_propuestas, data})
         }
 

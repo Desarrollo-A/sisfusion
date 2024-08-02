@@ -195,7 +195,7 @@ let columns = [
             upload_button = new RowButton({ icon: 'file_upload', label: `Subir kit bancario`, onClick: upload, data })
         }
 
-        return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}</div>`
     } },
 ]
 

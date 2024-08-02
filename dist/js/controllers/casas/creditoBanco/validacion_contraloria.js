@@ -66,9 +66,9 @@ capturaContratos = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'obra', value: data.obra, label: 'Contrato de obra a mano alzada', width: '12' }),
-            new TextAreaField({  id: 'tesoreria', value: data.tesoreria, label: 'Contrato de tesoreria', width: '12' }),
-            new TextAreaField({  id: 'serviciosArquitectonicos', value: data.serviciosArquitectonicos, label: 'Contrato de servicios arquitectónicos', width: '12' }),
+            new NumberField({  id: 'obra', value: data.obra, label: 'Contrato de obra a mano alzada', width: '12', required:true, mask: "#,##0.00" }),
+            new NumberField({  id: 'tesoreria', value: data.tesoreria, label: 'Contrato de tesoreria', width: '12', required:true, mask: "#,##0.00" }),
+            new NumberField({  id: 'serviciosArquitectonicos', value: data.serviciosArquitectonicos, label: 'Contrato de servicios arquitectónicos', width: '12', required:true, mask: "#,##0.00" }),
         ],
     })
 
