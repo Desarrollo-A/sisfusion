@@ -461,7 +461,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
-                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' +v.comentario + '</a>\n' +
