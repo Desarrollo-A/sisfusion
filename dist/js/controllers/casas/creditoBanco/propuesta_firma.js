@@ -13,7 +13,7 @@ pass_to_propuestas = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de elección de propuestas.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el lote correctamente", "success");
         
                     table.reload()
 
@@ -435,18 +435,7 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: function(data){
-        let inicio = new Date(data.fechaProceso)
-        let today = new Date()
-
-        let difference = today.getTime() - inicio.getTime()
-
-        let days = Math.floor(difference / (1000 * 3600 * 24))
-
-        let text = `Lleva ${days} día(s)`
-
-        return text
-    } },
+    { data: 'tiempoProceso' },
     { data: function (data) {
         switch(data.tipoMovimiento){
         case 1:

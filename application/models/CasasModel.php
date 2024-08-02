@@ -849,6 +849,9 @@ class CasasModel extends CI_Model
         pro.fechaFirma1,
         pro.fechaFirma2,
         pro.fechaFirma3,
+        CASE
+            WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+        END AS tiempoProceso,
         CASE WHEN cpc.archivos_faltantes > 0 THEN 0 ELSE 1 END AS cotizaciones,
         con.nombre AS condominio,
             resi.descripcion AS proyecto,
@@ -1750,7 +1753,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function getLotesProcesoBanco($proceso, $tipoDocumento){
+    public function getLotesProcesoBanco($proceso, $tipoDocumento, $condicionExtra){
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
 
@@ -1781,7 +1784,7 @@ class CasasModel extends CI_Model
         INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente 
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.tipoMovimiento AND id_catalogo = 136
 		LEFT JOIN documentos_proceso_casas dpc ON dpc.idProcesoCasas = pc.idProcesoCasas AND dpc.tipo IN($tipoDocumento)
-        WHERE pc.proceso IN ($placeholders) AND pc.status IN(1) AND pc.finalizado = 0", $procesoArray, 1);
+        WHERE pc.proceso IN ($placeholders) AND pc.status IN(1) AND pc.finalizado = 0 $condicionExtra", $procesoArray, 1);
 
         return $query;
     }
@@ -1851,7 +1854,26 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function countDocumentos($documentos){
+    public function getDocumentosContratos($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            CASE
+                WHEN archivo IS NULL THEN 'Sin archivo'
+                ELSE archivo
+            END AS archivo,
+            documento,
+            tipo,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND tipo IN (33, 34, 35)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function countDocumentos($documentos, $proceso){
         $documentosArray = explode(',', $documentos);
         $placeholders = implode(',', array_fill(0, count($documentosArray), '?'));
 
@@ -1883,7 +1905,8 @@ class CasasModel extends CI_Model
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombreCliente,
         CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
         CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
-        pc.tipoMovimiento
+        pc.tipoMovimiento,
+        doc2.archivo
     FROM 
         proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
@@ -1894,10 +1917,11 @@ class CasasModel extends CI_Model
         INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor 
         INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (".$placeholders.") AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas, archivo FROM documentos_proceso_casas WHERE tipo IN (".$placeholders.") AND archivo IS NOT NULL GROUP BY idProcesoCasas, archivo) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
     WHERE 
-        pc.proceso IN (4)
+        pc.proceso IN (". $proceso .")
         AND pc.status = 1 
         AND cli.status = 1", $documentosArray);
 

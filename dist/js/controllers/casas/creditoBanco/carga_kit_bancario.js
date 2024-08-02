@@ -1,8 +1,8 @@
 pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
+        title: 'Avanzar proceso',
+        text: `¿Deseas enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
         onSubmit: function (data) {
             //console.log(data)
             form.loading(true)
@@ -14,7 +14,7 @@ pass_to_vobo_cifras = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo. de cifras", "success");
+                    alerts.showNotification("top", "right", "El lote ha avanzado el proceso correctamente", "success");
 
                     table.reload()
 
@@ -195,7 +195,7 @@ let columns = [
             upload_button = new RowButton({ icon: 'file_upload', label: `Subir kit bancario`, onClick: upload, data })
         }
 
-        return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}</div>`
     } },
 ]
 

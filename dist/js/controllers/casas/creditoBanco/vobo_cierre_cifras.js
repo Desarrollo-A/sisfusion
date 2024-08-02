@@ -1,25 +1,38 @@
+let campo = ""
+let tipo = ""
+
+// 1 - ADMON
+// 2 - OOAM
+// 3 - GPH
+// 4 - PV
+
 switch(idRol){
     case 33:
     case 76: 
     case 81: 
-    case 55: // portventa 
+    case 55: // postventa 
         if(idUsuario == 5107){ // yolanda 
-            tipo = 1;
+            tipo = 1
+            campo = "voboADM"
         }
         else if(idUsuario == 4512){
             tipo = 3;
+            campo = "voboGPH"
         }
         else{
             tipo = 4;
+            campo = "voboPV"
         }
         break;
     
     case 99: // OOAM
         tipo = 2;
+        campo = "voboOOAM"
         break;
     
     case 101: // gph
         tipo = 3;
+        campo = "voboGPH"
         break;
 }
 
@@ -238,7 +251,7 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 13, tipoDocumento: 0 },
+    params: { proceso: 13, tipoDocumento: 0, tipoSaldo: tipo, campo: campo },
     buttons: buttons,
     columns,
 })

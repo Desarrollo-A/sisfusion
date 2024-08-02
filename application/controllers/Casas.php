@@ -800,7 +800,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
                 foreach ($documentos as $key => $documento) {
@@ -2937,13 +2937,18 @@ class Casas extends BaseController
         $proceso = $data["proceso"];
 
         $tipoDocumento = isset($data["tipoDocumento"]) ? $data["tipoDocumento"] : 0;
+        $tipoSaldo = isset($data["tipoSaldo"]) ? $data["tipoSaldo"] : 0;
+        $condicionExtra = ""; // solo se usa en paso 5 y 6 de proceso casa credito de banco
         
         if(!isset($proceso)){
             $response["result"] = false;
             $reponse["message"] = "Error al obtener los datos";
         }
+        if($tipoSaldo != 0){
+            $condicionExtra = "AND ". $data["campo"] ." = 0";
+        }
 
-        $getLotes = $this->CasasModel->getLotesProcesoBanco($proceso, $tipoDocumento)->result();
+        $getLotes = $this->CasasModel->getLotesProcesoBanco($proceso, $tipoDocumento, $condicionExtra)->result();
 
         $this->json($getLotes);
     }
@@ -3257,14 +3262,14 @@ class Casas extends BaseController
             $this->db->trans_commit();
             
             $response["result"] = true;  
-            $response["messsage"] = "Se ha avanzado el proceso";
+            $response["message"] = "Se ha avanzado el proceso correctamente";
             $response["avance"] = $avance;
         }
         else{
             $this->db->trans_rollback();
 
             $response["result"] = false;  
-            $response["messsage"] = "Error al avanzar el proceso";
+            $response["message"] = "Error al avanzar el proceso";
             $response["avance"] = 0;
         }
 
@@ -3560,9 +3565,35 @@ class Casas extends BaseController
         }
     }
 
+    public function documentacionContratos($proceso)
+    {
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        if(is_null($lote)){
+            $this->load->view('template/header');
+		    $this->load->view('template/home');
+		    $this->load->view('template/footer');
+        }
+        else{
+            $data = [
+                'lote' => $lote,
+            ];
+    
+            $this->load->view('template/header');
+            $this->load->view("casas/creditoBanco/documentacion_contratos", $data);
+        }
+    }
+
     public function getDocumentosProveedor($proceso)
     {
         $lotes = $this->CasasModel->getDocumentosProveedor($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function getDocumentosContratos($proceso)
+    {
+        $lotes = $this->CasasModel->getDocumentosContratos($proceso);
 
         $this->json($lotes);
     }
@@ -3571,8 +3602,9 @@ class Casas extends BaseController
     {
         $data = $this->input->get();
         $documentos = $data["documentos"];
+        $proceso = $data["proceso"];
 
-        $lotes = $this->CasasModel->countDocumentos($documentos);
+        $lotes = $this->CasasModel->countDocumentos($documentos, $proceso);
 
         $this->json($lotes);
     }
