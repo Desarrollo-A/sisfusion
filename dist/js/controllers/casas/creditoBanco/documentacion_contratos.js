@@ -32,13 +32,13 @@ function show_upload(data) {
             accept = ['image/png','image/jpeg','application/pdf']
         break;
 
+        case 14:
+            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        break;
+
         case 25:
             accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf']
         break;
-
-        case 38:
-            accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
-            break;
 
         default:
             accept = ['application/pdf'];
@@ -82,7 +82,7 @@ function show_upload(data) {
 }
 
 backPage = function() {
-    window.location.href = ps === 4 ? `${general_base_url}casas/ordenCompraFirma` : `${general_base_url}casas/cierre_cifras`;
+    window.location.href = `${general_base_url}casas/elaborarContrato`;
 }
 
 let buttons = [
@@ -150,7 +150,7 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: ps === 4 ? `casas/getDocumentosClienteCompleto/${idProcesoCasas}` : `casas/getDocumentosCliente/${idProcesoCasas}`,
+    url: `casas/getDocumentosContratos/${idProcesoCasas}`,
     buttons: buttons,
     columns,
 })

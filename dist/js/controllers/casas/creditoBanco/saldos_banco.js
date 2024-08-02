@@ -4,6 +4,7 @@ const formatter = new Intl.NumberFormat('es-MX', {
 });
 
 let tipoSaldo = 0; // se define el tipo de saldo 
+let campo = ""
 
 switch(idRol){
     case 33:
@@ -12,21 +13,26 @@ switch(idRol){
     case 55: // portventa 
         if(idUsuario == 5107){ // yolanda 
             tipoSaldo = 1;
+            campo = "saldoAdmon";
         }
         else if(idUsuario == 4512){
             tipoSaldo = 3;
+            campo = "saldoGPH";
         }
         else{
             tipoSaldo = 4;
+            campo = "saldoPV";
         }
         break;
     
     case 99: // OOAM
         tipoSaldo = 2;
+        campo = "saldoOOAM";
         break;
     
     case 101: // gph
         tipoSaldo = 3;
+        campo = "saldoGPH";
         break;
 }
 
@@ -100,7 +106,7 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: [5, 6], tipoDocumento: 0 },
+    params: { proceso: [5, 6], tipoDocumento: 0, tipoSaldo: tipoSaldo, campo: campo },
     buttons: buttons,
     columns,
 })

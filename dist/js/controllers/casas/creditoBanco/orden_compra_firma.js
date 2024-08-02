@@ -43,7 +43,7 @@ let columns = [
         }
 
         return `<div class="d-flex justify-center">${btn_avance}${subir_proveedor}${subir_cliente}${btn_rechazo}</div>`
-    } },
+    } }
 ]
 
 let buttons = [
@@ -68,7 +68,7 @@ let table = new Table({
     id: '#tableDoct',
     // url: 'casas/getLotesProcesoBanco',
     url: 'casas/countDocumentos',
-    params: { documentos: [ 2,4,5,6,7,8,10,11,12,36,38,39,40,41,42,43,44,45,46,47,48 ] },
+    params: { documentos: [ 2,4,5,6,7,8,10,11,12,36,38,39,40,41,42,43,44,45,46,47,48 ], proceso: 4 },
     buttons: buttons,
     columns,
 })

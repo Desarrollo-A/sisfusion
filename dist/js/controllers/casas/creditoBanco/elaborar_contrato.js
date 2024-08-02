@@ -1,27 +1,32 @@
-let tipo = 0; // este se define a base del rol y nos da a saber de que área viene el voBo
-let documento = 0;
-let tipoContrato = '';
+let tipo = 0 // este se define a base del rol y nos da a saber de que área viene el voBo
+let documento = 0
+let tipoContrato = ''
+let documentos = []
 
 switch(idRol){
     case 57: // titulacion
         tipo = 1;
         documento = 33
-        tipoContrato = 'contrato a mano alzada';
+        documentos = [ 33, 34, 35 ]
         break;
     
     case 99: // OOAM
         tipo = 2;
-        documento = 34
-        tipoContrato = 'contrato de tesorería';
+        documento = 49
+        tipoContrato = 'solicitud de elaboración de contrato';
+        documentos = [ 49 ]
+        campo = "contratoOOAM"
         break;
 
     case 33:
-    case 76: 
+    case 76:
     case 81:
     case 55: // postventa 
         tipo = 3
-        documento = 35
-        tipoContrato = 'contrato de servicios arquitectónicos';
+        documento = 50
+        tipoContrato = 'solicitud de medidor';
+        documentos = [ 50 ]
+        campo = "contratoPV"
         break;
 }
 
@@ -209,13 +214,14 @@ let columns = [
             let decline_button = ''
             let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver contrato', onClick: show_preview, data })
             let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `Subir ${tipoContrato}`, onClick: file_upload, data })
+            let subir_contratos = new RowButton({icon: 'toc', color: '', label: 'Subir contratos', onClick: go_to_documentos, data});
 
             if( tipo == 1 && data.contratoTitulacion == 0){
-                if(data.documento != null){
-                    return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>`
+                if(data.documentos == 3){
+                    return `<div class="d-flex justify-center">${pass_button}${subir_contratos}${decline_button}</div>`
                 }
                 else{
-                    return `<div class="d-flex justify-center">${upload_button}${decline_button}</div>`
+                    return `<div class="d-flex justify-center">${subir_contratos}${decline_button}</div>`
                 }                 
             }
             if( tipo == 2 && data.contratoOOAM == 0){
@@ -223,35 +229,34 @@ let columns = [
                     return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>`
                 }
                 else{
-                    return `<div class="d-flex justify-center">${upload_button}${decline_button}</div>`
-                }  
+                    return `<div class="d-flex justify-center">${pass_button}${upload_button}${decline_button}</div>`
+                }
             }
             if( tipo == 3 && data.contratoPV == 0){
+                if(idUsuario == 2896){
+                    decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
+                }
                 if(data.documento != null){
-                    if(idUsuario == 2896){
-                        decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
-                    }
-
-                    return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>`
+                    return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>` 
                 }
                 else{
-                    return `<div class="d-flex justify-center">${upload_button}${decline_button}</div>`
-                }  
+                    return `<div class="d-flex justify-center">${pass_button}${upload_button}${decline_button}</div>` 
+                }       
             }
             else{
                 return ''
             }
         }
-    },
+    }
 ]
 
-let table = new Table({
-    id: '#tableDoct',
-    url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 14, tipoDocumento: documento },
-    buttons: buttons,
-    columns,
-})
+    let table = new Table({
+        id: '#tableDoct',
+        url: tipo == 1 ? 'casas/countDocumentos' : 'casas/getLotesProcesoBanco',
+        params: tipo == 1 ? { documentos: documentos, proceso: 14 } : { proceso: 14, tipoDocumento: documentos, tipoSaldo: tipo, campo: campo },
+        buttons: buttons,
+        columns,
+    })
 
 
 function file_upload(data) {
@@ -355,4 +360,8 @@ function finalizar_rechazo(data, form){
             form.loading(false)
         }
     })
+}
+
+go_to_documentos = function(data) {
+    window.location.href = `documentacionContratos/${data.idProcesoCasas}`;
 }

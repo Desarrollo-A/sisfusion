@@ -158,7 +158,7 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 13, tipoDocumento: 0 },
+    params: { proceso: 13, tipoDocumento: 0, tipoSaldo: tipo, campo: campo },
     buttons: buttons,
     columns,
 })

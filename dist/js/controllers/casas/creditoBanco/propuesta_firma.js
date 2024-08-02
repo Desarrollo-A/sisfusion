@@ -13,7 +13,7 @@ pass_to_propuestas = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de elección de propuestas.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el lote correctamente", "success");
         
                     table.reload()
 
@@ -215,11 +215,14 @@ addNotaria = function(data) {
 
 let items = []
 
-gestorNotarias = function(data) {
+$(document).on('click', '.btn-gestion', () => {
+    gestorNotarias();
+})
+
+function gestorNotarias() {
     let form2 = new Form2({
         title: 'Gestión de notarías',
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HrTitle({text: 'Registro de notaría'}),
             new CrudInput({ id: 'notaria', placeholder: 'Nombre de la notaria', width: '12', required: 'required', icon: 'add', title: 'Agregar', onClick: addNotaria }),
             new HrTitle({text: 'Lista de notarías'}),
@@ -432,18 +435,7 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: function(data){
-        let inicio = new Date(data.fechaProceso)
-        let today = new Date()
-
-        let difference = today.getTime() - inicio.getTime()
-
-        let days = Math.floor(difference / (1000 * 3600 * 24))
-
-        let text = `Lleva ${days} día(s)`
-
-        return text
-    } },
+    { data: 'tiempoProceso' },
     { data: function (data) {
         switch(data.tipoMovimiento){
         case 1:
@@ -506,6 +498,15 @@ let buttons = [
                 }
             }
         },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    },
+    {
+        text: '<i class="fas fa-edit"></i>',
+        className: 'btn-large btn-sky btn-gestion',
+        titleAttr: 'Gestionar notarías',
+        title:"Gestionar notarías",
         attr: {
             style: 'position: relative; float: left; margin: 5px',
         }
