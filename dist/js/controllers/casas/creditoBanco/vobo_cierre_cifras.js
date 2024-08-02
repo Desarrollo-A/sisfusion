@@ -1,41 +1,3 @@
-let campo = ""
-let tipo = ""
-
-// 1 - ADMON
-// 2 - OOAM
-// 3 - GPH
-// 4 - PV
-
-switch(idRol){
-    case 33:
-    case 76: 
-    case 81: 
-    case 55: // postventa 
-        if(idUsuario == 5107){ // yolanda 
-            tipo = 1
-            campo = "voboADM"
-        }
-        else if(idUsuario == 4512){
-            tipo = 3;
-            campo = "voboGPH"
-        }
-        else{
-            tipo = 4;
-            campo = "voboPV"
-        }
-        break;
-    
-    case 99: // OOAM
-        tipo = 2;
-        campo = "voboOOAM"
-        break;
-    
-    case 101: // gph
-        tipo = 3;
-        campo = "voboGPH"
-        break;
-}
-
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
 
@@ -106,31 +68,19 @@ pass_to_vobo_cifras = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `setCierreCifras`,
+                url: `${general_base_url}casas/creditoBancoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
-                success: function (response) {
-                    if(response.result){
-                        if(response.avance == 1){
-                            avanceProceso(data, form);
-                        }
-                        else{
-                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-                            table.reload()
-                            form.hide() 
-                        }
-                       
-                    }
-                    else{
-                        alerts.showNotification("top", "right", response.message, "danger");
-                        table.reload()
-                        form.hide();
-                    }                
+                success : function(response){
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
                 },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
+                error: function(){
+                    alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+        
                     form.loading(false)
                 }
             })
@@ -138,40 +88,14 @@ pass_to_vobo_cifras = function (data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'tipo', value: tipo }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 14 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
-            new HiddenField({ id: 'voboADM', value: data.voboADM }),
-            new HiddenField({ id: 'voboOOAM', value: data.voboOOAM }),
-            new HiddenField({ id: 'voboGPH', value: data.voboGPH }),
-            new HiddenField({ id: 'voboPV', value: data.voboPV }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show()
-}
-
-function avanceProceso(data, form){
-    $.ajax({
-        type: 'POST',
-        url: `${general_base_url}casas/creditoBancoAvance`,
-        data: data,
-        contentType: false,
-        processData: false,
-        success : function(response){
-            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-
-            table.reload()
-            form.hide()                             
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
-
-            form.loading(false)
-        }
-    })
 }
 
 let buttons = [
@@ -223,27 +147,10 @@ let columns = [
     {
         data: function (data) {
             let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_vobo_cifras, data })
-            let decline_button = ''
+            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
 
-            if( tipo == 1 && data.voboADM == 0){
-                 return `<div class="d-flex justify-center">${pass_button}</div>`
-            }
-            if( tipo == 2 && data.voboOOAM == 0){
-                 return `<div class="d-flex justify-center">${pass_button}</div>`
-            }
-            if( tipo == 3 && data.voboGPH == 0){
-                 return `<div class="d-flex justify-center">${pass_button}</div>`
-            }
-            if( tipo == 4 && data.voboPV == 0){
-                if(idUsuario == 2896){
-                    decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
-                }
 
-                 return `<div class="d-flex justify-center">${pass_button}${decline_button}</div>`
-            }
-            else{
-                return ''
-            }
+            return `<div class="d-flex justify-center">${pass_button}${decline_button}</div>`
         }
     },
 ]

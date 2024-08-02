@@ -49,5 +49,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/creditoBanco/validacion_contraloria.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/creditoBanco/validacion_contraloria.js?v=2"></script>
 </body>

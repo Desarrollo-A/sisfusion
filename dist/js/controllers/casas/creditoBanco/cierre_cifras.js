@@ -17,18 +17,16 @@ function download_file(data) {
     window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
 }
 
-function show_upload(data) {
-    //console.log(data)
+function replace_upload(data ) {
 
     let form = new Form({
-        title: 'Subir cierre de cifras',
+        title: 'Reemplazar archivo',
         onSubmit: function (data) {
-            //console.log(data)
             form.loading(true)
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/upload_documento`,
+                url: `upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -49,21 +47,27 @@ function show_upload(data) {
         fields: [
             new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento', value: data.idDocumento }),
-            new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf'], required: true }),
+            new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
         ],
     })
 
     form.show()
 }
 
-go_to_documentos = function(data) {
-    window.location.href = `documentacionProveedor/${data.idProcesoCasas}`;
-}
-go_to_documentos_cliente = function(data) {
-    window.location.href = `documentacionCliente/${data.idProcesoCasas}`;
-}
+function show_preview(data) {
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
 
+    Shadowbox.init();
+
+    Shadowbox.open({
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
+        player: "html",
+        title: `Visualizando archivo: ${data.documento}`,
+        width: 985,
+        height: 660
+    });
+}
 
 pass_to_vobo_cifras = function (data) {
 
@@ -76,7 +80,7 @@ pass_to_vobo_cifras = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_vobo_cifras`,
+                url: `to_vobo_cifras_contraloria`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -165,16 +169,13 @@ let columns = [
 
             let pass_button = ''
 
-            let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Documentos de proveedor', onClick: go_to_documentos, data});
-            let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Documentos de cliente', onClick: go_to_documentos_cliente, data});
-
             if (data.kitBancario) {
-
             pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_vobo_cifras, data })
-
             }
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar kit bancario`, onClick: show_preview, data})
+            upload_button = new RowButton({ icon: 'file_upload', label: `Modificar carta de distribución de ministraciones firmada`, onClick: replace_upload, data })
 
-            return `<div class="d-flex justify-center">${pass_button}${subir_proveedor}${subir_cliente}</div>`
+            return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}</div>`
         }
     },
 ]
