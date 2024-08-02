@@ -40,8 +40,8 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active"><a href="#dispersionComer" role="tab" data-toggle="tab">Dispersión Comercialización</a></li>
-                            <li ><a href="#dispersionCasas" role="tab" data-toggle="tab">Dispersión casas</a></li>
+                            <li class="active"><a href="#dispersionComer" onclick="asignarNumTabla(1)" role="tab" data-toggle="tab">Dispersión Comercialización</a></li>
+                            <li ><a href="#dispersionCasas" role="tab" onclick="asignarNumTabla(2)" data-toggle="tab">Dispersión casas</a></li>
                             <!-- <li ><a href="#asimiladosOOAM" role="tab" data-toggle="tab">Asimilados lotes</a></li> -->
                         </ul>
                         <div class="card no-shadow m-0 border-conntent__tabs">
@@ -51,42 +51,42 @@
                                         <div class="tab-pane active" id="dispersionComer">
                                             <div class="card-content">
                                                 <div class="encabezadoBox">
-                                                    <h3 class="h3 card-title center-align" >Dispersión de pago</h3>
+                                                    <h3 class="h3 card-title center-align" >Dispersión de pago Comercialización</h3>
                                                     <p class="card-title pl-1 center-align">Lotes nuevos sin dispersar, con saldo disponible en neodata y rescisiones con la nueva venta.</p>
                                                 </div>
                                                 <div class="toolbar">
-                                                <div class="container-fluid p-0">
-                                                <?php $this->load->view('comisiones/dispersion/menu_superior/menu_superior_view'); ?>
-                                                <div class="material-datatables">
-                                                <div class="form-group">
-                                                <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
-                                                    <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>TIPO DE VENTA</th>
-                                                        <th>MODALIDAD</th>
-                                                        <th>CONTRATACIÓN</th>
-                                                        <th>PLAN DE VENTA</th>
-                                                        <th>PRECIO FINAL LOTE</th>
-                                                        <th>% COMISION TOTAL</th>
-                                                        <th>IMPORTE COMISION PAGADA</th>
-                                                        <th>IMPORTE COMISION PENDIENTE</th>
-                                                        <th>DETALLES</th>
-                                                        <th>FECHA ACTUALIZACIÓN</th>
-                                                        <th>TIPO MENSUALIDAD</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                    </thead>
-                                                </table>
-                                                </div>
-                                                </div>
+                                                    <div class="container-fluid p-0">
+                                                    <?php $this->load->view('comisiones/dispersion/menu_superior/menu_superior_view'); ?>
+                                                        <div class="material-datatables">
+                                                            <div class="form-group">
+                                                                <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th></th>
+                                                                            <th>PROYECTO</th>
+                                                                            <th>CONDOMINIO</th>
+                                                                            <th>LOTE</th>
+                                                                            <th>ID LOTE</th>
+                                                                            <th>CLIENTE</th>
+                                                                            <th>TIPO DE VENTA</th>
+                                                                            <th>MODALIDAD</th>
+                                                                            <th>CONTRATACIÓN</th>
+                                                                            <th>PLAN DE VENTA</th>
+                                                                            <th>PRECIO FINAL LOTE</th>
+                                                                            <th>% COMISION TOTAL</th>
+                                                                            <th>IMPORTE COMISION PAGADA</th>
+                                                                            <th>IMPORTE COMISION PENDIENTE</th>
+                                                                            <th>DETALLES</th>
+                                                                            <th>FECHA ACTUALIZACIÓN</th>
+                                                                            <th>TIPO MENSUALIDAD</th>
+                                                                            <th>ACCIONES</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                </table>
+                                                            </div>
+                                                        </div>
                                                 <!--  -->
-                                                </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -104,8 +104,7 @@
 <?php $this->load->view('template/footer');?>
 <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/general/generalesDispersion.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion.js"></script>
-
-            
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion/casas/dispersion_casas.js"></script>
 </body>

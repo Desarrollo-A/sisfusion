@@ -212,10 +212,10 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_NEODATA_reubicadas" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_NEODATA_Casas" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form method="post" id="form_NEODATA_reubicadas">
+                    <form method="post" id="form_NEODATA_Casas">
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
                     </form>
@@ -255,6 +255,22 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="modal fade" id="modalPrioridad" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" id="mHeader"></div>
+                    <form method="post" class="row" id="modalPrioridad" autocomplete="off">
+                        <div class="modal-body pb-0 pt-0"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary"> Aceptar </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
