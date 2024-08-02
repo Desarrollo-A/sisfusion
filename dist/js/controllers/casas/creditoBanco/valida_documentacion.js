@@ -72,12 +72,12 @@ let columns = [
     } },
     { data: function(data){
         if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
             let parts = data.archivo ? data.archivo.split('.') : [];
             let extension = parts.pop();
 
             if(extension == 'xlsx'){
-                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+                view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: download_file, data})
             }
         }else{
             view_button = new RowButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})

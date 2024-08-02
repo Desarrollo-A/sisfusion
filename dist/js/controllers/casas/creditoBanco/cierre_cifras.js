@@ -73,7 +73,7 @@ pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
+        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
         onSubmit: function (data) {
             //console.log(data)
             form.loading(true)
@@ -170,10 +170,10 @@ let columns = [
             let pass_button = ''
 
             if (data.kitBancario) {
-            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_vobo_cifras, data })
+            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_vobo_cifras, data })
             }
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar kit bancario`, onClick: show_preview, data})
-            upload_button = new RowButton({ icon: 'file_upload', label: `Modificar carta de distribución de ministraciones firmada`, onClick: replace_upload, data })
+            view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
 
             return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}</div>`
         }

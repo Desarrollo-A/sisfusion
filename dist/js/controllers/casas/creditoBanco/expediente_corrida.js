@@ -16,8 +16,8 @@ let columns = [
     { data: 'tiempoProceso' },
     { data: function(data)
         {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso al lote', onClick: nextProcess, data})
-            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
+            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: nextProcess, data})
+            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: returnProcess, data})
             return '<div class="d-flex justify-center">' + pass_button + return_button + '</div>'
         } 
     },

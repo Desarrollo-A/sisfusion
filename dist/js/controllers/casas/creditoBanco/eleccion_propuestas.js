@@ -66,7 +66,7 @@ pass_to_validacion_contraloria = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a validación de documentación?`,
+        text: `¿Deseas enviar el lote <b>${data.nombreLote}</b> a validación de documentación?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -122,8 +122,8 @@ function download_file(archivo) {
 back_to_propuesta_firma = function(data) {
 
     let form = new Form({
-        title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a propuestas para firma?`,
+        title: 'Rechzar proceso', 
+        text: `¿Deseas rechazar de proceso del lote ${data.nombreLote}`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -135,7 +135,7 @@ back_to_propuesta_firma = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a propuestas para firma.`, "success");
+                    alerts.showNotification("top", "right", `Se ha rechazado el proceso correctamente.`, "success");
         
                     table.reload()
 
@@ -240,14 +240,14 @@ let columns = [
 
         // view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
         if(data.fechaElegida && data.cotizacionElegida){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_validacion_contraloria, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_validacion_contraloria, data})
         }
         
         // }
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_propuesta_firma, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_propuesta_firma, data})
 
-        return `<div class="d-flex justify-center">${propuestas_button}${view_button}${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${propuestas_button}${view_button}${back_button}</div>`
     } },
 ]
 

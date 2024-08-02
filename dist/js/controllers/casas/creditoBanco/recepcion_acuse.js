@@ -43,8 +43,8 @@ let columns = [
         return `<span class="label lbl-${clase}">${data.nombreMovimiento}</span>`
     } },
     { data: function(data){
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Finalizar proceso', onClick: avance_proceso, data})
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data})
+        let pass_button = new RowButton({icon: 'done', color: 'green', label: 'Finalizar', onClick: avance_proceso, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data})
 
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },

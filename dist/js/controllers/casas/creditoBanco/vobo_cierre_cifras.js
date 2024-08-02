@@ -146,8 +146,8 @@ let columns = [
     },
     {
         data: function (data) {
-            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_vobo_cifras, data })
-            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data })
+            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_vobo_cifras, data })
+            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data })
 
 
             return `<div class="d-flex justify-center">${pass_button}${decline_button}</div>`
@@ -158,7 +158,7 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 13, tipoDocumento: 0, tipoSaldo: tipo, campo: campo },
+    params: { proceso: 13, tipoDocumento: 0 },
     buttons: buttons,
     columns,
 })

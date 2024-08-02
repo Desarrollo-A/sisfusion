@@ -30,14 +30,14 @@ let columns = [
         } 
     },
     { data: function(data){
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: rechazo_proceso, data})
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data})
         let btn_avance = ''
         let view_button = '';
-        let subir_archivo = new RowButton({icon: 'file_upload', label: `Subir archivo ${data.documento}`, onClick: file_upload, data})
+        let subir_archivo = new RowButton({icon: 'file_upload', label: `Cargar documento`, onClick: file_upload, data})
 
         if(data.documento){
-            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: avanceProcesoBanco, data})
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
         }
 
         return `<div class="d-flex justify-center">${btn_avance}${view_button}${subir_archivo}${btn_rechazo}</div>`
@@ -65,7 +65,7 @@ let buttons = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/getLotesProcesoBanco',
-    params: { proceso: 7, tipoDocumento: 32 },
+    params: { proceso: 7, tipoDocumento: 16 },
     buttons: buttons,
     columns,
 })
@@ -129,7 +129,7 @@ function file_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function(response){
-                    alerts.showNotification("top", "right", "Se ha cargado el archivo", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
                         
                     table.reload()
                     form.hide()
@@ -145,7 +145,7 @@ function file_upload(data) {
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'tipoDocumento', value: data.tipo }),
-            new HiddenField({ id: 'id_documento', value: 32 }),
+            new HiddenField({ id: 'id_documento', value: 16 }),
             new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
             new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ]

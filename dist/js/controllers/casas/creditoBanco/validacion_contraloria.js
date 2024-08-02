@@ -1,8 +1,8 @@
 pass_to_solicitud_contratos = function(data) {
 
     let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a subir contratos?`,
+        title: 'Avanzar proceso',
+        text: `¿Deseas continuar con el lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -14,7 +14,7 @@ pass_to_solicitud_contratos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de subir contratos.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente.", "success");
         
                     table.reload();
                     form.hide();
@@ -78,8 +78,8 @@ capturaContratos = function(data) {
 back_to_adeudos = function(data) {
 
     let form = new Form({
-        title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a documentación del cliente?`,
+        title: 'Rechazar proceso', 
+        text: `¿Deseas Rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -91,7 +91,7 @@ back_to_adeudos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a documentación del cliente.`, "success");
+                    alerts.showNotification("top", "right", `Se ha rechazado el proceso`, "success");
         
                     table.reload()
                     form.hide();
@@ -167,7 +167,7 @@ function replace_upload(data ) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
 
                     table.reload()
 
@@ -194,7 +194,7 @@ function replace_upload(data ) {
 function upload(data) {
 
     let form = new Form({
-        title: 'Subir archivo',
+        title: 'Cargar documento',
         onSubmit: function (data) {
             form.loading(true)
 
@@ -205,7 +205,7 @@ function upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
 
                     table.reload()
 
@@ -237,7 +237,7 @@ function show_preview(data) {
     Shadowbox.open({
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
         player: "html",
-        title: `Visualizando archivo: ${data.documento}`,
+        title: `Visualizando documento: ${data.documento}`,
         width: 985,
         height: 660
     });
@@ -272,18 +272,7 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: function(data){
-        let inicio = new Date(data.fechaProceso)
-        let today = new Date()
-
-        let difference = today.getTime() - inicio.getTime()
-
-        let days = Math.floor(difference / (1000 * 3600 * 24))
-
-        let text = `Lleva ${days} día(s)`
-
-        return text
-    } },
+    { data: 'tiempoProceso'},
     { data: function (data) {
         switch(data.tipoMovimiento){
         case 1:
@@ -308,19 +297,19 @@ let columns = [
 
         if (data.archivo) {
             view_button = new RowButton({icon: 'visibility', label: `Visualizar distribución de pagos`, onClick: show_preview, data})
-            upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar distribución de pagos`, onClick: replace_upload, data })
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar distribución de pagos`, onClick: replace_upload, data })
             if(data.tesoreria && data.serviciosArquitectonicos && data.obra){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_solicitud_contratos, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_solicitud_contratos, data})
             }
         }else{
-            upload_button = new RowButton({ icon: 'file_upload', label: `Subir distribución de pagos`, onClick: upload, data })
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar distribución de pagos`, onClick: upload, data })
         }
 
         let contratos = new RowButton({icon: 'description', label: 'Captura de montos de contrato', onClick: capturaContratos, data})
 
         let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentación del cliente', onClick: back_to_adeudos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_adeudos, data})
 
         return `<div class="d-flex justify-center">${pass_button}${docu_button}${view_button}${upload_button}${contratos}${back_button}</div>`
     } },

@@ -85,7 +85,7 @@ upload_archivo = function(data){ // funcion para subir el archivo de adeudo
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a asignación.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
         
                     table.reload();
 

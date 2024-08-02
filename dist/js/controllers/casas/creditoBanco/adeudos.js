@@ -153,11 +153,11 @@ let columns = [
 
             let pass_button = ''
             if(data.documentos == 3){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
             }
 
-            let docu_button = new RowButton({icon: 'toc', label: 'Editar documentos', onClick: go_to_documentos, data})
-            let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorización', onClick: back_to_carta_auth, data })
+            let docu_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data})
+            let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data })
 
             return `<div class="d-flex justify-center">${pass_button}${docu_button}${back_button}</div>`
         }

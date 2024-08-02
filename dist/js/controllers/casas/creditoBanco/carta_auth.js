@@ -2,7 +2,7 @@ back_process = function (data) {
 
     let form = new Form({
         title: 'Regresar proceso',
-        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a asignación de cartera?`,
+        text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a asignación de cartera?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -104,8 +104,8 @@ $.ajax({
 pass_to_adeudos = function (data) {
 
     let form = new Form({
-        title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a concentrar adeudos?`,
+        title: 'Avanzar proceso', 
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -147,20 +147,7 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    {
-        data: function (data) {
-            let inicio = new Date(data.fechaProceso)
-            let today = new Date()
-
-            let difference = today.getTime() - inicio.getTime()
-
-            let days = Math.floor(difference / (1000 * 3600 * 24))
-
-            let text = `Lleva ${days} día(s)`
-
-            return text
-        }
-    },
+    { data: 'tiempoProceso' },
     { data: function (data) {
         switch(data.tipoMovimiento){
         case 1:
@@ -177,16 +164,16 @@ let columns = [
     } },
     {
         data: function (data) {
-            let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir carta de autorización', onClick: show_upload, data })
+            let upload_button = new RowButton({ icon: 'file_upload', label: 'Cargar archivo', onClick: show_upload, data })
 
             let view_button = ''
             let pass_button = ''
             if (data.archivo) {
-                view_button = new RowButton({ icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data })
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_adeudos, data })
+                view_button = new RowButton({ icon: 'visibility', label: 'Visualizar archivo', onClick: show_preview, data })
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_adeudos, data })
             }
 
-            let cancel_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: back_process, data })
+            let cancel_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_process, data })
 
             return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${cancel_button}</div>`
         }

@@ -20,8 +20,8 @@ let columns = [
            let return_button = '';
 
             if(data.voBoValidacionEnganche == null || data.voBoValidacionEnganche == 0){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso al lote', onClick: nextProcess, data})
-                return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: nextProcess, data})
+                return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: returnProcess, data})
             }
 
             return '<div class="d-flex justify-center">' + pass_button + return_button + '</div>'

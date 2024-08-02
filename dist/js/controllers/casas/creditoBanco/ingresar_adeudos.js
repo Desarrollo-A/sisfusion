@@ -238,7 +238,7 @@ function show_preview(data) {
 
 pass_to_proyecto_ejecutivo = function(data) {
     let form = new Form({
-        title: 'Continuar proceso', 
+        title: 'Avanzar proceso', 
         text: `¿Deseas avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
@@ -251,7 +251,7 @@ pass_to_proyecto_ejecutivo = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de proyecto.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
         
                     table.reload()
 
@@ -346,13 +346,13 @@ let columns = [
             let parts = data.archivo.split('.');
             let extension = parts.pop();
             if(extension == 'xlsx'){
-                view_button = new RowButton({icon: 'file_download', label: `Descargar ${nameFile}`, onClick: show_preview, data})
+                view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
             }else{
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar ${nameFile}`, onClick: show_preview, data})
             }
-            upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar ${nameFile}`, onClick: replace_upload, data })
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
         }else{
-            upload_button = new RowButton({ icon: 'file_upload', label: `Subir ${nameFile}`, onClick: upload, data })
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
         }
 
         let pass_button = ''

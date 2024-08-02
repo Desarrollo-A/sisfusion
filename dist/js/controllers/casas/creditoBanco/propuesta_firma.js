@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a elección de propuestas?`,
+        text: `¿Deseas realizar el avance de proceso del lote ${proceso.nombreLote}?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -134,7 +134,7 @@ selectNotarias = function(data) {
             },
             fields: [
                 new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-                new Button({id: 'btn-notaria', icon: 'edit', label: 'Gestionar notarías', onClick: gestorNotarias, data}),
+                
                 new SelectField({ id: 'notaria', label: 'Notaria', value: data.notaria, placeholder: 'Selecciona una opción', data: itemsNot, required: true }),
             ],
         });
@@ -275,7 +275,7 @@ function replace_upload(data ) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
 
                     table.reload()
 
@@ -302,7 +302,7 @@ function replace_upload(data ) {
 function upload(data) {
 
     let form = new Form({
-        title: 'Subir archivo',
+        title: 'Cargar documento',
         onSubmit: function (data) {
             form.loading(true)
 
@@ -313,7 +313,7 @@ function upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo cargado con éxito", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
 
                     table.reload()
 
@@ -354,8 +354,8 @@ function show_preview(data) {
 
 back_to_documentos = function(proceso) {
     let form = new Form({
-        title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote <b>${proceso.nombreLote}</b> a validación de proyectos?`,
+        title: 'Rechazar proceso', 
+        text: `¿Deseas realizar el rechazar de proceso del lote ${proceso.nombreLote}`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -367,7 +367,7 @@ back_to_documentos = function(proceso) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido regresado a documentación cliente.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido rechazado.`, "success");
         
                     table.reload()
                     form.hide()
@@ -460,23 +460,23 @@ let columns = [
 
         if(idRol === 101){
             if (data.constancia) {
-                view_button = new RowButton({icon: 'visibility', label: `Visualizar constancia de no adeudo`, onClick: show_preview, data})
-                upload_button = new RowButton({ icon: 'file_upload', label: `reemplazar constancia de no adeudo`, onClick: replace_upload, data })
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
+                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
             }else{
-                upload_button = new RowButton({ icon: 'file_upload', label: `Subir constancia de no adeudo`, onClick: upload, data })
+                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
             }
         }
 
         if(idRol === 57){
         propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
-        upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
+        upload_button = new RowButton({icon: 'file_upload', label: 'Cargar documento', onClick: go_to_cotizaciones, data})
         notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
         
         if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos && data.constancia && data.notarias != 0 && idRol === 57){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_propuestas, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_propuestas, data})
         }
 
-        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: back_to_documentos, data})
+        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_documentos, data})
         }
 
         return `<div class="d-flex justify-center">${pass_button}${view_button}${propuestas_button}${upload_button}${notarias}${back_button}</div>`
