@@ -662,5 +662,9 @@ public function getDatosFechasProyecCondm(){
     echo json_encode($this->Casas_comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
   }
 
-}
+  public function InsertNeo(){
+   
+    exit;
+  }
+
 }

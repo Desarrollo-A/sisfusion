@@ -35,7 +35,7 @@
             href="#myModal" style="color:white"> Reporte dispersión</a>
         </div>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
-            <button class="btn-gral-data" id="btn-detalle-plan" style="color:white; ">Planes</button>
+            <button class="btn-gral-data btn-detalle-plan"  style="color:white; ">Planes</button>
         </div>
         
     </div>
