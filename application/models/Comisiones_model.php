@@ -6637,4 +6637,40 @@ WHERE lo.idLote = @lote;";
     }
 
     
+
+
+
+
+
+
+
+
+
+
+
+
+    public function insertComisionesCasas($idLote){
+        
+            // Query SQL completo
+    $cmd = "
+    EXEC MiProcedimiento 
+	@abonoNeodata = 100.00,@pagoNeodata =20.00,
+	@comentario = 'data prueba procedimiento ',@abonoFinal = 100,
+	@porcentajes = 8.00,@DispersadoPor = 1, 
+	@idLote = 16301, @idUsuario =  10299,
+	@ComisionTotal = 1000.00, @estatus = 1,
+	@observaciones = 'ejejeje' ,@porcentajeDecimal = 1.00,
+	@rolGenerado = 7 , @cliente = 112;
+    ";
+    $query = $this->db->query($cmd);
+    echo json_encode( $this->db->query("SELECT * FROM #pago_casas_temp")->result());
+    $resultado = $query->result();
+
+        
+    }
+
+
+
+
+
 }
