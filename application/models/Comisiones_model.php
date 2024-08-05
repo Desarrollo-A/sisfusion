@@ -5339,6 +5339,8 @@ function getDatosGralInternomex(){
             $id_lider .= ", 654, 697, 5604, 10251, 12688";
         else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
             $id_lider .= ", 24";
+        else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
+            $id_lider .= ", 7474";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES

@@ -410,6 +410,8 @@ class Contratacion_model extends CI_Model {
          $idsGerente = $id_lider . ", 654, 697, 5604, 10251, 12688";
       else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
          $idsGerente = $id_lider . ", 24";
+      else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
+         $idsGerente = $id_lider . ", 7474";
       else
          $idsGerente = $id_lider;
       return $idsGerente;
