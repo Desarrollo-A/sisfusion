@@ -190,7 +190,7 @@ class CasasModel extends CI_Model
         pc.proceso,
         pc.idProcesoCasas,
         pc.idLote,
-        pc.idAsesor,
+        cli.id_asesor_c AS idAsesor,
         pc.tipoMovimiento,
         lo.nombreLote,
         cli.esquemaCreditoCasas,
@@ -206,7 +206,8 @@ class CasasModel extends CI_Model
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc.nombre AS movimiento,
-        oxc.color
+        oxc.color,
+        cli.id_cliente AS idCliente
         FROM proceso_casas pc
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
@@ -218,7 +219,7 @@ class CasasModel extends CI_Model
         WHERE
             pc.proceso = 0
             AND pc.status = 1
-            AND pc.idGerente = $this->idUsuario
+            AND cli.id_gerente_c = $this->idUsuario
             AND cli.status = 1
         UNION ALL
         SELECT
@@ -242,7 +243,8 @@ class CasasModel extends CI_Model
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc.nombre AS movimiento,
-        oxc.color
+        oxc.color,
+        cli.id_cliente AS idCliente
         FROM proceso_casas_directo pcd
         LEFT JOIN usuarios us ON us.id_usuario = pcd.idAsesor
         LEFT JOIN lotes lo ON lo.idLote = pcd.idLote
@@ -254,25 +256,23 @@ class CasasModel extends CI_Model
         WHERE
             pcd.proceso = 0
             AND pcd.estatus = 1
-            AND pcd.idGerente = $this->idUsuario
+            AND cli.id_gerente_c = $this->idUsuario
             AND cli.status = 1
         ";
 
         return $this->db->query($query)->result();
     }
 
-    public function addLoteToAsignacion($idLote, $idGerente, $comentario, $idUsuario){
+    public function addLoteToAsignacion($idLote, $comentario, $idUsuario){
         $query = "INSERT INTO proceso_casas
         (
             idLote,
-            idGerente,
             comentario,
             creadoPor
         )
         VALUES
         (
             $idLote,
-            $idGerente,
             '$comentario',
             $idUsuario
         )";
@@ -287,18 +287,16 @@ class CasasModel extends CI_Model
         }
     }
 
-    public function addLoteToAsignacionDirecto($idLote, $idGerente, $comentario, $idUsuario){
+    public function addLoteToAsignacionDirecto($idLote, $comentario, $idUsuario){
         $query = "INSERT INTO proceso_casas_directo
         (
             idLote,
-            idGerente,
             comentario,
             creadoPor
         )
         VALUES
         (
             $idLote,
-            $idGerente,
             '$comentario',
             $idUsuario
         )";

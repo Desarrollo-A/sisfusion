@@ -50,6 +50,7 @@ function choose_asesor(data) {
         new HiddenField({ id: 'idLote', value: data.idLote }),
         new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
         new HiddenField({ id: 'proceso', value: data.proceso }),
+        new HiddenField({ id: 'idCliente', value: data.idCliente }),
         new SelectField({ id: 'asesor', label: 'Asesor', value: data.idAsesor, placeholder: 'Selecciona una opción', data: items, required: true }),
     ]
 
@@ -93,6 +94,7 @@ select_asesor = function (data) {
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -134,6 +136,7 @@ cancel_process = function (data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

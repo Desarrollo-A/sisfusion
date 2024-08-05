@@ -155,6 +155,7 @@ let columns = [
     { data: 'cliente' },
     { data: function(data)
         {
+            console.log(data)
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
             return '<div class="d-flex justify-center">' + pass_button + '</div>'
         } 

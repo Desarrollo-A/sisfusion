@@ -408,20 +408,24 @@ class Casas extends BaseController
         }
 
         $dataUpdate = array(
-            "esquemaCreditoCasas" => $esquemaCredito
+            "esquemaCreditoCasas" => $esquemaCredito,
+            "id_gerente_c" => $gerente,
+            "id_subdirector_c" => $idUsuario,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
         );
 
         $this->db->trans_begin();
 
         if ($esquemaCredito == 1) { // se agrega un condicion para saber que esquema de credito se usara
-            $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $gerente, $comentario, $idUsuario);
+            $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $comentario, $idUsuario);
             // $copiarDs = $this->copiarDS($idLote);
         } else if ($esquemaCredito == 2) {
             $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idLote, $gerente, $comentario, $idUsuario);
         }
 
         if ($proceso) {
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso | Comentario: ' . $proceso->comentario, $esquemaCredito == 1 ? 1 : 2);
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicia proceso | Comentario: ' . $proceso->comentario, $esquemaCredito == 1 ? 1 : 2);
             $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
         } else {
             $this->db->trans_rollback();
@@ -439,11 +443,12 @@ class Casas extends BaseController
         $form = $this->form();
 
         $id = $this->form('id');
-        $asesor = $this->form('asesor');
+        $idAsesor = $this->form('asesor');
         $idLote = $this->form('idLote');
         $proceso = $this->form('proceso');
         $esquemaCreditoCasas = $this->form('esquemaCreditoCasas');
         $idProcesoCasas = $this->form('idProcesoCasas');
+        $idCliente = $this->form('idCliente');
         $update = true;
         $banderaSuccess = true;
 
@@ -466,22 +471,19 @@ class Casas extends BaseController
             "esquemaCreditoProceso" => $esquemaCreditoCasas
         );
 
-        $updateData = array(
-            "idAsesor" => $asesor->idUsuario,
-            "fechaModificacion" => date("Y-m-d H:i:s")
-        );
-
         // paso general: se agrega el registro al historial
         $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $addHistorialData);
         if (!$addHistorial) {
             $banderaSuccess = false;
         }
 
-        if ($esquemaCreditoCasas == 1) {  // esquema de banco
-            $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
-        } else if ($esquemaCreditoCasas == 2) { // esquema directo
-            $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProcesoCasas);
-        }
+        $updateCliente = array(
+            "id_asesor_c"        => $idAsesor,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
+        );
+
+        $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -511,9 +513,10 @@ class Casas extends BaseController
         $tipoMovimiento = $this->form('tipoMovimiento');
         $update = true;
         $comentario = $this->form('comentario');
+        $idCliente = $this->form('idCliente');
         $banderaSuccess = true;
 
-        if (!isset($id) || !isset($asesor) || !isset($idLote) || !isset($proceso) || !isset($esquemaCreditoCasas) || !isset($esquemaCreditoCasas) || !isset($idProcesoCasas) || !isset($update)) {
+        if (!isset($id) || !isset($asesor) || !isset($idLote) || !isset($proceso) || !isset($esquemaCreditoCasas) || !isset($esquemaCreditoCasas) || !isset($idProcesoCasas) || !isset($update) || !isset($idCliente)) {
             http_response_code(400);
 
             $banderaSuccess = false;
@@ -552,6 +555,12 @@ class Casas extends BaseController
                 $movimiento = 3;
             }
 
+            $updateCliente = array(
+                "id_asesor_c"        => $asesor,
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+                "modificadoPor" => $this->session->userdata('id_usuario')
+            );
+
             $updateData = array(
                 "proceso"        => 16,
                 "comentario"     => $comentario,
@@ -570,9 +579,16 @@ class Casas extends BaseController
                 "esquemaCreditoProceso" => 2
             );
 
+
             // se actualiza el registro de credito directo
             $update = $this->General_model->updateRecord('proceso_casas_directo', $updateData, 'idProceso', $idProcesoCasas);
             if (!$update) {
+                $banderaSuccess = false;
+            }
+
+            $updateCliente = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
+
+            if (!$updateCliente) {
                 $banderaSuccess = false;
             }
 
@@ -610,6 +626,7 @@ class Casas extends BaseController
         $esquemaCreditoCasas = $this->form('esquemaCreditoCasas');
         $idProcesoCasas = $this->form('idProcesoCasas');
         $comentario = $this->form('comentario');
+        $idCliente = $this->form('idCliente');
         $banderaSuccess = true;
 
         if (!isset($id) || !isset($esquemaCreditoCasas)) {
@@ -619,10 +636,13 @@ class Casas extends BaseController
         $this->db->trans_begin();
 
         $updateLoteData = array(
-            "esquemaCreditoCasas" => 0
+            "esquemaCreditoCasas" => 0,
+            "id_gerente_c" => 0,
+            "id_subdirector_c" => 0,
+            "id_asesor_c" => 0,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
         );
-
-        $cliente = $this->CasasModel->getCliente($idLote);
 
         $insertHistorialData = array(
             "idProcesoCasas"  => $id,
@@ -634,7 +654,7 @@ class Casas extends BaseController
         );
 
         // paso general 1: se regresa el esquema de credito del lote a 0 
-        $updateLote = $this->General_model->updateRecord("clientes", $updateLoteData, "id_cliente", $cliente->id_cliente);
+        $updateLote = $this->General_model->updateRecord("clientes", $updateLoteData, "id_cliente", $idCliente);
         if (!$updateLote) {
             $banderaSuccess = false;
         }
