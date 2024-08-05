@@ -108,7 +108,7 @@ class Reestructura_model extends CI_Model
         ) dxc4 ON dxc4.idLote = lo.idLote
 
 
-    	LEFT JOIN (SELECT lf.idLotePvOrigen, COUNT(*) totalContratoFirmadoFusion FROM historial_documento hd2 INNER JOIN lotesFusion lf ON lf.idLote = hd2.idLote WHERE hd2.tipo_doc=30  AND lf.origen=1 AND hd2.expediente  IS NOT NULL GROUP BY lf.idLotePvOrigen) hdcountlf ON hdcountlf.idLotePvOrigen = lf.idLote
+    	LEFT JOIN (SELECT lf.idLotePvOrigen, COUNT(*) totalContratoFirmadoFusion FROM historial_documento hd2 INNER JOIN lotesFusion lf ON lf.idLote = hd2.idLote WHERE hd2.tipo_doc=30 AND lf.origen=1 AND hd2.status = 1 AND hd2.expediente IS NOT NULL GROUP BY lf.idLotePvOrigen) hdcountlf ON hdcountlf.idLotePvOrigen = lf.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalRescisionFusion FROM lotesFusion WHERE rescision IS NOT NULL GROUP BY idLotePvOrigen) lf6 ON lf6.idLotePvOrigen = lo.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalRescisionFusionNumero FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lf7 ON lf7.idLotePvOrigen = lo.idLote
 		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30 AND HD.status = 1 AND HD.idCliente = lo.idCliente
@@ -1311,11 +1311,12 @@ class Reestructura_model extends CI_Model
         hd.expediente, hd.idDocumento, c.nombre AS nombreCondominio, r.nombreResidencial
         FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
-        LEFT JOIN historial_documento hd ON hd.idLote=l.idLote AND hd.tipo_doc=30
+        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.tipo_doc = 30 AND hd.status = 1
         LEFT JOIN condominios c ON c.idCondominio=l.idCondominio
         LEFT JOIN residenciales r ON r.idResidencial = c.idResidencial
         LEFT JOIN (SELECT lf2.idLotePvOrigen , COUNT(idLotePvOrigen) as originales FROM lotesFusion lf2  WHERE origen=1 GROUP BY lf2.idLotePvOrigen ) co ON co.idLotePvOrigen = lf.idLotePvOrigen
         WHERE lf.idLotePvOrigen=" . $idLote . " $tipoOrigenDestino");
+
         return $query->result_array();
     }
 
