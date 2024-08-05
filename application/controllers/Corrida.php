@@ -10,7 +10,7 @@ class Corrida extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('registrolote_modelo', 'General_model'));
+        $this->load->model(array('registrolote_modelo', 'General_model', 'Neodata_model'));
         $this->load->model('model_queryinventario');
         $this->load->model('Corrida_model');
         $this->load->database('default');
@@ -21,7 +21,7 @@ class Corrida extends CI_Controller
         $val = $this->session->userdata('certificado') . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-//        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'), $rutaUrl[1], $this->session->userdata('opcionesMenu'));
+//      $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'), $rutaUrl[1], $this->session->userdata('opcionesMenu'));
     }
 
     public function index()
@@ -108,7 +108,7 @@ class Corrida extends CI_Controller
     public function editar_ds()
     {
         $objDatos = json_decode(file_get_contents("php://input"));
-
+        $idLote = (int)$objDatos->id_lote;
 
 
 
@@ -122,6 +122,7 @@ class Corrida extends CI_Controller
         );
         /****codigo de prueba para creacion de Planes de Pago*******/
         $corrida_dump = json_encode($objDatos);
+        $this->Corrida_model->borrarPlanesPagoPorLote($idLote);
         $this->getCorridaToPlanDePago($corrida_dump, $rangos);
         /****************/
 
@@ -4505,4 +4506,41 @@ legend {
 
     }
 
+        public function cancelaPlanPagoNeo(){
+        $data = $this->input->post();
+        $response = $this->Neodata_model->cancelaPlanPagoNeo($data);
+        print_r( json_encode($response, JSON_NUMERIC_CHECK));
+    }
+
+    public function cancelaPlanPagoCRM(){
+        $idPlanPago = $this->input->post('idPlanPago');
+        $flagUpdate = 0;
+
+        $data_update = array(
+            "estatusPlan" => 3,
+            "fechaModificacion" => date('Y-m-d h:i:s')
+        );
+        if($this->General_model->updateRecord("planes_pago", $data_update, "idPlanPago", $idPlanPago)){// MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+            $flagUpdate = 1;
+        }
+
+        if($flagUpdate>0){
+                $respuesta = array(
+                    "status" => true,
+                    "msj" => "Se canceló correctamente el  plan de pago."
+                );
+
+        }else{
+            $respuesta = array(
+                "status" => false,
+                "msj" => "Hubo un error al actualizar, inténtalo nuevamente."
+            );
+        }
+
+        if ($respuesta != null) {
+            echo json_encode($respuesta);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
