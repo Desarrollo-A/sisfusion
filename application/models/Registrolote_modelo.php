@@ -1217,6 +1217,10 @@
 		$id_usuario = $this->session->userdata('id_usuario');
 		$id_lider = $this->session->userdata('id_lider');
 		$id_rol = $this->session->userdata('id_rol');
+
+		if($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
+			$id_lider .= ", 24, 10";
+			
 		if($id_rol == 2 || $id_rol == 4 || $id_rol == 33) // DIRECCIÓN COMERCIAL || ASISTENTE DE DIRECCIÓN COMERCIAL
 			$lider = "";
 		else if ($id_rol == 3) // GERENTE
