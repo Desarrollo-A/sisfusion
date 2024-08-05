@@ -3576,7 +3576,6 @@ class Reestructura extends CI_Controller{
                 'flagProcesoJuridico' => 0
             );
         }
-        
 
         $update = $this->General_model->updateRecord('datos_x_cliente', $updateData, 'idLote', $idLotePv);
 

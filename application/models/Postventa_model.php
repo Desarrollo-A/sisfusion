@@ -1607,23 +1607,23 @@ function checkBudgetInfo($idSolicitud){
     function getHistorialEstatus3(){
         return $this->db->query("SELECT res.abreviatura as nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote,
         lo.idLote, lo.referencia, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
-        lo.ubicacion, sede.nombre as nombreSede, CAST(lo.comentario AS varchar(MAX)) comentario, hl.modificado, 
-        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) as nombreGerente
+        lo.ubicacion, sede.nombre as nombreSede, CAST(lo.comentario AS varchar(MAX)) comentario, 
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) as nombreGerente,
+        hl.modificado fechaEnvioPostventa, hl3.modificado fechaEnvioAsesor
         FROM lotes lo
-        INNER JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes hl
-        WHERE hl.idStatusContratacion IN (2) AND hl.idMovimiento IN (4, 74, 101, 103)
-        AND status = 1 GROUP BY idLote, idCliente) hl 
-        ON hl.idLote = lo.idLote-- AND hl.idCliente = lo.idCliente
+        LEFT JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes hl WHERE hl.idMovimiento IN (4, 74, 101, 103) AND status = 1 GROUP BY idLote, idCliente) hl  ON hl.idLote = lo.idLote-- AND hl.idCliente = lo.idCliente
+        LEFT JOIN historial_lotes hl2 ON hl2.idLote = hl.idLote AND hl2.idCliente = hl.idCliente AND hl2.modificado = hl.modificado AND hl2.status = 1
+        INNER JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes hl3 WHERE hl3.idMovimiento IN (98, 100) AND status = 1 GROUP BY idLote, idCliente) hl3  ON hl3.idLote = lo.idLote-- AND hl.idCliente = lo.idCliente
+        INNER JOIN historial_lotes hl4 ON hl4.idLote = hl3.idLote AND hl4.idCliente = hl3.idCliente AND hl4.modificado = hl3.modificado AND hl4.status = 1
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
-        INNER JOIN sedes sede ON sede.id_sede = lo.ubicacion
-        INNER JOIN historial_lotes hl2 ON hl2.idLote = hl.idLote AND hl2.idCliente = hl.idCliente AND hl2.modificado = hl.modificado AND hl2.status = 1
+        LEFT JOIN sedes sede ON sede.id_sede = lo.ubicacion
         INNER JOIN usuarios us ON us.id_usuario = cl.id_gerente
         WHERE lo.tipo_venta = 1 AND lo.status = 1 
         GROUP BY res.abreviatura, co.nombre, lo.nombreLote, lo.idLote, lo.nombreLote, lo.referencia, cl.nombre,
         cl.apellido_paterno, cl.apellido_materno,  lo.ubicacion, sede.nombre, CAST(lo.comentario AS varchar(MAX)), hl.modificado,
-        us.nombre, us.apellido_paterno, us.apellido_materno;")->result_array();
+        us.nombre, us.apellido_paterno, us.apellido_materno, hl3.modificado")->result_array();
     }
     
 }

@@ -94,7 +94,6 @@ $('#tablaReporteVentas').DataTable({
                 return `${d.ultiModificacion}`;
             }
         },
-        // { data: "nombreSedeRecepcion" },
         {
             data: function (d) {
                 if(d.id_cliente_reubicacion_2 != 0 ) {
@@ -108,9 +107,9 @@ $('#tablaReporteVentas').DataTable({
                     ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
                         return '<br><span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
                     }
-            }
-            return '<br><span class="label lbl-gray">SIN DISPERSIÓN</span>';
-        },
+                }
+                return '<br><span class="label lbl-gray">SIN DISPERSIÓN</span>';
+            },
         },
         {
             data: function (d) {
@@ -341,13 +340,11 @@ $(document).on('click', '#verPreproceso', function (e) {
 
     $("#tab-proceso").removeClass('active');
     $("#tab-preProceso").addClass('active');
-
 });
 
 $(document).on('click', '#verProceso', function (e) {
     $("#preproceso").addClass('hide');
     $("#proceso").removeClass('hide');
-
     $("#tab-proceso").addClass('active');
     $("#tab-preProceso").removeClass('active');
 });
@@ -362,7 +359,6 @@ $(document).on("click", ".ver_historial", function () {
 
     $("#tab-proceso").addClass('active');
     $("#tab-preproceso").removeClass('active');
-
     $('.btn-historial').attr('data-idLote', idLote); // se asignan los valores por default
     $('.btn-historial').attr('data-flagFusion', flagFusion);
 
@@ -389,12 +385,10 @@ $(document).on("click", ".ver_historial", function () {
         }
     });
 
-
     // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
     consultarHistoriaContratacion(idLote);
     $("#seeInformationModal").modal();
 });
-
 
 $(document).on("click", "#verifyNeodata", function () {
     let empresa = $(this).attr("data-empresa");
@@ -415,17 +409,17 @@ $(document).on("click", "#verifyNeodata", function () {
                     <div class="d-flex align-center justify-center">
                         <div>
                             <h3 class="text-center fw-600">Detalle de mensualidades</h3>
-                            <div class="d-flex align-center">
+                            <div class="d-flex align-center justify-center">
                                 <i class="fas fa-money-bill-wave-alt fa-lg mr-2" style="color:#6da36f"></i>
-                                <p class="m-0">Pagadas<b>${response[0]['MenPagadas']}</b></p>
+                                <p>Pagadas <b>${response[0]['MenPagadas']}</b></p>
                             </div>
-                            <div class="d-flex align-center">
+                            <div class="d-flex align-center justify-center">
                                 <i class="fas fa-hand-holding fa-lg mr-2" style="color:#666"></i></i>
-                                <p class="m-0">Pendientes <b>${response[0]['MenPendientes']}</b></p>
+                                <p>Pendientes <b>${response[0]['MenPendientes']}</b></p>
                             </div>
-                            <div class="d-flex align-center">
-                                <i class="fas fa-receipt" style="color:#666"></i>
-                                <p class="m-0">Totales  ${parseInt(response[0]['MenPagadas']) + parseInt(response[0]['MenPendientes'])}</p>
+                            <div class="d-flex align-center justify-center">
+                                <i class="fas fa-receipt fa-lg mr-2" style="color:#666"></i>
+                                <p>Totales  <b>${parseInt(response[0]['MenPagadas']) + parseInt(response[0]['MenPendientes'])}</b></p>
                             </div>
                         </div>
                     </div>`);

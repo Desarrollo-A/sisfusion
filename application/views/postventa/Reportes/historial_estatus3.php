@@ -29,8 +29,8 @@
                                         <th>CONDOMINIO</th>
                                         <th>LOTE</th>
                                         <th>CLIENTE</th>
-                                        <th>FECHA SOLICITUD</th>
-                                        <th>FECHA RECHAZO</th>
+                                        <th>FECHA SOLICITUD (avance de expediente)</th>
+                                        <th>FECHA EXPEDIENTE</th>
                                         <th>COMENTARIO</th>
                                     </tr>
                                     </thead>

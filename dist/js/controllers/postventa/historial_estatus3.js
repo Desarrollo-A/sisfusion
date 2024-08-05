@@ -66,8 +66,21 @@ $(document).ready(()=>{
             { data: 'nombreCondominio' },
             { data: 'nombreLote' },
             { data: 'nombreCliente' },
-            { data: 'referencia' },
-            { data: 'nombreGerente' },
+            { data: 'fechaEnvioAsesor' },
+            {
+                //data: 'fechaEnvioPostventa'
+
+                data: function (d) {
+                    let fechaEnvioPostventa;
+                    if(d.fechaEnvioPostventa == '' || d.fechaEnvioPostventa == null){
+                        fechaEnvioPostventa = 'Sin registro de status 3';
+                    }else{
+                        fechaEnvioPostventa = d.fechaEnvioPostventa;
+                    }
+                    return fechaEnvioPostventa;
+                }
+
+            },
             {
                 data: function (d) {
                     return d.comentario;
