@@ -1,5 +1,5 @@
 function show_preview(data) {
-    let url = `${general_base_url}pagoscasas/archivo/${data.archivo}`
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
 
     Shadowbox.init();
 
@@ -12,33 +12,54 @@ function show_preview(data) {
     });
 }
 
-function download_file(data) {
-    alerts.showNotification("top", "right", "Descargando archivo...", "info");
-    let url = `${general_base_url}casas/archivo/${data.archivo}`
-
-    window.open(url, '_blank').focus()
+backPage = function() {
+    window.location.href = `${general_base_url}casas/solicitar_contratos`
 }
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Contratos del lote",
+        exportOptions: {
+            columns: [0, 1, 2, 3],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
 
 function show_upload(data) {
     //console.log(data)
-    let accept = ['image/png', 'image/jpeg', 'application/pdf']
-    
-    if(data.tipo === 5){
-        accept = ['application/pdf']
-    }
-
-    if(data.tipo === 6){
-        accept = ['text/xml']
-    }
 
     let form = new Form({
         title: `Subir ${data.documento}`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/pagoscasas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -51,14 +72,16 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
         fields: [
-            new HiddenField({ id: 'id_proceso',         value: data.idProcesoPagos }),
-            new HiddenField({ id: 'id_documento',       value: data.idDocumento }),
-            new HiddenField({ id: 'name_documento',     value: data.documento }),
-            new FileField({   id: 'file_uploaded',      label: 'Archivo', placeholder: 'Selecciona un archivo', accept: accept, required: true }),
+            new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
+            new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
+            new HiddenField({ id: 'name_documento', value: data.documento }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ],
     })
 
@@ -68,47 +91,33 @@ function show_upload(data) {
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
-    { data: 'archivo' },
+    { data: function(data){
+        if(data.archivo){
+            return data.archivo
+        }
+        return 'sin archivo'
+    } },
     { data: function(data){
         if(data.fechaModificacion){
             return data.fechaModificacion.substring(0, 16)
         }
-
-        return ''
+        return 'no subido'
     } },
     { data: function(data){
         let view_button = ''
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
-
-            if(data.tipo === 6){
-                view_button = new RowButton({icon: 'file_download', label: `Visualizar ${data.documento}`, onClick: download_file, data})
-            }
         }
 
         let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
-
+        
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },
 ]
 
-let buttons = [
-    {
-        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
-        action: function() {
-            window.location.href = `${general_base_url}pagoscasas/documentacion`
-        },
-        attr: {
-            class: 'btn-back',
-            style: 'position: relative; float: left',
-            title: 'Regresar'
-        }
-    },
-]
-
 let table = new Table({
     id: '#tableDoct',
-    url: `pagoscasas/lista_subir_documentos/${idProcesoPagos}`,
+    url: `casas/lista_contratos/${idProcesoCasas}`,
+    buttons:buttons,
     columns,
-    buttons,
 })

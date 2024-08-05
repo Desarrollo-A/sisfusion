@@ -7,8 +7,6 @@ $.ajax({
     type: 'GET',
     url: 'residenciales',
     success: function (response) {
-        // console.log(response)
-
         filtro_proyectos.setOptions(response)
     },
     error: function () {
@@ -16,18 +14,17 @@ $.ajax({
     }
 })
 
-function cambio(option) {
-    // console.log(option)
-}
-
 filtro_proyectos.onChange(function(option){
-    // console.log(option)
+    arrayValores = []
+    arrayIdLotes = []
+
+    let btn = document.getElementsByClassName("btn-asignar")
+    btn[0].classList.add('hide');
 
     $.ajax({
         type: 'GET',
         url: `condominios?proyecto=${option.value}`,
         success: function (response) {
-            // console.log(response)
 
             filtro_condominios.setOptions(response)
         },
@@ -38,7 +35,11 @@ filtro_proyectos.onChange(function(option){
 })
 
 filtro_condominios.onChange(function(option){
-    // console.log(option)
+    arrayValores = []
+    arrayIdLotes = []
+    
+    let btn = document.getElementsByClassName("btn-asignar")
+    btn[0].classList.add('hide');
 
     table.setParams({condominio: option.value})
     table.reload()
@@ -54,8 +55,8 @@ let filtros = new Filters({
 
 let gerentes = []
 let tipoEsquema = [];
-tipoEsquema[0] = {label: "Credito de banco", value: 1}; // credito de banco
-tipoEsquema[1] = {label: "Credito directo", value: 2}; // credito directo
+tipoEsquema[0] = {label: "Crédito de banco", value: 1}; // credito de banco
+tipoEsquema[1] = {label: "Crédito directo", value: 2}; // credito directo
 
 $.ajax({
     type: 'GET',
@@ -74,7 +75,6 @@ select_lote = function(data) {
         title: 'Iniciar proceso', 
         text: `¿Deseas iniciar el proceso de asignación del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
-            // console.log(data)
             form.loading(true)
 
             $.ajax({
@@ -84,23 +84,27 @@ select_lote = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a asignación.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
         
                     table.reload();
 
                     form.hide();
+                    arrayValores = []
+                    arrayIdLotes = []
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
+                    
                     form.loading(false)
+                    arrayValores = []
+                    arrayIdLotes = []
                 }
             })
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de credito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
+            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -127,8 +131,8 @@ let buttons = [
     {
         text: '<i class="fas fa-user-plus"></i>',
         className: 'btn-large btn-sky btn-asignar botonEnviar hide',
-        titleAttr: 'Fusionar lotes',
-        title:"Fusionar lotes",
+        titleAttr: 'Asignar lotes',
+        title:"Asignar lotes",
     }
 ]
 
@@ -150,7 +154,7 @@ let columns = [
     { data: 'cliente' },
     { data: function(data)
         {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
+            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
             return '<div class="d-flex justify-center">' + pass_button + '</div>'
         } 
     },
@@ -164,7 +168,7 @@ let table = new Table({
 })
 
 
-function verificarCheck(valorActual){    
+function verificarCheck(valorActual){
     const tr = $(this).closest('tr');
         const row = $('#tablaAsignacionCartera').DataTable().row(tr);
         let botonEnviar = document.getElementsByClassName('botonEnviar');
@@ -208,36 +212,6 @@ function buscarValor(valor, array) {
     return null;
 }
 
-$(document).on('click', '#fusionarLotes', ()=>{
-    let dataFS = new FormData();
-    dataFS.append("data", JSON.stringify(arrayValores));
-    $.ajax({
-        url: `${general_base_url}Reestructura/setFusionLotes`,
-        data: dataFS,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: "POST",
-        success: function (response) {
-            response = JSON.parse(response);
-            $("#fusionarLotes").prop("disabled", false);
-            if (response.status==200) {
-                alerts.showNotification("top", "right", response.message, "success");
-                $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
-                $('#preguntaConfirmacion').modal('toggle');
-                document.getElementsByClassName('btn-asignar-ventaML')[0].classList.add('hide');
-                arrayValores=[]; //resetea el array que guarda los lotes que se fusionaron
-            }
-            else
-                alerts.showNotification("top", "right", response.status, "warning");/**/
-        },
-        error: function () {
-            $("#fusionarLotes").prop("disabled", false);
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
 $(document).on('click', '.btn-asignar', () => {
     let nombresLot = '';
     let separador = '';
@@ -263,7 +237,7 @@ $(document).on('click', '.btn-asignar', () => {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "lol", "success");
+                    alerts.showNotification("top", "right", "Se han asignado los lotes correctamente", "success");
         
                     table.reload();
                     form.hide();
@@ -281,7 +255,7 @@ $(document).on('click', '.btn-asignar', () => {
         },
         fields: [
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de credito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
+            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

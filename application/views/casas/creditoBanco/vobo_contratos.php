@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Documentación del lote: <?php echo $lote->nombreLote ?></h3>
+                                    <h3 class="card-title center-align">Contratos del lote: <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -45,7 +45,7 @@
     <?php $this->load->view('template/modals');?>
 
     <script type="text/javascript">
-        const idProcesoPagos = <?php echo $lote->idProcesoPagos ?>
+        const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>
     </script>
-    <script src="<?= base_url() ?>dist/js/controllers/pagos_casas/lista_valida_documentos.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/creditoBanco/vobo_contratos.js"></script>
 </body>
