@@ -24,14 +24,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
-    public function getCliente($idLote){
-        $query = "SELECT cl.id_cliente FROM clientes cl
-        INNER JOIN lotes lt ON lt.idCliente = cl.id_cliente 
-        WHERE lt.idLote = $idLote AND cl.status = 1";
-
-        return $this->db->query($query)->row();
-    }
-
     public function getLastNotarias(){
         $query = "SELECT TOP 1 * 
         FROM opcs_x_cats 
@@ -171,58 +163,25 @@ class CasasModel extends CI_Model
     }
 
     public function getCarteraLotes($idCondominio){
-        $query = "SELECT 
-        lo.idLote,
-        lo.nombreLote,
-        pc.status,
-        con.nombre AS condominio,
-        resi.descripcion AS proyecto,
-        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-        CASE
-        WHEN cli.id_asesor IS NULL THEN 'SIN ESPECIFICAR'
-        ELSE CONCAT(us_ases.nombre, ' ', us_ases.apellido_paterno, ' ', us_ases.apellido_materno)
-        END AS asesor,
-        CASE
-        WHEN cli.id_coordinador IS NULL THEN 'SIN ESPECIFICAR'
-        ELSE CONCAT(us_coord.nombre, ' ', us_coord.apellido_paterno, ' ', us_coord.apellido_materno)
-        END AS coordinador,
-        CASE
-        WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
-        ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
-        END AS gerente,
-        CASE
-        WHEN cli.id_subdirector IS NULL THEN 'SIN ESPECIFICAR'
-        ELSE CONCAT(us_sub.nombre, ' ', us_sub.apellido_paterno, ' ', us_sub.apellido_materno)
-        END AS subdirector,
-        CASE
-        WHEN cli.id_regional IS NULL THEN 'SIN ESPECIFICAR'
-        ELSE CONCAT(us_regi.nombre, ' ', us_regi.apellido_paterno, ' ', us_regi.apellido_materno)
-        END AS regional,
-        CASE
-        WHEN cli.id_regional_2 IS NULL THEN 'SIN ESPECIFICAR'
-        ELSE CONCAT(us_regi2.nombre, ' ', us_regi2.apellido_paterno, ' ', us_regi2.apellido_materno)
-        END AS regional2
-        FROM lotes lo
-        LEFT JOIN proceso_casas pc ON pc.idLote = lo.idLote AND pc.status = 1
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_ases ON us_ases.id_usuario = cli.id_asesor  
-        LEFT JOIN usuarios us_coord ON us_coord.id_usuario = cli.id_coordinador 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
-        LEFT JOIN usuarios us_sub ON us_sub.id_usuario = cli.id_subdirector 
-        LEFT JOIN usuarios us_regi On us_regi.id_usuario = cli.id_regional 
-        LEFT JOIN usuarios us_regi2 On us_regi2.id_usuario = cli.id_regional_2
-        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
-        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
-        WHERE
-        lo.idMovimiento = 45
-        AND lo.idStatusContratacion = 15
-        AND lo.idCondominio = $idCondominio
-        AND pc.status IS NULL
-        AND cli.status = 1
-        AND (cl.esquemaCreditoCasas = 0 OR cl.esquemaCreditoCasas IS NULL)";
-
-        return $this->db->query($query)->result();
+        return $this->db->query(
+            "SELECT 
+                lo.idLote, 
+                lo.nombreLote, 
+                pc.status, 
+                co.nombre condominio, 
+                re.descripcion proyecto, 
+                CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END cliente, 
+                CASE WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente,
+                ISNULL(cl.id_cliente, 0) idCliente
+            FROM 
+                lotes lo 
+            LEFT JOIN proceso_casas pc ON pc.idLote = lo.idLote AND pc.status = 1 
+            LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.esquemaCreditoCasas = 0 OR cl.esquemaCreditoCasas IS NULL)
+            LEFT JOIN usuarios u2 ON u2.id_usuario = pc.idGerente 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+            WHERE 
+                lo.idStatusLote = 2")->result();
     }
 
     public function getListaAsignacion(){

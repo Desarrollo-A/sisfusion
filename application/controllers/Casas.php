@@ -393,8 +393,8 @@ class Casas extends BaseController
 
     public function to_asignacion()
     {
-
         $idLote = $this->form('idLote');
+        $idCliente = $this->form('idCliente');
         $comentario = $this->form('comentario');
         $gerente = $this->form('gerente');
         $idUsuario = $this->session->userdata('id_usuario');
@@ -411,8 +411,6 @@ class Casas extends BaseController
             "esquemaCreditoCasas" => $esquemaCredito
         );
 
-        $cliente = $this->CasasModel->getCliente($idLote);
-
         $this->db->trans_begin();
 
         if ($esquemaCredito == 1) { // se agrega un condicion para saber que esquema de credito se usara
@@ -424,7 +422,7 @@ class Casas extends BaseController
 
         if ($proceso) {
             $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso | Comentario: ' . $proceso->comentario, $esquemaCredito == 1 ? 1 : 2);
-            $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $cliente->id_cliente);
+            $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
         } else {
             $this->db->trans_rollback();
             http_response_code(404);

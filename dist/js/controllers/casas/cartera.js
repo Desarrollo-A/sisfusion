@@ -103,6 +103,7 @@ select_lote = function(data) {
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
             new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
@@ -140,7 +141,7 @@ let columns = [
     { data: function (data)
         {
             return `<center><input type="checkbox" onChange="verificarCheck(this)"
-            data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required></center>` 
+            data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" name="lotesOrigen[]" value="${data.idLote}" required></center>` 
         }        
     },
     {
