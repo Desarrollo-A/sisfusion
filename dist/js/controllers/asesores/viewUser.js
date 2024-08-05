@@ -1,5 +1,5 @@
 let titulos_intxt = [];
-$(document).ready( function() {
+$(document).ready(function () {
     $('#all_password_datatable thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         titulos_intxt.push(title);
@@ -12,7 +12,7 @@ $(document).ready( function() {
     });
 
     $allUsersTable = $('#all_password_datatable').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         bAutoWidth: true,
@@ -21,11 +21,11 @@ $(document).ready( function() {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Consulta Contraseña',
-            title:'Consulta Contraseña',
+            title: 'Consulta Contraseña',
             exportOptions: {
-                columns: [0,1],
-                format:{
-                    header:  function (d, columnIdx) {
+                columns: [0, 1],
+                format: {
+                    header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
@@ -46,25 +46,17 @@ $(document).ready( function() {
             }
         },
         destroy: true,
-        columns: [{ 
-            data: function (d) {
-                return d.usuario
-            }
-        },
-        { data: function (d) {
-                return d.contrasena
-            }
-        }],
-        "ajax": {
-            "url": "getUsersListAsesor",
-            "type": "POST",
-            cache: false,
-            "data": function( d ){
-            }
+        columns: [
+            { data: 'usuario' },
+            { data: 'contrasena' }
+        ],
+        ajax: {
+            url: "getUsersListAsesor",
+            type: "POST"
         }
     });
 
-    $('#all_password_datatable').on('draw.dt', function() {
+    $('#all_password_datatable').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });

@@ -60,7 +60,7 @@ select_asesor = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea asignar a <b>${data.nombreAsesor}</b> al lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas asignar a <b>${data.nombreAsesor}</b> al lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -71,7 +71,7 @@ select_asesor = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido puesto para ingresar carta de autorización.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
 
                     table.reload();
 
@@ -169,8 +169,17 @@ let buttons = [
 let columns = [
     { data: function (data)
         {
-            return `<center><input type="checkbox" onChange="verificarCheck(this)"
-            data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required></center>` 
+            let check = ''
+
+            if(!data.idAsesor){
+                check = `<div class="d-flex justify-center">
+                        <label class="cont">
+                            <input type="checkbox" onChange="verificarCheck(this)" data-idProcesoCasas="${data.idProcesoCasas}" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-tipoEsquema="${data.tipoEsquema}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <span></span>
+                        </label></div>`
+            }
+
+            return check
         }        
     },
     { data: 'idLote' },
@@ -217,12 +226,12 @@ let columns = [
 
             let pass_button = ''
             if (data.idAsesor) {
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Aceptar asignación', onClick: select_asesor, data })
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_asesor, data })
             }
 
             let cancel_button = new RowButton({ icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data })
 
-            return `<div class="d-flex justify-center">${asesor_button}${pass_button}${cancel_button}</div>`
+            return `<div class="d-flex justify-center">${pass_button}${asesor_button}${cancel_button}</div>`
         }
     },
 ]
@@ -244,9 +253,11 @@ function verificarCheck(valorActual){
     
         if (valorActual.checked){
             arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
-            arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
+            arrayInterno.push($(valorActual).attr('data-idLote'));//[1]
 
-            arrayId.push($(valorActual).attr('data-idLote'));//[1]
+            arrayId.push($(valorActual).attr('data-idLote'));//[0]
+            arrayId.push($(valorActual).attr('data-tipoEsquema'));//[1]
+            arrayId.push($(valorActual).attr('data-idProcesoCasas'));//[2]
     
             arrayValores.push(arrayInterno);
             arrayIdLotes.push(arrayId);
@@ -292,14 +303,14 @@ $(document).on('click', '.btn-asignar', () => {
     });
 
     let form = new Form({
-        title: 'Iniciar proceso',
+        title: 'Asignar lotes a asesor',
         text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
             data.append("idLotes", JSON.stringify(arrayIdLotes))
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/to_asignacion_varios`,
+                url: `${general_base_url}casas/to_asignacion_asesor`,
                 data: data,
                 contentType: false,
                 processData: false,

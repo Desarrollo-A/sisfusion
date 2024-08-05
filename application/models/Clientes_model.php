@@ -517,13 +517,17 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
                 $where = "pr.id_gerente IN ($id_lider, 80, 664)";
             else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
-                $where = "pr.id_gerente IN ($id_lider, 495)";
+                $where = "pr.id_gerente IN ($id_lider, 12688)";
             else if ($id_usuario == 15761) // JACQUELINE GARCIA SOTELLO
                 $where = "pr.id_gerente IN ($id_lider, 13016)";
             else if ($id_usuario == 15545) // PAMELA IVONNE LEE MORENO
                 $where = "pr.id_gerente IN ($id_lider, 13059, 11680)";
             else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
                 $where = "pr.id_gerente IN ($id_lider, 10251)";
+            else if ($id_usuario == 16186) // CAROLINA CORONADO YAÑEZ
+                $where = "pr.id_gerente IN ($id_lider, 6942)";
+            else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
+                $where = "pr.id_gerente IN ($id_lider, 654, 697, 5604, 10251, 12688)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

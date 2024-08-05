@@ -227,9 +227,9 @@
         }else
          {
             $statusLote = '1,2,3';
-                if($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 32){
-                    $statusLote = '2,3';
-                } 
+//                if($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 32){
+//                    $statusLote = '2,3';
+//                }
 
             $query = $this->db->query("SELECT con.idCondominio, con.nombre FROM [condominios] con JOIN [lotes] ON con.idCondominio = lotes.idCondominio 
                                     WHERE lotes.idStatusLote in($statusLote) AND con.status = 1 AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
@@ -661,7 +661,7 @@
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
         INNER JOIN opcs_x_cats planPagoCatalogo ON planPagoCatalogo.id_opcion =  pp.tipoPlanPago AND planPagoCatalogo.id_catalogo = 137
-        WHERE pp.estatus = 1 AND pp.estatusPlan = 1 AND pp.idPlanPago = ".$idPlanPago." ORDER BY pp.idPlanPago ASC");
+        WHERE pp.estatus = 1 AND (pp.estatusPlan = 1 OR pp.estatusPlan = 3) AND pp.idPlanPago = ".$idPlanPago." ORDER BY pp.idPlanPago ASC");
         return $query->result_array();
     }
 
@@ -768,5 +768,11 @@
         $query = $this->db->query("SELECT * FROM planes_pago WHERE idLote = $idLote AND estatus=1 AND tipoPlanPago=1;");
         return $query->result_array();
     }
+
+    function borrarPlanesPagoPorLote($idLote){
+        $this->db->query("DELETE FROM planes_pago WHERE idLote = ".$idLote);
+    }
+
+
 
 }
