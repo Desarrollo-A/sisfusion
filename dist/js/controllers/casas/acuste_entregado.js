@@ -22,7 +22,7 @@ let columns = [
 
             if(data.finalizado == 0){
             pass_button = new RowButton({icon: 'check', color: 'green', label: 'Finalizar proceso', onClick: nextProcess, data})
-            return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
+            return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: returnProcess, data})
             }
 
             return '<div class="d-flex justify-center">' + pass_button + '</div>'
@@ -41,7 +41,7 @@ let table = new Table({
 returnProcess = function(data){ // funcion para subir el archivo de adeudo
 
     let form = new Form({
-        title: '¿Rechazar lote?', 
+        title: 'Rechazar lote', 
         text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             // console.log(data)
@@ -84,7 +84,7 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
 nextProcess = function(data){ // funcion para el avance del lote
     
     let form = new Form({
-        title: '¿Avanzar lote?', 
+        title: 'Finalizar', 
         text: `Finzalizará el proceso del lote  - <b>${data.nombreLote}</b>`,
         onSubmit: function(data){
             form.loading(true)
