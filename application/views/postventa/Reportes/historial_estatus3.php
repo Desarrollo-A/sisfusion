@@ -28,11 +28,9 @@
                                         <th>PROYECTO</th>
                                         <th>CONDOMINIO</th>
                                         <th>LOTE</th>
-                                        <th>REFERENCIA</th>
-                                        <th>GERENTE</th>
                                         <th>CLIENTE</th>
-                                        <th>FECHA DE MODIFICACIÓN</th>
-                                        <th>UBICACIÓN</th>
+                                        <th>FECHA SOLICITUD (avance de expediente)</th>
+                                        <th>FECHA EXPEDIENTE</th>
                                         <th>COMENTARIO</th>
                                     </tr>
                                     </thead>

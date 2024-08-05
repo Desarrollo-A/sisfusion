@@ -1112,7 +1112,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     public function changePassword()
     {
         $key = "";
-        $pattern = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
+        $pattern = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
         $max = strlen($pattern) - 1;
         $length = 8;
         for ($i = 0; $i < $length; $i++) {
