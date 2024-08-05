@@ -178,6 +178,9 @@ $('#idLote').change(function () {
                         case 2: //Se envio correctamente a NeoData
                             etiqueta = `<label class="label lbl-green">Se envió correctamente a NeoData</label>`;
                             break;
+                        case 3: //Plan de pago cancelado
+                            etiqueta = `<label class="label lbl-warning">Plan de pago cancelado en NeoData</label>`;
+                            break;
                     }
 
                     return etiqueta;
@@ -188,6 +191,18 @@ $('#idLote').change(function () {
                 data: function (d) {
                     let BTN_EDIT;
                     let BTN_SEND;
+                    let BTN_DELETE;
+                    // if(d.idStatusContratacion == 0 && d.idMovimiento == 0){ //validacion de estatus apra poder eliminar
+                        if(d.estatusPlan == 2){
+                            BTN_DELETE = `<button class="btn-data btn-warning cancelarPlanPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-planPagoNumero="${d.ordenPago}"
+                            data-toggle="tooltip" data-placement="left" title="Eliminar Plan"><i class="fas fa-trash"></i></button>`;
+                        }else{
+                            BTN_DELETE = ``;
+                        }
+
+                    // }
 
                     let BTN_VER = `<button class="btn-data btn-blueMaderas ver_planPago" value="${d.idLote}" 
                     data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
@@ -212,6 +227,18 @@ $('#idLote').change(function () {
                             BTN_SEND = `<button class="btn-data" disabled 
                             data-toggle="tooltip" data-placement="left" title="PLAN ENVIADO" ><i class="fas fa-share"></i></button>`;
                             break;
+                        case 3:
+                            BTN_EDIT = `<button class="btn-data btn-blueMaderas editarPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-saldoSig="${d.saldoSig}"
+                            data-toggle="tooltip" data-placement="left" title="EDITAR PLAN" ><i class="fas fa-pencil-alt"></i></button>`;
+
+                            BTN_SEND = `<button class="btn-data btn-blueMaderas enviarPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-saldoSig="${d.saldoSig}"
+                            data-toggle="tooltip" data-placement="left" title="ENVIAR NUEVAMENTE" ><i class="fas fa-share"></i></button>`;
+                            break;
+                            break;
                     }
 
 
@@ -219,7 +246,7 @@ $('#idLote').change(function () {
 
 
 
-                    let buttonValidado = (d.tipoPlanPago == 1) ? BTN_SEND : '';
+                    let buttonValidado = (d.tipoPlanPago == 1) ? BTN_SEND + BTN_DELETE: '';
                     return `<center>${BTN_VER} ${BTN_EDIT} ${buttonValidado}</center>`;
                 }
             }],
@@ -1224,4 +1251,96 @@ $(document).on('change','#tazaInteresPP', function(){
 
 });
 
+$(document).on('click', '.cancelarPlanPago', function(){
+    //CDMAGS-LAVH-097
+    //@numPlanPagoCRM = 2
+    let numeroPlanPago = $(this).attr('data-planpagonumero');
+    let nombreLote = $(this).attr('data-nomlote');
+    let idLote = $(this).val();
+    let nombrePlan = $(this).attr('data-nombrePlan');
+    let idPlanPago = $(this).attr('data-idplanpago');
+    console.log('nombrePlan', nombrePlan);
+    // idLoteCancelado
+    //cancelarPlanPago
+    $('#idLoteCancelado').val(idLote);
+    // nombreLoteCancelado
+    // document.getElementById("nombrePlanPagoCancelatxt").innerText = nombrePlan;
+    $("#nombrePlanPagoCancelatxt").text(nombrePlan);
+    $('#nombreLoteCancelado').val(nombreLote);
+    $('#numeroPlanLoteCancelado').val(numeroPlanPago);
+    $('#idPlanPagoCancelado').val(idPlanPago);
+    $('#cancelarPlanPago').modal('toggle');
 
+    console.log('numeroPlanPago', numeroPlanPago);
+    console.log('nombrePlan', nombrePlan);
+    /*$.ajax({
+        data:{data:1},
+        url: 'Corrida/cancelaPlanPagoNeo',
+        type: 'POST',
+        success: function (response) {
+            response = JSON.parse(response);
+            let statusAviso;
+            if(response.status === true){//status de la transacción general
+                console.log('response: ', response);
+                statusAviso = 'success';
+            }else{
+                statusAviso = 'danger';
+            }
+            alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
+
+        }
+    });*/
+});
+
+$(document).on('click', '#cancelarPP', ()=>{
+    let nombreLoteCancelado = $('#nombreLoteCancelado').val();
+    let numeroPlanLoteCancelado = $('#numeroPlanLoteCancelado').val();
+    let idPlanPago = $('#idPlanPagoCancelado').val();
+
+    $.ajax({
+        data:{nombreLoteCancelado:nombreLoteCancelado, numeroPlanLoteCancelado:numeroPlanLoteCancelado},
+        url: 'cancelaPlanPagoNeo',
+        type: 'POST',
+        success: function (response) {
+            console.log('response', response);
+            response = JSON.parse(response);
+            response = response.responseGeneral[0];
+            console.log('response JSON', response);
+
+            let statusAviso;
+            if(response.status === 1){//status de la transacción general
+                statusAviso = 'success';
+                //actualizar elmplan de pago en CRM
+                cancelaPlanCRM(idPlanPago);
+            }else{
+                statusAviso = 'danger';
+                if(response.msj == 'No existe el plan de pagos activo para el lote proporcionado'){
+                    cancelaPlanCRM(idPlanPago);
+                }
+            }
+            alerts.showNotification('top', 'right', "[NEODATA] "+response.msj, statusAviso);
+            $('#cancelarPlanPago').modal('toggle');
+        }
+    });
+    $('#tablaPlanPagos').DataTable().ajax.reload();
+});
+
+function cancelaPlanCRM(idPlanPago){
+    $.ajax({
+        data:{idPlanPago:idPlanPago},
+        url: 'cancelaPlanPagoCRM',
+        type: 'POST',
+        success: function (response) {
+            response = JSON.parse(response);
+            let statusAviso;
+            if(response.status === 1 || response.status === true){//status de la transacción general
+                statusAviso = 'success';
+                //actualizar el plan de pago en CRM
+            }else{
+                statusAviso = 'danger';
+            }
+            alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
+            $('#tablaPlanPagos').DataTable().ajax.reload();
+        }
+    });
+}

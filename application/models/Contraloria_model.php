@@ -1895,7 +1895,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function setFilters($id_usuario, $id_sede) {
-        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799, 10088, 2827, 6012, 12931, 13053, 2875, 14342, 14481)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799, 10088, 2827, 6012, 12931, 13053, 2875, 14342, 14481, 12276, 16679)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
 		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
@@ -1903,6 +1903,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
         else  if($id_usuario == 15580) // MJ: SANDRA MIRA SANCHEZ VE CIUDAD DE MÉXICO, ESTADO DE MÉXICO OCCIDENTE Y NORTE
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '13', '14')";
+        else  if($id_usuario == 14283) // MJ: JOSE RODRIGO HERMOCILLO GARCIA VE AGUACALIENTES (SEDE ACTUAL) + CIUDAD JUÁREZ Y TEXAS
+            $filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '17')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA

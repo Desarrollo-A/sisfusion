@@ -25,7 +25,7 @@
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content text-center">
 					<div class="modal-header">
-						<h5>¿Estas seguro de guardar tus cambios?</h5>
+						<h5>¿Estás seguro de guardar tus cambios?</h5>
 					</div>
 					<div class="container-fluid">
 						<div class="row mb-1 mt-1">

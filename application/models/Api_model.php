@@ -175,48 +175,6 @@ class Api_model extends CI_Model
         return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
     }
 
-    public function getInventarioVirtual($idResidencial, $idCondominio) {
-        $andCondominio = $idCondominio != 0 ? "AND co.idCondominio = $idCondominio" : "";
-        return $this->db->query(
-            "SELECT
-                co.nombre condominio, 
-                lo.nombreLote lote, 
-                lo.idLote, 
-                re.descripcion proyecto, 
-                lo.sup superficie, 
-                lo.total precioLista, 
-                lo.precio m2, 
-                lo.msi, 
-                CASE WHEN u0.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) END asesor, 
-                CASE WHEN u1.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) END coordinador, 
-                CASE WHEN u2.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente, 
-                CASE WHEN u3.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END subDirector, 
-                CONCAT (u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) director, 
-                CASE WHEN tv.id_tventa IS NOT NULL THEN CONCAT(st.nombre, ' ', tv.tipo_venta) ELSE st.nombre END estatus, 
-                cl.fechaApartado, 
-                cl.fechaEnganche 
-            FROM 
-                lotes lo
-                INNER JOIN condominios co ON lo.idCondominio = co.idCondominio $andCondominio
-                INNER JOIN residenciales AS re ON co.idResidencial = re.idResidencial AND re.idResidencial NOT IN (21, 22, 14, 25) AND re.idResidencial = $idResidencial 
-                LEFT JOIN clientes AS cl ON cl.id_cliente = lo.idCliente AND cl.proceso IN (0, 1) 
-                LEFT JOIN usuarios AS u0 ON u0.id_usuario = cl.id_asesor 
-                LEFT JOIN usuarios AS u1 ON u1.id_usuario = cl.id_coordinador 
-                LEFT JOIN usuarios AS u2 ON u2.id_usuario = cl.id_gerente 
-                LEFT JOIN usuarios AS u3 ON u3.id_usuario = cl.id_subdirector 
-                LEFT JOIN usuarios AS u4 ON u4.id_usuario = 2 
-                LEFT JOIN statuslote AS st ON st.idStatusLote = lo.idStatusLote 
-                LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
-            WHERE 
-                lo.status = 1 
-                AND lo.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)
-            ")->result_array();
-    }
-
-    public function getListaResidenciales() {
-        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21, 22, 14, 25)")->result_array();
-    }
-
     public function validacionIdSalesforce($id_salesforce) {
         return $this->db->query("SELECT * FROM prospectos WHERE id_salesforce = '$id_salesforce'")->result_array();
     }
@@ -432,8 +390,69 @@ class Api_model extends CI_Model
         ")->result_array();
     }
 
-    public function getListaCondominios($idResidencial) {
-        return $this->db->query("SELECT idResidencial, idCondominio, nombre FROM condominios WHERE status = 1 AND idResidencial NOT IN (21, 22, 14, 25) AND idResidencial = $idResidencial")->result_array();
+    public function getInventarioVirtual($idResidencial, $idCondominio) {
+        $andCondominio = $idCondominio != 0 ? "AND co.idCondominio = $idCondominio" : "";
+        return $this->db->query(
+            "SELECT
+                co.nombre condominio, 
+                lo.nombreLote lote, 
+                lo.idLote, 
+                re.descripcion proyecto, 
+                lo.sup superficie, 
+                lo.total precioLista, 
+                lo.precio m2, 
+                lo.msi, 
+                CASE WHEN u0.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) END asesor, 
+                CASE WHEN u1.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) END coordinador, 
+                CASE WHEN u2.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente, 
+                CASE WHEN u3.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END subDirector, 
+                CONCAT (u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno) director, 
+                CASE WHEN tv.id_tventa IS NOT NULL THEN CONCAT(st.nombre, ' ', tv.tipo_venta) ELSE st.nombre END estatus, 
+                cl.fechaApartado, 
+                cl.fechaEnganche 
+            FROM 
+                lotes lo
+                INNER JOIN condominios co ON lo.idCondominio = co.idCondominio $andCondominio
+                INNER JOIN residenciales AS re ON co.idResidencial = re.idResidencial AND re.idResidencial NOT IN (21, 22, 14) AND re.idResidencial = $idResidencial 
+                LEFT JOIN clientes AS cl ON cl.id_cliente = lo.idCliente AND cl.proceso IN (0, 1) 
+                LEFT JOIN usuarios AS u0 ON u0.id_usuario = cl.id_asesor 
+                LEFT JOIN usuarios AS u1 ON u1.id_usuario = cl.id_coordinador 
+                LEFT JOIN usuarios AS u2 ON u2.id_usuario = cl.id_gerente 
+                LEFT JOIN usuarios AS u3 ON u3.id_usuario = cl.id_subdirector 
+                LEFT JOIN usuarios AS u4 ON u4.id_usuario = 2 
+                LEFT JOIN statuslote AS st ON st.idStatusLote = lo.idStatusLote 
+                LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
+            WHERE 
+                lo.status = 1 
+                AND lo.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)
+                AND lo.liberaBandera != 1
+            ")->result_array();
     }
-    
+
+    public function getListaResidenciales() {
+        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21, 22, 14)")->result_array();
+    }
+
+    public function getListaCondominios($idResidencial) {
+        return $this->db->query(
+            "SELECT
+                co.idResidencial,
+                co.idCondominio, 
+                co.nombre 
+            FROM 
+                condominios co
+            INNER JOIN lotes lo ON co.idCondominio = lo.idCondominio
+            WHERE 
+                lo.status = 1 
+                AND lo.liberaBandera != 1
+                AND co.status = 1 
+                AND (lo.idMovimiento = 0 OR lo.idMovimiento IS NULL ) 
+                AND idResidencial = $idResidencial
+            GROUP BY
+                co.idResidencial,
+                co.idCondominio, 
+                co.nombre 
+            ORDER BY 
+                co.nombre ASC")->result_array();
+    }
 }

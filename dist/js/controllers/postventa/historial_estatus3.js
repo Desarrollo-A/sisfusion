@@ -65,24 +65,27 @@ $(document).ready(()=>{
             { data: 'nombreResidencial' },
             { data: 'nombreCondominio' },
             { data: 'nombreLote' },
-            { data: 'referencia' },
-            { data: 'nombreGerente' },
             { data: 'nombreCliente' },
+            { data: 'fechaEnvioAsesor' },
             {
+                //data: 'fechaEnvioPostventa'
+
                 data: function (d) {
-                    return d.modificado;
+                    let fechaEnvioPostventa;
+                    if(d.fechaEnvioPostventa == '' || d.fechaEnvioPostventa == null){
+                        fechaEnvioPostventa = 'Sin registro de status 3';
+                    }else{
+                        fechaEnvioPostventa = d.fechaEnvioPostventa;
+                    }
+                    return fechaEnvioPostventa;
                 }
-            },
-            {
-                data: function (d) {
-                    return `<span class="label lbl-azure">${d.nombreSede}</span>`;
-                }
+
             },
             {
                 data: function (d) {
                     return d.comentario;
                 }
-            },
+            }
         ],
         columnDefs: [
             {
