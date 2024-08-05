@@ -384,7 +384,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 654, 697, 5604, 10251, 12688)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14556) { // KATTYA GUADALUPE CADENA CRUZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 24)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 24, 10)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 7474)";

@@ -3562,7 +3562,7 @@
 					$id_lider = $id_lider . ', 654, 697, 5604, 10251, 12688';
 					$sede = "";
 				} else if ($id_usuario == 14556) { // KATTYA GUADALUPE CADENA CRUZ
-					$id_lider = $id_lider . ', 24';
+					$id_lider = $id_lider . ', 24, 10';
 					$sede = "";
 				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
 					$id_lider = $id_lider . ', 7474';

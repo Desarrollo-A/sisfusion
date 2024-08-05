@@ -529,7 +529,7 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
                 $where = "pr.id_gerente IN ($id_lider, 654, 697, 5604, 10251, 12688)";
             else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
-                $where = "pr.id_gerente IN ($id_lider, 24)";
+                $where = "pr.id_gerente IN ($id_lider, 24, 10)";
             else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
                 $where = "pr.id_gerente IN ($id_lider, 7474)";
             else
