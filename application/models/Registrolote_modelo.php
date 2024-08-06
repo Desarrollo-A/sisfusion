@@ -3529,9 +3529,6 @@
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
 					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
 					$sede = "";
-				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
-					$id_lider = $id_lider . ', 694, 4509';
-					$sede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
 					$id_lider = $id_lider . ', 13295, 7970';
 					$sede = "";

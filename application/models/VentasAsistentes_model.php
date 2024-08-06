@@ -347,9 +347,6 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435)";
                     $filtroSede = "";
-				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 4509)";
-                    $filtroSede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295, 7970)";
                     $filtroSede = "";
