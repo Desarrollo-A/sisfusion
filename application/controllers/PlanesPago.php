@@ -77,10 +77,14 @@ class PlanesPago extends CI_Controller {
     }
 
     private function insertar_pago($pagos, $num_pago, $monto){
-        $pago = $pagos[$num_pago];
+        $viejo = $pagos[$num_pago];
 
-        $restante = [
-            "fecha" => $pago->fecha,
+        $restante = (object) [
+            'fecha' => $viejo->fecha,
+            'planPago' => $viejo->planPago,
+            'pago' => 0,
+            'capital' => $monto * -1,
+
         ];
 
         array_splice(
@@ -89,6 +93,10 @@ class PlanesPago extends CI_Controller {
             0,
             [$restante]
         );
+
+        foreach ($pagos as $key => $pago) {
+            $pago->pago = $key + 1;
+        }
 
         return $pagos;
     }
@@ -136,6 +144,8 @@ class PlanesPago extends CI_Controller {
                 break;
             }
         }
+
+        #Guardar plan de pagos
     }
 }
 
