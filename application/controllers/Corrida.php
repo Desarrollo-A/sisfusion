@@ -4013,7 +4013,7 @@ legend {
         $cantidadIvaPP = isset($cantidadIvaPP) ? $cantidadIvaPP : '';
         $tipoPlanTxtPP = $this->input->post("tipoPlanTxtPP");//nombre del tipo de plan
         $dumpPlanPago = $this->input->post("dumpPlanPago");
-        $prioridadCalculo = $this->input->post("tipoNc_valor");
+        $prioridadCalculo = $this->input->post("tipoNc_valor") || 1;
 
         $nombrePlan = ($tipoPlanTxtPP=='Enganche')  ? $tipoPlanTxtPP : $tipoPlanTxtPP.' '.($planPago);
         $fecha_actual = date('Y-m-d H:i:s');
