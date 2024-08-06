@@ -35,7 +35,7 @@ let columns = [
         let view_button = '';
         let subir_archivo = new RowButton({icon: 'file_upload', label: `Cargar documento`, onClick: file_upload, data})
 
-        if(data.documento){
+        if(data.archivo){
             btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
             view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
         }

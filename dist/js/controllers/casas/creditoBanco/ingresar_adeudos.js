@@ -357,9 +357,9 @@ let columns = [
 
         let pass_button = ''
 
-        if(idRol === 99 && data.adeudoOOAM && data.archivo){
+        if(idRol === 99 && data.adeudoOOAM ){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-        }else if((idRol === 11 || idRol === 33) && data.adeudoADM && data.archivo){
+        }else if((idRol === 11 || idRol === 33) && data.adeudoADM){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
         }
 

@@ -1290,40 +1290,71 @@ class Casas extends BaseController
         $this->form();
 
         $id = $this->form('id');
+        $idRol = $this->form('idRol');
         $comentario = $this->form('comentario');
 
         if (!isset($id)) {
             http_response_code(400);
         }
 
-        $documentos = $this->CasasModel->getDocumentos([18]);
+        if($idRol == 101){
 
-        $is_ok = true;
-        foreach ($documentos as $key => $documento) {
-            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+            $vobo = $this->CasasModel->getVobos($id, 3);
 
-            if (!$is_ok) {
-                break;
+            if($vobo->num_rows() == 0){
+
+                $insertVobo = $this->CasasModel->insertVobo($id, 3);
+
+                if(!$insertVobo){
+                    http_response_code(404);
+                }
+            }
+
+            $updateData = array(
+                    "gph"  => 1,
+                    "modificadoPor" => $this->session->userdata('id_usuario'),
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+                
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if(!$update){
+                http_response_code(400);
             }
         }
 
-        $new_status = 9;
+        if($idRol == 57){
 
-        $proceso = $this->CasasModel->getProceso($id);
+            $documentos = $this->CasasModel->getDocumentos([18]);
 
-        $movimiento = 0;
-        if ($proceso->tipoMovimiento == 1) {
-            $movimiento = 2;
-        }
+            $is_ok = true;
+            foreach ($documentos as $key => $documento) {
+                $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
+                if (!$is_ok) {
+                    break;
+                }
+            }
 
-        if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
+            $new_status = 9;
 
-            $this->json([]);
-        } else {
-            http_response_code(404);
+            $proceso = $this->CasasModel->getProceso($id);
+
+            $movimiento = 0;
+            if ($proceso->tipoMovimiento == 1) {
+                $movimiento = 2;
+            }
+
+            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
+
+            if ($is_ok) {
+                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
+
+                $this->json([]);
+            } else {
+                http_response_code(404);
+            }
+
         }
     }
 
@@ -1342,6 +1373,20 @@ class Casas extends BaseController
         $comentario = $this->form('comentario');
 
         if (!isset($id)) {
+            http_response_code(400);
+        }
+
+        $vobo = $this->CasasModel->getVobos($id, 3);
+
+        $updateData = array(
+            "gph"  => 0,
+            "modificadoPor" => $this->session->userdata('id_usuario'),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+        );
+         
+        $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+        if (!$update) {
             http_response_code(400);
         }
 

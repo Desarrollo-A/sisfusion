@@ -28,6 +28,7 @@ pass_to_propuestas = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'idRol', value: idRol }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -328,7 +329,7 @@ function upload(data) {
         },
         fields: [
             new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'tipo', value: rol == 57 ? 17 : 28 }),
+            new HiddenField({ id: 'tipo', value: idRol == 57 ? 17 : 28 }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
         ],
@@ -463,6 +464,7 @@ let columns = [
             if (data.constancia) {
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
                 upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_propuestas, data})
             }else{
                 upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
             }
@@ -484,10 +486,10 @@ let columns = [
         }
         
         if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos == 2 && data.notarias != 0 && idRol === 57){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_propuestas, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_propuestas, data})
         }
 
-        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: back_to_documentos, data})
+        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_documentos, data})
 
         return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${upload_cotizacion}${propuestas_button}${notarias}${back_button}</div>`
     } },
