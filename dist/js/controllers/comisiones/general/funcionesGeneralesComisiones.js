@@ -1,5 +1,4 @@
-var fechaInicioCorteGlobal, fechaFinCorteGlobal, horaFinCorteGlobal,datosFechaCorte = [];
-
+var fechaInicioCorteGlobpivoteMultiplicadoral, fechaFinCorteGlobal, horaFinCorteGlobal,datosFechaCorte = [];
 $.ajax({
     url: general_base_url + 'Comisiones/getFechaCorteActual',
     cache: false,
@@ -57,3 +56,9 @@ function setInitialValues() {
     $('#endDate').val(finalEndDate2);
     $('[data-toggle="tooltip"]').tooltip();
 }
+
+$('#tabla_dispersar_comisiones, #tabla_dispersion_casas').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});

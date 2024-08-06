@@ -263,8 +263,8 @@
         <div class="modal fade" id="modalPrioridad" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
+                <form method="post" class="row" id="formPrioridad" autocomplete="off">
                     <div class="modal-header" id="mHeader"></div>
-                    <form method="post" class="row" id="modalPrioridad" autocomplete="off">
                         <div class="modal-body pb-0 pt-0"></div>
                         <div class="modal-footer">
                             <div class="col-lg-12">

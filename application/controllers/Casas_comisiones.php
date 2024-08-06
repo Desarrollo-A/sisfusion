@@ -667,4 +667,11 @@ public function getDatosFechasProyecCondm(){
     exit;
   }
 
+  public function changePrioridad(){
+    $prioridadActual = $this->input->post("priridadActual") == 1 ? 0 : 1;
+    $idClienteCasas = $this->input->post("idClienteCasas");
+    $respuesta = $this->Casas_comisiones_model->changePrioridad($prioridadActual,$idClienteCasas,$this->session->userdata('id_usuario'));
+    echo json_encode($respuesta);
+  }
+
 }
