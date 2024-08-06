@@ -1824,6 +1824,43 @@ class CasasModel extends CI_Model
         return $query;
     }
 
+    public function getVoboCierreCifras($proceso, $tipoDocumento, $condicionExtra, $column){
+        $procesoArray = explode(',', $proceso);
+        $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
+
+        $query = $this->db->query("SELECT
+            pc.*,
+            oxc.color,
+            oxc.nombre AS nombreMovimiento,
+            CASE
+                WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT('LLEVA', ' ', 0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
+            lo.idLote,  
+            lo.nombreLote,
+            co.nombre AS condominio,
+            re.descripcion AS proyecto,
+			dpc.archivo,
+            dpc.documento,
+            dpc.tipo,
+            CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente,
+            CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
+            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
+            pc.tipoMovimiento
+        FROM proceso_casas pc
+        INNER JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN usuarios usA ON usA.id_usuario = cl.id_asesor 
+        INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente 
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.tipoMovimiento AND id_catalogo = 136
+		LEFT JOIN documentos_proceso_casas dpc ON dpc.idProcesoCasas = pc.idProcesoCasas AND dpc.tipo IN($tipoDocumento)
+        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 4
+        WHERE $column != 1 AND pc.proceso IN ($placeholders) AND pc.status IN(1) AND pc.finalizado = 0 $condicionExtra", $procesoArray, 1);
+
+        return $query;
+    }
+
     public function getDocumentoCreditoBanco($id_documento){
         $query = $this->db->query("SELECT *FROM opcs_x_cats 
         WHERE id_catalogo = 126 AND id_opcion = ?", $id_documento);
