@@ -1301,15 +1301,6 @@ class Casas extends BaseController
 
             $vobo = $this->CasasModel->getVobos($id, 3);
 
-            if($vobo->num_rows() == 0){
-
-                $insertVobo = $this->CasasModel->insertVobo($id, 3);
-
-                if(!$insertVobo){
-                    http_response_code(404);
-                }
-            }
-
             $updateData = array(
                     "gph"  => 1,
                     "modificadoPor" => $this->session->userdata('id_usuario'),
@@ -3214,6 +3205,15 @@ class Casas extends BaseController
 
             if(!$update){
                 http_response_code(400);
+            }
+        }
+
+        if($procesoNuevo == 8){
+
+            $insertVobo = $this->CasasModel->insertVobo($idProceso, 3);
+
+            if(!$insertVobo){
+                http_response_code(404);
             }
         }
 
