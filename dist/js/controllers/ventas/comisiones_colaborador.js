@@ -1,6 +1,8 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
-let fin = userSede == 8 ? 16 : 13;
+var fin = userSede == 8 ? 15 : 14;
+var fechaGlobal;
+var fechaInicioCorteGlobal, fechaFinCorteGlobal, horaFinCorteGlobal,datosFechaCorte = [];
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
     v2 = document.getElementById("file-upload-extranjero").files[0].name;
@@ -129,6 +131,23 @@ $(document).on("submit", "#cpForm", function (e) {
 });
 
 $(document).ready(function () {
+        $.ajax({
+            url: general_base_url + 'Comisiones/getFechaCorteActual',
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'GET',
+            success: function (response) {
+                const data = JSON.parse(response);
+                datosFechaCorte = data.fechasCorte;
+                fechaInicioCorteGlobal = data.fechasCorte[0].fechaInicio.split(' ')[0].split('-');
+                fechaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[0].split('-');
+                //[0] hora [1] minutos [2] segundos
+                horaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[1].split(':');
+            },
+            async:false
+        });
+
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -142,60 +161,14 @@ $(document).ready(function () {
     var dia = hoy.getDate();
     var mes = hoy.getMonth() + 1;
     var hora = hoy.getHours();
-
     if(forma_pago == 3){
-        if(tipo_usuario == 2){
-            if (
-                (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
-                        ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
-                        // || (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
-                ) {
-                requestCodigoPostal();
-            }
-
-        } else if(tipo_usuario == 1){
-
-            if (
-                ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || // ENE 2024 VENTAS
-                ((mes == 2 && dia == 12)  ||  (mes == 2 && dia == 13 && hora <= fin)) || // FEB 2024 VENTAS
-                ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
-                ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
-                ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
-                ((mes == 6 && dia == 9)  ||  (mes == 6 && dia == 10 && hora <= fin)) || // JUN 2024 VENTAS
-                ((mes == 7 && dia == 7)  ||  (mes == 7 && dia == 8 && hora <= fin)) || // JUL 2024 VENTAS
-                ((mes == 8 && dia == 11)  ||  (mes == 8 && dia == 12 && hora <= fin)) || // AGO 2024 VENTAS
-                ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
-                ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
-                ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
-                ) {
-                requestCodigoPostal();
-            }
+        if (
+            [0,1].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                            ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION FECHA CORTE
+            ) {
+            requestCodigoPostal();
         }
-
     }
-
 });
 
 $('#proyecto_wp').change(function () {
@@ -298,50 +271,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 var dia = hoy.getDate();
                 var mes = hoy.getMonth() + 1;
                 var hora = hoy.getHours();
-
                 if(
-                    (tipo_usuario == 2 && 
-                        (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
-                        ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
-                        // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
-                        ) 
-                        || (tipo_usuario == 1 && 
-                            ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || // ENE 2024 VENTAS
-                            ((mes == 2 && dia == 12)  ||  (mes == 2 && dia == 13 && hora <= fin)) || // FEB 2024 VENTAS
-                            ((mes == 3 && dia == 13)  ||  (mes == 3 && dia == 13 && hora <= fin)) || // MAR 2024 VENTAS
-                            ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
-                            ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
-                            ((mes == 6 && dia == 9)  ||  (mes == 6 && dia == 10 && hora <= fin)) || // JUN 2024 VENTAS
-                            ((mes == 7 && dia == 7)  ||  (mes == 7 && dia == 8 && hora <= fin)) || // JUL 2024 VENTAS
-                            ((mes == 8 && dia == 11)  ||  (mes == 8 && dia == 12 && hora <= fin)) || // AGO 2024 VENTAS
-                            ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
-                            ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
-                            ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                            ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
-                            )//VALIDACION VENTAS NORMAL
-
-                        || (id_usuario_general == 7689)
+                    ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                    ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
+                    || (id_usuario_general == 7689)
                     ) {
             
                     if ($('input[name="idT[]"]:checked').length > 0) {
@@ -583,8 +516,47 @@ $("#tabla_nuevas_comisiones").ready(function () {
             }
         },
         {
+            visible: [12841].indexOf(parseInt(id_usuario_general)) >= 0 ? true : false,
+            "data": function (d) {
+                return '<p class="m-0">' + d.id_arcus + '</p>';
+            }
+        },
+        {
+            visible: [12841].indexOf(parseInt(id_usuario_general)) >= 0 ? true : false,
+            "data": function (d) {
+                return '<p class="m-0">' + d.nombreCliente + '</p>';
+            }
+        },
+        {
             "orderable": false,
             "data": function (data) {
+                let botones = ``;
+                let proceso = 0;
+                if(data.proceso == 6){
+                    botones += ` <button href="#" 
+                    value="${data.id_pago_i}"
+                    data-idLote="${data.idLote}"
+                    data-proceso="1"
+                    class="btn-data btn-violetBoots excedente1" 
+                    title="Excedente"
+                    data-toggle="tooltip_nuevas" 
+                    data-placement="top">
+                    <i class="fas fa-sitemap"></i>
+                    </button>`;
+                } else if(data.proceso == 7 || data.proceso == 4 ){
+                    botones += ` <button href="#" 
+                    value="${data.id_pago_i}"
+                    data-idLote="${data.idLote}"
+                    data-proceso="2"
+                    class="btn-data btn-violetBoots excedente1" 
+                    title="Excedente"
+                    data-toggle="tooltip_nuevas" 
+                    data-placement="top">
+                    <i class="fas fa-sitemap"></i>
+                    </button>`;
+                }
+                
+
                 return `<div class="d-flex justify-center">
                             <button href="#" 
                                     value="${data.id_pago_i}"
@@ -596,6 +568,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     data-placement="top">
                                 <i class="fas fa-info"></i>
                             </button>
+                            ${botones}
                         </div>`;
             }
         }],
@@ -617,47 +590,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     var hora = hoy.getHours();
 
                     if(
-                        (tipo_usuario == 2 && 
-                            (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
-                            ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
-                            ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
-                            ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
-                            ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
-                            ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
-                            ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
-                            ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
-                            ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
-                            ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
-                            ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
-                            ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
-                            ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
-                            ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
-                            ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
-                            ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
-                            ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
-                            ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
-                            ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
-                            ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
-                            ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
-                            ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
-                            ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
-                            // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
-                            ) 
-                            || (tipo_usuario == 1 && 
-                                ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || // ENE 2024 VENTAS
-                                ((mes == 2 && dia == 12)  ||  (mes == 2 && dia == 13 && hora <= fin)) || // FEB 2024 VENTAS
-                                ((mes == 3 && dia == 13)  ||  (mes == 3 && dia == 14 && hora <= fin)) || // MAR 2024 VENTAS
-                                ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
-                                ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
-                                ((mes == 6 && dia == 9)  ||  (mes == 6 && dia == 10 && hora <= fin)) || // JUN 2024 VENTAS
-                                ((mes == 7 && dia == 7)  ||  (mes == 7 && dia == 8 && hora <= fin)) || // JUL 2024 VENTAS
-                                ((mes == 8 && dia == 11)  ||  (mes == 8 && dia == 12 && hora <= fin)) || // AGO 2024 VENTAS
-                                ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
-                                ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
-                                ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                                ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
-                                )//VALIDACION VENTAS NORMAL
-    
+                        ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2]) || (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
                             || (id_usuario_general == 7689)
                         ) {
 
@@ -707,6 +640,87 @@ $("#tabla_nuevas_comisiones").ready(function () {
         }
     });
 
+    //inicio de aqui empezamos con la nueva forma
+
+    $("#tabla_nuevas_comisiones tbody").on("click", ".excedente1", function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        $('#spiner-loader').removeClass('hide');
+
+
+        document.getElementById("origenes").innerHTML = '';
+        document.getElementById("destino").innerHTML = '';
+        document.getElementById("exceSup").innerHTML = '';
+        document.getElementById("exceMonto").innerHTML = '';
+        document.getElementById("ExcedenteDinero").innerHTML = '';
+        document.getElementById("porciento1").innerHTML = '';
+
+        // id_pago = $(this).val();
+        idLote = $(this).attr("data-idLote");
+        
+        proceso = $(this).attr("data-proceso");
+        $("#modalExcedente").modal();
+        var origenes = ``;
+        var destino = ``;
+        var exceSup = ``;
+        var exceMonto = ``;
+        var ExcedenteDinero = ``;
+        var porciento1 = ``;
+        if(proceso == 1){
+            $.getJSON("resumenIndividual/" + idLote+"/"+proceso).done(function (data) {
+            
+                
+                exceSup += `<div class="col-lg-12 col-md-12 ">  ${data[0].Excedente_sup} m. </div>`;
+                exceMonto += `<div class="col-lg-12 col-md-12 ">  ${formatMoney(data[0].total8P)} . </div>`;
+                ExcedenteDinero = formatMoney(data[0].ExcedenteDinero);
+                porciento1 = formatMoney(data[0].porciento1);
+                $.each(data, function (i, v) {
+                    console.log(v);
+                    v.destino == 0 ? origenes += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen} ) </div>` : ``;
+                    v.destino == 1 ? destino += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen}) </div>` :  `` ;
+    
+                    // v.destino == 0 ?  : ``;
+                });
+                document.getElementById("origenes").innerHTML = origenes;
+                document.getElementById("destino").innerHTML = destino;
+                document.getElementById("exceSup").innerHTML = exceSup;
+                document.getElementById("exceMonto").innerHTML = exceMonto;
+                document.getElementById("ExcedenteDinero").innerHTML = ExcedenteDinero;
+                document.getElementById("porciento1").innerHTML = porciento1;
+                $('#spiner-loader').addClass('hide');
+            });
+        }else{
+            $('#spiner-loader').removeClass('hide');
+
+
+            var origenes = ``;
+            var destino = ``;
+            $.getJSON("resumenIndividual/" + idLote+"/"+proceso).done(function (data) {
+                ExcedenteDinero = formatMoney(data[0].ExcedenteDinero);
+                destino = data[0].nombreDestino;
+                origenes = data[0].nombreOrigen ;
+                porciento1 = formatMoney(data[0].porciento1);
+                exceSup = data[0].Excedente_sup;
+                document.getElementById("exceSup").innerHTML = exceSup;
+                exceMonto += `<div class="col-lg-12 col-md-12 ">  ${formatMoney(data[0].montoExcedente)} . </div>`;
+                document.getElementById("origenes").innerHTML = origenes;
+                document.getElementById("destino").innerHTML = destino;
+                document.getElementById("exceMonto").innerHTML = exceMonto;
+                document.getElementById("ExcedenteDinero").innerHTML = ExcedenteDinero;
+                document.getElementById("porciento1").innerHTML = porciento1;
+                $('#spiner-loader').addClass('hide');
+            });
+
+            
+        }
+
+        
+    });
+
+    // fin de aqui empezamos con la nueva forma
+
+
+    
     $('#tabla_nuevas_comisiones').on('click', 'input', function () {
         tr = $(this).closest('tr');
         var row = tabla_nuevas.row(tr).data();
@@ -1607,46 +1621,8 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
 
     if(
-        (tipo_usuario == 2 && 
-            (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
-                        ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
-                        // || (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
-            ) 
-            || (tipo_usuario == 1 && 
-                ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || // ENE 2024 VENTAS
-                ((mes == 2 && dia == 12)  ||  (mes == 2 && dia == 13 && hora <= fin)) || // FEB 2024 VENTAS
-                ((mes == 3 && dia == 13)  ||  (mes == 3 && dia == 14 && hora <= fin)) || // MAR 2024 VENTAS
-                ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
-                ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
-                ((mes == 6 && dia == 9)  ||  (mes == 6 && dia == 10 && hora <= fin)) || // JUN 2024 VENTAS
-                ((mes == 7 && dia == 7)  ||  (mes == 7 && dia == 8 && hora <= fin)) || // JUL 2024 VENTAS
-                ((mes == 8 && dia == 11)  ||  (mes == 8 && dia == 12 && hora <= fin)) || // AGO 2024 VENTAS
-                ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
-                ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
-                ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
-                )//VALIDACION VENTAS NORMAL
+        ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
 
             || (id_usuario_general == 7689)
         ) {
@@ -2160,3 +2136,12 @@ function asignarValorColumnasDT(nombre_datatable) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
 }
+
+
+
+
+
+
+
+
+

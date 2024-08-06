@@ -25,7 +25,7 @@
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content text-center">
 					<div class="modal-header">
-						<h5>¿Estas seguro de guardar tus cambios?</h5>
+						<h5>¿Estás seguro de guardar tus cambios?</h5>
 					</div>
 					<div class="container-fluid">
 						<div class="row mb-1 mt-1">
@@ -113,7 +113,7 @@
 											<table class="table-striped table-hover" id="tableTotal" name="tableTotal">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
+														<th>ID</th>
 														<th>PORCENTAJE</th>
 													</tr>
 												</thead>
@@ -127,7 +127,7 @@
 											<table class="table-striped table-hover" id="tableEnganche" name="tableEnganche">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
+														<th>ID</th>
 														<th>PORCENTAJE</th>
 													</tr>
 												</thead>
@@ -141,8 +141,8 @@
 											<table class="table-striped table-hover" id="tableEfectivoporm" name="tableEfectivoporm">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
-														<th>PORCENTAJE</th>
+														<th>ID</th>
+														<th>TOTAL</th>
 													</tr>
 												</thead>
 											</table>
@@ -155,8 +155,8 @@
 											<table class="table-striped table-hover" id="tableBono" name="tableBono">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
-														<th>PORCENTAJE</th>
+														<th>ID</th>
+														<th>TOTAL</th>
 													</tr>
 												</thead>
 											</table>
@@ -169,8 +169,8 @@
 											<table class="table-striped table-hover" id="tableMSI" name="tableMSI">
 												<thead>
 													<tr>
-														<th>ID DESCUENTO</th>
-														<th>PORCENTAJE</th>
+														<th>ID</th>
+														<th>MESES</th>
 													</tr>
 												</thead>
 											</table>
@@ -196,7 +196,7 @@
 						<div class="form-group d-flex justify-center">
 							<div class="">
 								<p class="m-0" id="label_descuento"></p>
-								<input type="text" class="input-gral border-none w-100" required data-type="currency" id="descuento" name="descuento">
+								<input type="text" class="input-gral border-none w-100" required id="descuento" name="descuento">
 							</div>
 						</div>
 						<div class="container-fluid">
@@ -219,21 +219,21 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
 						<ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-							<li class="active" id="li-aut">
-								<a href="#nuevas-1" role="tab" onclick="verificarEdicion()" data-toggle="tab">AUTORIZACIONES</a>
+							<li class="active" id="li-plan">
+								<a href="#nuevas-2" role="tab" onclick="verificarEdicion()" data-toggle="tab">CARGAR PLAN</a>
 							</li>
-                            <li id="li-plan" class="">
-								<a href="#nuevas-2" role="tab" data-toggle="tab">CARGAR PLAN</a>
+                            <li id="li-aut" class="">
+								<a href="#nuevas-1" role="tab" data-toggle="tab">AUTORIZACIONES</a>
 							</li>
                             <li id="autorizacionesMsiPanel" class="">
                                 <a href="#autorizacionesTab" role="tab" data-toggle="tab">AUTORIZACIONES MSI</a>
 							</li>
                         </ul>
 
-						<div class="card no-shadow m-0">
+						<div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0">
 								<div class="tab-content">
-									<div class="tab-pane active" id="nuevas-1">
+									<div class="tab-pane" id="nuevas-1">
 										<div class="toolbar">
 											<div class="container-fluid">
 												<div class="row aligned-row">
@@ -284,11 +284,12 @@
 											</div>
 										</div>
 									</div> 
-									<div class="tab-pane" id="nuevas-2">
+									<div class="tab-pane active" id="nuevas-2">
 										<form id="form-paquetes" class="formulario">
 											<div class="container-fluid">
 												<div class="row">
 													<div class="boxInfoGral">
+														<button type="button" data-toggle="modal" id="btnPlantilla" class="btnDescuento" rel="tooltip" data-placement="top" title="Descargar plantilla"><i class="fas fa-file-excel"></i></button>
 														<button type="button" data-toggle="modal" onclick="construirTablas();" data-target="#exampleModal" id="btn_open_modal" class="btnDescuento" rel="tooltip" data-placement="top" title="Ver descuentos"><i class="fas fa-tags" ></i></button>
 														<button type="submit" id="btn_save" class="btnAction d-none" rel="tooltip" data-placement="top" title="Guardar planes">Guardar todo</button>
 													</div>
@@ -338,7 +339,7 @@
 																				<input type="radio" id="customRadio1" value="1" name="superficie"  onclick="selectSuperficie(1)">
 																				<label class="custom-control-label" for="customRadio1">Menor a 200</label>
 																				<input type="radio" id="customRadio2" value="2" name="superficie" onclick="selectSuperficie(2)">
-																				<label class="custom-control-label" for="customRadio2">Mayor a 200</label>
+																				<label class="custom-control-label" for="customRadio2">Mayor a 190</label>
 																				<input type="radio" id="customRadio3" value="3" name="superficie" onclick="selectSuperficie(3)">
 																				<label class="custom-control-label" for="customRadio3">Cualquiera</label>	
 																				<input type="hidden" id="super" name="super" value="0">

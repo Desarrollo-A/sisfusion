@@ -22,7 +22,7 @@ class SegurosComision extends CI_Controller
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
-    $this->jwt_actions->authorize('4141', $_SERVER['HTTP_HOST']);
+    $this->jwt_actions->authorize('4242', $_SERVER['HTTP_HOST']);
     $this->validateSession();
 
       $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -267,6 +267,19 @@ class SegurosComision extends CI_Controller
     $respuesta = array( FALSE );
     if($this->input->post("id_pago")){
       $respuesta = array( $this->Seguros_comision_model->update_estatus_pausaM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+    }
+    echo json_encode( $respuesta );
+  }
+
+  public function getDatosHistorialPago($proyecto = null, $condominio = null) {      
+    $dat =  $this->Seguros_comision_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
+    echo json_encode( array( "data" => $dat));
+  }
+
+  function refresh_solicitud(){
+    $respuesta = array( FALSE );
+    if($this->input->post("id_pago_i")){
+      $respuesta = array( $this->Seguros_comision_model->update_estatus_refresh( $this->input->post("id_pago_i")));
     }
     echo json_encode( $respuesta );
   }

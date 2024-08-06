@@ -1,6 +1,9 @@
 <?php
 
 if (!defined('BASEPATH')) exit('No direct script access allowed');
+use PhpOffice\PhpSpreadSheet\Spreadsheet;
+require_once './dist/js/jwt/JWT.php';
+use Firebase\JWT\JWT;
 class Administracion extends CI_Controller{
 	public function __construct()
 	{ 
@@ -9,7 +12,10 @@ class Administracion extends CI_Controller{
 		$this->load->model('registrolote_modelo');
 
 		$this->load->library(array('session', 'form_validation'));
+		
+		$this->load->model('General_model');
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
+		$this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Formatter','permisos_sidebar'));
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
          $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url', 'form'));
@@ -28,7 +34,7 @@ class Administracion extends CI_Controller{
 	public function index() {
 		if (!in_array($this->session->userdata('id_rol'), array('11', '34' , '23', '35' , '26', '41' , '39', '31' , '49', '50' , '40', '54' , '58', '10', '18', '19', '20', 
 		    '21', '28', '33', '25', '25', '27', '30', '36', '22', '53', '8' , '23', '12', '61', '63', '64' , '65', '66' , '69', '68' , '70', '71', '72', '73' , '74', '75' ,
-		    '76', '77' , '78', '79' , '80', '81' , '82', '83' , '84'))) {
+		    '76', '77' , '78', '79' , '80', '81' , '82', '83' , '84', '98', '99', '101'))) {
 			redirect(base_url() . 'login');
 		}
 		$this->load->view('template/header');
@@ -71,6 +77,10 @@ class Administracion extends CI_Controller{
 		  	$dataPer[$i]['nombreSede']=$data[$i]->nombreSede;
 		  	$dataPer[$i]['tipo_proceso']=$data[$i]->tipo_proceso;
             $dataPer[$i]['proceso']=$data[$i]->proceso;
+			$dataPer[$i]['idDocumento']=$data[$i]->idDocumento;
+			$dataPer[$i]['movimiento']=$data[$i]->movimiento;
+			$dataPer[$i]['expediente']=$data[$i]->expediente;
+			$dataPer[$i]['bucket']=$data[$i]->bucket;
 		  	$horaInicio = date("08:00:00");
 		  	$horaFin = date("16:00:00");
 		  	$arregloFechas = array();  
@@ -542,6 +552,263 @@ class Administracion extends CI_Controller{
 			echo json_encode(0);
         }
 	}
+
+	public function masterModulo (){
+		$this->load->view('template/header');
+		$this->load->view('administracion/master_view.php');
+	}
+	public function getDatosLotes($idLote) {
+		$data = $this->Administracion_model->getDatosLotes($idLote);
+		if($data != null) {
+			echo json_encode($data);
+		}else {
+			json_encode(array());
+		}
+	}
+	/*public function anyEmpty(...$values) {
+		foreach ($values as $value) {
+			if ($value == null || $value == ''){
+				return true;
+			}
+		}
+		return false;
+	}*/
+	public function anyEmpty($msg, ...$values) {
+    	foreach ($values as $value) {
+        	if ($value == null || $value == ''){
+            	echo json_encode(array("empty" => true, "msg" => $msg));
+            	exit; 
+        	}
+    	}
+    	return false;
+	}
+	
+	public function masterOptions(){
+		$accion = $this->input->post('opciones');
+		$data = $_POST;
+		$idCliente = $data['idCliente'];
+		$representante = $data['representante'];
+		$idLote = $data['idLote'];
+		$tipoVenta = $data['tipoVenta'];
+		$idSede = $data['sedes'];
+		$impuesto = $data['impuesto'];
+		$nombre = $data['nombre_rep'];
+		$paterno = $data['paterno_rep'];
+		$materno = $data['materno_rep'];
+		$estatus =  $data['repEstatus'];
+		$idRepresentante = $data['repData'];
+		$comentario = $data['comentarioLote'];
+		$switchCheckbox = isset($data['switchCheckbox']) && $data['switchCheckbox'] !== '' ? $data['switchCheckbox'] : '';
+		$idTipoVenta = $data['idTipoVenta'] != "" ? '': $data['idTipoVenta'];
+		$nacionalidad = $data['nacionalidad'];
+		$tipoCasa = $data['tipoCasa'];
+		
+		//ACTUALIZAR RL
+		if($accion == 1 && !$this->anyEmpty("Por favor seleccione algún representante",$representante, $idCliente)){
+			$response = $this->General_model->updateRecord('clientes', array('rl' => $representante), 'id_cliente', $idCliente);
+			echo json_encode(array("status"=> $response, "tabla" => true));
+		}	
+		else if($accion == 2 && !$this->anyEmpty("Por favor seleccione el tipo de venta",$tipoVenta, $idLote)){
+			$response = $this->General_model->updateRecord('lotes', array('tipo_venta' => $tipoVenta), 'idLote', $idLote);
+			echo json_encode(array("status"=> $response, "tabla" => true));
+		}
+		else if($accion == 3 && !$this->anyEmpty("Uno o mas valores están vacios",$impuesto, $idSede)){
+			$response = $this->General_model->updateRecord('sedes', array('impuesto' => $impuesto), 'id_sede', $idSede);
+			echo json_encode(array("status"=> $response, "tabla" => false));
+		}
+		else if($accion == 4 && !$this->anyEmpty("Por favor llene todos los campos",$nombre, $paterno, $materno)){
+			$last_id = $this->Administracion_model->getLastId('opcs_x_cats', array('id_catalogo' => 77), 'id_opcion');
+			$data_insert = array(
+				'id_opcion' => $last_id + 1,
+				'id_catalogo' => 77,
+				'nombre' => $nombre. ' '.$paterno.' '.$materno,
+				'estatus' => 1,
+				'fecha_creacion' => date('Y-m-d H:i:s'), 
+				'creado_por' => 1,
+				'color' => null
+			);
+			$response = $this->General_model->addRecord('opcs_x_cats', $data_insert);
+			echo json_encode(array("status"=> $response, "reload" => true));
+		}
+		else if($accion == 5 && !$this->anyEmpty("Por favor llene todos los campos",$estatus, $idRepresentante)) {
+			$response = $this->Administracion_model->updateMultiple('opcs_x_cats', array('id_catalogo' => 77, 'id_opcion' => $idRepresentante), array('estatus' => $estatus));
+			echo json_encode(array("status" => $response, "reload" => true));
+		}
+		else if($accion == 7 && !$this->anyEmpty("Por favor llene todos los campos",$idLote, $comentario, $idCliente)) {
+			$response = $this->General_model->updateRecord('lotes', array('comentario' => $comentario), 'idLote', $idLote);
+			echo json_encode(array("status" => $response, "tabla" => true));
+		}
+		else if($accion == 8 && !$this->anyEmpty($idLote, $switchCheckbox)) {
+			$switchCheckbox = $data['switchCheckbox'] = 'on' ? '9' : '6';
+			$response = $this->General_model->updateRecord('lotes', array('idStatusLote' => $switchCheckbox), 'idLote', $idLote);
+			echo json_encode(array("status"=>$response, "tabla" => true));
+		}
+		else if($accion == 9) {
+			$result = $this->Administracion_model->getResultados($idLote, $idCliente);
+			$idMovimiento = $result[0]['idMovimiento'];
+			$idStatus = $result[0]['idStatusContratacion'];
+			$idMovimiento2 = $result[1]['idMovimiento'];
+			$idStatus2 = $result[1]['idStatusContratacion'];
+			$statusContratacion1 = array("7", "6");
+			if(($idStatus == 7 || $idStatus == 6) && ($idMovimiento == 77 || $idMovimiento == 76)) {
+				$response = $this->General_model->updateRecord('lotes', array('idMovimiento' => $idMovimiento2, 'idStatusContratacion' => $idStatus2), 'idLote', $idLote);
+				echo json_encode(array("status" => $response, "tabla" => true));
+			}
+			else if(($idStatus == 11 || $idStatus == 7 || $idStatus == 8) && ($idMovimiento == 41 || $idMovimiento == 37 || $idMovimiento == 38)) {
+				$response = $this->General_model->updateRecord('lotes', array('idMovimiento'=>$idMovimiento2, 'idStatusContratacion'=> $idStatus2,'totalValidado' => '0.00', 'validacionEnganche' => NULL), 'idLote', $idLote);
+				echo json_encode(array("status" => $response, "tabla"=>true));
+			}
+		}
+		else if($accion == 10 && !$this->anyEmpty("Por favor seleccione el dato a actualizar.",$idLote, $idTipoVenta)) {
+			$response = $this->General_model->updateRecord('lotes', array('tipo_venta' => 0), 'idLote', $idLote);
+			echo json_encode(array("status" => $response, "tabla" => true));
+		}
+		else if($accion == 11 && !$this->anyEmpty("Por favor llene todos los campos",$nacionalidad)) {
+			$last_id = $this->Administracion_model->getLastId('opcs_x_cats', array('id_catalogo' => 11), 'id_opcion');
+			$data_insert = array(
+				'id_opcion'=> $last_id + 1,
+				'id_catalogo' => 11,
+				'nombre' => $nacionalidad,
+				'estatus' => 1,
+				'fecha_creacion' => date('Y-m-d H:i:s'),
+				'creado_por' => 1, 
+				'color'=> null
+			);
+			$response = $this->General_model->addRecord('opcs_x_cats', $data_insert);
+			echo json_encode(array("status" => $response, "reload" => true));
+		}
+		else if ($accion == 12 && !$this->anyEmpty("Por favor llene todos los campos",$tipoCasa)) {
+			$response = $this->General_model->updateRecord('clientes', array('tipo_casa' => $tipoCasa), 'id_cliente', $idCliente);
+			echo json_encode(array("status" => $response, "tabla" => true));
+		}
+		else if($accion == 13 && !$this->anyEmpty($switchCheckbox)) {
+			$datos = $this->Administracion_model->getDatosLotes($idLote);
+			$responseLote = $this->General_model->updateRecord('lotes', array('idStatusLote'=>2, 'idStatusContratacion'=>15, 'idMovimiento'=>45, 
+			'perfil'=>6, 'usuario'=>1, 'comentario'=>'SE REGRESA EXPEDIENTE AL ESTATUS 2'),'idLote', $idLote) ;
+			if($responseLote) {
+				$response = $this->General_model->addRecord('historial_lotes', array('nombreLote'=>$datos[0]['nombreLote'], 'idStatusContratacion'=>15,
+				'idMovimiento'=>45, 'modificado'=>date("Y-m-d H:i:s"), 'fechaVenc'=>date("Y-m-d H:i:s"), 'idLote'=>$idLote, 'idCondominio'=>$datos[0]['idCondominio'],
+				'idCliente'=>$idCliente, 'usuario'=>1, 'comentario'=>'SE REGRESA EXPEDIENTE AL ESTATUS 2', 'perfil'=>'8', 'status'=>1, 'folioContrato'=>null));
+				echo json_encode(array("status"=>$response, "tabla" =>true));
+			}else {
+				echo json_encode(array("status"=>false));
+			}
+		}
+		else if($accion == 14 && !$this->anyEmpty("Por favor llene todos los campos",$comentario)){
+			//$responseLotes = $this->General_model->updateRecord('lotes', array('idStatusContratacion'=>$idStatus, 'idMovimiento'=>$idMovimiento), 'idLote', $idLote);
+			
+			$idStatus = 0;
+			$idMovimiento = 0;
+			//echo var_dump($data);
+			if($data['statusLote'] == '') {
+				echo json_encode(array("empty" =>true));
+			}else {
+
+			}
+			//if($data['statusLote'] == "0") {
+				//return json_encode(array("empty" =>true));
+			//}
+			/*if($data['statusLote'] == "2") {
+				$idStatus = 1;
+				$idMovimiento = 73;
+			}
+			else if($data['statusLote' == "5"]) {
+				$idStatus = 2;
+				$idMovimiento = 74;
+			}*/
+			/*
+			$datos = $this->Administracion_model->getDatosLotes($idLote);
+			$insertData = array(
+				'nombreLote' => $datos[0]['nombreLote'],
+				'idStatusContratacion' => $idStatus,
+				'idMovimiento' => $idMovimiento,
+				'modificado' => date('Y-m-d H:i:s'),
+				'fechaVenc' => date('Y-m-d H:i:s'),
+				'idLote' => $datos[0]['idLote'],
+				'idCondominio'=>$datos[0]['idCondominio'],
+				'idCliente' => $datos[0]['idCliente'],
+				'usuario' =>$this->session->userdata('id_usuario'),
+				'comentario' =>$data['comentario'],
+				'perfil'=> $this->session->userdata('id_rol'),
+				'status' => 1,
+				'folioContrato'=> null
+			);*/
+			
+			//$responseHistorial = $this->General_model->addRecord('historial_lotes', $insertData);
+			/*
+			if($responseLotes == true && $responseHistorial == true) {
+				echo json_encode(array("status"=> true, "tabla"=>true));
+			}*/
+
+		}
+		else if($accion == 15) {
+		$estatus = $_POST['tipoPago'];
+		$dataFile = $_POST['data'];
+		$insertArrayData = array();
+		$updateArrayData = array();
+		try {
+			$decodeData = JWT::decode($dataFile, 'thisismysecretkeytest', array('HS256'));
+			$decodedData = json_decode($decodeData);
+			if(count($decodedData) >  0) {
+				$id_pago_i = array();
+				$verifiedData = array();
+				for($i = 0; $i < count($decodedData); $i++) {
+					if(isset($decodedData[$i]->ID_PAGO) && !empty($decodedData[$i]->ID_PAGO)) {
+						$id_pago_i[$i] = (int)$decodedData[$i]->ID_PAGO;
+					}else {
+						unset($decodedData[$i]);
+						$decodedData = array_values($decodedData);
+					}
+				}
+				for($i = 0; $i < count( $decodedData); $i++) {
+					$dataUpdate = array();
+					$dataInsert = array();
+
+					if(count($decodedData) > 0) {
+
+					}
+
+					if (count($decodedData) > 0) {
+						$dataUpdate += array("id_pago_i" => (int)$decodedData[$i]->ID_PAGO,
+							"estatus" => (int)$estatus,
+							"modificado_por" => (int) 1
+						);
+						array_push($updateArrayData, $dataUpdate);
+				
+						$dataInsert += array("id_pago_i" => (int)$decodedData[$i]->ID_PAGO,
+							'id_usuario'=>(int)$this->session->userdata('id_usuario'),
+							'fecha_movimiento' => date("Y-m-d H:i:s"), 
+							'estatus' => (int) 1,
+							'comentario' => (string) 'CONTRALORÍA ENVÍO PAGO A INTERNOMEX'
+						);
+						array_push($insertArrayData, $dataInsert);
+					}
+				}
+				if(count($insertArrayData) > 0 && count($updateArrayData) > 0) {
+					$updateResponse = $this->General_model->updateBatch("pago_comision_ind", $updateArrayData, "id_pago_i");
+					$insertResponse = $this->General_model->insertBatch("historial_comisiones", $insertArrayData);
+
+					if($updateResponse && $insertResponse) {
+						echo json_encode(array("status" => true, "reload"=>true));
+					}
+				}
+			}
+		} catch(Exception $e) {
+			echo 'Error: '.$e->getMessage();
+		}
+		}
+		/*else {
+			echo json_encode(array("status" => false));
+		}*/
+	}
+	public function getCatalogoMaster() {
+		$data = $this->Administracion_model->getCatalogoMaster()->result_array();
+		if($data != null) {
+			echo json_encode($data);
+		}else {
+			json_encode(array());
+		}
+	}	
 }
 
 

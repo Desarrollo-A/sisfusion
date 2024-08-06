@@ -65,9 +65,11 @@ class Login extends CI_Controller
 				$id_usuario = $this->input->post('id_usuario');
 				$imagen_perfil = $this->input->post('imagen_perfil');
 				$check_user = $this->login_model->login_user($usuario,$contrasena);
+
 				if(empty($check_user))
 				{
 					$this->session->set_userdata('errorLogin', 33);
+
 					redirect(base_url());
 				}
 				else{
@@ -91,6 +93,7 @@ class Login extends CI_Controller
 					if($check_user[0]->id_rol != 0)
 					{
 						$dataRol = $this->login_model->getRolByUser($check_user[0]->id_rol);
+
 						if($dataRol[0]->nombre=="Asistente gerente")
 						{
 							$perfil = ($dataRol[0]->nombre=="Asistente gerente") ? "asistentesGerentes" : $dataRol[0]->nombre;
@@ -167,6 +170,10 @@ class Login extends CI_Controller
 						{
 							$perfil = ($dataRol[0]->nombre=="Asesor OOAM") ? "asesorOOAM" : $dataRol[0]->nombre;
 						}
+						elseif ($dataRol[0]->nombre=="OOAM casas")
+						{
+							$perfil = ($dataRol[0]->nombre=="OOAM casas") ? "administracion" : $dataRol[0]->nombre;
+						}
 
 					}
 					/*get ubicacion*/
@@ -209,7 +216,9 @@ class Login extends CI_Controller
 							'controlador'			=>		$check_user[0]->controlador,
 							'tipo'       			=>		$check_user[0]->tipo
 						);
-						session_start();
+						
+						if(session_status() === PHP_SESSION_NONE) session_start();
+
 						$_SESSION['rutaController'] = '';
 						$_SESSION['datos4'] = [];
 						$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
@@ -228,7 +237,7 @@ class Login extends CI_Controller
 						else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 5)
 							$id_rol = 97;
 						else if ($check_user[0]->tipo == 4)
-							$id_rol = 95;
+							$id_rol = 98;
 						else
 							$id_rol = $check_user[0]->id_rol;
 						$datos = $this->get_menu->get_menu_data($id_rol, $check_user[0]->id_usuario, $check_user[0]->estatus);

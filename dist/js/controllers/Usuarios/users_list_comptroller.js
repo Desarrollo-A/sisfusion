@@ -1,4 +1,4 @@
-const usuariosContraloria = [2767, 5957, 4878, 2754, 14481];
+const usuariosContraloria = [2767, 5957, 11947, 2754, 14481, 11815];
 
 $(document).ready(function() {
     $.post(`${general_base_url}Usuarios/getPaymentMethod`, function(data) {
@@ -131,14 +131,7 @@ $('#all_users_datatable').DataTable({
         },
         {
             data: function (d) {
-                let tipo = '';
-                if (d.tipo == 2 || d.tipo == '2')
-                    tipo = '<span class="label lbl-sky">MADERAS UPGRADE</span>';
-                else if (d.tipo == 3 || d.tipo == '3')
-                    tipo = '<span class="label lbl-violetBoots">CASAS</span>';
-                else
-                    tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
-                return tipo;
+                return `<span class="label ${d.colorTipo}">${d.tipoUsuario}</span> `; 
             }
         },
         { data: function (d) {

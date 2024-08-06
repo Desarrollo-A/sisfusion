@@ -4,6 +4,50 @@
     }
 
 
+	buttons_adelanto {
+		padding: 35px 50px;
+		border: unset;
+		border-radius: 27px;
+		width: 98%;
+		color: #212121;
+		z-index: 1;
+		background: #FFFFFF;
+		position: relative;
+		-webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+		box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+		transition: all 250ms;
+		overflow: hidden;
+		}
+
+		buttons_adelanto::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 0;
+		border-radius: 27px;
+		background-color: #4794EC;
+		z-index: -1;
+		-webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+		box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
+		transition: all 250ms
+		}
+		/* COLO DE LETRA 
+		#103f75
+		#FFFFFF
+		*/
+		buttons_adelanto:hover {
+		color: #FFFFFF;
+		}
+
+		buttons_adelanto:hover::before {
+		width: 100%;
+	}
+
+
+
+
 		buttons {
 		padding: 10px 25px;
 		border: unset;
@@ -48,40 +92,41 @@
 
 
 	.switch {
-	--button-width:	2.5em;
-	--button-height: 1.5em;
-	--toggle-diameter: 1.5em;
-	--button-toggle-offset: calc((var(--button-height) - var(--toggle-diameter)) / 2);
-	--toggle-shadow-offset: 3px;
-	--toggle-wider: 1em;
-	--color-grey: #b8babf;
-	--top: 1;
-	--color-green: #003d82;
-	}
+    --button-width: 2.5em;
+    --button-height: 1.5em;
+    --toggle-diameter: 1.5em;
+    --button-toggle-offset: calc((var(--button-height) - var(--toggle-diameter)) / 2);
+    --toggle-shadow-offset: 3px;
+    --toggle-wider: 1em;
+    --color-grey: #b8babf;
+    --top: 1;
+    --color-green: #003d82;
+    margin: auto; /* Agregamos esta línea para centrar horizontalmente */
+}
 
-	.slider {
-	display: inline-block;
-	width: var(--button-width);
-	height: var(--button-height);
-	background-color: var(--color-grey);
-	border-radius: calc(var(--button-height) / 2);
-	position: relative;
-	transition: 0.3s all ease-in-out;
-	}
+.slider {
+    display: inline-block;
+    width: var(--button-width);
+    height: var(--button-height);
+    background-color: var(--color-grey);
+    border-radius: calc(var(--button-height) / 2);
+    position: relative;
+    transition: 0.3s all ease-in-out;
+}
 
-	.slider::after {
-	content: "";
-	display: inline-block;
-	width: var(--toggle-diameter);
-	height: var(--toggle-diameter);
-	background-color: #fff;
-	border-radius: calc(var(--toggle-diameter) / 2);
-	position: absolute;
-	top: var(--button-toggle-offset);
-	transform: translateX(var(--button-toggle-offset));
-	box-shadow: var(--toggle-shadow-offset) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
-	transition: 0.3s all ease-in-out;
-	}
+.slider::after {
+    content: "";
+    display: inline-block;
+    width: var(--toggle-diameter);
+    height: var(--toggle-diameter);
+    background-color: #fff;
+    border-radius: calc(var(--toggle-diameter) / 2);
+    position: absolute;
+    top: var(--button-toggle-offset);
+    transform: translateX(var(--button-toggle-offset));
+    box-shadow: var(--toggle-shadow-offset) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
+    transition: 0.3s all ease-in-out;
+}
 
 	.switch input[type="checkbox"]:checked + .slider {
 	background-color: var(--color-green);
@@ -153,5 +198,15 @@
 	  #modal_config_motivo{
                 z-index: 99!important;
             }
+
+
+
+	.btn-roundedP {
+		border-radius: 60%;
+		width: 120px;
+		height: 110px;
+		border: none;
+	}
+	
             
 </style>

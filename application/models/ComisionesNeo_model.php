@@ -10,7 +10,17 @@ class ComisionesNeo_model extends CI_Model {
 
     public function getStatusNeodata($lote){
         $pre_validate = $this->db->query("SELECT l.id_estado FROM lotes l WHERE l.status = 1 AND l.idLote = $lote");
-        $var = $pre_validate->row()->id_estado;
+
+        
+        
+        if( !isset($pre_validate->row()->id_estado) )
+        {
+            $var = 2;
+        }else{
+            $var = $pre_validate->row()->id_estado;
+        }
+        
+        
         if($var == 1){
             $filter = " l.id_desarrollo_n AS idResidencial";
         }else{
@@ -23,6 +33,8 @@ class ComisionesNeo_model extends CI_Model {
             $ref = $validate->row()->referencia;
             $des = $validate->row()->idResidencial;
             return $this->gphsis->query("EXEC [GPHSIS].[dbo].[004VerificaconNeoPrueba3] @referencia = $ref, @iddesarrollo = $des");
+            return false;
+        }else{
             return false;
         }
     }
@@ -355,6 +367,10 @@ class ComisionesNeo_model extends CI_Model {
 
     public function updateFlagPendienteDistintos(){
         $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado WHERE total_comision NOT IN (0) AND bandera NOT IN (100, 150, 110, 170) ");
+    }
+    public function getMensualidadAbonoNeo($empresa = '', $nombreLote = ''){
+        return $this->programacion->query("EXEC [programacion].[dbo].[CDM058PagosSaldosXLote] @empresa = 'FRO', @vivienda = 'CDMSLP-AGAH-008'");
+        
     }
 
 }

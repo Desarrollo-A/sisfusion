@@ -119,15 +119,15 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                                 var fecha = new Date();
                                 tabla_asimilados2_seguros.ajax.reload();
                                 var mensaje = "Comisiones de esquema<b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
-                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
+                                modalInformation(data, mensaje);
                             } else {
                                 $('#spiner-loader').addClass('hide');
-                                modalInformation(RESPUESTA_MODAL.FAIL);
+                                modalInformation(2);
                                 }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            modalInformation(RESPUESTA_MODAL.FAIL);
+                            modalInformation(2);
                         }
                     });
                 }else{
@@ -209,7 +209,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                 if( d.comision_total == "" || d.comision_total == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
+                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
@@ -217,7 +217,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                 if( d.pago_cliente == "" || d.pago_cliente == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
+                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
             }
         },
         {
@@ -225,7 +225,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                 if( d.solicitado == "" || d.solicitado == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
+                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
             }
         },
         {
@@ -241,7 +241,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                 if( d.dcto == "" || d.dcto == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
+                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
@@ -249,18 +249,12 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                 if( d.impuesto == "" || d.impuesto == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
             }
         },
         {
             data: function( d ){
-                if(d.lugar_prospeccion == 6){
-                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                }
-                else{
-                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                }
-            
+                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% del 10% DEL COSTO TOTAL)</b></p>';
             }
         },
         {
@@ -325,7 +319,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 8){
                     if(full.id_comision){
-                        return `<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value=" ${full.id_pago_i} ">`;
+                        return `<input type="checkbox" name="idTQ[]" class="individualCheck_seguros" style="width:20px;height:20px;"  value=" ${full.id_pago_i} ">`;
                     }else{
                         return '';
                     }
@@ -385,7 +379,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
         showModal();
 
         $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago  ).done( function( data ){
+        $.getJSON(general_base_url+"Seguros/getComments/"+id_pago  ).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
@@ -477,7 +471,7 @@ $("#form_interes_seguros").submit( function(e) {
 });
 
 function CloseModalDelete2Intmex_seguros(){
-    document.getElementById("form_multiples").reset();
+    document.getElementById("form_multiples_seguros").reset();
     a = document.getElementById('borrarProyect');
     padre = a.parentNode;
     padre.removeChild(a);
@@ -586,7 +580,7 @@ function cleanComments(){
     myFactura.innerHTML = '';
 }
 
-$(document).on("click", ".individualCheck", function() {
+$(document).on("click", ".individualCheck_seguros", function() {
     totaPen_seguros = 0;
     tabla_asimilados2_seguros.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_asimilados2_seguros.$('input[type="checkbox"]:checked') ;
@@ -637,7 +631,7 @@ $(document).ready( function(){
     });
 });
 
-$("#form_multiples").submit( function(e) {
+$("#form_multiples_seguros").submit( function(e) {
     $('#spiner-loader').removeClass('hidden');
     e.preventDefault();
 }).validate({
@@ -657,6 +651,7 @@ $("#form_multiples").submit( function(e) {
                 if( data == 1){
                     CloseModalDelete2Intmex_seguros();
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
+                    tabla_asimilados2_seguros.ajax.reload();
                 }else{
                     CloseModalDelete2Intmex_seguros();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");

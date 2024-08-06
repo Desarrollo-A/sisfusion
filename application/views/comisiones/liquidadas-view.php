@@ -132,10 +132,7 @@
                                                     <th>PRECIO FINAL LOTE</th>
                                                     <th>PORCENTAJE</th>
                                                     <th>IMPORTE COMISION PAGADA</th>
-                                                    
                                                     <th>IMPORTE COMISION PENDIENTE</th>
-
-                                                    <!-- <th>IMPORTE COMISION PAGADA</th> -->
                                                     <th>DETALLES</th>
                                                     <th>FECHA ACTUALIZACIÓN</th>
                                                     <th>ACCIONES</th>

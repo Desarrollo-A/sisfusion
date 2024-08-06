@@ -45,12 +45,29 @@
                                                    value="" style="margin-top: 6px"/>
                                         </div>
                                     </div>
+
                                     <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group" >
                                             <label class="control-label">T. interés (anual)</label>
                                             <input type="text" class="form-control input-gral" name="tazaInteresPP" id="tazaInteresPP"  value="" style="margin-top: 6px"/>
                                         </div>
                                     </div>
+
+                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left: 0px;padding-right: 0px">
+                                        <div class="col col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                                            <div class="form-group" >
+                                                <label class="control-label">Prioridad del cálculo</label>
+                                                <div class="radio_container">
+                                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor1" class="inputRadio" value="1" checked>
+                                                    <label for="tipoNc_valor1" id="labelTipoNc_valor1">Por mensualidad</label>
+                                                    <input type="radio" name="tipoNc_valor" id="tipoNc_valor2" class="inputRadio" value="2" >
+                                                    <label for="tipoNc_valor2" id="labelTipoNc_valor2">Por Periodos</label>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left: 0px;padding-right: 0px">
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group" >
@@ -119,6 +136,8 @@
                     <input type="hidden" name="idLotePP" id="idLotePP">
                     <input type="hidden" name="idClientePP" id="idClientePP">
                     <input type="hidden" name="nombreLotePP" id="nombreLotePP">
+                    <input type="hidden" name="idPlanPagoModal" id="idPlanPagoModal">
+                    <input type="hidden" name="saldoSiguienteModal" id="saldoSiguienteModal">
                     <!--<button type="button" class="btn btn-simple btn-green" onclick="generarPlanPagoFunction()"> Generar plan </button>-->
                     <button type="button" class="btn btn-danger btn-simple" onclick="cerrarModalAddPlan()"> Cancelar </button>
                     <button type="submit" id="RequestInformacion" class="btn btn-primary">Aceptar</button>

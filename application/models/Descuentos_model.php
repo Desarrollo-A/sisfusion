@@ -19,6 +19,20 @@ class Descuentos_model extends CI_Model {
         AND oxc.estatus = 1");
     }
 
+    function lista_descuentosEspecificos(){ /*  ffffff*/
+        return $this->db->query("SELECT * FROM opcs_x_cats oxc
+        INNER JOIN motivosRelacionPrestamos mrp on  oxc.id_opcion = mrp.id_opcion
+        WHERE oxc.id_catalogo=23 
+        AND oxc.id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,27,28,41,42,51,52,88) 
+        AND oxc.estatus = 1");
+    }
+
+    function busqueda_true($id_opcion){
+
+        return $this->db->query("SELECT evidencia FROM motivosRelacionPrestamos WHERE id_opcion = $id_opcion")->row()->evidencia;
+
+    }
+
     function getUsuariosRol($rol,$opc = ''){
         if($rol == 38){
             return $this->db->query("SELECT 1988 AS id_usuario, 'MKTD Plaza Fernanda (León, San Luis Potosí)' AS name_user UNION SELECT 1981 AS id_usuario, 'MKTD Plaza Maricela (Querétaro, CDMX, Peninsula)' AS name_user");
@@ -43,9 +57,9 @@ class Descuentos_model extends CI_Model {
             $this->db->insert('prestamos_aut', $insertArray);
             $afftectedRows = $this->db->affected_rows();
             if ($afftectedRows == 0) {
-                return 0;
+                return FALSE;
             } else {
-                return 1;
+                return TRUE;
             }
         }
     
@@ -68,13 +82,22 @@ class Descuentos_model extends CI_Model {
         }
 
         if($valor == 1){
-            return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata AS comision_total, 0 abono_pagado,pci.pago_neodata 
+            $cmdPagos="SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
             FROM comisiones com 
             INNER JOIN lotes l ON l.idLote = com.id_lote
             INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-
             INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-            WHERE com.estatus IN (1,8) AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC");
+            WHERE com.estatus IN (1, 8) AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC";
+            $arrayDeDatos['PAGOS'] =  $this->db->query($cmdPagos)->result_array();
+
+            $cmdPrestamos="SELECT pres.id_prestamo,pres.id_usuario, pres.tipo,pres.estatus,
+            oxc.id_opcion, oxc.nombre
+            FROM prestamos_aut pres
+            INNER JOIN opcs_x_cats  oxc ON oxc.id_catalogo = 23 and oxc.id_opcion = pres.tipo  
+            where pres.id_usuario = $user_vobo and pres.estatus = 1 "; 
+            $arrayDeDatos['PRESTAMOS'] =  $this->db->query($cmdPrestamos)->result_array();
+
+            return $arrayDeDatos;
         }else if($valor == 2){
             return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata AS comision_total, 0 abono_pagado,pci.pago_neodata 
             FROM comisiones com 
@@ -126,18 +149,11 @@ class Descuentos_model extends CI_Model {
     }
 
     
-    function insertar_descuentoEsp($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor,$insertar_descuento,$tipo){
-        $estatus = 16; 
-        $user = $this->session->userdata('id_usuario');
+    function insertar_descuentoEsp($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor){
+        $estatus = 16;
         $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO ', 1 ,null, null)");
         $insert_id = $this->db->insert_id();
-
-        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente ,evidenciaDocs) VALUES ($usuarioid, $monto, 1, $monto, 'DESCUENTO REVISIÓN2', 2, 0, $user, GETDATE(), $user, GETDATE(), 1,  $estatus, 0,'$insertar_descuento')");
-        $insert_id_4 = $this->db->insert_id(); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
-
-        $respuesta = $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np) VALUES($insert_id_4, $insert_id, 1, $user, GETDATE(), $user, GETDATE(), 1)"); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
-
-        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'DESCUENTO: ".$comentario."')");
+        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'SE APLICÓ UN DESCUENTO, MOTIVO DESCUENTO: ".$comentario."')");
     
         if (! $respuesta ) {
             return 0;
@@ -146,24 +162,122 @@ class Descuentos_model extends CI_Model {
         }
     }
 
+    function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor){
 
-    function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user){
+        $estatus = $monto < 1 ? 0 : 1;
+        if($valor == 2){
+            $estatus = $monto < 1 ? 0 : 4;
+        }
+        else if($valor == 3){
+            $estatus = $monto < 1 ? 0 : 1;
+        }
+        
+            $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null)");
+            $insert_id = $this->db->insert_id();
+        
+            $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'NUEVO PAGO, DISPONIBLE PARA COBRO')");
+        
+        
+            if (! $respuesta ) {
+                return 0;
+                } else {
+                return 1;
+                }
+    }
+
+
+    function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user,$pagos_aplicados,$motivo,$prestamo,$tipo_descuento,$archivo,$descuento,$bandera){
+       
+        
+        if($motivo==2 && $bandera == 0){
+            
+                    
+            $nombre= $this->db->query("SELECT nombre FROM opcs_x_cats where id_catalogo = 23 and id_opcion= $tipo_descuento")->row()->nombre;
+            if($archivo != NULL)
+            {
+                $insert_prestamo =$this->db->query("INSERT INTO prestamos_aut VALUES ($usuario, $descuento, 1, $descuento, '$nombre', 25, 0, $user, GETDATE(), $user, GETDATE(), 1, $tipo_descuento, NULL, '$archivo')");
+                
+            }else{
+                $insert_prestamo =$this->db->query("INSERT INTO prestamos_aut VALUES ($usuario, $descuento, 1, $descuento, '$nombre', 25, 0, $user, GETDATE(), $user, GETDATE(), 1, $tipo_descuento, NULL, NULL)");
+            }
+            $insert_id_prestamo = $this->db->insert_id();
+        }
+
+        if($motivo==2 && $bandera == -1){
+            
+                    
+            $nombre= $this->db->query("SELECT nombre FROM opcs_x_cats where id_catalogo = 23 and id_opcion= $tipo_descuento")->row()->nombre;
+            if($archivo != NULL)
+            {
+                $insert_prestamo =$this->db->query("INSERT INTO prestamos_aut VALUES ($usuario, $monto, 1, $monto, '$nombre', 25, 0, $user, GETDATE(), $user, GETDATE(), 1, $tipo_descuento, NULL, '$archivo')");
+                
+            }else{
+                $insert_prestamo =$this->db->query("INSERT INTO prestamos_aut VALUES ($usuario, $monto, 1, $monto, '$nombre', 25, 0, $user, GETDATE(), $user, GETDATE(), 1, $tipo_descuento, NULL, NULL)");
+            }
+            $insert_id_prestamo = $this->db->insert_id();
+
+        }
+       
         $estatus = 0;
         $uni='DESCUENTO';
         if($valor == 2){
+           
             $estatus =16;
         }else if($valor == 3){
+            
             $estatus =17;
-            $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", estatus = 2, primer_descuento = (CASE WHEN primer_descuento IS NULL THEN GETDATE() ELSE primer_descuento END) WHERE id_usuario = ".$user." AND estatus IN (1, 0)");
+            $respuesta = $this->db->query("UPDATE descuentos_universidad SET saldo_comisiones=".$saldo_comisiones.", pagos_activos = (pagos_activos - ".$pagos_aplicados."), estatus = 2 WHERE id_usuario = ".$user." AND estatus IN (1, 0)");
             $uni='SALDO COMISIONES: $'.number_format($saldo_comisiones,2, '.', ',');
-		
         }
 
         if ($monto == 0) {
-            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
+            
+            if($estatus == 0){
+                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), comentario='$uni' WHERE id_pago_i=$id_pago_i");
+                if($motivo==1){
+                    $tipo =$this->db->query("SELECT tipo FROM prestamos_aut WHERE id_prestamo = $prestamo")->row()->tipo;
+                    $respuesta1 = $this->db->query("INSERT INTO relacion_motivo_pago VALUES ($id_pago_i, $prestamo, $tipo, $estatus)");                    
+                }else{
+
+                    // $nombre= $this->db->query("SELECT nombre FROM opcs_x_cats where id_catalogo = 23 and id_opcion= $tipo_descuento")->row()->nombre;
+                    // if($archivo != NULL)
+                    // {
+                    //     $insert_prestamo =$this->db->query("INSERT INTO prestamos_aut VALUES ($usuario, $monto, 1, $monto, '$nombre', 5, 0, $user, GETDATE(), $user, GETDATE(), 1, $tipo_descuento, NULL, '$archivo')");
+                        
+                    // }else{
+                    //     $insert_prestamo =$this->db->query("INSERT INTO prestamos_aut VALUES ($usuario, $monto, 1, $monto, '$nombre', 5, 0, $user, GETDATE(), $user, GETDATE(), 1, $tipo_descuento, NULL, NULL)");
+                    // }
+                  
+                    // $insert_id_prestamo = $this->db->insert_id();
+                    // $respuesta = $this->db->query("INSERT INTO relacion_motivo_pago VALUES ($id_pago_i, $insert_id_prestamo, $tipo_descuento, $estatus)");
+
+                        $prestamo_id = $this->db->query("SELECT id_prestamo FROM prestamos_aut WHERE estatus = 25")->row()->id_prestamo;
+                      
+                        $respuesta3 = $this->db->query("INSERT INTO relacion_motivo_pago VALUES ($id_pago_i, $prestamo_id, $tipo_descuento, $estatus)");
+                        
+                
+
+                }
+            }
         } else {
-            $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
+            
+             $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
+             if($estatus == 0){
+                if($motivo==1){
+                    $tipo =$this->db->query("SELECT tipo FROM prestamos_aut WHERE id_prestamo = $prestamo")->row()->tipo;
+                    $respuesta = $this->db->query("INSERT INTO relacion_motivo_pago VALUES ($id_pago_i, $prestamo, $tipo, $estatus)");                    
+                }else{
+
+                    // $respuesta = $this->db->query("INSERT INTO relacion_motivo_pago VALUES ($id_pago_i, $insert_id_prestamo, $tipo_descuento, $estatus)");
+                    $prestamo_id = $this->db->query("SELECT id_prestamo FROM prestamos_aut WHERE estatus = 25")->row()->id_prestamo;
+                   
+                        $respuesta2 = $this->db->query("INSERT INTO relacion_motivo_pago VALUES ($id_pago_i, $prestamo_id, $tipo_descuento, $estatus)");
+
+                    
+                }
+            }
         }
+     
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
 
         if (! $respuesta ) {
@@ -173,38 +287,17 @@ class Descuentos_model extends CI_Model {
             }
     }
 
-
-    function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor,$insertar_descuento,$tipo){
-        $estatus = $monto < 1 ? 0 : 1;
-        if($valor == 2){
-            $estatus = $monto < 1 ? 0 : 4;
-        } else if($valor == 3){
-            $estatus = $monto < 1 ? 0 : 1;
-        }
-
-        $comentarios = 'DESCUENTO EN REVISIÓN '.$comentario;    
-
-        $user = $this->session->userdata('id_usuario');
-
-        $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO NUEVO PAGO', 0 ,null, null)");
-        $insert_id = $this->db->insert_id();
-
-
-        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente,evidenciaDocs) VALUES ($usuarioid, $monto, 1, $monto,  '$comentarios', 2, 0, $usuario, GETDATE(), $usuario, GETDATE(), 1,  $tipo, 0,'$insertar_descuento')");
-        $insert_id_4 = $this->db->insert_id(); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
-
-
-        $respuesta = $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np) VALUES($insert_id_4, $insert_id, 1, $usuario, GETDATE(), $user, GETDATE(), 1)"); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
-
-
-        $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'NUEVO PAGO, DISPONIBLE PARA COBRO')");
-
-        if (! $respuesta ) {
-            return 0;
+    Public function update_estatus_prestamo(){
+     $cambio_estatus = $this->db->query("UPDATE prestamos_aut SET estatus = 5 WHERE estatus =25");
+     if (! $cambio_estatus ) {
+        return 0;
         } else {
-            return 1;
+        return 1;
         }
+     
     }
+
+    
     public function getGeneralDataPrestamo($idPrestamo)
     {
         $result = $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, 
@@ -299,7 +392,7 @@ class Descuentos_model extends CI_Model {
         }
 
         public function BorrarPrestamo($id_prestamo){
-            $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
+            $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=5,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
             $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL,NULL,NULL,NULL)");
     
             if (! $respuesta ) {
@@ -370,7 +463,7 @@ class Descuentos_model extends CI_Model {
             LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion 
             WHERE id_catalogo=23 
             AND mrp.evidencia != 'true'
-            AND mrp.id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88)
+            AND mrp.id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,27,28,41,42,51,52,88)
             AND oxc0.estatus = 1
             AND mrp.estatus = 1
             ";
@@ -452,11 +545,315 @@ class Descuentos_model extends CI_Model {
 
 
             function UpdateDescuento($id_bono){
-                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = 27,modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 0 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
+
+                $motivo_descuento= $this->db->query("SELECT pres.tipo , rmp.id_prestamo, pres.n_p, rmp.motivo_prestamo, pres.id_usuario
+                FROM 
+                relacion_motivo_pago rmp INNER JOIN prestamos_aut pres ON pres.id_prestamo = rmp.id_prestamo
+                WHERE rmp.id_pago_i = $id_bono");
+
+                $motivo_prestamo = $motivo_descuento->row()->motivo_prestamo;
+                $id_prestamo = $motivo_descuento->row()->id_prestamo;
+                $np= $motivo_descuento->row()->n_p;
+                $id_usuario= $motivo_descuento->row()->id_usuario;
+
+               
+                $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $motivo_prestamo, modificado_por='".$this->session->userdata('id_usuario')."' WHERE estatus = 0 AND descuento_aplicado = 1 AND id_pago_i = $id_bono");
+
+                $respuesta2 = $this->db->query("INSERT INTO relacion_pagos_prestamo VALUES ($id_prestamo,$id_bono,1,1,GETDATE(),1,GETDATE(),$np)");
+                $respuesta3 = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_bono, $id_usuario, GETDATE(), 1, 'POR MOTIVO DE PRESTAMO')");
+
                 if (! $respuesta ) {
                 return 0;
                 } else {
                 return 1;
                 }
             }
+
+            public function  insertAdelanto($insert){
+                $respuesta = $this->db->insert('anticipo',$insert);
+                return  $this->db->insert_id();
+            }
+            
+            public function  insertAdelantoGenerico($insert,$tabla){
+                $respuesta = $this->db->insert($tabla,$insert);
+                if($respuesta)
+                {
+                    return TRUE;
+                }else{
+                    return FALSE;
+                }    
+            }
+            public function update_generico_aticipo($clave,$llave,$tabla,$data){
+                try {
+                    $this->db->WHERE($llave, $clave);
+                    if($this->db->update($tabla, $data))
+                    {
+                        return TRUE;
+                    }else{
+                        return FALSE;
+                    }               
+                }
+                catch(Exception $e) {
+                    return $e->getMessage();
+                }      
+            }
+
+            public function  historial_anticipo_avance($insert){
+                $cmd = "SELECT * FROM opcs_x_cats  WHERE id_catalogo = 128 AND estatus = 1";
+                $query = $this->db->query($cmd );
+                return  $query->result_array();
+            }
+            public function  todos_los_pasos(){
+                
+                $usuario =  $this->session->userdata('id_usuario');
+                $cmd = "SELECT * FROM opcs_x_cats  WHERE id_catalogo = 128 AND estatus = 1";
+                $query = $this->db->query($cmd );   
+                $datos["TODOS"] = $query->result_array();
+                $cmd2 = "SELECT opcx.id_opcion , ha.id_usuario,ha.id_anticipo,opcx.nombre,opcx.estatus  ,opcx.id_catalogo,
+                ha.comentario as comentario_ha
+                FROM  opcs_x_cats opcx 
+                INNER  JOIN historial_anticipo ha ON ha.proceso = opcx.id_opcion  and opcx.id_catalogo = 128
+                where ha.id_usuario = $usuario";
+                $datos["USUARIO"]  = $this->db->query($cmd2  )->result_array();   
+                
+                $CMD_anticipos="SELECT ant.id_anticipo,ant.id_usuario,ant.monto ,us.forma_pago,
+                ant.comentario,ant.estatus,ant.proceso,ant.impuesto,ant.fecha_registro,
+
+                pra.mensualidades,pra.monto_parcialidad,pra.id_parcialidad,
+
+                ant.prioridad,ant.evidencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre_usuario
+                FROM anticipo ant
+                INNER JOIN usuarios us  ON us.id_usuario = ant.id_usuario
+                LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo
+
+                WHERE ant.id_usuario = $usuario";
+                $datos["ANTICIPOS"] = $this->db->query($CMD_anticipos)->result_array();   
+
+                
+                return  $datos;
+
+
+            }
+
+
+            public function solicitudes_por_aticipo ($bandera = ''){
+                $idUsu = intval($this->session->userdata('id_usuario')); 
+                $cmd = "DECLARE @user INT 
+                SELECT @user = $idUsu 
+                SELECT u.id_usuario, u.id_rol,
+                FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,  u.forma_pago  as formaNomal ,
+                UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                AS nombre, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
+                UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
+                CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
+                ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                pra.mensualidades,pra.monto_parcialidad,pra.id_parcialidad,
+                ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
+                u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
+                FROM usuarios u
+                INNER JOIN anticipo ant ON u.id_usuario =ant.id_usuario 
+                INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
+                LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo
+                where u.id_rol in(1,2,3,7,9) 
+                AND ant.proceso in (1,2,3,4)
+                AND (u.id_lider = @user  
+                OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
+                OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
+                ORDER BY u.id_rol"; 
+                $query = $this->db->query($cmd );   
+                return $query->result_array();
+                
+            }
+            public function solicitudes_generales_reporte(){
+
+                $usuario =  $this->session->userdata('id_usuario');
+                
+                $cmd = "SELECT u.id_usuario, u.id_rol,forma.nombre as nombre_forma_pago, u.forma_pago ,
+				UPPER(opcs_x_cats.nombre) AS puesto, ha.fecha_movimiento,
+				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                AS nombre,  FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
+				CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
+                UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
+                CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
+                ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
+                u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
+                FROM usuarios u
+                INNER JOIN anticipo ant ON u.id_usuario =ant.id_usuario 
+                INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
+				INNER JOIN opcs_x_cats forma ON forma.id_catalogo  = 16 and forma.id_opcion = u.forma_pago 
+                LEFT  JOIN historial_anticipo ha ON ha.id_anticipo = ant.id_anticipo and ha.proceso = 3 
+				where u.id_rol in(1,2,3,7,9) 
+				order by ha.fecha_movimiento
+                ";
+
+                $query = $this->db->query($cmd);
+                return $query->result_array();
+            }           
+
+            public function solicitudes_generales_dc(){
+
+                $usuario =  $this->session->userdata('id_usuario');
+                
+                $cmd = "SELECT u.id_usuario, u.id_rol, 
+				UPPER(opcs_x_cats.nombre) AS puesto, us.forma_pago,
+				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                AS nombre,  FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
+				CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
+                UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
+                CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
+                ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                pra.mensualidades,pra.monto_parcialidad,pra.id_parcialidad,
+                ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
+                u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
+                FROM usuarios u
+                INNER JOIN anticipo ant ON u.id_usuario =ant.id_usuario 
+                INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
+                LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo
+
+                where u.id_rol in(1,2,3,7,9) 
+                AND ant.proceso in (3)
+                ";
+
+                $query = $this->db->query($cmd);
+                return $query->result_array();
+            } 
+
+    function getComments($id){
+        $cmd = "SELECT DISTINCT(hc.comentario) as comentario_general , hc.id_ha,hc.proceso ,
+		opcx.nombre, pci.comentario as comentario_anticipo,
+		hc.id_anticipo, hc.id_usuario
+        FROM historial_anticipo hc 
+        INNER JOIN anticipo pci ON pci.id_anticipo = hc.id_anticipo
+		INNER JOIN opcs_x_cats opcx ON opcx.id_opcion = hc.proceso and opcx.id_catalogo = 128
+        INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        WHERE hc.id_anticipo = $id
+        ORDER BY hc.proceso DESC";
+        $query = $this->db->query($cmd);
+        return $query->result();
+    }
+
+
+
+
+
+        function leerxml( $xml_leer, $cargar_xml ){
+            $str = '';
+            if( $cargar_xml ){
+                rename( $xml_leer, "./UPLOADS/XML_Anticipo/documento_temporal.txt" );
+                $str = file_get_contents( "./UPLOADS/XML_Anticipo/documento_temporal.txt" );
+                if( substr ( $str, 0, 3 ) == 'o;?' ){
+                    $str = str_replace( "o;?", "", $str );
+                    file_put_contents( './UPLOADS/XML_Anticipo/documento_temporal.txt', $str );
+                }
+                rename( "./UPLOADS/XML_Anticipo/documento_temporal.txt", $xml_leer );
+            }
+            libxml_use_internal_errors(true);
+            $xml = simplexml_load_file( $xml_leer, null, true );
+            $datosxml = array(
+                "version" => $xml ->xpath('//cfdi:Comprobante')[0]['Version'],
+                "regimenFiscal" => $xml ->xpath('//cfdi:Emisor')[0]['RegimenFiscal'],
+                "formaPago" => $xml -> xpath('//cfdi:Comprobante')[0]['FormaPago'],
+                "usocfdi" => $xml -> xpath('//cfdi:Receptor')[0]['UsoCFDI'],
+                "metodoPago" => $xml -> xpath('//cfdi:Comprobante')[0]['MetodoPago'],
+                "claveUnidad" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveUnidad'],
+                "unidad" => $xml -> xpath('//cfdi:Concepto')[0]['Unidad'],
+                "claveProdServ" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveProdServ'],
+                "descripcion" => $xml -> xpath('//cfdi:Concepto')[0]['Descripcion'],
+                "subTotal" => $xml -> xpath('//cfdi:Comprobante')[0]['SubTotal'],
+                "total" => $xml -> xpath('//cfdi:Comprobante')[0]['Total'],
+                "rfcemisor" => $xml -> xpath('//cfdi:Emisor')[0]['Rfc'],
+                "nameEmisor" => $xml -> xpath('//cfdi:Emisor')[0]['Nombre'],
+                "rfcreceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Rfc'],
+                "namereceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Nombre'],
+                "TipoRelacion"=> $xml->xpath('//@TipoRelacion'),
+                "uuidV" =>$xml->xpath('//@UUID')[0],
+                "fecha"=> $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'],
+                "folio"=> $xml -> xpath('//cfdi:Comprobante')[0]['Folio'],
+            );
+            $datosxml["textoxml"] = $str;
+            return $datosxml;
+        }
+
+
+        function verificar_uuid( $uuid ){
+            return $this->db->query("SELECT * FROM facturas_anticipos WHERE uuid = '".$uuid."'");
+        }
+
+
+
+        function insertar_factura( $id_anticipo, $datos_factura,$usuarioid){
+            $VALOR_TEXT = $datos_factura['textoxml'];
+            $data = array(
+                "fecha_factura"  => $datos_factura['fecha'],
+                "folio_factura"  => $datos_factura['folio'],
+                "descripcion" => $datos_factura['descripcion'],
+                "subtotal" => $datos_factura['subTotal'],
+                "total"  => $datos_factura['total'],
+                "metodo_pago"  => $datos_factura['metodoPago'],
+                "uuid" => $datos_factura['uuidV'],
+                "nombre_archivo" => $datos_factura['nombre_xml'],
+                "id_usuario" => $usuarioid,
+                "id_anticipo" => $id_anticipo,
+                "forma_pago" => $datos_factura['formaPago'],
+                "cfdi" => $datos_factura['usocfdi'],
+                "unidad" => $datos_factura['claveUnidad'],
+                "claveProd" => $datos_factura['claveProdServ'],
+                "fecha_creacion"  => date("Y-m-d H:i:s"),
+                "fecha_ingreso"  => date("Y-m-d H:i:s"),
+                "regimen" => $datos_factura['regimenFiscal'],
+                "bandera" => 0
+                
+                
+            );
+            return $this->db->insert("facturas_anticipos", $data);
+        }
+
+    public function pausar_prestamo($arrayUpdate, $clave){
+        try {
+            $this->db->WHERE('id_prestamo', $clave);
+            
+            if($this->db->update('prestamos_aut', $arrayUpdate))
+            {
+                return TRUE;
+            }else{
+                return FALSE;
+            }               
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }  
+    }
+    
+    
+
+    function  todos_los_tipos(){
+        
+        $cmd = "SELECT * FROM opcs_x_cats 
+                WHERE id_catalogo=23 
+                AND id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88) 
+                and estatus = 1";
+
+        return $this->db->query($cmd)->result();
+    }
+
+
 }
+
+
+    
+    
+
+

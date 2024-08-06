@@ -109,7 +109,8 @@ function fillTable(typeTransaction, beginDate, endDate) {
                     else
                         return '<span class="label lbl-gray">NO APLICA</span>';
                 }
-            }
+            },
+            { data: 'nombreSedeRecepcion' },
         ],
         columnDefs: [{
             visible: false,

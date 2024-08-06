@@ -1,6 +1,14 @@
 $(document).ready(function () {
     loadTable()
 
+    $("#file_adelanto").change(function(){
+        // Verifica si se seleccionó un archivo
+        if($(this).val() !== ""){
+            // Muestra el contenedor de evidencia
+            $("#evidenciaContainer").show();
+        }
+    });
+
 });
 
 

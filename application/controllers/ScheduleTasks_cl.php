@@ -135,7 +135,8 @@ class ScheduleTasks_cl extends CI_Controller {
                 'victoria.diaz@ciudadmaderas.com',
                 'benjamin.uicab@ciudadmaderas.com',
                 'alan.alba@ciudadmaderas.com',
-                'monserrat.guerrero@ciudadmaderas.com'])*/
+                'monserrat.guerrero@ciudadmaderas.com',
+                'analilia.hernandez@ciudadmaderas.com'])*/
             ->subject('Acumulado de lotes sin integrar Expediente al: '.date("Y-m-d H:i:s"))
             ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
                 'encabezados' => $encabezados,
@@ -1111,7 +1112,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     public function changePassword()
     {
         $key = "";
-        $pattern = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
+        $pattern = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
         $max = strlen($pattern) - 1;
         $length = 8;
         for ($i = 0; $i < $length; $i++) {
@@ -1166,7 +1167,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 'nohemi.castillo@ciudadmaderas.com',
                 'lorena.serrato@ciudadmaderas.com',
                 'yaretzi.rosales@ciudadmaderas.com',
-                'esmeralda.vega@ciudadmaderas.com')*/
+                'esmeralda.vega@ciudadmaderas.com',
+                'analilia.hernandez@ciudadmaderas.com')*/
             ->subject('Cambio de contraseña ASESOR COMODÍN.')
             ->view($this->load->view('mail/schedule-tasks-cl/change-password', [
                 'encabezados' => $encabezados,
@@ -1202,7 +1204,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         //token autorizado para esta operación
         //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4MTAzNTgsImV4cCI6MTcwNDg5Njc1OCwiZGF0YSI6eyJ1c2VybmFtZSI6IjAwNE1fQ09NNTAyIiwicGFzc3dvcmQiOiIyMjM1JjgzMlNEVlcifX0.bqVjnDZeaHVvFQdDoTN8zxhvNOt5owMOYqdG1jCf6k4
 
-        if (!isset(apache_request_headers()["Authorization"])) //solicitud de autorización
+        if (!isset(apache_request_headersxxx()["Authorization"])) //solicitud de autorización
             echo json_encode(array("status" => 360, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
             if (apache_request_headers()["Authorization"] == "") // validar headers autorización

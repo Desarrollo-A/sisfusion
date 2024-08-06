@@ -1,7 +1,11 @@
 let idLote = 0;
 let dumpPlanPago = [];
 let nombreLote;
-
+let planesDePagoIds;
+let monedaCatalogo;
+let periodicidadCatalogo;
+let planesPagoCatalogo;
+let catalogos;
 $(document).ready(function () {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -56,18 +60,28 @@ $('#tablaPlanPagos thead tr:eq(0) th').each(function (i) {
     });
 });
 $('#idLote').change(function () {
+    $('#nombreCliente').val('');
     $('#spiner-loader').removeClass('hide');
     $('#tablaPlanPagos').removeClass('hide');
     index_idLote = $(this).val();
     idLote = index_idLote;
     console.log('index_idLote', index_idLote);
     var nombreLoteSeleccionado = $('option:selected', this).attr('data-nombreLote');
-
+    var disabledButton;
     //tablaPlanPagos
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url+"Corrida/getInfoByLote/"+idLote, function (data) {
-        $('#nombreCliente').val(data[0].nombre+' '+data[0].apellido_paterno+' '+data[0].apellido_materno);
+        console.log(data['cliente']);
+        console.log(data['planPago']);
+        $('#nombreCliente').val(data['cliente'][0].nombre+' '+data['cliente'][0].apellido_paterno+' '+data['cliente'][0].apellido_materno);
         $('#spiner-loader').addClass('hide');
+        console.log(data['planPago'].length);
+
+        if(data['planPago'].length <= 0 ){
+            tablaPlanPagos.buttons( '.myButtonClass' ).disable();
+        }else{
+            disabledButton = false;
+        }
     }, 'json');
 
 
@@ -76,6 +90,7 @@ $('#idLote').change(function () {
         width: '100%',
         destroy: true,
         searching: true,
+        scrollX: true,
         ajax: {
             url: `${general_base_url}corrida/getPlanesPago/${index_idLote}`,
             dataSrc: ""
@@ -163,6 +178,9 @@ $('#idLote').change(function () {
                         case 2: //Se envio correctamente a NeoData
                             etiqueta = `<label class="label lbl-green">Se envió correctamente a NeoData</label>`;
                             break;
+                        case 3: //Plan de pago cancelado
+                            etiqueta = `<label class="label lbl-warning">Plan de pago cancelado en NeoData</label>`;
+                            break;
                     }
 
                     return etiqueta;
@@ -171,15 +189,65 @@ $('#idLote').change(function () {
             /***********/
             {
                 data: function (d) {
+                    let BTN_EDIT;
+                    let BTN_SEND;
+                    let BTN_DELETE;
+                    // if(d.idStatusContratacion == 0 && d.idMovimiento == 0){ //validacion de estatus apra poder eliminar
+                        if(d.estatusPlan == 2){
+                            BTN_DELETE = `<button class="btn-data btn-warning cancelarPlanPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-planPagoNumero="${d.ordenPago}"
+                            data-toggle="tooltip" data-placement="left" title="Eliminar Plan"><i class="fas fa-trash"></i></button>`;
+                        }else{
+                            BTN_DELETE = ``;
+                        }
+
+                    // }
+
                     let BTN_VER = `<button class="btn-data btn-blueMaderas ver_planPago" value="${d.idLote}" 
                     data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
                     data-toggle="tooltip" data-placement="left" title="VER PLAN"><i class="fas fa-eye"></i></button>`;
 
-                    let BTN_EDIT = `<button class="btn-data btn-blueMaderas editarPago" value="${d.idLote}" 
-                    data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
-                    data-toggle="tooltip" data-placement="left" title="EDITAR PLAN"><i class="fas fa-pencil-alt"></i></button>`;
+                    switch (d.estatusPlan) {
+                        case 1:
+                            BTN_EDIT = `<button class="btn-data btn-blueMaderas editarPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-saldoSig="${d.saldoSig}"
+                            data-toggle="tooltip" data-placement="left" title="EDITAR PLAN" ><i class="fas fa-pencil-alt"></i></button>`;
 
-                    return `<center>${BTN_VER} ${BTN_EDIT}</center>`;
+                            BTN_SEND = `<button class="btn-data btn-blueMaderas enviarPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-saldoSig="${d.saldoSig}"
+                            data-toggle="tooltip" data-placement="left" title="ENVIAR PLAN" ><i class="fas fa-share"></i></button>`;
+                            break;
+                        case 2:
+                            BTN_EDIT = `<button class="btn-data " disabled
+                            data-toggle="tooltip" data-placement="left" title="PLAN ENVIADO NO SE PUEDE EDITAR" ><i class="fas fa-pencil-alt"></i></button>`;
+
+                            BTN_SEND = `<button class="btn-data" disabled 
+                            data-toggle="tooltip" data-placement="left" title="PLAN ENVIADO" ><i class="fas fa-share"></i></button>`;
+                            break;
+                        case 3:
+                            BTN_EDIT = `<button class="btn-data btn-blueMaderas editarPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-saldoSig="${d.saldoSig}"
+                            data-toggle="tooltip" data-placement="left" title="EDITAR PLAN" ><i class="fas fa-pencil-alt"></i></button>`;
+
+                            BTN_SEND = `<button class="btn-data btn-blueMaderas enviarPago" value="${d.idLote}" 
+                            data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                            data-saldoSig="${d.saldoSig}"
+                            data-toggle="tooltip" data-placement="left" title="ENVIAR NUEVAMENTE" ><i class="fas fa-share"></i></button>`;
+                            break;
+                            break;
+                    }
+
+
+
+
+
+
+                    let buttonValidado = (d.tipoPlanPago == 1) ? BTN_SEND + BTN_DELETE: '';
+                    return `<center>${BTN_VER} ${BTN_EDIT} ${buttonValidado}</center>`;
                 }
             }],
         initComplete: function() {
@@ -187,6 +255,9 @@ $('#idLote').change(function () {
         }
     });
     $('#spiner-loader').addClass('hide');
+    /*
+
+    * */
 
 });
 
@@ -202,9 +273,18 @@ function addPlanPago(){
             if (dto != []) {
                 try {
                     if (dto.status == 1) {
-                        loadInputsCatalogos(dto);
-
-                        $('#addPlanPago').modal('show');
+                        if(dto.enviadoNeodata == 0){
+                            console.log('log: ', dto);
+                            loadInputsCatalogos(dto);
+                            $('#addPlanPago').modal('show');
+                        }
+                        else{
+                            let tituloAviso = '<h5>Estos planes de pago <b>ya fueron enviados a NeoData</b> anteriormente</h5>';
+                            let subtitAviso = '<p>Por lo cual, no es posible agregar más planes de pago</p>';
+                            let contenedorGeneral = tituloAviso + subtitAviso;
+                            document.getElementById("contenidoAviso").innerHTML =  contenedorGeneral;
+                            $('#avisoModalPlanPago').modal('show');
+                        }
                     }
                     else
                         alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los datos.", "danger");
@@ -233,8 +313,17 @@ function loadInputsCatalogos(dto){
     });
     cerrarModalAddPlan();
     dto.dtoCatalogos.map((catalogoOpciones) => {
-        if (catalogoOpciones.id_catalogo == 137) // PLAN DE PAGO
-            $("#tipoPP").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+        if (catalogoOpciones.id_catalogo == 137) {
+            // PLAN DE PAGO
+            if(dto.planDeEngancheActual < 1){
+                $("#tipoPP").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+            }else{
+                if(catalogoOpciones.id_opcion == 2){
+                    $("#tipoPP").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+                }
+            }
+        }
+
         if (catalogoOpciones.id_catalogo == 138) // PERIODICIDAD
             $("#periocidadPP").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
         if (catalogoOpciones.id_catalogo == 112) // MONEDA O DIVISA
@@ -254,8 +343,9 @@ function loadInputsCatalogos(dto){
     nombreLotePP.value = dto.infoLote.nombreLote;
 
 
-
-
+    $('#tipoPP').removeAttr('disabled');
+    $('#tazaInteresPP').removeAttr('readonly');
+    $('#interesesSSI').removeAttr('disabled');
 
     let planPago = document.getElementById("planPago");
     planPago.value = (dto.planesTotal + 1);
@@ -288,6 +378,10 @@ $(document).on("submit", "#formPlanPago", function (e) {
     generarPlanPagoFunction();
     let formulario =  new FormData(this);
     formulario.append("dumpPlanPago", dumpPlanPago);
+    console.log('JSON.parse(dumpPlanPago).length', JSON.parse(dumpPlanPago).length);
+    console.log('dumpPlanPago', dumpPlanPago);
+    // formulario.append("noPeriodosPP", JSON.parse(dumpPlanPago).length);
+    // console.log('dumpPlanPago', dumpPlanPago);
     $.ajax({
         type: 'POST',
         url: `${general_base_url}Corrida/guardaPlanPago`,
@@ -415,14 +509,52 @@ $(document).on('change','#tipoPP', function(){
     let tipoPP = parseInt($(this).val());
     let tazaInteresPP = $('#tazaInteresPP');
     let interesesSSI = $('#interesesSSI');
+    let tipoNc_valor1 = document.getElementById("tipoNc_valor1");
+    let tipoNc_valor2 = document.getElementById("tipoNc_valor2");
+
+    let labelTipoNc_valor1 = document.getElementById("labelTipoNc_valor1");
+    let labelTipoNc_valor2 = document.getElementById("labelTipoNc_valor2");
+
+    let descripcionPlanPago = $("#descripcionPlanPago");
+
+
+    console.log('tipoPP', tipoPP);
     if(tipoPP==1){
         tazaInteresPP.attr('readonly','true');
         tazaInteresPP.val(0);
         interesesSSI.attr('disabled', 'disabled');
+        tipoNc_valor1.disabled = false;
+        tipoNc_valor2.disabled = false;
+
+        tipoNc_valor1.checked  = false;
+        tipoNc_valor2.checked  = false;
+        labelTipoNc_valor1.classList.remove('disabledClassRadio');
+
+        descripcionPlanPago.attr("readonly", true);
+        descripcionPlanPago.val("Plan de pago Enganche");
     }else{
         tazaInteresPP.removeAttr('readonly');
         tazaInteresPP.val(0);
-        interesesSSI.removeAttr('disabled');
+        descripcionPlanPago.attr("readonly", false);
+        descripcionPlanPago.val("");
+        if(Number.parseInt(tazaInteresPP.val())  == 0){
+            interesesSSI.attr('disabled', 'disabled');
+            tipoNc_valor1.disabled = false;
+            tipoNc_valor2.disabled = false;
+
+            tipoNc_valor1.checked  = false;
+            tipoNc_valor2.checked  = false;
+            labelTipoNc_valor1.classList.remove('disabledClassRadio');
+        }else{
+            interesesSSI.removeAttr('disabled');
+            tipoNc_valor1.disabled = true;
+            tipoNc_valor2.disabled = true;
+
+            tipoNc_valor1.checked  = true;
+            tipoNc_valor2.checked  = false;
+            labelTipoNc_valor1.classList.add('disabledClassRadio');
+        }
+
     }
 });
 
@@ -447,12 +579,22 @@ function cerrarModalAddPlan() {
     cont_eng = 0;
     document.getElementById("interesesSSI").checked = false;
     document.getElementById("ivaPP").checked = false;
+    document.getElementById("tipoNc_valor1").checked = false;
+    document.getElementById("tipoNc_valor2").checked = false;
+
+    $("#idLotePP").val('');
+    $("#idClientePP").val('');
+    $("#nombreLotePP").val('');
+    $("#idPlanPagoModal").val('');
+    $("#saldoSiguienteModal").val('');
+
 }
 
 function generarPlanPagoFunction(){
+    console.log("$('#idPlanPagoModal').val()", $('#idPlanPagoModal').val());
     //let tipoPP = $('#tipoPP').empty().selectpicker('refresh');
+    let tipoPP = $('#tipoPP').val();
     let fechaInicio = $('#fechaInicioPP').val();
-    let noPeriodosPP = $('#noPeriodosPP').val();
     let periocidadPP = $('#periocidadPP').val();
     let tazaInteresPP = $('#tazaInteresPP').val();
     let planPago = $('#planPago').val();
@@ -462,12 +604,20 @@ function generarPlanPagoFunction(){
     let interesesSSI = document.getElementById('interesesSSI').checked;
     let ivaPP = document.getElementById('ivaPP').checked;
     let porcentajeIva = document.getElementById('porcentajeIvaPP').value;
-    dumpPlanPago = generarPlanPago(fechaInicio, noPeriodosPP, montoPP, tazaInteresPP, periocidadPP, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva);
+    let idPlanPagoModal = ($('#idPlanPagoModal').val() == '' || $('#idPlanPagoModal').val() == undefined) ? undefined : $('#idPlanPagoModal').val();//id del plan de pago viene null o undefined cuando es primera inserción
+    let saldoSiguienteModal = $('#saldoSiguienteModal').val();//id del plan de pago viene null o undefined cuando es primera inserción
+
+    mensualidadPP = parseFloat(mensualidadPP.replace(',', ''));
+    // let noPeriodosPP = Math.round(montoPP/mensualidadPP); // //$('#noPeriodosPP').val();
+    let noPeriodosPP = $('#noPeriodosPP').val();
+    let prioridadCalculo = $('input[name="tipoNc_valor"]:checked').val();
+    dumpPlanPago = generarPlanPago(fechaInicio, noPeriodosPP, montoPP, tazaInteresPP, periocidadPP, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva, idPlanPagoModal, saldoSiguienteModal, prioridadCalculo);
 }
 
 $(document).on('click', '.ver_planPago', async function(){
     let idPlanPago = $(this).attr('data-idplanPago');
     let nombrePlanPago = $(this).attr('data-nombreplan');
+
     console.log('idPlanPago', idPlanPago);
     console.log('nombrePlanPago', nombrePlanPago);
 
@@ -487,93 +637,46 @@ const getPlanPagoDump = (idPlanPago) =>{
 }
 
 function fillTable(data) {
-    console.log(data)
-    
     var tablePagos
 
     const createdCell = function(cell) {
         let original;
 
-        const recalcularPlan = function(row, capital) {
-            // const row = tablePagos.row(e.target.parentElement)
-            //row.invalidate()
-            //console.log('Row changed: ', row.data())
+        const recalcularPlan = function(e) {
+            cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
 
-            // let montoInicial = parseFloat(data.monto)
+            if (original !== e.target.textContent) {
+                const row = tablePagos.row(e.target.parentElement)
+                //row.invalidate()
+                //console.log('Row changed: ', row.data())
 
-            // let capital = parseFloat(e.target.textContent)
+                //console.log(data)
 
-            let pagos = tablePagos.rows().data().toArray()
+                let montoInicial = data.saldoInicialPlan
 
-            let pago_nuevo = row.data()
+                let capital = parseFloat(e.target.textContent)
 
-            let nuevo_capital = parseFloat(data.monto)//montoInicial
+                let pagos = tablePagos.rows().data().toArray()
 
-            let num_pagos = pagos.length
-            for (var p = 0; p < pagos.length; p++) {
-                let pago = pagos[p]
-                //console.log(pago.capital, capital)
+                let pago_nuevo = row.data()
 
-                if(pago.pago == pago_nuevo.pago){
-                    pago.capital = capital
-                }
-
-                if(pago.capital > nuevo_capital){
-                    pago.capital = nuevo_capital
-                }
-
-                nuevo_capital -= pago.capital
-
-                pago.total = pago.capital
-                pago.saldo = nuevo_capital
-
-                if(pago.capital === 0){
-                    pagos.splice(p, 1)
-                }
-
-                if(pagos.length === p + 1){
-                    if(nuevo_capital > 0){
-                        let date_parts = pago.fecha.split('-')
-                        let date = new Date(date_parts[2], date_parts[1] - 1, date_parts[0])
-                        
-                        let new_fecha = new Date(date.setMonth(date.getMonth()+1))
-                        let date_str = [
-                            ('0' + new_fecha.getDate()).slice(-2),
-                            ('0' + (new_fecha.getMonth() + 1)).slice(-2),
-                            new_fecha.getFullYear(),
-                        ].join('-')
-
-                        pagos.push({
-                            capital: nuevo_capital,
-                            fecha: date_str,
-                            interes: pago.interes,
-                            iva: pago.iva,
-                            pago: pagos.length + 1,
-                            planPago: pago.planPago,
-                            saldo: 0,
-                            saldoCapital: pago.saldoCapital,
-                            saldoInteres: pago.saldoInteres,
-                            saldoIva: pago.saldoIva,
-                            total: nuevo_capital,
-                        })
+                let nuevo_capital = montoInicial
+                for(const pago of pagos){
+                    if(pago.pago == pago_nuevo.pago){
+                        pago.capital = capital
                     }
-                }else{
-                    if(nuevo_capital <= 0){
-                        pagos.splice(p + 1, 1)
-                    }
+
+                    nuevo_capital -= pago.capital
+
+                    pago.saldo = nuevo_capital
                 }
-            }
 
-            // console.log(pagos)
-
-            if(num_pagos === pagos.length){
+                //tablePagos.clear()
+                //tablePagos.rows.add(pagos).draw(false)
                 tablePagos
-                .rows()
-                .invalidate()
-                .draw()
-            }else{
-                tablePagos.clear()
-                tablePagos.rows.add(pagos).draw(false)
+                    .rows()
+                    .invalidate()
+                    .draw()
             }
         }
 
@@ -586,28 +689,13 @@ function fillTable(data) {
             original = e.target.textContent
         })
         cell.addEventListener('keydown', function(e) {
-            cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
-
             if (e.keyCode === 13){
                 e.preventDefault()
 
-                const row = tablePagos.row(e.target.parentElement)
-                const capital = parseFloat(e.target.textContent)
-
-                recalcularPlan(row, capital)
+                recalcularPlan(e)
             }
         })
-        cell.addEventListener("blur", function(e) {
-            cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
-
-            if (original !== e.target.textContent) {
-
-                const row = tablePagos.row(e.target.parentElement)
-                const capital = parseFloat(e.target.textContent)
-
-                recalcularPlan(row, capital)
-            }
-        })
+        cell.addEventListener("blur", recalcularPlan )
     }
 
     $('#nombrePlanPagotxt').val(data.nombrePlanPago);
@@ -657,16 +745,6 @@ function fillTable(data) {
                         }
                     }
                 }
-            },
-            {
-                text: "<i class='fas fa-pencil-alt' aria-hidden='true'></i>",
-                titleAttr: 'Editar plan de pago',
-                className: "btn  buttons-pdf editarPlanPago",
-            },
-            {
-                text: "<i class='fas fa-check' aria-hidden='true'></i>",
-                titleAttr: 'Enviar planes de pago',
-                className: "btn btn-azure  enviarPlanPago",
             }
         ],
         pagingType: "full_numbers",
@@ -711,44 +789,50 @@ function fillTable(data) {
             {
                 data: function (d) {
                     if(d.capital){
-                        return parseFloat(d.capital).toFixed(2);
+                        // return d.capital.toFixed(2);
+                        return formatMoney(d.capital);
                     }
                     return ''
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(parseFloat(d.saldoCapital).toFixed(2));
+                    return formatMoney((d.saldoCapital).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(parseFloat(d.interes).toFixed(2));
+                    // return formatMoney((d.interes).toFixed(2));
+                    return formatMoney((d.interes));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(parseFloat(d.saldoInteres).toFixed(2));
+                    // return formatMoney((d.saldoInteres).toFixed(2));
+                    return formatMoney((d.saldoInteres));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(parseFloat(d.iva).toFixed(2));
+                    // return formatMoney((d.iva).toFixed(2));
+                    return formatMoney((d.iva));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(parseFloat(d.saldoIva).toFixed(2));
+                    return formatMoney((d.saldoIva).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(parseFloat(d.total).toFixed(2));
+                    // return formatMoney((d.total).toFixed(2));
+                    return formatMoney((d.total));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(parseFloat(d.saldo).toFixed(2));
+                    // return formatMoney((d.saldo).toFixed(2));
+                    return formatMoney((d.saldo));
                 }
             },
         ],
@@ -778,8 +862,140 @@ function fillTable(data) {
 }
 
 $(document).on('click', '.editarPago', function(){
+    $('#spiner-loader').removeClass('hide');
     console.log('acciones para editar el plan de pago');
+    let idPlanPago = $(this).attr("data-idplanpago");
+    let saldoSigPlan = $(this).attr('data-saldosig');
+    $('#saldoSiguienteModal').val(saldoSigPlan);
+    console.log('idPlanPago: ', idPlanPago);
+    $.ajax({
+        // data: {idLote: idLote},
+        url: 'getPlanPagoEditar/'+idPlanPago,
+        type: 'POST',
+        beforeSend: function () {
+            // $('#spiner-loader').removeClass('hide');
+        },
+        success:  function (response) {
+            response = JSON.parse(response);
+            fillPlanPagoGral(response);
+            $('#spiner-loader').addClass('hide');
+        }
+    });
 });
+async function getDatalogos(){
+    catalogos = await obtenerCatalgosEditar();
+    console.log('catalogos', catalogos);
+
+}
+const obtenerCatalgosEditar = () =>{
+    return new Promise((resolve) => {
+        $.getJSON(`${general_base_url}Corrida/getCatalogosEditarPlan`,function (cats) {
+            resolve(cats);
+        });
+    });
+}
+function fillPlanPagoGral(data){
+    console.log('data', data);
+    let interesesSSI = $('#interesesSSI');
+    $('#planPago').val(data.ordenPago);
+    $('#planPago').attr('readonly', true);
+    $('#descripcionPlanPago').val(data.descripcion);
+    $('#montoPP').val(formatMoney(data.monto));
+
+    $('#tazaInteresPP').val(data.tazaInteres);
+    if(data.tipoPlanPago == 1){
+        $('#tazaInteresPP').attr('readonly', true);
+    }
+
+    $('#noPeriodosPP').val(data.numeroPeriodos);
+    $('#mensualidadPP').val(formatMoney(data.mensualidad));
+    $('#porcentajeIvaPP').val(data.montoIvaPorcentaje);
+    $('#cantidadIvaPP').val((data.cantidadIva<=0) ? 0 : data.cantidadIva);
+    $('#idPlanPagoModal').val(data.idPlanPago);
+
+
+    $('#idLotePP').val(data.idLote);
+    $('#idClientePP').val(data.idCliente);
+    $('#nombreLotePP').val(data.nombreLote);
+
+    monedaCatalogo = data['monedaLista'];
+    periodicidadCatalogo = data['periodicidadLista'];
+    planesPagoCatalogo = data['tipos_planes'];
+
+    //catalogos
+    monedaCatalogo.forEach((monedasData)=>{
+        const id = monedasData.id_opcion;
+        const name = monedasData.nombre;
+        if (id === parseInt(data.moneda)){
+            $("#monedaPP").append($('<option selected>').val(id).text(name.toUpperCase()));
+        } else {
+            $("#monedaPP").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+    });
+    $("#monedaPP").selectpicker('refresh');
+
+    planesPagoCatalogo.forEach((planesPagoData)=>{
+        const id = planesPagoData.id_opcion;
+        const name = planesPagoData.nombre;
+        if (id === parseInt(data.tipoPlanPago)){
+            $("#tipoPP").append($('<option selected>').val(id).text(name.toUpperCase()));
+        } else {
+            $("#tipoPP").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+    });
+    $('#tipoPP').attr('disabled', true);
+    $("#tipoPP").selectpicker('refresh');
+
+    periodicidadCatalogo.forEach((periodicidadData)=>{
+        const id = periodicidadData.id_opcion;
+        const name = periodicidadData.nombre;
+        if (id === parseInt(data.periodicidad)){
+            $("#periocidadPP").append($('<option selected>').val(id).text(name.toUpperCase()));
+        } else {
+            $("#periocidadPP").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+    });
+    $("#periocidadPP").selectpicker('refresh');
+
+
+    if(data.tipoPlanPago == 1){
+        document.getElementById("interesesSSI").checked = false;
+        interesesSSI.attr('disabled', 'disabled');
+    }else{
+        document.getElementById("interesesSSI").checked = false;
+        interesesSSI.attr('disabled', 'disabled');
+        if(data.ssi == 1){
+            document.getElementById("interesesSSI").checked = true;
+            interesesSSI.attr('disabled', false);
+        }
+    }
+    if(data.tazaInteres == 1){
+        document.getElementById("ivaPP").checked = true;
+    }
+
+    if(data.prioridadCalculo == 1){
+        document.getElementById("tipoNc_valor1").checked = true;
+    }else if(data.prioridadCalculo == 2){
+        document.getElementById("tipoNc_valor2").checked = true;
+    }
+
+    let fechaBaseData =  data.fechaInicioPLan;
+    let fecha_formateada = new Date(fechaBaseData);
+    console.log('fecha_formateada', fecha_formateada);
+
+
+
+
+    let dayFormateada = (fecha_formateada.getDate()<10) ? '0'+fecha_formateada.getDate() : fecha_formateada.getDate();
+    let monthFormateada = ((fecha_formateada.getMonth()+1)<10) ? '0'+(fecha_formateada.getMonth()+1) : (fecha_formateada.getMonth()+1) ;
+    let yearFormateada = fecha_formateada.getFullYear();
+    // $('#fechaInicioPP').val(data.fechaInicioPlan);
+
+    $('#fechaInicioPP').val( yearFormateada +'-'+monthFormateada+'-'+ dayFormateada);
+
+
+    $('#addPlanPago').modal('show');
+}
 
 function enviarPlanPago(idLote){
     console.log('se enviara el plan de pago actual');
@@ -790,10 +1006,51 @@ function enviarPlanPago(idLote){
 
 
 }
+
+$(document).on('click', '.enviarPago', function(){
+    console.log('vamonos alv');
+    let idPlanPago = $(this).attr('data-idplanpago');
+    console.log('idPlanPago:', idPlanPago);
+    $('#idPlanPagoIn').val(idPlanPago);
+    $('#aceptarPlanPagoPP').modal();
+});
+
+$(document).on('click', '#aceptarEnvioPP2', function(){
+   console.log('enviio de plan de pago individual');
+    let idPlanPago = $('#idPlanPagoIn').val();
+    console.log('idPlanPago:', idPlanPago);
+    $.ajax({
+        data: {idPlanPago:idPlanPago},
+        url: 'generaPlanPagoEnvioidPago/',
+        type: 'POST',
+        beforeSend: function(){
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function (response) {
+            response = JSON.parse(response);
+            if (response.respuesta == 1) {
+                //enviar el plan generado pero ahora al servicio de NeoData
+                //Descomentar cuando se haga la prueba con el servicio de Rodri
+                servicioNeoData(response);
+            }
+            else if(response.respuesta == -1){
+                alerts.showNotification('top', 'right', 'No hay registro de plan de pagos para enviar o ya se enviaron a Neodata anteriormente.', 'danger');
+                $('#aceptarPlanPagoPP').modal('toggle');
+                $('#spiner-loader').addClass('hide');
+            }
+            else{
+                alerts.showNotification('top', 'right', 'OCURRIO UN ERROR INESPERADO, INTENTELO NUEVAMENTE', 'danger');
+                $('#aceptarPlanPagoPP').modal('toggle');
+                $('#spiner-loader').addClass('hide');
+                $('#tablaPlanPagos').DataTable().ajax.reload();
+            }
+        }
+    });
+});
+
 $(document).on('click', '#aceptarEnvioPP', function(){
 
    let idLote = $('#idLoteSbt').val();
-   console.log('se debe hacer la acción', idLote);
     $.ajax({
         data: {idLote:idLote},
         url: 'generaPlanPagoEnvio/',
@@ -803,35 +1060,287 @@ $(document).on('click', '#aceptarEnvioPP', function(){
         },
         success: function (response) {
             response = JSON.parse(response);
-            console.log('response',response);
             if (response.respuesta == 1) {
-
+                console.log("response:", response);
+                servicioNeoData(response);
 
                 //enviar el plan generado pero ahora al servicio de NeoData
                 //Descomentar cuando se haga la prueba con el servicio de Rodri
-                // $.ajax({
-                //     data: {planPago:response.planServicio},
-                //     url: 'generaPlanPagoEnvio/',
-                //     type: 'POST',
-                //     success: function (response) {
-                //         $('#aceptarPlanPago').modal('toggle');
-                //         $('#spiner-loader').addClass('hide');
-                        //     alerts.showNotification('top', 'right', 'Se envió correctamente el plan de pago', 'success');
-                        //     $('#tablaPlanPagos').DataTable().ajax.reload();
-                //     }
-                // });
 
-                //código de prueba para no ejecutar el servicio y llamar a NeoData
+
+                /*console.log('response', response);
+                planesDePagoIds = response.planesPagoIds;
+                $.ajax({
+                     data:JSON.stringify(response.planServicio),
+                     url: 'http://192.168.16.20/neodata_reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
+                     type: 'POST',
+                     success: function (response) {
+                         console.log('RESPUES NEODATA:'+response);
+                         response = JSON.parse(response);
+                         let statusAviso;
+                         if(response.status === true){
+                             statusAviso = 'success';
+                             //actualizar los registros de los  planes de pago com enviados
+                             $.ajax({
+                                 data:{ids:planesDePagoIds},
+                                 url: 'actualizaPlanPagoStatus',
+                                 type: 'POST',
+                                 success: function (response) {
+                                     response = JSON.parse(response);
+                                     let statusAviso;
+                                     if(response.status === true){
+                                         statusAviso = 'success';
+                                         //actualizar los registros de los  planes de pago com enviados
+                                     }else{
+                                         statusAviso = 'danger';
+                                     }
+                                     alerts.showNotification('top', 'right', response.msj, statusAviso);
+                                     $('#aceptarPlanPago').modal('toggle');
+                                     $('#spiner-loader').addClass('hide');
+                                     $('#tablaPlanPagos').DataTable().ajax.reload();
+                                 }
+                             });
+                         }else{
+                             statusAviso = 'danger';
+                             alerts.showNotification('top', 'right', response.msj, statusAviso);
+                             $('#aceptarPlanPago').modal('toggle');
+                             $('#spiner-loader').addClass('hide');
+                             $('#tablaPlanPagos').DataTable().ajax.reload();
+                         }
+                     }
+
+                 });*/
+
+
+            } else if(response.respuesta == -1){
+                alerts.showNotification('top', 'right', 'No hay registro de plan de pagos para enviar o ya se enviaron a Neodata anteriormente.', 'danger');
+                $('#aceptarPlanPago').modal('toggle');
+                $('#spiner-loader').addClass('hide');
+            } else{
+                alerts.showNotification('top', 'right', 'OCURRIO UN ERROR INESPERADO, INTENTELO NUEVAMENTE', 'danger');
                 $('#aceptarPlanPago').modal('toggle');
                 $('#spiner-loader').addClass('hide');
                 $('#tablaPlanPagos').DataTable().ajax.reload();
-                alerts.showNotification('top', 'right', 'Se envió correctamente el plan de pago', 'success');
-
-            } else {
-                alerts.showNotification('top', 'right', 'OCURRIO UN ERROR INESPERADO, INTENTELO NUEVAMENTE', 'danger');
             }
 
         }
     });
 });
 
+function servicioNeoData(response){
+    planesDePagoIds = response.planesPagoIds;
+    console.log("planesDePagoIds", planesDePagoIds);
+
+    $.ajax({
+        data:JSON.stringify(response.planServicio),
+        url: 'http://192.168.16.20/neodata_reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
+        type: 'POST',
+        success: function (response) {
+            console.log('RESPUES NEODATA:'+response);
+            response = JSON.parse(response);
+            let statusAviso;
+            if(response.status === true){//resultado general de la consulta
+                statusAviso = 'success';
+
+                let banderaActualizado = 0;
+                response.data.map((elemento, index)=>{//se recorre la respuesta del servidor de NEODATA
+                    console.log('elemento', elemento);
+                    let avisoCRM = '';
+                    if(elemento.status === true){//revisa el estado de la transacción interna de los planes
+                        statusAviso = 'success';
+                        banderaActualizado += 1;
+                        planesDePagoIds.map((planPagoObject, index2)=>{//se recorren los planes de pago del CRM
+                            if(planPagoObject.numPlanPago == elemento.numPlan){//se checa que se haya insertado en NEODATA para actualziarlo en CRM
+                                $.ajax({
+                                    data:{idPlanPago:planPagoObject.idPlanPago},
+                                    url: 'actualizaPlanPagoIndividual',
+                                    type: 'POST',
+                                    success: function (response) {
+                                        response = JSON.parse(response);
+                                        let statusAviso;
+                                        if(response.status === true){//status de la transacción general
+                                            console.log('response: ', response);
+                                            statusAviso = 'success';
+                                        }else{
+                                            statusAviso = 'danger';
+                                        }
+                                        alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else{
+                        statusAviso = 'danger';
+                        avisoCRM = ' [CRM] Registro no actualizado PLAN PAGO '+elemento.numPlan;
+                    }
+                    alerts.showNotification('top', 'right', '[NEODATA] '+elemento.msj+avisoCRM, statusAviso);
+                });
+
+                // if(response.data.length == banderaActualizado){
+                //     $.ajax({
+                //         data:{ids:planesDePagoIds},
+                //         url: 'actualizaPlanPagoStatus',
+                //         type: 'POST',
+                //         success: function (response) {
+                //             response = JSON.parse(response);
+                //             let statusAviso;
+                //             if(response.status === true){//status de la transacción general
+                //                 console.log('response.data: ', response.data);
+                //                 statusAviso = 'success';
+                //
+                //             }else{
+                //                 statusAviso = 'danger';
+                //             }
+                //             alerts.showNotification('top', 'right', response.msj, statusAviso);
+                //
+                //         }
+                //     });
+                // }
+
+
+                //actualizar los registros de los  planes de pago com enviados
+                $('#aceptarPlanPago').modal('hide');
+                $('#aceptarPlanPagoPP').modal('hide');
+                $('#spiner-loader').addClass('hide');
+                $('#tablaPlanPagos').DataTable().ajax.reload();
+            }
+            else{
+                statusAviso = 'danger';
+                alerts.showNotification('top', 'right', response.msj, statusAviso);
+                $('#aceptarPlanPago').modal('hide');
+                $('#aceptarPlanPagoPP').modal('hide');
+                $('#spiner-loader').addClass('hide');
+                $('#tablaPlanPagos').DataTable().ajax.reload();
+            }
+        }
+
+    });/**/
+    setTimeout(()=>{
+        $('#tablaPlanPagos').DataTable().ajax.reload();//recargar la tabla por si no se recargó correctamente
+    }, 3000)
+}
+
+$(document).on('change','#tazaInteresPP', function(){
+    let tazaInteresPP = parseInt($('#tazaInteresPP').val());
+        console.log('Ha cambiado a:', tazaInteresPP);
+    let tipoPP = parseInt($(this).val());
+    let interesesSSI = $('#interesesSSI');
+    let tipoNc_valor1 = document.getElementById("tipoNc_valor1");
+    let tipoNc_valor2 = document.getElementById("tipoNc_valor2");
+    let labelTipoNc_valor1 = document.getElementById("labelTipoNc_valor1");
+
+    if(tazaInteresPP <= 0){
+        interesesSSI.attr('disabled', 'disabled');
+        tipoNc_valor1.disabled = false;
+        tipoNc_valor2.disabled = false;
+
+        tipoNc_valor1.checked  = false;
+        tipoNc_valor2.checked  = false;
+        labelTipoNc_valor1.classList.remove('disabledClassRadio');
+    }else{
+        interesesSSI.removeAttr('disabled');
+        tipoNc_valor1.disabled = true;
+        tipoNc_valor2.disabled = true;
+
+        tipoNc_valor1.checked  = true;
+        tipoNc_valor2.checked  = false;
+        labelTipoNc_valor1.classList.add('disabledClassRadio');
+    }
+
+});
+
+$(document).on('click', '.cancelarPlanPago', function(){
+    //CDMAGS-LAVH-097
+    //@numPlanPagoCRM = 2
+    let numeroPlanPago = $(this).attr('data-planpagonumero');
+    let nombreLote = $(this).attr('data-nomlote');
+    let idLote = $(this).val();
+    let nombrePlan = $(this).attr('data-nombrePlan');
+    let idPlanPago = $(this).attr('data-idplanpago');
+    console.log('nombrePlan', nombrePlan);
+    // idLoteCancelado
+    //cancelarPlanPago
+    $('#idLoteCancelado').val(idLote);
+    // nombreLoteCancelado
+    // document.getElementById("nombrePlanPagoCancelatxt").innerText = nombrePlan;
+    $("#nombrePlanPagoCancelatxt").text(nombrePlan);
+    $('#nombreLoteCancelado').val(nombreLote);
+    $('#numeroPlanLoteCancelado').val(numeroPlanPago);
+    $('#idPlanPagoCancelado').val(idPlanPago);
+    $('#cancelarPlanPago').modal('toggle');
+
+    console.log('numeroPlanPago', numeroPlanPago);
+    console.log('nombrePlan', nombrePlan);
+    /*$.ajax({
+        data:{data:1},
+        url: 'Corrida/cancelaPlanPagoNeo',
+        type: 'POST',
+        success: function (response) {
+            response = JSON.parse(response);
+            let statusAviso;
+            if(response.status === true){//status de la transacción general
+                console.log('response: ', response);
+                statusAviso = 'success';
+            }else{
+                statusAviso = 'danger';
+            }
+            alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
+
+        }
+    });*/
+});
+
+$(document).on('click', '#cancelarPP', ()=>{
+    let nombreLoteCancelado = $('#nombreLoteCancelado').val();
+    let numeroPlanLoteCancelado = $('#numeroPlanLoteCancelado').val();
+    let idPlanPago = $('#idPlanPagoCancelado').val();
+
+    $.ajax({
+        data:{nombreLoteCancelado:nombreLoteCancelado, numeroPlanLoteCancelado:numeroPlanLoteCancelado},
+        url: 'cancelaPlanPagoNeo',
+        type: 'POST',
+        success: function (response) {
+            console.log('response', response);
+            response = JSON.parse(response);
+            response = response.responseGeneral[0];
+            console.log('response JSON', response);
+
+            let statusAviso;
+            if(response.status === 1){//status de la transacción general
+                statusAviso = 'success';
+                //actualizar elmplan de pago en CRM
+                cancelaPlanCRM(idPlanPago);
+            }else{
+                statusAviso = 'danger';
+                if(response.msj == 'No existe el plan de pagos activo para el lote proporcionado'){
+                    cancelaPlanCRM(idPlanPago);
+                }
+            }
+            alerts.showNotification('top', 'right', "[NEODATA] "+response.msj, statusAviso);
+            $('#cancelarPlanPago').modal('toggle');
+        }
+    });
+    $('#tablaPlanPagos').DataTable().ajax.reload();
+});
+
+function cancelaPlanCRM(idPlanPago){
+    $.ajax({
+        data:{idPlanPago:idPlanPago},
+        url: 'cancelaPlanPagoCRM',
+        type: 'POST',
+        success: function (response) {
+            response = JSON.parse(response);
+            let statusAviso;
+            if(response.status === 1 || response.status === true){//status de la transacción general
+                statusAviso = 'success';
+                //actualizar el plan de pago en CRM
+            }else{
+                statusAviso = 'danger';
+            }
+            alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
+            $('#tablaPlanPagos').DataTable().ajax.reload();
+        }
+    });
+}

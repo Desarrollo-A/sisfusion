@@ -856,10 +856,12 @@
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, 
         UPPER(concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno)) as gerente, lotes.referencia,lotes.observacionContratoUrgente, hl.modificado as modificado_historial,Upper( st.nombre) as estatus_lote, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta, 
 		st.color, lotes.status8Flag, hl2.modificado fechaEstatus7, hl3.modificado fechaEstatus8,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta,
+		cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
         FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
 		LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
+		LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial AND residencial.sede_residencial = $id_sede $where
         LEFT JOIN usuarios AS us ON cl.id_asesor=us.id_usuario
@@ -880,7 +882,7 @@
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
         concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, 
 		lotes.referencia, lotes.observacionContratoUrgente, hl.modificado, st.nombre, tv.tipo_venta, st.color, lotes.status8Flag, hl2.modificado, hl3.modificado,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '')");
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), cl.sedeRecepcion, sed.nombre");
 		return $query->result();
 	}
 	
@@ -1583,10 +1585,13 @@
 				cl.id_cliente_reubicacion, 
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, 
 				ISNULL(hd.expediente, 0) documentoCargado, 
-				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta 
+				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta,
+				cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion, cl.tipoEnganche, oxc.nombre
 			FROM lotes lo 
-				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1 
+				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1
+				LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
 				LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
+				LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
 				INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
 				INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
 				LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
@@ -1634,7 +1639,8 @@
 				cl.id_cliente_reubicacion, 
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), 
 				hd.expediente, 
-				tv.tipo_venta"
+				tv.tipo_venta,
+				cl.sedeRecepcion, sed.nombre, cl.tipoEnganche, oxc.nombre"
 		)->result();
     }
 
@@ -3400,7 +3406,7 @@
 						'1' venta_compartida 
 					FROM 
 						lotes lo
-						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
+						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_asesor = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
 					WHERE 
 						lo.status = 1 
 						AND lo.idCondominio = $condominio 
@@ -3414,7 +3420,7 @@
 					FROM 
 						lotes lo
 						INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
+						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_asesor = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
 					WHERE 
 						vc.estatus = 1 
 						AND lo.status = 1 
@@ -3507,14 +3513,14 @@
 				} else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
 					$id_lider = $id_lider . ', 1916, 11196'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
 					$sede = "";
+				} else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
+					$id_lider = $id_lider . ', 12688, 495';
+					$sede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
 					$id_lider = $id_lider . ', 5604';
 					$sede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
-					$sede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-					$id_lider = $id_lider . ', 21, 1545';
 					$sede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
 					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
@@ -3523,16 +3529,37 @@
 					$id_lider = $id_lider . ', 694, 4509';
 					$sede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-					$id_lider = $id_lider . ', 13295';
-					$sede = "";
-				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-					$id_lider = $id_lider . ', 3111';
+					$id_lider = $id_lider . ', 13295, 7970';
 					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
 					$sede = "";
 				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
 					$id_lider = $id_lider . ', 6942';
+					$sede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+					$id_lider = $id_lider . ', 6661';
+					$sede = "";
+				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
+					$id_lider = $id_lider . ', 80, 664';
+					$sede = "";
+				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
+					$id_lider = $id_lider . ', 12688';
+					$sede = "";
+				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
+					$id_lider = $id_lider . ', 13016, 12027';
+					$sede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+					$id_lider = $id_lider . ', 13059, 11680';
+					$sede = "";
+				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+					$id_lider = $id_lider . ', 10251';
+					$sede = "";
+				} else if ($id_usuario == 16186) { // CAROLINA CORONADO YAÑEZ
+					$id_lider = $id_lider . ', 6942';
+					$sede = "";
+				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
+					$id_lider = $id_lider . ', 654, 697, 5604, 10251, 12688';
 					$sede = "";
 				}
 
@@ -3637,7 +3664,7 @@
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso
+        lo.status8Flag, u0.estatus AS estatusAsesor, cl.proceso, hd.bucket
 		FROM historial_documento hd
 		INNER JOIN lotes lo ON lo.idLote = hd.idLote
 		INNER JOIN clientes cl ON  lo.idCliente = cl.id_cliente AND cl.idLote = lo.idLote AND cl.status = 1
@@ -3942,6 +3969,18 @@
 			$where = "AND cond.idCondominio = $id_condominio";
         }
 		
+		if(in_array($this->session->userdata('id_rol'),array(3,6))){
+			$idUsuario = $this->session->userdata('id_rol') == 3 ? $this->session->userdata('id_usuario') : $this->session->userdata('id_lider');
+			$sqlRol = " AND cl.id_gerente=".$idUsuario;
+		}else if( $this->session->userdata('id_rol') == 2){
+			$sqlRol = " AND cl.id_subdirector = ".$this->session->userdata('id_usuario')." OR cl.id_regional = ".$this->session->userdata('id_usuario');
+		}else{
+			$sqlRol = "";
+		}
+
+
+
+
 		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
 		cl.id_sede, personalidad_juridica, cl.nacionalidad,
 		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
@@ -3973,7 +4012,7 @@
 		LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
 		LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
 		LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
-		WHERE cl.status = 1 $where
+		WHERE cl.status = 1 $where $sqlRol
 		ORDER BY cl.id_cliente DESC")->result();
     }
 

@@ -225,30 +225,30 @@
             $this->db->query("UPDATE clientes SET status = 0 WHERE status = 1 and idLote IN (".$row['idLote'].") ");
             $this->db->query("UPDATE historial_enganche SET status = 0, comentarioCancelacion = 'LOTE LIBERADO' WHERE status = 1 and idLote IN (".$row['idLote'].") ");
             $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 and idLote IN (".$row['idLote'].") ");
+            $this->db->query("UPDATE informacion_lotes SET estatus = 0 WHERE estatus = 1 and idLote IN (".$row['idLote'].") ");
             $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total FROM comisiones where id_lote=".$row['idLote']."")->result_array();
             for ($i=0; $i <count($comisiones) ; $i++) {
                 $sumaxcomision=0;
                 $pagos_ind = $this->db->query("select * from pago_comision_ind where id_comision=".$comisiones[$i]['id_comision']."")->result_array();
-                
-                for ($j=0; $j <count($pagos_ind) ; $j++) { 
+                for ($j=0; $j <count($pagos_ind) ; $j++) {
                     $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
                 }
                 $this->db->query("UPDATE comisiones set  modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
             }
             $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  where id_lote=".$row['idLote']." ");
-           //PAQUETES CF
-           if($datos['tipo_lote'] == 1 ){ //1 - Comercial
+            //PAQUETES CF
+            if($datos['tipo_lote'] == 1 ){ //1 - Comercial
                 //si el condominio es comercial solo consultar sin importar la superficie
-               $descuentos=$datos['descuentosComerciales'];
-              }else{ //0 - Habitacional
-                      $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMayores'];
-                      //var_dump($datos['descuentoHabMenores']);
-             }
-             $descuento = $descuentos != NULL ? "id_descuento='$descuentos'," : "id_descuento=NULL,";
-            
-        /**----------------------------------------------- */
-           
-           
+                $descuentos=$datos['descuentosComerciales'];
+            }else{ //0 - Habitacional
+                $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMayores'];
+                //var_dump($datos['descuentoHabMenores']);
+            }
+            $descuento = $descuentos != NULL ? "id_descuento='$descuentos'," : "id_descuento=NULL,";
+
+            /**----------------------------------------------- */
+
+
             $data_l = array(
                 'nombreLote'=> $datos['nombreLote'],
                 'comentarioLiberacion'=> $datos['comentarioLiberacion'],
@@ -263,12 +263,11 @@
                 'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
             );
             $this->db->insert('historial_liberacion',$data_l);
-            
+
             $tventa = ($row['tipo_venta'] == 1) ? 1 : ($datos['activeLP'] == 1 ? 1 : 0);
             if ($datos['activeLE'] == 0) {
                 $st = ($datos['activeLP'] == 1) ? 1 : 1;
                 $tv = ($datos['activeLP'] == 1) ? 1 : 0;
-                
                 if ($tv == 1) { // LIBERACIÓN VENTA DE PARTICULAES
                     $data_lp = array(
                         'id_lote'=> $row['idLote'],
@@ -315,7 +314,7 @@
                 WHERE idLote IN (".$row['idLote'].") and status = 1 ");
             } else if ($datos['activeLE'] == 1) {
                 $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
-                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
+                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = '".$userLiberacion."', perfil = 'NULL ', 
                 fechaVenc = null, modificado = null, status8Flag = 0,
                 ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
                 totalValidado = 0, validacionEnganche = 'NULL', 
@@ -335,13 +334,13 @@
                 saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1)),
                 asig_jur = 0
                 WHERE idLote IN (".$row['idLote'].") and status = 1 ");
-            }         
+            }
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 return false;
             } else {
                 $this->db->trans_commit();
-                if (intval($row['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+                if (intval($row['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS
                     $arcusData = array(
                         "propiedadRelacionada" => $row['idLote'],
                         "uid" => $row['id_arcus'],
@@ -351,9 +350,8 @@
                 }
                 return true;
             }
-        }      
+        }
     }
-
 
     public function uploadSup($datos)
     {
@@ -536,14 +534,21 @@
     }
 
 
-    public function getCondominioByIdLote($idLote)
-    {
-        $this->db->select('*');
-        $this->db->join('condominios cond', 'cond.idcondominio = l.idCondominio');
-
-        $this->db->where('idLote', $idLote);
-        $query = $this->db->get("lotes l");
-        return $query->result_array();
+    public function getCondominioByIdLote($idLote) {
+        return $this->db->query(
+            "SELECT 
+                co.idCondominio,
+                lo.idLote,
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData
+            FROM 
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            WHERE 
+                lo.idLote = $idLote
+            "
+        )->result_array();
     }
 
     public function getLoteData($idLote)
@@ -802,7 +807,7 @@
 
     public function getGerente()
     {
-        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5, 7092, 14161)");
+        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5, 7092, 14161, 15844)");
         return $query->result_array();
     }
 
@@ -814,7 +819,7 @@
             SELECT id_usuario, CONCAT(id_usuario,' - ', nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_usuario = $id_gerente");*/
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
-			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5,7092, 10806)) ORDER BY nombre");
+			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5,7092, 10806, 15844)) ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -826,7 +831,7 @@
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
 			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR 
-            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626, 7092, 5))  ORDER BY nombre");
+            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626, 7092, 5, 691))  ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -1410,8 +1415,8 @@
     public function getLider($id_gerente) {
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
-        WHEN us.id_lider = 7092 THEN 3 
-        WHEN us.id_lider IN (9471, 681, 609, 2411, 9783) THEN 607 
+        WHEN us.id_lider IN (7092, 15316) THEN 3 
+        WHEN us.id_lider IN (9471, 681, 609, 2411, 9783, 896) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider IN (703, 19) THEN 4
         WHEN us.id_lider = 7886 THEN 5
@@ -1566,6 +1571,60 @@
     }
     public function getDatosCondominio($idCondominio){
         return $this->db->query("SELECT tipo_lote FROM condominios WHERE idCondominio=$idCondominio")->result_array();
-     }
+    }
+
+    public function getInformaciongGeneralPorCliente($id_cliente) {
+        return $this->db->query(
+            "SELECT
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData,
+                cl.telefono1,
+                cl.ladaTel1,
+                cl.telefono2,
+                cl.correo,
+                cl.fecha_nacimiento,
+                CONVERT(varchar, cl.fechaApartado, 23) fechaApartado,
+                lo.referencia,
+                cl.rfc,
+                cl.estado,
+                cl.pais,
+                cl.genero,
+                cl.municipio,
+                cl.tipoMoneda,
+                cl.exterior,
+                cl.interior,
+                cl.cp,
+                cl.calle,
+                cl.localidad, 
+                cl.regimen_fac,
+                cl.cp_fac, 
+                cl.colonia,
+                cl.pais
+
+            FROM
+                clientes cl
+            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+            WHERE
+                cl.id_cliente = $id_cliente"
+        )->row();
+    }
+
+    public function getInformaciongGeneralPorLote($idLote) {
+        return $this->db->query(
+            "SELECT
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData,
+                lo.referencia
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            WHERE
+                lo.idLote = $idLote"
+        )->row();
+    }
 
 }

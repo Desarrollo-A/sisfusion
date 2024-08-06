@@ -1,8 +1,9 @@
 $(document).on('click', '.btn-historial', function () {
     let idLoteOrigen = $(this).attr("data-idLote");
+    let flagFusion = $(this).attr("data-flagFusion");
     $('#historialLine').html('');
     $("#spiner-loader").removeClass('hide');
-    $.post(`getHistorialPorLote/${idLoteOrigen}`).done(function (data) {
+    $.post(`getHistorialPorLote/${idLoteOrigen}/${flagFusion}`).done(function (data) {
         $("#modal_historial").modal();
         if (JSON.parse(data).length > 0) {
             $.each(JSON.parse(data), function (i, v) {
@@ -17,6 +18,9 @@ $(document).on('click', '.btn-historial', function () {
 });
 
 function fillChangelog(v) {
+    
+    const comentario = v.comentario.trim() === "" ? "(Sin comentario)" : v.comentario;
+    console.log(v);
     $("#historialLine").append(`<li>
         <div class="container-fluid">
             <div class="row">
@@ -30,6 +34,9 @@ function fillChangelog(v) {
                     <p class="m-0"><small>Estatus: </small><b>  ${v.movimiento} </b></p>
                 </div>
             </div>
+        </div>
+        <div class="col-md-12">
+            <p class="m-0"><small>Comentario: </small><b>  ${comentario} </b></p>
         </div>
     </li>`);
 }
