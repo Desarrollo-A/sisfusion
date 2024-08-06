@@ -6609,58 +6609,47 @@ WITH UltimoValor AS (
 
 -- Consulta principal
 SELECT cl.id_cliente_reubicacion_2,
-       cl.idLote AS idLoteDestino,
-       lo.nombreLote AS nombreDestino,
-       lo.sup AS superficieDestino,
-       lo.totalNeto2 AS totalNeto2Destino,
-       clReu.id_cliente AS clienteReubicado,
-       loReu.idLote AS idLoteOrigen,
-       loReu.nombreLote AS nombreOrigen,
-       cl.total8P AS montoExcedente,
+        cl.idLote AS idLoteDestino,
+        lo.nombreLote AS nombreDestino,
+        lo.sup AS superficieDestino,
+        lo.totalNeto2 AS totalNeto2Destino,
+        clReu.id_cliente AS clienteReubicado,
+        loReu.idLote AS idLoteOrigen,
+        loReu.nombreLote AS nombreOrigen,
+        cl.total8P AS montoExcedente,
        ((lo.sup) - ((loReu.sup * 0.05) + (loReu.sup))) AS Excedente_sup,
-      
 		((CAST(UPDL.anterior AS NUMERIC) * 0.01) * @porcentaje) AS porciento1,
 		
 
 		UPDL.anterior AS totalNeto2Origen,
        ((cl.total8P * @excedente) / 100) AS ExcedenteDinero,
-       loReu.sup AS superficieOrigen
-FROM lotes lo
-INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente		
-INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
-LEFT JOIN UltimoValor UPDL   ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
-WHERE lo.idLote = @lote;";
+        loReu.sup AS superficieOrigen
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.idLote = lo.idLote 
+        INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente		
+        INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
+        LEFT JOIN UltimoValor UPDL   ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
+        WHERE lo.idLote = @lote;";
         $query = $this->db->query($cmd);
 
         return $query->result_array();
     }
 
-    
 
-
-
-
-
-
-
-
-
-
-
-
-    public function insertComisionesCasas($idLote){
+    public function insertComisionesCasas($idLote, $abonoNeodata,$abonoFinal, $porcentajes , $usuarioXdispersar,$comisionTotal , $porcentajeDecimal,$rolGenerado,$cliente ){
         
             // Query SQL completo
+
+
     $cmd = "
     EXEC MiProcedimiento 
-	@abonoNeodata = 100.00,@pagoNeodata =20.00,
-	@comentario = 'data prueba procedimiento ',@abonoFinal = 100,
-	@porcentajes = 8.00,@DispersadoPor = 1, 
-	@idLote = 16301, @idUsuario =  10299,
-	@ComisionTotal = 1000.00, @estatus = 1,
-	@observaciones = 'ejejeje' ,@porcentajeDecimal = 1.00,
-	@rolGenerado = 7 , @cliente = 112;
+	@abonoNeodata = $abonoNeodata ,@pagoNeodata =$pagoNeodata ,
+	@comentario = 'Nueva dispersión : casas ',@abonoFinal = $abonoFinal ,
+	@porcentajes = $porcentajes,@DispersadoPor = 1, 
+	@idLote = $idLote , @idUsuario = $idUsuario ,
+	@ComisionTotal = $comisionTotal, @estatus = 1,
+	@observaciones = 'Nueva dispersión : casas' ,@porcentajeDecimal = $porcentajeDecimal,
+	@rolGenerado = $rolGenerado , @cliente = $cliente;
     ";
     $query = $this->db->query($cmd);
     echo json_encode( $this->db->query("SELECT * FROM #pago_casas_temp")->result());
