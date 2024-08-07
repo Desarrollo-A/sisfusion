@@ -262,7 +262,7 @@ go_to_cotizaciones = function(data) {
     window.location.href = `cotizaciones/${data.idProcesoCasas}`;
 }
 
-function replace_upload(data ) {
+function upload(data ) {
 
     let form = new Form({
         title: 'Reemplazar archivo',
@@ -300,7 +300,7 @@ function replace_upload(data ) {
     form.show()
 }
 
-function upload(data) {
+function replace_upload(data) {
 
     let form = new Form({
         title: 'Cargar documento',
@@ -338,7 +338,6 @@ function upload(data) {
     form.show()
 }
 
-
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
 
@@ -353,7 +352,7 @@ function show_preview(data) {
     });
 }
 
-back_to_documentos = function(proceso) {
+back_to_documentos = function(data) {
     let form = new Form({
         title: 'Rechazar proceso', 
         text: `¿Deseas realizar el rechazar de proceso del lote ${data.nombreLote}`,
@@ -381,7 +380,7 @@ back_to_documentos = function(proceso) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id', value: proceso.idProcesoCasas }),
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -463,10 +462,10 @@ let columns = [
         if(idRol == 101){
             if (data.constancia) {
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
-                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
+                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
                 pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_propuestas, data})
             }else{
-                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
+                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
             }
         }
 
@@ -478,10 +477,8 @@ let columns = [
 
             if (data.titulacion) {
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar títulos de propiedad`, onClick: show_preview, data})
-                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: replace_upload, data })
-            }else{
-                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
             }
+                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
 
         }
         
