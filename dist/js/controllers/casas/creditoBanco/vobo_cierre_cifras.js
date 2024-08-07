@@ -68,7 +68,7 @@ pass_to_vobo_cifras = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/VoboCierreCifras`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -87,10 +87,7 @@ pass_to_vobo_cifras = function (data) {
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
-            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 14 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -157,7 +154,7 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/getLotesProcesoBanco',
+    url: 'casas/getVoboCierreCifras',
     params: { proceso: 13, tipoDocumento: 0 },
     buttons: buttons,
     columns,
@@ -172,7 +169,7 @@ rechazo_proceso = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/RechazoVoboCierreCifras`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -190,11 +187,7 @@ rechazo_proceso = function (data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'idLote', value: data.idLote }),
-            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 12 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),    
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

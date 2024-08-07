@@ -212,10 +212,10 @@ let columns = [
     {
         data: function (data) {
             let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avance_contratos, data })
-            let decline_button = ''
             let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver documento', onClick: show_preview, data })
             let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `Cargar documento`, onClick: file_upload, data })
             let subir_contratos = new RowButton({icon: 'toc', color: '', label: 'Subir contratos', onClick: go_to_documentos, data});
+            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data })
 
             if( tipo == 1 && data.contratoTitulacion == 0){
                 if(data.documentos == 3){
@@ -234,9 +234,6 @@ let columns = [
                 }
             }
             if( tipo == 3 && data.contratoPV == 0){
-                if(idUsuario == 2896){
-                    decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data })
-                }
                 if(data.documento != null){
                     return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>` 
                 }
