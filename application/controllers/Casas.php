@@ -399,7 +399,7 @@ class Casas extends BaseController
         $gerente = $this->form('gerente');
         $idUsuario = $this->session->userdata('id_usuario');
 
-        $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crdito - 1: bancario - 2: directo
+        $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crédito - 1: bancario - 2: directo
         $banderaSuccess = true;
 
         if (!isset($idLote) || !isset($gerente) || !isset($esquemaCredito)) {
@@ -467,7 +467,7 @@ class Casas extends BaseController
             "procesoNuevo"          => $proceso,
             "fechaMovimiento"       => date("Y-m-d H:i:s"),
             "creadoPor"             => $this->session->userdata('id_usuario'),
-            "descripcion"           => "Se asigno el asesor: " . $asesor->nombre . " - con id: " . $asesor->idUsuario,
+            "descripcion"           => "Se asignó el asesor: " . $asesor->nombre . " (" . $asesor->idUsuario . ")",
             "esquemaCreditoProceso" => $esquemaCreditoCasas
         );
 

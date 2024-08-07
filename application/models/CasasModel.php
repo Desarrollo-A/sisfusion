@@ -171,17 +171,18 @@ class CasasModel extends CI_Model
                 co.nombre condominio, 
                 re.descripcion proyecto, 
                 CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END cliente, 
-                CASE WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente,
+                CASE WHEN cl.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente,
                 ISNULL(cl.id_cliente, 0) idCliente
             FROM 
                 lotes lo 
             LEFT JOIN proceso_casas pc ON pc.idLote = lo.idLote AND pc.status = 1 
-            LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.esquemaCreditoCasas = 0 OR cl.esquemaCreditoCasas IS NULL)
-            LEFT JOIN usuarios u2 ON u2.id_usuario = pc.idGerente 
+            LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 
+            LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente_c 
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
             WHERE 
-                lo.idStatusLote = 2")->result();
+                lo.idStatusLote = 2
+            AND (cl.esquemaCreditoCasas = 0 OR cl.esquemaCreditoCasas IS NULL)")->result();
     }
 
     public function getListaAsignacion(){
@@ -202,17 +203,17 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
-			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
-		END AS gerente,
+                WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+        END AS gerente,
         oxc.nombre AS movimiento,
         oxc.color,
         cli.id_cliente AS idCliente
         FROM proceso_casas pc
-        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+        LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
