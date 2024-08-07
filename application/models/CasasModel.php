@@ -472,7 +472,6 @@ class CasasModel extends CI_Model
     }
 
     public function getListaConcentradoAdeudos($tipoDoc, $rol){
-
         if($rol == 99){
 			$vobo  = "AND vb.ooam = 0";
 		}else if($rol == 11 || $rol == 33){
@@ -497,7 +496,7 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+			 WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc.nombre AS movimiento,
@@ -508,10 +507,10 @@ class CasasModel extends CI_Model
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
-        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
 		LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = $tipoDoc
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 1
