@@ -5751,13 +5751,19 @@ public function insertComisionesCasas() {
     $id_rol = $this->input->post("id_rol[]");
     $comision_abonada = $this->input->post("comision_abonada[]");
     $comision_pendiente = $this->input->post("comision_pendiente[]");
-
+    $pago = $this->input->post("pago_neo");
+    $porcentajes =  1;
+    $abonoFinal = 0;
+    $idCliente = $this->input->post("idCliente");
     for ($i=0; $i <count($id_usuario) ; $i++) { 
 
-        // $respuesta_casas = $this->comisiones_model->insertComisionesCasas($id_usuario[$i],);
-        // $respuesta = $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
-    
-        // echo '<br>'.$respuesta.'<br>';
+
+        $respuesta_casas = $this->comisiones_model->insertComisionesCasas(
+            $lote_1,$pago,$abonoFinal,
+            $porcentajes,$id_usuario[$i],$comision_total[$i],
+            $porcentaje[$i],$id_rol[$i],$idCliente
+        );
+
     
     }
 
