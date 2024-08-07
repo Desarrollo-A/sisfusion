@@ -131,7 +131,7 @@ class PlanesPago extends CI_Controller {
                 $pago->pagado = 1;
                 $pagos[$num_pago] = $pago;
 
-                if($monto < 0){
+                if(round($monto, 2) < 0){
                     $pagos = $this->insertar_pago($pagos, $num_pago, $monto);
                 }
 
