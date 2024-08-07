@@ -293,9 +293,10 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         data-code = "${d.cbbtton}"
                         data-opcionMensualidad = "${d.opcionMensualidad}"
                         data-nombreMensualidad = "${d.nombreMensualidad}"
-                        class = "btn-data ${varColor} verify_neodataCasas" data-toggle="tooltip"  data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
+                        class = "btn-data ${varColor} verify_neodataCasas" data-prioridad="${d.prioridadComision}" data-toggle="tooltip"  data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                         
-                        BtnStats += `<button href="#" value="${d.idLote}" data-prioridad="${d.prioridadComision}" data-nombreLote="${d.nombreLote}" class="btn-data btn-blueMaderas btn-prioridad" data-toggle="tooltip"  data-placement="top" title="Prioridad"> <i class="material-icons">group</i></button>`;
+                        let colorPrioridad = d.prioridadComision == 1 ? 'btn-warning' : 'btn-blueMaderas' ;
+                        BtnStats += `<button href="#" value="${d.idLote}" data-prioridad="${d.prioridadComision}" data-idCliente="${id_cliente}" data-nombreLote="${d.nombreLote}" class="btn-data ${colorPrioridad} btn-prioridad" data-toggle="tooltip"  data-placement="top" title="Prioridad"> <i class="material-icons">group</i></button>`;
                         //BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
                     
             }
@@ -315,15 +316,104 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
     
 });
 
+$('#tabla_dispersion_casas').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
 $("#tabla_dispersion_casas tbody").on("click", ".btn-prioridad", async function(){
     nombreLote = $(this).attr("data-nombreLote");
+    prioridad = $(this).attr("data-prioridad");
+    idCliente = $(this).attr("data-idCliente");
 
     $("#modalPrioridad .modal-header").html("");
     $("#modalPrioridad .modal-body").html("");
 
-    $("#modalPrioridad .modal-header").append('<h4 class="modal-title">¿Estas seguro de madar cambiar la priodad para el asesor y gerente de <b>'+nombreLote+'</b>?</h4>');
+    let condicionFrase = prioridad == 1 ?  'cancelar' : 'cambiar';
+
+    $("#modalPrioridad .modal-header").append(`
+        <h4 class="modal-title">
+            ¿Estas seguro ${condicionFrase} la priodad para el asesor y gerente de <b>${nombreLote}</b>?
+        </h4>
+        <input type="hidden" name="priridadActual" id="priridadActual">
+        <input type="hidden" name="idClienteCasas" id="idClienteCasas">`);
+    $('#priridadActual').val(prioridad);
+    $('#idClienteCasas').val(idCliente);
     $("#modalPrioridad").modal();
 });
+
+$("#formPrioridad").submit( function(e) {
+    $('#btnSubmit').prop('disabled', true);
+    document.getElementById('btnSubmit').disabled = true;
+    e.preventDefault();
+}).validate({
+    submitHandler: function( form ) {
+        $('#spiner-loader').removeClass('hidden');
+        var data = new FormData( $(form)[0] );
+        $.ajax({
+            url: general_base_url + 'Casas_comisiones/changePrioridad',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function(data){
+                if( data == 1 ){
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "La petición se ha realizado con éxito", "success");
+                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
+                    $("#modalPrioridad").modal( 'hide' );
+                    $('#btnSubmit').prop('disabled', false);
+                    document.getElementById('btnSubmit').disabled = false;
+                } else if (data == 2) {
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "Ya se dispersó por otro usuario", "warning");
+                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $("#modal_NEODATA_Casas").modal( 'hide' );
+                    $('#dispersar').prop('disabled', false);
+                    document.getElementById('dispersar').disabled = false;
+                }else{
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "No se pudo completar tu solicitud", "danger");
+                    $('#dispersar').prop('disabled', false);
+                    document.getElementById('dispersar').disabled = false;
+                }
+            },error: function(){
+                $('#spiner-loader').addClass('hidden');
+                alerts.showNotification("top", "right", "EL LOTE NO SE PUEDE DISPERSAR, INTÉNTALO MÁS TARDE", "warning");
+            }
+        });
+    }
+});
+
+function operacionValidarFun(porcentajeAbonado,cuantosAsesores,cuantosCoor,id_rol,total,pivoteNuevas){
+
+    let nuevoPorcentaje = 0;
+    if(porcentajeAbonado < 2){ //ATICIPO MENOR AL 1%
+        let porcentajeRestante = 100 - 0;
+            if([7,3].indexOf(parseInt(id_rol)) >= 0){
+                console.log('porcentaje restante'+porcentajeRestante);
+                nuevoPorcentaje = id_rol == 7 ? (8 * (((porcentajeRestante / 4) * 3)  / cuantosAsesores) /100): (8 *((porcentajeRestante / 4)  / cuantosCoor) /100);
+                console.log('nuevo porcentaje ' + nuevoPorcentaje)
+            }else{
+                nuevoPorcentaje = 0;
+            }
+       
+    }else if(porcentajeAbonado >= 2 && porcentajeAbonado < 5){ // ABONADO ENTRE EL 5 Y EL 2%
+        let porcentajeRestante = 100 - 0;
+            if([7,3].indexOf(parseInt(id_rol)) >= 0){
+                nuevoPorcentaje = id_rol == 7 ? (8 * (((porcentajeRestante / 7) * 2)  / cuantosAsesores) /100): (8 *((porcentajeRestante / 7)  / cuantosCoor) /100);
+            }else{
+                nuevoPorcentaje = (8 * (porcentajeRestante / 7)  /100);
+            }
+    }
+    operacionValidar = (total*(pivoteNuevas*nuevoPorcentaje));
+   return operacionValidar;
+
+}
+
 $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async function(){
 
         
@@ -355,6 +445,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
 
     opcionMensualidad = $(this).attr("data-opcionMensualidad");
     nombreMensualidad = $(this).attr("data-nombreMensualidad");
+    prioridadDispersion = $(this).attr("data-prioridad");
     disparador = 1;
     precioDestino = $(this).attr("data-precioDestino");
     if(parseFloat(totalNeto2) > 0){
@@ -364,6 +455,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
         $("#modal_NEODATA_Casas .modal-footer").html("");
         $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
             var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
+            
             if(data.length > 0){
                 switch (data[0].Marca) {
                     case 0:
@@ -375,7 +467,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                             let total0 = parseFloat(data[0].Aplicado);
                             let total = 0;
                             if(total0 > 0){
-                                total = total0;
+                                total = 11000;
                             }else{
                                 total = 0;
                             }
@@ -384,6 +476,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                             if(parseFloat(data[0].Bonificado) > 0){
                                 bonificadoTotal = data[0].Bonificado;
                             }
+                            var porcentajeAbonado = ((total * 100) / totalNeto2);
 
                           //  $("#modal_NEODATA_Casas .modal-body").append(`<input type="hidden" name="bonificacion" id="bonificacion" value=">${bonificadoTotal}">`);
                             
@@ -474,7 +567,26 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
 
                             $.post(general_base_url + "Casas_comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision}, function (resultArr) {
                                 resultArr = JSON.parse(resultArr);
-                                let numComisionistas = resultArr.length;                                
+                                let numComisionistas = resultArr.length;        
+                                const busquedaPivote = pivoteMultiplicador.find((planes) => planes.id_plan == parseInt(plan_comision));
+                                let pivoteNuevas = busquedaPivote == undefined ? 0.125 : (busquedaPivote.valor / 100);    
+                                
+                                
+
+                                var cuantosAsesores = 0;
+                                    var cuantosCoor = 0;
+                                    $.each( resultArr, function( i, v){
+                                       
+                                        if(v.id_rol == 7){
+                                            cuantosAsesores = cuantosAsesores + 1; 
+                                        }if(v.id_rol == 3){
+                                            cuantosCoor = cuantosCoor + 1; 
+                                        }
+                                        
+                                    });
+
+
+
                                 $.each( resultArr, function( i, v){
                                     let porcentajes = '';
                                    
@@ -504,44 +616,45 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                 
                                     switch(bandera_anticipo){
                                         case 0:// monto < 5% se dispersará solo lo proporcional
-                                             operacionValidar = (total*(0.125*v.porcentaje_decimal));
-                                        if(operacionValidar > v.comision_total){
-                                            saldo1C = v.comision_total;
-                                        }else{
-                                            saldo1C = operacionValidar;
-                                        }
+                                        
+                                             operacionValidar = prioridadDispersion == 1 ? operacionValidarFun(porcentajeAbonado,cuantosAsesores,cuantosCoor,v.id_rol,total,pivoteNuevas) : (total*(pivoteNuevas*v.porcentaje_decimal));
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                         break;
-                                        case 1:// monto igual o mayor a 8% dispersar 12.5% / la mitad
-                                        operacionValidar = (total_comision1 / 2);
-                                        if(operacionValidar > v.comision_total){
-                                            saldo1C = v.comision_total;
-                                        }else{
-                                            saldo1C = operacionValidar;
-                                        }
+                                            case 1:// monto igual o mayor a 8% dispersar 12.5% / la mitad
+                                            operacionValidar = (total_comision1 / 2);
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                         break;
                                         case 2: // monto entre 5% y 8% dispersar 4 parte
-                                        operacionValidar =  (total_comision1 / 2);
-                                        if(operacionValidar > v.comision_total){
-                                            saldo1C = v.comision_total;
-                                        }else{
-                                            saldo1C = operacionValidar;
-                                        }
+                                            operacionValidar =  (total_comision1 / 2);
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                         break;
                                         case 3: // monto OOAM 50%
-                                        operacionValidar = (total*(0.125*v.porcentaje_decimal));
-                                        if(operacionValidar > (v.comision_total/2)){
-                                            saldo1C = (v.comision_total/2);
-                                        }else{
-                                            saldo1C = operacionValidar;
-                                        }
+                                            operacionValidar = (total*(pivoteNuevas*v.porcentaje_decimal));
+                                            if(operacionValidar > (v.comision_total/2)){
+                                                saldo1C = (v.comision_total/2);
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                         break;
                                         case 4: // monto OOAM 100%
-                                        operacionValidar = (total*(0.125*v.porcentaje_decimal));
-                                        if(operacionValidar > v.comision_total){
-                                            saldo1C = v.comision_total;
-                                        }else{
-                                            saldo1C = operacionValidar;
-                                        }
+                                            operacionValidar = (total*(pivoteNuevas*v.porcentaje_decimal));
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
                                         break;
                                     }
 
@@ -613,8 +726,6 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                 }
                                 var counts=0;
                                 let labelPenalizacion = '';
-                                // data1[0].abonado
-                                console.log('total0 '+total0);
                                 if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">Lote con Penalización + 90 días</b>';}
                                 $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney([2,3,4,7].includes(parseInt(procesoReestructura)) ? total0 : (total0-(data1[0].abonado)))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
                                 $("#modal_NEODATA_Casas .modal-body").append(`
@@ -626,12 +737,10 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                     
 
                                 `);
-                               let cadenaExcedente = [4,6,7].indexOf(parseInt(procesoReestructura)) >= 0 ? `<h4>Excedente: <b>${formatMoney(total8P)}</b></h4>` : ''; 
-                                console.log([4,6,7].indexOf(parseInt(procesoReestructura)));
                                 if(parseFloat(data[0].Bonificado) > 0){
-                                    cadena = `<h4>Bonificación: <b style="color:#D84B16;">$${formatMoney(data[0].Bonificado)}</b></h4>${cadenaExcedente}`;
+                                    cadena = `<h4>Bonificación: <b style="color:#D84B16;">$${formatMoney(data[0].Bonificado)}</b></h4>`;
                                 }else{
-                                    cadena = `<h4>Bonificación: <b >${formatMoney(0)}</b></h4>${cadenaExcedente}`;
+                                    cadena = `<h4>Bonificación: <b >${formatMoney(0)}</b></h4>`;
                                 }
                                 $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
                                 <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
@@ -646,14 +755,6 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                                         <div class="col-md-2"><b>PENDIENTE</b></div>
                                                         <div class="col-md-2"><b>DISPONIBLE</b></div>
                                                     </div>`);
-                                    let contador=0;
-                                    let coor = data.length;
-                                    for (let index = 0; index < data.length; index++) {
-                                        const element = data[index].id_usuario;
-                                        if(data[index].id_usuario == 5855){
-                                            contador += 1;
-                                        }
-                                    }
 
                                     $.each( data, function( i, v){
                                         saldo =0;
@@ -667,49 +768,9 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                         }
                                         else{
                                             let pendienteGlobal = parseFloat(data1[0].total_comision - data1[0].abonado);
-                                            console.log('pendiente: '+pendienteGlobal);
-                                            console.log('total: '+total);
-                                            //saldo =  ((12.5 *(v.porcentaje_decimal / 100)) * total);
-                                            /* buscar el valor divisor segun el % del plan*/
-                                            const pivoteMultiplicador =  [
-                                                {
-                                                    id_plan:64,
-                                                    valor:(100/0.5)
-                                                },
-                                                {
-                                                    id_plan:65,
-                                                    valor:(100/1)
-                                                },
-                                                {
-                                                    id_plan:66,
-                                                    valor:12.5
-                                                },
-                                                {
-                                                    id_plan:84,
-                                                    valor:(100/0.6)
-                                                },
-                                                {
-                                                    id_plan:85,
-                                                    valor:(100/1.2)
-                                                },
-                                                {
-                                                    id_plan:86,
-                                                    valor:(100/9.2)
-                                                },
-                                                {
-                                                    id_plan:93,
-                                                    valor:(100/8.5)
-                                                }
-                                                ];
-                                                console.log(plan_comision);
-                                                const busquedaPivote = pivoteMultiplicador.find((planes) => planes.id_plan == parseInt(plan_comision));
-                                                console.log(busquedaPivote);
-                                                let pivote = busquedaPivote == undefined ? 12.5 : busquedaPivote.valor;
-                                                console.log(pivote);
+                                            const busquedaPivote = pivoteMultiplicador.find((planes) => planes.id_plan == parseInt(plan_comision));
+                                            let pivote = busquedaPivote == undefined ? 12.5 : busquedaPivote.valor;
 
-                                            /**/ 
-                                            console.log('TOTAL----------'+total);
-                                            console.log('TOTAL----------'+AplicadoGlobal);
                                             v.porcentaje_decimal = idLote == 37629 && v.id_usuario == 13556 ? 2.5 : v.porcentaje_decimal;
                                             saldo = (([2,3,4,7].includes(parseInt(procesoReestructura)) && total > 2238.71) && idLote != 52454 ) ? ( pendienteGlobal > total ? ((pivote *(v.porcentaje_decimal / 100)) * total)  :  ((pivote *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal)) ) : ((pivote *(v.porcentaje_decimal / 100)) * total);
                                             saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total <= 0) ? 0 : saldo;

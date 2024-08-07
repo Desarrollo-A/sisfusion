@@ -706,6 +706,9 @@ $(document).ready(function () {
                                         
                                     });
                                     console.log(SumaComisionTotal);
+                                    const busquedaPivote = pivoteMultiplicador.find((planes) => planes.id_plan == parseInt(plan_comision));
+                                    console.log(busquedaPivote);
+                                    let pivoteNuevas = busquedaPivote == undefined ? 0.125 : (busquedaPivote.valor / 100);   
                                     $.each( resultArr, function( i, v){
                                         let porcentajes = '';
                                         if(plan_comision == 66 || plan_comision == 86){
@@ -779,7 +782,6 @@ $(document).ready(function () {
                                                             if(parseInt(v.id_usuario) == 12841){
                                                                 porcentajeMaderas =  (8 * (porcentajeReferido / 100));
                                                                 nuevoPorcentaje = porcentajeMaderas;
-                                                               // operacionValidar = (total*(0.125*porcentajeMaderas));
 
                                                             }else{
                                                                 if([7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){
@@ -797,7 +799,6 @@ $(document).ready(function () {
                                                             if(parseInt(v.id_usuario) == 12841){
                                                                 porcentajeMaderas =  (8 * (porcentajeReferido / 100));
                                                                 nuevoPorcentaje = porcentajeMaderas;
-                                                               // operacionValidar = (total*(0.125*porcentajeMaderas));
 
                                                             }else{
                                                                 if([7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){
@@ -816,9 +817,9 @@ $(document).ready(function () {
                                                     else if(plan_comision == 56 && parseInt(v.id_usuario) == 12841){
                                                         porcentajeMaderas = v.porcentaje_decimal + sumaAsesorCoor;
                                                         } */
-                                                            operacionValidar = (total*(0.125*nuevoPorcentaje));
+                                                            operacionValidar = (total*(pivoteNuevas*nuevoPorcentaje));
                                                     }else{
-                                                        operacionValidar = (total*(0.125*v.porcentaje_decimal));
+                                                        operacionValidar = (total*(pivoteNuevas*v.porcentaje_decimal));
                                                     }
                                             if(operacionValidar > v.comision_total){
                                                 saldo1C = v.comision_total;
@@ -848,7 +849,7 @@ $(document).ready(function () {
                                             break;
 
                                             case 3: // monto OOAM 50%
-                                            operacionValidar = (total*(0.125*v.porcentaje_decimal));
+                                            operacionValidar = (total*(pivoteNuevas*v.porcentaje_decimal));
                                             if(operacionValidar > (v.comision_total/2)){
                                                 saldo1C = (v.comision_total/2);
                                             }else{
@@ -857,7 +858,7 @@ $(document).ready(function () {
                                             break;
 
                                             case 4: // monto OOAM 100%
-                                            operacionValidar = idLote == 63107 ? (total*((2)*v.porcentaje_decimal)) : (total*(0.125*v.porcentaje_decimal));
+                                            operacionValidar = idLote == 63107 ? (total*((2)*v.porcentaje_decimal)) : (total*(pivoteNuevas*v.porcentaje_decimal));
                                             console.log('total'+total);
                                             console.log('operacionValidar'+operacionValidar);
                                             if(operacionValidar > v.comision_total){
