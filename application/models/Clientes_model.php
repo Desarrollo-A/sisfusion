@@ -530,6 +530,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 24, 10)";
             else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
                 $where = "pr.id_gerente IN ($id_lider, 7474)";
+            else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
+                $where = "pr.id_gerente IN ($id_lider, 13821)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

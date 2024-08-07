@@ -5341,6 +5341,8 @@ function getDatosGralInternomex(){
             $id_lider .= ", 24, 10";
         else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
             $id_lider .= ", 7474";
+        else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
+            $id_lider .= ", 13821";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES
