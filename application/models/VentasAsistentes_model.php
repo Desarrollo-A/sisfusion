@@ -360,7 +360,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6661)";
                     $filtroSede = "";
 				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664, 16458, 2599)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";

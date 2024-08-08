@@ -3542,7 +3542,7 @@
 					$id_lider = $id_lider . ', 6661';
 					$sede = "";
 				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
-					$id_lider = $id_lider . ', 80, 664';
+					$id_lider = $id_lider . ', 80, 664, 16458, 2599';
 					$sede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
 					$id_lider = $id_lider . ', 12688';

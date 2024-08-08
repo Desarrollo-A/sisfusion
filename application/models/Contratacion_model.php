@@ -582,7 +582,7 @@ class Contratacion_model extends CI_Model {
       else if ($id_usuario == 12292) // REYNALDO HERNANDEZ SANCHEZ
          $idsGerente = $id_lider . ", 6661";
       else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
-         $idsGerente = $id_lider . ", 80, 664";
+         $idsGerente = $id_lider . ", 80, 664, 16458, 2599";
       else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
          $idsGerente = $id_lider . ", 12688";
       else if ($id_usuario == 15761) // JACQUELINE GARCIA SOTELLO

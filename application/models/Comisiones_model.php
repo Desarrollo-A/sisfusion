@@ -5332,7 +5332,7 @@ function getDatosGralInternomex(){
         else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
             $id_lider .= ", 5604";
         else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
-            $id_lider .= ", 80, 664";
+            $id_lider .= ", 80, 664, 16458, 2599";
         else if ($id_usuario == 16186) // CAROLINA CORONADO YAÑEZ
             $id_lider .= ", 6942";
         else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
