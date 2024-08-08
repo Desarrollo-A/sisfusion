@@ -102,7 +102,6 @@ $.ajax({
 })
 
 pass_to_adeudos = function (data) {
-
     let form = new Form({
         title: 'Avanzar proceso', 
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
