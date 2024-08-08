@@ -786,13 +786,14 @@ class Casas extends BaseController
         $id = $this->form('id');
         $tipo = $this->form('tipo');
         $comentario = $this->form('comentario');
+        $tipoMovimiento = $this->form('tipoMovimiento');
 
         if (!isset($id) || !isset($tipo)) {
             http_response_code(400);
             $this->json([]);
         }
 
-        $new_status = 2;
+        $new_status = $tipoMovimiento == 1 ? 3 : 2; // poner extra aqui
 
         $proceso = $this->CasasModel->getProceso($id);
 

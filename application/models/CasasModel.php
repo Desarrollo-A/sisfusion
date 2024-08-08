@@ -532,11 +532,11 @@ class CasasModel extends CI_Model
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         CASE
-            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
             ELSE 'Sin asignar'
         END AS nombreAsesor,
         CASE
-            WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+            WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
             ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
         END AS gerente,
         oxc.nombre AS movimiento,
@@ -545,10 +545,10 @@ class CasasModel extends CI_Model
         proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
-        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 1
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
@@ -1966,12 +1966,12 @@ class CasasModel extends CI_Model
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         CASE
-            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
             ELSE 'Sin asignar'
         END AS nombreAsesor,
         CASE
-            WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
-            ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+            WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+            ELSE CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno)
         END AS gerente,
         oxc.nombre AS movimiento,
         doc2.documentos,
@@ -1982,13 +1982,11 @@ class CasasModel extends CI_Model
     FROM 
         proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote         
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
-        INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor 
-        INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente 
-        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
+        INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c        
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (".$placeholders.") AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
     WHERE 
@@ -2014,7 +2012,7 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36, 37, 38)";
+        AND tipo IN (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36, 37, 38)";
 
         return $this->db->query($query)->result();
     }
