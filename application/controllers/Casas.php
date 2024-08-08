@@ -803,6 +803,8 @@ class Casas extends BaseController
         $tipo = $this->form('tipo');
         $comentario = $this->form('comentario');
         $tipoMovimiento = $this->form('tipoMovimiento');
+        $adm = $this->form('adm');
+        $ooam = $this->form('ooam');
 
         if (!isset($id) || !isset($tipo)) {
             http_response_code(400);
@@ -898,8 +900,8 @@ class Casas extends BaseController
         $vobo = $this->CasasModel->getVobos($id, 1);
 
         $updateData = array(
-            "adm"  => 0,
-            "ooam" => 0,
+            "adm"  => 1,
+            "ooam" => 1,
             "proyectos" => 0,
             "modificadoPor" => $this->session->userdata('id_usuario'),
             "fechaModificacion" => date("Y-m-d H:i:s"),
@@ -3175,16 +3177,16 @@ class Casas extends BaseController
         $column = '';
 
         if (in_array($this->idUsuario, [5107])) {
-            $column = 'vb.adm';
+            $column = 'vb.adm != 1 AND';
         }
-        if (in_array($this->idUsuario, [15891, 15892, 15893, 16197, 16198, 16199, 15840])) {
-            $column = 'vb.ooam';
+        if (in_array($this->idUsuario, [15838, 15891, 15892, 15893, 16197, 16198, 16199, 15840])) {
+            $column = 'vb.ooam != 1 AND';
         }
         if (in_array($this->idUsuario, [15896, 16204, 15897, 16205, 15898, 16206, 4512, 15841])) {
-            $column = 'vb.gph';
+            $column = 'vb.gph != 1 AND';
         }
         if (in_array($this->idUsuario, [2896, 12072, 12112, 15900, 16208])) {
-            $column = 'vb.pv';
+            $column = 'vb.pv != 1 AND';
         }
 
         $getLotes = $this->CasasModel->getVoboCierreCifras($proceso, $tipoDocumento, $condicionExtra, $column)->result();
@@ -3301,13 +3303,13 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
-        if ($procesoNuevo == 3 || $procesoNuevo == 2) {
+        if ($procesoNuevo == 3) { //para el rechazo al paso 3
 
             $vobo = $this->CasasModel->getVobos($idProceso, 1);
 
             $updateData = array(
-                "adm"  => 0,
-                "ooam" => 0,
+                "adm"  => 1,
+                "ooam" => 1,
                 "proyectos" => 0,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
                 "fechaModificacion" => date("Y-m-d H:i:s"),
@@ -4199,7 +4201,7 @@ class Casas extends BaseController
                 http_response_code(400);
             }
         }
-        if (in_array($this->idUsuario, [15891, 15892, 15893, 16197, 16198, 16199, 15840])) {
+        if (in_array($this->idUsuario, [15838, 15891, 15892, 15893, 16197, 16198, 16199, 15840])) {
             $updateData = array(
                 "ooam"  => 1,
                 "modificadoPor" => $this->session->userdata('id_usuario'),

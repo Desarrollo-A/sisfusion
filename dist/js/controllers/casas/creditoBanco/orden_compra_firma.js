@@ -34,7 +34,7 @@ let columns = [
     },
     { data: function(data){
         let btn_avance = '';
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: funcionRechazo, data});
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazoProcesoBanco, data});
         let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de proveedor', onClick: go_to_documentos, data});
         let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de cliente', onClick: go_to_documentos_cliente, data});
         
@@ -113,11 +113,10 @@ function avanceProcesoBanco(data){
     form.show();
 }
 
-
 function rechazoProcesoBanco(data){
     let form = new Form({
-        title: 'Avanzar proceso',
-        text: `Se avanzara el proceso del lote ${data.nombreLote}`,
+        title: 'Rechazar proceso',
+        text: `¿Deseas rechazar el proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             form.loading(true);
 
@@ -145,7 +144,7 @@ function rechazoProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 5 }),
+            new HiddenField({ id: 'procesoNuevo', value: 3 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
@@ -195,6 +194,7 @@ function file_upload(data) {
 go_to_documentos = function(data) {
     window.location.href = `documentacionProveedor/${data.idProcesoCasas}`;
 }
+
 go_to_documentos_cliente = function(data) {
     window.location.href = `documentacionCliente/${data.idProcesoCasas}`;
 }

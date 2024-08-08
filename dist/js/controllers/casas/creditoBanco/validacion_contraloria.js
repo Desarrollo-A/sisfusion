@@ -116,10 +116,9 @@ back_to_adeudos = function(data) {
 pass_to_solicitud_contratos = function(data) {
 
     let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a subir contratos?`,
+        title: 'Avanzar proceso',
+        text: `¿Desea avanzar le proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
-            //console.log(data)
             form.loading(true);
 
             $.ajax({
@@ -129,7 +128,7 @@ pass_to_solicitud_contratos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de subir contratos.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente.", "success");
         
                     table.reload();
                     form.hide();
