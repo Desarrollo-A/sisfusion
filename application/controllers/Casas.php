@@ -251,6 +251,7 @@ class Casas extends BaseController
     {
         $this->load->view('template/header');
         $this->load->view("casas/creditoBanco/reporte_casas");
+
     }
 
     public function cotizaciones($proceso)
@@ -747,7 +748,7 @@ class Casas extends BaseController
         $id_proceso = $this->form('id_proceso');
         $id_documento = $this->form('id_documento');
         $name_documento = $this->form('name_documento');
-        $tipo_documento = $this->form('tipo_documento');
+        $tipo_documento = $this->form('tipo_documento') != null ? $this->form('tipo_documento') : 0;
 
         if (!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)) {
             http_response_code(400);
@@ -763,22 +764,17 @@ class Casas extends BaseController
         }
 
         setlocale(LC_ALL, "es_MX");
-        $string = "24/11/2014";
-        $date = DateTime::createFromFormat("d/m/Y", $string);
-        $dateMail = strftime("%A", $date->getTimestamp());
+        $dateNow = date("D-M-Y H:i:s");
 
         if ($tipo_documento == 2) {
             $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista34@ciudadmaderas.com')
-            ->subject('Notificación de carga de orden de compra en proceso casas - '. $dateMail)
-            ->view($this->load->view('mail/casas/mailOrdenCompra', [
-                "dato" => 1
-            ], true));
+            ->to('coordinador1.desarrollo@ciudadmaderas.com')
+            ->subject('Notificación de carga de orden de compra en proceso casas - '. $dateNow)
+            ->view($this->load->view('mail/casas/mailOrdenCompra', [ "dato" => 1], true));
             
-            print_r($this->email->send(true));
-            exit;
+            $this->email->send();            
         }
 
         if ($file) {
@@ -1447,7 +1443,6 @@ class Casas extends BaseController
 
     public function lista_propuesta_firma()
     {
-
         $data = $this->input->get();
         $rol = $data["rol"];
 
@@ -4302,5 +4297,30 @@ class Casas extends BaseController
         } else {
             http_response_code(404);
         }
+    }
+
+    public function delete_cotizacion(){
+        $this->form();
+
+        $idCotizacion = $this->form('idCotizacion');
+        
+        $updateData = array(
+            "nombre" => '',
+            "archivo" => NULL
+        );
+
+        $update = $this->General_model->updateRecord("cotizacion_proceso_casas", $updateData, "idCotizacion", $idCotizacion);
+
+        if($update){
+            $response["result"] = true;
+            $response["message"] = "Se ha eliminado la cotización";
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "Error al eliminar la cotización";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
     }
 }
