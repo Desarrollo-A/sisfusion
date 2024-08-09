@@ -1042,7 +1042,7 @@ class Reporte_model extends CI_Model {
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, null, $leader);
         list($filtroCliente, $filtroCompartida, $filtroTotal, $totalChart, $filtroModal) = $this->amountShare($id_rol, $render, $id_usuario, $leadersList, null, $leader);
         $idList = $idArr == ("0,0,0,0") ? ['0'] : '('.implode(',', $idArr). ')';
-        $loteFiltro .= $idList == "0" ? '' : ' and lo.idLote IsN '.$idList;
+        $loteFiltro .= $idList == "0" ? '' : ' and lo.idLote IN '.$idList;
 
         /*
         $type = 1 APARTADO FILA PAPÁ
