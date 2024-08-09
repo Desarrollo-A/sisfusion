@@ -65,8 +65,8 @@ function show_propuestas(proceso) {
 pass_to_validacion_contraloria = function(data) {
 
     let form = new Form({
-        title: 'Continuar proceso', 
-        text: `¿Deseas enviar el lote <b>${data.nombreLote}</b> a validación de documentación?`,
+        title: 'Avanzar proceso', 
+        text: `¿Deseas avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -122,8 +122,8 @@ function download_file(archivo) {
 back_to_propuesta_firma = function(data) {
 
     let form = new Form({
-        title: 'Rechzar proceso', 
-        text: `¿Deseas rechazar de proceso del lote ${data.nombreLote}`,
+        title: 'Rechazar proceso', 
+        text: `¿Deseas rechazar el proceso del lote ${data.nombreLote}`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -204,18 +204,7 @@ let columns = [
 
         return fecha
     } },
-    { data: function(data){
-        let inicio = new Date(data.fechaProceso)
-        let today = new Date()
-
-        let difference = today.getTime() - inicio.getTime()
-
-        let days = Math.floor(difference / (1000 * 3600 * 24))
-
-        let text = `Lleva ${days} día(s)`
-
-        return text
-    } },
+    { data: 'tiempoProceso' },
     { data: function (data) {
         switch(data.tipoMovimiento){
         case 1:

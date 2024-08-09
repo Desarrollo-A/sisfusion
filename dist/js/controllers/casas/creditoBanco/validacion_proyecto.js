@@ -73,7 +73,7 @@ let table = new Table({
 function avanceProcesoBanco(data){
     let form = new Form({
         title: 'Avanzar proceso',
-        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true);
 
@@ -145,7 +145,9 @@ function file_upload(data) {
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'tipoDocumento', value: data.tipo }),
-            new HiddenField({ id: 'id_documento', value: 16 }),
+            new HiddenField({ id: 'id_documento', value: 16
+
+             }),
             new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
             new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ]

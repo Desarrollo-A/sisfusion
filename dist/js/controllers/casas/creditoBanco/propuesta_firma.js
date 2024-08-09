@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -149,7 +149,7 @@ selectNotarias = function(data) {
 addNotaria = function(data) {
 
     if(!data){
-        alerts.showNotification("top", "right", "El campo esta vacio.", "danger");
+        alerts.showNotification("top", "right", "El campo esta vacío.", "danger");
     }else{
         let form = new FormConfirm({
             title: '¿Estás seguro de registrar la notaria?',
@@ -225,7 +225,7 @@ function gestorNotarias() {
         title: 'Gestión de notarías',
         fields: [
             new HrTitle({text: 'Registro de notaría'}),
-            new CrudInput({ id: 'notaria', placeholder: 'Nombre de la notaria', width: '12', required: 'required', icon: 'add', title: 'Agregar', onClick: addNotaria }),
+            new CrudInput({ id: 'notaria', placeholder: 'Nombre de la notaría', width: '12', required: 'required', icon: 'add', title: 'Agregar', onClick: addNotaria }),
             new HrTitle({text: 'Lista de notarías'}),
             ...items.map(item => 
                 new CrudInput({
@@ -265,7 +265,7 @@ go_to_cotizaciones = function(data) {
 function upload(data ) {
 
     let form = new Form({
-        title: 'Reemplazar archivo',
+        title: 'Cargar documento',
         onSubmit: function (data) {
             form.loading(true)
 
@@ -470,16 +470,14 @@ let columns = [
         }
 
         if(idRol == 57){
-
-        propuestas_button = new RowButton({icon: 'event', label: 'Propuestas de fechas', onClick: show_propuestas, data})
-        upload_cotizacion = new RowButton({icon: 'list', label: 'Cargar propuestas de cotizaciones', onClick: go_to_cotizaciones, data})
-        notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
+            propuestas_button = new RowButton({icon: 'event', label: 'Propuestas de fechas', onClick: show_propuestas, data})
+            upload_cotizacion = new RowButton({icon: 'list', label: 'Cargar propuestas de cotizaciones', onClick: go_to_cotizaciones, data})
+            notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
 
             if (data.titulacion) {
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar títulos de propiedad`, onClick: show_preview, data})
             }
-                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
-
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
         }
         
         if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos == 2 && data.notarias != 0 && idRol === 57){
@@ -491,6 +489,12 @@ let columns = [
         return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${upload_cotizacion}${propuestas_button}${notarias}${back_button}</div>`
     } },
 ]
+
+let atributoButton = '';
+
+if(idRol != 57){
+    atributoButton = 'hidden'
+}
 
 let buttons = [
     {
@@ -513,7 +517,7 @@ let buttons = [
     },
     {
         text: '<i class="fas fa-edit"></i>',
-        className: 'btn-large btn-sky btn-gestion',
+        className: `btn-large btn-sky btn-gestion ${atributoButton}`,
         titleAttr: 'Gestionar notarías',
         title:"Gestionar notarías",
         attr: {

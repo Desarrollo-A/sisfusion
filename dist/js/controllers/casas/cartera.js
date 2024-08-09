@@ -140,8 +140,12 @@ let buttons = [
 let columns = [
     { data: function (data)
         {
-            return `<center><input type="checkbox" onChange="verificarCheck(this)"
-            data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" name="lotesOrigen[]" value="${data.idLote}" required></center>` 
+            return `<div class="d-flex justify-center">
+                        <label class="cont">
+                            <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <span></span>
+                        </label>
+                    </div>` 
         }        
     },
     {

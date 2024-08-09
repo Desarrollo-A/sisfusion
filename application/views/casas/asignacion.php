@@ -61,6 +61,7 @@ input[type="checkbox"]:checked::after {
  opacity: 100%;
 }
 </style>
+
 <body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
