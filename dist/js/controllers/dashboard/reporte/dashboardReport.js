@@ -227,7 +227,7 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canConId = null, canApt = null){
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canApt = null, canConId = null){
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30 && idUser != 4888 && idUser != 29 && idUser != 7401))
@@ -441,6 +441,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
         
         initComplete: function() {
             $('[data-toggle="tooltip"]').tooltip();
+            console.log("transaction: ", transaction);
         }, 
     });
 }
@@ -504,6 +505,7 @@ function getLeadersLine (leadersList, id_usuario, id_lider) {
         leadersList[4] = 0;
         leadersList[3] = idLider;
         leadersList[2] = id_usuario;
+        console.log("subdirector");
     }
     return leadersList;
 }
@@ -524,6 +526,8 @@ $(document).on('click', '.update-dataTable', function (e) {
     const contid = $(this).attr("data-contid");
     const cancontid = $(this).attr("data-cancontid");
     const canaptid = $(this).attr("data-canaptid");
+    console.log("cancontid: ", cancontid);
+    console.log("canaptid: ", canaptid);
     closestChild = $(this).closest('.childTable');
     closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
     closestChild.nextAll().remove();
@@ -698,7 +702,11 @@ $(document).on('click', '.btnSub', function () {
         coordinador: $(this).data("co"),
         gerente: $(this).data("ge"),
         subdirector: $(this).data("su"),
-        regional: $(this).data("dr")
+        regional: $(this).data("dr"),
+        aptid: $(this).data('aptid'),
+        contid: $(this).data('contid'),
+        canaptid: $(this).data('canaptid'),
+        cancontid: $(this).data('cancontid')
     }
     //initDetailRow(data);
     initDetailRow($(this).closest('tr'), data);
@@ -1136,6 +1144,10 @@ function createDetailRow(row, tr, dataObj){
         subdirector: dataObj.subdirector,
         regional: dataObj.regional,
         filters: filters,
+        contid: dataObj.contid,
+        aptid: dataObj.aptid,
+        canaptid: dataObj.canaptid,
+        cancontid: dataObj.cancontid
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
@@ -1284,6 +1296,10 @@ $(document).on('click', '.btnModalDetails', function () {
     let dataObject = {
         type: $(this).data("type"),
         sede: $(this).data("sede"),
+        aptid : $(this).attr("data-aptid"),
+        contid : $(this).attr("data-contid"),
+        cancontid : $(this).attr("data-cancontid"),
+        canaptid : $(this).attr("data-canaptid"),
         leader: $(this).data("leader"),
         transaction: $(this).data("transaction"),
         user: $(this).data("iduser"),
@@ -1480,6 +1496,8 @@ function fillTableReport(dataObject) {
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
+                    "aptid": dataObject.aptid,
+                    "contid": dataObject.contid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1825,6 +1843,5 @@ function setListEstatus(){
 }
 
 $(window).resize(function(){
-    console.log("I was toggled");
     $(`#table${optionTable}`).DataTable().columns.adjust();
 });
