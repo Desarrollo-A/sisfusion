@@ -3571,6 +3571,9 @@
 				} else if ($id_usuario == 16783) { // Mayra Alejandra Angulo Muñiz
 					$id_lider = $id_lider . ', 13821';
 					$sede = "";
+				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
+					$id_lider = $id_lider . ', 11843';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
