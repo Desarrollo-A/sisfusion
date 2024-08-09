@@ -1,3 +1,26 @@
+<style>
+#form-modal2 .modal-dialog {
+    max-width: 600px; 
+    margin: 1.75rem auto; 
+}
+#form-modal2 .modal-body {
+    max-height: 70vh; 
+    overflow-y: auto; 
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+  background: #b3b3b3; 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+</style>
+
 <div id="alert-modal" class="modal fade" role="dialog" tabindex='-1'>
     <div class="modal-dialog">
         <div class="modal-content">
@@ -56,7 +79,7 @@
     </div>
 </div>
 
-<div id="form-modal2" class="modal fade" role="dialog" tabindex='-1' style="overflow-y: auto;">
+<div id="form-modal2" class="modal fade" role="dialog" tabindex='-1'>
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="form-form-modal2" method="post" novalidate>
