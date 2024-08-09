@@ -770,7 +770,7 @@ class Casas extends BaseController
                 $updated = $this->CasasModel->updateDocumentRow($id_documento, $filename);
 
                 if ($updated) {
-                    $motivo = "Se subio archivo: $name_documento";
+                    $motivo = "Se subió archivo: $name_documento";
                     $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo, 1); // se añade el numero de esquema 1 -proceso banco
 
                     $this->json([]);
@@ -2215,10 +2215,10 @@ class Casas extends BaseController
                     
                     $this->CasasModel->setProceso3($proceso->idProcesoCasas);
 
-                    $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, 3, "Se modifico adeudo", 1);
+                    $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, 3, "Se modificó adeudo", 1);
                 }
 
-                $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se modifico adeudo", 1);
+                $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se modificó adeudo", 1);
 
                 $this->json([]);
             } else {
@@ -2489,7 +2489,7 @@ class Casas extends BaseController
                 $created = $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento);
 
                 if ($created) {
-                    $motivo = "Se subio archivo: $name_documento";
+                    $motivo = "Se subió archivo: $name_documento";
                     $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2);
 
                     $this->json([]);
@@ -3034,7 +3034,7 @@ class Casas extends BaseController
                 $add = $this->General_model->addRecord('documentos_proceso_casas', $insertData);
 
                 if ($add) {
-                    $motivo = "Se subio archivo: $name_documento";
+                    $motivo = "Se subió archivo: $name_documento";
                     $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo, 1); // se añade el numero de esquema 1 -proceso banco
 
                     $this->json([]);
@@ -3219,7 +3219,7 @@ class Casas extends BaseController
                 $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario);
 
                 if ($created) {
-                    $motivo = "Se subio archivo: $name_documento";
+                    $motivo = "Se subió archivo: $name_documento";
                     $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 1);
 
                     $this->json([]);

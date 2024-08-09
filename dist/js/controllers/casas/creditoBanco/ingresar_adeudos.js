@@ -45,12 +45,12 @@ function set_adeudo(data) {
         case 33:
             adeudo = 'adeudoADM'
             value = data.adeudoADM
-            label = 'Adeudo ADM'
+            label = 'Adeudo administración'
             break
         case 11:
             adeudo = 'adeudoADM'
             value = data.adeudoADM
-            label = 'Adeudo ADM'
+            label = 'Adeudo administración'
             break
 
     }
