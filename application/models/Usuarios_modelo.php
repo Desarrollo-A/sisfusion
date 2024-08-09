@@ -138,7 +138,7 @@ class Usuarios_modelo extends CI_Model
                     LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(usuarios.id_sede AS VARCHAR(45))
                     LEFT JOIN opcs_x_cats oxcNE ON oxcNE.id_opcion = usuarios.id_rol AND oxcNE.id_catalogo = 83
                     LEFT JOIN opcs_x_cats tipoUser ON tipoUser.id_opcion = usuarios.tipo AND tipoUser.id_catalogo = 124
-                    WHERE ($id_sede id_rol IN (2, 3, 7, 9) AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '') NOT LIKE '%test_%' $correo)
+                    WHERE ($id_sede id_rol IN (2, 3, 7, 9) AND rfc NOT LIKE '%TSTDD%' $correo)
                     $id_usuario
                     $validacionTipo
                     ORDER BY nombre");
