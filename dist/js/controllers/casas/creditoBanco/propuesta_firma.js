@@ -519,7 +519,7 @@ let columns = [
 
         if(idRol == 57){
             propuestas_button = new RowButton({icon: 'event', label: 'Propuestas de fechas', onClick: show_propuestas, data})
-            upload_cotizacion = new RowButton({icon: 'list', label: 'Cargar cotizaciones', onClick: go_to_cotizaciones, data})
+            upload_cotizacion = new RowButton({icon: 'list', label: 'Cargar propuestas de cotizaciones', onClick: go_to_cotizaciones, data})
             notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
 
             if (data.titulacion) {
