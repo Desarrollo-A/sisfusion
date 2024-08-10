@@ -17,7 +17,7 @@ function download_file(data) {
     window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
 }
 
-function replace_upload(data ) {
+function replace_upload(data) {
 
     let form = new Form({
         title: 'Reemplazar archivo',
@@ -85,7 +85,7 @@ pass_to_vobo_cifras = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo. de cifras", "success");
+                    alerts.showNotification("top", "right", "El proceso ha avanzado correctamente", "success");
 
                     table.reload()
 
@@ -155,6 +155,11 @@ let columns = [
         data: function (data) {
 
             let pass_button = ''
+            let back_button = ''
+
+            if(data.comercializacion == 0){
+                back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazar_proceso, data})
+            }
 
             if (data.kitBancario) {
             pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_vobo_cifras, data })
@@ -162,7 +167,7 @@ let columns = [
             view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
             upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
 
-            return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}</div>`
+            return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${back_button}</div>`
         }
     },
 ]
@@ -173,3 +178,44 @@ let table = new Table({
     buttons: buttons,
     columns,
 })
+
+rechazar_proceso = function(data) {
+
+    let form = new Form({
+        title: 'Rechazar proceso', 
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `rechazoPaso12`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `Se ha rechazado el proceso correctamente`, "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 10 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}

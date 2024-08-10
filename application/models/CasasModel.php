@@ -103,25 +103,18 @@ class CasasModel extends CI_Model
     }
 
     public function insertVobo($idProcesoCasas, $paso){
+        $query = $this->db->query(
+            "BEGIN
+                IF NOT EXISTS (SELECT *FROM vobos_proceso_casas WHERE idProceso = ? AND paso = ?)
+                
+                BEGIN 
+                    INSERT INTO vobos_proceso_casas (idProceso, paso, adm, ooam, proyectos) 
+                        VALUES(?, ?, ?, ?, ?)
+                END
+            END", array($idProcesoCasas, $paso, $idProcesoCasas, $paso, 0, 0, 0)                
+        );
 
-        $query = "INSERT INTO vobos_proceso_casas
-        (
-            idProceso,
-            paso,
-            adm,
-            ooam,
-            proyectos
-        )
-        VALUES
-        (
-            $idProcesoCasas,
-            $paso,
-            0,
-            0,
-            0
-        )";
-
-        return $this->db->query($query);
+        return $query;
     }
 
     public function getDocumentos($docs){
@@ -816,7 +809,18 @@ class CasasModel extends CI_Model
     public function getListaPropuestaFirma($rol){
 
         if($rol == 57){
-            $query = "SELECT
+            $query = "WITH UltimoValor AS (
+              SELECT
+                procesoAnterior,
+                procesoNuevo, 
+                fechaMovimiento, 
+                idProcesoCasas, 
+                ROW_NUMBER() OVER ( PARTITION BY idProcesoCasas ORDER BY fechaMovimiento DESC) AS rn 
+              FROM historial_proceso_casas hpc 
+              WHERE esquemaCreditoProceso = 1
+            )
+            
+            SELECT
             pc.*,
             lo.nombreLote,
             pro.idPropuesta,
@@ -845,7 +849,8 @@ class CasasModel extends CI_Model
             doc3.documento,
             doc3.archivo,
             oxc2.nombre AS nombreArchivo,
-            coti.cotizacionCargada
+            coti.cotizacionCargada,
+            u.*
             FROM proceso_casas pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
             LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
@@ -860,6 +865,7 @@ class CasasModel extends CI_Model
             LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
             LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 17
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 17 AND oxc2.id_catalogo = 126
+            LEFT JOIN UltimoValor u ON u.idProcesoCasas = pc.idProcesoCasas and u.rn = 1
             LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
             WHERE pc.proceso = 8
             AND pc.status = 1 AND cli.status = 1";
@@ -911,10 +917,9 @@ class CasasModel extends CI_Model
             LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 28
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 28 AND oxc2.id_catalogo = 126
             LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
-            LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 3
+            LEFT JOIN (SELECT TOP 1 * FROM vobos_proceso_casas vb WHERE vb.paso = 3) vb ON vb.idProceso = pc.idProcesoCasas 
             WHERE pc.proceso = 8
             AND pc.status = 1 AND cli.status = 1 AND vb.gph = 0";
-
         }
 
         
@@ -925,6 +930,7 @@ class CasasModel extends CI_Model
     public function getListaCargaKitBancario(){
         $query = "SELECT
         pc.*,
+        vb.*,
         lo.nombreLote,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
@@ -958,8 +964,7 @@ class CasasModel extends CI_Model
         LEFT JOIN documentos_proceso_casas doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas AND doc2.tipo = 31
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 31 AND oxc2.id_catalogo = 126
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
-        WHERE
-            pc.proceso IN (11, 12)
+        WHERE pc.proceso IN (11, 12)
         AND pc.status = 1 AND cli.status = 1
         AND vb.comercializacion != 1";
 
@@ -1959,50 +1964,62 @@ class CasasModel extends CI_Model
         $documentosArray = explode(',', $documentos);
         $placeholders = implode(',', array_fill(0, count($documentosArray), '?'));
 
-        $query = $this->db->query("SELECT 
-        pc.*,
-        oxc.color,
-        oxc.nombre AS nombreMovimiento,
-        CASE
-            WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT('LLEVA', ' ', 0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
-        END AS tiempoProceso,
-        CASE
-            WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
-            ELSE CONCAT('$', pc.adeudoOOAM) 
-        END AS adOOAM,
-        lo.nombreLote,
-        con.nombre AS condominio,
-        resi.descripcion AS proyecto,
-        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-        CASE
-            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
-            ELSE 'Sin asignar'
-        END AS nombreAsesor,
-        CASE
-            WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
-            ELSE CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno)
-        END AS gerente,
-        oxc.nombre AS movimiento,
-        doc2.documentos,
-        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombreCliente,
-        CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
-        CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
-        pc.tipoMovimiento
-    FROM 
-        proceso_casas pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote         
-        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
-        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
-        INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
-        INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c        
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (".$placeholders.") AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
-    WHERE 
-        pc.proceso IN (". $proceso .")
-        AND pc.status = 1 
-        AND cli.status = 1
-        $validacionExtra", $documentosArray);
+        $query = $this->db->query("WITH UltimoValor AS (
+              SELECT 
+                procesoAnterior,
+                procesoNuevo, 
+                fechaMovimiento, 
+                idProcesoCasas, 
+                ROW_NUMBER() OVER ( PARTITION BY idProcesoCasas ORDER BY fechaMovimiento DESC) AS rn 
+              FROM historial_proceso_casas hpc 
+              WHERE esquemaCreditoProceso = 1
+            )
+
+            SELECT 
+            pc.*,
+            u.*,
+            oxc.color,
+            oxc.nombre AS nombreMovimiento,
+            CASE
+                WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT('LLEVA', ' ', 0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
+            CASE
+                WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
+                ELSE CONCAT('$', pc.adeudoOOAM) 
+            END AS adOOAM,
+            lo.nombreLote,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno)
+            END AS gerente,
+            oxc.nombre AS movimiento,
+            doc2.documentos,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombreCliente,
+            CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
+            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
+            pc.tipoMovimiento
+        FROM
+            proceso_casas pc
+            LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+            INNER JOIN clientes cli ON cli.idLote = lo.idLote
+            INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+            INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+            INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
+            INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
+            LEFT JOIN UltimoValor u ON u.idProcesoCasas = pc.idProcesoCasas and u.rn = 1
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (" . $placeholders . ") AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        WHERE 
+            pc.proceso IN (" . $proceso . ")
+            AND pc.status = 1 
+            AND cli.status = 1 $validacionExtra", $documentosArray);
 
         return $query->result();
     }
@@ -2024,6 +2041,18 @@ class CasasModel extends CI_Model
         AND tipo IN (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36, 37, 38)";
 
         return $this->db->query($query)->result();
+    }
+
+    public function rechazoPaso12($idProceso){
+        $query = $this->db->query("UPDATE vobos_proceso_casas SET comercializacion = ? WHERE idProceso = ? AND paso = ?", array(0, $idProceso, 2));
+
+        return $query;
+    }
+
+    public function removerBanderaPaso12($idVobo){
+        $query = $this->db->query("UPDATE vobos_proceso_casas SET contraloria = 0 WHERE idVobo = ?", $idVobo);
+
+        return $query;
     }
 }
 
