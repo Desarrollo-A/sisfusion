@@ -404,32 +404,33 @@ class CasasModel extends CI_Model
         doc.archivo,
         doc.documento,
         doc.idDocumento,
+        vpc.*,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         (CASE
-            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us_asesor.nombre, ' ', us_asesor.apellido_paterno, ' ', us_asesor.apellido_materno)
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
             WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
         END AS tiempoProceso,
         CASE
-			 WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
-			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+        WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+        ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+
 		END AS gerente,
         oxc.nombre AS movimiento
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 1
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
+        LEFT JOIN usuarios us_asesor ON us_asesor.id_usuario = cli.id_asesor_c
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        WHERE
-            pc.proceso = 1
+        LEFT JOIN vobos_proceso_casas vpc ON vpc.idVobo = pc.idProcesoCasas
+        WHERE pc.proceso = 1
         AND pc.status = 1
         AND cli.status = 1";
 
@@ -471,7 +472,6 @@ class CasasModel extends CI_Model
     }
 
     public function getListaConcentradoAdeudos($tipoDoc, $rol){
-
         if($rol == 99){
 			$vobo  = "AND vb.ooam = 0";
 		}else if($rol == 11 || $rol == 33){
@@ -532,7 +532,7 @@ class CasasModel extends CI_Model
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         CASE
-            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
             ELSE 'Sin asignar'
         END AS nombreAsesor,
         CASE
@@ -766,12 +766,15 @@ class CasasModel extends CI_Model
         pro.fechaFirma1,
         pro.fechaFirma2,
         pro.fechaFirma3,
+        CASE
+            WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+        END AS tiempoProceso,
         cpc.idCotizacion AS cotizacionElegida,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         (CASE
-            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
@@ -828,7 +831,7 @@ class CasasModel extends CI_Model
                 resi.descripcion AS proyecto,
                 CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
                 (CASE
-                    WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+                    WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
                     ELSE 'Sin asignar'
                 END) AS nombreAsesor,
                 CASE
@@ -878,7 +881,7 @@ class CasasModel extends CI_Model
                 resi.descripcion AS proyecto,
                 CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
                 (CASE
-                    WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+                    WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
                     ELSE 'Sin asignar'
                 END) AS nombreAsesor,
                 CASE
@@ -927,13 +930,16 @@ class CasasModel extends CI_Model
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         (CASE
-            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
 			 WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
+        CASE
+            WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+        END AS tiempoProceso,
         oxc2.nombre AS nombreArchivo,
         doc.documentos AS kit,
         doc2.idDocumento,
@@ -968,7 +974,7 @@ class CasasModel extends CI_Model
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         (CASE
-            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
@@ -1146,13 +1152,16 @@ class CasasModel extends CI_Model
 	        resi.descripcion AS proyecto,
 	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
 	        (CASE
-	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
 				 WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
+            CASE
+                WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
+            END AS tiempoProceso,
             oxc.nombre AS movimiento,
             oxc2.nombre AS nombreArchivo
         FROM proceso_casas_banco pc
@@ -1857,7 +1866,7 @@ class CasasModel extends CI_Model
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.tipoMovimiento AND id_catalogo = 136
 		LEFT JOIN documentos_proceso_casas dpc ON dpc.idProcesoCasas = pc.idProcesoCasas AND dpc.tipo IN($tipoDocumento)
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 4
-        WHERE $column != 1 AND pc.proceso IN ($placeholders) AND pc.status IN(1) AND pc.finalizado = 0 $condicionExtra", $procesoArray, 1);
+        WHERE $column pc.proceso IN ($placeholders) AND pc.status IN(1) AND pc.finalizado = 0 $condicionExtra", $procesoArray, 1);
 
         return $query;
     }
@@ -1966,12 +1975,12 @@ class CasasModel extends CI_Model
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         CASE
-            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
             ELSE 'Sin asignar'
         END AS nombreAsesor,
         CASE
             WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
-            ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+            ELSE CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno)
         END AS gerente,
         oxc.nombre AS movimiento,
         doc2.documentos,
@@ -1982,13 +1991,12 @@ class CasasModel extends CI_Model
     FROM 
         proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote         
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
-        INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor 
-        INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente 
-        LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
+        INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
+        INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c        
+
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (".$placeholders.") AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
     WHERE 
@@ -2014,7 +2022,7 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36, 37, 38)";
+        AND tipo IN (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36, 37, 38)";
 
         return $this->db->query($query)->result();
     }

@@ -102,7 +102,6 @@ $.ajax({
 })
 
 pass_to_adeudos = function (data) {
-
     let form = new Form({
         title: 'Avanzar proceso', 
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
@@ -131,6 +130,7 @@ pass_to_adeudos = function (data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new SelectField({ id: 'tipo', label: 'Tipo de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipos, required: true }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],

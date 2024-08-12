@@ -53,5 +53,6 @@
         const idRol = <?php echo $idRol ?>;
         const idUsuario = <?php echo $idUsuario ?>;
     </script>
+    
     <script src="<?= base_url() ?>dist/js/controllers/casas/creditoBanco/propuesta_firma.js"></script>
 </body>
