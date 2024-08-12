@@ -1133,7 +1133,7 @@ function servicioNeoData(response){
 
     $.ajax({
         data:JSON.stringify(response.planServicio),
-        url: 'http://192.168.16.20/neodata_reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
+        url: 'regPlanPagoCompleto',
         type: 'POST',
         success: function (response) {
             console.log('RESPUES NEODATA:'+response);

@@ -550,11 +550,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
     }
     else if (editarFile == 0) {
 
-        if(arrayKeysArchivos.length == flagValidacion){
+        if(flagValidacion > 0){
             flagEnviar = true;
-        }else{
-            alerts.showNotification('top', 'right', 'Ingresa los archivos requeridos', 'warning');
-            flagEnviar = false;
         }
         
         if ((flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) && arrayResicion.includes(0)) {

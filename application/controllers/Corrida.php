@@ -4,6 +4,15 @@
     //use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
     //require '../../vendor/autoload.php'; //linea debe descomentarse en local
 
+require_once(APPPATH . "libraries/http/IClient.php");
+require_once(APPPATH . "libraries/http/IRequest.php");
+require_once(APPPATH . "libraries/http/Request.php");
+require_once(APPPATH . "libraries/http/IResponse.php");
+require_once(APPPATH . "libraries/http/Response.php");
+require_once(APPPATH . "libraries/http/Client.php");
+
+use RestClient\Client;
+
 class Corrida extends CI_Controller
 {
 
@@ -4315,6 +4324,9 @@ legend {
                 }
             }
             $arrayFinal['planesPago'] = $arrayDump;
+
+            
+
             $response = array(
                 "planesPagoIds" => $arrayIdPagos,
                 "respuesta" => (($arrayDump) > 0) ? 1 : 0,
@@ -4331,12 +4343,28 @@ legend {
                 "respuesta" => -1,
                 "planServicio" => array()
             );
+
         }
 
         print_r(json_encode($response));
         exit;
     }
 
+    public function regPlanPagoCompleto(){
+        $data = json_decode(file_get_contents("php://input"));
+
+        $url = "http://192.168.16.20/neodata_reps/back/index.php/ServiciosNeo/regPlanPagoCompleto";
+
+        $client = new Client();
+
+        $request = $client->newRequest($url, 'POST', json_encode($data));
+
+        $response = $request->getResponse();
+
+        print_r(json_encode(json_decode($response->getParsedResponse())));
+
+        exit;
+    }
 
     private function calculatePlan($pagos, $saldoInicialPlan){
         $montoInicial = $saldoInicialPlan;
