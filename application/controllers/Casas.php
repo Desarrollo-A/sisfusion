@@ -671,7 +671,7 @@ class Casas extends BaseController
             );
             // se elimina el registro de proceso_casas o se modifica ?
             // $deleteBanco = $this->General_model->deleteRecord('proceso_casas', array("idProcesoCasas" => $idProcesoCasas) );
-            $deleteBanco = $this->General_model->updateRecord('proceso_casas', $updateDataBanco, "idProcesoCasas", $idProcesoCasas);
+            $deleteBanco = $this->General_model->updateRecord('proceso_casas_banco', $updateDataBanco, "idProcesoCasas", $idProcesoCasas);
             if (!$deleteBanco) {
                 $banderaSuccess = false;
             }
@@ -1533,7 +1533,7 @@ class Casas extends BaseController
             "costoConstruccion" => $costoConstruccion
         );
 
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $id);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $id);
 
         $proceso = $this->CasasModel->getProceso($id);
 
@@ -3109,7 +3109,7 @@ class Casas extends BaseController
             "modificadoPor" => $this->session->userdata('id_usuario'),
         );
 
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
 
         if (!$update) {
              http_response_code(400);
@@ -3290,7 +3290,7 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProceso);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3512,7 +3512,7 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
         if(!$update){
             $banderaSuccess = false;
         }
@@ -3689,7 +3689,7 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProceso);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3841,7 +3841,7 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3916,7 +3916,7 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3960,7 +3960,7 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -4128,7 +4128,7 @@ class Casas extends BaseController
 
         // se hace insert en la tabla de credito de banco si hay datos en el arreglo
         if(count($dataUpdateBanco) > 0){
-            $update = $this->General_model->updateBatch("proceso_casas", $dataUpdateBanco, "idProcesoCasas");
+            $update = $this->General_model->updateBatch("proceso_casas_banco", $dataUpdateBanco, "idProcesoCasas");
 
             if(!$update) $banderaSuccess = false;
         }

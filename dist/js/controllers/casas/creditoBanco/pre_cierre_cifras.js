@@ -79,7 +79,7 @@ let table = new Table({
 function avanceProcesoBanco(data){
     let form = new Form({
         title: 'Avanzar proceso',
-        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true);
 

@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -149,7 +149,7 @@ selectNotarias = function(data) {
 addNotaria = function(data) {
 
     if(!data){
-        alerts.showNotification("top", "right", "El campo esta vacio.", "danger");
+        alerts.showNotification("top", "right", "El campo esta vacío.", "danger");
     }else{
         let form = new FormConfirm({
             title: '¿Estás seguro de registrar la notaria?',
