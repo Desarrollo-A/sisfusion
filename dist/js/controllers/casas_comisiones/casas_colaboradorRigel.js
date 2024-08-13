@@ -48,7 +48,8 @@ let titulos = [];
 var datosProyectos = [], datosCondominios = [], datosFechaCorte = [], datosSumaPagos = [], datosOpinion = [];
 $(document).ready(function() {
     $('#spiner-loader').removeClass('hide');
-    $.post(general_base_url + "Casas_comisiones/getDatosFechasProyecCondm",{tipoUsuario:tipoUsuarioGeneral}, function (data) {
+    $.post(general_base_url + "Casas_comisiones/getDatosFechasProyecCondm",function (data) {
+        console.log(data);
         data = JSON.parse(data);
         datosFechaCorte = data.fechasCorte;
         datosSumaPagos = data.sumaPagos;
@@ -507,7 +508,7 @@ async function crearTabla(idTabla,data2,estatus){
         user = $(this).attr("data-usuario");
         $('#spiner-loader').removeClass('hide');
         modalHistorial();
-        $.getJSON("getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Casas_comisiones/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+ v.nombre_usuario +' </b></a><br></div><div class="float-end text-right"><a> '+ v.fecha_movimiento +' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIO: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });

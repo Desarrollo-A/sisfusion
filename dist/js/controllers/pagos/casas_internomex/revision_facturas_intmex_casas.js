@@ -3,16 +3,18 @@ var tabla_facturas_casas;
 let titulos_casas = [];
 function CloseModalDelete2IntmexSeguros(){
 
-    document.getElementById("form_multiples_seguros").reset();
+    document.getElementById("form_multiples_casas").reset();
     a = document.getElementById('borrarProyectoIntmexSeguros');
     padre = a.parentNode;
     padre.removeChild(a);
-    $("#modal_multiples_IntmexF_seguros").modal('toggle');  
+    $("#modal_multiples_IntmexF_casas").modal('toggle');  
+    tabla_facturas_casas.ajax.reload();
+
 }
 
 $(document).ready(function() {
     $("#tabla_facturas_intmex_casas").prop("hidden", true);
-    $.post(general_base_url+"/pagos/lista_roles", function (data) {
+    $.post(general_base_url+"Pagos/lista_roles", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
@@ -34,7 +36,7 @@ $('#catalogo_factura_intmex_casas').change(function(ruta){
     rol = $('#catalogo_factura_intmex_casas').val();
     $("#usuario_factura_intmex_casas").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Pago_casas/lista_usuarios/',
+        url: general_base_url+'Pagos_casas/lista_usuarios/',
         data:{
             rol: rol,
             forma_pago: 2
@@ -66,29 +68,29 @@ $('#usuario_factura_intmex_casas').change(function(ruta){
     get_facturas_Intmex_casas(proyecto, condominio);
 });
 
-$(document).on("click", ".PagarSeguros", function() {          
-    $("#modal_multiples_IntmexF_seguros .modal-body").html("");
-    $("#modal_multiples_IntmexF_seguros .modal-header").html("");
-    $("#modal_multiples_IntmexF_seguros .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples_IntmexF_seguros .modal-footer").append(`<div id="borrarProyectoIntmexSeguros"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2IntmexSeguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptarIntmexSeguros" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
-    $("#modal_multiples_IntmexF_seguros .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect_Int_seguros" name="desarrolloSelect_Int_seguros" class="selectpicker select-gral desarrolloSelect_Int_seguros ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
+$(document).on("click", ".PagarCasas", function() {          
+    $("#modal_multiples_IntmexF_casas .modal-body").html("");
+    $("#modal_multiples_IntmexF_casas .modal-header").html("");
+    $("#modal_multiples_IntmexF_casas .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
+    $("#modal_multiples_IntmexF_casas .modal-footer").append(`<div id="borrarProyectoIntmexSeguros"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2IntmexSeguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptarIntmexSeguros" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiples_IntmexF_casas .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect_Int_casas" name="desarrolloSelect_Int_casas" class="selectpicker select-gral desarrolloSelect_Int_casas ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'Pagos_casas/getDesarrolloSelectINTMEX/', {desarrollo: 2 } ,function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['name_user'];
-            $("#desarrolloSelect_Int_seguros").append($('<option>').val(id).attr('data-value', id).text(name));
+            $("#desarrolloSelect_Int_casas").append($('<option>').val(id).attr('data-value', id).text(name));
         }
         if (len <= 0) {
-            $("#desarrolloSelect_Int_seguros").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#desarrolloSelect_Int_casas").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
-        $("#desarrolloSelect_Int_seguros").val(0);
-        $("#desarrolloSelect_Int_seguros").selectpicker('refresh');
+        $("#desarrolloSelect_Int_casas").val(0);
+        $("#desarrolloSelect_Int_casas").selectpicker('refresh');
     }, 'json');
         
-    $('#desarrolloSelect_Int_seguros').change(function() {
-        $("#modal_multiples_IntmexF_seguros .modal-body .bodypagos").html("");
+    $('#desarrolloSelect_Int_casas').change(function() {
+        $("#modal_multiples_IntmexF_casas .modal-body .bodypagos").html("");
         if(document.getElementById('bodypago2')){
             let a =  document.getElementById('bodypago2');
             padre = a.parentNode;
@@ -96,22 +98,22 @@ $(document).on("click", ".PagarSeguros", function() {
         }
     
         var valorSeleccionado = $(this).val();
-        var combo = document.getElementById("desarrolloSelect_Int_seguros");
+        var combo = document.getElementById("desarrolloSelect_Int_casas");
         var selected = combo.options[combo.selectedIndex].text;
 
         $.getJSON(general_base_url + "Pagos_casas/getPagosByProyect/"+valorSeleccionado+'/'+2).done(function(data) {
             let sumaComision = 0;
             if (!data) {
-                $("#modal_multiples_IntmexF_seguros .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
+                $("#modal_multiples_IntmexF_casas .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples_IntmexF_seguros .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
+                    $("#modal_multiples_IntmexF_casas .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
                 } 
                 
-                $("#modal_multiples_IntmexF_seguros .modal-body ").append(`<div  id="bodypago2"></div>`);
+                $("#modal_multiples_IntmexF_casas .modal-body ").append(`<div  id="bodypago2"></div>`);
                 $.each(data[1], function(i, v) {
-                    $("#modal_multiples_IntmexF_seguros .modal-body #bodypago2").append(`
+                    $("#modal_multiples_IntmexF_casas .modal-body #bodypago2").append(`
                     <input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
                 });
                 document.getElementById('btn-aceptarIntmexSeguros').disabled = false;
@@ -119,7 +121,7 @@ $(document).on("click", ".PagarSeguros", function() {
         });
     });
 
-    $("#modal_multiples_IntmexF_seguros").modal({
+    $("#modal_multiples_IntmexF_casas").modal({
         backdrop: 'static',
         keyboard: false
     });
@@ -176,7 +178,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'SegurosComision/pago_internomex/',
+                        url : general_base_url + 'Pagos_casas/pago_internomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -186,7 +188,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#autorizar_factura_intmex_seguros").html(formatMoney(0));
+                                $("#autorizar_factura_intmex_casas").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 tabla_facturas_casas.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
@@ -334,7 +336,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
         {
             data: function( data ){
                 var BtnStats;
-                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
+                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_factura_casas" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
 
                 return '<div class="d-flex justify-center">'+ BtnStats +'</div>';
             }
@@ -363,7 +365,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "SegurosComision/getDatosNuevasFacturasSeguros/" ,
+            "url": general_base_url + "Pagos_casas/getDatosNuevasFacturasSeguros/" ,
             "type": "POST",
             data:{
                 proyecto:proyecto,
@@ -373,7 +375,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
         },
     });
 
-    $("#tabla_facturas_intmex_casas tbody").on("click", ".consultar_logs_remanente", function(e){
+    $("#tabla_facturas_intmex_casas tbody").on("click", ".consultar_logs_factura_casas", function(e){
         $("#nombreLote").html('');
         $("#comentariosFactura").html('');
         $('#spiner-loader').removeClass('hide');
@@ -409,7 +411,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
         showModal();
         
         $("#nombreLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Pagos_casas/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comentariosFactura").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
@@ -445,31 +447,31 @@ function get_facturas_Intmex_casas(proyecto, condominio){
             totaPen -= parseFloat(row.pa);
             row.pa = 0;
         }
-        $("#autorizar_factura_intmex_seguros").html(formatMoney(numberTwoDecimal(totaPen)));
+        $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
-    $("#tabla_facturas_intmex_casas tbody").on("click", ".cambiar_estatus", function(){
-        var trs = $(this).closest('tr');
-        var row = tabla_facturas_casas.row( trs );
-        id_pago_i = $(this).val();
-        $("#modal_nuevas_Intmex_seguros .modal-body").html("");
-        $("#modal_nuevas_Intmex_seguros .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_nuevas_Intmex_seguros .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se pauso la solicitud"></input></div></div>');
-        $("#modal_nuevas_Intmex_seguros .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-        $("#modal_nuevas_Intmex_seguros .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-        $("#modal_nuevas_Intmex_seguros").modal();
-    });
+    // $("#tabla_facturas_intmex_casas tbody").on("click", ".cambiar_estatus", function(){
+    //     var trs = $(this).closest('tr');
+    //     var row = tabla_facturas_casas.row( trs );
+    //     id_pago_i = $(this).val();
+    //     $("#modal_nuevas_Intmex_casas .modal-body").html("");
+    //     $("#modal_nuevas_Intmex_casas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+    //     $("#modal_nuevas_Intmex_casas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se pauso la solicitud"></input></div></div>');
+    //     $("#modal_nuevas_Intmex_casas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
+    //     $("#modal_nuevas_Intmex_casas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
+    //     $("#modal_nuevas_Intmex_casas").modal();
+    // });
 
-    $("#tabla_facturas_intmex_casas tbody").on("click", ".despausar_estatus", function(){
-        var trs = $(this).closest('tr');
-        var row = tabla_facturas_casas.row( trs );
-        id_pago_i = $(this).val();
-        $("#modal_refresh .modal-body").html("");
-        $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
-        $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-        $("#modal_refresh").modal();
-    });
+    // $("#tabla_facturas_intmex_casas tbody").on("click", ".despausar_estatus", function(){
+    //     var trs = $(this).closest('tr');
+    //     var row = tabla_facturas_casas.row( trs );
+    //     id_pago_i = $(this).val();
+    //     $("#modal_refresh .modal-body").html("");
+    //     $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+    //     $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
+    //     $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
+    //     $("#modal_refresh").modal();
+    // });
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -481,41 +483,41 @@ $(window).resize(function(){
 });
 
 function cancela(){
-    $("#modal_nuevas_Intmex_seguros").modal('toggle');
+    $("#modal_nuevas_Intmex_casas").modal('toggle');
 }
 
-$("#form_interes_seguros").submit( function(e) {
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        var data = new FormData( $(form)[0] );
-        console.log(data);
-        data.append("id_pago_i", id_pago_i);
-        $.ajax({
-            url: general_base_url + "SegurosComision/pausar_solicitud/",
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST',
-            success: function(data){
-                if( data[0] ){
-                    $("#modal_nuevas_Intmex_seguros").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
-                    setTimeout(function() {
-                        tabla_facturas_casas.ajax.reload();
-                    }, 3000);
-                }else{
-                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-                }
-            },error: function( ){
-                alert("ERROR EN EL SISTEMA");
-            }
-        });
-    }
-});
+// $("#form_interes_casas").submit( function(e) {
+//     e.preventDefault();
+// }).validate({
+//     submitHandler: function( form ) {
+//         var data = new FormData( $(form)[0] );
+//         console.log(data);
+//         data.append("id_pago_i", id_pago_i);
+//         $.ajax({
+//             url: general_base_url + "Pagos_casas/pausar_solicitud/",
+//             data: data,
+//             cache: false,
+//             contentType: false,
+//             processData: false,
+//             dataType: 'json',
+//             method: 'POST',
+//             type: 'POST',
+//             success: function(data){
+//                 if( data[0] ){
+//                     $("#modal_nuevas_Intmex_casas").modal('toggle' );
+//                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+//                     setTimeout(function() {
+//                         tabla_facturas_casas.ajax.reload();
+//                     }, 3000);
+//                 }else{
+//                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+//                 }
+//             },error: function( ){
+//                 alert("ERROR EN EL SISTEMA");
+//             }
+//         });
+//     }
+// });
 
 $("#form_refresh").submit( function(e) {
     e.preventDefault();
@@ -524,7 +526,7 @@ $("#form_refresh").submit( function(e) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "pagos/refresh_solicitud/",
+            url: general_base_url + "Pagos_casas/refresh_solicitud/",
             data: data,
             cache: false,
             contentType: false,
@@ -549,37 +551,37 @@ $("#form_refresh").submit( function(e) {
     }
 });
 
-$("#form_despausar").submit( function(e) {
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        var data = new FormData( $(form)[0] );
-        data.append("id_pago_i", id_pago_i);
-        $.ajax({
-            url: general_base_url + "SegurosComision/despausar_solicitud/",
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST',
-            success: function(data){
-                if( data[0] ){
-                    $("#modal_despausar").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha regresado la comisión exitosamente", "success");
-                    setTimeout(function() {
-                        tabla_facturas_casas.ajax.reload();
-                    }, 3000);
-                }else{
-                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-                }
-            },error: function( ){
-                alert("ERROR EN EL SISTEMA");
-            }
-        });
-    }
-});
+// $("#form_despausar").submit( function(e) {
+//     e.preventDefault();
+// }).validate({
+//     submitHandler: function( form ) {
+//         var data = new FormData( $(form)[0] );
+//         data.append("id_pago_i", id_pago_i);
+//         $.ajax({
+//             url: general_base_url + "Pagos_casas/despausar_solicitud/",
+//             data: data,
+//             cache: false,
+//             contentType: false,
+//             processData: false,
+//             dataType: 'json',
+//             method: 'POST',
+//             type: 'POST',
+//             success: function(data){
+//                 if( data[0] ){
+//                     $("#modal_despausar").modal('toggle' );
+//                     alerts.showNotification("top", "right", "Se ha regresado la comisión exitosamente", "success");
+//                     setTimeout(function() {
+//                         tabla_facturas_casas.ajax.reload();
+//                     }, 3000);
+//                 }else{
+//                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+//                 }
+//             },error: function( ){
+//                 alert("ERROR EN EL SISTEMA");
+//             }
+//         });
+//     }
+// });
 
 function preview_info(archivo){
     $("#documento_preview .modal-dialog").html("");
@@ -629,7 +631,7 @@ $(document).on("click", ".individualCheck", function() {
         else 
             $("#all").prop("checked", false);
     });
-    $("#autorizar_factura_intmex_seguros").html(formatMoney(numberTwoDecimal(totaPen)));
+    $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
 });
 
 function selectAllIntmexSeguros(e) {
@@ -643,7 +645,7 @@ function selectAllIntmexSeguros(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#autorizar_factura_intmex_seguros").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
         $(tabla_facturas_casas.$('input[type="checkbox"]')).each(function (i, v) {
@@ -651,18 +653,18 @@ function selectAllIntmexSeguros(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#autorizar_factura_intmex_seguros").html(formatMoney(0));
+        $("#autorizar_factura_intmex_casas").html(formatMoney(0));
     }
 }
 
-$("#form_multiples_seguros").submit( function(e) {
+$("#form_multiples_casas").submit( function(e) {
     $('#loader').removeClass('hidden');
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         $.ajax({
-            url: general_base_url + "SegurosComision/IntMexPagadosByProyect",
+            url: general_base_url + "Pagos_casas/IntMexPagadosByProyect",
             data: data,
             cache: false,
             contentType: false,

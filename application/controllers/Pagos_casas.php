@@ -74,9 +74,14 @@ class Pagos_casas extends CI_Controller
     }   
 
 
+    public function carga_listado_factura(){
+      echo json_encode( $this->Pagos_casas_model->get_solicitudes_factura( $this->input->post("idResidencial"), $this->input->post("id_usuario") ) );
+    }
+
+
     public function updateRevisionaInternomex(){
         $sol=$this->input->post('idcomision');  
-        $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_seguro_ind where id_pago_i IN (".$sol.")");
+        $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_casas_ind where id_pago_i IN (".$sol.")");
             if( $consulta_comisiones->num_rows() > 0 ){
             $consulta_comisiones = $consulta_comisiones->result_array();
             $id_user_Vl = $this->session->userdata('id_usuario');
@@ -129,7 +134,7 @@ class Pagos_casas extends CI_Controller
 
       public function getDatosNuevasRemanenteSeguros(){
         $proyecto = $this->input->post('proyecto');  
-        $condominio =   $this->input->post('condominio');
+        $condominio = $this->input->post('condominio');
         $dat =  $this->Pagos_casas_model->getDatosNuevasRemanenteSeguros($proyecto,$condominio);
         for( $i = 0; $i < count($dat); $i++ ){
           $dat[$i]['pa'] = 0;
@@ -141,13 +146,66 @@ class Pagos_casas extends CI_Controller
 
       public function getDatosNuevasXContraloria(){
         $proyecto = $this->input->post('proyecto');
-        $dat =  $this->Pagos_casas_model->getDatosNuevasXContraloria($proyecto)->result_array();
+        $condominio = $this->input->post('condominio');
+        $dat =  $this->Pagos_casas_model->getDatosNuevasXContraloria($proyecto,$condominio)->result_array();
         for( $i = 0; $i < count($dat); $i++ ){
             $dat[$i]['pa'] = 0;
         }
         echo json_encode( array( "data" => $dat));
       }
       
+      public function GetDescripcionXML($xml){
+        error_reporting(0);
+        $xml=simplexml_load_file("".base_url()."UPLOADS/XMLS_CASAS/".$xml."") or die("Error: Cannot create object");
+        $cuantos = count($xml->xpath('//cfdi:Concepto'));
+        $UUID = $xml->xpath('//@UUID')[0];
+        $fecha = $xml->xpath('//cfdi:Comprobante')[0]['Fecha'];
+        $folio = $xml->xpath('//cfdi:Comprobante')[0]['Folio'];
+        if($folio[0] == null){
+          $folio = '*';
+        }
+        $total = $xml->xpath('//cfdi:Comprobante')[0]['Total'];
+        $cadena = '';
+        for($i=0;$i< $cuantos; $i++ ){
+          $cadena = $cadena.' '.$xml->xpath('//cfdi:Concepto')[$i]['Descripcion']; 
+        }
+        $arr[0]= $UUID[0];
+        $arr[1]=  $fecha[0];
+        $arr[2]=  $folio[0];
+        $arr[3]=  $total;
+        $arr[4]=  $cadena;
+        echo json_encode($arr);
+      }
+
+      public function descargar_XML(){
+        if( $this->session->userdata('id_rol') == 31 ){
+          $filtro = " pci.estatus IN (8) ";
+        } else{
+          $filtro = " pci.estatus IN (4,8) ";
+        }
+        
+        $facturas_disponibles = array();
+        $facturas_disponibles = $this->db->query("SELECT DISTINCT(fa.nombre_archivo) 
+        from factura_casas fa
+        INNER JOIN pago_casas_ind pci ON fa.id_comision = pci.id_pago_i
+        WHERE $filtro
+        GROUP BY fa.nombre_archivo
+        ORDER BY fa.nombre_archivo");
+        
+        if( $facturas_disponibles->num_rows() > 0 ){
+          $this->load->library('zip');
+          $nombre_documento = 'FACTURAS_INTERNOMEX_'.date("YmdHis").'.zip';
+          foreach( $facturas_disponibles->result() as $row ){
+            $this->zip->read_file( './UPLOADS/XMLS_CASAS/'.$row->nombre_archivo );
+          }
+          
+          $this->zip->archive( $nombre_documento );
+          $this->zip->download( $nombre_documento );
+        }else{
+
+          echo "<script>alert('HA OCURRIDO UN ERROR');</script>";
+        }
+      }
 
         public function getReporteEmpresa(){
           echo json_encode($this->Pagos_casas_model->report_empresa());
@@ -210,8 +268,8 @@ class Pagos_casas extends CI_Controller
               }
               Ini_set('max_execution_time', 0);
         
-              $up_b = $this->Seguros_comision_model->update_acepta_INTMEX($id_pago_i);
-              $ins_b = $this->Seguros_comision_model->insert_phc($data);
+              $up_b = $this->Pagos_casas_model->update_acepta_INTMEX($id_pago_i);
+              $ins_b = $this->Pagos_casas_model->insert_phc($data);
         
             if($up_b == true && $ins_b == true){
               $data_response = 1;
@@ -233,47 +291,49 @@ class Pagos_casas extends CI_Controller
         }
 
         public function pago_internomex(){
-            $id_pago_is = $this->input->post('idcomision');  
-            $consulta_comisiones = $this->Pagos_casas_model->consultaComisiones($id_pago_is);
+          $id_pago_is = $this->input->post('idcomision');  
+          $consulta_comisiones = $this->Pagos_casas_model->consultaComisiones($id_pago_is);
+          
+          // var_dump($consulta_comisiones);
+      
+          if( $consulta_comisiones != 0 ){
+            $id_user_Vl = $this->session->userdata('id_usuario');
+            $sep = ',';
+            $id_pago_i = '';
+            $data=array();
         
-              if( $consulta_comisiones != 0 ){
-                $id_user_Vl = $this->session->userdata('id_usuario');
-                $sep = ',';
-                $id_pago_i = '';
-                $data=array();
+            foreach ($consulta_comisiones as $row) {
+              $id_pago_i .= implode($sep, $row);
+              $id_pago_i .= $sep;
         
-                  foreach ($consulta_comisiones as $row) {
-                    $id_pago_i .= implode($sep, $row);
-                    $id_pago_i .= $sep;
-        
-                    $row_arr=array(
-                      'id_pago_i' => $row['id_pago_i'],
-                      'id_usuario' =>   $this->session->userdata('id_usuario'),
-                      'fecha_movimiento' => date('Y-m-d H:i:s'),
-                      'estatus' => 1,
-                      'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
-                    );
-                    array_push($data,$row_arr);
-                  }
-                  $id_pago_i = rtrim($id_pago_i, $sep);
-                    
-                    $up_b = $this->Pagos_casas_model->update_acepta_INTMEX($id_pago_i);
-                    $ins_b = $this->Pagos_casas_model->insert_phc($data);
+              $row_arr=array(
+              'id_pago_i' => $row['id_pago_i'],
+              'id_usuario' =>   $this->session->userdata('id_usuario'),
+              'fecha_movimiento' => date('Y-m-d H:i:s'),
+              'estatus' => 1,
+              'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
+              );
+              array_push($data,$row_arr);
+            }
+
+            $id_pago_i = rtrim($id_pago_i, $sep);
+            $up_b = $this->Pagos_casas_model->update_acepta_INTMEX($id_pago_i);
+            $ins_b = $this->Pagos_casas_model->insert_phc($data);
               
-              if($up_b == true && $ins_b == true){
-                $data_response = 1;
-                echo json_encode($data_response);
-              } else {
-                $data_response = 0;
-                echo json_encode($data_response);
-              }
-                    
-              }
-              else{
-                $data_response = 0;
+            if($up_b == true && $ins_b == true){
+              $data_response = 1;
               echo json_encode($data_response);
-              }
+            } else {
+              $data_response = 0;
+              echo json_encode($data_response);
+            }
+                    
+          }else{
+            $data_response = 0;
+            echo json_encode($data_response);
           }
+          
+        }
 
 
           function despausar_solicitud(){

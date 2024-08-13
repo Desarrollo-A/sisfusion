@@ -1,10 +1,10 @@
 <div class="tab-pane" id="factura_casas">
     <div class="text-center">
         <div class="encabezadoBox">
-            <h3 class="card-title center-align">Comisiones nuevas <b>factura seguros</b></h3>
+            <h3 class="card-title center-align">Comisiones nuevas <b>factura casas</b></h3>
         </div>
         <div>
-            <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturación seguros)</p>
+            <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturación casas)</p>
         </div>
     </div>
     <div class="toolbar">
@@ -19,7 +19,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="form-group d-flex justify-center align-center">
                         <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                        <p class="input-tot pl-1" id="autorizar_factura_intmex_seguros" name="autorizar_factura_intmex_seguros">$0.00</p>
+                        <p class="input-tot pl-1" id="autorizar_factura_intmex_casas" name="autorizar_factura_intmex_casas">$0.00</p>
                     </div>
                 </div>
             </div>
@@ -33,12 +33,12 @@
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     <div class="form-group">
                         <label class="control-label" for="usuario_factura_intmex_casas">Usuario</label>
-                        <select class="selectpicker select-gral" id="usuario_factura_intmex_casas" name="usuario_factura[]_intmex_seguros" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                        <select class="selectpicker select-gral" id="usuario_factura_intmex_casas" name="usuario_factura[]_intmex_casas" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
                     <div class="form-group w-100">
-                        <button type="button" class="btn-gral-data PagarSeguros">Pagar masivamente</button>
+                        <button type="button" class="btn-gral-data PagarCasas">Pagar masivamente</button>
                     </div>
                 </div>
             </div>

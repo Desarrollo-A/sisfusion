@@ -1,7 +1,7 @@
 <div class="tab-pane" id="XMLCasas">
     <div class="card-content">
         <div class="text-center">
-            <h3 class="card-title center-align" >Comisiones en revisión  <b>xml  CASAS</b></h3>
+            <h3 class="card-title center-align" >Comisiones en revisión  <b>XML Casas</b></h3>
             <p class="card-title pl-1">Concentrado de facturas solicitadas por el área comercial.</p>
         </div>
         <div class="toolbar">
@@ -10,7 +10,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <div class="form-group d-flex justify-center align-center">
                             <h4 class="title-tot center-align m-0">Total:</h4>
-                            <p class="input-tot pl-1" name="disponibleXml" id="disponibleXml">$0.00</p>
+                            <p class="input-tot pl-1" name="totpagarfactura" id="totpagarfactura">$0.00</p>
                         </div>
                     </div>
                 </div>

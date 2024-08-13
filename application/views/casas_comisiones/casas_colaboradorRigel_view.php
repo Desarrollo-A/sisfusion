@@ -486,7 +486,6 @@
     <?php $this->load->view('template/footer'); ?>
     <script>
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
-        var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     

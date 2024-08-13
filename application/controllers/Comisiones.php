@@ -161,11 +161,6 @@ class Comisiones extends CI_Controller
 
     switch($this->session->userdata('id_rol')){
       case '1':
-
-        if($tipo == 3){
-          $this->load->view("casas_comisiones/casas_colaboradorRigel_view", $datos);
-        }
-
       case '2':
         if (in_array($this->session->userdata('id_usuario'),[13546, 13549, 13589])){ // ALEJANDRO GONZÁLEZ DÁVALOS
           $this->load->view("ventas/comisiones_colaborador", $datos);
@@ -176,7 +171,6 @@ class Comisiones extends CI_Controller
         }
       break;
       default:
-         $rol = $this->session->userdata('id_rol');
          $tipo = $this->session->userdata('tipo');
 
         if($tipo == 3){
@@ -190,6 +184,10 @@ class Comisiones extends CI_Controller
     }
   }
 
+  public function solicitudRigel(){
+    $this->load->view('template/header');
+    $this->load->view("casas_comisiones/casas_colaboradorRigel_view");
+  }
 
 
   public function asesores_baja()
@@ -199,11 +197,18 @@ class Comisiones extends CI_Controller
   }
 
   public function historial_colaborador()
-  {
-    $this->load->view('template/header');
-    if($this->session->userdata('tipo') == 3){
-      $this->load->view("casas_comisiones/historial_casas_comisiones");
+  { // Validacion de un usuario multitipo
+    $id_user = $this->session->userdata('id_usuario');
+    $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user")->result_array();
+    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
+    $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
+    $validacion_multitipo = $multitipo != null ? True : False;
 
+    $this->load->view('template/header');
+    if($validacion_multitipo == True && $tipo ==3){
+      $this->load->view("ventas/historial_contraloria");
+    }else if($this->session->userdata('tipo') == 3 && $validacion_multitipo == False ){
+      $this->load->view("casas_comisiones/historial_casas_comisiones");
     }else{
       $this->load->view("comisiones/colaborador/historial_comisiones_contraloria_view");
 
@@ -5686,7 +5691,7 @@ public function lista_usuarios($rol,$forma_pago){
     $data = array(
       "catalogo" => $this->General_model->getCatalogOptions(115)->result_array(),
       "proyecto" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
-      "directivos" => $this->Comisiones_model->getDirectivos()->result_array()
+      "directivos" => $this->Comisiones_model->getDirectivos()
     );
     echo json_encode($data);
   }

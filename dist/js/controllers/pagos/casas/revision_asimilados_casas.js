@@ -1,5 +1,5 @@
 var tr1;
-var tabla_asimilados_casas ;
+var tabla_asimilados_casas_2 ;
 var totaPago_asimilados_casas = 0;
 let titulos_casas = [];
 
@@ -101,7 +101,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
     
 
     $("#tabla_asimilados_casas").prop("hidden", false);
-    tabla_asimilados_casas = $("#tabla_asimilados_casas").DataTable({
+    tabla_asimilados_casas_2 = $("#tabla_asimilados_casas").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -126,7 +126,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
             action: function() {
                 if ($('input[name="idPagoAsimilados[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_asimilados_casas.$('input[name="idPagoAsimilados[]"]:checked')).map(function() {
+                    var idcomision = $(tabla_asimilados_casas_2.$('input[name="idPagoAsimilados[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
                     var com2 = new FormData();
@@ -145,7 +145,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                                 $("#autorizarAsimilados_casas").html(formatMoney(0));
                                 $("#all_seguros").prop('checked', false);
                                 var fecha = new Date();
-                                tabla_asimilados_casas.ajax.reload();
+                                tabla_asimilados_casas_2.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
                                 modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
@@ -400,7 +400,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
 
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $('#spiner-loader').removeClass('hide');
-        $.getJSON(general_base_url+"Seguros/getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Pagos_casas/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
@@ -426,7 +426,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
 
     $('#tabla_asimilados_casas').on('click', 'input', function() {
         tr2 = $(this).closest('tr');
-        var row = tabla_asimilados_casas.row(tr2).data();
+        var row = tabla_asimilados_casas_2.row(tr2).data();
         if (row.monto == 0) {
             row.monto = row.impuesto;
             totaPago_asimilados_casas += parseFloat(row.monto);
@@ -441,10 +441,10 @@ function getDataAsimiladosCasas(proyecto, condominio){
 
     $("#tabla_asimilados_casas tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr1 = $(this).closest('tr');
-        var row = tabla_asimilados_casas.row( tr1 );
+        var row = tabla_asimilados_casas_2.row( tr1 );
         id_pago_i = $(this).val();
-        $("#modalPausarAsimiladosSeguros .modal-body").html("");
-        $("#modalPausarAsimiladosSeguros .modal-body").append(
+        $("#modalPausarAsimiladosCasas .modal-body").html("");
+        $("#modalPausarAsimiladosCasas .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
                     '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
@@ -469,11 +469,11 @@ function getDataAsimiladosCasas(proyecto, condominio){
         buttonPausar_seguro.addEventListener('click', function handleClick() {
             $("#autorizarAsimilados_casas").html(formatMoney(0));
         });
-        $("#modalPausarAsimiladosSeguros").modal();
+        $("#modalPausarAsimiladosCasas").modal();
     });
 }
 
-$("#formPausarAsimiladosSeguros").submit( function(e) {
+$("#formPausarAsimiladosCasas").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -490,10 +490,10 @@ $("#formPausarAsimiladosSeguros").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modalPausarAsimiladosSeguros").modal('toggle' );
+                    $("#modalPausarAsimiladosCasas").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
-                        tabla_asimilados_casas.ajax.reload();
+                        tabla_asimilados_casas_2.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -507,12 +507,12 @@ $("#formPausarAsimiladosSeguros").submit( function(e) {
 
 $(document).on("click", ".checkPagosIndividual", function() {
     totaPago_asimilados_casas = 0;
-    tabla_asimilados_casas.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_asimilados_casas.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_asimilados_casas.$('input[type="checkbox"]');
+    tabla_asimilados_casas_2.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_asimilados_casas_2.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_asimilados_casas_2.$('input[type="checkbox"]');
         if(this.checked){
             tr1 = this.closest('tr');
-            row = tabla_asimilados_casas.row(tr1).data();
+            row = tabla_asimilados_casas_2.row(tr1).data();
             totaPago_asimilados_casas += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
@@ -526,9 +526,9 @@ $(document).on("click", ".checkPagosIndividual", function() {
 function selectAllSeguros(e) {
     tota2 = 0;
     if(e.checked == true){
-        $(tabla_asimilados_casas.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_asimilados_casas_2.$('input[type="checkbox"]')).each(function (i, v) {
             tr1 = this.closest('tr');
-            row = tabla_asimilados_casas.row(tr1).data();
+            row = tabla_asimilados_casas_2.row(tr1).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
@@ -537,7 +537,7 @@ function selectAllSeguros(e) {
         $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
-        $(tabla_asimilados_casas.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_asimilados_casas_2.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
                 $(v).prop("checked", false);
             }
