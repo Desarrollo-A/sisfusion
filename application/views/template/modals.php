@@ -7,18 +7,6 @@
     max-height: 70vh; 
     overflow-y: auto; 
 }
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
-::-webkit-scrollbar-thumb {
-  background: #b3b3b3; 
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
-}
 </style>
 
 <div id="alert-modal" class="modal fade" role="dialog" tabindex='-1'>
@@ -86,12 +74,12 @@
                 <div class="modal-header">
                     <h4 class="modal-title text-center"><b id="title-form-modal2"></b></h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body scroll-styles">
                     <span id="text-form-modal2"></span>
                     <div id="fields-form-modal2" class="row">
 
                     </div>
-                    <div class="mt-4">ㅤ</div>
+                    <div class="mt-4"></div>
                 </div>
                 <div class="modal-footer">
                     <button id="cancel-button-form-modal2" type="button" class="btn btn-danger btn-simple" data-dismiss="modal">cerrar</button>
