@@ -110,7 +110,7 @@ class HiddenField {
 }
 
 class SelectField {
-    constructor({ id, label, placeholder, data = [], value, width, required = false }) {
+    constructor({ id, label, placeholder, data = [], value, width, required = false, onChange=undefined }) {
         this.id = id
         this.required = required
 
@@ -153,6 +153,7 @@ class SelectField {
                             .attr('title', placeholder)
                             .append(options)
                             .on('change', () => this.validate())
+                            .on('change', (event) => this.triggerOnChange(event))
                     )
                     .append(
                         $('<span />')
@@ -165,6 +166,19 @@ class SelectField {
 
         this.value = () => {
             return $(`#${this.id}`).val()
+        }
+
+        this.callback = onChange        
+    }
+
+    triggerOnChange = (event) => {
+        let value = $(event.target).val()
+        let label = $(event.target).find("option:selected").text()
+
+        let option = {value, label}
+        
+        if(this.callback){
+            this.callback(option)
         }
     }
 
@@ -193,6 +207,16 @@ class SelectField {
     }
 
     load() { }
+
+    hide(){
+        this.field.hide()
+        this.required = false
+    }
+
+    show(){
+        this.field.show()
+        this.required = true
+    }
 }
 
 class FileField {
