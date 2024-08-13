@@ -79,13 +79,25 @@ class PlanesPago extends CI_Controller {
     private function insertar_pago($pagos, $num_pago, $monto){
         $viejo = $pagos[$num_pago];
 
+        $total = $monto * -1;
+        $capital = $monto * -1;
+        $saldo = $viejo->saldo;
+
         $restante = (object) [
             'fecha' => $viejo->fecha,
             'planPago' => $viejo->planPago,
             'pago' => 0,
-            'capital' => $monto * -1,
-
+            'capital' => $capital,
+            'total' => $total,
+            'saldo' => $saldo,
+            
+            'saldoCapital' => 0,
+            "interes" => "0.00",
+            "saldoInteres" => 0,
+            "iva" => "0.00",
+            "saldoIva" => 0,
         ];
+
 
         array_splice(
             $pagos,
@@ -138,14 +150,15 @@ class PlanesPago extends CI_Controller {
                 $planes[$num_plan]->dumpPlan = json_encode($pagos);
             }
 
+            #Guardar plan de pagos
+            $this->PlanesPagoModel->savePlanPago($planes[$num_plan]->idPlanPago, $planes[$num_plan]->dumpPlan);
+
             if($monto <= 0){
                 print_r($planes[$num_plan]->dumpPlan);
 
                 break;
             }
         }
-
-        #Guardar plan de pagos
     }
 }
 

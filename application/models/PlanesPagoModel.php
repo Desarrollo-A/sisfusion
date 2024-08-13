@@ -25,6 +25,16 @@ class PlanesPagoModel extends CI_Model {
 
         return $this->db->query($query)->result();
     }
+
+    public function savePlanPago($idPlanPago, $dumpPlan){
+        $query = "UPDATE planes_pago
+        SET
+            dumpPlan = '$dumpPlan'
+        WHERE
+            idPlanPago = $idPlanPago";
+
+        return $this->db->query($query);
+    }
 }
 
 ?>
