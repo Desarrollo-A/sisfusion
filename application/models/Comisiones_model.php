@@ -6636,11 +6636,11 @@ SELECT cl.id_cliente_reubicacion_2,
     }
 
 
-    public function insertComisionesCasas($idLote, $abonoNeodata,$abonoFinal, $porcentajes , $usuarioXdispersar,$comisionTotal , $porcentajeDecimal,$rolGenerado,$cliente ){
+    public function insertComisionesCasas($idLote, $abonoNeodata,$abonoFinal,$porcentajes , $usuarioXdispersar,$comisionTotal , $porcentajeDecimal,$rolGenerado,$cliente ){
         
             // Query SQL completo
 
-
+    
     $cmd = "
     EXEC MiProcedimiento 
 	@abonoNeodata = $abonoNeodata ,@pagoNeodata =$pagoNeodata ,
