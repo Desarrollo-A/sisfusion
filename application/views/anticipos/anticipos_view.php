@@ -86,6 +86,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h3 class="card-title center-align">Estatus - Anticipos</h3>
+                            <h5 class="card-title center-align">Al aceptar el monto sera para crear el préstamo. </h5>
                         </div>
                         <div class="modal-body">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

@@ -443,10 +443,14 @@ $("#tabla_anticipos").ready(function () {
             type: 'POST',
             contentType: false,
             cache: false,
-            processData: false,
+            processData: false, 
+            
+            dataType: 'json',
             success: function(response) {
-                var jsonResponse = JSON.parse(response);
-                if (jsonResponse.success) {
+                console.log(response.success);
+
+              // if(response.success){
+                if (response.success) {
                     $('#anticipoModal').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                     $('#tabla_anticipos').DataTable().ajax.reload();
