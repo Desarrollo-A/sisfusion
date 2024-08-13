@@ -16,7 +16,7 @@ class CasasModel extends CI_Model
         $query = "SELECT
             pc.*,
             lo.nombreLote
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         WHERE
             pc.idProcesoCasas = $idProcesoCasas";
@@ -63,7 +63,7 @@ class CasasModel extends CI_Model
     public function setProcesoTo($idProcesoCasas, $proceso, $comentario, $tipoMovimiento){
         $idModificacion = $this->session->userdata('id_usuario');
 
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             proceso = $proceso,
             comentario = '$comentario',
@@ -168,7 +168,7 @@ class CasasModel extends CI_Model
                 ISNULL(cl.id_cliente, 0) idCliente
             FROM 
                 lotes lo 
-            LEFT JOIN proceso_casas pc ON pc.idLote = lo.idLote AND pc.status = 1 
+            LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote AND pc.status = 1 
             LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 
             LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente_c 
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
@@ -228,7 +228,7 @@ class CasasModel extends CI_Model
     }
 
     public function addLoteToAsignacion($idLote, $comentario, $idUsuario){
-        $query = "INSERT INTO proceso_casas
+        $query = "INSERT INTO proceso_casas_banco
         (
             idLote,
             comentario,
@@ -244,7 +244,7 @@ class CasasModel extends CI_Model
         $result = $this->db->query($query);
 
         if($result){
-            $query = "SELECT TOP 1 * FROM proceso_casas ORDER BY idProcesoCasas DESC";
+            $query = "SELECT TOP 1 * FROM proceso_casas_banco ORDER BY idProcesoCasas DESC";
             return $this->db->query($query)->row();
         }else{
             return null;
@@ -340,7 +340,7 @@ class CasasModel extends CI_Model
     }
 
     public function asignarAsesor($idProcesoCasas, $idAsesor){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             idAsesor = $idAsesor
         WHERE
@@ -350,7 +350,7 @@ class CasasModel extends CI_Model
     }
 
     public function setProcesoToCartaAuth($idProcesoCasas){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             proceso = 1,
             fechaProceso = GETDATE()
@@ -384,7 +384,7 @@ class CasasModel extends CI_Model
 
 		END AS gerente,
         oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -402,7 +402,7 @@ class CasasModel extends CI_Model
     }
 
     public function cancelProcess($idProcesoCasas, $comentario){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             status = 0,
             comentario = '$comentario'
@@ -468,7 +468,7 @@ class CasasModel extends CI_Model
         doc.documento,
         doc.idDocumento,
         doc2.documentos
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -506,7 +506,7 @@ class CasasModel extends CI_Model
         oxc.nombre AS movimiento,
         doc2.documentos
     FROM 
-        proceso_casas pc
+        proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -578,7 +578,7 @@ class CasasModel extends CI_Model
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -631,7 +631,7 @@ class CasasModel extends CI_Model
 			 WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -682,7 +682,7 @@ class CasasModel extends CI_Model
              ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
         END AS gerente,
         oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (16) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -746,7 +746,7 @@ class CasasModel extends CI_Model
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc2.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
         LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
@@ -767,7 +767,7 @@ class CasasModel extends CI_Model
     }
 
     public function setProcesoToValidacionContraloria($idProcesoCasas){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             proceso = 7,
             fechaProceso = GETDATE()
@@ -873,7 +873,7 @@ class CasasModel extends CI_Model
             doc3.archivo,
             oxc2.nombre AS nombreArchivo,
             coti.cotizacionCargada
-            FROM proceso_casas pc
+            FROM proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
             LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
             INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -923,7 +923,7 @@ class CasasModel extends CI_Model
         doc2.documento,
         doc2.archivo,
         oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -965,7 +965,7 @@ class CasasModel extends CI_Model
         doc2.documento,
         doc2.archivo,
         oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -999,7 +999,7 @@ class CasasModel extends CI_Model
     }
 
     public function setProcesoToSolicitudContratos($idProcesoCasas){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             proceso = 8,
             fechaProceso = GETDATE()
@@ -1026,7 +1026,7 @@ class CasasModel extends CI_Model
     			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
     		END AS gerente,
             oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (19,20,21,22) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1098,7 +1098,7 @@ class CasasModel extends CI_Model
             END AS gerente,
             oxc.nombre AS movimiento,
             doc.documentos
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1140,7 +1140,7 @@ class CasasModel extends CI_Model
             END AS tiempoProceso,
             oxc.nombre AS movimiento,
             oxc2.nombre AS nombreArchivo
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1180,7 +1180,7 @@ class CasasModel extends CI_Model
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
             oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
@@ -1212,7 +1212,7 @@ class CasasModel extends CI_Model
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
             oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1243,7 +1243,7 @@ class CasasModel extends CI_Model
                  ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
             END AS gerente,
             oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1274,7 +1274,7 @@ class CasasModel extends CI_Model
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
             oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1311,7 +1311,7 @@ class CasasModel extends CI_Model
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
             oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1344,7 +1344,7 @@ class CasasModel extends CI_Model
                  ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
             END AS gerente,
             oxc.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1361,7 +1361,7 @@ class CasasModel extends CI_Model
     }
 
     public function markProcesoFinalizado($idProcesoCasas){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             finalizado = 1,
             tipoMovimiento = 3,
@@ -1373,7 +1373,7 @@ class CasasModel extends CI_Model
     }
 
     public function setAdeudo($idProcesoCasas, $adeudo, $cantidad){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET $adeudo = $cantidad
         WHERE idProcesoCasas = $idProcesoCasas";
 
@@ -1381,7 +1381,7 @@ class CasasModel extends CI_Model
     }
 
     public function setProceso3($idProcesoCasas){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET proceso = 3
         WHERE idProcesoCasas = $idProcesoCasas";
 
@@ -1390,7 +1390,7 @@ class CasasModel extends CI_Model
 
     public function getAdeudosValid($idProcesoCasas){
         $query = "SELECT adeudoOOAM, adeudoADM 
-        FROM proceso_casas 
+        FROM proceso_casas_banco 
         WHERE idProcesoCasas = $idProcesoCasas AND adeudoOOAM IS NOT null AND adeudoADM IS NOT null";
 
         return $this->db->query($query);
@@ -1507,7 +1507,7 @@ class CasasModel extends CI_Model
 
         $this->db->query($query);
 
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             cotizacionElegida = $idCotizacion
         WHERE
@@ -1517,7 +1517,7 @@ class CasasModel extends CI_Model
     }
 
     public function setTipoCredito($idProcesoCasas, $tipoCredito, $notaria){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             tipoCredito = $tipoCredito,
             notaria = $notaria
@@ -1555,7 +1555,7 @@ class CasasModel extends CI_Model
             END AS gerente,
             oxc.nombre AS procesoNombre,
             oxc2.nombre AS movimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1615,7 +1615,7 @@ class CasasModel extends CI_Model
     }
 
     public function setVoboToProceso($idProcesoCasas, $column){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             $column = 1
         WHERE
@@ -1625,7 +1625,7 @@ class CasasModel extends CI_Model
     }
 
     public function resetVoBos($idProcesoCasas){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE proceso_casas_banco
         SET
             voboADM = NULL,
             voboOOAM = NULL,
@@ -1796,7 +1796,7 @@ class CasasModel extends CI_Model
             CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
             pc.tipoMovimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         INNER JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
@@ -1832,7 +1832,7 @@ class CasasModel extends CI_Model
             CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
             pc.tipoMovimiento
-        FROM proceso_casas pc
+        FROM proceso_casas_banco pc
         INNER JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
@@ -1888,7 +1888,7 @@ class CasasModel extends CI_Model
     }
 
     public function setVoBoSaldos($columna, $idProcesoCasas, $idUsuario){
-        $query = $this->db->query("UPDATE proceso_casas SET ". $columna ." = ?, fechaProceso = GETDATE(), fechaModificacion = GETDATE(), modificadoPor = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
+        $query = $this->db->query("UPDATE proceso_casas_banco SET ". $columna ." = ?, fechaProceso = GETDATE(), fechaModificacion = GETDATE(), modificadoPor = ? WHERE idProcesoCasas = ?", array(1, $idUsuario, $idProcesoCasas));
 
         return $query;
     }
@@ -1931,7 +1931,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function countDocumentos($documentos, $proceso, $validacionExtra){
+public function countDocumentos($documentos, $proceso, $validacionExtra){
         $documentosArray = explode(',', $documentos);
         $placeholders = implode(',', array_fill(0, count($documentosArray), '?'));
 

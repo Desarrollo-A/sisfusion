@@ -1451,7 +1451,7 @@ class Casas extends BaseController
             "costoConstruccion" => $costoConstruccion
         );
 
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $id);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $id);
 
         $proceso = $this->CasasModel->getProceso($id);
 
@@ -3019,7 +3019,7 @@ class Casas extends BaseController
             "modificadoPor" => $this->session->userdata('id_usuario'),
         );
 
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
 
         if (!$update) {
             http_response_code(400);
@@ -3202,7 +3202,7 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProceso);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3428,7 +3428,7 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3609,7 +3609,7 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProceso);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3761,7 +3761,82 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+            $response["result"] = true;
+        } else {
+            $this->db->trans_rollback();
+            $response["result"] = false;
+        }
+
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($response));
+    }
+
+    public function rechazoPaso14()
+    {
+        $form = $this->form();
+
+        $idLote = $form->idLote;
+        $idProcesoCasas = $form->idProcesoCasas;
+        $banderaSuccess = true;
+
+        $this->db->trans_begin();
+
+        $vobo = $this->CasasModel->getVobos($idProcesoCasas, 4);
+
+        $updateData = array(
+            "adm"  => 0,
+            "ooam" => 0,
+            "gph" => 0,
+            "pv" => 0,
+            "modificadoPor" => $this->session->userdata('id_usuario'),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+        );
+
+        $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+            $response["result"] = true;
+        } else {
+            $this->db->trans_rollback();
+            $response["result"] = false;
+        }
+
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($response));
+    }
+
+    public function rechazoPaso7()
+    {
+        $form = $this->form();
+
+        $idLote = $form->idLote;
+        $idProcesoCasas = $form->idProcesoCasas;
+        $banderaSuccess = true;
+
+        $this->db->trans_begin();
+
+        $updateData = array(
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "saldoAdmon" => 0,
+            "saldoGPH" => 0,
+            "saldoPV" => 0,
+            "saldoOOAM" => 0,
+            "cierreContraloria" => 0
+        );
+
+        // paso 1: hacer update del proceso
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3809,7 +3884,7 @@ class Casas extends BaseController
         );
 
         // paso 1: hacer update del proceso
-        $update = $this->General_model->updateRecord("proceso_casas", $updateData, "idProcesoCasas", $idProcesoCasas);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
         if (!$update) {
             $banderaSuccess = false;
         }
