@@ -201,5 +201,17 @@ class Anticipos_model extends CI_Model {
         return $this->db->affected_rows() > 0 ? 1 : 0;
     }
 
+    public function inserPAGOS($tabla, $insert){
+        $respuesta = $this->db->insert($tabla,$insert);
+                if($respuesta)
+                {
+                    return TRUE;
+                }else{
+                    return FALSE;
+                }  
+    }
+
+
+
     
 }
