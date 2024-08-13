@@ -632,9 +632,11 @@ class Casas extends BaseController
         $this->form();
 
         $id = $this->form('id');
+        $idCliente = $this->form('idCliente');
         $comentario = $this->form('comentario');
+        $banderaSuccess = true;
 
-        if (!isset($id)) {
+        if (!isset($id) || !isset($idCliente)) {
             http_response_code(400);
         }
 
@@ -643,12 +645,26 @@ class Casas extends BaseController
         $proceso = $this->CasasModel->getProceso($id);
 
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
-
         if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: ' . $comentario, 1);
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso el proceso a asignación de asesor | Comentario: ' . $comentario, 1);
+        }
+        else{
+            $banderaSuccess = false;
+        }
 
+        $updateData = array(
+            "id_asesor_c" => 0
+        );
+
+        $update = $this->General_model->updateRecord("clientes", $updateData, "id_cliente", $idCliente);
+        if(!$update){
+            $banderaSuccess = false;
+        }
+
+        if($banderaSuccess){
             $this->json([]);
-        } else {
+        }
+        else {
             http_response_code(404);
         }
     }
