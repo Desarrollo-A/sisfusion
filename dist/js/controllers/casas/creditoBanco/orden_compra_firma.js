@@ -1,3 +1,5 @@
+let valor_avance = 5; // valor predefinido al que se debe avanzar normalmente, a excepcion de cuando es rechazo de un paso mas alto
+
 const formatter = new Intl.NumberFormat('es-MX', {
   style: 'currency',
   currency: 'MXN',
@@ -74,6 +76,10 @@ let table = new Table({
 })
 
 function avanceProcesoBanco(data){
+    if(data.procesoAnterior > data.procesoNuevo && data.tipoMovimiento == 1){
+        valor_avance = data.procesoAnterior // para identificar a que paso debe de avanzar viendo de que paso se rechazo
+    }
+
     let form = new Form({
         title: 'Avanzar proceso',
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
@@ -104,7 +110,7 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 5 }),
+            new HiddenField({ id: 'procesoNuevo', value: valor_avance }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
