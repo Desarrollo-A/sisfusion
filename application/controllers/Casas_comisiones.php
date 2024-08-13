@@ -37,6 +37,11 @@ class Casas_comisiones extends CI_Controller
   }
   
 
+  public function dispersionBonos(){
+    $this->load->view('template/header');
+    $this->load->view("Comisiones/dispersion/dispersionBonosView");
+  }
+
   public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
       redirect(base_url() . "index.php/login");
@@ -662,15 +667,126 @@ public function getDatosFechasProyecCondm(){
     echo json_encode($this->Casas_comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
   }
 
-  public function InsertNeo(){
    
-    exit;
+    public function InsertNeo(){
+
+      //$arrayDatos = array();
+      //$arrayDatos[0] = array('id' => $idL)
+      $arrayDatos = array(
+        array("abono" => 1375,"id_usuario"=>2,"porcentaje_decimal"=>1,"comision_total"=>12000,"porcentaje_neodata"=>12.5,"nombre"=>"RIGEL SILVA ","id_rol"=>1,"detail_rol"=>"Director","rolVal"=>1),
+        array("abono" => 1375,"id_usuario"=>11650,"porcentaje_decimal"=>1,"comision_total"=>12000,"porcentaje_neodata"=>12.5,"nombre"=>"Jorge De La Cruz ","id_rol"=>2,"detail_rol"=>"Subdirector","rolVal"=>2),
+        array("abono" => 1375,"id_usuario"=>75,"porcentaje_decimal"=>1,"comision_total"=>12000,"porcentaje_neodata"=>12.5,"nombre"=>"GRACIA TERESA DE LA PAZ GARCIA","id_rol"=>3,"detail_rol"=>"Gerente","rolVal"=>3),
+        array("abono" => 4125,"id_usuario"=>14894,"porcentaje_decimal"=>3,"comision_total"=>36000,"porcentaje_neodata"=>37.5,"nombre"=>"GUILLERMO BRINGAS ROBLEDO","id_rol"=>7,"detail_rol"=>"Asesor","rolVal"=>5),
+        array("abono" => 550,"id_usuario"=>16660,"porcentaje_decimal"=>0.4,"comision_total"=>4800,"porcentaje_neodata"=>5,"nombre"=>"BONOS CASAS ","id_rol"=>105,"detail_rol"=>"Influencer","rolVal"=>7),
+        array("abono" => 1375,"id_usuario"=>4824,"porcentaje_decimal"=>1,"comision_total"=>12000,"porcentaje_neodata"=>12.5,"nombre"=>"EMPRESA ABONOS ","id_rol"=>45,"detail_rol"=>"Empresa","rolVal"=>8) );
+
+      for ($i=0; $i < count($arrayDatos) ; $i++) { 
+        $idLote = 16299;
+         $id_usuario = $arrayDatos[$i]["id_usuario"] ;
+          $TotComision = $arrayDatos[$i]["comision_total"] ;
+          $user = 1;
+           $porcentaje = $arrayDatos[$i]["porcentaje_decimal"];
+        $abono =$arrayDatos[$i]["abono"] ;
+        $pago =67962.42 ;
+        $rol = $arrayDatos[$i]["id_rol"];
+        $idCliente = 135168;
+        $tipo_venta = 1;
+        $ooam  = 0;
+         $nombreOtro = 'NULL';
+
+        
+      if($porcentaje != 0 && $porcentaje != ''){
+          $respuesta =  $this->db->query("INSERT INTO comisiones_casas ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', $ooam, '".$nombreOtro."', ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+          $insert_id = $this->db->insert_id();
+          $respuesta = $this->db->query("INSERT INTO pago_casas_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user')");
+          $insert_id_2 = $this->db->insert_id();
+          //$respuesta = $this->db->query("INSERT INTO historial_casas VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+
+      }
+
+    }
+      if (! $respuesta ) {
+          return 0;
+      } else {
+          return 1;
+      }
+  
+  }
+
+  function getDatosAbonadoSuma11($idlote){
+    echo json_encode($this->Casas_comisiones_model->getDatosAbonadoSuma11($idlote)->result_array());
+  }
+  function getDatosAbonadoDispersion($idlote){
+
+    echo json_encode($this->Casas_comisiones_model->getDatosAbonadoDispersion($idlote)->result_array());
   }
 
   public function changePrioridad(){
     $prioridadActual = $this->input->post("priridadActual") == 1 ? 0 : 1;
     $idClienteCasas = $this->input->post("idClienteCasas");
     $respuesta = $this->Casas_comisiones_model->changePrioridad($prioridadActual,$idClienteCasas,$this->session->userdata('id_usuario'));
+    echo json_encode($respuesta);
+  }
+
+
+  public function getPagosBonos(){
+    $respuesta = $this->Casas_comisiones_model->getPagosBonos();
+    echo json_encode( array("data" =>$respuesta));
+  }
+
+  public function getUsuariosBonos(){
+     echo json_encode($this->Casas_comisiones_model->getUsuariosBonos()->result_array());
+  }
+
+  public function AsignarBono(){
+    $id_usuario = explode(',',$this->input->post("id_usuario"));
+    $id_pago_i = $this->input->post("id_pago_i");
+    $id_comision = $this->input->post("id_comision");
+    $montoActual = $this->input->post("montoPago");
+    $monto = $this->input->post("monto_dispersar");
+    $totalNeto2 = $this->input->post("totalNeto2");
+    $idLote = $this->input->post("idLote");
+    $idCliente = $this->input->post("idCliente");
+    $porcentajeTotal = 0.4;
+    $porcentajeAsignado = ($monto * 100) / $totalNeto2;
+    
+    exit;
+   /* $dataUpdateCom = array(
+      "comision_total" => $monto,
+      "id_usuario" => $id_usuario[0],
+      "rol_generado" => $id_usuario[1],
+      "porcentaje_abonado" => $porcentajeAsignado
+    );
+    $dbTransaction = $this->General_model->updateRecord('comisiones_casas', $dataUpdateCom, 'id_comision', $id_comision);*/
+    $dataUpdatePago = array(
+      "abono_neodata" => 0,
+      "id_usuario" => 0,
+      "estatus" => 0,
+    );
+    $dbTransaction = $this->General_model->updateRecord('pago_casas_ind', $dataUpdatePago, 'id_pago_i', $id_pago_i);
+
+    $data = array(
+      "id_lote" => $idLote,
+      "id_usuario" => $id_usuario[0],
+      "comision_total" => $monto,
+      "estatus" => 1,
+      "observaciones" => 'NUEVA DISPERSIÓN BONO',
+      "ooam" => 0,
+      "loteReubicado" => NULL,
+      "creado_por" => $id_usuario,
+      "fecha_creacion" => $hoy,
+      "porcentaje_decimal" => $porcentajeAsignado,
+      "fecha_autorizacion" => $hoy,
+      "rol_generado" => $id_usuario[1],
+      "descuento" => NULL,
+      "idCliente" => $idCliente,
+      "modificado_por" => $id_usuario,
+      "liquidada" => 0,
+  );
+  $dbTransaction = $this->General_model->addRecord("comisiones", $data);
+
+
+    $respuesta = $this->Casas_comisiones_model->asignarBono($id_usuario,$id_bono);
     echo json_encode($respuesta);
   }
 
