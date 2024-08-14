@@ -4281,7 +4281,7 @@ class Casas extends BaseController
         $esquemaCredito = $this->form('esquemaCredito');
         $modeloCasa = $this->form('modeloCasa');
         $idUsuario = $this->session->userdata('id_usuario');
-        $tabla = $esquemaCredito == 1 ? 'proceso_casas' : 'proceso_casas_directo';
+        $tabla = $esquemaCredito == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
         $banderaSuccess = true;
 
         if (!isset($idLote) || !isset($idCliente) || !isset($esquemaCredito)) {
