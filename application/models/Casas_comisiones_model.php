@@ -890,6 +890,60 @@ class Casas_comisiones_model extends CI_Model {
         return $this->db->query("EXEC porcentajesCom @idCliente = $idCliente, @precioTotal = $costoConstruccion,@planComision = $planComision");
     }
 
+    public function validateDispersionCommissions($lote){
+        return $this->db->query("SELECT count(*) dispersion, pc.bandera 
+        FROM comisiones_casas com
+        LEFT JOIN pago_comision_casas pc ON pc.id_lote = com.id_lote and pc.bandera = 0
+        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
+    }
+    public function InsertPagoComision($lote,$sumaComi,$sumaDispo,$porcentaje,$resta,$id_user,$pagado,$bonificacion){
+        $QUERY_VOBO =  $this->db->query("SELECT id_pagoc FROM pago_comision_casas WHERE id_lote = ".$lote."");
+        if($QUERY_VOBO->num_rows() > 0){
+            $respuesta =  $this->db->query("UPDATE pago_comision_casas SET total_comision = $sumaComi, abonado = $sumaDispo, porcentaje_abono = $porcentaje, pendiente = $resta, creado_por = $id_user, fecha_modificacion = GETDATE(), ultimo_pago = $pagado, bonificacion = $bonificacion, ultima_dispersion = GETDATE(), numero_dispersion = (numero_dispersion+1) WHERE id_lote = $lote");
+        } else{
+            $respuesta =  $this->db->query("INSERT INTO pago_comision_casas ([id_lote],[total_comision],[abonado],[porcentaje_abono],[pendiente],[creado_por],[fecha_modificacion],[fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por],[new_neo],[ultima_dispersion],[numero_dispersion],[monto_anticipo]) VALUES ($lote,$sumaComi,$sumaDispo,$porcentaje,$resta,$id_user,GETDATE(),GETDATE(),1,$pagado,$bonificacion,null,null,null,GETDATE(),1,$sumaDispo)");
+        }
+
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    public function UpdateLoteDisponible($lote,$idCliente){
+        $respuesta =  $this->db->query("UPDATE pago_comision_casas SET bandera = 1 WHERE id_lote = $lote");
+        $respuesta =  $this->db->query("UPDATE clientes SET registroComisionCasas = 1,usuario=".$this->session->userdata('id_usuario')." WHERE id_cliente = $idCliente");
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+
+    public function InsertNeo($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta,$ooam, $nombreOtro){
+        
+        if($porcentaje != 0 && $porcentaje != ''){
+            $respuesta =  $this->db->query("INSERT INTO comisiones_casas ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', $ooam, '".$nombreOtro."', ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+            $insert_id = $this->db->insert_id();
+
+            $respuesta = $this->db->query("INSERT INTO pago_casas_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user')");
+            $insert_id_2 = $this->db->insert_id();
+
+            $respuesta = $this->db->query("INSERT INTO historial_comision_casas VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+
+            $respuesta = $this->db->query("UPDATE comisiones_casas SET liquidada = 1 
+            FROM comisiones_casas com
+            LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_casas_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
+            WHERE com.id_comision = $insert_id AND com.ooam IN (2) AND (com.comision_total-abonado) < 1");
+        }
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
 public function getDataDispersionPago() {
     $this->db->query("SET LANGUAGE Español;");
     $query = $this->db->query("SELECT DISTINCT(l.idLote),cl.esquemaCreditoCasas,(CASE WHEN cl.esquemaCreditoCasas = 2 THEN opcDir.nombre ELSE opcBanco.nombre END) estatusConstruccion,cl.prioridadComision,cl.registroComisionCasas, res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,

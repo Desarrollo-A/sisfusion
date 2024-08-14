@@ -14,7 +14,7 @@ $(document).ready(function () {
 });
 
 
-
+/*
 
 $("#form_NEODATA").submit( function(e) {
     $('#dispersar').prop('disabled', true);
@@ -74,7 +74,7 @@ $("#form_NEODATA").submit( function(e) {
             }
         });
     }
-});
+});*/
 
 
 
@@ -269,7 +269,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         class = "btn-data ${varColor} verify_neodataCasas" data-prioridad="${d.prioridadComision}" data-toggle="tooltip"  data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                         
                         let colorPrioridad = d.prioridadComision == 1 ? 'btn-warning' : 'btn-blueMaderas' ;
-                        BtnStats += `<button href="#" value="${d.idLote}" data-prioridad="${d.prioridadComision}" data-idCliente="${id_cliente}" data-nombreLote="${d.nombreLote}" class="btn-data ${colorPrioridad} btn-prioridad" data-toggle="tooltip"  data-placement="top" title="Prioridad"> <i class="material-icons">group</i></button>`;
+                        BtnStats += d.registroComisionCasas == 1 ? '' : `<button href="#" value="${d.idLote}" data-prioridad="${d.prioridadComision}" data-idCliente="${id_cliente}" data-nombreLote="${d.nombreLote}" class="btn-data ${colorPrioridad} btn-prioridad" data-toggle="tooltip"  data-placement="top" title="Prioridad"> <i class="material-icons">group</i></button>`;
                         //BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
                     
             
@@ -433,7 +433,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                             let total0 = esquemaCreditoCasas == 2 ? parseFloat(data[0].Aplicado) : abonadoCliente;
                             let total = 0;
                             if(total0 > 0){
-                                total = total;
+                                total = total0;
                             }else{
                                 total = 0;
                             }
@@ -637,7 +637,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                                 </div>`);
                                             if(i == resultArr.length -1){
                                                 $("#modal_NEODATA_Casas .modal-body").append(`
-                                                <input type="hidden" name="pago_neo" id="pago_neo" value="${data[0].Aplicado}">
+                                                <input type="hidden" name="pago_neo" id="pago_neo" value="${total}">
                                                 <input type="hidden" name="idLote" id="idLote" value="${idLote}">
                                                 <input type="hidden" name="porcentaje_abono" id="porcentaje_abono" value="${porcentaje_abono}">
                                                 <input type="hidden" name="abonado" id="abonado" value="${abonado}">
@@ -668,8 +668,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                 }
                                 var counts=0;
                                 let labelPenalizacion = '';
-                                if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">Lote con Penalización + 90 días</b>';}
-                                $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney(total0)}</b><br>${labelPenalizacion}</h3></div></div><br>`);
+                                $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney(total0)}</b><br></h3></div></div><br>`);
                                 $("#modal_NEODATA_Casas .modal-body").append(`
                                     <div class="row">
                                         <div class="col-md-4 pl-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div>
@@ -753,7 +752,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                         counts++
                                     });
                                 });
-                                $("#modal_NEODATA_Casas .modal-footer").append('<div class="row"><input type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"><input type="submit" class="btn btn-primary mr-2" name="disper_btn"  id="dispersar" value="Dispersar"></div>');
+                                $("#modal_NEODATA_Casas .modal-footer").append('<div class="row"><input type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"><input type="submit" class="btn btn-primary mr-2" name="disper_btn"  id="dispersarCasas" value="Dispersar"></div>');
                                 if(total < 1 ){
                                     $('#dispersar').prop('disabled', true);
                                 }
@@ -818,19 +817,7 @@ $("#form_NEODATA_Casas").submit( function(e) {
                     function_totales();
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
-                    $.ajax({
-                        url: general_base_url + 'Casas_comisiones/ultimaDispersion',
-                        data: formulario,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        dataType: 'json',
-                        method: 'POST',
-                        type: 'POST',
-                        success:function(data){
-                        numerosDispersion();
-                        }
-                    })
+                    
                 } else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otro usuario", "warning");
