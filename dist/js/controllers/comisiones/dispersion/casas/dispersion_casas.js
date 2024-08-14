@@ -675,8 +675,6 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                         <div class="col-md-4">Total abonado: <b style="color:green"></b></div>
                                         <div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div>
                                     </div>
-                                    
-
                                 `);
                                 if(parseFloat(data[0].Bonificado) > 0){
                                     cadena = `<h4>Bonificación: <b style="color:#D84B16;">$${formatMoney(data[0].Bonificado)}</b></h4>`;

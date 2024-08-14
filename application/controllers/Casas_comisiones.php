@@ -859,7 +859,9 @@ echo "la seguda";
   }
 
   public function AsignarBono(){
-    $id_usuario = explode(',',$this->input->post("id_usuario"));
+    $this->db->trans_begin();
+    $usuariosBonos = [10460,15103];
+    $id_usuario = $this->input->post("usuarioBono");
     $id_pago_i = $this->input->post("id_pago_i");
     $id_comision = $this->input->post("id_comision");
     $montoActual = $this->input->post("montoPago");
@@ -867,10 +869,11 @@ echo "la seguda";
     $totalNeto2 = $this->input->post("totalNeto2");
     $idLote = $this->input->post("idLote");
     $idCliente = $this->input->post("idCliente");
+    $creadoPor = $this->session->userdata('id_usuario');
     $porcentajeTotal = 0.4;
-    $porcentajeAsignado = ($monto * 100) / $totalNeto2;
+    $hoy = date("Y-m-d H:i:s");
+    //$porcentajeAsignado = ($monto * 100) / $totalNeto2;
     
-    exit;
    /* $dataUpdateCom = array(
       "comision_total" => $monto,
       "id_usuario" => $id_usuario[0],
@@ -879,35 +882,50 @@ echo "la seguda";
     );
     $dbTransaction = $this->General_model->updateRecord('comisiones_casas', $dataUpdateCom, 'id_comision', $id_comision);*/
     $dataUpdatePago = array(
-      "abono_neodata" => 0,
-      "id_usuario" => 0,
-      "estatus" => 0,
+      "estatus" => 11,
+      "modificado_por" => $creadoPor
     );
     $dbTransaction = $this->General_model->updateRecord('pago_casas_ind', $dataUpdatePago, 'id_pago_i', $id_pago_i);
+    $arrayBonos = array();
+    $data = array(
+      "id_pago_i" => $id_pago_i,
+      "id_usuario" => $id_usuario,
+      "abono_bono" => $monto,
+      "fecha_abono" => $hoy,
+      "fecha_pago_intmex" => NULL,
+      "pago_bono" => $montoActual,
+      "estatus" => 1,
+      "creado_por" => $creadoPor,
+      "comentario" => "DISPERIÓN BONOS",
+      "modificado_por " => $creadoPor,
+      "descuento" => 0
+  );
+  array_push($arrayBonos, $data);
 
     $data = array(
-      "id_lote" => $idLote,
-      "id_usuario" => $id_usuario[0],
-      "comision_total" => $monto,
+      "id_pago_i" => $id_pago_i,
+      "id_usuario" => $id_usuario == $usuariosBonos[0] ? $usuariosBonos[1] : $usuariosBonos[0] ,
+      "abono_bono" => $montoActual - $monto,
+      "fecha_abono" => $hoy,
+      "fecha_pago_intmex" => NULL,
+      "pago_bono" => $montoActual,
       "estatus" => 1,
-      "observaciones" => 'NUEVA DISPERSIÓN BONO',
-      "ooam" => 0,
-      "loteReubicado" => NULL,
-      "creado_por" => $id_usuario,
-      "fecha_creacion" => $hoy,
-      "porcentaje_decimal" => $porcentajeAsignado,
-      "fecha_autorizacion" => $hoy,
-      "rol_generado" => $id_usuario[1],
-      "descuento" => NULL,
-      "idCliente" => $idCliente,
-      "modificado_por" => $id_usuario,
-      "liquidada" => 0,
+      "creado_por" => $creadoPor,
+      "comentario" => "DISPERIÓN BONOS",
+      "modificado_por " => $creadoPor,
+      "descuento" => 0
   );
-  $dbTransaction = $this->General_model->addRecord("comisiones", $data);
+    array_push($arrayBonos, $data);
 
-
-    $respuesta = $this->Casas_comisiones_model->asignarBono($id_usuario,$id_bono);
-    echo json_encode($respuesta);
+    $insertado = $this->General_model->insertBatch('pago_comision_bono', $arrayBonos);
+    if ( $insertado === FALSE || $this->db->trans_status() === FALSE){
+         $this->db->trans_rollback();
+         $resultado = array("resultado" => FALSE);
+     }else{
+         $this->db->trans_commit();
+         $resultado = array("resultado" => TRUE);
+     }
+    echo json_encode($resultado);
   }
 
   //------------------------------ Contralodores resguardo_casas.js -----------------------------
