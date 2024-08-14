@@ -49,12 +49,12 @@
                 <div class="modal-header">
                     <h4 class="modal-title text-center"><b id="title-form-modal"></b></h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body scroll-styles" style="max-height:450px; padding:0 20px; overflow:auto">
                     <span id="text-form-modal"></span>
                     <div id="fields-form-modal" class="row">
 
                     </div>
-                    <div class="mt-4">ㅤ</div>
+                    <div class="mt-4"></div>
                 </div>
                 <div class="modal-footer">
                     <button id="cancel-button-form-modal" type="button" class="btn btn-danger btn-simple" data-dismiss="modal">cerrar</button>

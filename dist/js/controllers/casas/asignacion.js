@@ -177,7 +177,7 @@ let columns = [
             if(!data.idAsesor){
                 check = `<div class="d-flex justify-center">
                         <label class="cont">
-                            <input type="checkbox" onChange="verificarCheck(this)" data-idProcesoCasas="${data.idProcesoCasas}" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-tipoEsquema="${data.tipoEsquema}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <input type="checkbox" onChange="verificarCheck(this)" data-idProcesoCasas="${data.idProcesoCasas}" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" data-tipoEsquema="${data.tipoEsquema}" name="lotesOrigen[]" value="${data.idLote}" required>
                             <span></span>
                         </label></div>`
             }
@@ -185,13 +185,6 @@ let columns = [
             return check
         }        
     },
-    { data: 'idLote' },
-    { data: 'nombreLote' },
-    { data: 'condominio' },
-    { data: 'proyecto' },
-    { data: 'cliente' },
-    { data: 'nombreAsesor' },
-    { data: 'gerente' },
     {
         data: function (data) {
             if(data.esquemaCreditoCasas == 1){
@@ -223,6 +216,41 @@ let columns = [
             return `<span class="label lbl-${clase}">${data.movimiento}</span>`
         }
     },
+    { data: 'proyecto' },
+    { data: 'condominio' },
+    { data: 'nombreLote' },
+    { data: 'idLote' },
+    { data: 'precioTotalLote' },
+    { data: 'sup' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
+    { data: 'cliente' },
+    { data: function(data)
+        {
+            if (data.telefono1 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono1}` 
+        } 
+    },
+    { data: function(data)
+        {
+            if (data.telefono2 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono2}` 
+        } 
+    },
+    { data: function(data)
+        {
+            if (data.telefono3 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono3}` 
+        } 
+    },
+    { data: 'correo' },
+    { data: 'lugar_prospeccion' },
     {
         data: function (data) {
             let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data })
@@ -248,39 +276,38 @@ let table = new Table({
 })
 
 function verificarCheck(valorActual){
-    const tr = $(this).closest('tr');
-        const row = $('#tablaAsignacionCartera').DataTable().row(tr);
-        let botonEnviar = document.getElementsByClassName('botonEnviar');
-        let arrayInterno = [];
-        let arrayId = [];
-    
-        if (valorActual.checked){
-            arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
-            arrayInterno.push($(valorActual).attr('data-idLote'));//[1]
+    let botonEnviar = document.getElementsByClassName('botonEnviar');
+    let arrayInterno = [];
+    let arrayId = [];
 
-            arrayId.push($(valorActual).attr('data-idLote'));//[0]
-            arrayId.push($(valorActual).attr('data-tipoEsquema'));//[1]
-            arrayId.push($(valorActual).attr('data-idProcesoCasas'));//[2]
-    
-            arrayValores.push(arrayInterno);
-            arrayIdLotes.push(arrayId);
-        }
-        else{
-            let indexDelete = buscarValor($(valorActual).val(),arrayValores);
-            let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
+    if (valorActual.checked){
+        arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
+        arrayInterno.push($(valorActual).attr('data-idLote'));//[1]
 
-            arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
-            arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
-        }
+        arrayId.push($(valorActual).attr('data-idLote'));//[0]
+        arrayId.push($(valorActual).attr('data-tipoEsquema'));//[1]
+        arrayId.push($(valorActual).attr('data-idProcesoCasas'));//[2]
+        arrayId.push($(valorActual).attr('data-idCliente'));//[2]
 
-        if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
-         //se seleccionó más de uno, se habilita el botón para hacer el multiple
-            botonEnviar[0].classList.remove('hide');
-            $('#btn_'+$(valorActual).val()).prop("disabled", true);        
-        }
-        else{
-            botonEnviar[0].classList.add('hide');
-        }
+        arrayValores.push(arrayInterno);
+        arrayIdLotes.push(arrayId);
+    }
+    else{
+        let indexDelete = buscarValor($(valorActual).val(),arrayValores);
+        let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
+
+        arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
+        arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
+    }
+
+    if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
+        //se seleccionó más de uno, se habilita el botón para hacer el multiple
+        botonEnviar[0].classList.remove('hide');
+        $('#btn_'+$(valorActual).val()).prop("disabled", true);        
+    }
+    else{
+        botonEnviar[0].classList.add('hide');
+    }
 }
 
 function buscarValor(valor, array) {

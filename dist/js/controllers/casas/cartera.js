@@ -2,6 +2,8 @@ let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  pl
 let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona una opción' })
 let arrayValores = []
 let arrayIdLotes = []
+let arrayIdClientes = []
+
 
 $.ajax({
     type: 'GET',
@@ -17,6 +19,8 @@ $.ajax({
 filtro_proyectos.onChange(function(option){
     arrayValores = []
     arrayIdLotes = []
+    arrayIdClientes = []
+
 
     let btn = document.getElementsByClassName("btn-asignar")
     btn[0].classList.add('hide');
@@ -37,6 +41,7 @@ filtro_proyectos.onChange(function(option){
 filtro_condominios.onChange(function(option){
     arrayValores = []
     arrayIdLotes = []
+    arrayIdClientes = []
     
     let btn = document.getElementsByClassName("btn-asignar")
     btn[0].classList.add('hide');
@@ -91,6 +96,8 @@ select_lote = function(data) {
                     form.hide();
                     arrayValores = []
                     arrayIdLotes = []
+                    arrayIdClientes = []
+
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -98,6 +105,8 @@ select_lote = function(data) {
                     form.loading(false)
                     arrayValores = []
                     arrayIdLotes = []
+                    arrayIdClientes = []
+
                 }
             })
         },
@@ -148,18 +157,43 @@ let columns = [
                     </div>` 
         }        
     },
-    {
-        data: 'idLote'
-    },
+    { data: 'proyecto' },
+    { data: 'condominio' },
     { data: function(data)
         { return `${data.nombreLote}` } 
     },
-    { data: 'condominio' },
-    { data: 'proyecto' },
+    { data: 'idLote' },
+    { data: 'precioTotalLote' },
+    { data: 'sup' },
     { data: 'cliente' },
     { data: function(data)
         {
-            console.log(data)
+            if (data.telefono1 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono1}` 
+        } 
+    },
+    { data: function(data)
+        {
+            if (data.telefono2 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono2}` 
+        } 
+    },
+    { data: function(data)
+        {
+            if (data.telefono3 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono3}` 
+        } 
+    },
+    { data: 'correo' },
+    { data: 'lugar_prospeccion' },
+    { data: function(data)
+        {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
             return '<div class="d-flex justify-center">' + pass_button + '</div>'
         } 
@@ -175,37 +209,42 @@ let table = new Table({
 
 
 function verificarCheck(valorActual){
-    const tr = $(this).closest('tr');
-        const row = $('#tablaAsignacionCartera').DataTable().row(tr);
-        let botonEnviar = document.getElementsByClassName('botonEnviar');
-        let arrayInterno = [];
-        let arrayId = [];
-    
-        if (valorActual.checked){
-            arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
-            arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
+    let botonEnviar = document.getElementsByClassName('botonEnviar');
+    let arrayInterno = [];
+    let arrayId = [];
+    let arrayIdCli = [];
 
-            arrayId.push($(valorActual).attr('data-idLote'));//[1]
-    
-            arrayValores.push(arrayInterno);
-            arrayIdLotes.push(arrayId);
-        }
-        else{
-            let indexDelete = buscarValor($(valorActual).val(),arrayValores);
-            let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
+    if (valorActual.checked){
+        arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
+        arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
 
-            arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
-            arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
-        }
+        arrayId.push($(valorActual).attr('data-idLote'));//[1]
+        arrayIdCli.push($(valorActual).attr('data-idCliente'));//[1]
 
-        if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
-         //se seleccionó más de uno, se habilita el botón para hacer el multiple
-            botonEnviar[0].classList.remove('hide');
-            $('#btn_'+$(valorActual).val()).prop("disabled", true);        
-        }
-        else{
-            botonEnviar[0].classList.add('hide');
-        }
+        arrayValores.push(arrayInterno);
+        arrayIdLotes.push(arrayId);
+        arrayIdClientes.push(arrayIdCli);
+
+    }
+    else{
+        let indexDelete = buscarValor($(valorActual).val(),arrayValores);
+        let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
+        let indexDeleteIdCli = buscarValor($(valorActual).val(),arrayIdClientes);
+
+
+        arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
+        arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
+        arrayIdClientes = arrayIdClientes.slice(0, indexDeleteId).concat(arrayIdClientes.slice(indexDeleteIdCli + 1));
+    }
+
+    if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
+        //se seleccionó más de uno, se habilita el botón para hacer el multiple
+        botonEnviar[0].classList.remove('hide');
+        $('#btn_'+$(valorActual).val()).prop("disabled", true);        
+    }
+    else{
+        botonEnviar[0].classList.add('hide');
+    }
 }
 
 function buscarValor(valor, array) {
@@ -232,10 +271,11 @@ $(document).on('click', '.btn-asignar', () => {
 
     let form = new Form({
         title: 'Iniciar proceso',
-        text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
+        text: `¿Deseas iniciar el proceso de asignación de los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
             data.append("idLotes", JSON.stringify(arrayIdLotes))
+            data.append("idClientes", JSON.stringify(arrayIdClientes))
             $.ajax({
                 type: 'POST',
                 url: `${general_base_url}casas/to_asignacion_varios`,
@@ -249,6 +289,7 @@ $(document).on('click', '.btn-asignar', () => {
                     form.hide();
                     arrayValores = []
                     arrayIdLotes = []
+                    arrayIdClientes = []
                     let btn = document.getElementsByClassName("btn-asignar")
                     btn[0].classList.add('hide');
                 },

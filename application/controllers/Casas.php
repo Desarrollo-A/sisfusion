@@ -418,7 +418,7 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
-        if ($esquemaCredito == 1) { // se agrega un condicion para saber que esquema de credito se usara
+        if ($esquemaCredito == 1) { // se agrega un condición para saber que esquema de credito se usara
             $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $comentario, $idUsuario);
             // $copiarDs = $this->copiarDS($idLote);
         } else if ($esquemaCredito == 2) {
@@ -4001,12 +4001,11 @@ class Casas extends BaseController
     public function to_asignacion_varios()
     {
         $form = $this->form();
-
-        $idLote = $this->form('idLote');
         $comentario = $this->form('comentario');
         $gerente = $this->form('gerente');
         $idUsuario = $this->session->userdata('id_usuario');
         $idLotes = json_decode($this->form('idLotes'));
+        $idClientes = json_decode($this->form('idClientes'));
         $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crdito - 1: bancario - 2: directo
         $banderaSuccess = true;
 
@@ -4015,30 +4014,40 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
-        if (!isset($idLote) || !isset($gerente) || !isset($esquemaCredito)) {
+        if (!isset($idClientes) || !isset($idLotes) || !isset($gerente) || !isset($esquemaCredito)) {
             $banderaSuccess = false;
         }
 
-        foreach ($idLotes as $id) {
+        foreach ($idClientes as $id) {
             foreach ($id as $idValue) {
                 $dataUpdate[] = array(
-                    "idLote" => $idValue,
-                    "esquemaCreditoCasas" => $esquemaCredito
+                    "id_cliente" => $idValue,
+                    "esquemaCreditoCasas" => $esquemaCredito,
+                    "id_gerente_c" => $gerente,
+                    "id_subdirector_c" => $idUsuario,
+                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                    "modificado_por" => $this->session->userdata('id_usuario')
                 );
             }
+        }
+
+        // se hace update del esquema de los lotes
+        $update = $this->General_model->updateBatch('clientes', $dataUpdate, 'id_cliente');
+        if (!$update) {
+            $banderaSuccess = false;
         }
 
         if ($esquemaCredito == 1) { // se agrega un condicion para saber que esquema de credito se usara
             foreach ($idLotes as $id) {
                 foreach ($id as $idValue) {
-                    $proceso = $this->CasasModel->addLoteToAsignacion($idValue, $gerente, $comentario, $idUsuario);
+                    $proceso = $this->CasasModel->addLoteToAsignacion($idValue, $comentario, $idUsuario);
 
                     $dataHistorial[] = array(
                         "idProcesoCasas"  => $proceso->idProcesoCasas,
                         "procesoAnterior" => NULL,
                         "procesoNuevo"    => 0,
                         "creadoPor"    => $idUsuario,
-                        "descripcion"     => $proceso->comentario,
+                        "descripcion"     =>  'Se inicia proceso | Comentario: ' .$proceso->comentario,
                         "esquemaCreditoProceso" => 1
                     );
                 }
@@ -4063,12 +4072,6 @@ class Casas extends BaseController
         // se hace el insert en el historial
         $insert = $this->General_model->insertBatch("historial_proceso_casas", $dataHistorial);
         if (!$insert) {
-            $banderaSuccess = false;
-        }
-
-        // se hace update del esquema de los lotes
-        $update = $this->General_model->updateBatch('lotes', $dataUpdate, 'idLote');
-        if (!$update) {
             $banderaSuccess = false;
         }
 
@@ -4115,7 +4118,7 @@ class Casas extends BaseController
                 "procesoAnterior" => 0,
                 "procesoNuevo"    => 0,
                 "creadoPor"       => $idUsuario,
-                "descripcion"     => "Se asigno el asesor " . $getAsesor->nombre . " con el ID: " . $getAsesor->idUsuario,
+                "descripcion"     => "Se asignó el asesor: " . $getAsesor->nombre . " (" . $getAsesor->idUsuario . ")",
                 "esquemaCreditoProceso" => $id[1]
             );
 

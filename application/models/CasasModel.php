@@ -167,19 +167,28 @@ class CasasModel extends CI_Model
             "SELECT 
                 lo.idLote, 
                 lo.nombreLote, 
+                lo.sup,
                 pc.status, 
                 co.nombre condominio, 
                 re.descripcion proyecto, 
                 CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END cliente, 
+                UPPER(REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
+                FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
+                CASE WHEN cl.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.telefono1 END telefono1,
+                CASE WHEN cl.telefono2 IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.telefono2 END telefono2,
+                CASE WHEN cl.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.telefono3 END telefono3,
+                CASE WHEN cl.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.correo END correo,
                 CASE WHEN cl.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente,
                 ISNULL(cl.id_cliente, 0) idCliente
+
             FROM 
                 lotes lo 
             LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote AND pc.status = 1 
             LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 
             LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente_c 
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9 
             WHERE 
                 lo.idStatusLote = 2
             AND (cl.esquemaCreditoCasas = 0 OR cl.esquemaCreditoCasas IS NULL)")->result();
@@ -194,10 +203,17 @@ class CasasModel extends CI_Model
         cli.id_asesor_c AS idAsesor,
         pc.tipoMovimiento,
         lo.nombreLote,
+        lo.sup,
         cli.esquemaCreditoCasas,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        UPPER(REPLACE(ISNULL(oxc2.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
+        CASE WHEN cli.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono1 END telefono1,
+        CASE WHEN cli.telefono2 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono2 END telefono2,
+        CASE WHEN cli.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono3 END telefono3,
+        CASE WHEN cli.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.correo END correo,
         (CASE
             WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
             ELSE 'Sin asignar'
@@ -217,12 +233,15 @@ class CasasModel extends CI_Model
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
         WHERE
             pc.proceso = 0
             AND pc.status = 1
             AND cli.id_gerente_c = $this->idUsuario
             AND cli.status = 1
+
         UNION ALL
+        
         SELECT
         2 AS tipoEsquema,
         pcd.proceso,
@@ -231,10 +250,17 @@ class CasasModel extends CI_Model
         pcd.idAsesor,
         pcd.tipoMovimiento,
         lo.nombreLote,
+        lo.sup,
         cli.esquemaCreditoCasas,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        UPPER(REPLACE(ISNULL(oxc2.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
+        CASE WHEN cli.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono1 END telefono1,
+        CASE WHEN cli.telefono2 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono2 END telefono2,
+        CASE WHEN cli.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono3 END telefono3,
+        CASE WHEN cli.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.correo END correo,
         (CASE
             WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
             ELSE 'Sin asignar'
@@ -254,6 +280,7 @@ class CasasModel extends CI_Model
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 108 AND oxc.id_opcion = pcd.tipoMovimiento
+        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
         WHERE
             pcd.proceso = 0
             AND pcd.estatus = 1
