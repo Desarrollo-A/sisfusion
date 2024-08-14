@@ -1,6 +1,6 @@
 let form = new Form({
     title: 'Asignar asesor',
-    //text: 'Descripcion del formulario',
+    text: 'Asigna un asesor para avanzar el proceso',
 })
 let arrayValores = []
 let arrayIdLotes = []
@@ -18,6 +18,10 @@ form.onSubmit = function (data) {
             alerts.showNotification("top", "right", "Se asignó el asesor correctamente.", "success");
 
             table.reload()
+            arrayValores = []
+            arrayIdLotes = []
+            let btn = document.getElementsByClassName("btn-asignar")
+            btn[0].classList.add('hide');
 
             form.hide()
         },
@@ -45,12 +49,7 @@ $.ajax({
 
 function choose_asesor(data) {
     form.fields = [
-        new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new HiddenField({ id: 'esquemaCreditoCasas', value: data.esquemaCreditoCasas }),
-        new HiddenField({ id: 'idLote', value: data.idLote }),
-        new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-        new HiddenField({ id: 'proceso', value: data.proceso }),
-        new HiddenField({ id: 'idCliente', value: data.idCliente }),
+        new HiddenField({ id: 'idCliente', value: data.id_cliente }),
         new SelectField({ id: 'asesor', label: 'Asesor', value: data.idAsesor, placeholder: 'Selecciona una opción', data: items, required: true }),
     ]
 
@@ -131,12 +130,8 @@ cancel_process = function (data) {
 
         },
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'esquemaCreditoCasas', value: data.esquemaCreditoCasas }),
             new HiddenField({ id: 'idLote', value: data.idLote }),
-            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'idCliente', value: data.idCliente }),
+            new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -177,44 +172,13 @@ let columns = [
             if(!data.idAsesor){
                 check = `<div class="d-flex justify-center">
                         <label class="cont">
-                            <input type="checkbox" onChange="verificarCheck(this)" data-idProcesoCasas="${data.idProcesoCasas}" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" data-tipoEsquema="${data.tipoEsquema}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <input type="checkbox" onChange="verificarCheck(this)" data-idCliente="${data.id_cliente}" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required>
                             <span></span>
                         </label></div>`
             }
 
             return check
         }        
-    },
-    {
-        data: function (data) {
-            if(data.esquemaCreditoCasas == 1){
-                switch(data.tipoMovimiento){
-                    case 1:
-                        clase = 'warning'
-                        break
-                    case 2:
-                        clase = 'orange'
-                        break
-                    default:
-                        clase = 'blueMaderas'
-                    }
-            }
-            else{
-                switch(data.tipoMovimiento){
-                    case 2:
-                        clase = 'warning'
-                        break
-                    case 3:
-                        clase = 'orange'
-                        break
-                    default:
-                        clase = 'blueMaderas'
-                    }
-            }
-            
-    
-            return `<span class="label lbl-${clase}">${data.movimiento}</span>`
-        }
     },
     { data: 'proyecto' },
     { data: 'condominio' },
@@ -259,10 +223,15 @@ let columns = [
             if (data.idAsesor) {
                 pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_asesor, data })
             }
+        }
+    },
+    {
+        data: function (data) {
+            let asesor_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: choose_asesor, data })            
 
             let cancel_button = new RowButton({ icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data })
 
-            return `<div class="d-flex justify-center">${pass_button}${asesor_button}${cancel_button}</div>`
+            return `<div class="d-flex justify-center">${asesor_button}${cancel_button}</div>`
         }
     },
 ]
@@ -276,38 +245,37 @@ let table = new Table({
 })
 
 function verificarCheck(valorActual){
-    let botonEnviar = document.getElementsByClassName('botonEnviar');
-    let arrayInterno = [];
-    let arrayId = [];
+    const tr = $(this).closest('tr');
+        const row = $('#tablaAsignacionCartera').DataTable().row(tr);
+        let botonEnviar = document.getElementsByClassName('botonEnviar');
+        let arrayInterno = [];
+        let arrayId = [];
+    
+        if (valorActual.checked){
+            arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
+            arrayInterno.push($(valorActual).attr('data-idLote'));//[1]
 
-    if (valorActual.checked){
-        arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
-        arrayInterno.push($(valorActual).attr('data-idLote'));//[1]
+            arrayId.push($(valorActual).attr('data-idCliente'));//[0]
+    
+            arrayValores.push(arrayInterno);
+            arrayIdLotes.push(arrayId);
+        }
+        else{
+            let indexDelete = buscarValor($(valorActual).val(),arrayValores);
+            let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
 
-        arrayId.push($(valorActual).attr('data-idLote'));//[0]
-        arrayId.push($(valorActual).attr('data-tipoEsquema'));//[1]
-        arrayId.push($(valorActual).attr('data-idProcesoCasas'));//[2]
-        arrayId.push($(valorActual).attr('data-idCliente'));//[2]
+            arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
+            arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
+        }
 
-        arrayValores.push(arrayInterno);
-        arrayIdLotes.push(arrayId);
-    }
-    else{
-        let indexDelete = buscarValor($(valorActual).val(),arrayValores);
-        let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
-
-        arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
-        arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
-    }
-
-    if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
-        //se seleccionó más de uno, se habilita el botón para hacer el multiple
-        botonEnviar[0].classList.remove('hide');
-        $('#btn_'+$(valorActual).val()).prop("disabled", true);        
-    }
-    else{
-        botonEnviar[0].classList.add('hide');
-    }
+        if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
+         //se seleccionó más de uno, se habilita el botón para hacer el multiple
+            botonEnviar[0].classList.remove('hide');
+            $('#btn_'+$(valorActual).val()).prop("disabled", true);        
+        }
+        else{
+            botonEnviar[0].classList.add('hide');
+        }
 }
 
 function buscarValor(valor, array) {
@@ -337,7 +305,7 @@ $(document).on('click', '.btn-asignar', () => {
         text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
-            data.append("idLotes", JSON.stringify(arrayIdLotes))
+            data.append("idClientes", JSON.stringify(arrayIdLotes))
             $.ajax({
                 type: 'POST',
                 url: `${general_base_url}casas/to_asignacion_asesor`,

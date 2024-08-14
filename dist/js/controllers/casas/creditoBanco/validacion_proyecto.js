@@ -179,17 +179,15 @@ rechazo_proceso = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/rechazoPaso7`,
+                url: `${general_base_url}casas/creditoBancoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success : function(response){
-                    if(response.result){
-                        finalizar_rechazo(data, form)
-                    }
-                    else{
-                        alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-                    }                                               
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
                 },
                 error: function(){
                     alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
@@ -209,25 +207,4 @@ rechazo_proceso = function (data) {
     })
 
     form.show()
-}
-
-finalizar_rechazo = function(data, form){
-    $.ajax({
-        type: 'POST',
-        url: `${general_base_url}casas/creditoBancoAvance`,
-        data: data,
-        contentType: false,
-        processData: false,
-        success : function(response){
-            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-
-            table.reload()
-            form.hide()                             
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
-
-            form.loading(false)
-        }
-    })
 }

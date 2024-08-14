@@ -2252,6 +2252,20 @@ class Reestructura extends CI_Controller{
         $idRol = $this->session->userdata('id_rol');
         $flagProcesoContraloriaJuridico = 0;
 
+        $check = $this->Reestructura_model->copiarDatosXCliente($idLote);
+        if(empty($check)){
+            $this->db->trans_rollback();
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error en la información del cliente',
+                'color' => 'danger'
+            ));
+            return;
+            exit;
+        }
+
         if ($idPreproceso == 2)
             $flagProcesoContraloriaJuridico = $this->Reestructura_model->validarEstatusContraloriaJuridico($idLote);
         

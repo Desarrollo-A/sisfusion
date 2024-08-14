@@ -387,7 +387,14 @@ class Casas extends BaseController
 
     public function lista_asignacion()
     {
-        $lotes = $this->CasasModel->getListaAsignacion();
+        $lotes = $this->CasasModel->getListaAsignacion()->result();
+
+        $this->json($lotes);
+    }
+
+    public function lista_asignacion_esquema()
+    {
+        $lotes = $this->CasasModel->getListaAsignacionEsquema()->result();
 
         $this->json($lotes);
     }
@@ -399,17 +406,14 @@ class Casas extends BaseController
         $comentario = $this->form('comentario');
         $gerente = $this->form('gerente');
         $idUsuario = $this->session->userdata('id_usuario');
-
-        $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crédito - 1: bancario - 2: directo
         $banderaSuccess = true;
 
-        if (!isset($idLote) || !isset($gerente) || !isset($esquemaCredito)) {
+        if (!isset($idLote) || !isset($gerente)) {
             http_response_code(400);
             $this->json([]);
         }
 
         $dataUpdate = array(
-            "esquemaCreditoCasas" => $esquemaCredito,
             "id_gerente_c" => $gerente,
             "id_subdirector_c" => $idUsuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
@@ -418,65 +422,40 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
-        if ($esquemaCredito == 1) { // se agrega un condición para saber que esquema de credito se usara
-            $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $comentario, $idUsuario);
-            // $copiarDs = $this->copiarDS($idLote);
-        } else if ($esquemaCredito == 2) {
-            $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idLote, $gerente, $comentario, $idUsuario);
+        $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
+
+        if(!$update){
+            $banderaSuccess = false;
         }
 
-        if ($proceso) {
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicia proceso | Comentario: ' . $proceso->comentario, $esquemaCredito == 1 ? 1 : 2);
-            $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
-        } else {
+        if($banderaSuccess){
+            $this->db->trans_commit();
+
+            $response["result"] = true;
+            $response["message"] = "Se ha avanzado el proceso correctamente";            
+        }
+        else{
             $this->db->trans_rollback();
-            http_response_code(404);
-
-            $this->json([]);
+            
+            $response["result"] = false;
+            $response["message"] = "No se puede avanzar el proceso";
         }
 
-        $this->db->trans_commit();
-        $this->json([]);
+        $this->output->set_content_type('application/json');
+        $this->output->set_output($this->json([]));
     }
 
     public function asignar()
     {
-        $form = $this->form();
-
-        $id = $this->form('id');
         $idAsesor = $this->form('asesor');
-        $idLote = $this->form('idLote');
-        $proceso = $this->form('proceso');
-        $esquemaCreditoCasas = $this->form('esquemaCreditoCasas');
-        $idProcesoCasas = $this->form('idProcesoCasas');
         $idCliente = $this->form('idCliente');
-        $update = true;
         $banderaSuccess = true;
 
-        if (!isset($form->id) || !isset($form->asesor) || !isset($form->id) || !isset($form->asesor)) {
+        if (!isset($idCliente)) {
             http_response_code(400);
         }
 
         $this->db->trans_begin();
-
-        // paso general: se obtiene al asesor
-        $asesor = $this->CasasModel->getAsesor($form->asesor);
-
-        $addHistorialData = array(
-            "idProcesoCasas"        => $idProcesoCasas,
-            "procesoAnterior"       => $proceso,
-            "procesoNuevo"          => $proceso,
-            "fechaMovimiento"       => date("Y-m-d H:i:s"),
-            "creadoPor"             => $this->session->userdata('id_usuario'),
-            "descripcion"           => "Se asignó el asesor: " . $asesor->nombre . " (" . $asesor->idUsuario . ")",
-            "esquemaCreditoProceso" => $esquemaCreditoCasas
-        );
-
-        // paso general: se agrega el registro al historial
-        $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $addHistorialData);
-        if (!$addHistorial) {
-            $banderaSuccess = false;
-        }
 
         $updateCliente = array(
             "id_asesor_c"        => $idAsesor,
@@ -485,7 +464,6 @@ class Casas extends BaseController
         );
 
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
-
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -621,71 +599,22 @@ class Casas extends BaseController
     {
         $this->form();
 
-        $id = $this->form('id');
-        $idLote = $this->form('idLote');
-        $proceso = $this->form('proceso');
-        $esquemaCreditoCasas = $this->form('esquemaCreditoCasas');
-        $idProcesoCasas = $this->form('idProcesoCasas');
-        $comentario = $this->form('comentario');
         $idCliente = $this->form('idCliente');
         $banderaSuccess = true;
 
-        if (!isset($id) || !isset($esquemaCreditoCasas)) {
+        if (!isset($idCliente)) {
             http_response_code(400);
         }
 
         $this->db->trans_begin();
 
-        $updateLoteData = array(
-            "esquemaCreditoCasas" => 0,
-            "id_gerente_c" => 0,
-            "id_subdirector_c" => 0,
-            "id_asesor_c" => 0,
-            "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $this->session->userdata('id_usuario')
+        $dataUpdate = array(
+            "id_gerente_c" => 0
         );
 
-        $insertHistorialData = array(
-            "idProcesoCasas"  => $id,
-            "procesoAnterior" => $proceso,
-            "procesoNuevo"    => 0,
-            "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "creadoPor"       => $this->session->userdata("id_usuario"),
-            "descripcion"     => $comentario
-        );
-
-        // paso general 1: se regresa el esquema de credito del lote a 0 
-        $updateLote = $this->General_model->updateRecord("clientes", $updateLoteData, "id_cliente", $idCliente);
-        if (!$updateLote) {
+        $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
+        if(!$update){
             $banderaSuccess = false;
-        }
-
-        // paso general 2: se agrega el historial
-        $addHistorial = $this->General_model->addRecord('historial_proceso_casas', $insertHistorialData);
-        if (!$addHistorial) {
-            $banderaSuccess = false;
-        }
-
-        if ($esquemaCreditoCasas == 1) {
-            $updateDataBanco = array(
-                "status" => 0
-            );
-            // se elimina el registro de proceso_casas o se modifica ?
-            // $deleteBanco = $this->General_model->deleteRecord('proceso_casas', array("idProcesoCasas" => $idProcesoCasas) );
-            $deleteBanco = $this->General_model->updateRecord('proceso_casas_banco', $updateDataBanco, "idProcesoCasas", $idProcesoCasas);
-            if (!$deleteBanco) {
-                $banderaSuccess = false;
-            }
-        } else if ($esquemaCreditoCasas == 2) {
-            $updateDataDirecto = array(
-                "estatus" => 0
-            );
-            // se elimina el registro de proceso_casas_directo
-            //$deleteBanco = $this->General_model->deleteRecord('proceso_casas_directo', array("idProceso" => $idProcesoCasas) );
-            $deleteBanco = $this->General_model->updateRecord('proceso_casas_directo', $updateDataDirecto, "idProceso", $idProcesoCasas);
-            if (!$deleteBanco) {
-                $banderaSuccess = false;
-            }
         }
 
         if ($banderaSuccess) {
@@ -703,9 +632,11 @@ class Casas extends BaseController
         $this->form();
 
         $id = $this->form('id');
+        $idCliente = $this->form('idCliente');
         $comentario = $this->form('comentario');
+        $banderaSuccess = true;
 
-        if (!isset($id)) {
+        if (!isset($id) || !isset($idCliente)) {
             http_response_code(400);
         }
 
@@ -714,12 +645,26 @@ class Casas extends BaseController
         $proceso = $this->CasasModel->getProceso($id);
 
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
-
         if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: ' . $comentario, 1);
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso el proceso a asignación de asesor | Comentario: ' . $comentario, 1);
+        }
+        else{
+            $banderaSuccess = false;
+        }
 
+        $updateData = array(
+            "id_asesor_c" => 0
+        );
+
+        $update = $this->General_model->updateRecord("clientes", $updateData, "id_cliente", $idCliente);
+        if(!$update){
+            $banderaSuccess = false;
+        }
+
+        if($banderaSuccess){
             $this->json([]);
-        } else {
+        }
+        else {
             http_response_code(404);
         }
     }
@@ -1201,32 +1146,6 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
-    public function back_to_documentos()
-    {
-        $this->form();
-
-        $id = $this->form('id');
-        $comentario = $this->form('comentario');
-
-        if (!isset($id)) {
-            http_response_code(400);
-        }
-
-        $new_status = 7;
-
-        $proceso = $this->CasasModel->getProceso($id);
-
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
-
-        if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: ' . $comentario, 1);
-
-            $this->json([]);
-        } else {
-            http_response_code(404);
-        }
-    }
-
     public function lista_documentos_comite($proceso)
     {
         $lotes = $this->CasasModel->getListaDocumentosComiteEjecutivo($proceso);
@@ -1308,6 +1227,7 @@ class Casas extends BaseController
         $id = $this->form('id');
         $idRol = $this->form('idRol');
         $comentario = $this->form('comentario');
+        $nuevo_proceso = $this->form('nuevo_proceso');
 
         if (!isset($id)) {
             http_response_code(400);
@@ -1343,7 +1263,7 @@ class Casas extends BaseController
                 }
             }
 
-            $new_status = 9;
+            $new_status = $nuevo_proceso;
 
             $proceso = $this->CasasModel->getProceso($id);
 
@@ -1531,27 +1451,40 @@ class Casas extends BaseController
         $this->form();
 
         $id = $this->form('id');
+        $idCliente = $this->form('idCliente');
         $obra = $this->form('obra');
         $tesoreria = $this->form('tesoreria');
         $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
         $costoConstruccion = $this->form('costoConstruccion');
 
-        if (!isset($id)) {
+        $banderaSuccess = true;
+
+        if (!isset($id) || !isset($idCliente)) {
             http_response_code(400);
         }
 
         $updateData = array(
             "obra"  => $obra,
             "tesoreria" => $tesoreria,
-            "serviciosArquitectonicos"    => $serviciosArquitectonicos,
-            "costoConstruccion" => $costoConstruccion
+            "serviciosArquitectonicos" => $serviciosArquitectonicos
+        );
+
+        $dataCliente = array(
+            "costo_construccion" => $costoConstruccion
         );
 
         $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $id);
+        if(!$update){
+            $banderaSuccess = false;
+        }
 
-        $proceso = $this->CasasModel->getProceso($id);
+        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "idCliente", $idCliente);
+        if(!$updateCliente){
+            $banderaSuccess = false;
+        }
 
-        if ($update) {
+        if ($banderaSuccess) {
+            $proceso = $this->CasasModel->getProceso($id);
             $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
             $this->json([]);
         } else {
@@ -3852,7 +3785,8 @@ class Casas extends BaseController
             "fechaModificacion" => date("Y-m-d H:i:s"),
             "contratoTitulacion" => 0,
             "contratoOOAM" => 0,
-            "contratoPV" => 0
+            "contratoPV" => 0,
+            "proceso" => 14
         );
 
         // paso 1: hacer update del proceso
@@ -3961,7 +3895,11 @@ class Casas extends BaseController
 
         $updateData = array(
             "fechaModificacion" => date("Y-m-d H:i:s"),
-            "cierreContraloria" => 0
+            "cierreContraloria" => 0,
+            "saldoAdmon" => 0,
+            "saldoOOAM"  => 0,
+            "saldoGPH"   => 0,
+            "saldoPV"    => 0 
         );
 
         $dataHistorial = array(
@@ -4001,20 +3939,16 @@ class Casas extends BaseController
     public function to_asignacion_varios()
     {
         $form = $this->form();
-        $comentario = $this->form('comentario');
-        $gerente = $this->form('gerente');
-        $idUsuario = $this->session->userdata('id_usuario');
-        $idLotes = json_decode($this->form('idLotes'));
-        $idClientes = json_decode($this->form('idClientes'));
-        $esquemaCredito = $this->form('esquemaCredito'); // se agrega el tipo de crdito - 1: bancario - 2: directo
-        $banderaSuccess = true;
 
-        $dataHistorial = array();
+        $idClientes = json_decode($this->form('idClientes'));
+        $gerente = $this->form('gerente');
+
+        $banderaSuccess = true;
         $dataUpdate = array();
 
         $this->db->trans_begin();
 
-        if (!isset($idClientes) || !isset($idLotes) || !isset($gerente) || !isset($esquemaCredito)) {
+        if (!isset($idClientes) || !isset($gerente)) {
             $banderaSuccess = false;
         }
 
@@ -4022,56 +3956,14 @@ class Casas extends BaseController
             foreach ($id as $idValue) {
                 $dataUpdate[] = array(
                     "id_cliente" => $idValue,
-                    "esquemaCreditoCasas" => $esquemaCredito,
-                    "id_gerente_c" => $gerente,
-                    "id_subdirector_c" => $idUsuario,
-                    "fecha_modificacion" => date("Y-m-d H:i:s"),
-                    "modificado_por" => $this->session->userdata('id_usuario')
+                    "id_gerente_c" => $gerente
                 );
             }
         }
 
-        // se hace update del esquema de los lotes
+        // se hace update del esquema de credito y gerente en clientes 
         $update = $this->General_model->updateBatch('clientes', $dataUpdate, 'id_cliente');
         if (!$update) {
-            $banderaSuccess = false;
-        }
-
-        if ($esquemaCredito == 1) { // se agrega un condicion para saber que esquema de credito se usara
-            foreach ($idLotes as $id) {
-                foreach ($id as $idValue) {
-                    $proceso = $this->CasasModel->addLoteToAsignacion($idValue, $comentario, $idUsuario);
-
-                    $dataHistorial[] = array(
-                        "idProcesoCasas"  => $proceso->idProcesoCasas,
-                        "procesoAnterior" => NULL,
-                        "procesoNuevo"    => 0,
-                        "creadoPor"    => $idUsuario,
-                        "descripcion"     =>  'Se inicia proceso | Comentario: ' .$proceso->comentario,
-                        "esquemaCreditoProceso" => 1
-                    );
-                }
-            }
-        } else if ($esquemaCredito == 2) {
-            foreach ($idLotes as $id) {
-                foreach ($id as $idValue) {
-                    $proceso = $this->CasasModel->addLoteToAsignacionDirecto($idValue, $gerente, $comentario, $idUsuario);
-
-                    $dataHistorial[] = array(
-                        "idProcesoCasas"  => $proceso->idProceso,
-                        "procesoAnterior" => NULL,
-                        "procesoNuevo"    => 0,
-                        "creadoPor"    => $idUsuario,
-                        "descripcion"     => $proceso->comentario,
-                        "esquemaCreditoProceso" => 2
-                    );
-                }
-            }
-        }
-
-        // se hace el insert en el historial
-        $insert = $this->General_model->insertBatch("historial_proceso_casas", $dataHistorial);
-        if (!$insert) {
             $banderaSuccess = false;
         }
 
@@ -4092,67 +3984,31 @@ class Casas extends BaseController
         $form = $this->form();
 
         $asesor = $this->form('asesor');
-        $idLotes = json_decode($this->form('idLotes'));
+        $idClientes = json_decode($this->form('idClientes'));
         $idUsuario = $this->session->userdata('id_usuario');
         $banderaSuccess = true;
 
+        if (!isset($idClientes) || !isset($asesor)) {
+            http_response_code(400);
+        }
+
+        $dataUpdate = array();
+
         // idLotes[0] -- es el idLote
-        // idLotes[1] -- es el tipo de esquema 
-        // idLotes[2] -- es el idProceso de su tabla
-
-        $dataHistorial = array();
-        $dataUpdateBanco = array();
-        $dataUpdateDirecto = array();
-
         $this->db->trans_begin();
 
-        $getAsesor = $this->CasasModel->getAsesor($asesor);
-
-        if (!isset($idLotes) || !isset($asesor)) {
-            $banderaSuccess = false;
-        }
-
-        foreach ($idLotes as $id) {
-            $dataHistorial[] = array(
-                "idProcesoCasas"  => 1,
-                "procesoAnterior" => 0,
-                "procesoNuevo"    => 0,
-                "creadoPor"       => $idUsuario,
-                "descripcion"     => "Se asignó el asesor: " . $getAsesor->nombre . " (" . $getAsesor->idUsuario . ")",
-                "esquemaCreditoProceso" => $id[1]
-            );
-
-            if ($id[1] == 1) { // para guardar en distintos arreglos y saber si son de banco o directo
-                $dataUpdateBanco[] = array(
-                    "idProcesoCasas" => $id[2],
-                    "idAsesor"       => $asesor,
-                    "modificadoPor" => $idUsuario
+        foreach($idClientes AS $cliente){
+            foreach($cliente AS $id){
+                $dataUpdate[] = array(
+                    "id_cliente" => $id,
+                    "id_asesor_c" => $asesor,
+                    "modificado_por" => $idUsuario 
                 );
-            } else {
-                $dataUpdateDirecto[] = array(
-                    "idProceso" => $id[2],
-                    "idAsesor"  => $asesor
-                );
-            }
+            }            
         }
-
-        // se hace insert en el historial
-        $insert = $this->General_model->insertBatch("historial_proceso_casas", $dataHistorial);
-        if (!$insert) $banderaSuccess = false;
-
-        // se hace insert en la tabla de credito de banco si hay datos en el arreglo
-        if (count($dataUpdateBanco) > 0) {
-            $update = $this->General_model->updateBatch("proceso_casas_banco", $dataUpdateBanco, "idProcesoCasas");
-
-            if (!$update) $banderaSuccess = false;
-        }
-
-        // se hace insert en la tabla de credito directo si hay datos en el arreglo
-        if (count($dataUpdateDirecto) > 0) {
-            $update = $this->General_model->updateBatch("proceso_casas_directo", $dataUpdateDirecto, "idProceso");
-
-            if (!$update) $banderaSuccess = false;
-        }
+        
+        $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
+        if(!$update) $banderaSuccess = false;
 
         if ($banderaSuccess) {
             $this->db->trans_commit();
@@ -4274,22 +4130,39 @@ class Casas extends BaseController
         }
 
         $vobo = $this->CasasModel->getVobos($id, 4);
+        $voboPaso12 = $this->CasasModel->getVobos($id, 2);
 
         $updateData = array(
             "adm"  => 0,
             "ooam" => 0,
             "gph" => 0,
             "pv" => 0,
+            "comercializacion" => 1,
+            "contraloria" => 0,
             "modificadoPor" => $this->session->userdata('id_usuario'),
             "fechaModificacion" => date("Y-m-d H:i:s"),
         );
+
+        $updateDataPaso12 = array(
+            "comercializacion" => 1,
+            "contraloria" => 0,
+            "modificadoPor" => $this->session->userdata('id_usuario'),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+        );
+
         $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
 
         if (!$update) {
             http_response_code(400);
         }
 
-        $new_status = 11;
+        $updatePaso12 = $this->General_model->updateRecord("vobos_proceso_casas", $updateDataPaso12, "idVobo", $voboPaso12->idVobo);
+
+        if (!$updatePaso12) {
+            http_response_code(400);
+        }
+
+        $new_status = 12;
 
         $proceso = $this->CasasModel->getProceso($id);
 
@@ -4327,5 +4200,178 @@ class Casas extends BaseController
 
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($response));
+    }
+
+    public function rechazoPaso12(){
+        $form = $this->form();
+
+        $idLote = $form->idLote;
+        $idProceso = $form->idProcesoCasas;
+        $proceso = $form->proceso;
+        $procesoNuevo = $form->procesoNuevo;
+        $comentario = $form->comentario;
+        $tipoMovimiento = $form->tipoMovimiento;
+        $banderaSuccess = true;
+
+        $this->db->trans_begin();
+        
+        $dataHistorial = array(
+            "idProcesoCasas"  => $idProceso,
+            "procesoAnterior" => $proceso,
+            "procesoNuevo"    => $procesoNuevo,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
+            "descripcion"     => $comentario,
+            "esquemaCreditoProceso" => 1
+        );
+
+        // paso 1: hacer update del proceso
+        $update = $this->CasasModel->rechazoPaso12($idProceso);
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        // paso 2: guardar registro del movimiento
+        $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+        if (!$addHistorial) {
+            $banderaSuccess = false;
+        }
+
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+            $this->json([]);
+        } else {
+            $this->db->trans_rollback();
+            http_response_code(400);
+
+            $this->json([]);
+        }
+    }
+
+    public function removerBanderPaso12(){
+        $form = $this->form();
+
+        $idVobo = $form->idVobo;
+        $update = $this->CasasModel->removerBanderaPaso12($idVobo);
+
+        if($update){
+            $response["result"] = true ;
+            $response["message"] = "";                        
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "";
+        }
+
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($update));
+    }
+
+    public function asignacionEsquema(){
+        $this->load->view('template/header');
+        $this->load->view("casas/asignacion_esquema");
+    }
+
+    public function options_esquema()
+    {
+        $esquema = $this->CasasModel->getEsquemaOptions()->result();
+
+        $this->json($esquema);
+    }
+
+    public function options_modelo()
+    {
+        $modelo = $this->CasasModel->getModeloOptions()->result();
+
+        $this->json($modelo);
+    }
+
+    public function to_asignacion_esquema()
+    {
+        $idLote = $this->form('idLote');
+        $idCliente = $this->form('idCliente');
+        $comentario = $this->form('comentario');
+        $esquemaCredito = $this->form('esquemaCredito');
+        $modeloCasa = $this->form('modeloCasa');
+        $idUsuario = $this->session->userdata('id_usuario');
+        $tabla = $esquemaCredito == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
+        $banderaSuccess = true;
+
+        if (!isset($idLote) || !isset($idCliente) || !isset($esquemaCredito)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        $dataUpdate = array(
+            "esquemaCreditoCasas" => $esquemaCredito,
+            "id_subdirector_c" => $idUsuario,
+            "modelo_c" => $modeloCasa,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
+        );
+
+        $procesoData = array(
+            "idLote" => $idLote,
+            "proceso" => 1
+        );
+
+        $this->db->trans_begin();
+
+        $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
+        if(!$update){
+            $banderaSuccess = false;
+        }
+
+        $insert = $this->CasasModel->insertProceso($procesoData, $tabla); // valor del id de casas que se inserta en el momento
+        if(!$insert){
+            $banderaSuccess = false;
+        }
+
+        $dataHistorial = array(
+            "idProcesoCasas" => $insert,
+            "procesoAnterior" => 0,
+            "procesoNuevo" => 1,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "creadoPor" => $this->session->userdata('id_usuario'),
+            "descripcion" => "Se inicio proceso | comentario: " . $comentario,
+            "esquemaCreditoProceso" => $esquemaCredito 
+        );
+
+        $insertHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+        if(!$insertHistorial){
+            $banderaSuccess = false;
+        }
+
+        if($esquemaCredito == 1){
+            $documentoData = array(
+                "idProcesoCasas" => $insert,
+                "documento" => "Carta de autorización",
+                "archivo" => NULL,
+                "tipo" => 1,
+                "creadoPor" => $idUsuario,
+                "modificadoPor" => $idUsuario
+            );
+
+            $insertDocumento = $this->General_model->addRecord("documentos_proceso_casas", $documentoData);
+            if(!$insertDocumento){
+                $banderaSuccess = false;
+            }
+        }
+
+        if($banderaSuccess){
+            $this->db->trans_commit();
+
+            $response["result"] = true;
+            $response["message"] = "Se ha avanzado el proceso correctamente";            
+        }
+        else{
+            $this->db->trans_rollback();
+            
+            $response["result"] = false;
+            $response["message"] = "No se puede avanzar el proceso";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output($this->json([]));
     }
 }

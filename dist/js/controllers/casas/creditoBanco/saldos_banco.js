@@ -64,6 +64,9 @@ let columns = [
         let btn_rechazo = ''
         let btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
 
+        if(data.cierreContraloria == 1){ // solo si el usaurio es Patricia Maya y si se ha dado un avance en el cierre de contraloria
+            btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data});
+        }
         if( tipoSaldo == 1 && data.saldoAdmon == 0){
             return `<div class="d-flex justify-center">${btn_avance}${btn_rechazo}</div>`
         }
@@ -74,9 +77,7 @@ let columns = [
             return `<div class="d-flex justify-center">${btn_avance}${btn_rechazo}</div>`
         }
         if( tipoSaldo == 4 && data.saldoPV == 0){
-            if(idUsuario == 2896 && data.cierreContraloria == 1){ // solo si el usaurio es Patricia Maya y si se ha dado un avance en el cierre de contraloria
-                btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data});
-            }
+            
             return `<div class="d-flex justify-center">${btn_avance}${btn_rechazo}</div>`
         }
         else{

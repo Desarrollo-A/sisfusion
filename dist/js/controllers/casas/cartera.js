@@ -113,8 +113,7 @@ select_lote = function(data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
-            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
+            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),            
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -209,42 +208,37 @@ let table = new Table({
 
 
 function verificarCheck(valorActual){
-    let botonEnviar = document.getElementsByClassName('botonEnviar');
-    let arrayInterno = [];
-    let arrayId = [];
-    let arrayIdCli = [];
+    const tr = $(this).closest('tr');
+        const row = $('#tablaAsignacionCartera').DataTable().row(tr);
+        let botonEnviar = document.getElementsByClassName('botonEnviar');
+        let arrayInterno = [];
+        let arrayId = [];
+    
+        if (valorActual.checked){
+            arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
+            arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
 
-    if (valorActual.checked){
-        arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
-        arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
+            arrayId.push($(valorActual).attr('data-idCliente'));//[1]
+    
+            arrayValores.push(arrayInterno);
+            arrayIdLotes.push(arrayId);
+        }
+        else{
+            let indexDelete = buscarValor($(valorActual).val(),arrayValores);
+            let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
 
-        arrayId.push($(valorActual).attr('data-idLote'));//[1]
-        arrayIdCli.push($(valorActual).attr('data-idCliente'));//[1]
+            arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
+            arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
+        }
 
-        arrayValores.push(arrayInterno);
-        arrayIdLotes.push(arrayId);
-        arrayIdClientes.push(arrayIdCli);
-
-    }
-    else{
-        let indexDelete = buscarValor($(valorActual).val(),arrayValores);
-        let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
-        let indexDeleteIdCli = buscarValor($(valorActual).val(),arrayIdClientes);
-
-
-        arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
-        arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
-        arrayIdClientes = arrayIdClientes.slice(0, indexDeleteId).concat(arrayIdClientes.slice(indexDeleteIdCli + 1));
-    }
-
-    if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
-        //se seleccionó más de uno, se habilita el botón para hacer el multiple
-        botonEnviar[0].classList.remove('hide');
-        $('#btn_'+$(valorActual).val()).prop("disabled", true);        
-    }
-    else{
-        botonEnviar[0].classList.add('hide');
-    }
+        if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
+         //se seleccionó más de uno, se habilita el botón para hacer el multiple
+            botonEnviar[0].classList.remove('hide');
+            $('#btn_'+$(valorActual).val()).prop("disabled", true);        
+        }
+        else{
+            botonEnviar[0].classList.add('hide');
+        }
 }
 
 function buscarValor(valor, array) {
@@ -274,8 +268,7 @@ $(document).on('click', '.btn-asignar', () => {
         text: `¿Deseas iniciar el proceso de asignación de los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
-            data.append("idLotes", JSON.stringify(arrayIdLotes))
-            data.append("idClientes", JSON.stringify(arrayIdClientes))
+            data.append("idClientes", JSON.stringify(arrayIdLotes))
             $.ajax({
                 type: 'POST',
                 url: `${general_base_url}casas/to_asignacion_varios`,
@@ -302,7 +295,6 @@ $(document).on('click', '.btn-asignar', () => {
         },
         fields: [
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
