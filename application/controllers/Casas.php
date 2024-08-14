@@ -1451,27 +1451,40 @@ class Casas extends BaseController
         $this->form();
 
         $id = $this->form('id');
+        $idCliente = $this->form('idCliente');
         $obra = $this->form('obra');
         $tesoreria = $this->form('tesoreria');
         $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
         $costoConstruccion = $this->form('costoConstruccion');
 
-        if (!isset($id)) {
+        $banderaSuccess = true;
+
+        if (!isset($id) || !isset($idCliente)) {
             http_response_code(400);
         }
 
         $updateData = array(
             "obra"  => $obra,
             "tesoreria" => $tesoreria,
-            "serviciosArquitectonicos"    => $serviciosArquitectonicos,
-            "costoConstruccion" => $costoConstruccion
+            "serviciosArquitectonicos" => $serviciosArquitectonicos
+        );
+
+        $dataCliente = array(
+            "costo_construccion" => $costoConstruccion
         );
 
         $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $id);
+        if(!$update){
+            $banderaSuccess = false;
+        }
 
-        $proceso = $this->CasasModel->getProceso($id);
+        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "idCliente", $idCliente);
+        if(!$updateCliente){
+            $banderaSuccess = false;
+        }
 
-        if ($update) {
+        if ($banderaSuccess) {
+            $proceso = $this->CasasModel->getProceso($id);
             $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
             $this->json([]);
         } else {

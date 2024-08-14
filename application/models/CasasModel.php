@@ -946,6 +946,7 @@ class CasasModel extends CI_Model
     public function getListaValidaContraloria(){
         $query = " SELECT
         pc.*,
+        cli.id_cliente,
         lo.nombreLote,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
