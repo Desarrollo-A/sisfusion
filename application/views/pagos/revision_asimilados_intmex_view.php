@@ -24,6 +24,16 @@
         </div>
     </div>
 
+    <div class="modal fade modal-alertas" id="modal_nuevas_casas" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" id="form_interes_casas">
+                    <div class="modal-body"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -51,6 +61,17 @@
             <div class="modal-content">
                 <div class="modal-header"></div>
                 <form method="post" id="form_multiples_seguros">
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade modal-alertas" id="modal_multiples_intmexA_casas" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header"></div>
+                <form method="post" id="form_multiples_casas">
                     <div class="modal-body"></div>
                     <div class="modal-footer"></div>
                 </form>

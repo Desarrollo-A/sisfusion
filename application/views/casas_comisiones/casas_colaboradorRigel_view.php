@@ -161,7 +161,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas Vista Rigel </a>
+                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas</a>
                             </li>
                             <li>
                                 <a href="#resguardo-1" role="tab" data-toggle="tab">RESGUARDO</a>
@@ -486,7 +486,6 @@
     <?php $this->load->view('template/footer'); ?>
     <script>
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
-        var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     

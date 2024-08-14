@@ -55,7 +55,7 @@ $('#catalogo_historial, #tipo_historial').change(function(){
     }
     
         if (tipo == '' || tipo == null || tipo == undefined) {
-            tipo = 0;
+            tipo = tipo_usuario;
         }
 
         if (tabla_historialGral2) {
@@ -144,6 +144,8 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
         //queda pendiente para cambio
         Comisiones = "SegurosComision/getDatosHistorialPago/";
 
+    }else if(tipo ==3){
+        Comisiones = "Casas_comisiones/getDatosHistorialPago/";
     }else{
         alerts.showNotification("top", "right", "Tipo aún no existente en el sistema.", "alert");
         return false;
@@ -1014,7 +1016,6 @@ function consultarHistorialDescuentos() {
 }
 
 $(document).on('click', '.consultarDetalleDelPago', function(e) {
-    let ruta = $('#tipo_historial').val() == 4 ? 'Seguros' : 'Pagos';
     $("#comments-list-asimilados").html('');
     $("#nameLote").html('');
     $('#spiner-loader').removeClass('hide');
@@ -1024,7 +1025,7 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
     lote = $(this).attr("data-value");
     modalHistorial();
     $("#nameLote").append(`<p><h5>HISTORIAL DEL PAGO DE: <b>${lote}</b></h5></p>`);
-    $.getJSON(`${general_base_url}${ruta}/getComments/${id_pago}`).done( function( data ){
+    $.getJSON(general_base_url+ 'Casas_comisiones/getComments/'+id_pago).done( function( data ){
         $.each( data, function(i, v){
             $("#comments-list-asimilados").append(`<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Usuario: </small><b>${v.nombre_usuario}</b></a><br></div><div class="float-end text-right"><a>${v.fecha_movimiento}</a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>${v.comentario}</b></p></div><h6></h6></div></div></li>`);
             $('#spiner-loader').addClass('hide');

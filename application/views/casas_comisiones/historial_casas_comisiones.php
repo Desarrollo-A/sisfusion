@@ -304,6 +304,10 @@
     </div>
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>   
+    <script>
+        var usuario_id = <?= $this->session->userdata('id_usuario')?>;
+        var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
+    </script>
     <script src="<?= base_url() ?>dist/js/controllers/casas_comisiones/historial_casas.js"></script>
 
 

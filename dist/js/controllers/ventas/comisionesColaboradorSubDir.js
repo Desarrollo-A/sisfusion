@@ -366,16 +366,16 @@ async function crearTabla(idTabla,data2,estatus){
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 días"><span class="label lbl-orangeYellow">PENALIZACIÓN + 90 días</span></p>';
+                    lblPenalizacion =`<p class="m-0" title="PENALIZACIÓN + 90 días"><span class="label lbl-orangeYellow">PENALIZACIÓN + 90 días</span></p>`;
                 }
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-pink">Bon. '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = `<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-pink">Bon. '+formatMoney(d.bonificacion)+'</span></p>`;
                 }
                 else{
                     p1 = '';
                 }
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
+                    p2 = `<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">Recisión</span></p>`;
                 }
                 else{
                     p2 = '';
@@ -385,9 +385,10 @@ async function crearTabla(idTabla,data2,estatus){
         },
         {
             "data": function(d) {
-                // revisar el uso de las siguientes dos lineas
-                        // let td = d.estatus == 1 ? `<br><span class="label ${d.forma_pago.split('/')[2]}">${d.forma_pago.split('/')[3]}  ${d.estatus_actual}</span></p>` : ``;
-                        // return `<p class="m-0"><span class="label ${d.forma_pago.split('/')[0]}">${d.forma_pago.split('/')[1]}</span>` + td;
+                let valores = d.texto.split('/');
+                var color = valores[0];
+                var texto = valores[1];
+             return `<p class="m-0"><span class="label lbl-${d.color}">${d.pj_name}</span><br><span class="label lbl-${color}">${texto}  ${d.estatus_actual}</span></p>`;
             }
         },
         {

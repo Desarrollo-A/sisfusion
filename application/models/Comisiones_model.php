@@ -198,13 +198,20 @@ class Comisiones_model extends CI_Model {
                 $filtroExtra = ' AND com.id_usuario = '.$user_data.' AND co.idCondominio = '.$condominio.'';
             }
 
-            return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre AS pj_name, u.forma_pago, pac.porcentaje_abono, 0 AS factura, 1 expediente,
+            return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre AS pj_name, u.forma_pago, pac.porcentaje_abono, 0 AS factura, 1 expediente,oxcpj.color,
         
             (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote, 
             (CASE WHEN com.ooam = 1 THEN  CONCAT(oxcest.nombre,' (EEC)') ELSE oxcest.nombre END) estatus_actual,
     
             (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, cl.lugar_prospeccion, pci1.fecha_abono, opt.fecha_creacion AS fecha_opinion, opt.estatus AS estatus_opinion, 
             (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
+            (CASE WHEN u.forma_pago  = 1  THEN 'yellow/REVISAR CON RH: '
+              WHEN u.forma_pago  = 2  THEN 'melon/SUBIR XML: '
+              WHEN u.forma_pago  = 3  THEN 'oceanGreen/LISTA PARA APROBAR: '
+              WHEN u.forma_pago  = 4  THEN 'oceanGreen/LISTA PARA APROBAR: ' 
+              WHEN u.forma_pago  = 5  THEN 'yellow/REVISAR CON RH: '  
+              ELSE 'yellow/REVISAR CON RH: ' 
+            END ) texto,
             (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0)
             FROM pago_comision_ind pci1 
             INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8) 
@@ -220,7 +227,7 @@ class Comisiones_model extends CI_Model {
             LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
             LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
             WHERE pci1.estatus IN ($estado) $filtroExtra
-            GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2");
+            GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, lo.nombreLote, oxcpj.color, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2");
     }
 
     public function getDataDispersionPago() {
@@ -380,7 +387,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario $tipo
+        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
         INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
@@ -3456,9 +3463,16 @@ class Comisiones_model extends CI_Model {
     }
 
     public function getDirectivos(){
-        $resultado = $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS nombre FROM usuarios us WHERE us.id_rol in (1,2)");
+        // $resultado = $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS nombre FROM usuarios us WHERE us.id_rol in (1,2)");
+        $resultado = $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS nombre, us.tipo, mul.tipo AS tipo_2 FROM usuarios us
+                    LEFT JOIN multitipo mul ON us.id_usuario = mul.id_usuario 
+                    WHERE us.id_rol in (1,2)");
 
-         return  $resultado->result_array();
+        
+
+        
+
+        return  $resultado->result_array();
     }
 
     public function getDirectivos2(){

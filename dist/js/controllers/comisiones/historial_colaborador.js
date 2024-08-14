@@ -23,20 +23,9 @@ $('#ano_historial').change(function(){
 
 $('#ano_historial').change(function(){
     $("#tipo_historial").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url+'Contratacion/nombreTipo/',
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-                var id = response[i]['tipo'];
-                var name = response[i]['nombre_tipo'];
-                $("#tipo_historial").append($('<option>').val(id).text(name));
-            }
-            $("#tipo_historial").selectpicker('refresh');
-        }
-    });
+    $("#tipo_historial").append($('<option>').val(1).text('NORMAL'));
+    $("#tipo_historial").append($('<option>').val(3).text('CASAS'))
+    $("#tipo_historial").selectpicker('refresh');
 });
 
 $('#catalogo_historial, #tipo_historial').change(function(){
@@ -48,6 +37,8 @@ $('#catalogo_historial, #tipo_historial').change(function(){
         proyecto = $('#ano_historial').val();
         condominio = $('#catalogo_historial').val();
         tipo = $('#tipo_historial').val();
+        console.log(tipo);
+
         
     $('#tabla_historialGral').removeClass('hide');
     
@@ -140,6 +131,8 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
 
         Comisiones = "SegurosComision/getDatosHistorialPago/";
 
+    }else if(tipo == 3 ){
+        Comisiones = "Casas_comisiones/getDatosHistorialPago/";
     }else{
         alerts.showNotification("top", "right", "Tipo aún no existente en el sistema.", "alert");
         return false;
@@ -861,7 +854,24 @@ $('#tablaHistorialDescuentos thead tr:eq(0) th').each(function (i) {
 	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
-function consultarHistorialDescuentos() {
+$("#tipo_historial_casas").on("change", function(){
+    seleccion = $(this).val();
+
+    if(seleccion == 1) {
+        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
+        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+    } else if(seleccion == 3) {
+        var enlace = 'Casas_comisiones/getHistorialDescuentosPorUsuario'
+        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+    }
+
+    consultarHistorialDescuentos(enlace)
+});
+
+
+
+function consultarHistorialDescuentos(enlace) {
+    
     tablaHistorialDescuentos = $("#tablaHistorialDescuentos").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%', 
@@ -1001,7 +1011,7 @@ function consultarHistorialDescuentos() {
             $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
         },
         ajax: {
-            url: `${general_base_url}Comisiones/getHistorialDescuentosPorUsuario`,
+            url: `${general_base_url}${enlace}`,
             type: "POST",
             cache: false,
         }
@@ -1009,7 +1019,7 @@ function consultarHistorialDescuentos() {
 }
 
 $(document).on('click', '.consultarDetalleDelPago', function(e) {
-    let ruta = $('#tipo_historial').val() == 4 ? 'Seguros' : 'Pagos';
+    let ruta = $('#tipo_historial').val() == 4 ? 'Seguros' : ($('#tipo_historial').val() == 3 || $('#tipo_historial_casas').val() == 3 ?'Casas_comisiones':'Pagos');
     $("#comments-list-asimilados").html('');
     $("#nameLote").html('');
     $('#spiner-loader').removeClass('hide');
@@ -1028,6 +1038,12 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
 });
 
 $(document).ready(function () {
+
+    if(usuario_id !=3){
+    var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
+    $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+    consultarHistorialDescuentos(enlace)
+    }
 
     let titulosHistorialOOAM = [];
     $('#tablaHistorialOOAM thead tr:eq(0) th').each(function (i) {

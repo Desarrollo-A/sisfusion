@@ -39,7 +39,7 @@
             }
         }
         ?>
-    <?php $this->load->view('ventas/comisiones_colaborador_modales/comisiones_colaborador_modales_comple'); ?>
+        <?php $this->load->view('ventas/comisiones_colaborador_modales/comisiones_colaborador_modales_comple'); ?>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -135,8 +135,6 @@
                                                                 <th>% COMISIÓN</th>
                                                                 <th>DETALLE</th>
                                                                 <th>ESTATUS</th>
-                                                                <th>ID ARCUS</th>
-                                                                <th>NOMBRE CLIENTE</th>
                                                                 <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
@@ -298,7 +296,7 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend'); ?>
-    </div>
+        </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>

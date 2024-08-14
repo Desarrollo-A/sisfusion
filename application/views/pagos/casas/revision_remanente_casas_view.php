@@ -1,9 +1,9 @@
 <div class="tab-pane" id="remanenteCasas">
         <div class="text-center">
             <h3 class="card-title center-align">Comisiones en revisión <b>remanente Casas</b></h3>
-            <i class="fas fa-house-user  "
+            <!-- <i class="fas fa-house-user  "
             style="color:#000000;  font-size: 30px;"
-            ></i>
+            ></i> -->
             <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de remanente casas.</p>
         </div>
 

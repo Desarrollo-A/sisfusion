@@ -474,7 +474,7 @@
     </script>
     
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>                                                        
-    <!-- <script src="<?=base_url()?>dist/js/controllers/ventas/comisionesColaboradorSubDir.js"></script> -->
+    <script src="<?=base_url()?>dist/js/controllers/ventas/comisionesColaboradorSubDir.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/ventas/filtrosProCond.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/ventas/sinPagoNeodata.js"></script>
 

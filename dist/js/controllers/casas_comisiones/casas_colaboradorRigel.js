@@ -48,7 +48,8 @@ let titulos = [];
 var datosProyectos = [], datosCondominios = [], datosFechaCorte = [], datosSumaPagos = [], datosOpinion = [];
 $(document).ready(function() {
     $('#spiner-loader').removeClass('hide');
-    $.post(general_base_url + "Casas_comisiones/getDatosFechasProyecCondm",{tipoUsuario:tipoUsuarioGeneral}, function (data) {
+    $.post(general_base_url + "Casas_comisiones/getDatosFechasProyecCondm",function (data) {
+        console.log(data);
         data = JSON.parse(data);
         datosFechaCorte = data.fechasCorte;
         datosSumaPagos = data.sumaPagos;
@@ -159,8 +160,8 @@ for (let m = 0; m < datosTablas.length; m++) {
 
 async function crearTabla(idTabla,data2,estatus){
     // console.log(idTabla)
-    // console.log(data2);
-    // console.log(estatus
+    console.log(data2);
+    // console.log(estatus);
     let datosTbActual = datosTablas.filter(datos => datos.estatus == estatus);
     // console.log(datosTbActual);
     // console.log(datosTbActual[0].id)
@@ -199,17 +200,13 @@ async function crearTabla(idTabla,data2,estatus){
                                 type: 'POST', 
                                 success: function(data){
                                     data = JSON.parse(data);
-                                    console.log(data);
                                     if(data.respuesta === 1) {
                                         $('#spiner-loader').addClass('hide');
                                         $("#total_solicitar").html(formatMoney(0));
                                         $("#all").prop('checked', false);
                                         datosSumaPagos = data.data;
-                                        console.log(data.data);
                                         llenarSumas();
-
                                         let datosPagos = getPagosComisiones(idProyecto,idCondominio,1);
-                                        console.log(datosPagos);
                                         crearTabla(datosTbActual[0].id,datosPagos,estatus);
                                         alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
                                        
@@ -267,15 +264,17 @@ async function crearTabla(idTabla,data2,estatus){
                             processData: false,
                             type: 'POST', 
                             success: function(data){
-                                response = JSON.parse(data);
-                                if(data == 1) {
+                                data = JSON.parse(data);
+                                if(data.respuesta === 1) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#total_solicitar").html(formatMoney(0));
                                     $("#all").prop('checked', false);
-                                    var fecha = new Date();
-                                    
+                                    datosSumaPagos = data.data;
+                                    llenarSumas();
+                                    let datosPagos = getPagosComisiones(idProyecto,idCondominio,1);
+                                    console.log(datosPagos);
+                                        crearTabla(datosTbActual[0].id,datosPagos,estatus);
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Resguardo.", "success");
-                                    $('#tabla_nuevas_comisiones').DataTable().ajax.reload();
 
                                 } else {
                                     $('#spiner-loader').addClass('hide');
@@ -399,6 +398,39 @@ async function crearTabla(idTabla,data2,estatus){
                 // revisar el uso de las siguientes dos lineas
                         // let td = d.estatus == 1 ? `<br><span class="label ${d.forma_pago.split('/')[2]}">${d.forma_pago.split('/')[3]}  ${d.estatus_actual}</span></p>` : ``;
                         // return `<p class="m-0"><span class="label ${d.forma_pago.split('/')[0]}">${d.forma_pago.split('/')[1]}</span>` + td;
+
+                        // switch (d.forma_pago) {
+                        //     case '1': 
+                        //     case 1:
+                        //         return `<p class="m-0"><span class="label lbl-gray">SIN DEFINIR FORMA DE PAGO</span><br><span class="label lbl-yellow">REVISAR CON RH  ${d.estatus_actual}</span></p>`;
+                        //     break;
+        
+                        //     case '2': 
+                        //     case 2: 
+                        //         return `<p class="m-0"><span class="label lbl-sky">FACTURA</span></p><p style="font-size: .5em"><span class="label lbl-melon" >SUBIR XML  ${d.estatus_actual}</span></p>`;
+                        //     break;
+        
+                        //     case '3':
+                        //     case 3: 
+                        //         return `<p class="m-0"><span class="label lbl-blueMaderas">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-oceanGreen">LISTA PARA APROBAR  ${d.estatus_actual}</span></p>`;
+                        //     break;
+        
+                        //     case '4': 
+                        //     case 4:
+                        //         return `<p class="m-0"><span class="label lbl-violetBoots">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-oceanGreen">LISTA PARA APROBAR  ${d.estatus_actual}</span></p>`;
+                        //     break;
+        
+                        //     default:
+                        //         return `<p class="m-0"><span class="label lbl-gray">DOCUMENTACIÓN FALTANTE</span><br><span class="label lbl-yellow">REVISAR CON RH  ${d.estatus_actual}</span></p>`;
+                        //     break;
+                        // }
+
+                        let valores = d.texto.split('/');
+                        var color = valores[0];
+                        var texto = valores[1];
+                        
+                     return `<p class="m-0"><span class="label lbl-${d.color}">${d.pj_name}</span><br><span class="label lbl-${color}">${texto}  ${d.estatus_actual}</span></p>`;
+
             }
         },
         {
@@ -476,7 +508,7 @@ async function crearTabla(idTabla,data2,estatus){
         user = $(this).attr("data-usuario");
         $('#spiner-loader').removeClass('hide');
         modalHistorial();
-        $.getJSON("getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Casas_comisiones/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+ v.nombre_usuario +' </b></a><br></div><div class="float-end text-right"><a> '+ v.fecha_movimiento +' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIO: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
