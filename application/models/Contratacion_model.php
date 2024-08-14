@@ -603,6 +603,8 @@ class Contratacion_model extends CI_Model {
          $idsGerente = $id_lider . ", 13821";
       else if ($id_usuario == 16813) // Vanessa Castro Muñoz
          $idsGerente = $id_lider . ", 11843";
+      else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
+         $idsGerente = $id_lider . ", 6661";
       else
          $idsGerente = $id_lider;
       return $idsGerente;

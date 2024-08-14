@@ -3574,6 +3574,9 @@
 				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
 					$id_lider = $id_lider . ', 11843';
 					$sede = "";
+				} else if ($id_usuario == 2987) { // Alan Michell Alba Sánchez
+					$id_lider = $id_lider . ', 6661';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes

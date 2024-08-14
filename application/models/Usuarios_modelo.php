@@ -223,6 +223,9 @@ class Usuarios_modelo extends CI_Model
                 } else if ($this->session->userdata('id_usuario') == 16813) { // Vanessa Castro Muñoz
                     $id_lider = $this->session->userdata('id_lider') . ', 11843';
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                } else if ($this->session->userdata('id_usuario') == 2987) { // Alan Michell Alba Sánchez
+                    $id_lider = $this->session->userdata('id_lider') . ', 6661';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                 }
                 else
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
