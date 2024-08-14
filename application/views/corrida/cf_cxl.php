@@ -649,6 +649,22 @@
 
 
                                 <div class="row">
+                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                                        <label>Descuentos meses anteriores:</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon" id="basic-addon1"><i class="fa fa-tag"></i></span>
+                                            <select ng-model="mesesAnteriores"
+                                                    ng-options="item.nombre for item in planesAnteriores"
+                                                    class="form-control" id="mesesAnteriores" ng-change="changeDescuento()">
+                                                <option value=""> - Selecciona descuento -</option>
+                                                <!--
+                                                <option value="1262"> OCTUBRE 2021</option>
+                                                <option value="1263"> NOVIEMBRE 2021</option>
+                                                <option value="1264"> DICIEMBRE 2021</option>
+                                                <option value="1265"> ENERO 2022</option>-->
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-md-4" ng-model="id" ng-repeat="paquete in paquetes">
                                         <div class="foreach">
                                             <input type="radio" id="checkPack" name="checkPack" required="required" ng-model="paquete.id_paquete"/>
