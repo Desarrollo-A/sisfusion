@@ -1187,14 +1187,8 @@ class Reestructura_model extends CI_Model
                     )->result_array();
     }
 
-    public function checarDisponibleRe($idLote, $idProyecto)
-    {
-        $validacionStatus = '';
-        if ($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22 || $idProyecto == 25) {
-            $validacionStatus = 'OR idStatusLote = 21';
-        }
-        $query = $this->db->query("SELECT * FROM lotes WHERE (idStatusLote = 15 OR idStatusLote = 1 OR idStatusLote = 2 " . $validacionStatus . ") AND idLote=" . $idLote);
-        return $query->result_array();
+    public function checarDisponibleRe($idLote, $idProyecto) {
+        return  $this->db->query("SELECT * FROM lotes WHERE idStatusLote IN (15, 1, 21, 2) AND idLote = $idLote")->result_array();
     }
 
     public function getListaUsuariosReasignacionJuridico()
