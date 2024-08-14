@@ -7,14 +7,14 @@
 
     public function getPaquetes($idLote){
 
-        $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote.'');
+        $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote);
+        $desc = $query->row();
 
-        foreach ($query->result_array() as $desc)
-        {
+        if($desc->id_descuento){
+            return $this->db-> query("SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ($desc->id_descuento)")->result_array();
+        }else{
+            return [];
         }
-        $query = $this->db-> query('SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ('.$desc['id_descuento'].')');
-
-        return $query->result_array();
     }
 
 
