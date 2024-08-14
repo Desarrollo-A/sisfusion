@@ -66,7 +66,8 @@
                                     <a href="#solicitudesSUMA" role="tab" data-toggle="tab">Historial SUMA</a>
                                 </li>
                                 <li>
-                                    <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="consultarHistorialDescuentos()">Historial descuentos</a>
+                                    <!-- <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="consultarHistorialDescuentos()">Historial descuentos</a> -->
+                                    <a href="#historialDescuentos" role="tab" data-toggle="tab" >Historial descuentos</a>
                                 </li>
 
                             <?php } ?>
@@ -256,9 +257,20 @@
                                                         <p class="card-title pl-1">Este es un listado de todos los descuentos que te han aplicado.</p>
                                                     </div>
                                                 </div>
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
+                                                            <div class="form-group select-is-empty">
+                                                                <label for="tipo" class="control-label">Tipo:</label>
+                                                                <select name="tipo_historial_casas" id="tipo_historial_casas" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
+                                                                    <option value="1">Normal</option>
+                                                                    <option value="3">Casas</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 <div class="material-datatables">
                                                     <div class="form-group">
-                                                        <table class="table-striped table-hover" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
+                                                        <table class="table-striped table-hover hide" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
                                                             <thead>
                                                                 <tr>
                                                                     <th>ID PAGO</th>
@@ -290,6 +302,10 @@
     </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
+    <script>
+        var usuario_id = <?= $this->session->userdata('id_usuario') ?>;
+
+    </script>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>   
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
 </body>

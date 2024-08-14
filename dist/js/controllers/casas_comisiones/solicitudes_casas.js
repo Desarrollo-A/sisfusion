@@ -21,7 +21,7 @@ $(document).on("click", ".subir-archivo", function (e) {
         dataType: 'JSON',
         success: function (data) {
             $('#total-comision').html("");
-            $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
+            $('#total-comision').append(`Total: ${formatMoney(data.total)}`);
             $('#addFileExtranjero').modal('show');
         }
     });
@@ -304,7 +304,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             type: 'POST',
                             success: function (data) {
                                 response = JSON.parse(data);
-                                console.log(response.respuesta);
                                 if (response.respuesta == 1) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#totpagarPen").html(formatMoney(0));
@@ -425,7 +424,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON.  '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -518,18 +517,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 }
             }
         },
-        {
-            visible: [12841].indexOf(parseInt(id_usuario_general)) >= 0 ? true : false,
-            "data": function (d) {
-                return '<p class="m-0">' + d.id_arcus + '</p>';
-            }
-        },
-        {
-            visible: [12841].indexOf(parseInt(id_usuario_general)) >= 0 ? true : false,
-            "data": function (d) {
-                return '<p class="m-0">' + d.nombreCliente + '</p>';
-            }
-        },
+        
         {
             "orderable": false,
             "data": function (data) {
@@ -678,7 +666,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 ExcedenteDinero = formatMoney(data[0].ExcedenteDinero);
                 porciento1 = formatMoney(data[0].porciento1);
                 $.each(data, function (i, v) {
-                    console.log(v);
                     v.destino == 0 ? origenes += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen} ) </div>` : ``;
                     v.destino == 1 ? destino += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen}) </div>` :  `` ;
     
@@ -746,7 +733,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
-        $.getJSON("getComments/" + id_pago).done(function (data) {
+        $.getJSON(general_base_url + "Casas_comisiones/getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
@@ -781,7 +768,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
-                document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_revision").textContent = formatMoney(total);
             }
         });
     });
@@ -792,7 +779,7 @@ $("#tabla_revision_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_revision").textContent = '$' + to;
+        document.getElementById("myText_revision").textContent = to;
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
@@ -850,27 +837,27 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -887,7 +874,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -948,7 +935,7 @@ $("#tabla_revision_comisiones").ready(function () {
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#2242CB; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
-        $.getJSON("getComments/" + id_pago).done(function (data) {
+        $.getJSON(general_base_url + "Casas_comisiones/getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:2242CB;">' + v.comentario + '</i><br><b style="color:#2242CB">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
@@ -981,7 +968,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                     total += parseFloat(v.pago_cliente);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("myText_pagadas").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_pagadas").textContent =  formatMoney(total);
             }
         });
     });
@@ -992,7 +979,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pagadas").textContent = '$' + to;
+        document.getElementById("myText_pagadas").textContent =  to;
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
@@ -1050,27 +1037,27 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>$ ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -1087,7 +1074,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -1148,7 +1135,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#9321B6; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
-        $.getJSON("getComments/" + id_pago).done(function (data) {
+        $.getJSON(general_base_url +"Casas_comisiones/getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:9321B6;">' + v.comentario + '</i><br><b style="color:#9321B6">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
@@ -1180,7 +1167,7 @@ $("#tabla_otras_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
-                document.getElementById("myText_pausadas").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_pausadas").textContent = formatMoney(total);
             }
         });
     });
@@ -1191,7 +1178,7 @@ $("#tabla_otras_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pausadas").textContent = '$' + to;
+        document.getElementById("myText_pausadas").textContent =  to;
     });
 
     tabla_otras = $("#tabla_otras_comisiones").DataTable({
@@ -1249,27 +1236,27 @@ $("#tabla_otras_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>$ ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -1349,7 +1336,7 @@ $("#tabla_otras_comisiones").ready(function () {
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#CB7922; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
-        $.getJSON("getComments/" + id_pago).done(function (data) {
+        $.getJSON(general_base_url + "Casas_comisiones/getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:CB7922;">' + v.comentario + '</i><br><b style="color:#CB7922">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
@@ -1615,6 +1602,7 @@ function todos() {
 }
 
 $(document).on("click", ".subir_factura_multiple", function() {
+    $('#desarrolloSelect').selectpicker('refresh');
     let actual=13;
     if(userSede == 8){
         actual=15;
@@ -1639,8 +1627,8 @@ $(document).on("click", ".subir_factura_multiple", function() {
         <span aria-hidden="true" style="font-size:40px;">&times;</span>
         </button>
         </div>
-        <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
-        $.post('getDesarrolloSelect', function (data) {
+        <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class=" select-gral desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true" title="SELECCIONA UNA OPCIÓN" ></select></div></div>`);
+        $.post(general_base_url+'Casas_comisiones/getDesarrolloSelect', function (data) {
             if (data == 3) {
                 $("#desarrolloSelect").append('<option selected="selected" disabled>YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE</option>');
             }
@@ -1649,7 +1637,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                     $("#desarrolloSelect").append($('NO TIENES PAGOS.'));
                 }
                 else {
-                    $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"));
+                    // $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"));
                     var len = data.length;
                     for (var i = 0; i < len; i++) {
                         var id = data[i]['id_usuario'];
@@ -1665,6 +1653,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
             }
         }, 'json');
         $('#desarrolloSelect').change(function () {
+            c=0;
             var valorSeleccionado = $(this).val();
             $("#modal_multiples .modal-body").html("");
             $.getJSON(general_base_url + "Casas_comisiones/getDatosProyecto/" + valorSeleccionado).done(function (data) {
@@ -1754,7 +1743,7 @@ function subir_xml(input) {
             }
             else {
                 input.val('');
-                alert(data.respuesta[1]);
+                alerts.showNotification("top", "right", data.respuesta[1], "warning");
             }
         },
         error: function (data) {
@@ -1788,7 +1777,8 @@ function subir_xml2(input) {
             }
             else {
                 input.val('');
-                alert(data.respuesta[1]);
+
+                alerts.showNotification("top", "right", data.respuesta[1], "warning");
             }
         },
         error: function (data) {
@@ -1816,7 +1806,7 @@ $("#eliminar_factura").submit(function (e) {
                 if (true) {
                     $("#modalQuitarFactura").modal('toggle');
                     tabla_nuevas.ajax.reload();
-                    alert("SE ELIMINÓ EL ARCHIVO");
+                    alerts.showNotification("top", "right", "SE ELIMINÓ EL ARCHIVO", "success");
                 }
                 else {
                     alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
@@ -1930,7 +1920,7 @@ function sumCheck() {
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
-    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
+    myCommentsList.innerHTML = 'Suma seleccionada: ' + formatMoney(suma.toFixed(3));
 } 
 
 function disabled() {
@@ -1962,28 +1952,28 @@ function save2() {
         success: function (data) {
             document.getElementById('btng').disabled = false;
             if (data.resultado) {
-                alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                alerts.showNotification("top", "right", "LA FACTURA SE SUBIÓ CORRECTAMENTE", "success");
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
                 tabla_revision.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 3) {
-                alert("ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES");
+                alerts.showNotification("top", "right", "ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES", "warning");
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 4) {
-                alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
+                alerts.showNotification("top", "right", "EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS", "warning");
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else {
-                alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                alerts.showNotification("top", "right", "NO SE HA PODIDO COMPLETAR LA SOLICITUD", "danger");
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
@@ -2015,11 +2005,11 @@ $("#frmnewsol").submit(function (e) {
             type: 'POST', // For jQuery < 1.9
             success: function (data) {
                 if (data.resultado) {
-                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                    alerts.showNotification("top", "right", "LA FACTURA SE SUBIÓ CORRECTAMENTE", "success");
                     $("#modal_formulario_solicitud").modal('toggle');
                     tabla_nuevas.ajax.reload();
                 } else {
-                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                    alerts.showNotification("top", "right", "NO SE HA PODIDO COMPLETAR LA SOLICITUD", "warning");
                 }
             },
             error: function () {
@@ -2047,12 +2037,12 @@ $("#frmnewsol2").submit(function (e) {
             type: 'POST', // For jQuery < 1.9
             success: function (data) {
                 if (data.resultado) {
-                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                    alerts.showNotification("top", "right", "LA FACTURA SE SUBIÓ CORRECTAMENTE", "success");
                     $("#modal_formulario_solicitud").modal('toggle');
                     tabla_nuevas.ajax.reload();
                 }
                 else {
-                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                    alerts.showNotification("top", "right", "NO SE HA PODIDO COMPLETAR LA SOLICITUD", "warning");
                 }
             },
             error: function () {

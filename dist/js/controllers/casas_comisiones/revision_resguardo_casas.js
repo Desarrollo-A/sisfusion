@@ -1,19 +1,19 @@
 
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
-var tr;
-var tabla_resguardo2 ;
-var totaPen = 0;
-let titulos = [];
+var totalLeon2 = 0;
+var totalQro2 = 0;
+var totalSlp2 = 0;
+var totalMerida2 = 0;
+var totalCdmx2 = 0;
+var totalCancun2 = 0;
+var tr2;
+var tabla_resguardo3 ;
+var totaPen2 = 0;
+let titulos2 = [];
 
 // ------------Funcion de botones anteriores de comisiones de resguardo------------------
 
 // $(document).ready(function() {
-//     $("#tabla_resguardo").prop("hidden", true);
+//     $("#tabla_resguardo_casas").prop("hidden", true);
 //     $.post(general_base_url + "Comisiones/getResguardo", function (data) {
 //         var len = data.length;
 //         for (var i = 0; i < len; i++) {
@@ -21,21 +21,21 @@ let titulos = [];
 //             var name = data[i]['nombre'];
 //             if(id_usuario_general == 1875 ){
 //                 if(id == 2){
-//                     $("#directivo_resguardo").append($('<option>').val(id).text(name.toUpperCase()));
+//                     $("#directivo_resguardo_casas").append($('<option>').val(id).text(name.toUpperCase()));
 //                 }
 //             }
 //             else{
-//                 $("#directivo_resguardo").append($('<option>').val(id).text(name.toUpperCase()));
+//                 $("#directivo_resguardo_casas").append($('<option>').val(id).text(name.toUpperCase()));
 //             }
 //         }
-//         $("#directivo_resguardo").selectpicker('refresh');
+//         $("#directivo_resguardo_casas").selectpicker('refresh');
 //     }, 'json');
 // });
 
 
-// $('#directivo_resguardo').change(function(ruta){
-//     residencial = $('#directivo_resguardo').val();
-//     $("#catalogo_resguardo").empty().selectpicker('refresh');
+// $('#directivo_resguardo_casas').change(function(ruta){
+//     residencial = $('#directivo_resguardo_casas').val();
+//     $("#catalogo_resguardo_casas").empty().selectpicker('refresh');
 //     $.ajax({
 //         url: general_base_url + 'Contratacion/lista_proyecto/'+residencial,
 //         type: 'post',
@@ -45,9 +45,9 @@ let titulos = [];
 //             for( var i = 0; i<len; i++){
 //                 var id = response[i]['idResidencial'];
 //                 var name = response[i]['descripcion'];
-//                 $("#catalogo_resguardo").append($('<option>').val(id).text(name));
+//                 $("#catalogo_resguardo_casas").append($('<option>').val(id).text(name));
 //             }
-//             $("#catalogo_resguardo").selectpicker('refresh');
+//             $("#catalogo_resguardo_casas").selectpicker('refresh');
 //         }
 //     });
 // });
@@ -56,150 +56,65 @@ let titulos = [];
 
 
 $(document).ready(function () { 
-    $("#tabla_resguardo, #tabla_resguardo_casas").prop("hidden", true);
-    $.post(general_base_url + "Comisiones/getResguardo", function (data) {
-
-    let catalogo = data.catalogo,
-    proyecto = data.proyecto, 
-    directivos = data.directivos;
-
-        for (var i = 0; i < catalogo.length; i++) {
-            var id = catalogo[i]['id_opcion'];
-            var anio = catalogo[i]['nombre'];
-            $(`#anio, #anio_casas`).append($('<option>').val(anio).text(anio));
-        }
-        $("#anio, #anio_casas").selectpicker('refresh');
-
-        $(`#catalogo_resguardo, #catalogo_resguardo_casas`).append($('<option>').val(0).text('SIN PROYECTO'));
-        for (var i1 = 0; i1 < proyecto.length; i1++) {
-            var id = proyecto[i1]['idResidencial'];
-            $(`#catalogo_resguardo, #catalogo_resguardo_casas`).append($('<option>').val(id).text(proyecto[i1]['descripcion']));
-        }
-        $("#catalogo_resguardo, #catalogo_resguardo_casas").selectpicker('refresh');
-        
-        for (var i2 = 0; i2 < directivos.length; i2++) {
-            var id = directivos[i2]['id_usuario'];
-            var name = directivos[i2]['nombre'];
-            directivos[i2]['tipo'] == 3 ? $(`#directivo_resguardo_casas`).append($('<option>').val(id).text(name)) : $(`#directivo_resguardo`).append($('<option>').val(id).text(name));
-            directivos[i2]['tipo_2'] == 3 ? $(`#directivo_resguardo_casas`).append($('<option>').val(id).text(name)) :'';
-        }$("#directivo_resguardo, #directivo_resguardo_casas").selectpicker('refresh');
-        
-    }, 'json');
-    let meses = [
-        {
-            id: '1',
-            mes:'ENERO'
-        },
-        {
-            id:'2',
-            mes:'FEBRERO'
-        },
-        {
-            id:'3',
-            mes:'MARZO'
-        },
-        {
-            id:'4',
-            mes:'ABRIL'
-        },
-        {
-            id:'5',
-            mes:'MAYO'
-        },
-        {
-            id:'6',
-            mes:'JUNIO'
-        },
-        {
-            id:'7',
-            mes:'JULIO'
-        },
-        {
-            id:'8',
-            mes:'AGOSTO'
-        },
-        {
-            id:'9',
-            mes:'SEPTIEMBRE'
-        },
-        {
-            id:'10',
-            mes:'OCTUBRE'
-        },
-        {
-            id:'11',
-            mes:'NOVIEMBRE'
-        },
-        {
-            id:'12',
-            mes:'DICIEMBRE'
-        }
-    ];
-    let datos = '';
-
-        for (let index = 0; index < meses.length; index++) {
-        datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
-        $('#mes, #mes_casas').html(datos);
-        $('#mes, #mes_casas').selectpicker('refresh');
-    }
+    // Cambio de las funciones al archivo revision_resguardos.js para no hacer dobl peticion
 
 });
 
-$('#directivo_resguardo, #anio, #mes').change(function(ruta){
-    directivo = $('#directivo_resguardo').val();
-    proyecto = $('#catalogo_resguardo').val();
-    anio = $('#anio').val();
-    mes = $('#mes').val();
+$('#directivo_resguardo_casas, #anio_casas, #mes_casas').change(function(ruta){
+    directivo = $('#directivo_resguardo_casas').val();
+    proyecto = $('#catalogo_resguardo_casas').val();
+    anio = $('#anio_casas').val();
+    mes = $('#mes_casas').val();
 
     if(directivo == '' || directivo == null || directivo == undefined || anio == '' || anio == null || anio == undefined
        || mes == '' || mes == null || mes== undefined
      ){
         return false;
     }else{
-    getAssimilatedCommissions(directivo, proyecto, anio, mes);
+    getAssimilatedCommissions_casas(directivo, proyecto, anio, mes);
     }
 });
 
-$('#catalogo_resguardo').change(function(ruta){
-    directivo = $('#directivo_resguardo').val();
-    proyecto = $('#catalogo_resguardo').val();
-    anio = $('#anio').val();
-    mes = $('#mes').val();
+$('#catalogo_resguardo_casas').change(function(ruta){
+    directivo = $('#directivo_resguardo_casas').val();
+    proyecto = $('#catalogo_resguardo_casas').val();
+    anio = $('#anio_casas').val();
+    mes = $('#mes_casas').val();
     if(directivo == '' || directivo == null || directivo == undefined || anio == '' || anio == null || anio == undefined
         || mes == '' || mes == null || mes== undefined
       ){
          return false;
      }else{
-     getAssimilatedCommissions(directivo, proyecto, anio, mes);
+     getAssimilatedCommissions_casas(directivo, proyecto, anio, mes);
      }
 });
 
-$('#tabla_resguardo thead tr:eq(0) th').each( function (i) {
+$('#tabla_resguardo_casas thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    titulos.push(title);
+    titulos2.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function() {
-        if (tabla_resguardo2.column(i).search() !== this.value) {
-            tabla_resguardo2.column(i).search(this.value).draw();
+        if (tabla_resguardo3.column(i).search() !== this.value) {
+            tabla_resguardo3.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_resguardo2.rows({ selected: true, search: 'applied' }).indexes();
-            var data = tabla_resguardo2.rows(index).data();
+            var index = tabla_resguardo3.rows({ selected: true, search: 'applied' }).indexes();
+            var data = tabla_resguardo3.rows(index).data();
         }
     });
 });
 
-function getAssimilatedCommissions(directivo, proyecto, anio, mes){
-    $('#tabla_resguardo').on('xhr.dt', function(e, settings, json, xhr) {
+function getAssimilatedCommissions_casas(directivo, proyecto, anio, mes){
+    $('#tabla_resguardo_casas').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("totpagarremanente").textContent = to;
+        document.getElementById("totpagarremanente_casas").textContent = to;
     });
 
-    $("#tabla_resguardo").prop("hidden", false);
-    tabla_resguardo2 = $("#tabla_resguardo").DataTable({
+    $("#tabla_resguardo_casas").prop("hidden", false);
+    tabla_resguardo3 = $("#tabla_resguardo_casas").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -214,7 +129,7 @@ function getAssimilatedCommissions(directivo, proyecto, anio, mes){
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return ' ' + titulos2[columnIdx] + ' ';
                     }
                 }
             },
@@ -380,7 +295,7 @@ function getAssimilatedCommissions(directivo, proyecto, anio, mes){
             className: 'dt-body-center',
         }],
         ajax: {
-            url: general_base_url + "Comisiones/getDatosResguardoContraloria/",
+            url: general_base_url + "Casas_comisiones/getDatosResguardoContraloria/",
             type: "POST",
             cache: false,
             data: {
@@ -392,11 +307,11 @@ function getAssimilatedCommissions(directivo, proyecto, anio, mes){
         },
     });
 
-    $('#tabla_resguardo').on('draw.dt', function() {
+    $('#tabla_resguardo_casas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
-    $("#tabla_resguardo tbody").on("click", ".consultarDetalleDelPago", function(e){
+    $("#tabla_resguardo_casas tbody").on("click", ".consultarDetalleDelPago", function(e){
         $("#spiner-loader").removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -432,7 +347,7 @@ function getAssimilatedCommissions(directivo, proyecto, anio, mes){
         showModal();
 
         $("#nombreLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+ "Casas_comisiones/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#spiner-loader").addClass('hide');
                 $("#comments-list-remanente").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
@@ -440,19 +355,19 @@ function getAssimilatedCommissions(directivo, proyecto, anio, mes){
         });
     });
 
-    $('#tabla_resguardo').on('click', 'input', function() {
-        tr = $(this).closest('tr');
-        var row = tabla_resguardo2.row(tr).data();
+    $('#tabla_resguardo_casas').on('click', 'input', function() {
+        tr2 = $(this).closest('tr');
+        var row = tabla_resguardo3.row(tr2).data();
         if (row.pa == 0) {
             row.pa = row.impuesto;
-            totaPen += parseFloat(row.pa);
-            tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+            totaPen2 += parseFloat(row.pa);
+            tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
         }
         else {
-            totaPen -= parseFloat(row.pa);
+            totaPen2 -= parseFloat(row.pa);
             row.pa = 0;
         }
-        $("#totpagarPen").html(formatMoney(totaPen));
+        $("#totpagarPen_casas").html(formatMoney(totaPen2));
     });
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -460,6 +375,6 @@ function getAssimilatedCommissions(directivo, proyecto, anio, mes){
     });
 
     $(window).resize(function(){
-        tabla_resguardo2.columns.adjust();
+        tabla_resguardo3.columns.adjust();
     });
 }

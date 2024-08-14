@@ -1,7 +1,7 @@
 <div class="tab-pane" id="facturaCasas">
     <div class="text-center">
-        <h3 class="card-title center-align">Comisiones en revisión <b>factura seguros </b></h3>
-        <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de factura seguros.</p>
+        <h3 class="card-title center-align">Comisiones en revisión <b>factura casas </b></h3>
+        <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de factura casas.</p>
     </div>
     <div class="toolbar">
         <div class="container-fluid p-0">
@@ -15,7 +15,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="form-group d-flex justify-center align-center">
                         <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                        <p class="input-tot pl-1" name="autorizarFactura_seguros" id="autorizarFactura_seguros">$0.00</p>
+                        <p class="input-tot pl-1" name="autorizarFactura_casas" id="autorizarFactura_casas">$0.00</p>
                     </div>
                 </div>
             </div>
