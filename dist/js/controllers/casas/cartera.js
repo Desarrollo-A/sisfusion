@@ -104,8 +104,7 @@ select_lote = function(data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
-            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
+            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),            
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -159,7 +158,6 @@ let columns = [
     { data: 'cliente' },
     { data: function(data)
         {
-            console.log(data)
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
             return '<div class="d-flex justify-center">' + pass_button + '</div>'
         } 
@@ -185,7 +183,7 @@ function verificarCheck(valorActual){
             arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
             arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
 
-            arrayId.push($(valorActual).attr('data-idLote'));//[1]
+            arrayId.push($(valorActual).attr('data-idCliente'));//[1]
     
             arrayValores.push(arrayInterno);
             arrayIdLotes.push(arrayId);
@@ -235,7 +233,7 @@ $(document).on('click', '.btn-asignar', () => {
         text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
-            data.append("idLotes", JSON.stringify(arrayIdLotes))
+            data.append("idClientes", JSON.stringify(arrayIdLotes))
             $.ajax({
                 type: 'POST',
                 url: `${general_base_url}casas/to_asignacion_varios`,
@@ -261,7 +259,6 @@ $(document).on('click', '.btn-asignar', () => {
         },
         fields: [
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
