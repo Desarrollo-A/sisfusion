@@ -11,9 +11,29 @@ $(document).ready(function () {
         dataUsuarios = data;
     }, 'json');
 });
-$("#tabla_dispersar_comisiones").ready(function () {
 
+var titulos_intxt = [];
+$('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
+    $(this).css('text-align', 'center');
+    var title = $(this).text();
+    titulos_intxt.push(title);
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_dispersar_comisiones').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_dispersar_comisiones').DataTable().column(i).search(this.value).draw();
+            }
+            var index = $('#tabla_dispersar_comisiones').DataTable().rows({
+            selected: true,
+            search: 'applied'
+            }).indexes();
+            var data = $('#tabla_dispersar_comisiones').DataTable().rows(index).data();
+        });
     
+});
+
+
+
+$("#tabla_dispersar_comisiones").ready(function () {    
     tabla_nuevas = $("#tabla_dispersar_comisiones").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -256,26 +276,20 @@ $("#formDispersion").submit( function(e) {
             dataType: 'json',
             method: 'POST',
             type: 'POST', // For jQuery < 1.9
-            success: function(data){
-                if( data == 1 ){
+            success: function(respuesta){
+                console.log(respuesta);
+                if( respuesta.resultado == true){
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "La petición se ha realizado con éxito", "success");
-                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
-                    $("#modalPrioridad").modal( 'hide' );
+                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $("#modalDispersion").modal( 'hide' );
                     $('#btnSubmit').prop('disabled', false);
                     document.getElementById('btnSubmit').disabled = false;
-                } else if (data == 2) {
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "Ya se dispersó por otro usuario", "warning");
-                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
-                    $("#modal_NEODATA_Casas").modal( 'hide' );
-                    $('#dispersar').prop('disabled', false);
-                    document.getElementById('dispersar').disabled = false;
                 }else{
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "No se pudo completar tu solicitud", "danger");
-                    $('#dispersar').prop('disabled', false);
-                    document.getElementById('dispersar').disabled = false;
+                    $('#btnSubmit').prop('disabled', false);
+                    document.getElementById('btnSubmit').disabled = false;
                 }
             },error: function(){
                 $('#spiner-loader').addClass('hidden');
