@@ -161,7 +161,6 @@ class CasasModel extends CI_Model
                 lo.idLote, 
                 lo.nombreLote, 
                 lo.sup,
-                pc.status, 
                 co.nombre condominio, 
                 re.descripcion proyecto, 
                 CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END cliente, 
@@ -183,8 +182,9 @@ class CasasModel extends CI_Model
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9 
             WHERE 
                 lo.idStatusLote = 2
-            AND cl.id_gerente_c = 0
-            AND cl.esquemaCreditoCasas = 0")->result();
+            AND (cl.id_gerente_c IS NULL OR cl.id_gerente_c = 0)
+            AND (cl.esquemaCreditoCasas IS NULL OR cl.esquemaCreditoCasas = 0)"
+        )->result();
     }
 
     public function getListaAsignacion(){
@@ -221,16 +221,23 @@ class CasasModel extends CI_Model
 
     public function getListaAsignacionEsquema(){
         $query = $this->db->query("SELECT 
-            cli.*,
+            cli.id_cliente,
             CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            UPPER(REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
+            FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
+            CASE WHEN cli.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono1 END telefono1,
+            CASE WHEN cli.telefono2 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono2 END telefono2,
+            CASE WHEN cli.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono3 END telefono3,
+            CASE WHEN cli.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.correo END correo,
             CASE 
                 WHEN cli.id_asesor_c = 0 THEN 'SIN ASESOR' ELSE CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
             END AS nombreAsesor,
             usA.id_usuario AS idAsesor,
             lo.idLote,
             lo.nombreLote,
+            lo.sup,
             co.nombre AS condominio,
-            re.nombreResidencial AS proyecto,
+            re.descripcion AS proyecto,
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente
             FROM clientes cli
             INNER JOIN lotes lo ON lo.idLote = cli.idLote
@@ -238,6 +245,7 @@ class CasasModel extends CI_Model
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
             INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
             WHERE cli.id_asesor_c = ? AND esquemaCreditoCasas = 0", array($this->idUsuario));
         
         return $query;
@@ -2053,7 +2061,7 @@ class CasasModel extends CI_Model
     }
 
     public function getModeloOptions(){
-        $query = $this->db->query("SELECT nombre AS label, id_opcion AS value FROM opcs_x_cats WHERE id_catalogo = ?", 154);
+        $query = $this->db->query("SELECT UPPER(CONCAT(modelo, ', Sup (', sup, ')')) label, idModelo AS value FROM modelos_casas");
 
         return $query;
     }

@@ -223,17 +223,10 @@ let columns = [
             if (data.idAsesor) {
                 pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_asesor, data })
             }
-        }
-    },
-    {
-        data: function (data) {
-            let asesor_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: choose_asesor, data })            
 
-            let cancel_button = new RowButton({ icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data })
-
-            return `<div class="d-flex justify-center">${asesor_button}${cancel_button}</div>`
+            return `<div class="d-flex justify-center">${asesor_button}${pass_button}</div>`
         }
-    },
+    }
 ]
 
 let table = new Table({

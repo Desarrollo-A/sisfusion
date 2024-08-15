@@ -148,12 +148,15 @@ let buttons = [
 let columns = [
     { data: function (data)
         {
-            return `<div class="d-flex justify-center">
-                        <label class="cont">
-                            <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" name="lotesOrigen[]" value="${data.idLote}" required>
-                            <span></span>
-                        </label>
-                    </div>` 
+            if (data.idCliente != 0)
+                return `<div class="d-flex justify-center">
+                            <label class="cont">
+                                <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" name="lotesOrigen[]" value="${data.idLote}" required>
+                                <span></span>
+                            </label>
+                        </div>` ;
+            else
+                return '';
         }        
     },
     { data: 'proyecto' },
@@ -194,7 +197,10 @@ let columns = [
     { data: function(data)
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
-            return '<div class="d-flex justify-center">' + pass_button + '</div>'
+            if (data.idCliente != 0)
+                return '<div class="d-flex justify-center">' + pass_button + '</div>'
+            else
+                return '';
         } 
     },
 ]
@@ -208,37 +214,37 @@ let table = new Table({
 
 
 function verificarCheck(valorActual){
-    const tr = $(this).closest('tr');
-        const row = $('#tablaAsignacionCartera').DataTable().row(tr);
-        let botonEnviar = document.getElementsByClassName('botonEnviar');
-        let arrayInterno = [];
-        let arrayId = [];
-    
-        if (valorActual.checked){
-            arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
-            arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
+    let botonEnviar = document.getElementsByClassName('botonEnviar');
+    let arrayInterno = [];
+    let arrayId = [];
 
-            arrayId.push($(valorActual).attr('data-idCliente'));//[1]
-    
-            arrayValores.push(arrayInterno);
-            arrayIdLotes.push(arrayId);
-        }
-        else{
-            let indexDelete = buscarValor($(valorActual).val(),arrayValores);
-            let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
+    if (valorActual.checked){
+        arrayInterno.push($(valorActual).attr('data-nombreLote'));
+        arrayInterno.push($(valorActual).attr('data-idLote'));
 
-            arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
-            arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
-        }
+        arrayId.push($(valorActual).attr('data-idCliente'));
 
-        if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
-         //se seleccionó más de uno, se habilita el botón para hacer el multiple
-            botonEnviar[0].classList.remove('hide');
-            $('#btn_'+$(valorActual).val()).prop("disabled", true);        
-        }
-        else{
-            botonEnviar[0].classList.add('hide');
-        }
+        arrayValores.push(arrayInterno);
+        arrayIdLotes.push(arrayId);
+    }
+    else{
+        let indexDelete = buscarValor($(valorActual).val(),arrayValores);
+        let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
+
+        arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
+        arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
+    }
+
+    if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
+        //se seleccionó más de uno, se habilita el botón para hacer el multiple
+        botonEnviar[0].classList.remove('hide');
+        $('#btn_'+$(valorActual).val()).prop("disabled", true);        
+    }
+    else{
+        botonEnviar[0].classList.add('hide');
+    }
+
+    console.log(arrayIdLotes);
 }
 
 function buscarValor(valor, array) {

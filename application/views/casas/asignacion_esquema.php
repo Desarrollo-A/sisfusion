@@ -82,15 +82,19 @@ input[type="checkbox"]:checked::after {
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
-                                        <tr>   
-                                            <th>ID LOTE</th>
-                                            <th>NOMBRE LOTE</th>
-                                            <th>CONDOMINIO</th>
+                                        <tr>
                                             <th>PROYECTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>NOMBRE LOTE</th>
+                                            <th>ID LOTE</th>
+                                            <th>PRECIO FINAL</th>
+                                            <th>SUPERFICIE</th>
                                             <th>NOMBRE CLIENTE</th>
-                                            <th>ASESOR</th>
-                                            <th>GERENTE</th>
-                                            <th>MOVIMIENTO</th>
+                                            <th>TELÉFONO 1</th>
+                                            <th>TELÉFONO 2</th>
+                                            <th>TELÉFONO 3</th>
+                                            <th>EMAIL</th>
+                                            <th>LUGAR DE PROSPECCIÓN</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

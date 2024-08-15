@@ -28,21 +28,11 @@ $.ajax({
 
 avanzar_proceso = function(data) {
     let required = true
-
     modelo_select = new SelectField({ id: 'modeloCasa', label: 'Modelo de casa', placeholder: 'Selecciona una opción', width: '12', data: modeloCasa, required: required })
-
-    hide_select = function(option){
-        if(option.value == 1){
-            modelo_select.hide()
-        }
-        else{
-            modelo_select.show()
-        }
-    }
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `Para continuar el proceso del lote <b>${data.nombreLote}</b> se deben asignar un esquema de crédito`,
+        text: `Para continuar el proceso del lote <b>${data.nombreLote}</b> se deben asignar un esquema de crédito y seleccionar un modelo de casa`,
         onSubmit: function(data){
             form.loading(true)
 
@@ -73,7 +63,7 @@ avanzar_proceso = function(data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
-            new SelectField({ id: 'esquemaCredito', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true, onChange: hide_select }),
+            new SelectField({ id: 'esquemaCredito', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true}),
             modelo_select,            
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
@@ -149,21 +139,47 @@ let buttons = [
 ]
 
 let columns = [
-    { data: 'idLote' },
-    { data: 'nombreLote' },
-    { data: 'condominio' },
     { data: 'proyecto' },
+    { data: 'condominio' },
+    { data: 'nombreLote' },
+    { data: 'idLote' },
+    { data: 'precioTotalLote' },
+    { data: 'sup' },
     { data: 'cliente' },
-    { data: 'nombreAsesor' },
-    { data: 'gerente' },
-    { data: 'gerente' },
+    { data: function(data)
+        {
+            if (data.telefono1 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono1}` 
+        } 
+    },
+    { data: function(data)
+        {
+            if (data.telefono2 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono2}` 
+        } 
+    },
+    { data: function(data)
+        {
+            if (data.telefono3 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono3}` 
+        } 
+    },
+    { data: 'correo' },
+    { data: 'lugar_prospeccion' },
     {
         data: function (data) {
             let asesor_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanzar_proceso, data })            
 
-            let cancel_button = new RowButton({ icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data })
+            // let cancel_button = new RowButton({ icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data })
 
-            return `<div class="d-flex justify-center">${asesor_button}${cancel_button}</div>`
+            // return `<div class="d-flex justify-center">${asesor_button}${cancel_button}</div>`
+            return `<div class="d-flex justify-center">${asesor_button}</div>`
         }
     },
 ]

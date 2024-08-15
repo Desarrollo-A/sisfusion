@@ -89,7 +89,6 @@
                                     <thead>
                                         <tr>
                                             <th></th>
-                                            <th>MOVIMIENTO</th>
                                             <th>PROYECTO</th>
                                             <th>CONDOMINIO</th>
                                             <th>NOMBRE LOTE</th>
