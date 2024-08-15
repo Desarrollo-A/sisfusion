@@ -39,7 +39,7 @@ class PlanesPago extends CI_Controller {
         }
     }
 
-    public function getMensualidadMasAlta($planes){
+    private function getMensualidadMasAlta($planes){
         $mensualidad = 0;
 
         foreach ($planes as $num_plan => $plan) {
@@ -126,7 +126,7 @@ class PlanesPago extends CI_Controller {
         return [$pago, $monto];
     }
 
-    public function insertar_pago_a_capital($pagos, $num_pago, $monto){
+    private function insertar_pago_a_capital($pagos, $num_pago, $monto){
         $viejo = $pagos[$num_pago];
 
         $fecha = $viejo->fechaPago;
@@ -230,6 +230,16 @@ class PlanesPago extends CI_Controller {
         return $pagos;
     }
 
+    private function recalcularSaldoPlan($saldo, $pagos){
+        foreach ($pagos as $num_pago =>$pago) {
+            $saldo -= $pagos[$num_pago]->capital;
+            
+            $pagos[$num_pago]->saldo = $saldo;
+        }
+
+        return $pagos;
+    }
+
     public function registrar_pago($lote){
         $data = json_decode(file_get_contents("php://input"));
 
@@ -264,7 +274,7 @@ class PlanesPago extends CI_Controller {
                     $pagos = $this->insertar_pago($pagos, $num_pago, $monto);
                 }
 
-                $planes[$num_plan]->dumpPlan = json_encode($pagos);
+                #$planes[$num_plan]->dumpPlan = json_encode($pagos);
             }
 
             if($data->capital){
@@ -274,14 +284,15 @@ class PlanesPago extends CI_Controller {
                     #print_r("Ingresar a capital: $monto" );
                     $pagos = $this->insertar_pago_a_capital($pagos, $num_pago, $monto);
 
-                    $planes[$num_plan]->dumpPlan = json_encode($pagos);
+                    #$planes[$num_plan]->dumpPlan = json_encode($pagos);
 
                     $monto = 0;
                 }
             }
 
             #Guardar plan de pagos
-            # $this->PlanesPagoModel->savePlanPago($planes[$num_plan]->idPlanPago, $planes[$num_plan]->dumpPlan);
+            $planes[$num_plan]->dumpPlan = json_encode($this->recalcularSaldoPlan($planes[$num_plan]->monto, $pagos));
+            $this->PlanesPagoModel->savePlanPago($planes[$num_plan]->idPlanPago, $planes[$num_plan]->dumpPlan);
 
             if($monto <= 0){
                 print_r($planes[$num_plan]->dumpPlan);
