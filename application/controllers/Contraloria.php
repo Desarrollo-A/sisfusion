@@ -3776,6 +3776,60 @@ class Contraloria extends CI_Controller {
     }*/
     }
 
+    // Vista Gestor Contraloría
+    public function gestorContraloria() {
+        $this->load->view('template/header');
+        $this->load->view('contraloria/gestorContraloriaView');
+    }
 
+    // Modelo Gestor Contraloría
+    public function getDatosTabla($tipoOperacion) {
+        if ($tipoOperacion == 1)
+            $datos = $this->Contraloria_model->getRegistrosRL();
+        else if ($tipoOperacion == 2)
+            $datos = $this->Contraloria_model->getRegistrosIntercambios();
+        if($datos != null) {
+            echo json_encode($datos);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    // Agregar registros a la tabla Gestor Contraloría
+    public function agregarRegistroGestorContraloria() {
+        $nombre = $this->input->post("nombre");
+        $id_opcion = $this->input->post("id_opcion");
+        $tipoTransaccion = $this->input->post("tipoTransaccion");
+        if ($tipoTransaccion == 0) {
+            $ultimoRegistro = $this->Contraloria_model->getUltimoRegistro();
+
+            $insetarDatos = array(
+                "id_opcion" => $ultimoRegistro->id_opcion + 1,
+                "id_catalogo" => 77,
+                "nombre" => $nombre,
+                "estatus" => 1,
+                "fecha_creacion" => date('Y-m-d H:i:s'),
+                "creado_por" => $this->session->userdata('id_usuario'),
+                "color" => NULL              
+            );
+            $respuesta = $this->General_model->addRecord('opcs_x_cats', $insetarDatos);
+        } else
+            $respuesta = $this->General_model->updateRecord('opcs_x_cats', array("estatus" => $tipoTransaccion == 1 ? 1 : 0), 'id_opcion', $id_opcion, 'AND id_catalogo = 77');
+        echo json_encode($respuesta);
+    }
     
+    public function cambiarEstatusLote() {
+        $idLote = $this->input->post("idLote");
+        $datosActualizar = array(
+            "idStatusLote" => 9,
+            "usuario" => $this->session->userdata('id_usuario')                    
+        );
+        $respuesta = $this->General_model->updateRecord('lotes', $datosActualizar, 'idLote', $idLote);
+        echo json_encode($respuesta);
+    }
+
+    public function getOpcionesPorCatalogo()
+    {
+        echo json_encode($this->Contraloria_model->getOpcionesPorCatalogo()->result_array());
+    }
+
 }

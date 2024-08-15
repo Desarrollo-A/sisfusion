@@ -1948,7 +1948,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         }
     }
 
-    public function validarMensualidad($idLote, $idCliente){
+    public function validarMensualidad($idLote, $idCliente) {
         $cmd = "SELECT * FROM mensualidad_cliente WHERE id_lote = $idLote AND id_cliente = $idCliente";
         $query= $this->db->query($cmd);
         return  $query->num_rows() > 0 ? TRUE : FALSE ; 
@@ -1975,6 +1975,42 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     public function deleteRamaComplementoPago($idDocumento) {
         $result = $this->db->query("DELETE FROM historial_documento WHERE idDocumento = $idDocumento AND tipo_doc = 55 AND status = 1");
         return $result;
+    }
+
+    // Consulta Gestor Contraloría
+    public function getRegistrosRL() {
+        $query = $this->db-> query("SELECT id_opcion, nombre, estatus, fecha_creacion FROM opcs_x_cats WHERE id_catalogo = 77");
+        return $query->result();
+    }
+    
+    public function getUltimoRegistro() {
+        return $this->db-> query("SELECT MAX(id_opcion) AS id_opcion FROM opcs_x_cats WHERE id_catalogo = 77")->row();
+    }
+
+    public function getRegistrosIntercambios() {
+        return $this->db-> query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') referencia,
+                lo.idStatusLote,
+                sl.nombre nombreEstatusLote,
+                sl.background_sl,
+                sl.color
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+            WHERE
+                lo.status = 1
+                AND lo.idStatusLote IN (6)")->result();
+    }
+
+    function getOpcionesPorCatalogo()  {
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (148) AND estatus = 1 ");
     }
     
 }
