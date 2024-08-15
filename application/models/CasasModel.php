@@ -181,8 +181,8 @@ class CasasModel extends CI_Model
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
             WHERE 
-                lo.idStatusLote = 2
-            AND (cl.esquemaCreditoCasas = 0 OR cl.esquemaCreditoCasas IS NULL)")->result();
+                lo.idStatusLote = 2            
+            AND (cl.pre_proceso_casas = 0 OR cl.pre_proceso_casas IS NULL)")->result();
     }
 
     public function getListaAsignacion(){
