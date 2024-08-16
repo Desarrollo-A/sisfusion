@@ -1,5 +1,7 @@
-let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  placeholder: 'Selecciona una opción' })
-let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona una opción' })
+/*let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  placeholder: 'Selecciona una opción' })
+let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona una opción' })*/
+let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  placeholder: 'Selecciona un proyecto' })
+let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona un condominio' })
 let arrayValores = []
 let arrayIdLotes = []
 
@@ -86,11 +88,11 @@ select_lote = function(data) {
     let form = new Form({
         title: 'Iniciar proceso', 
         text: `¿Deseas iniciar el proceso de asignación del lote <b>${data.nombreLote}</b>?`,
-        onSubmit: function(data){
+        onSubmit: function(dataForm){
             form.loading(true)
             let form2 = new FormConfirm({
                 title: '¿Estás seguro de iniciar el proceso de asignación?',
-                onSubmit: function(data){
+                onSubmit: function(){
                     $.ajax({
                         type: 'POST',
                         url: `${general_base_url}/casas/to_asignacion`,
@@ -109,10 +111,12 @@ select_lote = function(data) {
                             form2.loading(false)
                             arrayValores = [];
                             arrayIdLotes = [];
+                            form2.hide();
                         }
                     })
                 }
-            })
+            });
+            form2.show();
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
@@ -120,7 +124,7 @@ select_lote = function(data) {
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
             new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
-            new MultiSelectField({id: 'casa',label: 'Casa',data: propuestasCasas,placeholder: 'Selecciona una opción',width: '12',required: true}),
+            new MultiSelectField({ id: 'casa',label: 'Casa',data: propuestasCasas,placeholder: 'Selecciona una opción',width: '12',required: true}),
         ],
     })
 
@@ -266,7 +270,8 @@ $(document).on('click', '.btn-asignar', () => {
                     let btn = document.getElementsByClassName("btn-asignar")
                     btn[0].classList.add('hide');
                 },
-                error: function () {
+                error: function (response) {
+                    console.log("response: ", response);
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 
                     form.loading(false)
@@ -277,10 +282,12 @@ $(document).on('click', '.btn-asignar', () => {
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
             new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            new MultiSelectField({ id: 'casa', label: 'Casa', data:propuestasCasas, placeholder: 'Selecciona una opción', width: '12', required: true}),
         ],
     })
 
     form.show()
+    multipleSelect('casa');
  });
 
  function multipleSelect(idSelect) {

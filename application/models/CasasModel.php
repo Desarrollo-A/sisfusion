@@ -280,12 +280,27 @@ class CasasModel extends CI_Model
 
         $result = $this->db->query($query);
 
-        if($result){
-            $query = "SELECT TOP 1 * FROM proceso_casas ORDER BY idProcesoCasas DESC";
-            return $this->db->query($query)->row();
-        }else{
-            return null;
-        }
+     
+
+try {
+    if ($result) {
+        $query = "SELECT TOP 1 * FROM proceso_casas ORDER BY idProcesoCasas DESC";
+        $data = $this->db->query($query)->row();
+        return $data;
+    } else {
+        return null;
+    }
+} catch (Exception $err) {
+    echo "some error: " . $e->getMessage();
+}
+
+
+        // if($result){
+        //     $query = "SELECT TOP 1 * FROM proceso_casas ORDER BY idProcesoCasas DESC";
+        //     return $this->db->query($query)->row();
+        // }else{
+        //     return null;
+        // }
     }
 
     public function addLoteToAsignacionDirecto($idLote, $comentario, $idUsuario){
