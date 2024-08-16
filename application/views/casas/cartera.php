@@ -60,6 +60,18 @@ input[type="checkbox"]:checked::before {
 input[type="checkbox"]:checked::after {
  opacity: 100%;
 }
+.bootstrap-select .dropdown-menu {
+    max-height: 200px; 
+    overflow-y: auto;  
+    padding: 0;        
+}
+
+.bootstrap-select .dropdown-menu .inner {
+    max-height: none;  
+    overflow: hidden;  
+}
+
+
 </style>
 <body class="">
     <div class="wrapper">

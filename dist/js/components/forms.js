@@ -1379,3 +1379,93 @@ class FormConfirm {
         }
     }
 }
+
+class MultiSelectField {
+    constructor({ id, label, placeholder, data = [], value = [], width, required = false }) {
+        this.id = id;
+        this.required = required;
+        let options = [];
+        this.value = value;
+
+        for (let item of data) {
+            let option = $('<option>', {
+                value: item.value,
+                text: item.label
+            });
+            if (this.value.includes(item.value)) {
+                option.attr("selected", true);
+            }
+            options.push(option);
+        }
+
+        this.field = $('<div />')
+            .addClass(`col-lg-${width} col-md-12`)
+            .append(
+                $('<div />')
+                    .addClass('form-group select-is-empty overflow-hidden m-0 p-0')
+                    .append(
+                        $('<label />')
+                            .addClass('control-label m-1')
+                            .text(label)
+                    )
+                    .append(
+                        $('<select />')
+                            .addClass('selectpicker select-gral m-0')
+                            .attr('id', id)
+                            .attr('name', id)
+                            .attr('multiple', 'multiple')
+                            .data('style', 'btnSelect')
+                            .data('show-subtext', 'true')
+                            .data('live-search', 'true')
+                            .data('size', '7')
+                            .data('container', 'body')
+                            .attr('title', placeholder)
+                            .append(options)
+                            //.on('change', () => this.validate())
+                    )
+                    .append(
+                        $('<span />')
+                            .attr('id', `${id}_warning`)
+                            .addClass('text-danger h7 ml-1')
+                            .text('Debes escoger un elemento')
+                            .hide()
+                    )
+            );
+        this.value = () => {
+            return $(`#${this.id}`).val();
+        }
+        this.field.find('select').on('selected.bs.select', () => {
+            this.validate();
+        });
+        $(document).ready(() => this.initializeSelectPicker());
+        
+    }
+
+    initializeSelectPicker() {
+        $(`#${this.id}`).selectpicker('refresh');
+    }
+
+    validate() {
+        let pass = true;
+        if (this.required) {
+            let val = $(`#${this.id}`).val();
+            if (!val || val.length === 0) {
+                pass = false;
+            }
+            if (pass) {
+                $(`#${this.id}_warning`).hide();
+            } else {
+                $(`#${this.id}_warning`).show();
+            }
+        }
+        return pass;
+    }
+
+    get() {
+        return this.field;
+    }
+
+    load() { }
+}
+
+

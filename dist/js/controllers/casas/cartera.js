@@ -55,6 +55,7 @@ let filtros = new Filters({
 
 let gerentes = []
 let tipoEsquema = [];
+let propuestasCasas = [];
 tipoEsquema[0] = {label: "Crédito de banco", value: 1}; // credito de banco
 tipoEsquema[1] = {label: "Crédito directo", value: 2}; // credito directo
 
@@ -63,12 +64,23 @@ $.ajax({
     url: 'options_gerentes',
     async: false,
     success: function (response) {
-        gerentes = response
+        gerentes = response;
     },
     error: function () {
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
-})
+});
+
+$.post(`${general_base_url}General/getOpcionesPorCatalogo/154`, function(data) {
+    let rawData = JSON.parse(data);
+
+    propuestasCasas = rawData.map(item => ({
+        value: item.id_opcion,
+        label: item.nombre
+    }));
+});
+
+
 
 select_lote = function(data) {
     let form = new Form({
@@ -76,28 +88,29 @@ select_lote = function(data) {
         text: `¿Deseas iniciar el proceso de asignación del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true)
-
-            $.ajax({
-                type: 'POST',
-                url: `${general_base_url}casas/to_asignacion`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
-        
-                    table.reload();
-
-                    form.hide();
-                    arrayValores = []
-                    arrayIdLotes = []
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                    
-                    form.loading(false)
-                    arrayValores = []
-                    arrayIdLotes = []
+            let form2 = new FormConfirm({
+                title: '¿Estás seguro de iniciar el proceso de asignación?',
+                onSubmit: function(data){
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}/casas/to_asignacion`,
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        sucess: function (response) {
+                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
+                            table.reload();
+                            form2.hide(); 
+                            arrayValores = [];
+                            arrayIdLotes = [];
+                        },
+                        error: function () {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                            form2.loading(false)
+                            arrayValores = [];
+                            arrayIdLotes = [];
+                        }
+                    })
                 }
             })
         },
@@ -107,10 +120,12 @@ select_lote = function(data) {
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
             new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            new MultiSelectField({id: 'casa',label: 'Casa',data: propuestasCasas,placeholder: 'Selecciona una opción',width: '12',required: true}),
         ],
     })
 
-    form.show()
+    form.show();
+    multipleSelect('casa');
 }
 
 let buttons = [
@@ -159,7 +174,6 @@ let columns = [
     { data: 'cliente' },
     { data: function(data)
         {
-            console.log(data)
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
             return '<div class="d-flex justify-center">' + pass_button + '</div>'
         } 
@@ -268,3 +282,30 @@ $(document).on('click', '.btn-asignar', () => {
 
     form.show()
  });
+
+ function multipleSelect(idSelect) {
+    let selectElement = $(`#${idSelect}`);
+
+    selectElement.on('change', function(){
+        let selectedOptions = $(this).val();
+
+        if(selectedOptions.length > 2) {
+            $(this).val(selectedOptions.slice(0,2)).trigger('change');
+            return;
+        }
+
+        $(this).find('option').each(function() {
+            if (!$(this).prop('selected')) {
+                $(this).prop('disabled', selectedOptions.length >= 2);
+            }
+        });
+
+        $(this).find('option').each(function() {
+            if ($(this).prop('selected')) {
+                $(this).prop('disabled', false);
+            }
+        });
+
+        selectElement.selectpicker('refresh');
+    })
+ }
