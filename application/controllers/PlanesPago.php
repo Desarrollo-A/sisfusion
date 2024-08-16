@@ -234,7 +234,7 @@ class PlanesPago extends CI_Controller {
         foreach ($pagos as $num_pago =>$pago) {
             $saldo -= $pagos[$num_pago]->capital;
             
-            $pagos[$num_pago]->saldo = $saldo;
+            $pagos[$num_pago]->saldo = round($saldo, 2, PHP_ROUND_HALF_DOWN);
         }
 
         return $pagos;
@@ -273,8 +273,6 @@ class PlanesPago extends CI_Controller {
                 if($pago->saldoCapital > 0){
                     $pagos = $this->insertar_pago($pagos, $num_pago, $monto);
                 }
-
-                #$planes[$num_plan]->dumpPlan = json_encode($pagos);
             }
 
             if($data->capital){
@@ -284,15 +282,13 @@ class PlanesPago extends CI_Controller {
                     #print_r("Ingresar a capital: $monto" );
                     $pagos = $this->insertar_pago_a_capital($pagos, $num_pago, $monto);
 
-                    #$planes[$num_plan]->dumpPlan = json_encode($pagos);
-
                     $monto = 0;
                 }
             }
 
             #Guardar plan de pagos
             $planes[$num_plan]->dumpPlan = json_encode($this->recalcularSaldoPlan($planes[$num_plan]->monto, $pagos));
-            $this->PlanesPagoModel->savePlanPago($planes[$num_plan]->idPlanPago, $planes[$num_plan]->dumpPlan);
+            # $this->PlanesPagoModel->savePlanPago($planes[$num_plan]->idPlanPago, $planes[$num_plan]->dumpPlan);
 
             if($monto <= 0){
                 print_r($planes[$num_plan]->dumpPlan);
