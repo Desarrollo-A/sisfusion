@@ -28,21 +28,20 @@ filtro_proyectos.onChange(function(option){
         type: 'GET',
         url: `condominios?proyecto=${option.value}`,
         success: function (response) {
-
             filtro_condominios.setOptions(response)
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
-    })
-})
+    });
+});
 
 filtro_condominios.onChange(function(option){
     arrayValores = []
     arrayIdLotes = []
     arrayIdClientes = [];
     
-    let btn = document.getElementsByClassName("btn-asignar")
+    let btn = document.getElementsByClassName("btn-asignar");
     btn[0].classList.add('hide');
 
     table.setParams({condominio: option.value})
@@ -139,7 +138,6 @@ select_lote = function(data) {
     })
 
     form.show();
-    multipleSelect('casa');
 }
 
 let buttons = [
@@ -232,8 +230,6 @@ function verificarCheck(valorActual){
     else{
         botonEnviar[0].classList.add('hide');
     }
-
-    console.log(arrayIdLotes);
 }
 
 function buscarValor(valor, array) {
@@ -263,7 +259,7 @@ $(document).on('click', '.btn-asignar', () => {
         text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
-            data.append("idLotes", JSON.stringify(arrayIdLotes));
+            data.append("idClientes", JSON.stringify(arrayIdLotes));
             let form2 = new FormConfirm ({
                 title: '¿Estás seguro de iniciar el proceso de asignación?',
                 onSubmit: function(){

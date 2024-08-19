@@ -3989,8 +3989,7 @@ class Casas extends BaseController
 
     public function to_asignacion_varios() {
         $form = $this->form();
-        echo json_encode($_POST);
-        exit();
+        
         $idClientes = json_decode($this->form('idClientes'));
         $gerente = $this->form('gerente');
         $banderaSuccess = true;
@@ -4014,6 +4013,7 @@ class Casas extends BaseController
         }
 
         $update = $this->General_model->updateBatch('clientes', $dataUpdate, 'id_cliente');
+        //$this->CasasModel->addHistorial()
         if(!$update) {
             $banderaSuccess = false;
         }

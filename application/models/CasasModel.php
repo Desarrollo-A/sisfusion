@@ -227,8 +227,8 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
-            pc.proceso = 0
-            AND pc.status = 1
+            --pc.proceso = 0 AND 
+            pc.status = 1
             AND cli.id_gerente_c = $this->idUsuario
             AND cli.status = 1
         UNION ALL
@@ -264,10 +264,13 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 108 AND oxc.id_opcion = pcd.tipoMovimiento
         WHERE
-            pcd.proceso = 0
-            AND pcd.estatus = 1
+            --pcd.proceso = 0 AND 
+            
+            pcd.estatus = 1
             AND cli.id_gerente_c = $this->idUsuario
             AND cli.status = 1
+
+        
         ";
 
         return $this->db->query($query)->result();
