@@ -123,9 +123,8 @@ back_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Rechazar proceso', 
-        text: `¿Deseas rechazar el proceso del lote ${data.nombreLote}`,
-        onSubmit: function(data){
-            //console.log(data)
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>`,
+        onSubmit: function(data){        
             form.loading(true);
 
             $.ajax({

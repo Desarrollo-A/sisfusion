@@ -297,26 +297,21 @@ function file_upload(data) {
 rechazo_proceso = function (data) {
     let form = new Form({
         title: 'Rechazar proceso',
-        text: `¿Deseas rechazar el lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/rechazoPaso14`,
+                url: `${general_base_url}casas/creditoBancoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success : function(response){
-                    if(response.result){
-                        finalizar_rechazo(data, form)
-                    }
-                    else{
-                        alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "danger")
+                    alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "success")
         
-                        table.reload()
-                        form.hide() 
-                    }                                                
+                    table.reload()
+                    form.hide()                             
                 },
                 error: function(){
                     alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
@@ -328,9 +323,10 @@ rechazo_proceso = function (data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'tipo', value: tipo }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 13 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new HiddenField({ id: 'procesoNuevo', value: 8 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

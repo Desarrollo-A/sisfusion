@@ -3,7 +3,8 @@ let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio
 
 let arrayValores = []
 let arrayIdLotes = []
-let arrayIdClientes = [];
+let arrayIdClientes = []
+
 
 $.ajax({
     type: 'GET',
@@ -19,7 +20,8 @@ $.ajax({
 filtro_proyectos.onChange(function(option){
     arrayValores = []
     arrayIdLotes = []
-    arrayIdClientes = [];
+    arrayIdClientes = []
+
 
     let btn = document.getElementsByClassName("btn-asignar")
     btn[0].classList.add('hide');
@@ -39,7 +41,7 @@ filtro_proyectos.onChange(function(option){
 filtro_condominios.onChange(function(option){
     arrayValores = []
     arrayIdLotes = []
-    arrayIdClientes = [];
+    arrayIdClientes = []
     
     let btn = document.getElementsByClassName("btn-asignar");
     btn[0].classList.add('hide');
@@ -167,27 +169,59 @@ let buttons = [
 let columns = [
     { data: function (data)
         {
-            return `<div class="d-flex justify-center">
-                        <label class="cont">
-                            <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" name="lotesOrigen[]" value="${data.idLote}" required>
-                            <span></span>
-                        </label>
-                    </div>` 
+            if (data.idCliente != 0)
+                return `<div class="d-flex justify-center">
+                            <label class="cont">
+                                <input type="checkbox" onChange="verificarCheck(this)" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idCliente="${data.idCliente}" name="lotesOrigen[]" value="${data.idLote}" required>
+                                <span></span>
+                            </label>
+                        </div>` ;
+            else
+                return '';
         }        
     },
-    {
-        data: 'idLote'
-    },
+    { data: 'proyecto' },
+    { data: 'condominio' },
     { data: function(data)
         { return `${data.nombreLote}` } 
     },
-    { data: 'condominio' },
-    { data: 'proyecto' },
+    { data: 'idLote' },
+    { data: 'precioTotalLote' },
+    { data: 'sup' },
     { data: 'cliente' },
     { data: function(data)
         {
+            if (data.telefono1 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono1}` 
+        } 
+    },
+    { data: function(data)
+        {
+            if (data.telefono2 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono2}` 
+        } 
+    },
+    { data: function(data)
+        {
+            if (data.telefono3 == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.telefono3}` 
+        } 
+    },
+    { data: 'correo' },
+    { data: 'lugar_prospeccion' },
+    { data: function(data)
+        {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
-            return '<div class="d-flex justify-center">' + pass_button + '</div>'
+            if (data.idCliente != 0)
+                return '<div class="d-flex justify-center">' + pass_button + '</div>'
+            else
+                return '';
         } 
     },
 ]
@@ -256,7 +290,7 @@ $(document).on('click', '.btn-asignar', () => {
 
     let form = new Form({
         title: 'Iniciar proceso',
-        text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
+        text: `¿Deseas iniciar el proceso de asignación de los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
             data.append("idClientes", JSON.stringify(arrayIdLotes));
@@ -291,6 +325,7 @@ $(document).on('click', '.btn-asignar', () => {
         },
         fields: [
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
+            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
     form.show()

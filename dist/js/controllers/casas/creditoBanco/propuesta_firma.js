@@ -1,6 +1,12 @@
+let nuevo_proceso = 9
+
 pass_to_propuestas = function(data) {
+    if(data.procesoNuevo < data.procesoAnterior){
+        nuevo_proceso = data.procesoAnterior;
+    }
+
     let form = new Form({
-        title: 'Continuar proceso', 
+        title: 'Avanzar proceso', 
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
@@ -29,12 +35,54 @@ pass_to_propuestas = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'idRol', value: idRol }),
+            new HiddenField({ id: 'nuevo_proceso', value: nuevo_proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show()
+}
 
+rechazar_proceso = function(data) {
+    let form = new Form({
+        title: 'Rechazar proceso', 
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idRol', value: idRol }),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 4}),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
 }
 
 function updateItemsNot() {
@@ -352,7 +400,7 @@ function show_preview(data) {
     });
 }
 
-back_to_documentos = function(data) {
+rechazaroProceso = function(data) {
     let form = new Form({
         title: 'Rechazar proceso', 
         text: `¿Deseas realizar el rechazar de proceso del lote ${data.nombreLote}`,
@@ -484,7 +532,7 @@ let columns = [
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_propuestas, data})
         }
 
-        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_documentos, data})
+        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazar_proceso, data})
 
         return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${upload_cotizacion}${propuestas_button}${notarias}${back_button}</div>`
     } },
