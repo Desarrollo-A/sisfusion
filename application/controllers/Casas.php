@@ -991,7 +991,8 @@ class Casas extends BaseController
 
         $id = $this->form('id');
         $comentario = $this->form('comentario');
-        $rol = $this->form('rol') ? $this->form('rol') : 0;
+        $rol = $this->idRol;
+        // $rol = $this->form('rol') ? $this->form('rol') : 0;
         // $doc = $this->form('documentos');
 
         if (!isset($id)) {
@@ -1010,21 +1011,21 @@ class Casas extends BaseController
         }
 
         switch ($rol) {
-            case "99":
+            case 99:
                 $newVobos = [
                     "ooam"  => 1,
                     "modificadoPor" => $this->session->userdata('id_usuario'),
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                 ];
                 break;
-            case "11":
+            case 11:
                 $newVobos = [
                     "adm"  => 1,
                     "modificadoPor" => $this->session->userdata('id_usuario'),
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                 ];
                 break;
-            case "33":
+            case 33:
                 $newVobos = [
                     "adm"  => 1,
                     "modificadoPor" => $this->session->userdata('id_usuario'),

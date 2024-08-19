@@ -267,8 +267,6 @@ pass_to_proyecto_ejecutivo = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'rol', value: idRol }),
-            new HiddenField({ id: 'documentos', value: data.documentos }),
         ],
     })
 
@@ -399,6 +397,5 @@ if(idRol === 11 || idRol === 33){
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_adeudos`,
-    params: { tipoDoc: tipoDoc, rol: idRol},
     columns,
 })
