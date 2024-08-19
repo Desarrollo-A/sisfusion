@@ -768,15 +768,15 @@ class Casas extends BaseController
 
         $is_ok = $this->CasasModel->setTipoCredito($id, $tipo, $notaria);
 
-        $vobo = $this->CasasModel->getVobos($id, 1);
+        // $vobo = $this->CasasModel->getVobos($id, 1);
 
-        if (!$vobo) {
-            $insertVobo = $this->CasasModel->insertVobo($proceso->idProcesoCasas, 1);
+        // if (!$vobo) {
+        $insertVobo = $this->CasasModel->insertVobo($proceso->idProcesoCasas, 2);
 
-            if (!$insertVobo) {
-                http_response_code(404);
-            }
-        }
+        // if (!$insertVobo) {
+        //     http_response_code(404);
+        // }
+        // }
 
         $movimiento = 0;
         if ($proceso->tipoMovimiento == 1) {
@@ -786,7 +786,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 26, 27]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
@@ -953,9 +953,22 @@ class Casas extends BaseController
 
     public function lista_documentos_cliente($proceso)
     {
-        $lotes = $this->CasasModel->getListaDocumentosCliente($proceso);
+        $documentos = [];
 
-        $this->json($lotes);
+        switch ($this->idRol) {
+            case '62':
+                $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [13, 14, 15]);
+                break;
+            case '99':
+                $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [26, 27]);
+                break;
+        }
+
+        if($this->idUsuario == 5107){
+            $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [11]);
+        }
+
+        $this->json($documentos);
     }
 
     public function lista_proyecto_ejecutivo_documentos()
@@ -979,7 +992,7 @@ class Casas extends BaseController
         $id = $this->form('id');
         $comentario = $this->form('comentario');
         $rol = $this->form('rol') ? $this->form('rol') : 0;
-        $doc = $this->form('documentos');
+        // $doc = $this->form('documentos');
 
         if (!isset($id)) {
             http_response_code(400);
@@ -996,10 +1009,65 @@ class Casas extends BaseController
             }
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 1);
+        switch ($rol) {
+            case "99":
+                $newVobos = [
+                    "ooam"  => 1,
+                    "modificadoPor" => $this->session->userdata('id_usuario'),
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
+                break;
+            case "11":
+                $newVobos = [
+                    "adm"  => 1,
+                    "modificadoPor" => $this->session->userdata('id_usuario'),
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
+                break;
+            case "33":
+                $newVobos = [
+                    "adm"  => 1,
+                    "modificadoPor" => $this->session->userdata('id_usuario'),
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
+                break;
+            default:
+                $newVobos = [
+                    "proyectos" => 1,
+                    "modificadoPor" => $this->session->userdata('id_usuario'),
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
+                break;
+        }
+
+        $vobo = $this->CasasModel->updateVobos($id, 2, $newVobos);
+
+        // $vobo = $this->CasasModel->getVobos($id, 2);
 
         $proceso = $this->CasasModel->getProceso($id);
 
+        $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, $comentario, 1);
+        
+        if($vobo->adm == 1 && $vobo->ooam == 1){
+            $new_status = 4;
+
+            $movimiento = 0;
+            if ($proceso->tipoMovimiento == 1) {
+                $movimiento = 2;
+            }
+
+            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
+
+            if ($is_ok) {
+                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
+
+                $this->json([]);
+            } else {
+                http_response_code(404);
+            }
+        }
+
+        /*
         if ($doc == 3 && $vobo->adm == 1 && $vobo->ooam == 1) {
 
             $updateData = array(
@@ -1137,6 +1205,7 @@ class Casas extends BaseController
                 http_response_code(404);
             }
         }
+        */
     }
 
     public function lista_valida_comite()

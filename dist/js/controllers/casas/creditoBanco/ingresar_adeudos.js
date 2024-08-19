@@ -275,6 +275,10 @@ pass_to_proyecto_ejecutivo = function(data) {
     form.show()
 }
 
+go_to_documentos = function(data) {
+    window.location.href = `documentacion/${data.idProcesoCasas}`;
+}
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -284,13 +288,10 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        if(idRol === 99 && data.adeudoOOAM){
+        if(idRol === 99 && data.adeudoOOAM != null){
             return formatter.format(data.adeudoOOAM)
         }
-        else if(idRol === 33 && data.adeudoADM){
-            return formatter.format(data.adeudoADM)
-        }
-        else if(idRol === 11 && data.adeudoADM){
+        else if((idRol === 33 || idRol === 11) && data.adeudoADM != null){
             return formatter.format(data.adeudoADM)
         }
         return 'Sin ingresar'
@@ -324,42 +325,42 @@ let columns = [
     { data: function(data){
         let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
 
-        let upload_button = '';
+        let upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
 
         let nameFile = '';
 
         let view_button = '';
 
-        switch (idRol) {
-            case 99:
-                nameFile = 'Estado de cuenta'
-                break;
-            case 33:
-                nameFile = 'Formas de pago administración'
-                break;
-            case 11:
-                nameFile = 'Formas de pago administración'
-                break;
-        }
+        // switch (idRol) {
+        //     case 99:
+        //         nameFile = 'Estado de cuenta'
+        //         break;
+        //     case 33:
+        //         nameFile = 'Formas de pago administración'
+        //         break;
+        //     case 11:
+        //         nameFile = 'Formas de pago administración'
+        //         break;
+        // }
 
-        if (data.archivo) {
-            let parts = data.archivo.split('.');
-            let extension = parts.pop();
-            if(extension == 'xlsx'){
-                view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
-            }else{
-                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${nameFile}`, onClick: show_preview, data})
-            }
-            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
-        }else{
-            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
-        }
+        // if (data.archivo) {
+        //     let parts = data.archivo.split('.');
+        //     let extension = parts.pop();
+        //     if(extension == 'xlsx'){
+        //         view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
+        //     }else{
+        //         view_button = new RowButton({icon: 'visibility', label: `Visualizar ${nameFile}`, onClick: show_preview, data})
+        //     }
+        //     upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
+        // }else{
+        //     upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
+        // }
 
         let pass_button = ''
 
-        if(idRol === 99 && data.adeudoOOAM ){
+        if(idRol === 99 && data.adeudoOOAM != null ){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-        }else if((idRol === 11 || idRol === 33) && data.adeudoADM){
+        }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
         }
 

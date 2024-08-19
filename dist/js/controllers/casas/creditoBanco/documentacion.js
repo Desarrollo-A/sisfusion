@@ -59,7 +59,8 @@ function show_upload(data) {
 }
 
 backPage = function() {
-    window.location.href = `${general_base_url}casas/adeudos`
+    // window.location.href = `${general_base_url}casas/adeudos`
+    history.back();
 }
 
 let buttons = [
