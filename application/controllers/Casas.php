@@ -4000,7 +4000,7 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
-        if (!isset($idLote) !isset($gerente))  {
+        if (!isset($idLote) || !isset($gerente))  {
             $banderaSuccess = false;
         }
 
