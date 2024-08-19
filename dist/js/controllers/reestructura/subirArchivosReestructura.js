@@ -62,19 +62,19 @@ $(document).on('click', '.btn-abrir-modal', function () {
     contenedorTitulo.text(nombreLote);
     let flagEditar = $(this).attr("data-editar");
 
-    if(flagFusion == 1){
-        if (flagEditar == 1) {
-            $("#archivosFusionEditar").modal();
-        }
-        else{
-            $("#archivosReestructuraFusion").modal();
-        }
-    }
-    else{
-        $("#archivosReestructura").modal();
-    }
+    // if(flagFusion == 1){
+    //     if (flagEditar == 1) {
+    //         // $("#archivosFusionEditar").modal(); // regresar en caso de que se necesiten las opciones de fusión
+    //     }
+    //     else{
+    //         // $("#archivosReestructuraFusion").modal(); // regresar en caso de que se necesiten las opciones de fusión
+    //     }
+    // }
+    // else{
+    //     $("#archivosReestructura").modal();
+    // }
 
-
+    $("#archivosReestructura").modal();
     var formData = new FormData();
     formData.append("idLote", idLote);
     formData.append("flagFusion", banderaFusion);
@@ -188,7 +188,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         nombreLotes.push(nombreLote);
     }
     
-        if (flagFusion == 1) {
+        // if (flagFusion == 1) {
+        if(1==2){
             renderizar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles);
         }
         else {
@@ -226,7 +227,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             });
         }
 
-        if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+        // if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
             //se esta subiendo contrato se debe pedir uno adicional
             //cambiar el último número de la siguiente línea por datos[0]['tipo_proceso']
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
@@ -250,10 +251,10 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 '                        </div>';
             });
 
-            if(flagFusion == 1){
-                renderizarOrigen(nuevosDatosOrigen);
-            }            
-        }
+        //     if(flagFusion == 1){
+        //         renderizarOrigen(nuevosDatosOrigen);
+        //     }            
+        // }
     }
     else if (flagEditar == 1) {
         editarFile = 1;
@@ -270,10 +271,10 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             nombreLotes.push(nombreLote);
         }
         let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
-        if(flagFusion == 1){
-            renderizarEditar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles, hideButton, flagProceso, flagProcesoJuridico, id_rol_general); // para renderizar el editar sobre las fusiones
-        }
-        else{
+        // if(flagFusion == 1){
+        //     renderizarEditar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles, hideButton, flagProceso, flagProcesoJuridico, id_rol_general); // para renderizar el editar sobre las fusiones
+        // }
+        // else{
             nuevosDatosDestino.map((elemento, index) => {
                 arrayKeysArchivos.push(elemento);
                 id_pxls.push(elemento.id_pxl);
@@ -310,7 +311,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                     '                           </div>' +
                     '                        </div>';
             });
-        }
+        // }
         
         if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
             //se esta subiendo contrato se debe pedir uno adicional
@@ -1093,7 +1094,7 @@ $(document).on("click", "#sendRequestButtonFusion", function (e) { // este es un
             else{
                 archivoRe = archivoRe.files[0];
     
-                data.append(`${idpxl}[idpxl]`, idpxl);
+                data.append(`${idpxl}[idpxl]`, idpxlRe);
                 data.append(`${idpxl}[tipo]`, "1"); // tipo 1 resicion en el back 
             }
         }
