@@ -3,6 +3,7 @@ let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio
 
 let arrayValores = []
 let arrayIdLotes = []
+let arrayIdClientes = [];
 
 $.ajax({
     type: 'GET',
@@ -18,6 +19,7 @@ $.ajax({
 filtro_proyectos.onChange(function(option){
     arrayValores = []
     arrayIdLotes = []
+    arrayIdClientes = [];
 
     let btn = document.getElementsByClassName("btn-asignar")
     btn[0].classList.add('hide');
@@ -38,6 +40,7 @@ filtro_proyectos.onChange(function(option){
 filtro_condominios.onChange(function(option){
     arrayValores = []
     arrayIdLotes = []
+    arrayIdClientes = [];
     
     let btn = document.getElementsByClassName("btn-asignar")
     btn[0].classList.add('hide');
@@ -198,19 +201,18 @@ let table = new Table({
     columns,
 })
 
+
 function verificarCheck(valorActual){
-    const tr = $(valorActual).closest('tr');
-    const row = $('#tablaAsignacionCartera').DataTable().row(tr);
     let botonEnviar = document.getElementsByClassName('botonEnviar');
     let arrayInterno = [];
     let arrayId = [];
 
     if (valorActual.checked){
-        arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
-        arrayInterno.push($(valorActual).attr('data-idLote'));//[0]
-        
-        arrayId.push($(valorActual).attr('data-idLote'));//[1]
-        
+        arrayInterno.push($(valorActual).attr('data-nombreLote'));
+        arrayInterno.push($(valorActual).attr('data-idLote'));
+
+        arrayId.push($(valorActual).attr('data-idCliente'));
+
         arrayValores.push(arrayInterno);
         arrayIdLotes.push(arrayId);
     }
@@ -222,23 +224,16 @@ function verificarCheck(valorActual){
         arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
     }
 
-    /*if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
+    if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
         //se seleccionó más de uno, se habilita el botón para hacer el multiple
         botonEnviar[0].classList.remove('hide');
         $('#btn_'+$(valorActual).val()).prop("disabled", true);        
     }
     else{
         botonEnviar[0].classList.add('hide');
-        }
-    */
-    if (arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))) {
-        //se seleccionó más de uno, se habilita el botón para hacer el multiple
-        botonEnviar[0].classList.remove('hide');
-        $('#tablaAsignacionCartera tbody').find('button').hide();
-    } else {
-        botonEnviar[0].classList.add('hide');
-        $('#tablaAsignacionCartera tbody').find('button').show();
     }
+
+    console.log(arrayIdLotes);
 }
 
 function buscarValor(valor, array) {
@@ -268,41 +263,41 @@ $(document).on('click', '.btn-asignar', () => {
         text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
-            data.append("idLotes", JSON.stringify(arrayIdLotes))
-            $.ajax({
-                type: 'POST',
-                url: `${general_base_url}casas/to_asignacion_varios`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Se han asignado los lotes correctamente", "success");
-        
-                    table.reload();
-                    form.hide();
-                    arrayValores = []
-                    arrayIdLotes = []
-                    let btn = document.getElementsByClassName("btn-asignar")
-                    btn[0].classList.add('hide');
-                },
-                error: function (response) {
-                    console.log("response: ", response);
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
+            data.append("idLotes", JSON.stringify(arrayIdLotes));
+            let form2 = new FormConfirm ({
+                title: '¿Estás seguro de iniciar el proceso de asignación?',
+                onSubmit: function(){
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}casas/to_asignacion_varios`,
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            alerts.showNotification("top", "right", "Se han asignado los lotes correctamente", "success");
+                            form2.hide();
+                            form.hide();
+                            arrayValores = [];
+                            arrayIdLotes = [];
+                            arrayIdClientes = [];
+                            let btn = document.getElementsByClassName("btn-asignar");
+                            btn[0].classList.add('hide');
+                        },
+                        error: function (response) {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                            form.loading(false);
+                        }
+                    })
                 }
-            })
+            });
+            form2.show();
+            form.loading(false);
         },
         fields: [
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            //new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
-            //new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
-            //new MultiSelectField({ id: 'casa', label: 'Casa', data:propuestasCasas, placeholder: 'Selecciona una opción', width: '12', required: true}),
         ],
     })
-
     form.show()
-    multipleSelect('casa');
  });
 
  function multipleSelect(idSelect) {

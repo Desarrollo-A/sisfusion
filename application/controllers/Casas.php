@@ -3987,32 +3987,47 @@ class Casas extends BaseController
         $this->output->set_output(json_encode($response));
     }
 
-    public function to_asignacion_varios()
-    {
+    public function to_asignacion_varios() {
         $form = $this->form();
-        $idLote = $this->form('idLote');
+        echo json_encode($_POST);
+        exit();
+        $idClientes = json_decode($this->form('idClientes'));
         $gerente = $this->form('gerente');
-        $idUsuario = $this->session->userdata('id_usuario');
-        $idLotes = json_decode($this->form('idLotes'));
+        $banderaSuccess = true;
 
-        $dataHistorial = array();
         $dataUpdate = array();
 
         $this->db->trans_begin();
 
-        if (!isset($idLote) || !isset($gerente))  {
+        if(!isset($idClientes) || !isset($gerente)) {
             $banderaSuccess = false;
         }
 
-        foreach($idLotes as $id) {
-            foreach($id as $idValue) {
+        foreach ($idClientes as $id) {
+            foreach ($id as $idValue) {
                 $dataUpdate[] = array(
-                    "idLote" => $idValue
+                    "id_cliente" => $idValue,
+                    "id_gerente_c" => $gerente,
+                    "id_subdirector_c" => $this->session->userdata('id_usuario')
                 );
             }
         }
 
-        $insert = $this->General_model->insertBatch("historial_proceso_casas", $dataPropuesta);
+        $update = $this->General_model->updateBatch('clientes', $dataUpdate, 'id_cliente');
+        if(!$update) {
+            $banderaSuccess = false;
+        }
+
+        if($banderaSuccess) {
+            $this->db->trans_commit();
+            $response["result"]= true;
+        } else {
+            $this->db->trans_commit();
+            $response["result"] = true;
+        }
+
+        $this->output->set_content_type("application/json");
+        $this->output->set_output(json_encode($response));
     }
 
     public function to_asignacion_asesor()
