@@ -3547,9 +3547,6 @@
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
 					$id_lider = $id_lider . ', 12688';
 					$sede = "";
-				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
-					$id_lider = $id_lider . ', 13016, 12027';
-					$sede = "";
 				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
 					$id_lider = $id_lider . ', 13059, 11680';
 					$sede = "";

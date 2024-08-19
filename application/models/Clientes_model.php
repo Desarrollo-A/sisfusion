@@ -516,8 +516,6 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 80, 664, 16458, 2599)";
             else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
                 $where = "pr.id_gerente IN ($id_lider, 12688)";
-            else if ($id_usuario == 15761) // JACQUELINE GARCIA SOTELLO
-                $where = "pr.id_gerente IN ($id_lider, 13016)";
             else if ($id_usuario == 15545) // PAMELA IVONNE LEE MORENO
                 $where = "pr.id_gerente IN ($id_lider, 13059, 11680)";
             else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
