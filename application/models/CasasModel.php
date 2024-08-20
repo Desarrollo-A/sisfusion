@@ -472,7 +472,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
-    public function getListaConcentradoAdeudos($tipoDoc, $rol){
+    public function getListaConcentradoAdeudos($rol){
         if($rol == 99){
 			$vobo  = "AND vb.ooam = 0";
 		}else if($rol == 11 || $rol == 33){
@@ -501,10 +501,7 @@ class CasasModel extends CI_Model
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc.nombre AS movimiento,
-		doc.archivo,
-        doc.documento,
-        doc.idDocumento,
-        doc2.documentos
+        doc.documentos
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -513,9 +510,9 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-		LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = $tipoDoc AND doc.proveedor = 0
+		
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         WHERE pc.proceso IN (2, 3) AND pc.status = 1 AND cli.status = 1 $vobo";
 
         return $this->db->query($query)->result();
@@ -2108,5 +2105,43 @@ class CasasModel extends CI_Model
         $insert_id = $this->db->insert_id();
      
         return $insert_id;
-     }
+    }
+
+    public function setTipoProveedor($idProcesoCasas, $tipoProveedor){
+        return $this->db->query("UPDATE proceso_casas_banco 
+            SET tipoProveedor=$tipoProveedor
+            WHERE idProcesoCasas=$idProcesoCasas");
+    }
+
+    public function insertDocumentosProveedor($idProcesoCasas, $tipoProveedor){
+        $id_catalogo = 157;
+        if($tipoProveedor == 2){
+            $id_catalogo = 158;
+        }
+
+        // Eliminamos los documentos anteriores
+        $this->db->query("DELETE FROM documentos_proceso_casas WHERE idProcesoCasas=$idProcesoCasas AND proveedor = 1");
+
+        // Obtenemos los nuevos documentos
+        $documentos = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus = 1")->result();
+
+        // Agregamos los nuevos documentos
+        foreach ($documentos as $key => $documento) {
+            $this->db->query("INSERT INTO documentos_proceso_casas (
+                idProcesoCasas,
+                documento,
+                tipo,
+                proveedor,
+                idCreacion,
+                fechaCreacion
+            ) VALUES (
+                $idProcesoCasas,
+                '$documento->nombre',
+                $documento->id_opcion,
+                1,
+                $this->idUsuario,
+                GETDATE()
+            )");
+        }
+    }
 }

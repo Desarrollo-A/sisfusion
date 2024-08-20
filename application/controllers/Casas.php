@@ -813,10 +813,9 @@ class Casas extends BaseController
     public function lista_adeudos()
     {
         $data = $this->input->get();
-        $tipoDoc = $data["tipoDoc"];
-        $rol = $data["rol"];
+        $rol = $this->idRol;
 
-        $lotes = $this->CasasModel->getListaConcentradoAdeudos($tipoDoc, $rol);
+        $lotes = $this->CasasModel->getListaConcentradoAdeudos($rol);
 
         $this->json($lotes);
     }
@@ -989,14 +988,17 @@ class Casas extends BaseController
     {
         $this->form();
 
+        $rol = $this->idRol;
         $id = $this->form('id');
         $comentario = $this->form('comentario');
-        $rol = $this->idRol;
-        // $rol = $this->form('rol') ? $this->form('rol') : 0;
-        // $doc = $this->form('documentos');
+        $tipo_proveedor = $this->form('tipo_proveedor');
 
         if (!isset($id)) {
             http_response_code(400);
+        }
+
+        if($rol == 33){
+            $this->CasasModel->setTipoProveedor($id, $tipo_proveedor);
         }
 
         $documentos = $this->CasasModel->getDocumentos([16]);
@@ -1060,6 +1062,9 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
             if ($is_ok) {
+                // Agregar documentos de proveedor
+                $this->CasasModel->insertDocumentosProveedor($proceso->idProcesoCasas, $proceso->tipoProveedor);
+
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
                 $this->json([]);
