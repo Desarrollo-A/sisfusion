@@ -24,12 +24,12 @@ class Anticipos_model extends CI_Model {
         $data = $this->db->query("SELECT fa.nombre_archivo AS factura,
         oxc.nombre AS esquema, se.nombre AS sede, us.forma_pago,  oxcPago.nombre AS formaNombre,
         opcE.id_opcion as clave_empresa , opcE.nombre as nombre_empresa,
-
+        se.id_sede AS idsede,
 		oxcPago.nombre AS formaNombre,
         fa.nombre_archivo AS factura_nombre,
         ant.evidencia, ant.impuesto, ant.id_anticipo, ant.monto, ant.id_usuario, ant.estatus, 
         UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS nombreUsuario, 
-        
+        opcRol.nombre as puesto,
         ant.proceso, ant.comentario, 
         CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END AS prioridad_nombre, $filtroMonto as montoParcial,
         pra.monto_parcialidad as montoParcial1 ,
@@ -43,6 +43,7 @@ class Anticipos_model extends CI_Model {
         LEFT JOIN opcs_x_cats oxcPago ON oxcPago.id_opcion = us.forma_pago AND oxcPago.id_catalogo = 16 
         LEFT JOIN empresa_anticipo ea ON ea.id_anticipo = ant.id_anticipo 
 		LEFT JOIN opcs_x_cats opcE ON opcE.id_catalogo = 61 and opcE.estatus = 1 AND  ea.empresa = opcE.id_opcion 
+        LEFT JOIN opcs_x_cats opcRol ON opcRol.id_catalogo = 1 and us.id_rol = opcRol.id_opcion 
         LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo 
                 AND pra.monto_parcialidad IS NOT NULL
         WHERE ant.estatus = 2
