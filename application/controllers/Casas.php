@@ -3313,7 +3313,7 @@ class Casas extends BaseController
 
         if ($procesoNuevo == 3) { //para el rechazo al paso 3
 
-            $vobo = $this->CasasModel->getVobos($idProceso, 1);
+            $vobo = $this->CasasModel->getVobos($idProceso, 2);
 
             $updateData = array(
                 "adm"  => 1,

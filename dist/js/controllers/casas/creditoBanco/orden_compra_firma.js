@@ -40,7 +40,7 @@ let columns = [
         let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de proveedor', onClick: go_to_documentos, data});
         let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de cliente', onClick: go_to_documentos_cliente, data});
         
-        if(data.documentos == 20){
+        if(data.documentos == 9){
             btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
         }
 
@@ -70,7 +70,7 @@ let table = new Table({
     id: '#tableDoct',
     // url: 'casas/getLotesProcesoBanco',
     url: 'casas/countDocumentos',
-    params: { documentos: [ 2,4,5,6,7,8,10,11,12,36,38,39,40,41,42,43,44,45,46,47 ], proceso: 4 },
+    params: { documentos: [ 2,4,5,6,7,8,10,11,12 ], proceso: 4 },
     buttons: buttons,
     columns,
 })
