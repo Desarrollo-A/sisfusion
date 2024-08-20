@@ -175,15 +175,21 @@ $("#tabla_plaza_1_casas").ready( function(){
         },{
             "orderable": false,
             "data": function( data ){
-                var BtnStats = '';
-                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_bono}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_Bono" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
+                let btns = '';
 
-                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_bono}" data-value="${data.id_pago_bono}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
+                const BTN_DETASI = `<button href="#" value="${data.id_pago_bono}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_Bono" data-toggle="tooltip"  title="Detalles"><i class="fas fa-info"></i></button>`;
+                const BTN_PAUASI = `<button href="#" value="${data.id_pago_bono}" data-value="${data.id_pago_bono}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" data-toggle="tooltip" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
+                const BTN_ACTASI = `<button href="#" value="${data.id_pago_bono}" data-value="${data.id_pago_bono}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" data-toggle="tooltip" title="Activar solicitud"><i class="fas fa-play"></i></button>`
 
-                BtnStats += BTN_HISTORIAL;
-                BtnStats += BTN_PAUSAR;
-
-                return `<div class="d-flex justify-center">${BtnStats}</div>`;
+                if(data.estatus == 4){
+                    btns += BTN_DETASI;
+                    btns += BTN_PAUASI;
+                }
+                else{
+                    btns += BTN_DETASI;
+                    btns += BTN_ACTASI;
+                }
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
         columnDefs: [{
@@ -234,48 +240,40 @@ $("#tabla_plaza_1_casas").ready( function(){
         var tr = $(this).closest('tr');
         var row = plaza_1.row( tr );
         id_pago_bono = $(this).val();
+
         $("#modalPausarBono .modal-body").html("");
-        $("#modalPausarBono .modal-body").append(
-            '<div class="row">'+
-                '<div class="col-lg-12">'+
-                    '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para: </b>'+
-                        '<i>'+row.data().colaborador+'</i>?'+
-                    '</p>'+
-                '</div>'+
-            '</div>'+
-            '<div class="row">'+
-                '<div class="col-lg-12">'+
-                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe el motivo por el cual se pausara la solicitud"></input>'+
-                '</div>'+
-            '</div>'+
-            '<input type="hidden" name="id_pago" value="'+row.data().id_pago_bono+'">'+
-            '<div class="row">'+
-                '<div class="d-flex justify-end">'+
-                    '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>'+
-                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar">PAUSAR</button>'+
-                '</div>'+
-            '</div>'
-        );
-        const buttonPausar = document.getElementById('btnPausar');
-        buttonPausar.addEventListener('click', function handleClick() {
-            $("#myText_nuevas_casas").html(formatMoney(0));
-        });
+        $("#modalPausarBono .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para<b>: </b> <i>'+row.data().colaborador+'</i>?</p></div></div>');
+        $("#modalPausarBono .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="6"><input type="text" class="text-modal observaciones" name="observaciones" rows="3" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modalPausarBono .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_bono+'">');
+        $("#modalPausarBono .modal-body").append(`<div class="row"><div class="col-md-6"></div><div class="d-flex justify-end"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button></div></div>`);
+        $("#modalPausarBono").modal();
+    });
+
+    $("#tabla_plaza_1_casas tbody").on("click", ".regresar_estatus", function(){
+        var tr = $(this).closest('tr');
+        var row = plaza_1.row( tr );
+        id_pago_bono = $(this).val();
+
+        $("#modalPausarBono .modal-body").html("");
+        $("#modalPausarBono .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de activar la comisión de <b>'+row.data().lote+'</b> para<b>: </b> <i>'+row.data().colaborador+'</i>?</p></div></div>');
+        $("#modalPausarBono .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="2"><input type="hidden" name="estatus" value="4"><input type="text" class="text-modal observaciones"  rows="3" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modalPausarBono .modal-body").append(`<div class="d-flex justify-end"><input type="hidden" name="id_pago" value="'+row.data().id_pago_bono+'"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="ACTIVAR">ACTIVAR</button></div>`);        
         $("#modalPausarBono").modal();
     });
 
 });
 
 
+
 $("#formPausarBono").submit( function(e) {
     e.preventDefault();
 }).validate({
-    
     submitHandler: function( form ) {
         $('#spiner-loader').removeClass('hide');
-        var data = new FormData( $(form)[0] );
+        var data = new FormData($(form)[0]);
         data.append("id_pago_bono", id_pago_bono);
         $.ajax({
-            url: general_base_url + "Pagos_casas/pausar_solicitud_Bono/",
+            url: general_base_url + "Pagos_casas/despausar_solicitud_Bono_casas",
             data: data,
             cache: false,
             contentType: false,
@@ -286,25 +284,27 @@ $("#formPausarBono").submit( function(e) {
             success: function(data){
                 if( data[0] ){
                     $("#modalPausarBono").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                    alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
                         plaza_1.ajax.reload();
                         $('#spiner-loader').addClass('hide');
-                    }, 3000);
 
+                    }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                     $('#spiner-loader').addClass('hide');
 
                 }
             },error: function( ){
-                alert("ERROR EN EL SISTEMA");
                 $('#spiner-loader').addClass('hide');
+
+                alert("ERROR EN EL SISTEMA");
 
             }
         });
     }
 });
+
 
 function cleanComments_casas() {
     var myCommentsList = document.getElementById('comments-list_casas');

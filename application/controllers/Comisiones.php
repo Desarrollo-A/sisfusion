@@ -184,6 +184,18 @@ class Comisiones extends CI_Controller
     }
   }
 
+  public function Bono_colaborador(){
+    $datos = array();
+    $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+    $this->load->view('template/header');
+    $this->load->view("casas_comisiones/solicitudes_bono_casas_view", $datos);
+
+
+  }
+
+
+
+
   public function solicitudRigel(){
     $this->load->view('template/header');
     $this->load->view("casas_comisiones/casas_colaboradorRigel_view");

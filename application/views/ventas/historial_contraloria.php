@@ -17,6 +17,41 @@
             </div>
         </div>
 
+        <div class="modal fade observar_bonos" id="observar_bonos" style="overflow:auto !important;" role="dialog" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <h3 class="card-title text-center"><b>Bonos</b></h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="material-datatables">
+                                <table class="table-striped table-hover" id="tabla_bono" name="tabla_bono">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>PROYECTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>LOTE</th>
+                                            <th>PRECIO DEL LOTE</th>
+                                            <th>TOTAL DE LA COMISIÓN</th>
+                                            <th>DISPERSADO</th>
+                                            <th>USUARIO</th>
+                                            <th>PUESTO</th>
+                                            <th>ESTATUS</th>
+                                            <!-- <th>ACCIONES</th> -->
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>    
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div> 
+        </div>
+
         <div class="modal fade modal-alertas" id="modal_informacion" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
