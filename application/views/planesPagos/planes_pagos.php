@@ -37,6 +37,7 @@
     <?php include 'Modales/confirmarEnvioPlanModal.php' ?>
     <?php include 'Modales/confirmarEnvioPlanModal2.php' ?>
     <?php include 'Modales/avisoModal.php' ?>
+    <?php include 'Modales/confirmarCancelaPlan.php' ?>
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">

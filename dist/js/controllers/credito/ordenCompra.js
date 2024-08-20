@@ -10,48 +10,7 @@ $('#tableOrdenCompra thead tr:eq(0) th').each(function (i) {
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
-
-function show_upload(data) {
-    /* // console.log(data)
-
-    let form = new Form({
-        title: 'Subir carta de autorización',
-        onSubmit: function (data) {
-            form.loading(true)
-
-            $.ajax({
-                type: 'POST',
-                url: `upload_documento`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
-
-                    table.reload()
-
-                    form.hide()
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'id_documento', value: data.idDocumento }),
-            new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
-        ],
-    })
-
-    form.show() */
-
-    $("#archivosOrdenCompra").modal();
-}
-
+ 
 $(document).on('click', '#saveCancel', function () {
     let idLote = $("#idLote").val();
     let nombreLote = $("#nombreLote").val();
