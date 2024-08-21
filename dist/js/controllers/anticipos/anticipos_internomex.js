@@ -60,12 +60,31 @@ $("#tabla_anticipos_internomex").ready(function () {
             { data: 'comentario' },
             { data: 'prioridad_nombre' },
             { data: 'impuesto' },
+            {  
+                data: function( d ){
+                var total_impuesto_monto = d.forma_pago == 2 ?  0 : (d.monto*0.03);    
+                return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
+            }
+            } ,
+            
+            
             { data: 'sede' },
             { data: 'esquema' },
+            { data: 'nombre_empresa' },
             {
-                data: function(d) {
-                    var montoAMostrar = (d.montoParcial !== null) ? d.montoParcial : d.monto;
-                    return '<p class="m-0">' + formatMoney(montoAMostrar) + '</p>';
+                data: function( d ){
+                    var infoModal = '';
+                    var Mensualidades = '';
+                    if(d.montoParcial1 != null ){
+                        infoModal =  '<p class="m-0">monto parcial: '+d.montoParcial1+'</p>'
+                        Mensualidades = '<p class="m-0"> mensualidades: '+d.mensualidades+'</p>' ;
+
+                    }else{
+                        Mensualidades = '<p class="m-0">monto actual:  '+d.monto+'</p>' ;
+                        // infoModal = d.montoParcial;
+                    }
+
+                    return infoModal+  Mensualidades;
                 }
             },
             {
@@ -74,12 +93,58 @@ $("#tabla_anticipos_internomex").ready(function () {
                     // console.log(d.monto);
                     // console.log(d.montoParcial);
                     if(d.mensualidadesBoton==0){
+                        var Mensualidades;
+                        var NumeroMensualidades;
 
-                        var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatusFinal" data-mensualidades="${d.mensualidades}" data-numero_mensualidades="${d.mensualidadesBoton}" data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
+                        if(d.montoParcial1 != null ){
+                            Mensualidades =  d.montoParcial1;
+                            NumeroMensualidades = d.mensualidades ;
+                            bandera_parcial = 1;
+                        }else{
+                            Mensualidades = d.monto ;
+                            bandera_parcial = 0;
+                        }
+
+
+                        var botonEstatus = `<center><button 
+                        class="btn-data btn-blueMaderas anticiposEstatusFinal" 
+                        data-Nmensualidades="${NumeroMensualidades}" 
+                        data-datoMostrar="${Mensualidades}" 
+                        data-banderaParcial="${bandera_parcial}" 
+                        data-mensualidades="${d.mensualidades}" 
+                        data-numero_mensualidades="${d.mensualidadesBoton}" 
+                        data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" 
+                        data-doc="${d.evidencia}" data-proceso="${d.proceso}" 
+                        data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" 
+                        data-toggle="tooltip" 
+                        data-placement="left" title="PAGAR">
+                        <i class="fas fa-history"></i>
+                        </button></center>`;
                         
                     }else{
+                        if(d.montoParcial1 != null ){
+                            Mensualidades =  d.montoParcial1;
+                            NumeroMensualidades = d.mensualidades ;
+                            bandera_parcial = 1;
+                        }else{
+                            Mensualidades = d.monto ;
+                            bandera_parcial = 0;
+                        }
 
-                        var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-mensualidades="${d.mensualidades}" data-numero_mensualidades="${d.mensualidadesBoton}" data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
+                        var botonEstatus = `<center><button 
+                            class="btn-data btn-blueMaderas anticiposEstatus" 
+                            data-Nmensualidades="${NumeroMensualidades}" 
+                            data-datoMostrar="${Mensualidades}" 
+                            data-banderaParcial="${bandera_parcial}" 
+                            data-mensualidades="${d.mensualidades}" 
+                            data-numero_mensualidades="${d.mensualidadesBoton}" 
+                            data-montoParcialidad="${d.montoParcial}" 
+                            data-monto="${d.monto}" data-doc="${d.evidencia}" 
+                            data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" 
+                            data-usuario="${d.id_usuario}" data-toggle="tooltip" 
+                            data-placement="left" title="PAGAR">
+                            <i class="fas fa-history"></i>
+                            </button></center>`;
 
                     }
 
@@ -104,6 +169,36 @@ $("#tabla_anticipos_internomex").ready(function () {
 
     $(document).on('click', '.anticiposEstatusFinal', function (e) {
 
+
+
+                // anticiposEstatus
+        // data-Nmensualidades="${Nmensualidades}" 
+        // data-datoMostrar="${Mensualidades}" 
+        // data-banderaParcial="{}"
+        var montoReal ;
+        var mensualidadesSobrantes ;
+        var dato_restante =  $(this).attr("data-banderaParcial") == 1 ? $(this).attr("data-datoMostrar")    : $(this).attr("data-datoMostrar")   ; 
+        
+        var banderaParcial =  $(this).attr("data-banderaParcial")
+        if($(this).attr("data-banderaParcial") == 1) { 
+
+            montoReal = $(this).attr("data-monto") - $(this).attr("data-datoMostrar");
+
+            // dato_restante = 
+
+            mensualidadesSobrantes = $(this).attr("data-Nmensualidades")-1;
+        }else{
+            
+            montoReal = $(this).attr("data-monto");
+            mensualidadesSobrantes = '';
+        }
+
+
+        var input = document.getElementById("montoReal");
+
+        // Asignar un valor al input
+        input.value = montoReal;
+
         var id_usuario = $(this).attr("data-usuario");
         $("#id_usuario").val(id_usuario);
     
@@ -127,6 +222,37 @@ $("#tabla_anticipos_internomex").ready(function () {
 
     $(document).on('click', '.anticiposEstatus', function (e) {
 
+    
+        // anticiposEstatus
+        // data-Nmensualidades="${Nmensualidades}" 
+        // data-datoMostrar="${Mensualidades}" 
+        // data-banderaParcial="{}"
+        var montoReal ;
+        var mensualidadesSobrantes ;
+        var dato_restante =  $(this).attr("data-banderaParcial") == 1 ? $(this).attr("data-datoMostrar")    : $(this).attr("data-datoMostrar")   ; 
+        
+        var banderaParcial =  $(this).attr("data-banderaParcial")
+        if($(this).attr("data-banderaParcial") == 1) { 
+
+            montoReal = $(this).attr("data-monto") - $(this).attr("data-datoMostrar");
+
+            // dato_restante = 
+
+            mensualidadesSobrantes = $(this).attr("data-Nmensualidades")-1;
+        }else{
+            
+            montoReal = $(this).attr("data-monto");
+            mensualidadesSobrantes = '';
+        }
+
+
+        var input = document.getElementById("montoReal");
+
+        // Asignar un valor al input
+        input.value = montoReal;
+
+
+
         var id_usuario = $(this).attr("data-usuario");
         $("#id_usuario").val(id_usuario);
     
@@ -143,9 +269,9 @@ $("#tabla_anticipos_internomex").ready(function () {
         $("#numero_mensualidades").val(numero_mensualidades);
 
         if (numero_mensualidades == null || isNaN(numero_mensualidades)) {
-            $("#montoTitulo").text("Monto Restante: " + formatMoney(monto));
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(montoReal));
         } else {
-            $("#montoTitulo").text("Monto Restante: " + formatMoney(montoP * numero_mensualidades));
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(montoReal ) + " Mensualidades :" +mensualidadesSobrantes );
         }
     
         $("#anticipoModalInternomex").modal();
@@ -159,7 +285,8 @@ $("#tabla_anticipos_internomex").ready(function () {
         var id_anticipo = $("#id_anticipo").val();
         var montoParcial = $("#montoP").val();
         var numero_mensualidades = $("#numero_mensualidades").val();
-    
+        var montoReal = $("#montoReal1").val();
+
         console.log(montoParcial);
         console.log(numero_mensualidades);
     
@@ -169,7 +296,8 @@ $("#tabla_anticipos_internomex").ready(function () {
         anticipoData.append("procesoAntInternomex", procesoAntInternomex);
         anticipoData.append("montoParcial", montoParcial);
         anticipoData.append("numero_mensualidades", numero_mensualidades);
-    
+        anticipoData.append("montoReal", montoReal);
+
         $.ajax({
             url: general_base_url + 'Anticipos/actualizarEstatus',
             data: anticipoData,
@@ -177,10 +305,10 @@ $("#tabla_anticipos_internomex").ready(function () {
             contentType: false,
             cache: false,
             processData: false,
+            dataType: 'json',
             success: function(response) {
                 
-                var jsonResponse = JSON.parse(response);
-                if (jsonResponse.success) {
+                if (response.success) {
                     $('#anticipoModalInternomex').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                     $('#tabla_anticipos_internomex').DataTable().ajax.reload();
@@ -205,7 +333,7 @@ $("#tabla_anticipos_internomex").ready(function () {
         var id_anticipo = $("#id_anticipo").val();
         var montoParcial = $("#montoP").val();
         var numero_mensualidades = $("#numero_mensualidades").val();
-    
+        var montoReal = $("#montoReal").val();
         console.log(montoParcial);
         console.log(numero_mensualidades);
     
@@ -215,7 +343,7 @@ $("#tabla_anticipos_internomex").ready(function () {
         anticipoData.append("procesoAntInternomexFinal", procesoAntInternomexFinal);
         anticipoData.append("montoParcial", montoParcial);
         anticipoData.append("numero_mensualidades", numero_mensualidades);
-    
+        anticipoData.append("montoReal", montoParcial);
         $.ajax({
             url: general_base_url + 'Anticipos/actualizarEstatus',
             data: anticipoData,
@@ -223,10 +351,10 @@ $("#tabla_anticipos_internomex").ready(function () {
             contentType: false,
             cache: false,
             processData: false,
+            dataType: 'json',
             success: function(response) {
                 
-                var jsonResponse = JSON.parse(response);
-                if (jsonResponse.success) {
+                if (response.success) {
                     $('#anticipoModalInternomexFinal').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                     $('#tabla_anticipos_internomex').DataTable().ajax.reload();

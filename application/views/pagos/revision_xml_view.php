@@ -41,8 +41,9 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active"><a href="#xmlComercializacion" role="tab" data-toggle="tab">Xml lotes</a></li>
-                            <li><a href="#XMLSeguros" role="tab" data-toggle="tab">Xml seguros</a></li>
+                            <li class="active"><a href="#xmlComercializacion" role="tab" data-toggle="tab">XML Lotes</a></li>
+                            <!-- <li><a href="#XMLSeguros" role="tab" data-toggle="tab">Xml seguros</a></li> -->
+                            <li><a href="#XMLCasas" role="tab" data-toggle="tab">XML Casas</a></li>
                             <!-- <li><a href="#xmlOOAM" role="tab" data-toggle="tab">Xml ooam</a></li> -->
                         </ul>
                         <div class="card no-shadow m-0 border-conntent__tabs">
@@ -52,7 +53,7 @@
                                         <div class="tab-pane active" id="xmlComercializacion">
                                             <div class="card-content">
                                                 <div class="text-center">
-                                                    <h3 class="card-title center-align" >Comisiones en revisión <b>xml </b></h3>
+                                                    <h3 class="card-title center-align" >Comisiones en revisión <b>XML Lotes</b></h3>
                                                     <p class="card-title pl-1">Concentrado de facturas solicitadas por el área comercial.</p>
                                                 </div>
                                                 <div class="toolbar">
@@ -94,6 +95,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <?php $this->load->view('pagos/casas/revision_xml_casas_view') ; ?>
                                     </div>
                                 </div>
                             </div>
@@ -106,6 +108,7 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_xml.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/casas/revision_xml_casas.js"></script>
     <!-- <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_xml_ooam.js"></script> -->
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>

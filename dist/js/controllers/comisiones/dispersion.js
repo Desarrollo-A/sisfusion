@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
     numerosDispersion();
     let titulos_intxt = [];
@@ -203,6 +204,7 @@ $(document).ready(function () {
                         }
 
                         disparador = 0;
+                        var precioDestino = d.totalNeto2;
                         d.totalNeto2Cl = ([65,85].indexOf(parseInt(d.plan_comision)) >= 0  && (parseFloat(d.totalNeto2Cl) < parseFloat(d.totalNeto2)) && (parseInt(d.proceso) == 2 || parseInt(d.proceso) == 4) ) ? ( d.totalNeto2Cl > d.totalNeto2 ? d.totalNeto2 : d.totalNeto2Cl ) :([65,85].indexOf(parseInt(d.plan_comision)) < 0 ? d.totalNeto2Cl : d.totalNeto2 );
                         d.totalNeto2Cl = (parseInt(d.proceso) == 6 || parseInt(d.proceso) == 5) ? ( ((parseFloat(d.sumaFusion) < parseFloat(d.totalNeto2) && d.cuantosDestinos == 1) || (d.cuantosDestinos > 1 && [41152,97660,3631,4479,4480].indexOf(parseInt(d.idLote)) < 0) )  ? parseFloat(d.sumaFusion / d.cuantosDestinos) :  parseFloat(d.totalNeto2)  ): d.totalNeto2Cl; 
                         if(d.bandera_dispersion == 1 && d.registro_comision == 9){//NUEVA VENTAS 1°
@@ -339,7 +341,8 @@ $(document).ready(function () {
                             value = "${d.idLote}" 
                             data-totalNeto2 = "${totalLote}"
                             data-totalNeto2Cl = "${d.totalNeto2Cl}" 
-                            data-total8P = "${d.total8P}" 
+                            data-total8P = "${d.total8P}"
+                            data-precioDestino= "${precioDestino}"
                             data-reubicadas = "${reubicadas}" 
                             data-penalizacion = "${d.penalizacion}"
                             data-nombreLote = "${nombreLote}" 
@@ -497,7 +500,7 @@ $(document).ready(function () {
         opcionMensualidad = $(this).attr("data-opcionMensualidad");
         nombreMensualidad = $(this).attr("data-nombreMensualidad");
 
-
+        precioDestino = $(this).attr("data-precioDestino");
         totalNeto2 = (plan_comision == 66 || plan_comision == 86) ? total8P : totalNeto2;
 
 
@@ -570,7 +573,7 @@ $(document).ready(function () {
                                             </div>
 
                                             <div class="col-md-3 p-0">
-                                                <h5>Precio Lote: <b>${formatMoney(totalNeto2)}</b></h5>
+                                                <h5>Precio Lote: <b>${(plan_comision == 66 || plan_comision == 86) ? formatMoney(precioDestino) : formatMoney(totalNeto2)}</b></h5>
                                             </div>
 
                                             <div class="col-md-3 p-0">
@@ -703,6 +706,9 @@ $(document).ready(function () {
                                         
                                     });
                                     console.log(SumaComisionTotal);
+                                    const busquedaPivote = pivoteMultiplicador.find((planes) => planes.id_plan == parseInt(plan_comision));
+                                    console.log(busquedaPivote);
+                                    let pivoteNuevas = busquedaPivote == undefined ? 0.125 : (busquedaPivote.valor / 100);   
                                     $.each( resultArr, function( i, v){
                                         let porcentajes = '';
                                         if(plan_comision == 66 || plan_comision == 86){
@@ -776,7 +782,6 @@ $(document).ready(function () {
                                                             if(parseInt(v.id_usuario) == 12841){
                                                                 porcentajeMaderas =  (8 * (porcentajeReferido / 100));
                                                                 nuevoPorcentaje = porcentajeMaderas;
-                                                               // operacionValidar = (total*(0.125*porcentajeMaderas));
 
                                                             }else{
                                                                 if([7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){
@@ -794,7 +799,6 @@ $(document).ready(function () {
                                                             if(parseInt(v.id_usuario) == 12841){
                                                                 porcentajeMaderas =  (8 * (porcentajeReferido / 100));
                                                                 nuevoPorcentaje = porcentajeMaderas;
-                                                               // operacionValidar = (total*(0.125*porcentajeMaderas));
 
                                                             }else{
                                                                 if([7,9].indexOf(parseInt(v.id_rol)) >= 0 && parseInt(v.id_usuario) != 12841){
@@ -813,9 +817,9 @@ $(document).ready(function () {
                                                     else if(plan_comision == 56 && parseInt(v.id_usuario) == 12841){
                                                         porcentajeMaderas = v.porcentaje_decimal + sumaAsesorCoor;
                                                         } */
-                                                            operacionValidar = (total*(0.125*nuevoPorcentaje));
+                                                            operacionValidar = (total*(pivoteNuevas*nuevoPorcentaje));
                                                     }else{
-                                                        operacionValidar = (total*(0.125*v.porcentaje_decimal));
+                                                        operacionValidar = (total*(pivoteNuevas*v.porcentaje_decimal));
                                                     }
                                             if(operacionValidar > v.comision_total){
                                                 saldo1C = v.comision_total;
@@ -845,7 +849,7 @@ $(document).ready(function () {
                                             break;
 
                                             case 3: // monto OOAM 50%
-                                            operacionValidar = (total*(0.125*v.porcentaje_decimal));
+                                            operacionValidar = (total*(pivoteNuevas*v.porcentaje_decimal));
                                             if(operacionValidar > (v.comision_total/2)){
                                                 saldo1C = (v.comision_total/2);
                                             }else{
@@ -854,7 +858,7 @@ $(document).ready(function () {
                                             break;
 
                                             case 4: // monto OOAM 100%
-                                            operacionValidar = idLote == 63107 ? (total*((2)*v.porcentaje_decimal)) : (total*(0.125*v.porcentaje_decimal));
+                                            operacionValidar = idLote == 63107 ? (total*((2)*v.porcentaje_decimal)) : (total*(pivoteNuevas*v.porcentaje_decimal));
                                             console.log('total'+total);
                                             console.log('operacionValidar'+operacionValidar);
                                             if(operacionValidar > v.comision_total){
@@ -1000,7 +1004,7 @@ $(document).ready(function () {
                                                 /* buscar el valor divisor segun el % del plan*/
                                                 const pivoteMultiplicador =  [
                                                     {
-                                                        id_plan:65,
+                                                        id_plan:64,
                                                         valor:(100/0.5)
                                                     },
                                                     {
@@ -1021,7 +1025,7 @@ $(document).ready(function () {
                                                     },
                                                     {
                                                         id_plan:86,
-                                                        valor:12.5
+                                                        valor:(100/9.2)
                                                     },
                                                     {
                                                         id_plan:93,
@@ -1036,6 +1040,7 @@ $(document).ready(function () {
 
                                                 /**/ 
                                                 console.log('TOTAL----------'+total);
+                                                console.log('TOTAL----------'+AplicadoGlobal);
                                                 v.porcentaje_decimal = idLote == 37629 && v.id_usuario == 13556 ? 2.5 : v.porcentaje_decimal;
                                                 saldo = (([2,3,4,7].includes(parseInt(procesoReestructura)) && total > 2238.71) && idLote != 52454 ) ? ( pendienteGlobal > total ? ((pivote *(v.porcentaje_decimal / 100)) * total)  :  ((pivote *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal)) ) : ((pivote *(v.porcentaje_decimal / 100)) * total);
                                                 saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total <= 0) ? 0 : saldo;
@@ -1059,7 +1064,7 @@ $(document).ready(function () {
                                                 console.log('procesoReestructura::'+procesoReestructura);
                                                 console.log('plan_comision::'+plan_comision);
                                                 console.log('idLote::'+idLote);
-                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || ([64,65,66,84,85,86].indexOf(plan_comision) >= 0 || [57154,48216,55933].indexOf(idLote) >= 0)) ? saldo : ( saldo-v.abono_pagado );
+                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || ([64,65,66,84,85,86].indexOf(plan_comision) >= 0 || [57154,48216,55933,52454,54261].indexOf(parseInt(idLote)) >= 0)) ? saldo : ( saldo-v.abono_pagado );
                                                 console.log('RESTA'+resta_1);
                                                 if(parseFloat(resta_1) <= 0){
                                                     saldo = 0;
@@ -1071,7 +1076,7 @@ $(document).ready(function () {
                                                     else{
                                                         console.log('entra hasta aca')
                                                         console.log(saldo)
-                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933].indexOf(idLote)) >= 0) ? saldo : saldo-v.abono_pagado;
+                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933,52454,54261].indexOf(parseInt(idLote))) >= 0) ? saldo : saldo-v.abono_pagado;
                                                         console.log(saldo)
                                                     }
                                                 }
@@ -1144,25 +1149,6 @@ $(document).ready(function () {
     }); //FIN VERIFY_NEODATA
 });
 
-sp = {
-    initFormExtendedDatetimepickers: function () {
-        $('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
-            icons: {
-                time: "fa fa-clock-o",
-                date: "fa fa-calendar",
-                up: "fa fa-chevron-up",
-                down: "fa fa-chevron-down",
-                previous: 'fa fa-chevron-left',
-                next: 'fa fa-chevron-right',
-                today: 'fa fa-screenshot',
-                clear: 'fa fa-trash',
-                close: 'fa fa-remove',
-                inline: true
-            }
-        });
-    }
-}
 
 
 $('#detenidos-form').on('submit', function (e) {
@@ -1485,71 +1471,10 @@ function showDetailModal(idPlan) {
     });
 }
 
-$('#btn-detalle-plan').on('click', function () {
-    cleanElement('mHeader');
-    $('#planes-div').show();
-    $('#planes').empty().selectpicker('refresh');
-    $.ajax({
-        url: `${general_base_url}Comisiones/getPlanesComisiones`,
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            for (let i = 0; i < data.length; i++) {
-                const id = data[i].id_plan;
-                const name = data[i].descripcion.toUpperCase();
-                $('#planes').append($('<option>').val(id).text(name));
-            }
-            $("#detalle-plan-modal .modal-header").append('<h4 class="modal-title">Planes de comisión</h4>');
-            $('#planes').selectpicker('refresh');
-            $('#detalle-plan-modal').modal();
-            $('#detalle-tabla-div').hide();
-        }
-    });
-});
 
-// Cambiar tabla
-$('#planes').change(function () {
-    cleanElement('detalle-tabla-div');
-    const idPlan = $(this).val();
-    if (idPlan !== '0' || idPlan !== NULL) {
-        $.ajax({
-            url: `${general_base_url}Comisiones/getDetallePlanesComisiones/${idPlan}`,
-            type: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                $('#plan-detalle-tabla-tbody').empty();
-                $('#title-plan').text(`Plan: ${data.descripcion}`);
-                $('#detalle-plan-modal').modal();
-                $('#detalle-tabla-div').hide();
-                const roles = data.comisiones;
-                $('#detalle-tabla-div').append(`
-                <div class="row subBoxDetail" id="modalInformation">
-                    <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>PLANES DE COMISIÓN</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div>
-                    <div class="prueba"></div>
-                `)
-                roles.forEach(rol => {
-                    if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                        $('#detalle-tabla-div .prueba').append(`
-                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
-                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
-                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
-                        `);
-                    }
 
-                });
-                $('#detalle-tabla-div').append(`
-                </div>`)
-                $('#detalle-tabla-div').show();
-            },
-        });
-    } else {
-        $('#plan-detalle-tabla tbody').append('No tiene un plan asignado');
-        $('#detalle-tabla-div').hide();
-    }
-});
+
+
 
 function llenado (){
     $.ajax({
