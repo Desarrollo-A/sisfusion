@@ -1832,6 +1832,8 @@ class Casas extends BaseController
                 }
             }
 
+            $vobo = $this->CasasModel->getVobos($id, 4);
+
             $updateData = array(
                 "contraloria"  => 1,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
@@ -3223,23 +3225,26 @@ class Casas extends BaseController
             // Consulta nombre tipo documento
             $documento = $this->CasasModel->getDocumentoCreditoBanco($id_documento);
 
-            $name_documento = $documento->result()[0]->nombre;
+            if($documento){
+                $name_documento = $documento->nombre;
 
-            //  Nombre del archivo          
-            $filename = $this->generateFileName($name_documento, $nombre_lote, $idProceso, $file->name);
+                //  Nombre del archivo          
+                $filename = $this->generateFileName($name_documento, $nombre_lote, $idProceso, $file->name);
 
-            // Se sube archivo al buket
-            $uploaded = $this->upload($file->tmp_name, $filename);
+                // Se sube archivo al buket
+                $uploaded = $this->upload($file->tmp_name, $filename);
 
-            if ($uploaded) {
-                $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario);
+                if ($uploaded) {
+                    $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario);
 
-                if ($created) {
-                    $motivo = "Se subió archivo: $name_documento";
-                    $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 1);
+                    if ($created) {
+                        $motivo = "Se subió archivo: $name_documento";
+                        $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 1);
 
-                    $this->json([]);
+                        $this->json([]);
+                    }
                 }
+
             }
         }
 
@@ -3601,9 +3606,13 @@ class Casas extends BaseController
 
         switch ($tipo) {
             case 1: // titulacion
+                $avance = 1;
+
+                /*
                 if ($contratoOOAM == 1 && $contratoPV == 1) {
                     $avance = 1;
                 }
+                */
 
                 $columna = 'contratoTitulacion';
                 $depto = 'titulación';
@@ -3611,7 +3620,7 @@ class Casas extends BaseController
 
             case 2: // ooam
                 if ($contratoTitulacion == 1 && $contratoPV == 1) {
-                    $avance = 1;
+                    $avance = 0;
                 }
 
                 $columna = 'contratoOOAM';
@@ -3620,7 +3629,7 @@ class Casas extends BaseController
 
             case 3: // postventa
                 if ($contratoTitulacion == 1 && $contratoOOAM == 1) {
-                    $avance = 1;
+                    $avance = 0;
                 }
 
                 $columna = 'contratoPV';
@@ -4178,6 +4187,16 @@ class Casas extends BaseController
 
         if ($vobosGet->adm == 1 && $vobosGet->ooam == 1 && $vobosGet->gph == 1 && $vobosGet->pv == 1) {
             $new_status = 14;
+
+            $documentos = $this->CasasModel->getDocumentos([33,34,35]);
+
+            foreach ($documentos as $key => $documento) {
+                $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+                if (!$is_ok) {
+                    break;
+                }
+            }
 
             $proceso = $this->CasasModel->getProceso($id);
 

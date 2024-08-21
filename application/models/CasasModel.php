@@ -473,6 +473,8 @@ class CasasModel extends CI_Model
     }
 
     public function getListaConcentradoAdeudos($rol){
+        $vobo = "";
+
         if($rol == 99){
 			$vobo  = "AND vb.ooam = 0";
 		}else if($rol == 11 || $rol == 33){
@@ -889,7 +891,7 @@ class CasasModel extends CI_Model
             LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
             LEFT JOIN (SELECT count(*) AS archivos_faltantes, idProcesoCasas FROM cotizacion_proceso_casas WHERE status = 1 AND archivo IS NULL GROUP BY idProcesoCasas) cpc ON cpc.idProcesoCasas = pc.idProcesoCasas
             LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17, 28) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
             LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
             LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 17 AND doc3.proveedor = 0
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 17 AND oxc2.id_catalogo = 126
@@ -1909,7 +1911,7 @@ class CasasModel extends CI_Model
 
     public function getDocumentoCreditoBanco($id_documento){
         $query = $this->db->query("SELECT *FROM opcs_x_cats 
-        WHERE id_catalogo = 126 AND id_opcion = ?", $id_documento);
+        WHERE id_catalogo = 126 AND id_opcion = ?", $id_documento)->row();
 
         return $query;
     }

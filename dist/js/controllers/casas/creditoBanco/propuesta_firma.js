@@ -528,7 +528,7 @@ let columns = [
             upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
         }
         
-        if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos == 2 && data.notarias != 0 && idRol === 57){
+        if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos == 1 && data.notarias != 0 && idRol === 57){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_propuestas, data})
         }
 
