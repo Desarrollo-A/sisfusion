@@ -1379,13 +1379,13 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       ];
 
       // CORREO A CONTRALORÍA
-      if (count($informacionContraloria) > 20)
+      if (count($informacionContraloria) > 0)
         $this->enviarCorreoConRetrasos(1, $informacionContraloria, $correosPruebas);
       else
         $this->enviarCorreoSinRetrasos(1, $correosPruebas);
 
       // CORREO A CONTRATACIÓN Y TITULACIÓN
-      if (count($informacionContratacionTitulacion) > 2)
+      if (count($informacionContratacionTitulacion) > 0)
         $this->enviarCorreoConRetrasos(2, $informacionContratacionTitulacion, $correosPruebas);
       else
         $this->enviarCorreoSinRetrasos(2, $correosPruebas);
