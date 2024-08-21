@@ -241,8 +241,6 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         ooamDispersion = 0; //VENTAS SIN REESTRUCTURA
                         nombreOtro = '';
 
-                     
-                
                         BtnStats += `<button href="#" 
                         value = "${d.idLote}" 
                         data-totalNeto2 = "${totalLote}"

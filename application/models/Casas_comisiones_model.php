@@ -966,7 +966,7 @@ class Casas_comisiones_model extends CI_Model {
         }
     }
     public function UpdateLoteDisponible($lote,$idCliente){
-        $respuesta =  $this->db->query("UPDATE pago_comision_casas SET bandera = 1 WHERE id_lote = $lote");
+        $respuesta =  $this->db->query("UPDATE pago_comision_casas SET bandera = 0 WHERE id_lote = $lote");
         $respuesta =  $this->db->query("UPDATE clientes SET registroComisionCasas = 1,usuario=".$this->session->userdata('id_usuario')." WHERE id_cliente = $idCliente");
         if (! $respuesta ) {
             return 0;
@@ -999,9 +999,66 @@ class Casas_comisiones_model extends CI_Model {
         }
     }
 
+    public function getDataDispersionPagoInsertNeoNew($bandera_segunda,$idLote, $id_usuario, $idCliente, $TotComisionXusuario = null,$user = null, $porcentaje = null,$abono = null,$pago = null,$rol = null, $porcentaje_abono = null,$comisionesTotal = null, $abonado = null,$resta= null){
+        
+        if($bandera_segunda == 2 ){
+            $TotComisionXusuario = 0;
+        
+            $porcentaje = 2;
+        
+            $rol = 0; 
+            $porcentaje_abono = 0;
+            $comisionesTotal = 0; 
+            $abonado = 0;
+            $resta= 0;
+        }
+
+        $cmd = "
+            DECLARE @resultadoEsperarDatos INT;
+            DECLARE @resultadoEsperarComisiones INT;
+            DECLARE @resultadoComisionEntrada INT;
+            EXEC MiProcedimiento 
+                @badera_real        = 1,
+                @esperarDatos       = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
+                @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
+                @comisionEntrada    = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
+                @abonoNeodata       = $abono,
+                @pagoNeodata        = $pago,
+                @comentario         = 'Nueva dispersión: casas',
+                @abonoFinal         = 0,
+                @porcentajes        = $porcentaje_abono,
+                @DispersadoPor      = $user,
+                @idLote             = $idLote,
+                @idUsuario          = $id_usuario,
+                @ComisionTotalXUsuario = $TotComisionXusuario,
+                @estatus            = 1,
+                @observaciones      = 'Nueva dispersión: casas',
+                @porcentajeDecimal  = $porcentaje,
+                @rolGenerado        = $rol,
+                @cliente            = $idCliente,
+                @totalComision      = $comisionesTotal,
+                @abonado            = $abonado,
+                @pendiente_pc       = $resta";
+        // var_dump($cmd);
+        $respuesta = $this->db->query($cmd);
+
+        if (! $respuesta ) {
+            return $respuesta ;
+        } else {
+            return $respuesta ;
+        }
+
+    }
+
+
+
+
+
 public function getDataDispersionPago() {
     $this->db->query("SET LANGUAGE Español;");
-    $query = $this->db->query("SELECT DISTINCT(l.idLote),cl.esquemaCreditoCasas,(CASE WHEN cl.esquemaCreditoCasas = 2 THEN opcDir.nombre ELSE opcBanco.nombre END) estatusConstruccion,cl.prioridadComision,cl.registroComisionCasas, res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
+    $query = $this->db->query("SELECT DISTINCT(l.idLote),cl.esquemaCreditoCasas,
+    (CASE WHEN cl.esquemaCreditoCasas = 2 THEN opcDir.nombre ELSE opcBanco.nombre END) estatusConstruccion,cl.prioridadComision,
+    cl.registroComisionCasas, res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
     oxctipo.nombre tipo_venta,
     (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
     (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,cl.estructura,
@@ -1021,7 +1078,7 @@ public function getDataDispersionPago() {
     INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
     INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
     INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-	INNER JOIN opcs_x_cats oxctipo ON oxctipo.id_opcion = cl.esquemaCreditoCasas AND oxctipo.id_catalogo = 151
+	LEFT JOIN opcs_x_cats oxctipo ON oxctipo.id_opcion = cl.esquemaCreditoCasas AND oxctipo.id_catalogo = 151
     LEFT JOIN proceso_casas_banco procsb ON procsb.idLote=l.idLote AND procsb.status = 1
 	LEFT JOIN opcs_x_cats opcBanco ON opcBanco.id_opcion=procsb.proceso AND opcBanco.id_catalogo=135
 	LEFT JOIN proceso_pagos pcp ON pcp.idLote = l.idLote
