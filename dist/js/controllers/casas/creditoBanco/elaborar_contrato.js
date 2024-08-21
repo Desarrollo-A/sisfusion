@@ -24,9 +24,9 @@ switch(idRol){
     case 81:
     case 55: // postventa 
         tipo = 3
-        documento = 50
+        documento = 24
         tipoContrato = 'solicitud de medidor';
-        documentos = [ 50 ]
+        documentos = [ 24 ]
         campo = "contratoPV"
         break;
 }
@@ -227,18 +227,18 @@ let columns = [
             }
             if( tipo == 2 && data.contratoOOAM == 0){
                 if(data.documento != null){
-                    return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>`
+                    return `<div class="d-flex justify-center">${view_button}${upload_button}${decline_button}</div>`
                 }
                 else{
-                    return `<div class="d-flex justify-center">${pass_button}${upload_button}${decline_button}</div>`
+                    return `<div class="d-flex justify-center">${upload_button}${decline_button}</div>`
                 }
             }
             if( tipo == 3 && data.contratoPV == 0){
                 if(data.documento != null){
-                    return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>` 
+                    return `<div class="d-flex justify-center">${view_button}${upload_button}${decline_button}</div>` 
                 }
                 else{
-                    return `<div class="d-flex justify-center">${pass_button}${upload_button}${decline_button}</div>` 
+                    return `<div class="d-flex justify-center">${upload_button}${decline_button}</div>` 
                 }       
             }
             else{
