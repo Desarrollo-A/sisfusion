@@ -24,9 +24,9 @@ switch(idRol){
     case 81:
     case 55: // postventa 
         tipo = 3
-        documento = 50
+        documento = 24
         tipoContrato = 'solicitud de medidor';
-        documentos = [ 50 ]
+        documentos = [ 24 ]
         campo = "contratoPV"
         break;
 }
