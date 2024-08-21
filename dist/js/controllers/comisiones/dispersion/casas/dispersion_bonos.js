@@ -17,6 +17,7 @@ $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
     titulos_intxt.push(title);
+    if(i != 0){
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_dispersar_comisiones').DataTable().column(i).search() !== this.value ) {
@@ -28,7 +29,9 @@ $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
             }).indexes();
             var data = $('#tabla_dispersar_comisiones').DataTable().rows(index).data();
         });
-    
+    }else 
+    $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip_nuevas"  data-placement="top" title="SELECCIONAR"/>`);
+
 });
 
 
@@ -52,6 +55,74 @@ $("#tabla_dispersar_comisiones").ready(function () {
                     }
                 }
             },
+        },  {
+            text: '<i class="fa fa-paper-plane"></i> ASIGNAR PAGOS',
+            className: '',
+            action: function () {
+            
+                    if ($('input[name="idT[]"]:checked').length > 0) {
+
+                        var data = tabla_nuevas.row().data();
+
+                        //$('#spiner-loader').removeClass('hide');
+                        var idcomision = $(tabla_nuevas.$('input[name="idT[]"]:checked')).map(function () {
+                            return this.value;
+                        }).get();
+                        $("#modalAsignacion .modal-header").html("");
+                        $("#modalAsignacion .modal-body").html("");
+                        
+                        $("#modalAsignacion .modal-body").append(`
+                             <select class="selectpicker select-gral m-0" name="usuarioAsignar" 
+                                    id="usuarioAsignar" data-style="btn" data-show-subtext="true" 
+                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+                            </select>
+                            <input type="hidden" value="${idcomision}" id="idPagos" name="idPagos">`);
+
+                            var len = dataUsuarios.length;
+                            for (var i = 0; i < len; i++) {
+                                var id = dataUsuarios[i]['id_usuario'];
+                                var name = dataUsuarios[i]['nombre'];
+                                $("#usuarioAsignar").append($('<option>').val(id).text(name.toUpperCase()));
+                            }
+                            $("#usuarioAsignar").selectpicker('refresh');
+                        $('#modalAsignacion').modal();
+                        //var com2 = new FormData();
+                        //com2.append("idcomision", idcomision);
+                        console.log(com2)
+                        return false;
+                        $.ajax({
+                            url: general_base_url + 'Comisiones/acepto_comisiones_user/',
+                            data: com2,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            type: 'POST',
+                            success: function (data) {
+                                response = JSON.parse(data);
+                                if (data == 1) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#totpagarPen").html(formatMoney(0));
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
+                                    tabla_nuevas.ajax.reload();
+                                    tabla_revision.ajax.reload();
+                                }  else {
+                                    $('#spiner-loader').addClass('hide');
+                                    alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
+                                }
+                            },
+                            error: function (data) {
+                                $('#spiner-loader').addClass('hide');
+                                alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
+                            }
+                        });
+                    }
+                
+            },
+            attr: {
+                class: 'btn btn-azure',
+                style: 'position:relative; float:right'
+            }
         }],
         language: {
             url: `${general_base_url}static/spanishLoader_v2.json`,
@@ -65,6 +136,7 @@ $("#tabla_dispersar_comisiones").ready(function () {
         destroy: true,
         ordering: false,
         columns: [
+        {},
         {
             "data": function (d) {
                 return '<p class="m-0">' + d.id_pago_i + '</p>';
@@ -180,6 +252,16 @@ $("#tabla_dispersar_comisiones").ready(function () {
                         </div>`;
             }
         }],
+        columnDefs: [{
+            orderable: false,
+            className: 'select-checkbox',
+            targets: 0,
+            searchable: false,
+            className: 'dt-body-center',
+            render: function (d, type, full, meta) {
+                return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';                
+            },
+        }],
         ajax: {
             "url": general_base_url + "Casas_comisiones/getPagosBonos/"+1,
             "type": "POST",
@@ -191,6 +273,23 @@ $("#tabla_dispersar_comisiones").ready(function () {
             $('[data-toggle="tooltip_nuevas"]').tooltip({ trigger: "hover" });
         }
     });
+
+
+    $('#tabla_dispersar_comisiones').on('click', 'input', function () {
+        tr = $(this).closest('tr');
+        var row = tabla_nuevas.row(tr).data();
+        if (row.pa == 0) {
+            row.pa = row.impuesto;
+            totaPen += parseFloat(row.pa);
+            tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+        }
+        else {
+            totaPen -= parseFloat(row.pa);
+            row.pa = 0;
+        }
+        $("#totpagarPen").html(formatMoney(totaPen));
+    });
+
 
 
     $("#tabla_dispersar_comisiones tbody").on("click", ".dispersarPago", function (e) {
@@ -249,6 +348,18 @@ $("#tabla_dispersar_comisiones").ready(function () {
     });
 });
 //FIN TABLA NUEVA
+function selectAll(e) {
+    tota2 = 0;
+    $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+        if (!$(this).prop("checked")) {
+            $(this).prop("checked", true);
+            tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().pago_cliente);
+        } else {
+            $(this).prop("checked", false);
+        }
+        $("#totpagarPen").html(formatMoney(tota2));
+    });
+}
 
 function handleKeyUp(event) {
     let valorIngresado = parseFloat(event.target.value), valorActual = parseFloat($("#montoPago").val());

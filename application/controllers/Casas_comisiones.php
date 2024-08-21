@@ -851,6 +851,9 @@ echo "la seguda";
 
   public function getPagosBonos(){
     $respuesta = $this->Casas_comisiones_model->getPagosBonos();
+    for( $i = 0; $i < count($respuesta); $i++ ){
+      $respuesta[$i]['pa'] = 0;
+  }
     echo json_encode( array("data" =>$respuesta));
   }
 

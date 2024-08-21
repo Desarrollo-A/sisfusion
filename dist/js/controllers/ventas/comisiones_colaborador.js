@@ -261,7 +261,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
-            className: boton_sol_pago,
+            className: '',
             action: function () {
                 let actual=13;
                 if(userSede == 8){
