@@ -677,7 +677,7 @@ public function getDatosFechasProyecCondm(){
 
           $row_arr=array(
             'id_pago_i' => $row['id_pago_i'],
-            'id_usuario' =>  $id_user_Vl,
+            'id_usuario' =>  $id_user_Vl, 
             'fecha_movimiento' => date('Y-m-d H:i:s'),
             'estatus' => 1,
             'comentario' =>  'ENVÍO A SU RESGUARDO PERSONAL' 
@@ -762,7 +762,7 @@ public function getDatosFechasProyecCondm(){
 
       $tipo_venta_insert = $plan_comision;
       $pivote=0;
-  
+   
       for ($i=0; $i <count($id_usuario) ; $i++) {   
    
         // $respuesta = $this->Casas_comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
@@ -789,7 +789,7 @@ public function getDatosFechasProyecCondm(){
             $suma = 0;
             $replace = [",","$"];
             
-            $bandera_segunda = 2;
+            $bandera_segunda = 2; 
 
 
             for($i=0;$i<sizeof($id_comision);$i++){
