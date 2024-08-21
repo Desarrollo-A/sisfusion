@@ -72,10 +72,13 @@ $("#tabla_dispersar_comisiones").ready(function () {
                         $("#modalAsignacion .modal-body").html("");
                         
                         $("#modalAsignacion .modal-body").append(`
-                             <select class="selectpicker select-gral m-0" name="usuarioAsignar" 
-                                    id="usuarioAsignar" data-style="btn" data-show-subtext="true" 
-                                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
-                            </select>
+                            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 overflow-hidden" id="div_proyectos">
+                                <label class="control-label">Usuario</label>
+                                    <select class="selectpicker select-gral m-0" name="usuarioAsignar" 
+                                            id="usuarioAsignar" data-style="btn" data-show-subtext="true" 
+                                            title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+                                    </select>
+                            </div>
                             <input type="hidden" value="${idcomision}" id="idPagos" name="idPagos">`);
 
                             var len = dataUsuarios.length;
@@ -86,36 +89,7 @@ $("#tabla_dispersar_comisiones").ready(function () {
                             }
                             $("#usuarioAsignar").selectpicker('refresh');
                         $('#modalAsignacion').modal();
-                        //var com2 = new FormData();
-                        //com2.append("idcomision", idcomision);
-                        console.log(com2)
-                        return false;
-                        $.ajax({
-                            url: general_base_url + 'Comisiones/acepto_comisiones_user/',
-                            data: com2,
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            type: 'POST',
-                            success: function (data) {
-                                response = JSON.parse(data);
-                                if (data == 1) {
-                                    $('#spiner-loader').addClass('hide');
-                                    $("#totpagarPen").html(formatMoney(0));
-                                    $("#all").prop('checked', false);
-                                    alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
-                                    tabla_nuevas.ajax.reload();
-                                    tabla_revision.ajax.reload();
-                                }  else {
-                                    $('#spiner-loader').addClass('hide');
-                                    alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
-                                }
-                            },
-                            error: function (data) {
-                                $('#spiner-loader').addClass('hide');
-                                alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
-                            }
-                        });
+
                     }
                 
             },
@@ -259,7 +233,7 @@ $("#tabla_dispersar_comisiones").ready(function () {
             searchable: false,
             className: 'dt-body-center',
             render: function (d, type, full, meta) {
-                return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';                
+                return `<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="${full.id_pago_i}">`;                
             },
         }],
         ajax: {
@@ -412,7 +386,48 @@ $("#formDispersion").submit( function(e) {
 
 
 
+$("#formAsignacion").submit( function(e) {
+    alert(1);
 
+    $('#btnsubA').prop('disabled', true);
+    document.getElementById('btnsubA').disabled = true;
+    e.preventDefault();
+}).validate({
+    submitHandler: function( form ) {
+        alert();
+        $('#spiner-loader').removeClass('hidden');
+        var data = new FormData( $(form)[0] );
+        $.ajax({
+            url: general_base_url + 'Casas_comisiones/asigancionMasivaBonos',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function(respuesta){
+                console.log(respuesta);
+                if( respuesta.resultado == true){
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "La petición se ha realizado con éxito", "success");
+                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $("#modalAsignacion").modal( 'hide' );
+                    $('#btnsubA').prop('disabled', false);
+                    document.getElementById('btnsubA').disabled = false;
+                }else{
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "No se pudo completar tu solicitud", "danger");
+                    $('#btnsubA').prop('disabled', false);
+                    document.getElementById('btnsubA').disabled = false;
+                }
+            },error: function(){
+                $('#spiner-loader').addClass('hidden');
+                alerts.showNotification("top", "right", "EL LOTE NO SE PUEDE DISPERSAR, INTÉNTALO MÁS TARDE", "warning");
+            }
+        });
+    }
+});
 
 
 

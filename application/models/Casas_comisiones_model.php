@@ -1281,4 +1281,9 @@ function getBonoHistorialPago($id_pago) {
     ");
 }
 
+public function getPagosBonosEnviados($idPagos){
+        $query = "SELECT id_pago_i, abono_neodata FROM pago_casas_ind WHERE id_pago_i IN (?)";
+        return $this->db->query($query, [$idPagos]); 
+    
+}
 }

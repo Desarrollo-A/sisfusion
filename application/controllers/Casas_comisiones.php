@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class Casas_comisiones extends CI_Controller
 {
   private $gph;
+  public $hoy;
   public function __construct()
   {
     parent::__construct();
@@ -29,7 +30,7 @@ class Casas_comisiones extends CI_Controller
     $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
     $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
-    
+    $this->hoy = date("Y-m-d H:i:s");
    }
 
   public function index(){
@@ -103,14 +104,14 @@ class Casas_comisiones extends CI_Controller
         }
 
         date_default_timezone_set('America/Mexico_City');
-        $hoy = date("Y-m-d");
+        $hoyM = date("Y-m-d");
 
 
         $fileTmpPath = $_FILES['file-upload-extranjero']['tmp_name'];
         $fileName = $_FILES['file-upload-extranjero']['name'];
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
-        $newFileName = $nombre . $hoy . md5(time() . $fileName) . '.' . $fileExtension;
+        $newFileName = $nombre . $hoyM . md5(time() . $fileName) . '.' . $fileExtension;
         $uploadFileDir = './static/documentos/extranjero/';
 
         $dest_path = $uploadFileDir . $newFileName;
@@ -874,7 +875,6 @@ echo "la seguda";
     $idCliente = $this->input->post("idCliente");
     $creadoPor = $this->session->userdata('id_usuario');
     $porcentajeTotal = 0.4;
-    $hoy = date("Y-m-d H:i:s");
     //$porcentajeAsignado = ($monto * 100) / $totalNeto2;
     
    /* $dataUpdateCom = array(
@@ -894,7 +894,7 @@ echo "la seguda";
       "id_pago_i" => $id_pago_i,
       "id_usuario" => $id_usuario,
       "abono_bono" => $monto,
-      "fecha_abono" => $hoy,
+      "fecha_abono" => $this->hoy,
       "fecha_pago_intmex" => NULL,
       "pago_bono" => $montoActual,
       "estatus" => 1,
@@ -909,7 +909,7 @@ echo "la seguda";
       "id_pago_i" => $id_pago_i,
       "id_usuario" => $id_usuario == $usuariosBonos[0] ? $usuariosBonos[1] : $usuariosBonos[0] ,
       "abono_bono" => $montoActual - $monto,
-      "fecha_abono" => $hoy,
+      "fecha_abono" => $this->hoy,
       "fecha_pago_intmex" => NULL,
       "pago_bono" => $montoActual,
       "estatus" => 1,
@@ -929,6 +929,39 @@ echo "la seguda";
          $resultado = array("resultado" => TRUE);
      }
     echo json_encode($resultado);
+  }
+
+  public function asigancionMasivaBonos(){
+    $id_usuario = $this->input->post("usuarioBono");
+    $id_pago_i = explode(",",$this->input->post("id_pago_i"));
+    
+    $arrayBonos = array();
+
+echo $this->hoy;
+exit;
+
+    $datosPagos =  $this->Casas_comisiones_model->getPagosBonosEnviados($id_pago_i)->result_array();
+
+    for ($i=0; $i < count($datosPagos) ; $i++) { 
+      $data = array(
+        "id_pago_i" => $datosPagos[$i]['id_pago_i'],
+        "id_usuario" => $id_usuario,
+        "abono_bono" => $datosPagos[$i]['abono_neodata'],
+        "fecha_abono" => $this->hoy,
+        "fecha_pago_intmex" => NULL,
+        "pago_bono" => $montoActual,
+        "estatus" => 1,
+        "creado_por" => $creadoPor,
+        "comentario" => "DISPERIÓN BONOS",
+        "modificado_por " => $creadoPor,
+        "descuento" => 0
+    );
+      array_push($arrayBonos, $data);
+  
+      $insertado = $this->General_model->insertBatch('pago_comision_bono', $arrayBonos);
+
+    }
+
   }
 
   //------------------------------ Contralodores resguardo_casas.js -----------------------------
