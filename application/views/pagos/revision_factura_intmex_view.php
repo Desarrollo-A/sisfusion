@@ -71,6 +71,17 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade modal-alertas" id="modal_multiples_IntmexF_casas" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <form method="post" id="form_multiples_casas">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
         
         <div class="modal fade modal-alertas" id="modal_multiplesOoam" role="dialog">
             <div class="modal-dialog modal-md">
@@ -91,7 +102,8 @@
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
                         <!-- <li><a href="#proceso-1" role="tab" data-toggle="tab">Pagos lotes ooam</a></li> -->
-<li><a href="#factura_seguros" role="tab" data-toggle="tab">Pagos lotes seguros</a></li>
+                        <li><a href="#factura_seguros" role="tab" data-toggle="tab">Pagos lotes seguros</a></li>
+                        <li><a href="#factura_casas" role="tab" data-toggle="tab">Pagos casas</a></li>
                     </ul>
                     <div class="card no-shadow m-0 border-conntent__tabs">
                         <div class="card-content p-0">
@@ -173,8 +185,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php $this->load->view('pagos/seguros_internomex/revision_factura_intmex_ooam_view'); ?>
+                                        
                                         <?php $this->load->view('pagos/seguros_internomex/revision_factura_intmex_seguros_view'); ?>
+                                        <?php $this->load->view('pagos/casas_internomex/revision_factura_intmex_casas_view'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -189,4 +202,5 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_factura_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros_internomex/revision_factura_intmex_seguros.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/casas_internomex/revision_facturas_intmex_casas.js"></script>
 </body>

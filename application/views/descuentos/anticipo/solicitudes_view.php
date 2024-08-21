@@ -101,7 +101,7 @@
                         <div class="card-content">
                             <div class="encabezadoBox">
                                 <h3 class="card-title center-align">Anticipos </h3>
-                                <p class="card-title pl-1">(contrato recibido con firma del cliente)</p>
+                                <p class="card-title pl-1">(Anticipos Proceso subdirector)</p>
                             </div>
                             <div  class="toolbar">
                                 <div class="row">

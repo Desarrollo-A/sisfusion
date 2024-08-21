@@ -1,4 +1,4 @@
-<!-- <div class="tab-pane" id="asimiladosCasas">
+<div class="tab-pane" id="asimiladosCasas">
    <div class="text-center">
         <h3 class="card-title center-align">Comisiones en revisión <b>asimilados CASAS</b></h3>
         <i class="fas fa-house-user  "
@@ -83,4 +83,4 @@
     </div>
 </div>
 
- -->
+

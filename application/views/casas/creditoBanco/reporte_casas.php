@@ -19,7 +19,7 @@
                                     <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verVenta">Historial actual</a>
                                 </li>
                                 <li role="presentation" id="tab-proceso">
-                                    <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verProceso" class="btn-historial" data-idLote="" data-flagFusion="">Hitorial general</a>
+                                    <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verProceso" class="btn-historial" data-idLote="" data-flagFusion="">Historial general</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="venta">
@@ -74,10 +74,10 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#reporteCasas" role="tab" data-toggle="tab" onclick="dataFunction(1)">Reporte proceso de banco</a>
+                                <a href="#reporteCasas" role="tab" data-toggle="tab" onclick="dataFunction(1)">Crédito del banco</a>
                             </li>
                             <li>
-                                <a href="#reporteCredito" role="tab" data-toggle="tab" onclick="dataFunction(2)">Reporte proceso crédito directo</a>
+                                <a href="#reporteCredito" role="tab" data-toggle="tab" onclick="dataFunction(2)">Crédito directo</a>
                             </li>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -88,7 +88,7 @@
                                         <div class="tab-pane active" id="reporteCasas">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Proceso banco</h3>
+                                                    <h3 class="card-title center-align">Clientes en proceso (crédito del banco)</h3>
                                                     <div id="table-filters" class="row mb-1"></div>
                                                 </div>
 
@@ -118,7 +118,7 @@
                                         <div class="tab-pane" id="reporteCredito">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Proceso banco</h3>
+                                                    <h3 class="card-title center-align">Clientes en proceso (crédito directo)</h3>
                                                     <div id="table-filters-directo" class="row mb-1"></div>
                                                 </div>
 

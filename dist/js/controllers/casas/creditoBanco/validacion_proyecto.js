@@ -35,7 +35,7 @@ let columns = [
         let view_button = '';
         let subir_archivo = new RowButton({icon: 'file_upload', label: `Cargar documento`, onClick: file_upload, data})
 
-        if(data.documento){
+        if(data.archivo){
             btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
             view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
         }
@@ -73,7 +73,7 @@ let table = new Table({
 function avanceProcesoBanco(data){
     let form = new Form({
         title: 'Avanzar proceso',
-        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true);
 
@@ -145,7 +145,9 @@ function file_upload(data) {
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'tipoDocumento', value: data.tipo }),
-            new HiddenField({ id: 'id_documento', value: 16 }),
+            new HiddenField({ id: 'id_documento', value: 16
+
+             }),
             new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
             new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ]
@@ -177,17 +179,15 @@ rechazo_proceso = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/rechazoPaso7`,
+                url: `${general_base_url}casas/creditoBancoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success : function(response){
-                    if(response.result){
-                        finalizar_rechazo(data, form)
-                    }
-                    else{
-                        alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-                    }                                               
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
+        
+                    table.reload()
+                    form.hide()                             
                 },
                 error: function(){
                     alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
@@ -207,25 +207,4 @@ rechazo_proceso = function (data) {
     })
 
     form.show()
-}
-
-finalizar_rechazo = function(data, form){
-    $.ajax({
-        type: 'POST',
-        url: `${general_base_url}casas/creditoBancoAvance`,
-        data: data,
-        contentType: false,
-        processData: false,
-        success : function(response){
-            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-
-            table.reload()
-            form.hide()                             
-        },
-        error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
-
-            form.loading(false)
-        }
-    })
 }

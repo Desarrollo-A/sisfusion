@@ -1,3 +1,5 @@
+let valor_avance = 5; // valor predefinido al que se debe avanzar normalmente, a excepcion de cuando es rechazo de un paso mas alto
+
 const formatter = new Intl.NumberFormat('es-MX', {
   style: 'currency',
   currency: 'MXN',
@@ -34,11 +36,11 @@ let columns = [
     },
     { data: function(data){
         let btn_avance = '';
-        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: funcionRechazo, data});
+        let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazoProcesoBanco, data});
         let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de proveedor', onClick: go_to_documentos, data});
         let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de cliente', onClick: go_to_documentos_cliente, data});
         
-        if(data.documentos == 21){
+        if(data.documentos == 20){
             btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
         }
 
@@ -68,15 +70,19 @@ let table = new Table({
     id: '#tableDoct',
     // url: 'casas/getLotesProcesoBanco',
     url: 'casas/countDocumentos',
-    params: { documentos: [ 2,4,5,6,7,8,10,11,12,36,38,39,40,41,42,43,44,45,46,47,48 ], proceso: 4 },
+    params: { documentos: [ 2,4,5,6,7,8,10,11,12,36,38,39,40,41,42,43,44,45,46,47 ], proceso: 4 },
     buttons: buttons,
     columns,
 })
 
 function avanceProcesoBanco(data){
+    if(data.procesoAnterior > data.procesoNuevo && data.tipoMovimiento == 1){
+        valor_avance = data.procesoAnterior // para identificar a que paso debe de avanzar viendo de que paso se rechazo
+    }
+
     let form = new Form({
         title: 'Avanzar proceso',
-        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true);
 
@@ -104,7 +110,7 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 5 }),
+            new HiddenField({ id: 'procesoNuevo', value: valor_avance }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
@@ -113,11 +119,10 @@ function avanceProcesoBanco(data){
     form.show();
 }
 
-
 function rechazoProcesoBanco(data){
     let form = new Form({
-        title: 'Avanzar proceso',
-        text: `Se avanzara el proceso del lote ${data.nombreLote}`,
+        title: 'Rechazar proceso',
+        text: `¿Deseas rechazar el proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             form.loading(true);
 
@@ -145,7 +150,7 @@ function rechazoProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 5 }),
+            new HiddenField({ id: 'procesoNuevo', value: 3 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
@@ -195,6 +200,7 @@ function file_upload(data) {
 go_to_documentos = function(data) {
     window.location.href = `documentacionProveedor/${data.idProcesoCasas}`;
 }
+
 go_to_documentos_cliente = function(data) {
     window.location.href = `documentacionCliente/${data.idProcesoCasas}`;
 }

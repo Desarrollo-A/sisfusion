@@ -1,6 +1,5 @@
 let titulosInventario = [];
 $('#tabla_anticipo_revision thead tr:eq(0) th').each(function (i) {
-   
         var title = $(this).text();
         titulosInventario.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
@@ -8,7 +7,6 @@ $('#tabla_anticipo_revision thead tr:eq(0) th').each(function (i) {
             if ($('#tabla_anticipo_revision').DataTable().column(i).search() !== this.value)
                 $('#tabla_anticipo_revision').DataTable().column(i).search(this.value).draw();
         });
-    
 });
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
@@ -98,7 +96,6 @@ $("#tabla_anticipo_revision").ready(function () {
                 data-monto_parcialidad="${d.monto_parcialidad}"
                 data-id_parcialidad="${d.id_parcialidad}"
                 data-forma_pago="${d.formaNomal}"
-
                 data-name="${d.nombre}"
                 data-monto="${d.monto}" data-monto_formateado="${d.monto_formateado}"
                 class="btn-data btn-sky aceptar_anticipo_confirmar" title="Continuar Anticipo confirmar información">
@@ -146,7 +143,7 @@ $("#tabla_anticipo_revision").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input class="center-align" type="hidden"  value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-            <h4 class=" center-align">¿Ésta seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
+            <h4 class=" center-align">¿Estás seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
                 <label class="label control-label">Mótivo del rechazo</label>
                 <textarea id="motivoDescuento" name="motivoDescuento" class="text-modal" rows="3" required></textarea>
@@ -212,7 +209,7 @@ $("#tabla_anticipo_revision").ready(function () {
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
-                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' +v.comentario_general + '</a>\n' +
@@ -252,42 +249,30 @@ $("#tabla_anticipo_revision").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-
-            <h4 class="center-align">¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
+            <h4 class="center-align">¿Estás seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
-
-                
-
                 <div>
-                <h2 class="card_title">Detalles</h2>
+                    <h2 class="card_title">Detalles</h2>
                     <p class="center-align"> 
                         Monto solicitado : ${monto_formateado}.<br>
-                        Mendiante la modalidad : ${modalidad}
-
-                        
+                        Mediante la modalidad : ${modalidad}  
                     </p>
                 </div>
-
-
                 <div class="row aligned-row d-flex align-end pt-3" style="display: flex; justify-content: center"> 
-                
                     <div id="selectorModo" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <h2 class="card_title">Prioridad</h2>
+                        <h2 class="card_title">Prioridad</h2>
                         <div >
                             <div class="radio_container w-100">
                                 <input class="d-none find-results" type="radio" name="modoSubida" id="prioridad_normal" checked value="0">
                                 <label for="prioridad_normal" class="w-50">Normal</label>
                                 <input class="d-none generate" type="radio" name="modoSubida" id="prioridad_urge"  value="1">
                                 <label for="prioridad_urge" class="w-50">Urgente</label>
-                                
                             </div>
                         </div>
                     </div>
                 </div>
-                
             </div>
             <div class="form-group col-md-12 ">
-                
                 <input  type="hidden" value="${monto1}" name="monto" id="monto">
             </div>
             <div class="form-group">
@@ -335,13 +320,13 @@ $("#tabla_anticipo_revision").ready(function () {
         Modalbody_subir.append(`
             <input type="hidden" value="${idAnticipo1}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
-            <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
+            <h4>¿Estás seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
 
             <div>
                 <h2 class="card_title">Detalles</h2>
                 <p class="center-align"> 
                     Monto solicitado : ${monto_formateado}.<br>
-                    Mendiante la modalidad : ${modalidad}
+                    Mediante la modalidad : ${modalidad}
                 </p>
             </div>
             <div class="form-group">

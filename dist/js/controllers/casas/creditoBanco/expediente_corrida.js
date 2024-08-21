@@ -34,8 +34,8 @@ let table = new Table({
 returnProcess = function(data){ // funcion para subir el archivo de adeudo
 
     let form = new Form({
-        title: '¿Rechazar lote?', 
-        text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
+        title: 'Rechazar lote', 
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             // console.log(data)
             form.loading(true)
@@ -76,8 +76,8 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
 nextProcess = function(data){ // funcion para el avance del lote
     
     let form = new Form({
-        title: '¿Avanzar lote?', 
-        text: `Se avanzara el proceso del lote  - <b>${data.nombreLote}</b>`,
+        title: 'Avanzar lote', 
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true)
 

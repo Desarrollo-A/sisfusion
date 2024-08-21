@@ -20,8 +20,8 @@ let columns = [
            let return_button = '';
 
             if((data.voBoContrato == null || data.voBoContrato == 0) && (data.voBoValidacionEnganche == 1)){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso al lote', onClick: nextProcess, data})
-                return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: nextProcess, data})
+                return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: returnProcess, data})
             }
 
             return '<div class="d-flex justify-center">' + pass_button + return_button + '</div>'
@@ -40,8 +40,8 @@ let table = new Table({
 returnProcess = function(data){ // funcion para subir el archivo de adeudo
 
     let form = new Form({
-        title: '¿Rechazar lote?', 
-        text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
+        title: 'Rechazar lote', 
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             // console.log(data)
             form.loading(true)
@@ -84,7 +84,7 @@ nextProcess = function(data){ // funcion para el avance del lote
     
     let form = new Form({
         title: '¿Avanzar lote?', 
-        text: `Se avanzara el proceso del lote  - <b>${data.nombreLote}</b>`,
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true)
 

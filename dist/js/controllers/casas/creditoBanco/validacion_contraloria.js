@@ -1,40 +1,3 @@
-pass_to_solicitud_contratos = function(data) {
-
-    let form = new Form({
-        title: 'Avanzar proceso',
-        text: `¿Deseas continuar con el lote <b>${data.nombreLote}</b>?`,
-        onSubmit: function(data){
-            //console.log(data)
-            form.loading(true);
-
-            $.ajax({
-                type: 'POST',
-                url: `to_solicitud_contratos`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente.", "success");
-        
-                    table.reload();
-                    form.hide();
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-        ],
-    })
-
-    form.show()
-}
-
 capturaContratos = function(data) {
 
     console.log(data)
@@ -66,8 +29,9 @@ capturaContratos = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new NumberField({  id: 'obra', value: data.obra, label: 'Contrato de obra a mano alzada', width: '12', required:true, mask: "#,##0.00" }),
-            new NumberField({  id: 'tesoreria', value: data.tesoreria, label: 'Contrato de tesoreria', width: '12', required:true, mask: "#,##0.00" }),
+            new NumberField({  id: 'tesoreria', value: data.tesoreria, label: 'Contrato de tesorería', width: '12', required:true, mask: "#,##0.00" }),
             new NumberField({  id: 'serviciosArquitectonicos', value: data.serviciosArquitectonicos, label: 'Contrato de servicios arquitectónicos', width: '12', required:true, mask: "#,##0.00" }),
             new NumberField({  id: 'costoConstruccion', value: data.costoConstruccion, label: 'Costo total de construcción', width: '12', required:true, mask: "#,##0.00" }),
         ],
@@ -80,19 +44,19 @@ back_to_adeudos = function(data) {
 
     let form = new Form({
         title: 'Rechazar proceso', 
-        text: `¿Deseas Rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
 
             $.ajax({
                 type: 'POST',
-                url: `back_to_documentos`,
+                url: `creditoBancoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `Se ha rechazado el proceso`, "success");
+                    alerts.showNotification("top", "right", `Se ha rechazado el proceso correctamente`, "success");
         
                     table.reload()
                     form.hide();
@@ -105,8 +69,12 @@ back_to_adeudos = function(data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 4 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
@@ -116,10 +84,9 @@ back_to_adeudos = function(data) {
 pass_to_solicitud_contratos = function(data) {
 
     let form = new Form({
-        title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a subir contratos?`,
+        title: 'Avanzar proceso',
+        text: `¿Desea avanzar le proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
-            //console.log(data)
             form.loading(true);
 
             $.ajax({
@@ -129,7 +96,7 @@ pass_to_solicitud_contratos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de subir contratos.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente.", "success");
         
                     table.reload();
                     form.hide();
@@ -154,7 +121,7 @@ go_to_documentos = function(data) {
     window.location.href = `valida_documentacion/${data.idProcesoCasas}`;
 }
 
-function replace_upload(data ) {
+function replace_upload(data) {
 
     let form = new Form({
         title: 'Reemplazar archivo',
@@ -185,7 +152,7 @@ function replace_upload(data ) {
             new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento', value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
-            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept : ['image/png','image/jpeg','application/pdf'], required: true }),
         ],
     })
 
@@ -223,7 +190,7 @@ function upload(data) {
             new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
             new HiddenField({ id: 'tipo', value: 30 }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
-            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept : ['image/png','image/jpeg','application/pdf'], required: true }),
         ],
     })
 
@@ -293,8 +260,6 @@ let columns = [
         let upload_button = ''
         let view_button = '';
         let pass_button = '';
-
-        console.log(data)
 
         if (data.archivo) {
             view_button = new RowButton({icon: 'visibility', label: `Visualizar distribución de pagos`, onClick: show_preview, data})

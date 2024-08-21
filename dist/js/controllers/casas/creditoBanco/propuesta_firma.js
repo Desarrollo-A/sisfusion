@@ -1,7 +1,13 @@
+let nuevo_proceso = 9
+
 pass_to_propuestas = function(data) {
+    if(data.procesoNuevo < data.procesoAnterior){
+        nuevo_proceso = data.procesoAnterior;
+    }
+
     let form = new Form({
-        title: 'Continuar proceso', 
-        text: `¿Deseas realizar el avance de proceso del lote ${data.nombreLote}?`,
+        title: 'Avanzar proceso', 
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -28,12 +34,55 @@ pass_to_propuestas = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'idRol', value: idRol }),
+            new HiddenField({ id: 'nuevo_proceso', value: nuevo_proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
     form.show()
+}
 
+rechazar_proceso = function(data) {
+    let form = new Form({
+        title: 'Rechazar proceso', 
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `creditoBancoAvance`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idRol', value: idRol }),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
+            new HiddenField({ id: 'procesoNuevo', value: 4}),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
 }
 
 function updateItemsNot() {
@@ -148,7 +197,7 @@ selectNotarias = function(data) {
 addNotaria = function(data) {
 
     if(!data){
-        alerts.showNotification("top", "right", "El campo esta vacio.", "danger");
+        alerts.showNotification("top", "right", "El campo esta vacío.", "danger");
     }else{
         let form = new FormConfirm({
             title: '¿Estás seguro de registrar la notaria?',
@@ -224,7 +273,7 @@ function gestorNotarias() {
         title: 'Gestión de notarías',
         fields: [
             new HrTitle({text: 'Registro de notaría'}),
-            new CrudInput({ id: 'notaria', placeholder: 'Nombre de la notaria', width: '12', required: 'required', icon: 'add', title: 'Agregar', onClick: addNotaria }),
+            new CrudInput({ id: 'notaria', placeholder: 'Nombre de la notaría', width: '12', required: 'required', icon: 'add', title: 'Agregar', onClick: addNotaria }),
             new HrTitle({text: 'Lista de notarías'}),
             ...items.map(item => 
                 new CrudInput({
@@ -261,10 +310,10 @@ go_to_cotizaciones = function(data) {
     window.location.href = `cotizaciones/${data.idProcesoCasas}`;
 }
 
-function replace_upload(data ) {
+function upload(data ) {
 
     let form = new Form({
-        title: 'Reemplazar archivo',
+        title: 'Cargar documento',
         onSubmit: function (data) {
             form.loading(true)
 
@@ -299,7 +348,7 @@ function replace_upload(data ) {
     form.show()
 }
 
-function upload(data) {
+function replace_upload(data) {
 
     let form = new Form({
         title: 'Cargar documento',
@@ -328,7 +377,7 @@ function upload(data) {
         },
         fields: [
             new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
-            new HiddenField({ id: 'tipo', value: rol == 57 ? 17 : 28 }),
+            new HiddenField({ id: 'tipo', value: idRol == 57 ? 17 : 28 }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
         ],
@@ -336,7 +385,6 @@ function upload(data) {
 
     form.show()
 }
-
 
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
@@ -352,7 +400,7 @@ function show_preview(data) {
     });
 }
 
-back_to_documentos = function(proceso) {
+rechazaroProceso = function(data) {
     let form = new Form({
         title: 'Rechazar proceso', 
         text: `¿Deseas realizar el rechazar de proceso del lote ${data.nombreLote}`,
@@ -380,7 +428,7 @@ back_to_documentos = function(proceso) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id', value: proceso.idProcesoCasas }),
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -462,36 +510,39 @@ let columns = [
         if(idRol == 101){
             if (data.constancia) {
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
-                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
-            }else{
                 upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_propuestas, data})
+            }else{
+                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
             }
         }
 
         if(idRol == 57){
-
-        propuestas_button = new RowButton({icon: 'event', label: 'Propuestas de fechas', onClick: show_propuestas, data})
-        upload_cotizacion = new RowButton({icon: 'list', label: 'Cargar cotizaciones', onClick: go_to_cotizaciones, data})
-        notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
+            propuestas_button = new RowButton({icon: 'event', label: 'Propuestas de fechas', onClick: show_propuestas, data})
+            upload_cotizacion = new RowButton({icon: 'list', label: 'Cargar propuestas de cotizaciones', onClick: go_to_cotizaciones, data})
+            notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
 
             if (data.titulacion) {
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar títulos de propiedad`, onClick: show_preview, data})
-                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: replace_upload, data })
-            }else{
-                upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
             }
-
+            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
         }
         
         if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos == 2 && data.notarias != 0 && idRol === 57){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso', onClick: pass_to_propuestas, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_propuestas, data})
         }
 
-        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso', onClick: back_to_documentos, data})
+        back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazar_proceso, data})
 
         return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${upload_cotizacion}${propuestas_button}${notarias}${back_button}</div>`
     } },
 ]
+
+let atributoButton = '';
+
+if(idRol != 57){
+    atributoButton = 'hidden'
+}
 
 let buttons = [
     {
@@ -514,7 +565,7 @@ let buttons = [
     },
     {
         text: '<i class="fas fa-edit"></i>',
-        className: 'btn-large btn-sky btn-gestion',
+        className: `btn-large btn-sky btn-gestion ${atributoButton}`,
         titleAttr: 'Gestionar notarías',
         title:"Gestionar notarías",
         attr: {

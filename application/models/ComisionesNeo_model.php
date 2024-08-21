@@ -10,9 +10,6 @@ class ComisionesNeo_model extends CI_Model {
 
     public function getStatusNeodata($lote){
         $pre_validate = $this->db->query("SELECT l.id_estado FROM lotes l WHERE l.status = 1 AND l.idLote = $lote");
-
-        
-        
         if( !isset($pre_validate->row()->id_estado) )
         {
             $var = 2;

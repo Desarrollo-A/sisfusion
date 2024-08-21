@@ -1356,7 +1356,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     }
 
     public function getLotesAsignados(){
-      set_time_limit(600);
+      set_time_limit(6000);
       // para tener los datos de todos
       $getLotesTodo = $this->scheduleTasks_model->getLotesAsignadosTodos()->result();
       $getProceso6 = $this->scheduleTasks_model->getLotesAsignados6()->result();
@@ -1371,7 +1371,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           ->initialize()
           ->from('Ciudad Maderas')
           ->to($lote->correo)
-          ->subject('Notificación de estatus de lotes')
+          ->subject('Notificación de estatus de lotes - ' . date('Y-m-d H:i:s'))
           ->view($this->load->view('mail/reestructura/mailPendientes', [
               'nombreGerente' => $lote->nombreGerente,
               'cantidadProceso0' => $lote->cantidadProceso0,
@@ -1382,14 +1382,13 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           $this->email->send();
       }
 
-      // sleep(10);
       // envios de correos a asesores
       foreach($getProceso6 as $lote){
           $this->email
           ->initialize()
           ->from('Ciudad Maderas')
           ->to($lote->correo)
-          ->subject('Notificación de estatus de lotes')
+          ->subject('Notificación de estatus de lotes - ' . date('Y-m-d H:i:s'))
           ->view($this->load->view('mail/reestructura/mailPendientesAsesor', [
               'nombreAsesor' => $lote->nombreAsesor,
               'cantidadProceso6' => $lote->cantidadProceso6,
@@ -1397,14 +1396,13 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           $this->email->send();
       }
 
-      // sleep(10);
       // envios de correos a contraloria
       foreach($getProcesoContraloria as $lote){
           $this->email
           ->initialize()
           ->from('Ciudad Maderas')
-          ->to(['mariela.sanchez@ciudadmaderas.com', 'asistente.contraloria@ciudadmaderas.com']) // Mariela Sanchez 
-          ->subject('Notificación de estatus de lotes')
+          ->to('mariela.sanchez@ciudadmaderas.com')
+          ->subject('Notificación de estatus de lotes - ' . date('Y-m-d H:i:s'))
           ->view($this->load->view('mail/reestructura/mailPendientesContraloria', [
               'nombre1' => "Mariela Sanchez Sanchez",
               'nombre2' => "Alejando Santiago Gamez",
@@ -1413,14 +1411,27 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
           $this->email->send();            
       }
 
-      // sleep(10);
+      foreach($getProcesoContraloria as $lote){
+        $this->email
+        ->initialize()
+        ->from('Ciudad Maderas')
+        ->to('asistente.contraloria@ciudadmaderas.com')
+        ->subject('Notificación de estatus de lotes - ' . date('Y-m-d H:i:s'))
+        ->view($this->load->view('mail/reestructura/mailPendientesContraloria', [
+            'nombre1' => "Mariela Sanchez Sanchez",
+            'nombre2' => "Alejando Santiago Gamez",
+            'cantidadProceso2' => $lote->cantidadProceso2,
+        ], true));
+        $this->email->send();            
+    }
+
       // envios de correos a juridico
       foreach($getProcesoJuridico as $lote){
           $this->email
           ->initialize()
           ->from('Ciudad Maderas')
-          ->to(['cinthya.lopez@ciudadmaderas.com', 'asistente.juridico@ciudadmaderas.com']) // Cinthya López
-          ->subject('Notificación de estatus de lotes')
+          ->to('cinthya.lopez@ciudadmaderas.com')
+      ->subject('Notificación de estatus de lotes - ' . date('Y-m-d H:i:s'))
           ->view($this->load->view('mail/reestructura/mailPendientesJuridico', [
               'nombre1' => "Cinthya López",
               'cantidadProceso2' => $lote->cantidadProceso2,
@@ -1428,6 +1439,20 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
           $this->email->send();
       }
+
+      foreach($getProcesoJuridico as $lote){
+        $this->email
+        ->initialize()
+        ->from('Ciudad Maderas')
+        ->to('asistente.juridico@ciudadmaderas.com')
+        ->subject('Notificación de estatus de lotes - ' . date('Y-m-d H:i:s'))
+        ->view($this->load->view('mail/reestructura/mailPendientesJuridico', [
+            'nombre1' => "Cinthya López",
+            'cantidadProceso2' => $lote->cantidadProceso2,
+        ], true));
+
+        $this->email->send();
+    }
       
       if($sentFlag){
           $response["result"] = true;

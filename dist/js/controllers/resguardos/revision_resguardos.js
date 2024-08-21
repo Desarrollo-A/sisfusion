@@ -56,7 +56,7 @@ let titulos = [];
 
 
 $(document).ready(function () { 
-    $("#tabla_resguardo").prop("hidden", true);
+    $("#tabla_resguardo, #tabla_resguardo_casas").prop("hidden", true);
     $.post(general_base_url + "Comisiones/getResguardo", function (data) {
 
     let catalogo = data.catalogo,
@@ -66,21 +66,23 @@ $(document).ready(function () {
         for (var i = 0; i < catalogo.length; i++) {
             var id = catalogo[i]['id_opcion'];
             var anio = catalogo[i]['nombre'];
-            $(`#anio`).append($('<option>').val(anio).text(anio));
+            $(`#anio, #anio_casas`).append($('<option>').val(anio).text(anio));
         }
-        $("#anio").selectpicker('refresh')
-        $(`#catalogo_resguardo`).append($('<option>').val(0).text('SIN PROYECTO'));
+        $("#anio, #anio_casas").selectpicker('refresh');
+
+        $(`#catalogo_resguardo, #catalogo_resguardo_casas`).append($('<option>').val(0).text('SIN PROYECTO'));
         for (var i1 = 0; i1 < proyecto.length; i1++) {
             var id = proyecto[i1]['idResidencial'];
-            $(`#catalogo_resguardo`).append($('<option>').val(id).text(proyecto[i1]['descripcion']));
+            $(`#catalogo_resguardo, #catalogo_resguardo_casas`).append($('<option>').val(id).text(proyecto[i1]['descripcion']));
         }
-        $("#catalogo_resguardo").selectpicker('refresh')
+        $("#catalogo_resguardo, #catalogo_resguardo_casas").selectpicker('refresh');
         
         for (var i2 = 0; i2 < directivos.length; i2++) {
             var id = directivos[i2]['id_usuario'];
             var name = directivos[i2]['nombre'];
-            $(`#directivo_resguardo`).append($('<option>').val(id).text(name));
-        }$("#directivo_resguardo").selectpicker('refresh')
+            directivos[i2]['tipo'] == 3 ? $(`#directivo_resguardo_casas`).append($('<option>').val(id).text(name)) : $(`#directivo_resguardo`).append($('<option>').val(id).text(name));
+            directivos[i2]['tipo_2'] == 3 ? $(`#directivo_resguardo_casas`).append($('<option>').val(id).text(name)) :'';
+        }$("#directivo_resguardo, #directivo_resguardo_casas").selectpicker('refresh');
         
     }, 'json');
     let meses = [
@@ -137,8 +139,8 @@ $(document).ready(function () {
 
         for (let index = 0; index < meses.length; index++) {
         datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
-        $('#mes').html(datos);
-        $('#mes').selectpicker('refresh');
+        $('#mes, #mes_casas').html(datos);
+        $('#mes, #mes_casas').selectpicker('refresh');
     }
 
 });
