@@ -1003,7 +1003,7 @@ class Casas_comisiones_model extends CI_Model {
         
         if($bandera_segunda == 2 ){
             $TotComisionXusuario = 0;
-        
+         
             $porcentaje = 2;
         
             $rol = 0; 
@@ -1082,7 +1082,7 @@ public function getDataDispersionPago() {
     LEFT JOIN proceso_casas_banco procsb ON procsb.idLote=l.idLote AND procsb.status = 1
 	LEFT JOIN opcs_x_cats opcBanco ON opcBanco.id_opcion=procsb.proceso AND opcBanco.id_catalogo=135
 	LEFT JOIN proceso_pagos pcp ON pcp.idLote = l.idLote
-	LEFT JOIN proceso_casas_directo procd ON procd.idLote=l.idLote AND procd.estatus = 1
+	LEFT JOIN proceso_casas_directo procd ON procd.idLote=l.idLote AND procd.estatus = 1 
 	LEFT JOIN opcs_x_cats opcDir ON opcDir.id_opcion=procd.proceso AND opcDir.id_catalogo=150
     INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor_c
     LEFT JOIN pago_comision_casas pc ON pc.id_lote = l.idLote AND pc.bandera IN (0,100)
