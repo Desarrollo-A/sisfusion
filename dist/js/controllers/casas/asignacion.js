@@ -250,6 +250,7 @@ function verificarCheck(valorActual){
     const tr = $(this).closest('tr');
         const row = $('#tablaAsignacionCartera').DataTable().row(tr);
         let botonEnviar = document.getElementsByClassName('botonEnviar');
+        let botonAsesor = document.getElementsByClassName('btn-blueMaderas');
         let arrayInterno = [];
         let arrayId = [];
     
@@ -273,10 +274,16 @@ function verificarCheck(valorActual){
         if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
          //se seleccionó más de uno, se habilita el botón para hacer el multiple
             botonEnviar[0].classList.remove('hide');
+            for(let i = 0; i < botonAsesor.length; i++) {
+                botonAsesor[i].classList.add('hide');
+            }
             $('#btn_'+$(valorActual).val()).prop("disabled", true);        
         }
         else{
             botonEnviar[0].classList.add('hide');
+            for(let i = 0; i < botonAsesor.length; i++) {
+                botonAsesor[i].classList.remove('hide');
+            }
         }
 }
 
