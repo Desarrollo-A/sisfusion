@@ -209,7 +209,7 @@ $("#tabla_anticipo_revision").ready(function () {
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
-                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' +v.comentario_general + '</a>\n' +

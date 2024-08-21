@@ -233,7 +233,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-            <h4>¿Estás seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
+            <h4>¿Estás seguro que deseas aceptar el anticipo de ${nombreUsuario}?</h4>
                 <div>
                     <h2 class="card_title">Detalles</h2>
                     <p class="center-align"> 
@@ -398,7 +398,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
-                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' +v.comentario_general + '</a>\n' +

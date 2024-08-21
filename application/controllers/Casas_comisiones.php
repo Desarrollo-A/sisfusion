@@ -37,6 +37,11 @@ class Casas_comisiones extends CI_Controller
   }
   
 
+  public function dispersionBonos(){
+    $this->load->view('template/header');
+    $this->load->view("Comisiones/dispersion/dispersionBonosView");
+  }
+
   public function validateSession() {
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
       redirect(base_url() . "index.php/login");
@@ -699,6 +704,237 @@ public function getDatosFechasProyecCondm(){
         $data_response = 0;
       echo json_encode($data_response);
       }
+  }
+  public function getDataDispersionPago() {
+    $data['data'] = $this->Casas_comisiones_model->getDataDispersionPago()->result_array();
+    echo json_encode($data);
+  }
+
+  public function porcentajes(){
+    $plan_comision = $this->input->post("plan_comision");
+    $totalNeto2 = $this->input->post("totalNeto2");
+    $cliente = $this->input->post("idCliente");
+    echo json_encode($this->Casas_comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
+  }
+
+   
+  public function InsertNeo(){
+
+   // exit;
+    $lote_1 =  $this->input->post("idLote");
+    $bonificacion =  0;
+    $penalizacion = 0;
+    $nombreLote =  $this->input->post("nombreLote");
+    $disparador =  $this->input->post("id_disparador");
+    $ooam = 0;
+    $nombreOtro = $this->input->post("nombreOtro");
+    $responses = $this->Casas_comisiones_model->validateDispersionCommissions($lote_1)->result_array();
+    $totalFilas = count($responses); 
+    // var_dump($responses[0]['bandera']);
+    // exit;
+    if($totalFilas == 0){ 
+      // echo "entra a primera";
+      // INICIA PRIMERA VALIDACION DE DISPERSION
+        $this->db->trans_begin();
+        $replace = [",","$"];
+        $id_usuario = $this->input->post("id_usuario[]");
+        $comision_total = $this->input->post("comision_total[]");
+        $porcentaje = $this->input->post("porcentaje[]");
+        $id_rol = $this->input->post("id_rol[]");
+        $comision_abonada = $this->input->post("comision_abonada[]");
+        $comision_pendiente = $this->input->post("comision_pendiente[]");
+        $comision_dar = $this->input->post("comision_dar[]");
+        $pago_neo = $this->input->post("pago_neo");
+        $porcentaje_abono = $this->input->post("porcentaje_abono");
+        $abonado = $this->input->post("abonado");
+        $total_comision = $this->input->post("total_comision");
+        $pendiente = $this->input->post("pendiente");
+        $idCliente = $this->input->post("idCliente");
+        $tipo_venta_insert = $this->input->post('tipo_venta_insert'); 
+        $lugar_p = $this->input->post('lugar_p');
+        $totalNeto2 = $this->input->post('totalNeto2');
+        $plan_comision = $this->input->post('plan_c');
+        $banderita = 0;
+        $PorcentajeAsumar=0;
+        $porsicionAsesor = '';
+        $bandera_segunda = 1;
+    //   $respuesta = $this->Casas_comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
+
+      $tipo_venta_insert = $plan_comision;
+      $pivote=0;
+  
+      for ($i=0; $i <count($id_usuario) ; $i++) {   
+   
+        // $respuesta = $this->Casas_comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
+        $respuestaInsertNeoNew = $this->Casas_comisiones_model->getDataDispersionPagoInsertNeoNew($bandera_segunda,$lote_1,$id_usuario[$i],$idCliente,str_replace($replace,"",$comision_total[$i]), $this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]), str_replace($replace,"",$pago_neo),$id_rol[$i],$porcentaje_abono,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),str_replace($replace,"",$pendiente));
+    
+       }
+      
+      $respuesta = $this->Casas_comisiones_model->UpdateLoteDisponible($lote_1,$idCliente);
+    
+      //TERMINA PRIMERA VALIDACION DE DISPERSION
+    
+    } else if($responses[0]["bandera"] == 0 && $disparador == 0){
+
+        
+            $lote_1 =  $this->input->post("idLote");
+            $pending_1 =  $this->input->post("pending");
+            $abono_nuevo = $this->input->post("abono_nuevo[]");
+            $val_rol = $this->input->post("id_rol[]");
+            $id_usuario = $this->input->post("id_usuario[]");
+            $id_comision = $this->input->post("id_comision[]");
+            $pago = $this->input->post("pago_neo");
+            $idCliente = $this->input->post("idCliente");
+            
+            $suma = 0;
+            $replace = [",","$"];
+            
+            $bandera_segunda = 2;
+
+
+            for($i=0;$i<sizeof($id_comision);$i++){
+            $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+        
+                // $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
+                // $respuestaInsertNeoNew = $this->Casas_comisiones_model->getDataDispersionPagoInsertNeoNew($bandera_segunda,$lote_1,$id_usuario[$i],$idCliente,str_replace($replace,"",$comision_total[$i]), $this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]), str_replace($replace,"",$pago_neo),$id_rol[$i],$porcentaje_abono,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),str_replace($replace,"",$pendiente));
+    
+                $respuestaInsertNeoNew = $this->Casas_comisiones_model->getDataDispersionPagoInsertNeoNew($bandera_segunda,$lote_1,$id_usuario[$i],$idCliente,0,$this->session->userdata('id_usuario'),0,$var_n,$pago);
+      
+            
+            }
+            
+            for($i=0;$i<sizeof($abono_nuevo);$i++){
+            $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+            $suma = $suma + $var_n;
+            }
+            
+            $resta = $pending_1 - $pago;
+            if($suma > 0){
+            $respuesta = $this->Casas_comisiones_model->UpdateLoteDisponible($lote_1, $idCliente);
+            // $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
+            }
+    
+            /*if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $respuesta = false;
+            }else{
+            $this->db->trans_commit();
+            $respuesta = true;
+            }*/
+    }
+    else if($responses[0]->bandera != 0) {
+      $respuesta[0] = 2;
+    } else{
+      $respuesta[0] = 3;
+    } 
+
+    if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
+      $this->db->trans_rollback();
+      $respuesta = false;
+    }else{
+      $this->db->trans_commit();
+      $respuesta = true;
+    }
+
+  echo json_encode( $respuesta );
+  }
+
+  function getDatosAbonadoSuma11($idlote){
+    echo json_encode($this->Casas_comisiones_model->getDatosAbonadoSuma11($idlote)->result_array());
+  }
+  function getDatosAbonadoDispersion($idlote){
+
+    echo json_encode($this->Casas_comisiones_model->getDatosAbonadoDispersion($idlote)->result_array());
+  }
+
+  public function changePrioridad(){
+    $prioridadActual = $this->input->post("priridadActual") == 1 ? 0 : 1;
+    $idClienteCasas = $this->input->post("idClienteCasas");
+    $respuesta = $this->Casas_comisiones_model->changePrioridad($prioridadActual,$idClienteCasas,$this->session->userdata('id_usuario'));
+    echo json_encode($respuesta);
+  }
+
+
+  public function getPagosBonos(){
+    $respuesta = $this->Casas_comisiones_model->getPagosBonos();
+    for( $i = 0; $i < count($respuesta); $i++ ){
+      $respuesta[$i]['pa'] = 0;
+  }
+    echo json_encode( array("data" =>$respuesta));
+  }
+
+  public function getUsuariosBonos(){
+     echo json_encode($this->Casas_comisiones_model->getUsuariosBonos()->result_array());
+  }
+
+  public function AsignarBono(){
+    $this->db->trans_begin();
+    $usuariosBonos = [10460,15103];
+    $id_usuario = $this->input->post("usuarioBono");
+    $id_pago_i = $this->input->post("id_pago_i");
+    $id_comision = $this->input->post("id_comision");
+    $montoActual = $this->input->post("montoPago");
+    $monto = $this->input->post("monto_dispersar");
+    $totalNeto2 = $this->input->post("totalNeto2");
+    $idLote = $this->input->post("idLote");
+    $idCliente = $this->input->post("idCliente");
+    $creadoPor = $this->session->userdata('id_usuario');
+    $porcentajeTotal = 0.4;
+    $hoy = date("Y-m-d H:i:s");
+    //$porcentajeAsignado = ($monto * 100) / $totalNeto2;
+    
+   /* $dataUpdateCom = array(
+      "comision_total" => $monto,
+      "id_usuario" => $id_usuario[0],
+      "rol_generado" => $id_usuario[1],
+      "porcentaje_abonado" => $porcentajeAsignado
+    );
+    $dbTransaction = $this->General_model->updateRecord('comisiones_casas', $dataUpdateCom, 'id_comision', $id_comision);*/
+    $dataUpdatePago = array(
+      "estatus" => 11,
+      "modificado_por" => $creadoPor
+    );
+    $dbTransaction = $this->General_model->updateRecord('pago_casas_ind', $dataUpdatePago, 'id_pago_i', $id_pago_i);
+    $arrayBonos = array();
+    $data = array(
+      "id_pago_i" => $id_pago_i,
+      "id_usuario" => $id_usuario,
+      "abono_bono" => $monto,
+      "fecha_abono" => $hoy,
+      "fecha_pago_intmex" => NULL,
+      "pago_bono" => $montoActual,
+      "estatus" => 1,
+      "creado_por" => $creadoPor,
+      "comentario" => "DISPERIÓN BONOS",
+      "modificado_por " => $creadoPor,
+      "descuento" => 0
+  );
+  array_push($arrayBonos, $data);
+
+    $data = array(
+      "id_pago_i" => $id_pago_i,
+      "id_usuario" => $id_usuario == $usuariosBonos[0] ? $usuariosBonos[1] : $usuariosBonos[0] ,
+      "abono_bono" => $montoActual - $monto,
+      "fecha_abono" => $hoy,
+      "fecha_pago_intmex" => NULL,
+      "pago_bono" => $montoActual,
+      "estatus" => 1,
+      "creado_por" => $creadoPor,
+      "comentario" => "DISPERIÓN BONOS",
+      "modificado_por " => $creadoPor,
+      "descuento" => 0
+  );
+    array_push($arrayBonos, $data);
+
+    $insertado = $this->General_model->insertBatch('pago_comision_bono', $arrayBonos);
+    if ( $insertado === FALSE || $this->db->trans_status() === FALSE){
+         $this->db->trans_rollback();
+         $resultado = array("resultado" => FALSE);
+     }else{
+         $this->db->trans_commit();
+         $resultado = array("resultado" => TRUE);
+     }
+    echo json_encode($resultado);
   }
 
   //------------------------------ Contralodores resguardo_casas.js -----------------------------

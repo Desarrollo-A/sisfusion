@@ -942,6 +942,229 @@ class Casas_comisiones_model extends CI_Model {
         return true;
     }
 
+    public function porcentajes($idCliente, $costoConstruccion, $planComision){
+        return $this->db->query("EXEC porcentajesCom @idCliente = $idCliente, @precioTotal = $costoConstruccion,@planComision = $planComision");
+    }
+
+    public function validateDispersionCommissions($lote){
+        return $this->db->query("SELECT count(*) dispersion, pc.bandera 
+        FROM comisiones_casas com
+        LEFT JOIN pago_comision_casas pc ON pc.id_lote = com.id_lote and pc.bandera = 0
+        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
+    }
+    public function InsertPagoComision($lote,$sumaComi,$sumaDispo,$porcentaje,$resta,$id_user,$pagado,$bonificacion){
+        $QUERY_VOBO =  $this->db->query("SELECT id_pagoc FROM pago_comision_casas WHERE id_lote = ".$lote."");
+        if($QUERY_VOBO->num_rows() > 0){
+            $respuesta =  $this->db->query("UPDATE pago_comision_casas SET total_comision = $sumaComi, abonado = $sumaDispo, porcentaje_abono = $porcentaje, pendiente = $resta, creado_por = $id_user, fecha_modificacion = GETDATE(), ultimo_pago = $pagado, bonificacion = $bonificacion, ultima_dispersion = GETDATE(), numero_dispersion = (numero_dispersion+1) WHERE id_lote = $lote");
+        } else{
+            $respuesta =  $this->db->query("INSERT INTO pago_comision_casas ([id_lote],[total_comision],[abonado],[porcentaje_abono],[pendiente],[creado_por],[fecha_modificacion],[fecha_abono],[bandera],[ultimo_pago],[bonificacion],[fecha_neodata],[modificado_por],[new_neo],[ultima_dispersion],[numero_dispersion],[monto_anticipo]) VALUES ($lote,$sumaComi,$sumaDispo,$porcentaje,$resta,$id_user,GETDATE(),GETDATE(),1,$pagado,$bonificacion,null,null,null,GETDATE(),1,$sumaDispo)");
+        }
+
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    public function UpdateLoteDisponible($lote,$idCliente){
+        $respuesta =  $this->db->query("UPDATE pago_comision_casas SET bandera = 0 WHERE id_lote = $lote");
+        $respuesta =  $this->db->query("UPDATE clientes SET registroComisionCasas = 1,usuario=".$this->session->userdata('id_usuario')." WHERE id_cliente = $idCliente");
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+
+    public function InsertNeo($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta,$ooam, $nombreOtro){
+        
+        if($porcentaje != 0 && $porcentaje != ''){
+            $respuesta =  $this->db->query("INSERT INTO comisiones_casas ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.", ".$id_usuario.", ".$TotComision.", 1, 'NUEVA DISPERSIÓN - $tipo_venta ', $ooam, '".$nombreOtro."', ".$user.", GETDATE(), ".$porcentaje.", GETDATE(), ".$rol.",".$idCliente.",'".$this->session->userdata('id_usuario')."')");
+            $insert_id = $this->db->insert_id();
+
+            $respuesta = $this->db->query("INSERT INTO pago_casas_ind (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, estatus, pago_neodata, creado_por, comentario, modificado_por) VALUES (".$insert_id.", ".$id_usuario.", ".$abono.", GETDATE(), GETDATE(), 1 , ".$pago.",'$user', 'PAGO 1 - NEDOATA', '$user')");
+            $insert_id_2 = $this->db->insert_id();
+
+            $respuesta = $this->db->query("INSERT INTO historial_comision_casas VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ PAGO DE COMISIÓN')");
+
+            $respuesta = $this->db->query("UPDATE comisiones_casas SET liquidada = 1 
+            FROM comisiones_casas com
+            LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_casas_ind GROUP BY id_comision) as pci ON pci.id_comision = com.id_comision
+            WHERE com.id_comision = $insert_id AND com.ooam IN (2) AND (com.comision_total-abonado) < 1");
+        }
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    public function getDataDispersionPagoInsertNeoNew($bandera_segunda,$idLote, $id_usuario, $idCliente, $TotComisionXusuario = null,$user = null, $porcentaje = null,$abono = null,$pago = null,$rol = null, $porcentaje_abono = null,$comisionesTotal = null, $abonado = null,$resta= null){
+        
+        if($bandera_segunda == 2 ){
+            $TotComisionXusuario = 0;
+        
+            $porcentaje = 2;
+        
+            $rol = 0; 
+            $porcentaje_abono = 0;
+            $comisionesTotal = 0; 
+            $abonado = 0;
+            $resta= 0;
+        }
+
+        $cmd = "
+            DECLARE @resultadoEsperarDatos INT;
+            DECLARE @resultadoEsperarComisiones INT;
+            DECLARE @resultadoComisionEntrada INT;
+            EXEC MiProcedimiento 
+                @badera_real        = 1,
+                @esperarDatos       = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
+                @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
+                @comisionEntrada    = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
+                @abonoNeodata       = $abono,
+                @pagoNeodata        = $pago,
+                @comentario         = 'Nueva dispersión: casas',
+                @abonoFinal         = 0,
+                @porcentajes        = $porcentaje_abono,
+                @DispersadoPor      = $user,
+                @idLote             = $idLote,
+                @idUsuario          = $id_usuario,
+                @ComisionTotalXUsuario = $TotComisionXusuario,
+                @estatus            = 1,
+                @observaciones      = 'Nueva dispersión: casas',
+                @porcentajeDecimal  = $porcentaje,
+                @rolGenerado        = $rol,
+                @cliente            = $idCliente,
+                @totalComision      = $comisionesTotal,
+                @abonado            = $abonado,
+                @pendiente_pc       = $resta";
+        // var_dump($cmd);
+        $respuesta = $this->db->query($cmd);
+
+        if (! $respuesta ) {
+            return $respuesta ;
+        } else {
+            return $respuesta ;
+        }
+
+    }
+
+
+
+
+
+public function getDataDispersionPago() {
+    $this->db->query("SET LANGUAGE Español;");
+    $query = $this->db->query("SELECT DISTINCT(l.idLote),cl.esquemaCreditoCasas,
+    (CASE WHEN cl.esquemaCreditoCasas = 2 THEN opcDir.nombre ELSE opcBanco.nombre END) estatusConstruccion,cl.prioridadComision,
+    cl.registroComisionCasas, res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
+    oxctipo.nombre tipo_venta,
+    (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
+    (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,cl.estructura,
+    (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, 
+    CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion,(CASE WHEN cl.esquemaCreditoCasas = 1 THEN procsb.costoConstruccion ELSE 120000 END) costoTotalConstruccion,
+	pcp.montoDepositado,
+    (CASE WHEN year(pc.fecha_modificacion) < 2019 THEN NULL ELSE convert(nvarchar,  pc.fecha_modificacion , 6) END) fecha_sistema, se.nombre AS sede, l.referencia, cl.id_cliente,
+    CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, 
+    CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, 
+    CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, 
+    CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, 
+    (CASE WHEN cl.plan_comision_c IN (0) OR cl.plan_comision_c IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision_c,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion,
+    0 bandera_dispersion, l.registro_comision, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2, 
+    l.sup AS supAct, 
+    ISNULL(pc.abonado,0) abonadoAnterior, pc.porcentaje_abono as Comision_total, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes
+    FROM lotes l
+    INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
+    INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
+    INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+	LEFT JOIN opcs_x_cats oxctipo ON oxctipo.id_opcion = cl.esquemaCreditoCasas AND oxctipo.id_catalogo = 151
+    LEFT JOIN proceso_casas_banco procsb ON procsb.idLote=l.idLote AND procsb.status = 1
+	LEFT JOIN opcs_x_cats opcBanco ON opcBanco.id_opcion=procsb.proceso AND opcBanco.id_catalogo=135
+	LEFT JOIN proceso_pagos pcp ON pcp.idLote = l.idLote
+	LEFT JOIN proceso_casas_directo procd ON procd.idLote=l.idLote AND procd.estatus = 1
+	LEFT JOIN opcs_x_cats opcDir ON opcDir.id_opcion=procd.proceso AND opcDir.id_catalogo=150
+    INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor_c
+    LEFT JOIN pago_comision_casas pc ON pc.id_lote = l.idLote AND pc.bandera IN (0,100)
+    LEFT JOIN (SELECT id_cliente FROM ventas_compartidas_casas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
+    LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente_c
+    LEFT JOIN usuarios su ON su.id_usuario = cl.id_subdirector_c
+    LEFT JOIN usuarios di ON di.id_usuario = 2
+    LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision_c
+    LEFT JOIN sedes se ON se.id_sede = cl.id_sede       
+    LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+    "); 
+    return $query;
+}
+
+    public function changePrioridad($prioridadActual,$idClienteCasas,$idUsuario){
+
+        $query = "UPDATE clientes SET prioridadComision= ?, modificado_por= ? WHERE  id_cliente = ?";
+        return $this->db->query($query, [$prioridadActual,$idUsuario,$idClienteCasas]); 
+    }
+
+
+    public function getPagosBonos(){
+        $query = "SELECT 
+            pci1.id_pago_i,'' id_arcus,cl.fechaApartado, pci1.id_comision, 
+            lo.nombreLote  lote, 
+            re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, 
+            pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, 
+            pac.porcentaje_abono, 0 as factura, 1 expediente, 
+            lo.idLote,oxcest.nombre estatus_actual,
+            (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, 0 lugar_prospeccion,
+            pci1.fecha_abono, opt.fecha_creacion as fecha_opinion, opt.estatus as estatus_opinion,
+            '' as procesoCl,
+            '' as colorProcesoCl, 0 as proceso, 0 as id_cliente_reubicacion_2
+            FROM pago_casas_ind pci1 
+            INNER JOIN comisiones_casas com ON pci1.id_comision = com.id_comision 
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
+            INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
+            LEFT JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+            LEFT JOIN clientes  cl ON cl.id_cliente=com.idCliente
+            LEFT JOIN prospectos pr ON pr.id_prospecto=cl.id_prospecto
+            LEFT JOIN sedes sed ON sed.id_sede = 2 and sed.estatus = 1
+            LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
+            WHERE pci1.estatus IN (1) AND com.id_usuario = 16660
+            GROUP BY lo.idLote, pci1.id_comision,pr.id_arcus,cl.fechaApartado,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, opt.fecha_creacion, opt.estatus";
+             return $this->db->query($query)->result_array();
+    }
+
+    public function getUsuariosBonos(){
+        return $this->db->query("SELECT * FROM usuarios WHERE id_usuario  IN(10460,15103)"); 
+    }
+
+    public function getDatosAbonadoSuma11($idlote){
+        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion,cl.estructura
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN comisiones_casas c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
+        LEFT JOIN (SELECT SUM(comision_total) abono_pagado, id_comision FROM comisiones WHERE descuento in (1) AND estatus = 1 GROUP BY id_comision) c2 ON c1.id_comision = c2.id_comision
+        INNER JOIN pago_comision_casas pac ON pac.id_lote = lo.idLote
+        LEFT JOIN pago_casas_ind pci on pci.id_comision = c1.id_comision
+        WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
+        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado,cl.estructura");
+    }
+
+    public function getDatosAbonadoDispersion($idlote){
+         return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador, 
+          oxc.nombre as rol, com.comision_total, pci.abono_pagado, com.rol_generado,com.descuento
+         FROM comisiones_casas com
+         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_casas_ind 
+         GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
+         INNER JOIN lotes lo ON lo.idLote = com.id_lote 
+         INNER JOIN usuarios us ON us.id_usuario = com.id_usuario
+         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = com.rol_generado AND oxc.id_catalogo = 1
+         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = com.rol_generado AND oxc2.id_catalogo = 83
+         WHERE com.id_lote = $idlote AND com.estatus = 1   ORDER BY com.rol_generado asc");
+     }
 // ------------------------------ CONSULTAS DE resguardo_casas.js ------------------------------
 
 function getDatosResguardoContraloria($directivo,$proyecto,$anio,$mes){

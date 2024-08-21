@@ -627,7 +627,7 @@ class Descuentos_model extends CI_Model {
                 INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
                 INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
                 INNER JOIN usuarios us ON us.id_usuario= u.id_lider
-                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
                 LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo
 

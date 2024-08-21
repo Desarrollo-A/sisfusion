@@ -89,7 +89,7 @@
                         <div class="card-content">
                             <div class="encabezadoBox">
                                 <h3 class="card-title center-align">Anticipos </h3>
-                                <p class="card-title pl-1">(Procesos apoyos/prestamos)</p>
+                                <p class="card-title pl-1">(Procesos apoyos/préstamos)</p>
                             </div>
                             <div  class="toolbar">
                                 <div class="row">

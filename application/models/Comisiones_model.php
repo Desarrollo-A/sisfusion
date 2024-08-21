@@ -2053,7 +2053,7 @@ class Comisiones_model extends CI_Model {
         return $this->db->query("SELECT count(*) dispersion, pc.bandera 
         FROM comisiones com
         LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote and pc.bandera = 0
-        WHERE com.id_lote = $lote /*AND com.id_usuario = 2*/ AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
+        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
     }
 
     function getDatosNuevasAsimiladosContraloria($proyecto, $condominio){
@@ -4681,7 +4681,7 @@ function getDatosGralInternomex(){
         WHERE cA.id_cliente = @idCliente)
 
         UNION  /* OTRO PRIMERO - Contabilidad */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.otro = 2 THEN 'Dr. Regional' WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.id_o = 690 THEN 'Subdirector' WHEN pl.otro = 2 THEN 'Dr. Regional'  WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro not in (0)
@@ -6624,32 +6624,76 @@ WITH UltimoValor AS (
 
 -- Consulta principal
 SELECT cl.id_cliente_reubicacion_2,
-       cl.idLote AS idLoteDestino,
-       lo.nombreLote AS nombreDestino,
-       lo.sup AS superficieDestino,
-       lo.totalNeto2 AS totalNeto2Destino,
-       clReu.id_cliente AS clienteReubicado,
-       loReu.idLote AS idLoteOrigen,
-       loReu.nombreLote AS nombreOrigen,
-       cl.total8P AS montoExcedente,
+        cl.idLote AS idLoteDestino,
+        lo.nombreLote AS nombreDestino,
+        lo.sup AS superficieDestino,
+        lo.totalNeto2 AS totalNeto2Destino,
+        clReu.id_cliente AS clienteReubicado,
+        loReu.idLote AS idLoteOrigen,
+        loReu.nombreLote AS nombreOrigen,
+        cl.total8P AS montoExcedente,
        ((lo.sup) - ((loReu.sup * 0.05) + (loReu.sup))) AS Excedente_sup,
-      
 		((CAST(UPDL.anterior AS NUMERIC) * 0.01) * @porcentaje) AS porciento1,
 		
 
 		UPDL.anterior AS totalNeto2Origen,
        ((cl.total8P * @excedente) / 100) AS ExcedenteDinero,
-       loReu.sup AS superficieOrigen
-FROM lotes lo
-INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente		
-INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
-LEFT JOIN UltimoValor UPDL   ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
-WHERE lo.idLote = @lote;";
+        loReu.sup AS superficieOrigen
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.idLote = lo.idLote 
+        INNER JOIN clientes clReu ON cl.id_cliente_reubicacion_2 = clReu.id_cliente		
+        INNER JOIN lotes loReu ON clReu.idLote = loReu.idLote 
+        LEFT JOIN UltimoValor UPDL   ON UPDL.id_parametro = loReu.idLote AND UPDL.rn = 1
+        WHERE lo.idLote = @lote;";
         $query = $this->db->query($cmd);
 
         return $query->result_array();
     }
 
+
+    public function insertComisionesCasas($idLote, $abonoNeodata,$abonoFinal,$porcentajes , $usuarioXdispersar,$comisionTotal , $porcentajeDecimal,$rolGenerado,$cliente ){
+        
+            // Query SQL completo
+    $cmd = "
+    DECLARE @resultadoEsperarDatos INT;
+    DECLARE @resultadoEsperarComisiones INT;
+    DECLARE @resultadoComisionEntrada INT;
+    EXEC MiProcedimiento 
+    @badera_real = 1,
+    @esperarDatos = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
+    @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
+    @comisionEntrada = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
+    @abonoNeodata = 100,
+    @pagoNeodata = 1000,
+    @comentario = 'Nueva dispersión: casas',
+    @abonoFinal = 100,
+    @porcentajes = 8,
+    @DispersadoPor = 1,
+    @idLote = 200,
+    @idUsuario = 290,
+    @ComisionTotalXUsuario = 400,
+    @estatus = 1,
+    @observaciones = 'Nueva dispersión: casas',
+    @porcentajeDecimal = 1,
+    @rolGenerado = 2,
+    @cliente = 150821,
+    @totalComision = 25000,
+    @abonado = 200,
+    @pendiente_pc = 20000;
+
+
+
+    ";
+    $query = $this->db->query($cmd);
+    echo json_encode( $this->db->query("SELECT * FROM #pago_casas_temp")->result());
+    $resultado = $query->result();
+
     
+    
+    }
+
+
+
+
+
 }

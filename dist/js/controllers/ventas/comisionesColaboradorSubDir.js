@@ -235,7 +235,7 @@ async function crearTabla(idTabla,data2,estatus){
                 var mes = hoy.getMonth()+1;
                 var hora = hoy.getHours();
                 //PARA RESGUARDO SIEMPRE SON LOS DOS DIAS SIGUIENTES AL CORTE NORMAL DE COMISIONES
-                if([3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                if([0,1,3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                          ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
                 )
                 {
@@ -312,7 +312,8 @@ async function crearTabla(idTabla,data2,estatus){
         },
         destroy: true,
         ordering: false,
-        "data":data2,
+        data:data2,
+        info: false,
         columns: [{
         },
         {

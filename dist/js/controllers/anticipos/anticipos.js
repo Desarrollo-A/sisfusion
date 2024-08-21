@@ -71,7 +71,7 @@ $("#tabla_anticipos").ready(function () {
                 titleAttr: 'Reporte Anticipo',
                 title: "Reporte Anticipo",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + anticiposReporte[columnIdx] + ' ';
@@ -110,6 +110,9 @@ $("#tabla_anticipos").ready(function () {
             { data: 'id_usuario' },
             
             { data: 'nombreUsuario' },
+            { data: 'puesto' },
+
+
             { data: 'prioridad_nombre' },
         
             // { data: 'nombre_empresa' },
@@ -117,30 +120,28 @@ $("#tabla_anticipos").ready(function () {
                 var mostrar = d.nombre_empresa == null ? 'SELECIONA LA EMPRESA' : d.nombre_empresa;
                 return '<p class="m-0">'+mostrar+'</p>';
             } },
-
             { data: 'proceso' },
-            { data: 'comentario' },
             
+            { data: 'comentario' },
             { data: 'formaNombre' },
+
+
             {    data: function( d ){
                 return '<p class="m-0">'+formatMoney(d.monto)+'</p>';
             } },
-
-
             {   
                 data: function( d ){
-                var total_impuesto_monto = d.forma_pago == 2 ?  0 : (d.monto*0.03);    
+                var total_impuesto_monto = d.forma_pago == 2 ?  0 :  (d.idsede == 6 ) ? (d.monto*0.04) : (d.monto*0.03) ;    
                 return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
             } 
             },
+
             {  data: function( d ){
-                var total_impuesto = d.forma_pago == 2 ?  0 : 3;
+                var total_impuesto = d.forma_pago == 2 ?  0 :  (d.idsede == 6 ) ? 4 : 3;
                 return '<p class="m-0">'+total_impuesto+'%</p>';
                 } 
             },
             
-
-
             { data: 'prioridad_nombre' },
             { data: 'sede' },
             
@@ -443,10 +444,14 @@ $("#tabla_anticipos").ready(function () {
             type: 'POST',
             contentType: false,
             cache: false,
-            processData: false,
+            processData: false, 
+            
+            dataType: 'json',
             success: function(response) {
-                var jsonResponse = JSON.parse(response);
-                if (jsonResponse.success) {
+                console.log(response.success);
+
+              // if(response.success){
+                if (response.success) {
                     $('#anticipoModal').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                     $('#tabla_anticipos').DataTable().ajax.reload();

@@ -205,9 +205,13 @@ class Seguro_model extends CI_Model {
             $query = $this->db->query("UPDATE pago_seguro_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
             return true;
         }
-        function insertComisionSeguroAbono($dataIndividual,$banderaAbono , $comision) {
+        function insertComisionSeguroAbono($dataIndividual,$banderaAbono , $comision,$dataHistorialSeguros) {
             if ($dataIndividual != '' && $dataIndividual != null){
                 $response = $this->db->insert('pago_seguro_ind', $dataIndividual);
+                $insertComision = $this->db->insert_id();
+                $dataHistorialSeguros['id_pago_i'] = $insertComision;
+
+                $response = $this->db->insert('historial_seguro', $dataHistorialSeguros);
                 if (!$response) {
                     return 0;
                 } else {
@@ -674,7 +678,7 @@ class Seguro_model extends CI_Model {
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'lbl-violetBoots' ELSE 'lbl-gray' END) colorContratacion,
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'CONTRATADO' ELSE CONVERT(VARCHAR,l.idStatusContratacion) END) idStatusContratacion,pl.descripcion plan_comision,pl.id_plan,
             (CASE WHEN cl.estatusSeguro = 0 THEN 'PENDIENTE' ELSE opc.nombre END) estatusSeguro,
-			(CASE WHEN cl.estatusSeguro IN (0,1) THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
+			(CASE WHEN cl.estatusSeguro IN (0,1,4) THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
 			FROM lotes l
 			INNER JOIN clientes cl ON cl.id_cliente=l.idCliente
 			INNER JOIN condominios co ON co.idCondominio=l.idCondominio

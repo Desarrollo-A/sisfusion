@@ -899,8 +899,14 @@ class Descuentos extends CI_Controller
                         );
                     // LLAVE FIN DE PROCESO 6
                 }else if($this->input->post('proceso') ==4){
-                    // INICIO PROCES 4                
-                    if( $this->input->post('num_mensualidades') != null )
+                    // INICIO PROCES 4  
+                                
+                    if( $this->input->post('num_mensualidades') != null  
+                    ||  $this->input->post('num_mensualidades') != ''  
+                    ||  empty($this->input->post('num_mensualidades'))
+                    ||  $this->input->post('estatus') != null
+                    ||  $this->input->post('estatus') != ''
+                    )
                     {
                         $array_parcialidad_relacion_anticipo = array (
                             'mensualidades'         => intval($this->input->post('num_mensualidades')),
@@ -913,7 +919,7 @@ class Descuentos extends CI_Controller
                         $insertArray = array(
                             'monto'         =>  $monto,
                             'prioridad'     => $this->input->post('seleccion'),
-                            'estatus'       => $this->input->post('estatus'),
+                            // 'estatus'       => $this->input->post('estatus'),
                             'proceso'       => $this->input->post('proceso')
                         );
                         // vine por prestamo 
@@ -1170,9 +1176,9 @@ class Descuentos extends CI_Controller
 
             public function descargar_XML(){
                 if( $this->session->userdata('id_rol') == 31 ){
-                    $filtro = " ant.proceso IN (8) ";
+                    $filtro = " ant.proceso IN (7) ";
                 } else{
-                    $filtro = " ant.proceso  IN (7) ";
+                    $filtro = " ant.proceso  IN (6) ";
                 }
 
                 $facturas_disponibles = array();
