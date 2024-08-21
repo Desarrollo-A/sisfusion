@@ -389,7 +389,8 @@ class Comisiones_model extends CI_Model {
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8
-        INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+        INNER JOIN usuarios us ON us.id_usuario = pci1.id_usuario
+        INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = us.id_rol AND oprol.id_catalogo = 1
         INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
         LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
