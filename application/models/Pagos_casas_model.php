@@ -26,12 +26,33 @@ class Pagos_casas_model extends CI_Model {
         }     
     }
 
+    public function update_acepta_contraloria_Bono($data , $clave){
+        try {
+            $id_user_Vl = $this->session->userdata('id_usuario');
+            $cmd = "UPDATE pago_comision_bono SET estatus = 8, modificado_por =  $id_user_Vl  WHERE id_pago_bono IN  ($clave) ";
+            $query = $this->db->query($cmd);
+
+            if($this->db->affected_rows() > 0 ){
+                return TRUE;
+            }else{
+                return FALSE;
+            }               
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }     
+    }
+
 
     function insert_phc($data){
         $this->db->insert_batch('historial_comision_casas', $data);
         return true;
     }
 
+    function insert_phc_Bono($data){
+        $this->db->insert_batch('historial_casas_bono', $data);
+        return true;
+    }
 
 
     function getDatosNuevasAsimiladosSeguros($proyecto, $condominio){
@@ -420,6 +441,17 @@ class Pagos_casas_model extends CI_Model {
         return $query->result();
     }
 
+    function getCommentsBono($pago){
+        $cmd = "SELECT hc.comentario, hc.id_pago_i, hc.id_usuario, convert(nvarchar(20), hc.fecha_movimiento, 113) date_final, hc.fecha_movimiento, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+        FROM historial_casas_bono hc 
+        INNER JOIN pago_comision_bono pcb ON pcb.id_pago_bono = hc.id_pago_i
+        INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        WHERE hc.id_pago_i = $pago
+        ORDER BY hc.fecha_movimiento DESC";
+        $query = $this->db->query($cmd);
+        return $query->result();
+    }
+
     public function get_solicitudes_factura( $idResidencial, $id_usuario ){
         if( $this->session->userdata('id_rol') == 31 ){
             $filtro = "WHERE pci1.estatus IN (8,88) ";
@@ -441,4 +473,87 @@ class Pagos_casas_model extends CI_Model {
         $filtro AND u.id_usuario = $id_usuario
         GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion, co.nombre, lo.referencia ORDER BY lo.nombreLote")->result_array();
     }
+
+    function update_acepta_INTMEX_Bono($idsol) {
+        return $this->db->query("UPDATE pago_comision_bono SET estatus = 11, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_bono IN (".$idsol.")");
+    }
+
+    function consultaComisionesBono ($id_pago_is){
+        $cmd = "SELECT id_pago_bono FROM pago_comision_bono WHERE id_pago_bono IN ($id_pago_is)";
+        $query = $this->db->query($cmd);
+
+        $resultado = count($query->result()) > 0 ? $query->result_array() : 0 ;
+        return $resultado;
+    }
+    
+
+    function getDatosRevisionBonos(){
+        if( $this->session->userdata('id_rol') == 31 ){
+            $filtro = "WHERE pcbo.estatus in (8,88) AND pcbo.abono_bono > 0 ";
+        } else{
+            $filtro = "WHERE pcbo.estatus in (4,6) AND pcbo.abono_bono > 0 ";
+        }
+        return $this->db->query("SELECT pcbo.abono_bono , us.id_usuario, CONCAT(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) colaborador, UPPER(sed.nombre) sede, UPPER(oxc.nombre) forma_pago, pcbo.estatus, pcbo.id_pago_bono,
+        (CASE us.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pcbo.abono_bono) ELSE pcbo.abono_bono END) impuesto, sed.impuesto valimpuesto ,us.rfc, lo.nombreLote AS lote 
+        FROM pago_comision_bono pcbo
+        inner join pago_casas_ind coi on coi.id_pago_i = pcbo.id_pago_i 
+        inner join comisiones_casas com on com.id_comision = coi.id_comision
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+        INNER JOIN usuarios us ON us.id_usuario = pcbo.id_usuario 
+        INNER JOIN sedes sed ON sed.id_sede = (CASE WHEN LEN (us.id_sede) > 1 THEN 2 ELSE us.id_sede END)
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
+        $filtro");
+    }
+
+    function getDatosSumaMktd($sede, $PLAN,$empresa, $res){
+        return $this->db->query("SELECT SUM (pci.abono_neodata) suma_f01, STRING_AGG(pci.id_pago_i, ', ') AS valor_obtenido, res.empresa, res.nombreResidencial 
+        FROM pago_comision_bono pcb
+        INNER JOIN pago_casas_ind pci ON pci.id_comision = pci.id_comision
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN usuarios us ON us.id_usuario = pci.id_usuario
+        WHERE pci.estatus IN (4) AND lo.idLote IN (select id_lote FROM reportes_marketing WHERE estatus = 1 AND dispersion = 1) AND pci.id_usuario = 4394 AND lo.status = 1 AND lo.idLote NOT IN (select id_lote FROM compartidas_mktd) AND cl.status = 1 AND lo.ubicacion_dos IN (".$sede.") AND res.empresa = '".$empresa."' AND res.idResidencial = '".$res."'
+        GROUP BY pci.id_usuario, lo.ubicacion_dos, us.nombre, us.apellido_paterno, res.empresa, res.nombreResidencial");
+    }
+
+    function update_estatus_pausa_bono($id_pago_i, $obs) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO  historial_casas_bono VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
+        $respuesta =  $this->db->query("UPDATE pago_comision_bono SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_bono IN (".$id_pago_i.")");
+        $row = $this->db->query("SELECT uuid FROM factura_casas WHERE id_comision = ".$id_pago_i.";")->result_array();
+        
+
+        // Pausar las comisiones que tengan fatucras
+        // if(count($row) > 0){
+        //     $datos =  $this->db->query("select id_factura,total,id_comision,bandera FROM factura_casas WHERE uuid='".$row[0]['uuid']."'")->result_array();
+    
+        //     for ($i=0; $i <count($datos); $i++) {
+        //         if($datos[$i]['bandera'] == 1){
+        //             $respuesta = 1;
+        //         }else{
+        //             $comentario = 'Se regresó esta factura que correspondo al pago con id '.$datos[$i]['id_comision'].' con el monto global de '.$datos[$i]['total'].' por motivo de: '.$obs.' ';
+        //             $response = $this->db->query("UPDATE factura_casas set total=0,id_comision=0,bandera=1,descripcion='$comentario'  WHERE id_factura=".$datos[$i]['id_factura']."");
+        //             $respuesta = $this->db->query("INSERT INTO  historial_comision_casas VALUES (".$datos[$i]['id_comision'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
+        //         }
+        //     }
+        // }
+        return $respuesta;
+    }
+
+
+    function pausar_Bono($id_pago_i, $obs, $estatus) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO  historial_casas_bono VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
+        return $this->db->query("UPDATE pago_comision_bono SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_bono IN (".$id_pago_i.")");
+    }
+
+    function despausar_Bono($id_pago_i, $obs, $estatus) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO  historial_casas_bono VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE ACTIVÓ COMISIÓN, MOTIVO: ".$obs."')");
+        return $this->db->query("UPDATE pago_comision_bono SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_bono IN (".$id_pago_i.")");
+    }
+
+    
 }
