@@ -857,6 +857,9 @@ public function getDatosFechasProyecCondm(){
 
   public function getPagosBonos(){
     $respuesta = $this->Casas_comisiones_model->getPagosBonos();
+    for( $i = 0; $i < count($respuesta); $i++ ){
+      $respuesta[$i]['pa'] = 0;
+  }
     echo json_encode( array("data" =>$respuesta));
   }
 
@@ -948,4 +951,127 @@ public function getDatosFechasProyecCondm(){
     }
     echo json_encode( array( "data" => $dat));
   }
+  //-------------------------------- Controlador para solicitudes_bono_casas--------------------------------
+  public function getDatosBonoAsesor($a)
+  {
+    $dat =  $this->Casas_comisiones_model->getDatosBonoAsesor($a)->result_array();
+    for ($i = 0; $i < count($dat); $i++) {
+      $dat[$i]['pa'] = 0;
+    }
+    echo json_encode(array("data" => $dat));
+  }
+
+  public function aceptar_bono_user(){
+    $formaPagoInvalida = [2,3,4,5];
+    $diaActual = date('d'); 
+    $id_user_Vl = $this->session->userdata('id_usuario');
+    $formaPagoUsuario = $this->session->userdata('forma_pago');
+    $sol=$this->input->post('idcomision');  
+
+    $consulta_comisiones = $this->db->query("SELECT pcb.id_pago_bono FROM pago_comision_bono pcb LEFT JOIN usuarios u ON u.id_usuario=pcb.id_usuario WHERE pcb.id_pago_bono IN (".$sol.")");
+
+    // Validacion de un usuario multitipo
+    $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user_Vl")->result_array();
+    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
+    $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
+    $consultaTipoUsuario = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+
+    if(in_array($tipoValidado,$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
+      $opinionCumplimiento = $this->Casas_comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl); // viene vacio
+      $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; // viene 7 por el mes actual 
+
+      // falta validar
+      $filtro = ($tipoValidado == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($consultaTipoUsuario[0]['forma_pago'] == 2 && $tipoValidado == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
+      
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = $tipoValidado AND mes = $mesActual  $filtro")->result_array(); //trae dos datos con id de fecha de corte
+
+      $obtenerFechaSql = $this->db->query("SELECT FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;// obtiene la fecha de sistema
+      
+      if( $consulta_comisiones->num_rows() > 0 && $consultaFechasCorte ){ // valida que tenga datos consulta_comisiones y tambien consultafechasCorte
+        $validar_sede = $this->session->userdata('id_sede');
+        $fecha_actual = strtotime($obtenerFechaSql);
+        $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+        $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
+        
+        if($formaPagoUsuario == 3){
+          $consultaCP = $this->Casas_comisiones_model->consulta_codigo_postal($id_user_Vl)->result_array();
+        }
+
+        if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689)){
+          if( $formaPagoUsuario == 3 && ( $this->input->post('cp') == '' || $this->input->post('cp') == 'undefined' ) ){
+            $data_response = 3;
+            echo json_encode($data_response);
+          } else if( $formaPagoUsuario == 3 && ( $this->input->post('cp') != '' || $this->input->post('cp') != 'undefined' ) &&  $consultaCP[0]['estatus'] == 0 ){
+            $data_response = 4;
+            echo json_encode($data_response);
+          } else{
+
+            $consulta_comisiones = $consulta_comisiones->result_array();
+            $sep = ',';
+            $id_pago_bono = '';
+            $data=array();
+            $pagoInvoice = array();
+
+            foreach ($consulta_comisiones as $row) {
+              $id_pago_bono .= implode($sep, $row);
+              $id_pago_bono .= $sep;
+
+              $row_arr=array(
+                'id_pago_i' => $row['id_pago_bono'],
+                'id_usuario' =>  $id_user_Vl,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 1,
+                'comentario' =>  'COLABORADOR ENVÍO A CONTRALORÍA' 
+              );
+
+              array_push($data,$row_arr);
+
+              if ($formaPagoUsuario == 5) { // Pago extranjero
+                $pagoInvoice[] = array(
+                  'id_pago_i' => $row['id_pago_bono'],
+                  'nombre_archivo' => $opinionCumplimiento->archivo_name,
+                  'estatus' => 1,
+                  'modificado_por' => $id_user_Vl,
+                  'fecha_registro' => date('Y-m-d H:i:s')
+                );
+              }
+            }
+
+            $id_pago_bono = rtrim($id_pago_bono, $sep);
+            $up_b = $this->Casas_comisiones_model->update_aceptar_bono($id_pago_bono);
+            $ins_b = $this->Casas_comisiones_model->insert_phc_bono($data);
+            $this->Casas_comisiones_model->changeEstatusOpinion($id_user_Vl);
+            if ($formaPagoUsuario == 5) {
+              $this->Casas_comisiones_model->insertMany($pagoInvoice);
+            }
+              
+            if ($up_b === FALSE || $this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                echo json_encode(array("respuesta" => 0));
+              }else{
+                $this->db->trans_commit();
+                echo json_encode(array("respuesta" => 1, "data" => $this->Casas_comisiones_model->getSumaBono($this->session->userdata('id_usuario'))->result_array()));
+              } 
+          }
+        } else {
+          $data_response = 2;
+          echo json_encode($data_response);
+        }
+      } else{
+        $data_response = 0;
+        echo json_encode($data_response);
+      }
+    }else{ //EL COMISIONISTA NO TIENE UNA FORMA DE PAGO VALIDA Y TERMINA CON EL PROCESO DE ENVIO DE COMISIONES
+      // var_dump('el filtro esta aqui');
+      $data_response = 5;
+      echo json_encode($data_response);
+    } 
+  }
+
+  public function getBonoHistorialPago($id_pago_i) {      
+    $dat =  $this->Casas_comisiones_model->getBonoHistorialPago($id_pago_i)->result_array();
+    echo json_encode( array( "data" => $dat));
+  }
+
+
 }

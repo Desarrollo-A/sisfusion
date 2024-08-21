@@ -24,7 +24,7 @@ $('#ano_historial').change(function(){
 $('#ano_historial').change(function(){
     $("#tipo_historial").empty().selectpicker('refresh');
     $("#tipo_historial").append($('<option>').val(1).text('NORMAL'));
-    $("#tipo_historial").append($('<option>').val(3).text('CASAS'))
+    $("#tipo_historial").append($('<option>').val(3).text('CASAS'));
     $("#tipo_historial").selectpicker('refresh');
 });
 
@@ -312,8 +312,18 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
         { 
             "orderable": false,
             "data": function( data ){
-                var BtnStats;
-                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                var BtnStats = '';
+                const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                const BTN_BONOS = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow ver_bonos" data-toggle="tooltip" title="Bonos"><i class="fas fa-clipboard"></i></button>`;
+
+                if(data.cuantos_pagos > 0){
+                    BtnStats += BTN_DETASI;
+                    BtnStats += BTN_BONOS;
+                }
+                else{
+                    BtnStats += BTN_DETASI;
+                }
+ 
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -1030,6 +1040,11 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
     modalHistorial();
     $("#nameLote").append(`<p><h5>HISTORIAL DEL PAGO DE: <b>${lote}</b></h5></p>`);
     $.getJSON(`${general_base_url}${ruta}/getComments/${id_pago}`).done( function( data ){
+        if( data == '' || data == null || data == undefined){
+            $("#comments-list-asimilados").append(`<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>SIN HISTORIAL </small></a></div><h6></h6></div></div></li>`);
+            $('#spiner-loader').addClass('hide');
+
+        }
         $.each( data, function(i, v){
             $("#comments-list-asimilados").append(`<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Usuario: </small><b>${v.nombre_usuario}</b></a><br></div><div class="float-end text-right"><a>${v.fecha_movimiento}</a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>${v.comentario}</b></p></div><h6></h6></div></div></li>`);
             $('#spiner-loader').addClass('hide');
@@ -1228,5 +1243,178 @@ $(document).on("click", "#historial_previa", function () {
     
 });
 
+var tabla_bono =[];
 
+$(document).on('click', ".ver_bonos", function(e){
+
+    var id_pago_i = $(this).val();
+
+    asignarValorColumnasDT("tabla_bono");
+    $('#tabla_bono thead tr:eq(0) th').each( function (i) {
+        var title = $(this).text();
+        if (!excluir_column.includes(title)) {
+            columnas_datatable.tabla_bono.titulos_encabezados.push(title);
+            columnas_datatable.tabla_bono.num_encabezados.push(columnas_datatable.tabla_bono.titulos_encabezados.length-1);
+        }
+        let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+        if (title !== '') {
+            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+            $( 'input', this ).on('keyup change', function () {
+                if ($('#tabla_bono').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla_bono').DataTable().column(i).search(this.value).draw();
+                }
+            });
+        }
+    });
+    $('#boton').prop('disabled', true);
+
+    $("#observar_bonos .modal-footer").html('');
+
+    $("#tabla_bono").prop("hidden", false);
+    tabla_bono = $("#tabla_bono").DataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%', 
+        scrollX:true,               
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'HISTORIAL BONOS',
+            exportOptions: {
+                columns: columnas_datatable.tabla_bono.num_encabezados,
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + columnas_datatable.tabla_bono.titulos_encabezados[columnIdx] + ' ';
+                    }
+                }
+            },
+        }],
+        pagingType: "full_numbers",
+        fixedHeader: true,
+        language: {
+            url: general_base_url+"/static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        deferRender: true,
+        columns: [{
+            "data": function( d ){
+                var lblStats;
+                lblStats ='<p class="m-0"><b>'+d.id_pago_bono+'</b></p>'; //listo
+                return lblStats;
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.proyecto+'</p>'; //listo
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.condominio+'</p>'; //listo
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.nombreLote+'</p>'; //listo   
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+formatMoney(d.precio_lote)+'</p>'; //listo
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+formatMoney(d.comision_total)+' </p>'; //listo
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0"><b>'+formatMoney(d.dispersado)+'</b></p>'; //listo
+            }
+        },
+        {
+            "data": function( d ){
+                if(d.activo == 0 || d.activo == '0'){
+                    return '<p class="m-0"><b>'+d.user_names+'</b></p><p><span class="label lbl-warning">BAJA</span></p>';
+                }
+                else{
+                    return '<p class="m-0"><b>'+d.user_names+'</b></p>'; //listo
+                }
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.puesto+'</p>'; //listo
+            }
+        },
+        {
+            "data": function( d ){
+                var etiqueta;
+                var descuento = d.descuento_aplicado == 1 ? `<p class="m-0"><span class="label lbl-gray" style=""> DESCUENTO</span></p>` : ''; //listo
+                    if(d.pago_neodata < 1){
+                        etiqueta = '<p class="m-1">'+'<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span>'+'</p>'+'<p class="m-1">'+'<span class="label lbl-green">IMPORTACIÓN</span></p>';
+                    }else{
+                        etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color: '+d.color+'; ">'+d.estatus_actual+'</span></p>';
+                    }
+
+                return etiqueta + descuento;
+            }
+        }
+        // ,
+        // { 
+        //     "orderable": false,
+        //     "data": function( data ){
+        //         var BtnStats = '';
+        //         const BTN_DETASI = `<button href="#" value="${data.id_pago_bono}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                
+        //          BtnStats += BTN_DETASI;
+ 
+        //         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+        //     }
+        // }
+    ],
+        columnDefs: [{
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   0,
+            'searchable':true,
+            'className': 'dt-body-center',
+            select: {
+                style:    'os',
+                selector: 'td:first-child'
+            },
+        }],
+        ajax: {
+            "url": general_base_url +"Casas_comisiones/getBonoHistorialPago/" + id_pago_i,
+            "type": "POST",
+            cache: false,
+            "data": function( d ){}
+        },
+        order: [[ 1, 'asc' ]],
+    });
+
+    $('#tabla_bono').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+    });
+
+
+
+
+
+
+
+    $("#observar_bonos .modal-footer").append(`
+      
+        <button data-toggle="tooltip" data-placement="top"type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CERRAR"> CERRAR</button>
+        
+    `);
+    $("#observar_bonos").modal();
+
+});
 

@@ -293,9 +293,7 @@ class Pagos_casas extends CI_Controller
         public function pago_internomex(){
           $id_pago_is = $this->input->post('idcomision');  
           $consulta_comisiones = $this->Pagos_casas_model->consultaComisiones($id_pago_is);
-          
-          // var_dump($consulta_comisiones);
-      
+                
           if( $consulta_comisiones != 0 ){
             $id_user_Vl = $this->session->userdata('id_usuario');
             $sep = ',';
@@ -383,11 +381,134 @@ class Pagos_casas extends CI_Controller
 
         
         public function getComments($id_pago ){
-            // $id_pago = $this->input->post("id_pago");
             echo json_encode($this->Pagos_casas_model->getComments($id_pago));
         }
 
+        public function pago_internomexBono(){
+          $id_pago_is = $this->input->post('idcomision');  
+          $consulta_comisiones = $this->Pagos_casas_model->consultaComisionesBono($id_pago_is);
+                
+          if( $consulta_comisiones != 0 ){
+            $id_user_Vl = $this->session->userdata('id_usuario');
+            $sep = ',';
+            $id_pago_bono = '';
+            $data=array();
+        
+            foreach ($consulta_comisiones as $row) {
+              $id_pago_bono .= implode($sep, $row);
+              $id_pago_bono .= $sep;
+        
+              $row_arr=array(
+              'id_pago_i' => $row['id_pago_bono'],
+              'id_usuario' =>   $this->session->userdata('id_usuario'),
+              'fecha_movimiento' => date('Y-m-d H:i:s'),
+              'estatus' => 1,
+              'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
+              );
+              array_push($data,$row_arr);
+            }
 
+            $id_pago_bono = rtrim($id_pago_bono, $sep);
+            $up_b = $this->Pagos_casas_model->update_acepta_INTMEX_Bono($id_pago_bono);
+            $ins_b = $this->Pagos_casas_model->insert_phc_Bono($data);
+              
+            if($up_b == true && $ins_b == true){
+              $data_response = 1;
+              echo json_encode($data_response);
+            } else {
+              $data_response = 0;
+              echo json_encode($data_response);
+            }
+                    
+          }else{
+            $data_response = 0;
+            echo json_encode($data_response);
+          }
+          
+        }
 
+        public function getCommentsBono($id_pago ){
+          echo json_encode($this->Pagos_casas_model->getCommentsBono($id_pago));
+        }
+
+        public function getDatosRevisionBonos(){
+          $dat =  $this->Pagos_casas_model->getDatosRevisionBonos()->result_array();
+          for( $i = 0; $i < count($dat); $i++ ){
+            $dat[$i]['pa'] = 0;
+          }
+          echo json_encode( array( "data" => $dat));
+        }
+
+        function getDatosSumaMktd($sede, $plen, $empresa, $res){
+          echo json_encode($this->Pagos_casas_model->getDatosSumaMktd($sede, $plen, $empresa, $res)->result_array());
+        }
+
+        public function updateRevisionBonoaInternomex(){
+          $sol=$this->input->post('idcomision');  
+          $consulta_comisiones = $this->db->query("SELECT id_pago_bono FROM pago_comision_bono where id_pago_bono IN (".$sol.")");
+              if( $consulta_comisiones->num_rows() > 0 ){
+              $consulta_comisiones = $consulta_comisiones->result_array();
+              $id_user_Vl = $this->session->userdata('id_usuario');
+              $sep = ',';
+              $id_pago_bono = '';
+              $data=array();
+              foreach ($consulta_comisiones as $row) {
+                  $id_pago_bono .= implode($sep, $row);
+                  $id_pago_bono .= $sep;
+      
+                  $row_arr=array(
+                    'id_pago_i' => $row['id_pago_bono'],
+                    'id_usuario' =>  $id_user_Vl,
+                    'fecha_movimiento' => date('Y-m-d H:i:s'),
+                    'estatus' => 1,
+                    'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
+                  );
+                    array_push($data,$row_arr);
+                }
+                $id_pago_bono = rtrim($id_pago_bono, $sep);
+                  $arrayUpdateControlaria = array(
+                    'estatus' => 8,
+                    'modificado_por' => $id_user_Vl
+                  );
+                  $up_b = $this->Pagos_casas_model->update_acepta_contraloria_Bono($arrayUpdateControlaria , $id_pago_bono);
+                  $ins_b = $this->Pagos_casas_model->insert_phc_Bono($data);
+            if($up_b == true && $ins_b == true){
+              $data_response = 1;
+              echo json_encode($data_response);
+            } else {
+              $data_response = 0;
+              echo json_encode($data_response);
+            }
+            }
+            else{
+              $data_response = 3;
+            echo json_encode($data_response);
+            }
+        }
+
+        function pausar_solicitud_Bono(){
+          $respuesta = array( FALSE );
+          if($this->input->post("id_pago")){
+              $respuesta = array( $this->Pagos_casas_model->update_estatus_pausa_bono( $this->input->post("id_pago_bono"), $this->input->post("observaciones")));
+          }
+          echo json_encode( $respuesta );
+      }
+
+      function despausar_solicitud_Bono_casas(){
+        $respuesta = array( FALSE );
+        if($this->input->post("value_pago")){
+          $validate = $this->input->post("value_pago");
+      
+          switch($validate){
+              case 1:
+                $respuesta = array($this->Pagos_casas_model->pausar_Bono($this->input->post("id_pago_bono"), $this->input->post("observaciones"), $this->input->post("estatus") ));
+              break;    
+              case 2:
+                $respuesta = array($this->Pagos_casas_model->despausar_Bono($this->input->post("id_pago_bono"), $this->input->post("observaciones"), $this->input->post("estatus")));
+              break;
+          }  
+        }
+        echo json_encode( $respuesta );
+      }
 
 } //LLAVE FIN 
