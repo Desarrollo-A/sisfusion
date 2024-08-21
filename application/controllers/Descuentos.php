@@ -1176,9 +1176,9 @@ class Descuentos extends CI_Controller
 
             public function descargar_XML(){
                 if( $this->session->userdata('id_rol') == 31 ){
-                    $filtro = " ant.proceso IN (8) ";
+                    $filtro = " ant.proceso IN (7) ";
                 } else{
-                    $filtro = " ant.proceso  IN (7) ";
+                    $filtro = " ant.proceso  IN (6) ";
                 }
 
                 $facturas_disponibles = array();

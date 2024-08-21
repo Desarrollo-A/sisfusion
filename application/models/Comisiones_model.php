@@ -6653,23 +6653,42 @@ SELECT cl.id_cliente_reubicacion_2,
     public function insertComisionesCasas($idLote, $abonoNeodata,$abonoFinal,$porcentajes , $usuarioXdispersar,$comisionTotal , $porcentajeDecimal,$rolGenerado,$cliente ){
         
             // Query SQL completo
-
-    
     $cmd = "
+    DECLARE @resultadoEsperarDatos INT;
+    DECLARE @resultadoEsperarComisiones INT;
+    DECLARE @resultadoComisionEntrada INT;
     EXEC MiProcedimiento 
-	@abonoNeodata = $abonoNeodata ,@pagoNeodata =$pagoNeodata ,
-	@comentario = 'Nueva dispersión : casas ',@abonoFinal = $abonoFinal ,
-	@porcentajes = $porcentajes,@DispersadoPor = 1, 
-	@idLote = $idLote , @idUsuario = $idUsuario ,
-	@ComisionTotal = $comisionTotal, @estatus = 1,
-	@observaciones = 'Nueva dispersión : casas' ,@porcentajeDecimal = $porcentajeDecimal,
-	@rolGenerado = $rolGenerado , @cliente = $cliente;
+    @badera_real = 1,
+    @esperarDatos = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
+    @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
+    @comisionEntrada = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
+    @abonoNeodata = 100,
+    @pagoNeodata = 1000,
+    @comentario = 'Nueva dispersión: casas',
+    @abonoFinal = 100,
+    @porcentajes = 8,
+    @DispersadoPor = 1,
+    @idLote = 200,
+    @idUsuario = 290,
+    @ComisionTotalXUsuario = 400,
+    @estatus = 1,
+    @observaciones = 'Nueva dispersión: casas',
+    @porcentajeDecimal = 1,
+    @rolGenerado = 2,
+    @cliente = 150821,
+    @totalComision = 25000,
+    @abonado = 200,
+    @pendiente_pc = 20000;
+
+
+
     ";
     $query = $this->db->query($cmd);
     echo json_encode( $this->db->query("SELECT * FROM #pago_casas_temp")->result());
     $resultado = $query->result();
 
-        
+    
+    
     }
 
 
