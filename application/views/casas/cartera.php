@@ -52,19 +52,30 @@
         transition: .3s ease;
     }
 
-    input[type="checkbox"]:checked::before {
-        height: 130%;
-        width: 130%;
-        opacity: 100%;
-    }
+input[type="checkbox"]:checked::after {
+ opacity: 100%;
+}
+.bootstrap-select .dropdown-menu {
+    max-height: 200px; 
+    overflow-y: auto;  
+    padding: 0;        
+}
 
-    input[type="checkbox"]:checked::after {
-        opacity: 100%;
-    }
-    input[type=checkbox]:focus{
-        outline: 0px;
-        outline-offset: 0px;
-    }
+.bootstrap-select .dropdown-menu .inner {
+    max-height: none;  
+    overflow: hidden;  
+}
+
+input[type="checkbox"]:checked::before {
+    height: 130%;
+    width: 130%;
+    opacity: 100%;
+}
+
+input[type=checkbox]:focus{
+    outline: 0px;
+    outline-offset: 0px;
+}
 </style>
 <body class="">
     <div class="wrapper">

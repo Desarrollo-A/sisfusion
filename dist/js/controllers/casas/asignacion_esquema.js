@@ -28,48 +28,57 @@ $.ajax({
 
 avanzar_proceso = function(data) {
     let required = true
-    modelo_select = new SelectField({ id: 'modeloCasa', label: 'Modelo de casa', placeholder: 'Selecciona una opción', width: '12', data: modeloCasa, required: required })
 
     let form = new Form({
         title: 'Continuar proceso', 
         text: `Para continuar el proceso del lote <b>${data.nombreLote}</b> se deben asignar un esquema de crédito y seleccionar un modelo de casa`,
         onSubmit: function(data){
             form.loading(true)
-
-            $.ajax({
-                type: 'POST',
-                url: `${general_base_url}casas/to_asignacion_esquema`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
-        
-                    table.reload();
-
-                    form.hide();
-                    arrayValores = []
-                    arrayIdLotes = []
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                    
-                    form.loading(false)
-                    arrayValores = []
-                    arrayIdLotes = []
+            let form2 = new FormConfirm({
+                title: '¿Estás seguro de continuar el proceso?',
+                onSubmit: function() {
+                    form2.loading(true);
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}casas/to_asignacion_esquema`,
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
+                            table.reload();
+                            form2.hide();
+                            form.hide();
+                            form2.loading(false)
+                            arrayValores = []
+                            arrayIdLotes = []
+                        },
+                        error: function () {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                            form.loading(false);
+                            form2.loading(false);
+                            form2.hide();
+                            arrayValores = []
+                            arrayIdLotes = []
+                        }
+                    })
                 }
-            })
+            });
+            form2.show();
+            form.loading(false);
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
+            new HiddenField({ id: 'idGerente', value: data.id_gerente_c}),
             new SelectField({ id: 'esquemaCredito', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true}),
-            modelo_select,            
+            new MultiSelectField({ id: 'modeloCasa', label: 'Propuestas de casas', data: modeloCasa, placeholder: 'Seleccciona una opción', width: '12', required: true}),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
-    form.show()
+    form.show();
+    multipleSelect('modeloCasa');
 }
 
 
@@ -192,3 +201,33 @@ let table = new Table({
     buttons,
 })
 
+function multipleSelect(idSelect) {
+    let selectElement = $(`#${idSelect}`);
+    
+    selectElement.on('change', function() {
+        let selectedOptions = $(this).val();
+
+        if(selectedOptions.length > 2) {
+            $(this).val(selectedOptions.slice(0,2)).trigger('change');
+            return;
+        }
+
+        $(this).find('option').each(function() {
+            if (!$(this).prop('selected')) {
+                $(this).prop('disabled', selectedOptions.length >= 2);
+            }
+        });
+
+        $(this).find('option').each(function() {
+            if ($(this).prop('selected')) {
+                $(this).prop('disabled', false);
+            }
+        });
+
+        selectElement.selectpicker('refresh');
+
+        if(selectedOptions.length === 2) {
+            selectElement.selectpicker('toggle');
+        }
+    })
+}
