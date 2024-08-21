@@ -221,6 +221,7 @@ let table = new Table({
 
 function verificarCheck(valorActual){
     let botonEnviar = document.getElementsByClassName('botonEnviar');
+    let botonAvanzar = document.getElementsByClassName('btn-green');
     let arrayInterno = [];
     let arrayId = [];
     let arrayIdCliente = [];
@@ -248,10 +249,16 @@ function verificarCheck(valorActual){
     if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
         //se seleccionó más de uno, se habilita el botón para hacer el multiple
         botonEnviar[0].classList.remove('hide');
+        for (let i = 0; i < botonAvanzar.length; i++) {
+            botonAvanzar[i].classList.add('hide');
+        }
         $('#btn_'+$(valorActual).val()).prop("disabled", true);        
     }
     else{
         botonEnviar[0].classList.add('hide');
+        for(let i = 0; i < botonAvanzar.length; i++) {
+            botonAvanzar[i].classList.remove('hide');
+        }
     }
 }
 
