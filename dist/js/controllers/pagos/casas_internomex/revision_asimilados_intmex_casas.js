@@ -254,7 +254,7 @@ function getAssimilatedCommissions_asimilados_casas(proyecto, condominio){
         },
         {
             data: function( d ){
-                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% del 10% DEL COSTO TOTAL)</b></p>';
+                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% del 8% DEL COSTO TOTAL)</b></p>';
             }
         },
         {

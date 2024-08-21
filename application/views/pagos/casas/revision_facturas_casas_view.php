@@ -1,7 +1,7 @@
 <div class="tab-pane" id="facturaCasas">
     <div class="text-center">
         <h3 class="card-title center-align">Comisiones en revisión <b>factura casas </b></h3>
-        <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de factura casas.</p>
+        <p class="card-title pl-1">Comisiones solicitadas por el área de casas para proceder a pago en esquema de factura casas.</p>
     </div>
     <div class="toolbar">
         <div class="container-fluid p-0">
@@ -44,7 +44,7 @@
                                 <th>CONDOMINIO</th>
                                 <th>LOTE</th>
                                 <th>REFERENCIA</th>
-                                <th>PRECIO DEL LOTE</th>
+                                <th>COSTO CONSTRUCCIÓN</th>
                                 <th>EMPRESA</th>
                                 <th>TOTAL DE LA COMISIÓN</th>
                                 <th>PAGADO POR EL CLIENTE</th>

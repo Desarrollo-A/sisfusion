@@ -126,12 +126,14 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
     if(tipo == 1 || tipo == 2 || tipo == 0){
         tipo =  tipo == 0 ? 1 : tipo;
         Comisiones = "Comisiones/getDatosHistorialPago/";
+        $('#titulo_precio').text('PRECIO DEL LOTE');
 
     }else if(tipo == 4){
 
         Comisiones = "SegurosComision/getDatosHistorialPago/";
 
     }else if(tipo == 3 ){
+        $('#titulo_precio').text('COSTO CONSTRUCCIÓN');
         Comisiones = "Casas_comisiones/getDatosHistorialPago/";
     }else{
         alerts.showNotification("top", "right", "Tipo aún no existente en el sistema.", "alert");

@@ -4,7 +4,7 @@
             <!-- <i class="fas fa-house-user  "
             style="color:#000000;  font-size: 30px;"
             ></i> -->
-            <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de remanente casas.</p>
+            <p class="card-title pl-1">Comisiones solicitadas por el área de casas para proceder a pago en esquema de remanente casas.</p>
         </div>
 
         <div class="toolbar">
@@ -50,7 +50,7 @@
                                     <th>CONDOMINIO</th>
                                     <th>LOTE</th>
                                     <th>REFERENCIA</th>
-                                    <th>PRECIO DEL LOTE</th>
+                                    <th>COSTO CONSTRUCCIÓN</th>
                                     <th>EMPRESA</th>
                                     <th>TOTAL DE LA COMISIÓN</th>
                                     <th>PAGADO POR EL CLIENTE</th>

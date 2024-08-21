@@ -1,10 +1,7 @@
 <div class="tab-pane" id="asimiladosCasas">
    <div class="text-center">
         <h3 class="card-title center-align">Comisiones en revisión <b>asimilados CASAS</b></h3>
-        <i class="fas fa-house-user  "
-            style="color:#000000;  font-size: 30px;"
-        ></i>
-        <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de asimilados CASAS.</p>
+        <p class="card-title pl-1">Comisiones solicitadas por el área de casas para proceder a pago en esquema de asimilados CASAS.</p>
     </div>
 
     <div class="toolbar">
@@ -55,7 +52,7 @@
                                 <th>CONDOMINIO</th>
                                 <th>LOTE</th>
                                 <th>REFERENCIA</th>
-                                <th>PRECIO DEL SEGURO</th>
+                                <th>COSTO CONSTRUCCIÓN</th>
                                 <th>EMPRESA</th>
                                 <th>TOTAL DE LA COMISIÓN</th>
                                 <th>PAGADO POR EL CLIENTE</th>
