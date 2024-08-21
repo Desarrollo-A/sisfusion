@@ -1366,32 +1366,32 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       $correosPruebas = ['mariadejesus.garduno@ciudadmaderas.com', 'coordinador1.desarrollo@ciudadmaderas.com'];
 
       $encabezados = [
-          'estatusModificacion' => 'MOVIMIENTO',
-          'nombreResidencial'  => 'PROYECTO',
-          'nombreCondominio' => 'CONDOMINIO',
-          'nombreLote' => 'LOTE',
-          'nombreCliente' => 'CLIENTE',
-          'referencia' => 'REFERENCIA',
-          'nombreGerente' => 'GERENTE',
-          'fechaUltimoEstatus' => 'FECHA DE ÚLTIMO ESTATUS',
-          'fechaVencimiento' => 'FECHA DE VENCIMIENTO',
-          'diasVencimiento' => 'DÍAS DE VENCIMIENTO'
-      ];
+        'estatusModificacion' => 'MOVIMIENTO',
+        'nombreResidencial'  => 'PROYECTO',
+        'nombreCondominio' => 'CONDOMINIO',
+        'nombreLote' => 'LOTE',
+        'nombreCliente' => 'CLIENTE',
+        'referencia' => 'REFERENCIA',
+        'nombreGerente' => 'GERENTE',
+        'fechaUltimoEstatus' => 'FECHA DE ÚLTIMO ESTATUS',
+        'fechaVencimiento' => 'FECHA DE VENCIMIENTO',
+        'diasVencimiento' => 'DÍAS DE VENCIMIENTO'
+    ];
 
       // CORREO A CONTRALORÍA
       if (count($informacionContraloria) > 0)
-        $this->enviarCorreoConRetrasos(1, $informacionContraloria, $correosPruebas);
+        $this->enviarCorreoConRetrasos(1, $informacionContraloria, $correosContraloria, $encabezados);
       else
-        $this->enviarCorreoSinRetrasos(1, $correosPruebas);
+        $this->enviarCorreoSinRetrasos(1, $correosContraloria);
 
       // CORREO A CONTRATACIÓN Y TITULACIÓN
       if (count($informacionContratacionTitulacion) > 0)
-        $this->enviarCorreoConRetrasos(2, $informacionContratacionTitulacion, $correosPruebas);
+        $this->enviarCorreoConRetrasos(2, $informacionContratacionTitulacion, $correosContratacionYTitulacion, $encabezados);
       else
-        $this->enviarCorreoSinRetrasos(2, $correosPruebas);
+        $this->enviarCorreoSinRetrasos(2, $correosContratacionYTitulacion);
   }
 
-  public function llenarContenido($arregloDatos) {
+  public function enviarCorreoConRetrasos ($tipo, $arregloDatos, $correos, $encabezados) {
     $contenido[] = array();
     foreach ($arregloDatos as $key => $valor) {
       $contenido[$key] = array(
@@ -1407,14 +1407,10 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         'diasVencimiento' => $valor->diasVencimiento
       );
     }
-    return $contenido;
-  }
-
-  public function enviarCorreoConRetrasos ($tipo, $arregloDatos, $correos) {
     $subjectComplemento = $tipo == 1 ? "CONTRALORÍA" : "CONTRATACIÓN Y TITULACIÓN";
     $this->email->initialize()->from('Ciudad Maderas')->to($correos)
     ->subject("Trámites vencidos proceso de reestructura $subjectComplemento - " . date('d-m-Y'))
-    ->view($this->load->view('mail/reestructura/mailPendientesContraloria_ContratacionTitulacion.php', ['encabezados' => $encabezados, 'contenido' => $this->llenarContenido($arregloDatos)], true));
+    ->view($this->load->view('mail/reestructura/mailPendientesContraloria_ContratacionTitulacion.php', ['encabezados' => $encabezados, 'contenido' => $contenido], true));
     $this->email->send();
   }
 
