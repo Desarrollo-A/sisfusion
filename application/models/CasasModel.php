@@ -60,6 +60,15 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
+    public function getGerente($id) {
+        $query = "SELECT TOP 1 
+            nombre AS nombre,
+            id_usuario AS idUsuario
+            FROM usuarios WHERE id_usuario = $id";
+
+            return $this->db->query($query)->row();
+    }
+
     public function setProcesoTo($idProcesoCasas, $proceso, $comentario, $tipoMovimiento){
         $idModificacion = $this->session->userdata('id_usuario');
 
@@ -181,10 +190,8 @@ class CasasModel extends CI_Model
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9 
             WHERE 
-                lo.idStatusLote = 2
-            AND (cl.id_gerente_c IS NULL OR cl.id_gerente_c = 0)
-            AND (cl.esquemaCreditoCasas IS NULL OR cl.esquemaCreditoCasas = 0)"
-        )->result();
+                lo.idStatusLote = 2            
+            AND (cl.pre_proceso_casas = 0 OR cl.pre_proceso_casas IS NULL)")->result();
     }
 
     public function getListaAsignacion(){
@@ -206,7 +213,7 @@ class CasasModel extends CI_Model
             lo.sup,
             co.nombre AS condominio,
             re.nombreResidencial AS proyecto,
-            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente
+            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente, lo.idLote
             FROM clientes cli
             INNER JOIN lotes lo ON lo.idLote = cli.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -238,7 +245,8 @@ class CasasModel extends CI_Model
             lo.sup,
             co.nombre AS condominio,
             re.descripcion AS proyecto,
-            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente
+            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente,
+            cli.id_subdirector_c, cli.id_gerente_c
             FROM clientes cli
             INNER JOIN lotes lo ON lo.idLote = cli.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -246,7 +254,7 @@ class CasasModel extends CI_Model
             INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
-            WHERE cli.id_asesor_c = ? AND esquemaCreditoCasas = 0", array($this->idUsuario));
+            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas = 0 AND cli.pre_proceso_casas = 2 ", array($this->idUsuario));
         
         return $query;
     }
@@ -1704,7 +1712,7 @@ class CasasModel extends CI_Model
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
 
-        $query = $this->db->query("SELECT 
+        $query = $this->db->query("SELECT s
             pcd.*,
             oxc.color,
             oxc.nombre AS nombreMovimiento,

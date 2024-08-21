@@ -9,7 +9,7 @@ class BaseController extends CI_Controller {
         parent::__construct();
 
         $storage = new StorageClient([
-            'keyFilePath' => APPPATH . 'config/google.json'
+            //'keyFilePath' => APPPATH . 'config/google.json'
         ]);
 
         $this->bucket = $storage->bucket('bucket_prueba_php');

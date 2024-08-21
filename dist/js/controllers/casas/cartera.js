@@ -1,5 +1,6 @@
 let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  placeholder: 'Selecciona una opción' })
 let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona una opción' })
+
 let arrayValores = []
 let arrayIdLotes = []
 let arrayIdClientes = []
@@ -29,21 +30,20 @@ filtro_proyectos.onChange(function(option){
         type: 'GET',
         url: `condominios?proyecto=${option.value}`,
         success: function (response) {
-
             filtro_condominios.setOptions(response)
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
-    })
-})
+    });
+});
 
 filtro_condominios.onChange(function(option){
     arrayValores = []
     arrayIdLotes = []
     arrayIdClientes = []
     
-    let btn = document.getElementsByClassName("btn-asignar")
+    let btn = document.getElementsByClassName("btn-asignar");
     btn[0].classList.add('hide');
 
     table.setParams({condominio: option.value})
@@ -60,6 +60,7 @@ let filtros = new Filters({
 
 let gerentes = []
 let tipoEsquema = [];
+let propuestasCasas = [];
 tipoEsquema[0] = {label: "Crédito de banco", value: 1}; // credito de banco
 tipoEsquema[1] = {label: "Crédito directo", value: 2}; // credito directo
 
@@ -68,57 +69,62 @@ $.ajax({
     url: 'options_gerentes',
     async: false,
     success: function (response) {
-        gerentes = response
+        gerentes = response;
     },
     error: function () {
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
-})
+});
 
 select_lote = function(data) {
     let form = new Form({
         title: 'Iniciar proceso', 
         text: `¿Deseas iniciar el proceso de asignación del lote <b>${data.nombreLote}</b>?`,
-        onSubmit: function(data){
+        onSubmit: function(dataForm){
             form.loading(true)
-
-            $.ajax({
-                type: 'POST',
-                url: `${general_base_url}casas/to_asignacion`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
-        
-                    table.reload();
-
-                    form.hide();
-                    arrayValores = []
-                    arrayIdLotes = []
-                    arrayIdClientes = []
-
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                    
-                    form.loading(false)
-                    arrayValores = []
-                    arrayIdLotes = []
-                    arrayIdClientes = []
-
+            let form2 = new FormConfirm({
+                title: '¿Estás seguro de iniciar el proceso de asignación?',
+                onSubmit: function(){
+                    form2.loading(true);
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}/casas/to_asignacion`,
+                        data: dataForm,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
+                            table.reload();
+                            form2.hide(); 
+                            arrayValores = [];
+                            arrayIdLotes = [];
+                            arrayIdClientes = [];
+                            form2.loading(false);
+                            form.hide();
+                        },
+                        error: function (resp) {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                            form2.loading(false)
+                            arrayValores = [];
+                            arrayIdLotes = [];
+                            arrayIdClientes = [];
+                            form2.hide();
+                            form2.loading(false);
+                        }
+                    })
                 }
-            })
+            });
+            form2.show();
+            form.loading(false);
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
-            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),            
-            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
         ],
     })
 
-    form.show()
+    form.show();
 }
 
 let buttons = [
@@ -217,15 +223,19 @@ function verificarCheck(valorActual){
     let botonEnviar = document.getElementsByClassName('botonEnviar');
     let arrayInterno = [];
     let arrayId = [];
+    let arrayIdCliente = [];
 
     if (valorActual.checked){
         arrayInterno.push($(valorActual).attr('data-nombreLote'));
         arrayInterno.push($(valorActual).attr('data-idLote'));
+        arrayInterno.push($(valorActual).attr('data-idcliente'));
 
-        arrayId.push($(valorActual).attr('data-idCliente'));
+        arrayId.push($(valorActual).attr('data-idLote'));
+        arrayIdCliente.push($(valorActual).attr('data-idcliente'));
 
         arrayValores.push(arrayInterno);
         arrayIdLotes.push(arrayId);
+        arrayIdClientes.push(arrayIdCliente);
     }
     else{
         let indexDelete = buscarValor($(valorActual).val(),arrayValores);
@@ -243,8 +253,6 @@ function verificarCheck(valorActual){
     else{
         botonEnviar[0].classList.add('hide');
     }
-
-    console.log(arrayIdLotes);
 }
 
 function buscarValor(valor, array) {
@@ -274,36 +282,42 @@ $(document).on('click', '.btn-asignar', () => {
         text: `¿Deseas iniciar el proceso de asignación de los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
-            data.append("idClientes", JSON.stringify(arrayIdLotes))
-            $.ajax({
-                type: 'POST',
-                url: `${general_base_url}casas/to_asignacion_varios`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Se han asignado los lotes correctamente", "success");
-        
-                    table.reload();
-                    form.hide();
-                    arrayValores = []
-                    arrayIdLotes = []
-                    arrayIdClientes = []
-                    let btn = document.getElementsByClassName("btn-asignar")
-                    btn[0].classList.add('hide');
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false)
+            data.append("idLotes", JSON.stringify(arrayIdLotes));
+            data.append("idClientes", JSON.stringify(arrayIdClientes));
+            let form2 = new FormConfirm ({
+                title: '¿Estás seguro de iniciar el proceso de asignación?',
+                onSubmit: function(){
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}casas/to_asignacion_varios`,
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            alerts.showNotification("top", "right", "Se han asignado los lotes correctamente", "success");
+                            form2.hide();
+                            form.hide();
+                            arrayValores = [];
+                            arrayIdLotes = [];
+                            arrayIdClientes = [];
+                            let btn = document.getElementsByClassName("btn-asignar");
+                            btn[0].classList.add('hide');
+                            table.reload();
+                        },
+                        error: function (response) {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                            form.loading(false);
+                        }
+                    })
                 }
-            })
+            });
+            form2.show();
+            form.loading(false);
         },
         fields: [
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            //new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
-
     form.show()
  });
