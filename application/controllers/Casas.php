@@ -416,13 +416,13 @@ class Casas extends BaseController
             "id_subdirector_c" => $idUsuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario'),
-            "pre_proceso_casas" => 2
+            "pre_proceso_casas" => 1
         );
 
         $this->db->trans_begin();
         
         $getGerente = $this->CasasModel->getGerente($gerente);    
-        $this->CasasModel->addHistorial(0, 'NULL', 0,"Pre proceso: se asigna el gerente: ". $getGerente->nombre. " con el ID: " .$getGerente->idUsuario, 0);
+        $this->CasasModel->addHistorial(0, 'NULL', 1,"Pre proceso | se asigna el gerente: ". $getGerente->nombre. " con el ID: " .$getGerente->idUsuario, 0);
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
@@ -464,20 +464,20 @@ class Casas extends BaseController
             "id_asesor_c"        => $idAsesor,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario'),
-            "pre_proceso_casas" => 3
+            "pre_proceso_casas" => 2
         );
 
         $getAsesor = $this->CasasModel->getAsesor($idAsesor);
 
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
         
-        $historial = $this->CasasModel->addHistorial($idLote, 'NULL', 0, 'Se asigna el asesor: '.$getAsesor->nombre. " con el ID: ".$getAsesor->idUsuario, 0);
+        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: '.$getAsesor->nombre. " con el ID: ".$getAsesor->idUsuario, 0);
 
-        if (!$update || !$historial) {
+        if (!$update) {
             $banderaSuccess = false;
         }
 
-        if ($banderaSuccess && $historial) {
+        if ($banderaSuccess) {
             $this->db->trans_commit();
             $this->json([]);
         } else {
@@ -3969,7 +3969,7 @@ class Casas extends BaseController
                     "id_subdirector_c" => $this->session->userdata('id_usuario'),
                     "fecha_modificacion" => date("Y-m-d H:i:s"),
                     "modificado_por" => $this->session->userdata('id_usuario'),
-                    "pre_proceso_casas" => 2
+                    "pre_proceso_casas" => 1
                 );
             }
         }
@@ -3979,7 +3979,7 @@ class Casas extends BaseController
         $getGerente = $this->CasasModel->getGerente($gerente);
         foreach ($idLote  as $lote) {
             foreach ($lote as $loteId) {
-                $this->CasasModel->addHistorial(0, 'NULL', 0, "Pre proceso: se asigna el gerente: " . $getGerente->nombre . " con el ID: " . $getGerente->idUsuario, 0);
+                $this->CasasModel->addHistorial(0, 'NULL', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " con el ID: " . $getGerente->idUsuario, 0);
             }
         }
 
@@ -4006,12 +4006,14 @@ class Casas extends BaseController
         $asesor = $this->form('asesor');
         $idClientes = json_decode($this->form('idClientes'));
         $idUsuario = $this->session->userdata('id_usuario');
+        $banderaSuccess = true;
 
         if (!isset($idClientes) || !isset($asesor)) {
             http_response_code(400);
         }
 
         $dataUpdate = array();
+        $getAsesor = $this->CasasModel->getAsesor($asesor);
 
         // idLotes[0] -- es el idLote
         $this->db->trans_begin();
@@ -4022,14 +4024,15 @@ class Casas extends BaseController
                     "id_cliente" => $id,
                     "id_asesor_c" => $asesor,
                     "modificado_por" => $idUsuario,
-                    "pre_proceso_casas" => 3
+                    "pre_proceso_casas" => 2
                 );
             }            
         }
-        
+
+        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " con el ID: ".$getAsesor->idUsuario, 0);        
+
         $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
-        $getAsesor = $this->CasasModel->getAsesor($asesor);
-        //$this->CasasModel->addHistorial(0, 'NULL', 0, "Pre proceso: se asigna el asesor: " . $getAsesor)
+
         if(!$update) $banderaSuccess = false;
 
         if ($banderaSuccess) {
@@ -4356,8 +4359,8 @@ class Casas extends BaseController
 
         $dataHistorial = array(
             "idProcesoCasas" => $insert,
-            "procesoAnterior" => 0,
-            "procesoNuevo" => 1,
+            "procesoAnterior" => 2,
+            "procesoNuevo" => NULL,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor" => $this->session->userdata('id_usuario'),
             "descripcion" => "Se inicio proceso | comentario: " . $comentario,

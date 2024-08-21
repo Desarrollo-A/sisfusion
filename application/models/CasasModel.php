@@ -191,7 +191,7 @@ class CasasModel extends CI_Model
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9 
             WHERE 
                 lo.idStatusLote = 2            
-            AND (cl.pre_proceso_casas = 1 OR cl.pre_proceso_casas IS NULL)")->result();
+            AND (cl.pre_proceso_casas = 0 OR cl.pre_proceso_casas IS NULL)")->result();
     }
 
     public function getListaAsignacion(){
@@ -254,7 +254,7 @@ class CasasModel extends CI_Model
             INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
-            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas = 0 AND cli.pre_proceso_casas = 3", array($this->idUsuario));
+            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas = 0 AND cli.pre_proceso_casas = 2 ", array($this->idUsuario));
         
         return $query;
     }
