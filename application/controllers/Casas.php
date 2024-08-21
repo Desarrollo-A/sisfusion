@@ -415,13 +415,14 @@ class Casas extends BaseController
             "id_gerente_c" => $gerente,
             "id_subdirector_c" => $idUsuario,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $this->session->userdata('id_usuario')
+            "modificado_por" => $this->session->userdata('id_usuario'),
+            "pre_proceso_casas" => 2
         );
 
         $this->db->trans_begin();
         
         $getGerente = $this->CasasModel->getGerente($gerente);    
-        $this->CasasModel->addHistorial($idLote, 'NULL', 0,"Se asigna el gerente: ". $getGerente->nombre. " con el ID: " .$getGerente->idUsuario, 0);
+        $this->CasasModel->addHistorial(0, 'NULL', 0,"Pre proceso: se asigna el gerente: ". $getGerente->nombre. " con el ID: " .$getGerente->idUsuario, 0);
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
@@ -444,12 +445,13 @@ class Casas extends BaseController
         }
 
         $this->output->set_content_type('application/json');
-        $this->output->set_output($this->json([]));
+        $this->output->set_output($this->json([])); 
     }
     public function asignar()
     {
         $idAsesor = $this->form('asesor');
         $idCliente = $this->form('idCliente');
+        $idLote = $this->form('idLote');
         $banderaSuccess = true;
 
         if (!isset($idCliente)) {
@@ -461,15 +463,21 @@ class Casas extends BaseController
         $updateCliente = array(
             "id_asesor_c"        => $idAsesor,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $this->session->userdata('id_usuario')
+            "modificado_por" => $this->session->userdata('id_usuario'),
+            "pre_proceso_casas" => 3
         );
 
+        $getAsesor = $this->CasasModel->getAsesor($idAsesor);
+
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
-        if (!$update) {
+        
+        $historial = $this->CasasModel->addHistorial($idLote, 'NULL', 0, 'Se asigna el asesor: '.$getAsesor->nombre. " con el ID: ".$getAsesor->idUsuario, 0);
+
+        if (!$update || !$historial) {
             $banderaSuccess = false;
         }
 
-        if ($banderaSuccess) {
+        if ($banderaSuccess && $historial) {
             $this->db->trans_commit();
             $this->json([]);
         } else {
@@ -3941,6 +3949,7 @@ class Casas extends BaseController
         $form = $this->form();
         
         $idClientes = json_decode($this->form('idClientes'));
+        $idLote = json_decode($this->form('idLotes'));
         $gerente = $this->form('gerente');
         $banderaSuccess = true;
 
@@ -3957,13 +3966,23 @@ class Casas extends BaseController
                 $dataUpdate[] = array(
                     "id_cliente" => $idValue,
                     "id_gerente_c" => $gerente,
-                    "id_subdirector_c" => $this->session->userdata('id_usuario')
+                    "id_subdirector_c" => $this->session->userdata('id_usuario'),
+                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                    "modificado_por" => $this->session->userdata('id_usuario'),
+                    "pre_proceso_casas" => 2
                 );
             }
         }
 
         // se hace update del esquema de credito y gerente en clientes 
         $update = $this->General_model->updateBatch('clientes', $dataUpdate, 'id_cliente');
+        $getGerente = $this->CasasModel->getGerente($gerente);
+        foreach ($idLote  as $lote) {
+            foreach ($lote as $loteId) {
+                $this->CasasModel->addHistorial(0, 'NULL', 0, "Pre proceso: se asigna el gerente: " . $getGerente->nombre . " con el ID: " . $getGerente->idUsuario, 0);
+            }
+        }
+
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3987,7 +4006,6 @@ class Casas extends BaseController
         $asesor = $this->form('asesor');
         $idClientes = json_decode($this->form('idClientes'));
         $idUsuario = $this->session->userdata('id_usuario');
-        $banderaSuccess = true;
 
         if (!isset($idClientes) || !isset($asesor)) {
             http_response_code(400);
@@ -4003,12 +4021,15 @@ class Casas extends BaseController
                 $dataUpdate[] = array(
                     "id_cliente" => $id,
                     "id_asesor_c" => $asesor,
-                    "modificado_por" => $idUsuario 
+                    "modificado_por" => $idUsuario,
+                    "pre_proceso_casas" => 3
                 );
             }            
         }
         
         $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
+        $getAsesor = $this->CasasModel->getAsesor($asesor);
+        //$this->CasasModel->addHistorial(0, 'NULL', 0, "Pre proceso: se asigna el asesor: " . $getAsesor)
         if(!$update) $banderaSuccess = false;
 
         if ($banderaSuccess) {
@@ -4297,6 +4318,8 @@ class Casas extends BaseController
         $idUsuario = $this->session->userdata('id_usuario');
         $tabla = $esquemaCredito == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
         $banderaSuccess = true;
+        $idGerente = $this->form('idGerente');
+        $idSubdirector = $this->form('idSubdirector');
 
         if (!isset($idLote) || !isset($idCliente) || !isset($esquemaCredito)) {
             http_response_code(400);
@@ -4305,15 +4328,18 @@ class Casas extends BaseController
 
         $dataUpdate = array(
             "esquemaCreditoCasas" => $esquemaCredito,
-            "id_subdirector_c" => $idUsuario,
-            "modelo_c" => $modeloCasa,
+            "id_asesor_c" => $idUsuario,
+            "idPropuestaCasa" => $modeloCasa,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario')
         );
 
         $procesoData = array(
             "idLote" => $idLote,
-            "proceso" => 1
+            "proceso" => 1,
+            "comentario" => $comentario,
+            "idGerente" => $idGerente,
+            "idAsesor" => $idUsuario
         );
 
         $this->db->trans_begin();

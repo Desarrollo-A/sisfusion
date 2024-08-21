@@ -1451,7 +1451,7 @@ class MultiSelectField {
                         $('<span />')
                             .attr('id', `${id}_warning`)
                             .addClass('text-danger h7 ml-1')
-                            .text('Debes escoger un elemento')
+                            .text('Debes escoger mínimo un elemento')
                             .hide()
                     )
             );

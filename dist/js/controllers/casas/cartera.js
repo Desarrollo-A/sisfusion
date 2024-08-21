@@ -76,17 +76,6 @@ $.ajax({
     }
 });
 
-$.post(`${general_base_url}General/getOpcionesPorCatalogo/154`, function(data) {
-    let rawData = JSON.parse(data);
-
-    propuestasCasas = rawData.map(item => ({
-        value: item.id_opcion,
-        label: item.nombre
-    }));
-});
-
-
-
 select_lote = function(data) {
     let form = new Form({
         title: 'Iniciar proceso', 
@@ -104,22 +93,21 @@ select_lote = function(data) {
                         contentType: false,
                         processData: false,
                         success: function (response) {
-                            let resp = JSON.parse(response)
-                            if(resp.status == 'success') {
-                                alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
-                                table.reload();
-                                form2.hide(); 
-                                arrayValores = [];
-                                arrayIdLotes = [];
-                                form2.loading(false);
-                                form.hide();
-                            }
+                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success");
+                            table.reload();
+                            form2.hide(); 
+                            arrayValores = [];
+                            arrayIdLotes = [];
+                            arrayIdClientes = [];
+                            form2.loading(false);
+                            form.hide();
                         },
                         error: function (resp) {
                             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
                             form2.loading(false)
                             arrayValores = [];
                             arrayIdLotes = [];
+                            arrayIdClientes = [];
                             form2.hide();
                             form2.loading(false);
                         }
@@ -133,9 +121,6 @@ select_lote = function(data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            //new SelectField({   id: 'esquemaCredito', label: 'Tipo de crédito (Esquema)', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true }),
-            //new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
-            //new MultiSelectField({ id: 'casa',label: 'Casa',data: propuestasCasas,placeholder: 'Selecciona una opción',width: '12',required: true}),
         ],
     })
 
@@ -238,15 +223,19 @@ function verificarCheck(valorActual){
     let botonEnviar = document.getElementsByClassName('botonEnviar');
     let arrayInterno = [];
     let arrayId = [];
+    let arrayIdCliente = [];
 
     if (valorActual.checked){
         arrayInterno.push($(valorActual).attr('data-nombreLote'));
         arrayInterno.push($(valorActual).attr('data-idLote'));
+        arrayInterno.push($(valorActual).attr('data-idcliente'));
 
-        arrayId.push($(valorActual).attr('data-idCliente'));
+        arrayId.push($(valorActual).attr('data-idLote'));
+        arrayIdCliente.push($(valorActual).attr('data-idcliente'));
 
         arrayValores.push(arrayInterno);
         arrayIdLotes.push(arrayId);
+        arrayIdClientes.push(arrayIdCliente);
     }
     else{
         let indexDelete = buscarValor($(valorActual).val(),arrayValores);
@@ -293,7 +282,8 @@ $(document).on('click', '.btn-asignar', () => {
         text: `¿Deseas iniciar el proceso de asignación de los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
-            data.append("idClientes", JSON.stringify(arrayIdLotes));
+            data.append("idLotes", JSON.stringify(arrayIdLotes));
+            data.append("idClientes", JSON.stringify(arrayIdClientes));
             let form2 = new FormConfirm ({
                 title: '¿Estás seguro de iniciar el proceso de asignación?',
                 onSubmit: function(){
@@ -312,6 +302,7 @@ $(document).on('click', '.btn-asignar', () => {
                             arrayIdClientes = [];
                             let btn = document.getElementsByClassName("btn-asignar");
                             btn[0].classList.add('hide');
+                            table.reload();
                         },
                         error: function (response) {
                             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -325,35 +316,8 @@ $(document).on('click', '.btn-asignar', () => {
         },
         fields: [
             new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
-            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            //new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
     form.show()
  });
-
- function multipleSelect(idSelect) {
-    let selectElement = $(`#${idSelect}`);
-
-    selectElement.on('change', function(){
-        let selectedOptions = $(this).val();
-
-        if(selectedOptions.length > 2) {
-            $(this).val(selectedOptions.slice(0,2)).trigger('change');
-            return;
-        }
-
-        $(this).find('option').each(function() {
-            if (!$(this).prop('selected')) {
-                $(this).prop('disabled', selectedOptions.length >= 2);
-            }
-        });
-
-        $(this).find('option').each(function() {
-            if ($(this).prop('selected')) {
-                $(this).prop('disabled', false);
-            }
-        });
-
-        selectElement.selectpicker('refresh');
-    })
- }
