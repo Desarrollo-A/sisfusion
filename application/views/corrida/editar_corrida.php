@@ -741,7 +741,7 @@
                                     </div>
 
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-2 form-group">
                                         <label>Meses a diferir:</label>
                                         <div class="input-group">
                                             <span class="input-group-addon" id="basic-addon1">#</span>
@@ -754,7 +754,48 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-md-2 form-group" >
+                                        <label>MSI:</label>
+                                        <div class="input-group">
+                                            <input is-number ng-model="mesesSinInteres" type="number"
+                                                   ng-change="revisarInput()"
+                                                   class="form-control" id="mesesSinInteres" >
+                                        </div>
+                                        <!-- ng-blur="ChengecheckEngDif()"-->
+                                    </div>
                                     <!--</div>-->
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                                            <div class="col-md-2 form-group col-md-offset-5" id="offsetCnt">
+                                                <label>Fecha:</label>
+                                                <input type="date" ng-model="CurrentDate" class="form-control" value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
+                                            </div>
+                                            <div class=" col-md-2 form-group" >
+                                                <div id="labelFA">
+                                                    <label>Fecha Apartado:</label>
+                                                    <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true" id="fechaApartado">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 form-group" id="cnt-selectInicio">
+                                                <label>Fecha inicio de mensualidad:</label>
+                                                <select  ng-model="inicioMensualidad" id="fechaInicioMensualidad"  class="selectList2 js-example-basic-single js-states form-control" ng-change="selectInicioM()"><!---->
+                                                    <option>-SELECCIONA OPCIÓN-</option>
+                                                    <option value="1">Día de fecha de apartado</option>
+                                                    <option value="2" ng-selected="selected">Regla de apartado (tabla)</option>
+                                                    <option value="3">Otro</option>
+                                                </select>
+                                            </div>
+                                            <div class="hide" id="cnt-fechaCustom">
+                                                <label style="font-size: 0.9em">Fecha personalizada (sólo el día)</label>
+                                                <input ng-model="customDate" type="date" id="customDate" class="form-control"/><!-- ng-change="selectInicioM()"-->
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
 
@@ -3207,6 +3248,82 @@
 
                 calcularCF();
 
+            }
+
+            $scope.selectInicioM = () =>{
+                // switch ($scope.inicioMensualidad) {
+                //     case '1':
+                //         let fa = $scope.fechaApartado;
+                //         console.log('dia de apartado', fa);
+                //         console.log('dia de apartado DÍA', fa.getDate());
+                //
+                //         break;
+                //     case '2':
+                //         console.log('Día de la tabla');
+                //         break;
+                //     case '3':
+                //         console.log('Otro');
+                //         break;
+                //     default:
+                //
+                // }
+                if($scope.inicioMensualidad==3){
+
+                    var cntFechaCustom  =  angular.element( document.getElementById("cnt-fechaCustom"));
+                    var offsetCnt  =  angular.element( document.getElementById("offsetCnt"));
+                    var customDate  =  angular.element( document.getElementById("customDate"));
+
+                    //cnt-fechaCustom
+                    cntFechaCustom.removeClass("hide");
+                    cntFechaCustom.addClass("col-md-3");
+
+                    offsetCnt.removeClass('col-md-offset-5');
+                    offsetCnt.addClass('col-md-offset-2');
+
+
+
+                    var dateParts = $scope.fechaPM.split("-");
+
+                    var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+
+
+                    // var currentTime = new Date($scope.fechaApartado); //cuando no viene formateada la fecha
+                    var currentTime = dateObject;
+                    var minDate = new Date(currentTime.getFullYear(), currentTime.getMonth(), +1); //one day next before month
+                    var maxDate =  new Date(currentTime.getFullYear(), currentTime.getMonth() +1, +0); // one day before next month
+
+                    let dayMinDate = (minDate.getDate()<10) ? '0'+minDate.getDate() : minDate.getDate() ;
+                    let monthMinDate = ((minDate.getMonth()+1) < 10) ? '0'+(minDate.getMonth() +1) : (minDate.getMonth()+1);
+                    let yearMinDate = minDate.getFullYear();
+                    minDate = yearMinDate+'-'+ monthMinDate + '-' + dayMinDate;
+
+                    let dayMaxDate = (maxDate.getDate()<10) ? '0'+maxDate.getDate() : maxDate.getDate() ;
+                    let monthMaxDate = ((maxDate.getMonth()+1) < 10) ? '0'+(maxDate.getMonth() +1) : (maxDate.getMonth()+1);
+                    let yearMaxDate = maxDate.getFullYear();
+                    maxDate = yearMaxDate+'-'+ monthMaxDate + '-' + dayMaxDate;
+
+                    customDate.attr('min', minDate);
+                    customDate.attr('max', maxDate);
+
+                    let btnSimular = angular.element(document.getElementById("btnSimular"));
+                    btnSimular.removeClass("hide");
+                    $compile( document.getElementById('customDate') )($scope);
+                    // console.log('inicia desde aqui', $scope.fechaApartado);
+                }else{
+                    var cntFechaCustom  =  angular.element( document.getElementById("cnt-fechaCustom"));
+                    var offsetCnt  =  angular.element( document.getElementById("offsetCnt"));
+
+                    //cnt-fechaCustom
+                    cntFechaCustom.addClass("hide");
+                    cntFechaCustom.removeClass("col-md-3");
+
+                    offsetCnt.addClass('col-md-offset-5');
+                    offsetCnt.removeClass('col-md-offset-2');
+                    let btnSimular = angular.element(document.getElementById("btnSimular"));
+                    btnSimular.addClass("hide");
+                }
+
+                calcularCF();
             }
 
 
