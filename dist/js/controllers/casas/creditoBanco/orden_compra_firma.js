@@ -41,7 +41,7 @@ let columns = [
         let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de cliente', onClick: go_to_documentos_cliente, data});
         
         if(data.documentos == 9){
-            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanceProcesoBanco, data})
+            btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzasr', onClick: avanceProcesoBanco, data})
         }
 
         return `<div class="d-flex justify-center">${btn_avance}${subir_proveedor}${subir_cliente}${btn_rechazo}</div>`
@@ -113,6 +113,7 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'procesoNuevo', value: valor_avance }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            selectCasa('#form-form-modal', 'custom-div-id', data.idPropuestaCasa),
         ],
     })
 
@@ -285,3 +286,39 @@ $(".modal").on("hidden.bs.modal", function(){
     opcionRegreso = 0
     datos = ''
 });
+
+function selectCasa(parentSelector, divId, content) {
+    let array = content.split(',');
+    const parent = document.querySelector(parentSelector);
+    let existingDiv = parent.querySelector(`#${divId}`);
+
+    if (!existingDiv) {
+        for (let i = 0; i < array.length; i++) {
+            let newDiv = document.createElement('div');
+            newDiv.id = `${divId}-${i}`;
+            newDiv.className = 'card-select';
+            newDiv.innerHTML = `
+                <div class="col-12">
+                    <p class="m-0"><b>Modelo:</b> ${array[i]}</p>
+                </div>
+            `;
+
+            newDiv.addEventListener('click', function() {
+                if (!newDiv.classList.contains('card-disabled')) {
+                    // Mark this card as selected
+                    newDiv.classList.add('card-selected');
+                    newDiv.classList.remove('card-select');
+                    
+                    // Disable other cards
+                    const allCards = parent.querySelectorAll('.card-select');
+                    allCards.forEach(card => {
+                        card.classList.add('card-disabled');
+                        card.classList.remove('card-select');
+                    });
+                }
+            });
+
+            parent.querySelector('.modal-body').appendChild(newDiv);
+        }
+    }
+}
