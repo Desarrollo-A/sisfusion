@@ -57,8 +57,3 @@ function setInitialValues() {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-$('#tabla_dispersar_comisiones, #tabla_dispersion_casas').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});

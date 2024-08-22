@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class Casas_comisiones extends CI_Controller
 {
   private $gph;
-  public $hoy;
+  public $hoy,$creadoPor;
   public function __construct()
   {
     parent::__construct();
@@ -31,6 +31,7 @@ class Casas_comisiones extends CI_Controller
     $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
     $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
     $this->hoy = date("Y-m-d H:i:s");
+    $this->creadoPor = $this->session->userdata('id_usuario');
    }
 
   public function index(){
@@ -879,7 +880,6 @@ public function getDatosFechasProyecCondm(){
     $totalNeto2 = $this->input->post("totalNeto2");
     $idLote = $this->input->post("idLote");
     $idCliente = $this->input->post("idCliente");
-    $creadoPor = $this->session->userdata('id_usuario');
     $porcentajeTotal = 0.4;
     //$porcentajeAsignado = ($monto * 100) / $totalNeto2;
     
@@ -892,7 +892,7 @@ public function getDatosFechasProyecCondm(){
     $dbTransaction = $this->General_model->updateRecord('comisiones_casas', $dataUpdateCom, 'id_comision', $id_comision);*/
     $dataUpdatePago = array(
       "estatus" => 11,
-      "modificado_por" => $creadoPor
+      "modificado_por" => $this->creadoPor
     );
     $dbTransaction = $this->General_model->updateRecord('pago_casas_ind', $dataUpdatePago, 'id_pago_i', $id_pago_i);
     $arrayBonos = array();
@@ -904,9 +904,9 @@ public function getDatosFechasProyecCondm(){
       "fecha_pago_intmex" => NULL,
       "pago_bono" => $montoActual,
       "estatus" => 1,
-      "creado_por" => $creadoPor,
+      "creado_por" => $this->creadoPor,
       "comentario" => "DISPERIÓN BONOS",
-      "modificado_por " => $creadoPor,
+      "modificado_por " => $this->creadoPor,
       "descuento" => 0
   );
   array_push($arrayBonos, $data);
@@ -919,9 +919,9 @@ public function getDatosFechasProyecCondm(){
       "fecha_pago_intmex" => NULL,
       "pago_bono" => $montoActual,
       "estatus" => 1,
-      "creado_por" => $creadoPor,
+      "creado_por" => $this->creadoPor,
       "comentario" => "DISPERIÓN BONOS",
-      "modificado_por " => $creadoPor,
+      "modificado_por " => $this->creadoPor,
       "descuento" => 0
   );
     array_push($arrayBonos, $data);
@@ -938,16 +938,15 @@ public function getDatosFechasProyecCondm(){
   }
 
   public function asigancionMasivaBonos(){
-    $id_usuario = $this->input->post("usuarioBono");
-    $id_pago_i = explode(",",$this->input->post("id_pago_i"));
+    $this->db->trans_begin();
+
+    $id_usuario = $this->input->post("usuarioAsignar");
+    $id_pago_i = $this->input->post("idPagos");
     
     $arrayBonos = array();
 
-echo $this->hoy;
-exit;
 
     $datosPagos =  $this->Casas_comisiones_model->getPagosBonosEnviados($id_pago_i)->result_array();
-
     for ($i=0; $i < count($datosPagos) ; $i++) { 
       $data = array(
         "id_pago_i" => $datosPagos[$i]['id_pago_i'],
@@ -955,18 +954,32 @@ exit;
         "abono_bono" => $datosPagos[$i]['abono_neodata'],
         "fecha_abono" => $this->hoy,
         "fecha_pago_intmex" => NULL,
-        "pago_bono" => $montoActual,
+        "pago_bono" => $datosPagos[$i]['abono_neodata'],
         "estatus" => 1,
-        "creado_por" => $creadoPor,
+        "creado_por" => $this->creadoPor,
         "comentario" => "DISPERIÓN BONOS",
-        "modificado_por " => $creadoPor,
+        "modificado_por " => $this->creadoPor,
         "descuento" => 0
     );
       array_push($arrayBonos, $data);
-  
-      $insertado = $this->General_model->insertBatch('pago_comision_bono', $arrayBonos);
+
+      $dataUpdatePago = array(
+        "estatus" => 11,
+        "modificado_por" => $this->creadoPor
+      );
+      $dbTransaction = $this->General_model->updateRecord('pago_casas_ind', $dataUpdatePago, 'id_pago_i', $datosPagos[$i]['id_pago_i']);
 
     }
+    $insertado = $this->General_model->insertBatch('pago_comision_bono', $arrayBonos);
+    if ( $insertado === FALSE || $this->db->trans_status() === FALSE){
+      $this->db->trans_rollback();
+      $resultado = array("resultado" => FALSE);
+  }else{
+      $this->db->trans_commit();
+      $resultado = array("resultado" => TRUE);
+  }
+ echo json_encode($resultado);
+
 
   }
 

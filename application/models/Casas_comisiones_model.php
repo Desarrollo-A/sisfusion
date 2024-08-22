@@ -1277,7 +1277,7 @@ function getDatosBonoAsesor($estado){
         INNER JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
-        WHERE pcbo.estatus IN ($estado) AND com.estatus in (1) AND lo.idStatusContratacion > 8   AND com.id_usuario = $user_data
+        WHERE pcbo.estatus IN ($estado) AND com.estatus in (1) AND lo.idStatusContratacion > 8   AND pcbo.id_usuario = $user_data
         GROUP BY pci1.id_comision,pr.id_arcus,cl.fechaApartado,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pcbo.abono_bono, pcbo.pago_bono, pcbo.estatus, pcbo.fecha_abono, pcbo.id_usuario, oxcpj.nombre, u.forma_pago,pcbo.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2)");
 }
 
@@ -1339,9 +1339,8 @@ function getBonoHistorialPago($id_pago) {
     ");
 }
 
-public function getPagosBonosEnviados($idPagos){
-        $query = "SELECT id_pago_i, abono_neodata FROM pago_casas_ind WHERE id_pago_i IN (?)";
-        return $this->db->query($query, [$idPagos]); 
-    
-}
+    public function getPagosBonosEnviados($idPagos){
+            $query = "SELECT id_pago_i, abono_neodata,id_comision FROM pago_casas_ind WHERE id_pago_i IN (?)";
+            return $this->db->query($query, [intval($idPagos)]); 
+    }
 }

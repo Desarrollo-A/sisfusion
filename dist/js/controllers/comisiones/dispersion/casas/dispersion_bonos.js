@@ -22,12 +22,18 @@ $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_dispersar_comisiones').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_dispersar_comisiones').DataTable().column(i).search(this.value).draw();
+                var total = 0;
+
+                var index = $('#tabla_dispersar_comisiones').DataTable().rows({
+                selected: true,
+                search: 'applied'
+                }).indexes();
+                var data = $('#tabla_dispersar_comisiones').DataTable().rows(index).data();
+                $.each(data, function (i, v) {
+                    total += parseFloat(v.pago_cliente);
+                });
+                document.getElementById("myText_nuevas").textContent = formatMoney(total);
             }
-            var index = $('#tabla_dispersar_comisiones').DataTable().rows({
-            selected: true,
-            search: 'applied'
-            }).indexes();
-            var data = $('#tabla_dispersar_comisiones').DataTable().rows(index).data();
         });
     }else 
     $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip_nuevas"  data-placement="top" title="SELECCIONAR"/>`);
@@ -36,7 +42,15 @@ $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
 
 
 
-$("#tabla_dispersar_comisiones").ready(function () {    
+$("#tabla_dispersar_comisiones").ready(function () {   
+    $('#tabla_dispersar_comisiones').on('xhr.dt', function (e, settings, json, xhr) {
+        var total = 0;
+        $.each(json.data, function (i, v) {
+            total += parseFloat(v.pago_cliente);
+        });
+        var to = formatMoney(total);
+        document.getElementById("myText_nuevas").textContent = to;
+    }); 
     tabla_nuevas = $("#tabla_dispersar_comisiones").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -46,12 +60,12 @@ $("#tabla_dispersar_comisiones").ready(function () {
             text: `<i class="fa fa-file-excel-o" aria-hidden="true"></i>`,
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'REPORTE COMISIONES NUEVAS',
+            title: 'REPORTE PAGOS BONOS NUEVAS',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11],
                 format: {
                     header: function (d, columnIdx) {
-                        return '  ';
+                        return titulos_intxt[columnIdx];
                     }
                 }
             },
@@ -79,7 +93,8 @@ $("#tabla_dispersar_comisiones").ready(function () {
                                             title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
                                     </select>
                             </div>
-                            <input type="hidden" value="${idcomision}" id="idPagos" name="idPagos">`);
+                            <input type="hidden" value="${idcomision}" id="idPagos" name="idPagos">
+`);
 
                             var len = dataUsuarios.length;
                             for (var i = 0; i < len; i++) {
@@ -388,10 +403,10 @@ $("#formDispersion").submit( function(e) {
 
 $("#formAsignacion").submit( function(e) {
     alert(1);
+    e.preventDefault();
 
     $('#btnsubA').prop('disabled', true);
-    document.getElementById('btnsubA').disabled = true;
-    e.preventDefault();
+    //document.getElementById('btnsubA').disabled = true;
 }).validate({
     submitHandler: function( form ) {
         alert();
