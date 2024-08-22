@@ -7,38 +7,31 @@ const pivoteMultiplicador =  [
     },
     {
         id_plan:65,
-        valor:(100/1),
-        porcentaje:1
+        valor:(100/1)
     },
     {
         id_plan:66,
-        valor:(100/1),
-        porcentaje:1
+        valor:12.5
     },
     {
         id_plan:84,
-        valor:(100/0.6),
-        porcentaje:0.6
+        valor:(100/0.6)
     },
     {
         id_plan:85,
-        valor:(100/1.2),
-        porcentaje:0.6
+        valor:(100/1.2)
     },
     {
         id_plan:86,
-        valor:(100/1.2),
-        porcentaje:1.2
+        valor:(100/9.2)
     },
     {
         id_plan:93,
-        valor:(100/8.5),
-        porcentaje:8.5
+        valor:(100/8.5)
     },
     {
         id_plan:99,
-        valor:(100/8.5),
-        porcentaje:8.5
+        valor:(100/8.5)
     } ];
 $.ajax({
     url: `${general_base_url}Comisiones/getPlanesComisiones`,
@@ -132,6 +125,14 @@ $('#planes').change(function () {
 });
 
 function asignarNumTabla(numTabla) {
-    numeroTabla = numTabla;
-    console.log(numeroTabla)
+numeroTabla = numTabla;
+    if(numTabla == 2){
+        $('.planllenado').addClass('hidden');
+        $('.MainNavHelp').addClass('hidden');
+
+    }else if(numTabla == 1){
+        $('.planllenado').removeClass('hidden');
+        $('.MainNavHelp').removeClass('hidden');
+    }
+
 }

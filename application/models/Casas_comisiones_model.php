@@ -1018,8 +1018,11 @@ class Casas_comisiones_model extends CI_Model {
             DECLARE @resultadoEsperarDatos INT;
             DECLARE @resultadoEsperarComisiones INT;
             DECLARE @resultadoComisionEntrada INT;
+            DECLARE @resultadoPrioridad INT;
+            
             EXEC MiProcedimiento 
                 @badera_real        = 1,
+                @prioridad          = @resultadoPrioridad OUTPUT,
                 @esperarDatos       = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
                 @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
                 @comisionEntrada    = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
@@ -1130,7 +1133,7 @@ public function getDataDispersionPago() {
             LEFT JOIN prospectos pr ON pr.id_prospecto=cl.id_prospecto
             LEFT JOIN sedes sed ON sed.id_sede = 2 and sed.estatus = 1
             LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
-            WHERE pci1.estatus IN (1) AND com.id_usuario = 16660
+            WHERE pci1.estatus IN (1) AND com.id_usuario = 16660 AND pci1.abono_neodata > 0
             GROUP BY lo.idLote, pci1.id_comision,pr.id_arcus,cl.fechaApartado,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, opt.fecha_creacion, opt.estatus";
              return $this->db->query($query)->result_array();
     }
@@ -1339,4 +1342,8 @@ function getBonoHistorialPago($id_pago) {
     ");
 }
 
+    public function getPagosBonosEnviados($idPagos){
+            $query = "SELECT id_pago_i, abono_neodata,id_comision FROM pago_casas_ind WHERE id_pago_i IN (?)";
+            return $this->db->query($query, [intval($idPagos)]); 
+    }
 }

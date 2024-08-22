@@ -1,3 +1,4 @@
+
 IF OBJECT_ID('MiProcedimiento', 'P') IS NOT NULL
     DROP PROCEDURE MiProcedimiento;
 GO
@@ -42,7 +43,7 @@ BEGIN
 	AND estatus = 1;
 	---PRINT 'Entró en el bloque de inserción10';
     -- Verificar si @porcentajes es mayor que 0 y no es nulo
-    IF (@badera_real > 1 AND @badera_real IS NOT NULL)
+    IF (@badera_real = 1 AND @badera_real IS NOT NULL)
 		BEGIN
 			--PRINT 'Entró en el bloque de inserción1';
         -- Si no existen registros previos para este lote, insertamos en pago_casas
