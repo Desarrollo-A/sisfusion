@@ -768,33 +768,32 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-                                            <div class="col-md-2 form-group col-md-offset-5" id="offsetCnt">
-                                                <label>Fecha:</label>
-                                                <input type="date" ng-model="CurrentDate" class="form-control" value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
-                                            </div>
-                                            <div class=" col-md-2 form-group" >
-                                                <div id="labelFA">
-                                                    <label>Fecha Apartado:</label>
-                                                    <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true" id="fechaApartado">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 form-group" id="cnt-selectInicio">
-                                                <label>Fecha inicio de mensualidad:</label>
-                                                <select  ng-model="inicioMensualidad" id="fechaInicioMensualidad"  class="selectList2 js-example-basic-single js-states form-control" ng-change="selectInicioM()"><!---->
-                                                    <option>-SELECCIONA OPCIÓN-</option>
-                                                    <option value="1">Día de fecha de apartado</option>
-                                                    <option value="2" ng-selected="selected">Regla de apartado (tabla)</option>
-                                                    <option value="3">Otro</option>
-                                                </select>
-                                            </div>
-                                            <div class="hide" id="cnt-fechaCustom">
-                                                <label style="font-size: 0.9em">Fecha personalizada (sólo el día)</label>
-                                                <input ng-model="customDate" type="date" id="customDate" class="form-control"/><!-- ng-change="selectInicioM()"-->
-                                            </div>
+                                    <div class="col-md-2 form-group col-md-offset-5" id="offsetCnt">
+                                        <label>Fecha:</label>
+                                        <input type="date" ng-model="CurrentDate" class="form-control" value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
+                                    </div>
+
+                                    <div class=" col-md-2 form-group" >
+                                        <div id="labelFA">
+                                            <label>Fecha Apartado:</label>
+                                            <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true" id="fechaApartado">
                                         </div>
+                                    </div>
+
+                                    <div class="col-md-3 form-group" id="cnt-selectInicio">
+                                        <label>Fecha inicio de mensualidad:</label>
+                                        <select  ng-model="inicioMensualidad" id="fechaInicioMensualidad"  class="selectList2 js-example-basic-single js-states form-control" ng-change="selectInicioM()"><!---->
+                                            <option>-SELECCIONA OPCIÓN-</option>
+                                            <option value="1">Día de fecha de apartado</option>
+                                            <option value="2" ng-selected="selected">Regla de apartado (tabla)</option>
+                                            <option value="3">Otro</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="hide" id="cnt-fechaCustom">
+                                        <label style="font-size: 0.9em">Fecha personalizada (sólo el día)</label>
+                                        <input ng-model="customDate" type="date" id="customDate" class="form-control"/><!-- ng-change="selectInicioM()"-->
                                     </div>
 
                                 </div>
