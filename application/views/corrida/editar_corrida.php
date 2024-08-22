@@ -1387,6 +1387,15 @@
             // $scope.range2= 0;
             // $scope.range3= 0;
 
+            $scope.revisarInput = function() {
+                if($scope.mesesSinInteres > $scope.mesessiControl || $scope.mesesSinInteres < 0 ){
+                    $scope.mesesSinInteres = $scope.mesessiControl ;
+                }else{
+                    $scope.msni = $scope.mesesSinInteres;
+                    calcularCF();
+                }
+            }
+
 
             function chargeInnitialInfo(){
                 $scope.nombre = '<?php echo $data_corrida->nombre;?>';
