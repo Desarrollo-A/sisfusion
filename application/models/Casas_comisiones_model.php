@@ -1018,8 +1018,11 @@ class Casas_comisiones_model extends CI_Model {
             DECLARE @resultadoEsperarDatos INT;
             DECLARE @resultadoEsperarComisiones INT;
             DECLARE @resultadoComisionEntrada INT;
+            DECLARE @resultadoPrioridad INT;
+            
             EXEC MiProcedimiento 
                 @badera_real        = 1,
+                @prioridad          = @resultadoPrioridad OUTPUT,
                 @esperarDatos       = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
                 @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
                 @comisionEntrada    = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
