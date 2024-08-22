@@ -402,14 +402,11 @@ $("#formDispersion").submit( function(e) {
 
 
 $("#formAsignacion").submit( function(e) {
-    alert(1);
     e.preventDefault();
-
     $('#btnsubA').prop('disabled', true);
     //document.getElementById('btnsubA').disabled = true;
 }).validate({
     submitHandler: function( form ) {
-        alert();
         $('#spiner-loader').removeClass('hidden');
         var data = new FormData( $(form)[0] );
         $.ajax({

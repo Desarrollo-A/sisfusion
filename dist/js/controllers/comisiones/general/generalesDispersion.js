@@ -19,7 +19,7 @@ const pivoteMultiplicador =  [
     },
     {
         id_plan:85,
-        valor:(100/)
+        valor:(100/1.2)
     },
     {
         id_plan:86,
@@ -125,6 +125,14 @@ $('#planes').change(function () {
 });
 
 function asignarNumTabla(numTabla) {
-    numeroTabla = numTabla;
-    console.log(numeroTabla)
+numeroTabla = numTabla;
+    if(numTabla == 2){
+        $('.planllenado').addClass('hidden');
+        $('.MainNavHelp').addClass('hidden');
+
+    }else if(numTabla == 1){
+        $('.planllenado').removeClass('hidden');
+        $('.MainNavHelp').removeClass('hidden');
+    }
+
 }
