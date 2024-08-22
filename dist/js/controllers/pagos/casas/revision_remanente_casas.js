@@ -504,7 +504,8 @@ $("#formPausarRemanenteCasas").submit( function(e) {
     }
 });
 
-$(document).on("click", ".checkPagosIndividual_casas", function() {
+// $('#tabla_remanente_casas').on("click", "input", function() {
+    $(document).on("click", ".checkPagosIndividual_casas", function() {
     totaPago_casas = 0;
     tabla_remanente_casas.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_remanente_casas.$('input[type="checkbox"]:checked') ;

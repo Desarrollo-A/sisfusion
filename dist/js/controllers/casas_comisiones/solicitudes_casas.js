@@ -3,6 +3,7 @@ let columnas_datatable = {};
 var fin = userSede == 8 ? 15 : 14;
 var fechaGlobal;
 var fechaInicioCorteGlobal, fechaFinCorteGlobal, horaFinCorteGlobal,datosFechaCorte = [];
+// var tota2;
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
     v2 = document.getElementById("file-upload-extranjero").files[0].name;
@@ -309,6 +310,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     $("#totpagarPen").html(formatMoney(0));
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
+                                    tota2 = 0;
                                     tabla_nuevas.ajax.reload();
                                     tabla_revision.ajax.reload();
                                 } else if (data.respuesta == 2) {
@@ -318,14 +320,17 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                 } else if (response.respuesta == 3) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
+                                    tota2 = 0;
                                     alerts.showNotification("top", "right", "NO HAS INGRESADO TU CÓDIGO POSTAL", "warning");
                                 } else if (response.respuesta == 4) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
+                                    tota2 = 0;
                                     alerts.showNotification("top", "right", "NO HAS ACTUALIZADO CORRECTAMENTE TU CÓDIGO POSTAL", "warning");
                                 } else if (response.respuesta == 5) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
+                                    tota2 = 0;
                                     alerts.showNotification("top", "right", "NO CUENTAS CON UNA FORMA DE PAGO VÁLIDA", "warning");
                                 } else {
                                     $('#spiner-loader').addClass('hide');
@@ -710,20 +715,23 @@ $("#tabla_nuevas_comisiones").ready(function () {
     // fin de aqui empezamos con la nueva forma
 
 
-    
-    $('#tabla_nuevas_comisiones').on('click', 'input', function () {
-        tr = $(this).closest('tr');
-        var row = tabla_nuevas.row(tr).data();
-        if (row.pa == 0) {
-            row.pa = row.impuesto;
-            totaPen += parseFloat(row.pa);
-            tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-        }
-        else {
-            totaPen -= parseFloat(row.pa);
-            row.pa = 0;
-        }
-        $("#totpagarPen").html(formatMoney(totaPen));
+    $('#tabla_nuevas_comisiones').on("click", "input", function() {
+        totaPen = 0;
+        tabla_nuevas.$('input[type="checkbox"]').each(function () {
+            let totalChecados = tabla_nuevas.$('input[type="checkbox"]:checked') ;
+            let totalCheckbox = tabla_nuevas.$('input[type="checkbox"]');
+            if(this.checked){
+                trs = this.closest('tr');
+                row = tabla_nuevas.row(trs).data();
+                totaPen += parseFloat(row.impuesto); 
+            }
+            if( totalChecados.length == totalCheckbox.length )
+                $("#all").prop("checked", true);
+            else 
+                $("#all").prop("checked", false);
+        });
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+
     });
 
     $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_nuevas", function (e) {
@@ -2108,18 +2116,46 @@ function close_modal_xml() {
     $("#modal_nuevas").modal('toggle');
 }
 
+// function selectAll(e) {
+//     tota2 = 0;
+//     $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+//         if (!$(this).prop("checked")) {
+//             $(this).prop("checked", true);
+//             tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().pago_cliente);
+//         } else {
+//             $(this).prop("checked", false);
+//         }
+//         $("#totpagarPen").html(formatMoney(tota2));
+//     });
+// }
+
 function selectAll(e) {
+    console.log(e.checked);
+
     tota2 = 0;
-    $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
-        if (!$(this).prop("checked")) {
-            $(this).prop("checked", true);
-            tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().pago_cliente);
-        } else {
-            $(this).prop("checked", false);
-        }
-        $("#totpagarPen").html(formatMoney(tota2));
-    });
+    if(e.checked == true){
+        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+            trs = this.closest('tr');
+            row = tabla_nuevas.row(trs).data();
+            tota2 += parseFloat(row.impuesto);
+
+            if(v.checked == false){
+                $(v).prop("checked", true);
+            }
+        }); 
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+    }
+    if(e.checked == false){
+        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+            if(v.checked == true){
+                $(v).prop("checked", false);
+            }
+        }); 
+        $("#totpagarPen").html(formatMoney(0));
+    }
 }
+
+
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable()
