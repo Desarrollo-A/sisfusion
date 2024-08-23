@@ -8,8 +8,7 @@ class Reestructura_model extends CI_Model
         $this->load->model(array('Comisiones_model', 'General_model'));
     }
 
-    public function getListaClientesReubicar()
-    {
+    public function getListaClientesReubicar() {
         $id_usuario = $this->session->userdata('id_usuario');
         $id_rol = $this->session->userdata('id_rol');
         $tipo = $this->session->userdata('tipo');
@@ -21,7 +20,10 @@ class Reestructura_model extends CI_Model
 
         if ($id_rol == 15) { // JURÍDICO
             if (in_array($id_usuario, array(2762, 2747, 13691, 2765, 10463, 2876))) // ES DANI, CARLITOS O CECI
-                $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND ((dxc4.flagProcesoJuridico = 0 OR dxc4.flagProcesoJuridico IS NULL AND dxc2.flagProcesoJuridico = 0) AND (dxc4.flagProcesoContraloria = 1 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 1))";
+                $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario
+                AND ((dxc4.flagProcesoJuridico = 0 OR dxc4.flagProcesoJuridico IS NULL AND dxc2.flagProcesoJuridico = 0) AND  (dxc4.flagProcesoContraloria = 1 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 1))";
+            else
+                $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND ((dxc4.flagProcesoJuridico = 0 OR dxc4.flagProcesoJuridico IS NULL AND dxc2.flagProcesoJuridico = 0) AND  (dxc4.flagProcesoContraloria = 1 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 1))";
         } else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
             $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND (dxc4.flagProcesoContraloria = 0 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 0)";
         else if ($id_rol == 6 && $tipo == 2) // ASISTENTE GERENCIA && ES OOAM
@@ -39,7 +41,16 @@ class Reestructura_model extends CI_Model
         else if ($id_rol == 5 && in_array($id_lider, [13589, 13549])) // SON LAS ASISTENTES DE SUBDIRECCIÓN
             $validacionAdicional = "AND (lo.id_gerente_asignado = $id_lider OR lo.id_subdirector_asignado = $id_lider)";
 
-       return $this->db->query("SELECT dxc4.flagProcesoContraloria AS flagContraloriaFusion, dxc4.flagProcesoJuridico AS flagJuridicoFusion, lf.rescision,cl.plan_comision, lo.registro_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
+       return $this->db->query("SELECT tbl.flagContraloriaFusion, tbl.flagJuridicoFusion, tbl.rescision, tbl.plan_comision, tbl.registro_comision, tbl.idLotePvOrigen, tbl.idFusion, tbl.origen, tbl.destino, tbl.id_dxc, tbl.rescisioncl, tbl.proceso, 
+        tbl.idProyecto, tbl.idLote, tbl.nombreLote, tbl.idCliente, tbl.cliente, tbl.fechaApartado, tbl.nombreCondominio, tbl.nombreResidencial, tbl.nombreAsesor, tbl.nombreCoordinador, tbl.nombreGerente, tbl.nombreSubdirector, 
+        tbl.nombreRegional, tbl.nombreRegional2, tbl.sup, tbl.costom2f, tbl.total, tbl.estatusPreproceso, tbl.id_estatus_preproceso, tbl.totalCorridasNumero, tbl.totalContratoNumero, tbl.totalPropuestas, tbl.totalCorridas, 
+        tbl.totalContratos, tbl.totalRescision, tbl.idLoteXcliente, tbl.idLoteXclienteFusion, tbl.nombreAsesorAsignado, tbl.contratoFirmado, tbl.idContratoFirmado, tbl.idCondominio, tbl.totalContratoFirmado, tbl.totalContratoFirmadoFusion, 
+        tbl.totalCorridaFusion, tbl.totalCorridasFusionNumero, tbl.totalContratosFusion, tbl.totalContratoFusionNumero, tbl.totalContratoFirmadoFusionNumero, tbl.totalRescisionFusion, tbl.totalRescisionFusionNumero, tbl.comentario, 
+        tbl.id_estatus_modificacion, tbl.estatus_modificacion, tbl.estatus_modificacion_color, tbl.id_juridico_preproceso, tbl.sedeAsesorAsignado, tbl.idAsesorAsignado, tbl.id_lider, tbl.nombreEjecutivoJuridico, tbl.idStatusLote, 
+        tbl.tipo_estatus_regreso, tbl.contratoFirmadoFusion, tbl.flagProcesoContraloria, tbl.flagProcesoJuridico, tbl.cantidadTraspaso, tbl.comentarioTraspaso, tbl.fechaUltimoEstatus, tbl.fechaVencimiento, tbl.lotePreseleccionado, 
+        tbl.nombreLotePreseleccionado, tbl.banderaProcesoUrgenteTexto, tbl.banderaProcesoUrgente, tbl.bucket
+        FROM (
+       SELECT dxc4.flagProcesoContraloria AS flagContraloriaFusion, dxc4.flagProcesoJuridico AS flagJuridicoFusion, lf.rescision,cl.plan_comision, lo.registro_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -50,7 +61,7 @@ class Reestructura_model extends CI_Model
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
         CASE WHEN (lo.estatus_preproceso = 2 AND (dxc2.flagProcesoContraloria = 0 OR dxc4.flagProcesoContraloria = 0)) THEN 'Elaboración de corrida' WHEN (lo.estatus_preproceso = 2 AND ((dxc2.flagProcesoContraloria = 1 AND dxc2.flagProcesoJuridico = 0) OR (dxc4.flagProcesoContraloria = 1 AND dxc4.flagProcesoJuridico = 0))) 
         THEN 'Elaboración de contrato y rescisión' ELSE oxc1.nombre END estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl3.totalContratoNumero, pxl3.totalPropuestas,
-        pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente, dxc4.idLote AS idLoteXclienteFusion,
+        pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente, dxc4.loteDxc AS idLoteXclienteFusion,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado,
         HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado, hdcountlf.totalContratoFirmadoFusion,
         lf1.totalCorridaFusion, lf2.totalCorridasFusionNumero, lf3.totalContratosFusion, lf4.totalContratoFusionNumero, lf5.totalContratoFirmadoFusionNumero, lf6.totalRescisionFusion,
@@ -101,14 +112,14 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote 
 
         LEFT JOIN (       
-        select lf.idLotePvOrigen, lo.idLote, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico 
-			from lotes lo 
-			inner join lotesFusion lf on lf.idLote = lo.idLote 
-			left join datos_x_cliente dxc on dxc.idLote = lf.idLotePvOrigen 
+        select lf.idLotePvOrigen, lo.idLote, dxc.idLote AS loteDxc, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico 
+            from lotes lo 
+            inner join lotesFusion lf on lf.idLote = lo.idLote 
+            left join datos_x_cliente dxc on dxc.idLote = lf.idLotePvOrigen 
         ) dxc4 ON dxc4.idLote = lo.idLote
 
 
-    	LEFT JOIN (SELECT lf.idLotePvOrigen, COUNT(*) totalContratoFirmadoFusion FROM historial_documento hd2 INNER JOIN lotesFusion lf ON lf.idLote = hd2.idLote WHERE hd2.tipo_doc=30 AND lf.origen=1 AND hd2.status = 1 AND hd2.expediente IS NOT NULL GROUP BY lf.idLotePvOrigen) hdcountlf ON hdcountlf.idLotePvOrigen = lf.idLote
+    	LEFT JOIN (SELECT lf.idLotePvOrigen, COUNT(*) totalContratoFirmadoFusion FROM historial_documento hd2 INNER JOIN lotesFusion lf ON lf.idLote = hd2.idLote WHERE hd2.tipo_doc=30 AND lf.origen = 1 AND hd2.status = 1 AND hd2.expediente  IS NOT NULL GROUP BY lf.idLotePvOrigen) hdcountlf ON hdcountlf.idLotePvOrigen = lf.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalRescisionFusion FROM lotesFusion WHERE rescision IS NOT NULL GROUP BY idLotePvOrigen) lf6 ON lf6.idLotePvOrigen = lo.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalRescisionFusionNumero FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lf7 ON lf7.idLotePvOrigen = lo.idLote
 		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30 AND HD.status = 1 AND HD.idCliente = lo.idCliente
@@ -117,7 +128,16 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19) $validacionAdicional")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19) $validacionAdicional
+        ) tbl
+            GROUP BY tbl.flagContraloriaFusion, tbl.flagJuridicoFusion, tbl.rescision, tbl.plan_comision, tbl.registro_comision, tbl.idLotePvOrigen, tbl.idFusion, tbl.origen, tbl.destino, tbl.id_dxc, tbl.rescisioncl, tbl.proceso, 
+        tbl.idProyecto, tbl.idLote, tbl.nombreLote, tbl.idCliente, tbl.cliente, tbl.fechaApartado, tbl.nombreCondominio, tbl.nombreResidencial, tbl.nombreAsesor, tbl.nombreCoordinador, tbl.nombreGerente, tbl.nombreSubdirector, 
+        tbl.nombreRegional, tbl.nombreRegional2, tbl.sup, tbl.costom2f, tbl.total, tbl.estatusPreproceso, tbl.id_estatus_preproceso, tbl.totalCorridasNumero, tbl.totalContratoNumero, tbl.totalPropuestas, tbl.totalCorridas, 
+        tbl.totalContratos, tbl.totalRescision, tbl.idLoteXcliente, tbl.idLoteXclienteFusion, tbl.nombreAsesorAsignado, tbl.contratoFirmado, tbl.idContratoFirmado, tbl.idCondominio, tbl.totalContratoFirmado, tbl.totalContratoFirmadoFusion, 
+        tbl.totalCorridaFusion, tbl.totalCorridasFusionNumero, tbl.totalContratosFusion, tbl.totalContratoFusionNumero, tbl.totalContratoFirmadoFusionNumero, tbl.totalRescisionFusion, tbl.totalRescisionFusionNumero, tbl.comentario, 
+        tbl.id_estatus_modificacion, tbl.estatus_modificacion, tbl.estatus_modificacion_color, tbl.id_juridico_preproceso, tbl.sedeAsesorAsignado, tbl.idAsesorAsignado, tbl.id_lider, tbl.nombreEjecutivoJuridico, tbl.idStatusLote, 
+        tbl.tipo_estatus_regreso, tbl.contratoFirmadoFusion, tbl.flagProcesoContraloria, tbl.flagProcesoJuridico, tbl.cantidadTraspaso, tbl.comentarioTraspaso, tbl.fechaUltimoEstatus, tbl.fechaVencimiento, tbl.lotePreseleccionado, 
+        tbl.nombreLotePreseleccionado, tbl.banderaProcesoUrgenteTexto, tbl.banderaProcesoUrgente, tbl.bucket")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote)

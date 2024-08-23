@@ -418,7 +418,7 @@
 
 // filtro de condominios por residencial PARA SUR Y SAN LUIS
 	public function getResidencialQro() {
-		$where = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73)) ? "AND idResidencial NOT IN (14)" : "";
+		$where = in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $this->session->userdata('tipo') == 1 ? "AND idResidencial NOT IN (14)" : "";
 		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) nombreResidencial, idResidencial, descripcion, 
 		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1 $where");
 		return $query->result_array();
