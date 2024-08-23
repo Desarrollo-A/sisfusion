@@ -288,37 +288,60 @@ $(".modal").on("hidden.bs.modal", function(){
 });
 
 function selectCasa(parentSelector, divId, content) {
-    let array = content.split(',');
-    const parent = document.querySelector(parentSelector);
-    let existingDiv = parent.querySelector(`#${divId}`);
+    $.post(`${general_base_url}/casas/modeloOptions`, { idModelo: content }, function(data) {
+        const parent = document.querySelector(parentSelector);
 
-    if (!existingDiv) {
-        for (let i = 0; i < array.length; i++) {
-            let newDiv = document.createElement('div');
-            newDiv.id = `${divId}-${i}`;
-            newDiv.className = 'card-select';
+        const existingDivs = parent.querySelectorAll(`.${divId}`);
+        existingDivs.forEach(div => div.remove());
+
+        data.forEach((item, index) => {
+            const newDiv = document.createElement('div');
+            newDiv.id = `${divId}-${index}`;
+            newDiv.className = divId + ' card card-select';
             newDiv.innerHTML = `
-                <div class="col-12">
-                    <p class="m-0"><b>Modelo:</b> ${array[i]}</p>
-                </div>
-            `;
-
+                <div class="container-fluid">
+                    <div class="row align-items-center justify-content-center">
+                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 align-self-center">
+                            <p><b>Modelo: </b>${item.modelo} <br><b>Sup: </b>${item.sup} <br><b>Costo m2: </b> ${item.costoFinal}</p>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 align-self-center">
+                            <span class="checkmark" style="display: none;"><i class="fa fa-check"></i></span>
+                        </div>
+                    </div>
+                </div>`;
             newDiv.addEventListener('click', function() {
-                if (!newDiv.classList.contains('card-disabled')) {
-                    // Mark this card as selected
-                    newDiv.classList.add('card-selected');
-                    newDiv.classList.remove('card-select');
-                    
-                    // Disable other cards
-                    const allCards = parent.querySelectorAll('.card-select');
-                    allCards.forEach(card => {
-                        card.classList.add('card-disabled');
-                        card.classList.remove('card-select');
-                    });
+                if (newDiv.classList.contains('card-disabled')) return;
+
+                const isSelected = newDiv.classList.contains('card-selected');
+                toggleCard(newDiv, !isSelected);
+
+                if(!isSelected) {
+                    disableOtherCards(parent, newDiv);
+                } else {
+                    enableAllCards(parent);
                 }
             });
-
             parent.querySelector('.modal-body').appendChild(newDiv);
+        });
+    }, 'json');
+}
+
+function toggleCard(card, isSelected) {
+    card.classList.toggle('card-selected', isSelected);
+    const checkmark = card.querySelector('.checkmark');
+    checkmark.style.display = isSelected ? 'inline-block' : 'none';
+}
+
+function disableOtherCards(parent, selectedCard) {
+    parent.querySelectorAll('.card-select').forEach(card => {
+        if (card !== selectedCard) {
+            card.classList.add('card-disabled');
         }
-    }
+    });
+}
+
+function enableAllCards(parent) {
+    parent.querySelectorAll('.card-disabled').forEach(card => {
+        card.classList.remove('card-disabled');
+    });
 }

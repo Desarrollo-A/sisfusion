@@ -2154,4 +2154,12 @@ class CasasModel extends CI_Model
             )");
         }
     }
+    public function modeloOptions($idModelo){
+        
+        $query = $this->db->query("SELECT *, FORMAT(costom2, 'C')costoFinal FROM modelos_casas
+        WHERE idModelo IN ($idModelo)");
+        return $query;
+
+        
+    }
 }

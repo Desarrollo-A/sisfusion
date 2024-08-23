@@ -4498,4 +4498,10 @@ class Casas extends BaseController
         $this->output->set_content_type('application/json');
         $this->output->set_output($this->json([]));
     }
+
+    public function modeloOptions () {
+        $idModelo = $this->input->post('idModelo');
+        $modeloData = $this->CasasModel->modeloOptions($idModelo)->result();
+        $this->json($modeloData);
+    }
 }
