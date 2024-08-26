@@ -961,8 +961,10 @@ class Reestructura extends CI_Controller{
                         return;
                     }
 
-                    if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'],
-                        $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion)) {
+                    $moverExpediente = $this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'], $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion);
+                    $checkRescision = $this->Reestructura_model->checkRescision($dataLote['idLote'])->result();
+
+                    if (!$moverExpediente){
                         $this->db->trans_rollback();
             
                         echo json_encode(array(
@@ -973,6 +975,19 @@ class Reestructura extends CI_Controller{
                         ));
                         return;
                     }
+
+                    if (empty($checkRescision)){
+                        $this->db->trans_rollback();
+            
+                        echo json_encode(array(
+                            'titulo' => 'ERROR',
+                            'resultado' => FALSE,
+                            'message' => 'Error al dar de alta la rescisión de contrato',
+                            'color' => 'danger'
+                        ));
+                        return;
+                    }
+
                     $banderaInsertResicion = $banderaInsertResicion + 1;
                 }
             }
