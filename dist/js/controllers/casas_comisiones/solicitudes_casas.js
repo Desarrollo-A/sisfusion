@@ -2130,8 +2130,6 @@ function close_modal_xml() {
 // }
 
 function selectAll(e) {
-    console.log(e.checked);
-
     tota2 = 0;
     if(e.checked == true){
         $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
