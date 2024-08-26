@@ -1,5 +1,6 @@
 $(document).ready(function () {
 //  dani le quite este pedazo de codigo 
+numerosDispersionCasas();
 
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
@@ -828,6 +829,7 @@ $("#form_NEODATA_Casas").submit( function(e) {
             type: 'POST', // For jQuery < 1.9
             success: function(data){
                 if( data == 1 ){
+                    numerosDispersionCasas();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
                     $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
@@ -857,6 +859,18 @@ $("#form_NEODATA_Casas").submit( function(e) {
     }
 });
 
+
+function numerosDispersionCasas(){
+    $('.monto_labelC').html('');
+    $('.pagos_labelC').html('');
+    $('.lotes_labelC').html('');
+    $.post(general_base_url + "/Casas_comisiones/lotes", function (data) {
+        let montoLabel = data.monto ;
+        $('.monto_labelC').append(formatMoney(montoLabel));
+        $('.pagos_labelC').append(data.pagos);
+        $('.lotes_labelC').append(data.lotes);
+    }, 'json');
+}
 
 var maxWidth = window.matchMedia("(max-width: 992px)");
 responsive(maxWidth);

@@ -1119,5 +1119,18 @@ public function getDatosFechasProyecCondm(){
     echo json_encode( array( "data" => $dat));
   }
 
+  public function lotes(){
+    $lotes = $this->Casas_comisiones_model->lotes();
+    
+    $pagos = $this->Casas_comisiones_model->pagos();
+    
+    $monto = $this->Casas_comisiones_model->monto();
+
+    $dispersion[ "lotes"] = $lotes->nuevo_general; 
+    $dispersion["pagos"] = $pagos->nuevo_general;
+    $dispersion["monto"] = $monto->nuevo_general;
+
+    echo json_encode(  $dispersion);
+    }
 
 }
