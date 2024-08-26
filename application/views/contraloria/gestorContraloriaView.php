@@ -3,7 +3,7 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
-        <!-- MODAL DEL BOTÓN AGREGAR REGISTRO -->
+        <!-- INICIO MODAL DEL REPRESENTANTE LEGAL -->
         <div class="modal fade" id="modal" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -12,7 +12,7 @@
                     </div>
                     <div class="modal-body">
                         <row>
-                            <div class="" id="divNombre">
+                            <div id="divNombre">
                                 <div class="form-group m-0 overflow-hidden">
                                     <label class="control-label" for="proyecto">Nombre</label>
                                     <input type="text" class="form-control input-gral" id="nombre">
@@ -32,6 +32,8 @@
                 </div>
             </div>
         </div>
+        <!-- FIN MODAL DEL REPRESENTANTE LEGAL -->
+        <!-- INICIO MODAL INTERCAMBIOS -->
         <div class="modal fade" id="modalConfirmarCambio" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -39,11 +41,13 @@
                         <h4 class="modal-title text-center">Confirmar cambio de estatus</h4>
                     </div>
                     <div class="modal-body">
+                        <row>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                                 <div class="form-group m-0 overflow-hidden">
                                     <h6 id="confirmarCambioEstatus"></h6>
                                 </div>
-                            </div>                            
+                            </div>
+                        </row>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -51,8 +55,34 @@
                     </div>
                 </div>
             </div>
-        </div>  
-        <!--Contenido de la página-->
+        </div>
+        <!-- FIN MODAL INTERCAMBIOS -->
+         <!-- INICIO MODAL CAMBIO REPRESENTANTE LEGAL POR LOTE -->
+        <div class="modal fade" id="modalCambioRL" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center" id="titulo">Editar Representante Legal</h4>
+                    </div>
+                    <div class="modal-body">
+                        <row>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group m-0 overflow-visible">
+                                    <label class="control-label" for="nombreLote">Opciones</label>
+                                    <select class="selectpicker select-gral" id="selectorCambioRL" title="SELECCIONA UNA OPCIÓN"></select>
+                                </div>
+                            </div>                            
+                        </row>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnActualizarRL" class="btn btn-primary">Actualizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FIN MODAL CAMBIO REPRESENTANTE LEGAL POR LOTE -->
+        <!--INICIO DEL CONTENIDO DE LA PÁGINA -->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -65,10 +95,20 @@
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align">Gestor Contraloría</h3>
                                 </div>
-                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                    <select class="selectpicker select-gral" id="selector" title="SELECCIONA UNA OPCIÓN">                                        
-                                    </select>
+                                <div class="row">
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <label class="control-label" for="nombreLote">Opciones</label>
+                                        <select class="selectpicker select-gral" id="selector" title="SELECCIONA UNA OPCIÓN"></select>
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="divBusquedaLote">
+                                        <label class="control-label" for="nombreLote">Buscar Lote</label>
+                                        <div class="form-inline toolbar">
+                                            <input type="text" class="form-control text-center beginDate" placeholder="NOMBRE LOTE" id="nombreLote" />
+                                            <button class="btn btn-fab btn-fab-mini" onclick="llenarTablaCambioRL(3)"><span class="material-icons">search</span></button>
+                                        </div>
+                                    </div>
                                 </div>
+                                <!-- INICIO TABLA REPRESENTANTE LEGAL -->
                                 <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaRL">
                                     <table id="gestorContraloria" name="gestorContraloria" class="table-striped table-hover nowrap">
                                         <thead>
@@ -82,6 +122,8 @@
                                         </thead>
                                     </table>
                                 </div>
+                                <!-- FIN TABLA REPRESENTANTE LEGAL -->
+                                <!-- INICIO TABLA INTERCAMBIOS -->
                                 <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaIntercambio">
                                     <table id="tablaIntercambios" name="tablaIntercambios" class="table-striped table-hover nowrap">
                                         <thead>
@@ -97,12 +139,31 @@
                                         </thead>
                                     </table>
                                 </div>
+                                <!-- FIN TABLA INTERCAMBIOS -->
+                                <!-- INICIO TABLA CAMBIO DE REPRESENTANTE LEGAL POR LOTE -->
+                                <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaCambioRL">
+                                    <table id="tablaCambioRL" name="tablaCambioRL" class="table-striped table-hover nowrap">
+                                        <thead>
+                                            <tr>                                               
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE</th>
+                                                <th>REFERENCIA</th>
+                                                <th>REPRESENTANTE LEGAL</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <!-- FIN TABLA TABLA CAMBIO DE REPRESENTANTE LEGAL POR LOTE -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- FIN DEL CONTENIDO DE LA PÁGINA -->
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
 </body>

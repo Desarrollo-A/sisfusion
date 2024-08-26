@@ -3784,10 +3784,13 @@ class Contraloria extends CI_Controller {
 
     // Modelo Gestor Contraloría
     public function getDatosTabla($tipoOperacion) {
-        if ($tipoOperacion == 1)
+        if ($tipoOperacion == 1) {
             $datos = $this->Contraloria_model->getRegistrosRL();
-        else if ($tipoOperacion == 2)
+        } else if ($tipoOperacion == 2) {
             $datos = $this->Contraloria_model->getRegistrosIntercambios();
+        } else if ($tipoOperacion == 3) {
+            $datos = $this->Contraloria_model->getRegistrosCambioRL($this->input->post("nombreLote"));
+        }
         if($datos != null) {
             echo json_encode($datos);
         } else {
@@ -3801,7 +3804,6 @@ class Contraloria extends CI_Controller {
         $tipoTransaccion = $this->input->post("tipoTransaccion");
         if ($tipoTransaccion == 0) {
             $ultimoRegistro = $this->Contraloria_model->getUltimoRegistro();
-
             $insetarDatos = array(
                 "id_opcion" => $ultimoRegistro->id_opcion + 1,
                 "id_catalogo" => 77,
@@ -3830,6 +3832,10 @@ class Contraloria extends CI_Controller {
     public function getOpcionesPorCatalogo()
     {
         echo json_encode($this->Contraloria_model->getOpcionesPorCatalogo()->result_array());
+    }
+
+    public function actualizarRlLote() {
+        
     }
 
 }

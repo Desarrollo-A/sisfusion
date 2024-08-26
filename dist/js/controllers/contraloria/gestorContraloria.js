@@ -1,13 +1,13 @@
-
 let titulosGestor = [];
 let titulosTablaIntercambios = [];
+let titulosTablaCambioRL = [];
 let tipoTransaccion = '';
 let id_opcion = '';
 let idLote = '';
-let usuariosPermitidosRL = [2815, 2797, 12276, 2767, 11947, 2807];
-let usuariosPermitidosIntercambio = [5342, 2767, 11947, 2807];
+let usuariosPermitidosRL = [2815, 2875, 12276, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
+let usuariosPermitidosIntercambio = [5342, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 
-// FUNCION PARA MOSTRAR OPCIONES EN GESTOR
+// FUNCION PARA MOSTRAR OPCIONES EN EL SELECT AL INICIO DEL GESTOR
 $(document).ready(function () {
     $.getJSON("getOpcionesPorCatalogo").done(function (data) {
         for (let i = 0; i < data.length; i++) {
@@ -16,22 +16,35 @@ $(document).ready(function () {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 } else if (data[i]['id_opcion'] == 2 && usuariosPermitidosIntercambio.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-                }                
+                } else if (data[i]['id_opcion'] == 3) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                }
+            } else if (data[i]['id_catalogo'] == 77) {
+                $("#selectorCambioRL").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
             }
         }
         $('#selector').selectpicker('refresh');
+        $('#selectorCambioRL').selectpicker('refresh');
     });
 });
 
 $(document).on('change', '#selector', function () {
     if ($(this).val() == 1) {
-        $("#divTablaIntercambio").addClass("hide");
         $("#divTablaRL").removeClass("hide");
+        $("#divTablaIntercambio").addClass("hide");
+        $("#divTablaCambioRL").addClass("hide");
         llenarTablaRl($(this).val());
+        $("#divBusquedaLote").addClass("hide");
     } else if ($(this).val() == 2) {
         $("#divTablaIntercambio").removeClass("hide");
         $("#divTablaRL").addClass("hide");
+        $("#divTablaCambioRL").addClass("hide");
         llenarTablaIntercambios($(this).val());
+        $("#divBusquedaLote").addClass("hide");
+    } else if ($(this).val() == 3) {
+        $("#divBusquedaLote").removeClass("hide");
+        $("#divTablaRL").addClass("hide");
+        $("#divTablaIntercambio").addClass("hide");
     }
 });
 
@@ -199,8 +212,6 @@ function llenarTablaIntercambios(tipoOperacion) {
                 orderable: false,
                 data: function (d) {
                     return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-violetBoots confirmarCambio" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-exchange-alt"></i></button></div>`;
-
-
                 }
             }
         ],
@@ -227,7 +238,103 @@ function llenarTablaIntercambios(tipoOperacion) {
     });
 }
 
-// AGREGAR-EDITAR REPRESENTANTE LEGAL
+// FUNCION PARA LLENAR LA TABLA DE LOTES DISPONIBLES PARA CAMBIO DE REPRESENTANTE LEGAL
+function llenarTablaCambioRL(tipoOperacion) {
+    if ($("#nombreLote").val().length == 0) {
+        alerts.showNotification('top', 'right', 'Asegúrate de ingresar un valor.', 'warning')
+    } else {
+        $("#divTablaCambioRL").removeClass("hide");
+        $('#tablaCambioRL thead tr:eq(0) th').each(function (i) {
+            var title = $(this).text();
+            titulosTablaCambioRL.push(title);
+            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+            $('input', this).on('keyup change', function () {
+                if (tablaCambioRL.column(i).search() !== this.value)
+                    tablaCambioRL.column(i).search(this.value).draw();
+            });
+        });
+        tablaCambioRL = $("#tablaCambioRL").DataTable({
+            dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Exportar registros a Excel',
+                    title: "Listado de lotes",
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5],
+                        format: {
+                            header: function (d, columnIdx) {
+                                return ' ' + titulosTablaCambioRL[columnIdx] + ' ';
+                            }
+                        }
+                    }
+                }
+            ],
+            language: {
+                url: `${general_base_url}static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            pagingType: "full_numbers",
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "Todos"]
+            ],
+            bAutoWidth: false,
+            fixedColumns: true,
+            ordering: false,
+            scrollX: true,
+            destroy: true,
+            columns: [
+                { data: 'nombreResidencial' },
+                { data: 'nombreCondominio' },
+                { data: 'nombreLote' },
+                { data: 'idLote' },
+                { data: 'referencia' },
+                { data: 'nombreRl' },
+                {
+                    orderable: false,
+                    data: function (d) {
+                        return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-violetBoots cambiarRlLote" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-exchange-alt"></i></button></div>`;
+                    }
+                }
+            ],
+            columnDefs: [
+                {
+                    searchable: false,
+                    orderable: false,
+                    targets: 0
+                },
+            ],
+            ajax: {
+                url: `${general_base_url}Contraloria/getDatosTabla/${tipoOperacion}`,
+                dataSrc: "",
+                type: "POST",
+                cache: false,
+                data: {
+                    nombreLote: $('#nombreLote').val()
+                }
+
+
+            },
+            order: [[1, 'asc']]
+        });
+
+        $('#tablaCambioRL').on('draw.dt', function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        });
+    }
+
+}
+
+// MODAL PARA ACTIVAR O DESACTIVAR REPRESENTANTE LEGAL
 $(document).on('click', '.agregar', function () {
     let tipoT = $(this).data('transaccion');
     $('#modal').modal('show');
@@ -245,7 +352,7 @@ $(document).on('click', '.agregar', function () {
     id_opcion = $(this).data('idopcion');
 });
 
-// EVENTO DEL BOTÓN AGREGAR
+// EVENTOS DEL BOTÓN AGREGAR REPRESENTANTE LEGAL
 $(document).on('click', '#btnAgregar', function (e) {
     e.preventDefault();
     var nombre = $("#nombre").val();
@@ -286,17 +393,19 @@ $(document).on('click', '#btnAgregar', function (e) {
     }
 });
 
+// MODAL PARA REALIZAR EL CAMBIO DE LOTES CONTRATADOS POR INTERCAMBIO
 $(document).on('click', '.confirmarCambio', function () {
     $('#modalConfirmarCambio').modal('show');
     document.getElementById("confirmarCambioEstatus").innerHTML = `¿Estás seguro de realizar el cambio de estatus del lote <b>${$(this).attr('data-nombreLote')}</b>?`;
     idLote = $(this).data('idlote');
 });
 
+// EVENTOS DEL BOTÓN PARA REALIZAR EL CAMBIO DE LOTES CONTRATADOS POR INTERCAMBIO
 $(document).on('click', '#btnConfirmarCambio', function (e) {
     e.preventDefault();
     var dataExp1 = new FormData();
     dataExp1.append("idLote", idLote);
-    $('#btnAgregar').prop('disabled', true);
+    $('#btnConfirmarCambio').prop('disabled', true);
     $.ajax({
         url: `${general_base_url}Contraloria/cambiarEstatusLote`,
         data: dataExp1,
@@ -322,5 +431,32 @@ $(document).on('click', '#btnConfirmarCambio', function (e) {
             alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
         }
     });
+});
+
+// MODAL PARA REALIZAR EL CAMBIO DE REPRESENTANTE LEGAL POR LOTE
+$(document).on('click', '.cambiarRlLote', function () {
+    $('#modalCambioRL').modal('show');
+});
+
+// EVENTOS DEL BOTÓN PARA ACTUALIZAR EL REPRESENTANTE LEGAL POR LOTE
+$(document).on('click', '#btnActualizarRL', function (e) {
+    e.preventDefault();
+    var opcionNombreRl = $("#selectorCambioRL").val();
+    var validarOpcionNombre = ($("#selectorCambioRL").val().length == 0) ? 0 : 1;
+    var dataExp1 = new FormData();
+    dataExp1.append("opcionNombreRl", opcionNombreRl);
+    if (validarOpcionNombre == 0) {
+        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar una opción', 'warning')
+    } else {
+        $('#btnActualizarRL').prop('disabled', true);
+        $.ajax({
+            url: `${general_base_url}Contraloria/actualizarRlLote`,
+            data: dataExp1,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST'           
+        });
+    }
 });
 

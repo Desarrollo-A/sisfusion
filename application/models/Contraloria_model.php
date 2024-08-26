@@ -1979,16 +1979,18 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     // Consulta Gestor Contraloría
     public function getRegistrosRL() {
-        $query = $this->db-> query("SELECT id_opcion, nombre, estatus, fecha_creacion FROM opcs_x_cats WHERE id_catalogo = 77");
+        $query = $this->db->query("SELECT id_opcion, nombre, estatus, fecha_creacion FROM opcs_x_cats WHERE id_catalogo = 77");
         return $query->result();
     }
     
+    // Función que retorna el ultimo registro de la tabla opcs_x_cats
     public function getUltimoRegistro() {
-        return $this->db-> query("SELECT MAX(id_opcion) AS id_opcion FROM opcs_x_cats WHERE id_catalogo = 77")->row();
+        return $this->db->query("SELECT MAX(id_opcion) AS id_opcion FROM opcs_x_cats WHERE id_catalogo = 77")->row();
     }
 
+    // Función que retorna los registros de los lotes contratados por intercambio
     public function getRegistrosIntercambios() {
-        return $this->db-> query(
+        return $this->db->query(
             "SELECT
                 re.nombreResidencial,
                 co.nombre nombreCondominio,
@@ -2009,8 +2011,32 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 AND lo.idStatusLote IN (6)")->result();
     }
 
+    // Función que retorna los registros de las opciones para el gestor de contraloría
     function getOpcionesPorCatalogo()  {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (148) AND estatus = 1 ");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (148, 77) AND estatus = 1");
+    }
+
+    // Función que retorna los registros de los lotes para cambio de RL
+    public function getRegistrosCambioRL($nombreLote) {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') referencia,
+                cl.id_cliente,
+                cl.rl idRl,
+                ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') nombreRl
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+            LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.rl AND oxc0.id_catalogo = 77
+            WHERE
+                lo.status = 1
+            AND lo.nombreLote IN ('$nombreLote')")->result();
     }
     
 }
