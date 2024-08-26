@@ -149,7 +149,7 @@ $('#tabla_remanente_intmex_casas thead tr:eq(0) th').each( function (i) {
         });
         } 
     else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
+        $(this).html('<input id="all_casas_intmex" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
     }
 });
 
@@ -453,21 +453,25 @@ function getAssimilatedCommissionsIntmex_casas(proyecto, condominio){
         });
     });
 
-    $('#tabla_remanente_intmex_casas').on('click', 'input', function() {
-        tr1 = $(this).closest('tr');
-        var row = tabla_remanente_casas.row(tr1).data();
-        if (row.pa == 0) {
-            row.pa = row.impuesto;
-            totaPen_intmex_casas += parseFloat(row.pa);
-            tr1.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-        } 
-        else {
-            totaPen_intmex_casas -= parseFloat(row.pa);
-            row.pa = 0;
-        }
-
-        $("#total_autorizar_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen_intmex_casas)));
+    $('#tabla_remanente_intmex_casas').on("click", 'input', function() {
+        totaPago_casas = 0;
+        tabla_remanente_casas.$('input[type="checkbox"]').each(function () {
+            let totalChecados = tabla_remanente_casas.$('input[type="checkbox"]:checked') ;
+            let totalCheckbox = tabla_remanente_casas.$('input[type="checkbox"]');
+            if(this.checked){
+                trs = this.closest('tr');
+                row = tabla_remanente_casas.row(trs).data();
+                totaPago_casas += parseFloat(row.impuesto); 
+            }
+            if( totalChecados.length == totalCheckbox.length ){
+                $("#all_casas_intmex").prop("checked", true);
+            }else {
+                $("#all_casas_intmex").prop("checked", false);
+            }
+        });
+        $("#total_autorizar_intmex_casas").html(formatMoney(numberTwoDecimal(totaPago_casas)));
     });
+
 
     $("#tabla_remanente_intmex_casas tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr1 = $(this).closest('tr');
@@ -508,6 +512,7 @@ function cancela(){
 
 $("#form_interes_casas").submit( function(e) {
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
@@ -527,13 +532,19 @@ $("#form_interes_casas").submit( function(e) {
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
                         tabla_remanente_casas.ajax.reload();
+                        $('#spiner-loader').addClass('hide');
+
                     }, 3000);
                 }
                 else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+                    $('#spiner-loader').addClass('hide');
+
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
+                $('#spiner-loader').addClass('hide');
+
             }
         });
         $("#total_autorizar_intmex_casas").html(formatMoney(0));
@@ -575,6 +586,7 @@ $("#form_refresh_seguros").submit( function(e) {
 
 $("#form_despausar").submit( function(e) {
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
@@ -594,12 +606,18 @@ $("#form_despausar").submit( function(e) {
                     alerts.showNotification("top", "right", "Se ha regresado la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_remanente_casas.ajax.reload();
+                        $('#spiner-loader').removeClass('hide');
+
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+                    $('#spiner-loader').removeClass('hide');
+
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
+                $('#spiner-loader').removeClass('hide');
+
             }
         });
     }
@@ -633,23 +651,23 @@ function vistapreviaInformacion(archivo){
     }
 }
 
-$(document).on("click", ".individualCheck", function() {
-    totaPen_intmex_casas = 0;
-    tabla_remanente_casas.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_remanente_casas.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_remanente_casas.$('input[type="checkbox"]');
-        if(this.checked){
-            tr1 = this.closest('tr');
-            row = tabla_remanente_casas.row(tr1).data();
-            totaPen_intmex_casas += parseFloat(row.impuesto); 
-        }
-        if( totalChecados.length == totalCheckbox.length )
-            $("#all").prop("checked", true);
-        else 
-            $("#all").prop("checked", false); 
-    });
-    $("#total_autorizar_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen_intmex_casas)));
-});
+// $(document).on("click", ".individualCheck", function() {
+//     totaPen_intmex_casas = 0;
+//     tabla_remanente_casas.$('input[type="checkbox"]').each(function () {
+//         let totalChecados = tabla_remanente_casas.$('input[type="checkbox"]:checked') ;
+//         let totalCheckbox = tabla_remanente_casas.$('input[type="checkbox"]');
+//         if(this.checked){
+//             tr1 = this.closest('tr');
+//             row = tabla_remanente_casas.row(tr1).data();
+//             totaPen_intmex_casas += parseFloat(row.impuesto); 
+//         }
+//         if( totalChecados.length == totalCheckbox.length )
+//             $("#all").prop("checked", true);
+//         else 
+//             $("#all").prop("checked", false); 
+//     });
+//     $("#total_autorizar_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen_intmex_casas)));
+// });
 
 function selectAllIntmexSeguros(e) {
     tota2 = 0;
