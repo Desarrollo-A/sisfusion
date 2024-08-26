@@ -57,19 +57,8 @@
         font-size: 18px;
         margin-right: 5px;
     }
-    .checkmark {
-        position: absolute;
-        right: 15px; /* Adjust as needed */
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 20px;
-        color: #007bff; /* Adjust as needed */
-    }
 
-    .card-disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
-    }
+
 
  
 </style>

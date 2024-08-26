@@ -2046,7 +2046,7 @@ class CasasModel extends CI_Model
             CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombreCliente,
             CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
-            pc.tipoMovimiento, cli.idPropuestaCasa
+            pc.tipoMovimiento, cli.idPropuestaCasa, cli.id_cliente
         FROM
             proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
