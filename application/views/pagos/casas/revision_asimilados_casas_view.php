@@ -1,4 +1,15 @@
 <div class="tab-pane" id="asimiladosCasas">
+
+    <div class="modal fade modal-alertas" id="modal_asimilados_casas" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" id="form_interes_casas">
+                    <div class="modal-body"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
    <div class="text-center">
         <h3 class="card-title center-align">Comisiones en revisión <b>asimilados CASAS</b></h3>
         <p class="card-title pl-1">Comisiones solicitadas por el área de casas para proceder a pago en esquema de asimilados CASAS.</p>
