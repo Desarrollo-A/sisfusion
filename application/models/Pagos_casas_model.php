@@ -64,7 +64,7 @@ class Pagos_casas_model extends CI_Model {
         }
         else { // CONTRALORÍA
 
-            $filtro = "pci2.estatus IN (4)";
+            $filtro = "pci2.estatus IN (4,6)";
 
             if($condominio == 0)
                 $whereFiltro = "AND co.idResidencial  = $proyecto";
@@ -144,7 +144,7 @@ class Pagos_casas_model extends CI_Model {
         }
         else { // CONTRALORÍA
 
-            $filtro = "pci2.estatus IN (4)";
+            $filtro = "pci2.estatus IN (4,6)";
 
             if($condominio == 0)
                 $whereFiltro = "AND co.idResidencial  = $proyecto";
@@ -200,7 +200,7 @@ class Pagos_casas_model extends CI_Model {
         }
         else { // CONTRALORÍA
 
-            $filtro = "pci2.estatus IN (4)";
+            $filtro = "pci2.estatus IN (4,6)";
 
             if($condominio == 0)
                 $whereFiltro = "AND co.idResidencial  = $proyecto";

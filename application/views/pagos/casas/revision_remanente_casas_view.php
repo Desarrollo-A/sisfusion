@@ -1,4 +1,15 @@
 <div class="tab-pane" id="remanenteCasas">
+
+        <div class="modal fade modal-alertas" id="modal_remanente_casas" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="form_pausar_casas">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="text-center">
             <h3 class="card-title center-align">Comisiones en revisión <b>remanente Casas</b></h3>
             <!-- <i class="fas fa-house-user  "
