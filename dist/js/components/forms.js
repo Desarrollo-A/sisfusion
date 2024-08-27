@@ -333,9 +333,9 @@ class FileField {
 }
 
 class TextField {
-    constructor({ id, label, placeholder, width, required = false }) {
-        this.id = id
-        this.required = required
+    constructor({ id, label, placeholder, width, required = false, value = '' }) {
+        this.id = id;
+        this.required = required;
 
         this.field = $('<div />')
             .addClass(`col-lg-${width} mt-1`)
@@ -347,12 +347,13 @@ class TextField {
             )
             .append(
                 $('<input />')
-                    .addClass(`form-control input-gral`)
+                    .addClass('form-control input-gral')
                     .attr('id', id)
                     .attr('name', id)
                     .attr('type', 'text')
                     .prop('required', required)
                     .attr('placeholder', placeholder)
+                    .val(value)
                     .on('keyup', () => this.validate())
             )
             .append(
@@ -361,39 +362,40 @@ class TextField {
                     .addClass('text-danger h7 ml-1')
                     .text('Debes ingresar un texto')
                     .hide()
-            )
-
+            );
+        
         this.value = () => {
-            return $(`#${id}`).val()
-        }
+            return $(`#${id}`).val();
+        };
     }
 
     validate() {
-        let pass = true
+        let pass = true;
 
         if (this.required) {
-            let val = $(`#${this.id}`).val()
+            let val = $(`#${this.id}`).val();
 
             if (!val) {
-                pass = false
+                pass = false;
             }
 
             if (pass) {
-                $(`#${this.id}_warning`).hide()
+                $(`#${this.id}_warning`).hide();
             } else {
-                $(`#${this.id}_warning`).show()
+                $(`#${this.id}_warning`).show();
             }
         }
 
-        return pass
+        return pass;
     }
 
     get() {
-        return this.field
+        return this.field;
     }
 
     load() { }
 }
+
 
 class TextAreaField {
     constructor({ id, label, placeholder, width, required, value }) {
