@@ -237,7 +237,7 @@
                                                         <th>ID PAGO</th>
                                                         <th>PROYECTO</th>
                                                         <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
+                                                        <th>COSTO CONSTRUCCIÓN</th>
                                                         <th>TOTAL COMISIÓN</th>
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>
@@ -252,7 +252,7 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial <a href="<?=base_url()?>Comisiones/historial_colaborador"><b> Da clic aquí para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -290,7 +290,7 @@
                                                         <th>ID PAGO</th>
                                                         <th>PROYECTO</th>
                                                         <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
+                                                        <th>COSTO CONSTRUCCIÓN</th>
                                                         <th>TOTAL COMISIÓN</th>
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>
@@ -306,7 +306,7 @@
                                         <div class="tab-pane" id="resguardo-1">
                                             <div class="encabezadoBox">
                                         
-                                            <p class="card-title pl-1">Comisiones en resguardo, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1">Comisiones en resguardo, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b> Da clic aquí para ir al historial</b></a>.</p>
 
                                             </div>
                                             <div class="toolbar">
@@ -349,7 +349,7 @@
                                                         <th>ID PAGO</th>
                                                         <th>PROYECTO</th>
                                                         <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
+                                                        <th>COSTO CONSTRUCCIÓN</th>
                                                         <th>TOTAL COMISIÓN</th>
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>
@@ -364,7 +364,7 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b> Da clic aquí para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -402,7 +402,7 @@
                                                             <th>ID PAGO</th>
                                                             <th>PROYECTO</th>
                                                             <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
+                                                            <th>COSTO CONSTRUCCIÓN</th>
                                                             <th>TOTAL COMISIÓN</th>
                                                             <th>PAGADO CLIENTE</th>
                                                             <th>DISPERSADO</th>
@@ -418,7 +418,7 @@
 
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b> Da clic aquí para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -456,7 +456,7 @@
                                                         <th>ID PAGO</th>
                                                         <th>PROYECTO</th>
                                                         <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
+                                                        <th>COSTO CONSTRUCCIÓN</th>
                                                         <th>TOTAL COMISIÓN</th>
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>

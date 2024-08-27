@@ -389,7 +389,8 @@ class Comisiones_model extends CI_Model {
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8
-        INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+        INNER JOIN usuarios us ON us.id_usuario = pci1.id_usuario
+        INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = us.id_rol AND oprol.id_catalogo = 1
         INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
         LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
@@ -6657,23 +6658,42 @@ SELECT cl.id_cliente_reubicacion_2,
     public function insertComisionesCasas($idLote, $abonoNeodata,$abonoFinal,$porcentajes , $usuarioXdispersar,$comisionTotal , $porcentajeDecimal,$rolGenerado,$cliente ){
         
             // Query SQL completo
-
-    
     $cmd = "
+    DECLARE @resultadoEsperarDatos INT;
+    DECLARE @resultadoEsperarComisiones INT;
+    DECLARE @resultadoComisionEntrada INT;
     EXEC MiProcedimiento 
-	@abonoNeodata = $abonoNeodata ,@pagoNeodata =$pagoNeodata ,
-	@comentario = 'Nueva dispersión : casas ',@abonoFinal = $abonoFinal ,
-	@porcentajes = $porcentajes,@DispersadoPor = 1, 
-	@idLote = $idLote , @idUsuario = $idUsuario ,
-	@ComisionTotal = $comisionTotal, @estatus = 1,
-	@observaciones = 'Nueva dispersión : casas' ,@porcentajeDecimal = $porcentajeDecimal,
-	@rolGenerado = $rolGenerado , @cliente = $cliente;
+    @badera_real = 1,
+    @esperarDatos = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
+    @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
+    @comisionEntrada = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
+    @abonoNeodata = 100,
+    @pagoNeodata = 1000,
+    @comentario = 'Nueva dispersión: casas',
+    @abonoFinal = 100,
+    @porcentajes = 8,
+    @DispersadoPor = 1,
+    @idLote = 200,
+    @idUsuario = 290,
+    @ComisionTotalXUsuario = 400,
+    @estatus = 1,
+    @observaciones = 'Nueva dispersión: casas',
+    @porcentajeDecimal = 1,
+    @rolGenerado = 2,
+    @cliente = 150821,
+    @totalComision = 25000,
+    @abonado = 200,
+    @pendiente_pc = 20000;
+
+
+
     ";
     $query = $this->db->query($cmd);
     echo json_encode( $this->db->query("SELECT * FROM #pago_casas_temp")->result());
     $resultado = $query->result();
 
-        
+    
+    
     }
 
 

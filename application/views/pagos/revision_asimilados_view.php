@@ -64,8 +64,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#asimiladosComercializacion" role="tab" data-toggle="tab">Asimilados lotes</a></li>
-                        <li ><a href="#asimiladosSeguros" role="tab" data-toggle="tab">Seguros lotes  
-                            <i class="fas fa-house-user" style="color:#4A4A4A;  font-size: 30px;"></i></a>
+                        <li ><a href="#asimiladosSeguros" role="tab" data-toggle="tab">Seguros lotes</a>
                         </li>
                         <li ><a href="#asimiladosCasas" role="tab" data-toggle="tab">Casas Asimilados</a></li>
                         <!-- <li ><a href="#asimiladosOOAM" role="tab" data-toggle="tab">Asimilados lotes</a></li> -->

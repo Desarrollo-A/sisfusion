@@ -1,10 +1,21 @@
 <div class="tab-pane" id="remanenteCasas">
+
+        <div class="modal fade modal-alertas" id="modal_remanente_casas" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="form_pausar_casas">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="text-center">
             <h3 class="card-title center-align">Comisiones en revisión <b>remanente Casas</b></h3>
             <!-- <i class="fas fa-house-user  "
             style="color:#000000;  font-size: 30px;"
             ></i> -->
-            <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de remanente casas.</p>
+            <p class="card-title pl-1">Comisiones solicitadas por el área de casas para proceder a pago en esquema de remanente casas.</p>
         </div>
 
         <div class="toolbar">
@@ -50,7 +61,7 @@
                                     <th>CONDOMINIO</th>
                                     <th>LOTE</th>
                                     <th>REFERENCIA</th>
-                                    <th>PRECIO DEL LOTE</th>
+                                    <th>COSTO CONSTRUCCIÓN</th>
                                     <th>EMPRESA</th>
                                     <th>TOTAL DE LA COMISIÓN</th>
                                     <th>PAGADO POR EL CLIENTE</th>

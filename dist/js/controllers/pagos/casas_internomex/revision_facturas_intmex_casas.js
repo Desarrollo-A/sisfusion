@@ -148,7 +148,7 @@ $('#tabla_facturas_intmex_casas thead tr:eq(0) th').each( function (i) {
         });
     }
     else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
+        $(this).html('<input id="all_facturas_intmex" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
     }
 });
 
@@ -450,6 +450,25 @@ function get_facturas_Intmex_casas(proyecto, condominio){
         $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
+    $('#tabla_facturas_intmex_casas').on("click", 'input', function() {
+        totaPen = 0;
+        tabla_facturas_casas.$('input[type="checkbox"]').each(function () {
+            let totalChecados = tabla_facturas_casas.$('input[type="checkbox"]:checked') ;
+            let totalCheckbox = tabla_facturas_casas.$('input[type="checkbox"]');
+            if(this.checked){
+                trs = this.closest('tr');
+                row = tabla_facturas_casas.row(trs).data();
+                totaPen += parseFloat(row.impuesto); 
+            }
+            if( totalChecados.length == totalCheckbox.length ){
+                $("#all_facturas_intmex").prop("checked", true);
+            }else {
+                $("#all_facturas_intmex").prop("checked", false);
+            }
+        });
+        $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
+    });
+
     // $("#tabla_facturas_intmex_casas tbody").on("click", ".cambiar_estatus", function(){
     //     var trs = $(this).closest('tr');
     //     var row = tabla_facturas_casas.row( trs );
@@ -615,24 +634,24 @@ function preview_info(archivo){
 }
 
 
-$(document).on("click", ".individualCheck", function() {
-    totaPen = 0;
-    tabla_facturas_casas.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_facturas_casas.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_facturas_casas.$('input[type="checkbox"]');
-        if(this.checked){
-            trs = this.closest('tr');
-            row = tabla_facturas_casas.row(trs).data();
-            totaPen += parseFloat(row.impuesto); 
-        }
+// $(document).on("click", ".individualCheck", function() {
+//     totaPen = 0;
+//     tabla_facturas_casas.$('input[type="checkbox"]').each(function () {
+//         let totalChecados = tabla_facturas_casas.$('input[type="checkbox"]:checked') ;
+//         let totalCheckbox = tabla_facturas_casas.$('input[type="checkbox"]');
+//         if(this.checked){
+//             trs = this.closest('tr');
+//             row = tabla_facturas_casas.row(trs).data();
+//             totaPen += parseFloat(row.impuesto); 
+//         }
 
-        if( totalChecados.length == totalCheckbox.length )
-            $("#all").prop("checked", true);
-        else 
-            $("#all").prop("checked", false);
-    });
-    $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
-});
+//         if( totalChecados.length == totalCheckbox.length )
+//             $("#all").prop("checked", true);
+//         else 
+//             $("#all").prop("checked", false);
+//     });
+//     $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
+// });
 
 function selectAllIntmexSeguros(e) {
     tota2 = 0;
@@ -675,6 +694,8 @@ $("#form_multiples_casas").submit( function(e) {
             success: function(data){
                 if( data == 1){
                     CloseModalDelete2IntmexSeguros();
+                    $('#all_facturas_intmex').prop("checked", false);
+
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                 }else{
                     CloseModalDelete2IntmexSeguros();
