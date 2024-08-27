@@ -4434,9 +4434,7 @@ class Casas extends BaseController
         $procesoData = array(
             "idLote" => $idLote,
             "proceso" => 1,
-            "comentario" => $comentario,
-            "idGerente" => $idGerente,
-            "idAsesor" => $idUsuario
+            "comentario" => $comentario
         );
 
         $this->db->trans_begin();
