@@ -66,7 +66,7 @@ $('#tabla_asimilados_casas thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all_seguros" type="checkbox" style="width:20px; height:20px;" onchange="selectAllSeguros(this)"/>');
+        $(this).html('<input id="all_asimilado_casas" type="checkbox" style="width:20px; height:20px;" onchange="selectAllSeguros(this)"/>');
     }
 });
 
@@ -143,7 +143,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
                                 $("#autorizarAsimilados_casas").html(formatMoney(0));
-                                $("#all_seguros").prop('checked', false);
+                                $("#all_asimilado_casas").prop('checked', false);
                                 var fecha = new Date();
                                 tabla_asimilados_casas_2.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
@@ -211,7 +211,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.precio_lote == "" || d.precio_lote == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
             }
         },
         {
@@ -224,7 +224,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.comision_total == "" || d.comision_total == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
@@ -232,7 +232,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.pago_cliente == "" || d.pago_cliente == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">$'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
             }
         },
         {
@@ -240,7 +240,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.solicitado == "" || d.solicitado == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
             }
         },
         {
@@ -256,7 +256,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.dcto == "" || d.dcto == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
@@ -264,7 +264,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
                 if( d.impuesto == "" || d.impuesto == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0"><b>$'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
             }
         },
         {
@@ -323,13 +323,21 @@ function getDataAsimiladosCasas(proyecto, condominio){
             "orderable": false,
             data: function( data ){
                 let btns = '';
+                
+                const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles"><i class="fas fa-info"></i></button>`;
+                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus_casas" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
+                const BTN_ACTASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="Activar solicitud"><i class="fas fa-play"></i></button>`
 
-                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
-                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus_seguros" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
+                if(data.estatus == 4){
+                    btns += BTN_DETASI;
+                    btns += BTN_PAUASI;
 
-                btns += BTN_HISTORIAL;
-                btns += BTN_PAUSAR;
-
+                }
+                else{
+                    btns += BTN_DETASI;
+                    btns += BTN_ACTASI;
+                }
+                $('#spiner-loader').addClass('hide');
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
@@ -424,63 +432,62 @@ function getDataAsimiladosCasas(proyecto, condominio){
         });
     });
 
-    $('#tabla_asimilados_casas').on('click', 'input', function() {
-        tr2 = $(this).closest('tr');
-        var row = tabla_asimilados_casas_2.row(tr2).data();
-        if (row.monto == 0) {
-            row.monto = row.impuesto;
-            totaPago_asimilados_casas += parseFloat(row.monto);
-            tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-        } 
-        else {
-            totaPago_asimilados_casas -= parseFloat(row.monto);
-            row.monto = 0;
-        }
+    $('#tabla_asimilados_casas').on("click", 'input', function() {
+        totaPago_asimilados_casas = 0;
+        tabla_asimilados_casas_2.$('input[type="checkbox"]').each(function () {
+            let totalChecados = tabla_asimilados_casas_2.$('input[type="checkbox"]:checked') ;
+            let totalCheckbox = tabla_asimilados_casas_2.$('input[type="checkbox"]');
+            if(this.checked){
+                trs = this.closest('tr');
+                row = tabla_asimilados_casas_2.row(trs).data();
+                totaPago_asimilados_casas += parseFloat(row.impuesto); 
+            }
+            if( totalChecados.length == totalCheckbox.length ){
+                $("#all_asimilado_casas").prop("checked", true);
+            }else {
+                $("#all_asimilado_casas").prop("checked", false);
+            }
+        });
         $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(totaPago_asimilados_casas)));
     });
 
-    $("#tabla_asimilados_casas tbody").on("click", ".cambiar_estatus_seguros", function(){
+    $("#tabla_asimilados_casas tbody").on("click", ".cambiar_estatus_casas", function(){
+        var tr1 = $(this).closest('tr');
+        var row = tabla_asimilados_casas_2.row( tr1 );
+        id_pago_i = $(this).val(); 
+        
+        $("#modal_asimilados_casas .modal-body").html("");
+        $("#modal_asimilados_casas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+        $("#modal_asimilados_casas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="6"><input type="text" class="text-modal observaciones" name="observaciones" rows="3" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modal_asimilados_casas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
+        $("#modal_asimilados_casas .modal-body").append(`<div class="row"><div class="col-md-6"></div><div class="d-flex justify-end"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button></div></div>`);
+        $("#modal_asimilados_casas").modal('show');
+    });
+
+    $("#tabla_asimilados_casas tbody").on("click", ".regresar_estatus", function(){
         var tr1 = $(this).closest('tr');
         var row = tabla_asimilados_casas_2.row( tr1 );
         id_pago_i = $(this).val();
-        $("#modalPausarAsimiladosCasas .modal-body").html("");
-        $("#modalPausarAsimiladosCasas .modal-body").append(
-            '<div class="row">'+
-                '<div class="col-lg-12">'+
-                    '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
-                        '<i>'+row.data().usuario+'</i>?'+
-                    '</p>'+
-                '</div>'+
-            '</div>'+
-            '<div class="row">'+
-                '<div class="col-lg-12">'+
-                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe el motivo por el cual se pausara la solicitud"></input>'+
-                '</div>'+
-            '</div>'+
-            '<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">'+
-            '<div class="row">'+
-                '<div class="d-flex justify-end">'+
-                    '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>'+
-                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar_seguro">PAUSAR</button>'+
-                '</div>'+
-            '</div>'
-        );
-        const buttonPausar_seguro = document.getElementById('btnPausar_seguro');
-        buttonPausar_seguro.addEventListener('click', function handleClick() {
-            $("#autorizarAsimilados_casas").html(formatMoney(0));
-        });
-        $("#modalPausarAsimiladosCasas").modal();
+
+        $("#modal_asimilados_casas .modal-body").html("");
+        $("#modal_asimilados_casas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de activar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+        $("#modal_asimilados_casas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="2"><input type="hidden" name="estatus" value="4"><input type="text" class="text-modal observaciones"  rows="3" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modal_asimilados_casas .modal-body").append(`<div class="d-flex justify-end"><input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="ACTIVAR">ACTIVAR</button></div>`);        
+        $("#modal_asimilados_casas").modal();
     });
+
 }
 
-$("#formPausarAsimiladosCasas").submit( function(e) {
+$("#form_interes_casas").submit( function(e) {
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
+        
         $.ajax({
-            url: general_base_url + "Pagos_casas/pausar_solicitudM/",
+            url: general_base_url + "Pagos_casas/despausar_solicitud",
             data: data,
             cache: false,
             contentType: false,
@@ -490,51 +497,82 @@ $("#formPausarAsimiladosCasas").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modalPausarAsimiladosCasas").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                    $("#modal_asimilados_casas").modal('toggle' );
+
+                    alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
-                        tabla_asimilados_casas_2.ajax.reload();
+                        tabla_asimilados_casas_2.ajax.reload(null, false);
+                        $('#spiner-loader').addClass('hide');
+
                     }, 3000);
                 }else{
+                    $('#spiner-loader').addClass('hide');
+
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
             },error: function( ){
+                $('#spiner-loader').addClass('hide');
+
                 alert("ERROR EN EL SISTEMA");
             }
         });
     }
 });
 
-$(document).on("click", ".checkPagosIndividual", function() {
-    totaPago_asimilados_casas = 0;
-    tabla_asimilados_casas_2.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_asimilados_casas_2.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_asimilados_casas_2.$('input[type="checkbox"]');
-        if(this.checked){
-            tr1 = this.closest('tr');
-            row = tabla_asimilados_casas_2.row(tr1).data();
-            totaPago_asimilados_casas += parseFloat(row.impuesto); 
-        }
-        if( totalChecados.length == totalCheckbox.length )
-            $("#all_seguros").prop("checked", true);
-        else 
-            $("#all_seguros").prop("checked", false);
-    });
-    $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(totaPago_asimilados_casas)));
-});
+
+// $("#formPausarAsimiladosCasas").submit( function(e) {
+//     e.preventDefault();
+//     $('#spiner-loader').removeClass('hide');
+
+// }).validate({
+
+//     submitHandler: function( form ) {
+//         var data = new FormData( $(form)[0] );
+//         data.append("id_pago_i", id_pago_i);
+//         $.ajax({
+//             url: general_base_url + "Pagos_casas/pausar_solicitudM/",
+//             data: data,
+//             cache: false,
+//             contentType: false,
+//             processData: false,
+//             dataType: 'json',
+//             method: 'POST',
+//             type: 'POST',
+//             success: function(data){
+//                 if( data[0] ){
+//                     $("#modalPausarAsimiladosCasas").modal('toggle' );
+//                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+//                     setTimeout(function() {
+//                         tabla_asimilados_casas_2.ajax.reload();
+//                         $('#spiner-loader').addClass('hide');
+
+//                     }, 3000);
+//                 }else{
+//                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+//                     $('#spiner-loader').addClass('hide');
+
+//                 }
+//             },error: function( ){
+//                 $('#spiner-loader').addClass('hide');
+
+//                 alert("ERROR EN EL SISTEMA");
+//             }
+//         });
+//     }
+// });
     
 function selectAllSeguros(e) {
-    tota2 = 0;
+    totaPago_asimilados_casas = 0;
     if(e.checked == true){
         $(tabla_asimilados_casas_2.$('input[type="checkbox"]')).each(function (i, v) {
             tr1 = this.closest('tr');
             row = tabla_asimilados_casas_2.row(tr1).data();
-            tota2 += parseFloat(row.impuesto);
+            totaPago_asimilados_casas += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(totaPago_asimilados_casas)));
     }
     if(e.checked == false){
         $(tabla_asimilados_casas_2.$('input[type="checkbox"]')).each(function (i, v) {

@@ -140,7 +140,7 @@
                                                                 <th>CONDOMINIO</th>
                                                                 <th>LOTE</th>
                                                                 <th>REFERENCIA</th>
-                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>COSTO CONSTRUCCIÓN</th>
                                                                 <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>PAGO DEL CLIENTE</th>
                                                                 <th>DISPERSADO</th>
@@ -203,7 +203,7 @@
                                                                 <th>CONDOMINIO</th>
                                                                 <th>LOTE</th>
                                                                 <th>REFERENCIA1</th>
-                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>COSTO CONSTRUCCIÓN</th>
                                                                 <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>PAGO DEL CLIENTE</th>
                                                                 <th>DISPERSADO</th>
@@ -279,7 +279,7 @@
                                                                     <th>CONDOMINIO</th>
                                                                     <th>LOTE</th>
                                                                     <th>REFERENCIA</th>
-                                                                    <th>PRECIO DEL LOTE</th>
+                                                                    <th>COSTO CONSTRUCCIÓN</th>
                                                                     <th>TOTAL DE LA COMISIÓN</th>
                                                                     <th>MONTO DESCUENTO</th>
                                                                     <th>TIPO</th>

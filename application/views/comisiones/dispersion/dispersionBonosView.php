@@ -19,12 +19,31 @@
                                                     <p class="card-title pl-1 center-align"></p>
                                                 </div>
                                                 <div class="toolbar">
+                                                        <div class="toolbar">
+                                                            <div class="container-fluid p-0">
+                                                                <div class="row">
+                                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                        <div class="form-group text-center">
+                                                                            <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
+                                                                            <p class="input-tot" name="myText_nuevas" id="myText_nuevas">$0.00</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                        <div class="form-group text-center">
+                                                                            <h4 class="title-tot center-align m-0">Solicitar:</h4>
+                                                                            <p class="input-tot" id="totpagarPen">$0.00</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     <div class="container-fluid p-0">
                                                         <div class="material-datatables">
                                                             <div class="form-group">
                                                                 <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
                                                                     <thead>
                                                                         <tr>
+                                                                            <th></th>
                                                                             <th>ID PAGO</th>
                                                                             <th>PROYECTO</th>
                                                                             <th>LOTE</th>
@@ -68,6 +87,22 @@
                                     <div class="col-lg-12">
                                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                                         <button type="submit" id="btnSubmit" class="btn btn-primary">Aceptar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal fade" id="modalAsignacion" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <form method="post" class="row" id="formAsignacion" autocomplete="off">
+                            <div class="modal-header" id="mHeader"></div>
+                                <div class="modal-body pb-0 pt-0"></div>
+                                <div class="modal-footer">
+                                    <div class="col-lg-12">
+                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" id="btnsubA" class="btn btn-primary">Aceptar</button>
                                     </div>
                                 </div>
                             </div>
