@@ -7,6 +7,8 @@ const formatter = new Intl.NumberFormat('es-MX', {
 
 let opcionRegreso = 0
 let datos = "";
+let selectOption = null;
+
 
 let formRegreso = $("#modalRegreso")
 
@@ -74,12 +76,14 @@ let table = new Table({
     buttons: buttons,
     columns,
 })
-
+let idCasaFinal = new HiddenField({id: 'idCasaFinal', value: selectOption});
 function avanceProcesoBanco(data){
     if(data.procesoAnterior > data.procesoNuevo && data.tipoMovimiento == 1){
         valor_avance = data.procesoAnterior // para identificar a que paso debe de avanzar viendo de que paso se rechazo
     }
-
+    selectCasa('#form-form-modal', 'custom-div-id', data.idPropuestaCasa);
+    
+    
     let form = new Form({
         title: 'Avanzar proceso',
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
@@ -112,10 +116,13 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: valor_avance }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
-            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            idCasaFinal,
+            new HiddenField({ id: 'idCliente', value: data.id_cliente}),
+            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),          
         ],
+        
     })
-
+    
     form.show();
 }
 
@@ -285,3 +292,45 @@ $(".modal").on("hidden.bs.modal", function(){
     opcionRegreso = 0
     datos = ''
 });
+
+function selectCasa(parentSelector, divId, idPropuestaCasa) {
+    $.post(`${general_base_url}/casas/modeloOptions`, { idModelo: idPropuestaCasa }, function(data) {
+        
+        const parent = document.querySelector(parentSelector);
+        const existingDivs = parent.querySelectorAll(`.${divId}`);
+        existingDivs.forEach(div => div.remove());
+
+        const modalBody = parent.querySelector('.modal-body');
+
+        data.forEach((item, index) => {
+            const newDiv = document.createElement('div');
+            newDiv.id = `${divId}-${index}`;
+            newDiv.className = `${divId} element-select`; 
+            
+            newDiv.innerHTML = `
+                <div id="checkDS" style="margin-bottom: 10px">
+                    <div class="container boxChecks p-0">
+                        <label class="m-0 checkstyleDS">
+                            <input type="radio" name="idPropuesta" id="idPropuesta-${index}" value="${item.idModelo}">
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Modelo <b>${item.modelo}</b></p>
+                            </span>
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Superficie <b>${item.sup}</b></p>
+                            </span>
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">COSTO M2 <b>${item.costom2}</b></p>
+                            </span>
+                        </label>
+                    </div>
+                </div>`;
+            
+            newDiv.addEventListener('change', function() {
+                const selectedOption = modalBody.querySelector('input[name="idPropuesta"]:checked').value;    
+                selectOption = selectedOption;
+                idCasaFinal.set(selectOption)
+            });
+            modalBody.appendChild(newDiv);
+        });
+    }, 'json');
+}
