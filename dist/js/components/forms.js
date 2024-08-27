@@ -96,7 +96,8 @@ class Button {
 class HiddenField {
     constructor({ id, value }) {
         this.id = id
-        this.value = () => { return value }
+        this.value = () => { return this.data }
+        this.data = value
 
         this.field = $('<input />')
             .attr('type', 'hidden')
@@ -107,6 +108,10 @@ class HiddenField {
     }
 
     load() { }
+
+    set(value) {
+        this.data = value
+    }
 }
 
 class SelectField {
