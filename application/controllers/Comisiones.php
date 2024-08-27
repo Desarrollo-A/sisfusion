@@ -4334,19 +4334,19 @@ public function getDesarrolloSelectINTMEX($a = ''){
     echo json_encode($data);
   }
 
-public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
+  public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
 
-      ini_set('max_execution_time', 900);
-      set_time_limit(900);
-      ini_set('memory_limit','2048M');
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','2048M');
 
-      
-  $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus($proyecto,$condominio, $usuario)->result_array();
-  for( $i = 0; $i < count($dat); $i++ ){
-      $dat[$i]['pa'] = 0;
+        
+    $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus($proyecto,$condominio, $usuario)->result_array();
+    for( $i = 0; $i < count($dat); $i++ ){
+        $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
   }
-  echo json_encode( array( "data" => $dat));
-}
 
 
 
