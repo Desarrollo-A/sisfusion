@@ -180,7 +180,7 @@ class CasasModel extends CI_Model
                 CASE WHEN cl.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.telefono3 END telefono3,
                 CASE WHEN cl.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.correo END correo,
                 CASE WHEN cl.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente,
-                ISNULL(cl.id_cliente, 0) idCliente
+                ISNULL(cl.id_cliente, 0) idCliente, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE 1 END AS statusCliente
 
             FROM 
                 lotes lo 
@@ -1712,7 +1712,7 @@ class CasasModel extends CI_Model
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
 
-        $query = $this->db->query("SELECT s
+        $query = $this->db->query("SELECT 
             pcd.*,
             oxc.color,
             oxc.nombre AS nombreMovimiento,

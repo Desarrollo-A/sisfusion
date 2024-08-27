@@ -200,15 +200,32 @@ let columns = [
     },
     { data: 'correo' },
     { data: 'lugar_prospeccion' },
-    { data: function(data)
-        {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
-            if (data.idCliente != 0)
-                return '<div class="d-flex justify-center">' + pass_button + '</div>'
-            else
-                return '';
-        } 
-    },
+    {data: function(data) {
+        let buttons = '';
+
+        if(data.idCliente != 0) {
+            let pass_button = new RowButton({
+                icon: 'thumb_up',
+                color: 'green',
+                label: 'Avanzar',
+                onClick: select_lote,
+                data: data
+            });
+            buttons += '<div class="d-flex justify-center">' + pass_button + '</div>';
+        }
+
+        if (data.statusCliente == 0) {
+            let addCliente = new RowButton({
+                icon: 'assignment_ind',
+                label : 'Agregar Cliente',
+                onClick: altaCliente,
+                data: data
+            });
+            buttons += '<div class="d-flex justify-center">' + addCliente + '</div>';
+        }
+
+        return buttons;
+    }}
 ]
 
 let table = new Table({
@@ -328,3 +345,41 @@ $(document).on('click', '.btn-asignar', () => {
     })
     form.show()
  });
+
+
+altaCliente = function(data) {
+    let form = new Form({
+        title: 'Alta de cliente',
+        text: 'Rellena los campos',
+        onSubmit: function(dataForm){
+            form.loading(true);
+            let formConfirm = new FormConfirm({
+                title: '¿Estás seguro de crear el cliente?',
+                onSubmit: function () {
+                    formConfirm.loading(true);
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}/casas/altaCliente`,
+                        data: dataForm,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            console.log(`response: ${response}`);
+                            table.reload();
+
+                        }
+                    })
+                }
+            });
+            formConfirm.show();
+            form.loading(true);
+        }, 
+        fields : [
+            new TextField({id: 'nombre', label: 'Nombre', placeholder : 'Ingrese el nombre', width: 6, required : true}),
+            new TextField({id: 'paterno', label: 'Apellido Paterno', placeholder : 'Ingrese el apellido paterno', width: 6, required : true}),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+            new HiddenField({ id: 'altaAccion', value: 1}),
+        ]
+    });
+    form.show();
+}

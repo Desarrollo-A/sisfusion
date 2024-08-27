@@ -4498,4 +4498,52 @@ class Casas extends BaseController
         $this->output->set_content_type('application/json');
         $this->output->set_output($this->json([]));
     }
+
+    public function altaCliente () {
+        $nombre = $this->form('nombre');
+        $paterno = $this->form('paterno');
+        $idLote = $this->form('idLote');
+        $accion = $this->form('altaAccion');
+        $flagStatus = true;
+
+        $this->db->trans_begin();
+        //INSERT
+        if($accion == 1) {
+            $insertArr = array(
+                'nombre' => $nombre,
+                'apellido_paterno' => $paterno,
+                'id_subdirector' => 0,
+                'id_regional' => 0,
+                'plan_comision' => 0,
+                'regimen_fac' => 0,
+                'cp_fac' => 0,
+                'banderaEscrituracion' => 0,
+                'proceso' => 0,
+                'tipoLiberacion' => 0,
+                'banderaComisionCl' => 0,
+                'totalNeto2Cl' => 0,
+                'total8P' => 0,
+                'venta_extranjero' => 0,
+                'tipoCancelacion' => 0,
+                'estatusSeguro' => 0,
+                'sedeRecepcion' => 0,
+                'id_asesor_c' => 0,
+                'id_gerente_c' => 0,
+                'id_subdirector_c' => 0,
+                'idLote' => $idLote
+            );
+
+            $insertCliente = $this->General_model->addRecord("clientes", $insertArr);
+            if(!$insertCliente) {
+                $flagStatus = false;
+            }
+        }
+        
+        if($flagStatus) {
+            $this->db->trans_commit();
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output($this->json([]));
+    }
 }
