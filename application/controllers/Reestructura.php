@@ -992,6 +992,11 @@ class Reestructura extends CI_Controller{
 
                     if (!$check){
                         $this->db->trans_rollback();
+
+                        var_dump($check);
+                        var_dump($dataLote['idLote']);
+                        echo '<pre>';var_dump($checkRescision);echo '</pre>';
+                        echo '<pre>';var_dump($moverExpediente);echo '</pre>';
             
                         echo json_encode(array(
                             'titulo' => 'ERROR',
