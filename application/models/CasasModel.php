@@ -426,7 +426,7 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         LEFT JOIN vobos_proceso_casas vpc ON vpc.idVobo = pc.idProcesoCasas
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 1 AND doc.proveedor = 0
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 1 AND (doc.proveedor = 0 OR doc.proveedor IS NULL)
         WHERE pc.proceso = 1
         AND pc.status = 1
         AND cli.status = 1
