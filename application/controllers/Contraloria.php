@@ -1163,14 +1163,14 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso > 1) { // SON REESTRUCTURA O REUBICACIONES: HARÁN EL SALTO DE ETATUS
+        if ($cliente->proceso > 1 && $cliente->proceso != 8) { // SON REESTRUCTURA O REUBICACIONES: HARÁN EL SALTO DE ETATUS
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
             $arreglo["status8Flag"] = 1;
         }
 
         $assigned_location = null;
-        if ($cliente->proceso <= 1) {
+        if ($cliente->proceso <= 1 || $cliente->proceso == 8) {
 			$ub_jur = $this->Contraloria_model->val_ub($idLote);
 			$id_sede_jur = '';
 			$assigned_location = $ub_jur[0]['ubicacion'];
@@ -1290,7 +1290,7 @@ class Contraloria extends CI_Controller {
 		if (in_array($assigned_location, [1, 2, 4, 5, 3, 13, 15, 16, 6, 8, 19, 11]))
 			$this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur);
 
-		if (in_array($cliente->proceso, [0, 1])) {
+		if (in_array($cliente->proceso, [0, 1, 8])) {
 			$data['message'] = 'OK';
 			echo json_encode($data);
 			return;

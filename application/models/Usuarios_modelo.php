@@ -98,7 +98,7 @@ class Usuarios_modelo extends CI_Model
                 else if($this->session->userdata('id_usuario') == 7310) // 7310	DANAE
                     $id_sede = "(usuarios.id_sede IN ('2', '4', '13', '14', '15')) AND";
                 else if (in_array($this->session->userdata('id_usuario'), [30, 7401])) // 30 VALERIA PALACIOS / CLAUDIA LORENA SERRATO VEGA
-                    $id_sede = "(usuarios.id_sede IN ('1', '8', '10', '11', '19')) AND";
+                    $id_sede = "(usuarios.id_sede IN ('1', '8', '10', '11', '19') OR usuarios.id_sede LIKE '%18%') AND";
                 else if (in_array($this->session->userdata('id_usuario'), [6627])) // 30 JUANA GUZMAN
                     $id_sede = "(usuarios.id_sede IN ('6', '12')) AND";
                 else if (in_array($this->session->userdata('id_usuario'), [7097, 7096, 13094, 15842])) // 30 GRISSEL, SAMANTHA Y LEONARDO
@@ -1073,7 +1073,10 @@ class Usuarios_modelo extends CI_Model
         }
     }
 
-    function getUsersListByLeader($idUsuario){
+    function getUsersListByLeader($idUsuario) {
+        $validacionExtra = "";
+        if ($this->session->userdata('id_usuario') == 607)
+            $validacionExtra = "OR u.id_usuario = 9471";
         return $this->db->query("DECLARE @user INT 
         SELECT @user = $idUsuario
         SELECT u.id_usuario, u.id_rol, UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
@@ -1081,12 +1084,13 @@ class Usuarios_modelo extends CI_Model
         u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
         FROM usuarios u
         INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
-        INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+        LEFT JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
         INNER JOIN usuarios us ON us.id_usuario= u.id_lider
         where u.id_rol in(1,2,3,7,9) and u.rfc NOT LIKE '%TSTDD%' AND u.correo NOT LIKE '%test_%'
         AND (u.id_lider = @user  
         OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
-        OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
+        OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user ))
+        $validacionExtra)
         ORDER BY u.id_rol");
     }
 

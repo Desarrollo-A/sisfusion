@@ -79,7 +79,7 @@ class Contratacion_model extends CI_Model {
       else if (in_array($id_rol, [6])) // LO CONSULTA UN USUARIO TIPO ASISTNTE GERENTE
          $filtroClientesPropios = "AND (cl.id_gerente IN ($idsGerente))";
       else if (in_array($id_rol, [2])) // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
-         $filtroClientesPropios = "AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario)";
+         $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario)";
       else if (in_array($id_rol, [5])) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
          $filtroClientesPropios = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
 
