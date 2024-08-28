@@ -71,9 +71,9 @@ let buttons = [
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
         titleAttr: 'Descargar archivo excel',
-        title:"Originación de cartera",
+        title:"Lotes sin marca de escritura",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4],
+            columns: [0, 1, 2, 3, 4, 5, 6],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
