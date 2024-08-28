@@ -698,6 +698,8 @@ class Reestructura extends CI_Controller{
 
     public function setReubicacion(){
         $this->db->trans_begin();
+        $bandera = '';
+        $check = false;
         $idLote = $this->input->post('idLote');
         if(!isset($idLote)){
             echo json_encode(array(
@@ -963,6 +965,18 @@ class Reestructura extends CI_Controller{
 
                     $moverExpediente = $this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'], $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion);
                     $checkRescision = $this->Reestructura_model->checkRescision($dataLote['idLote'])->result();
+                    
+                    
+                    if(!empty($checkRescision)){
+                        $bandera = $dataLote['idLote'];
+                        $check = true;
+
+                        // $this->db->trans_rollback();
+                        // var_dump($check);
+                        // var_dump($dataLote['idLote']);
+                        // echo '<pre>';var_dump($checkRescision);echo '</pre>';
+                        // exit;
+                    }
 
                     if (!$moverExpediente){
                         $this->db->trans_rollback();
@@ -976,7 +990,7 @@ class Reestructura extends CI_Controller{
                         return;
                     }
 
-                    if (empty($checkRescision)){
+                    if (!$check){
                         $this->db->trans_rollback();
             
                         echo json_encode(array(
