@@ -13,8 +13,6 @@ $.ajax({
 })
 
 filtro_proyectos.onChange(function(option) {
-    
-
     $.ajax({
         type: 'GET',
         url: `condominios?proyecto=${option.value}`,
@@ -67,7 +65,6 @@ let filtros = new Filters({
     ],
 })
 
-
 let buttons = [
     {
         extend: 'excelHtml5',
@@ -98,7 +95,7 @@ btn_assign = function (data) {
                     formConfirm.loading(true);
                     $.ajax({
                         type: 'POST',
-                        url: `${general_base_url}/postventa/assignMarca`,
+                        url: `${general_base_url}/postventa/asignarMarca`,
                         data: dataForm,
                         contentType: false,
                         processData: false,

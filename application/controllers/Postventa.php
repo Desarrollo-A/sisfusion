@@ -3776,7 +3776,7 @@ public $controller = 'Postventa';
         $this->json($lotesEscritura);
     }
 
-    public function assignMarca() {
+    public function asignarMarca() {
         $idCliente = $this->form('idCliente');
         $accion = $this->form('accion');
         $banderaSuccess = true;
@@ -3785,7 +3785,10 @@ public $controller = 'Postventa';
             "escrituraFinalizada" => 1,
         );
         $this->db->trans_begin();
-        $update = $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
+        if($accion == 1) {
+            $update = $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
+        }
+        
         if(!$update){
             $banderaSuccess = false;
         }
