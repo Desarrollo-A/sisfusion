@@ -50,8 +50,6 @@ function show_preview(data) {
 }
 
 function show_upload(data) {
-    // console.log(data)
-
     let form = new Form({
         title: 'Subir carta de autorización',
         onSubmit: function (data) {

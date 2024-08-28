@@ -2,10 +2,10 @@
     <div class="card-content" style="justify-content: space-between">
         <div class="text-center">
             <div class="encabezadoBox">
-                <h3 class="card-title center-align">Comisiones nuevas <b>remanente seguros</b></h3>
+                <h3 class="card-title center-align">Comisiones nuevas <b>remanente casas</b></h3>
             </div>
             <div>
-                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible seguros)</p>
+                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible casas)</p>
             </div>
         </div>
         <div class="toolbar">
@@ -54,7 +54,7 @@
                                     <th>CONDOMINIO</th>
                                     <th>LOTE</th>
                                     <th>REFERENCIA</th>
-                                    <th>PRECIO DEL LOTE</th>
+                                    <th>COSTO CONSTRUCCIÓN</th>
                                     <th>EMPRESA</th>
                                     <th>TOTAL COMISIÓN</th>
                                     <th>PAGO DEL CLIENTE</th>

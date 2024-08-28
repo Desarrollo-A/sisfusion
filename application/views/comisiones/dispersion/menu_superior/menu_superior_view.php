@@ -27,11 +27,11 @@
         <br>
         <br>
         <br><br>
-        <div class="col-xs-4 col-sm-3 col-md-4 col-lg-4 d-flex align-end text-center">
-                <button type="sum" data-toggle="modal" class="btn-gral-data" id="planllenado" style="color:white" onclick="llenado()"> Llenado de plan</button>
+        <div class="col-xs-4 col-sm-3 col-md-4 col-lg-4 d-flex align-end text-center" >
+                <button type="sum" data-toggle="modal" class="planllenado btn-gral-data" id="planllenado" style="color:white" onclick="llenado()"> Llenado de plan</button>
         </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
-            <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center" >
+            <a data-target="#myModal" data-toggle="modal" class="btn-gral-data MainNavHelp" id="MainNavHelp" 
             href="#myModal" style="color:white"> Reporte dispersión</a>
         </div>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">

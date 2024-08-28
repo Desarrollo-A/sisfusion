@@ -430,7 +430,7 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         LEFT JOIN vobos_proceso_casas vpc ON vpc.idVobo = pc.idProcesoCasas
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 1 AND doc.proveedor = 0
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 1 AND (doc.proveedor = 0 OR doc.proveedor IS NULL)
         WHERE pc.proceso = 1
         AND pc.status = 1
         AND cli.status = 1
@@ -2050,7 +2050,7 @@ class CasasModel extends CI_Model
             CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS nombreCliente,
             CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
-            pc.tipoMovimiento
+            pc.tipoMovimiento, cli.idPropuestaCasa, cli.id_cliente
         FROM
             proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
@@ -2157,5 +2157,13 @@ class CasasModel extends CI_Model
                 GETDATE()
             )");
         }
+    }
+    public function modeloOptions($idModelo){
+        
+        $query = $this->db->query("SELECT *, FORMAT(costom2, 'C')costoFinal FROM modelos_casas
+        WHERE idModelo IN ($idModelo)");
+        return $query;
+
+        
     }
 }

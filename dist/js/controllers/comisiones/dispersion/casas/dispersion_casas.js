@@ -1,5 +1,6 @@
 $(document).ready(function () {
 //  dani le quite este pedazo de codigo 
+numerosDispersionCasas();
 
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
@@ -112,7 +113,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
         titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
         title: 'Reporte Comisiones Dispersión',
         exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16],
+            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -241,8 +242,6 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         ooamDispersion = 0; //VENTAS SIN REESTRUCTURA
                         nombreOtro = '';
 
-                     
-                
                         BtnStats += `<button href="#" 
                         value = "${d.idLote}" 
                         data-totalNeto2 = "${totalLote}"
@@ -343,7 +342,7 @@ $("#formPrioridad").submit( function(e) {
                 } else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otro usuario", "warning");
-                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
                     $("#modal_NEODATA_Casas").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
@@ -386,6 +385,27 @@ function operacionValidarFun(porcentajeAbonado,cuantosAsesores,cuantosCoor,id_ro
    return operacionValidar;
 
 }
+
+$('#tabla_dispersion_casas tbody').on('click', 'td.details-control', function () {
+    var tr = $(this).closest('tr');
+    var row = $('#tabla_dispersion_casas').DataTable().row(tr);
+    console.log(row.data());
+    if (row.child.isShown()) {
+        row.child.hide();
+        tr.removeClass('shown');
+        $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
+    } else {
+        var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información colaboradores</b></label></div>
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Director: </b>` + row.data().director + `</label></div>
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Subdirector: </b>` + row.data().subdirector + `</label></div>
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Gerente: </b>` + row.data().gerente + `</label></div>
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2"><label><b>Asesor: </b>` + row.data().asesor + `</label></div>
+        </div></div>`;
+        row.child(informacion_adicional).show();
+        tr.addClass('shown');
+        $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
+    }
+});
 
 $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async function(){
 
@@ -442,6 +462,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                             if(parseFloat(data[0].Bonificado) > 0){
                                 bonificadoTotal = data[0].Bonificado;
                             }
+                            total = idLote == 16299 ? 20000 : total;
                             var porcentajeAbonado = ((total * 100) / totalNeto2);                            
                                 cadena = 
                                 `<div class="col-12">
@@ -808,6 +829,7 @@ $("#form_NEODATA_Casas").submit( function(e) {
             type: 'POST', // For jQuery < 1.9
             success: function(data){
                 if( data == 1 ){
+                    numerosDispersionCasas();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
                     $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
@@ -837,6 +859,18 @@ $("#form_NEODATA_Casas").submit( function(e) {
     }
 });
 
+
+function numerosDispersionCasas(){
+    $('.monto_labelC').html('');
+    $('.pagos_labelC').html('');
+    $('.lotes_labelC').html('');
+    $.post(general_base_url + "/Casas_comisiones/lotes", function (data) {
+        let montoLabel = data.monto ;
+        $('.monto_labelC').append(formatMoney(montoLabel));
+        $('.pagos_labelC').append(data.pagos);
+        $('.lotes_labelC').append(data.lotes);
+    }, 'json');
+}
 
 var maxWidth = window.matchMedia("(max-width: 992px)");
 responsive(maxWidth);

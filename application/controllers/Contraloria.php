@@ -3672,4 +3672,154 @@ class Contraloria extends CI_Controller {
             echo json_encode(array("result" => false, "msg" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
         }
     }
+
+    public function activaMSIListos($id_autorizacion) {
+        //array  with the query data
+        $autorizacionData = $this->db->query("SELECT * FROM autorizaciones_msi WHERE id_autorizacion IN ($id_autorizacion)")->result_array();
+        $actualizar = array();
+        $insert_historial = array();
+        $update_lotes = array();
+
+        if (count($autorizacionData) > 0) {
+            foreach($autorizacionData as $autorizacion) {
+                $fecha_insercion = date('Y-M-d H:i:s');
+                if($autorizacion['modoActualizacion'] == 1) {
+                    $data_actualizar = array(
+                        "estatus_autorizacion" => 3,
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "fecha_modificacion" => $fecha_insercion,
+                        "modificado_por" => 1,
+                        "modoActualizacion" => $autorizacion['modoActualizacion']
+                    );
+
+                    $data_historial = array(
+                        "idAutorizacion" => $autorizacion['id_autorizacion'],
+                        "tipo" => 2,
+                        "id_usuario" => 1,
+                        "fecha_movimiento" => $fecha_insercion,
+                        "estatus" => 1,
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "modoActualizacion" => $autorizacion['modoActualizacion']
+                    );
+
+                    $table = 'autorizaciones_msi';
+                    $key = 'id_autorizacion';
+                    $table_historial = 'historiail_autorizacionesPSMI';
+                    $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);
+                    $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+
+                    $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                    $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
+
+                }
+
+                else if($autorizacion['modoActualizacion'] == 2) {
+                    $fecha_insercion = date('Y-m-d H:i:s');
+
+                    $data_actualizar = array(
+                        "estatus_autorizacion" => 3,
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "fecha_modificacion" => $fecha_insercion,
+                        "modificado_por" => 1,
+                        "modoActualizacion" => $autorizacion['modoActualizacion']
+                    );
+                    $data_historial = array(
+                        "idAutorizacion" => $autorizacion['id_autorizacion'],
+                        "tipo" => 2,
+                        "id_usuario" => 1,
+                        "fecha_movimiento" => $fecha_insercion,
+                        "estatus" => 1,
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "estatus_autorizacion" => 3,
+                        "modoActualizacion" => $autorizacion['modoActualizacion']
+                    );
+
+                    $table = 'autorizaciones_msi';
+                    $key = 'id_autorizacion';
+                    $table_historial = 'historial_autorizacionesPMSI';
+                    $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);
+                    $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+
+                    $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                    $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');                    
+                }
+            }
+            if($actualizar && $insert_historial &&  $update_lotes) {
+                $data_response['message'] = 'OK';
+            }else {
+                $data_response['message'] = 'ERROR';
+            }
+        } else {
+            $data_response['message'] = 'Nada que actualizar';
+        }
+        echo json_encode($data_response);
+        exit;
+
+    /*} else {
+        echo json_encode(array("status") => 365, "message" =>)
+    }*/
+    }
+
+    // Vista Gestor Contraloría
+    public function gestorContraloria() {
+        $this->load->view('template/header');
+        $this->load->view('contraloria/gestorContraloriaView');
+    }
+
+    // Modelo Gestor Contraloría
+    public function getDatosTabla($tipoOperacion) {
+        if ($tipoOperacion == 1) {
+            $datos = $this->Contraloria_model->getRegistrosRL();
+        } else if ($tipoOperacion == 2) {
+            $datos = $this->Contraloria_model->getRegistrosIntercambios();
+        } else if ($tipoOperacion == 3) {
+            $datos = $this->Contraloria_model->getRegistrosCambioRL($this->input->post("nombreLote"));
+        }
+        if($datos != null) {
+            echo json_encode($datos);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    // Agregar registros a la tabla Gestor Contraloría
+    public function agregarRegistroGestorContraloria() {
+        $nombre = $this->input->post("nombre");
+        $id_opcion = $this->input->post("id_opcion");
+        $tipoTransaccion = $this->input->post("tipoTransaccion");
+        if ($tipoTransaccion == 0) {
+            $ultimoRegistro = $this->Contraloria_model->getUltimoRegistro();
+            $insetarDatos = array(
+                "id_opcion" => $ultimoRegistro->id_opcion + 1,
+                "id_catalogo" => 77,
+                "nombre" => $nombre,
+                "estatus" => 1,
+                "fecha_creacion" => date('Y-m-d H:i:s'),
+                "creado_por" => $this->session->userdata('id_usuario'),
+                "color" => NULL              
+            );
+            $respuesta = $this->General_model->addRecord('opcs_x_cats', $insetarDatos);
+        } else
+            $respuesta = $this->General_model->updateRecord('opcs_x_cats', array("estatus" => $tipoTransaccion == 1 ? 1 : 0), 'id_opcion', $id_opcion, 'AND id_catalogo = 77');
+        echo json_encode($respuesta);
+    }
+    
+    public function cambiarEstatusLote() {
+        $idLote = $this->input->post("idLote");
+        $datosActualizar = array(
+            "idStatusLote" => 9,
+            "usuario" => $this->session->userdata('id_usuario')                    
+        );
+        $respuesta = $this->General_model->updateRecord('lotes', $datosActualizar, 'idLote', $idLote);
+        echo json_encode($respuesta);
+    }
+
+    public function getOpcionesPorCatalogo()
+    {
+        echo json_encode($this->Contraloria_model->getOpcionesPorCatalogo()->result_array());
+    }
+
+    public function actualizarRlLote() {
+        
+    }
+
 }

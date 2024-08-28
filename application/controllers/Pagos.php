@@ -716,6 +716,21 @@ class Pagos extends CI_Controller
     }
   }
 
+  public function casasBonos() {
+
+    switch($this->session->userdata('id_rol')){
+      case '31':
+          $this->load->view('template/header');
+          $this->load->view("pagos_casas/casas_bonos_intmex_view");
+      break;
+
+      default:
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/casas_bonos_view");
+      break;
+      }
+  }
+
   public function getComprobantesExtranjero(){
       $data = $this->Pagos_model->getComprobantesExtranjero();
       echo json_encode(array('data' => $data));
@@ -930,7 +945,7 @@ class Pagos extends CI_Controller
       $dat =  $this->Pagos_model->getDatosRevisionMktd()->result_array();
       for( $i = 0; $i < count($dat); $i++ ){
         $dat[$i]['pa'] = 0;
-    }
+      }
       echo json_encode( array( "data" => $dat));
     }
 

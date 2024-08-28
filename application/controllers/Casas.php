@@ -3264,13 +3264,15 @@ class Casas extends BaseController
     public function creditoBancoAvance()
     {
         $form = $this->form();
-
+        
         $idLote = $form->idLote;
         $idProceso = $form->idProcesoCasas;
         $proceso = $form->proceso;
         $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
         $tipoMovimiento = $form->tipoMovimiento;
+        $idCasaFinal = $form->idCasaFinal;
+        $idCliente = $form->idCliente;
         $banderaSuccess = true;
 
         $dataHistorial = array(
@@ -3322,7 +3324,8 @@ class Casas extends BaseController
 
         // paso 1: hacer update del proceso
         $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
-        if (!$update) {
+        $updateClientes = $this->General_model->updateRecord("clientes", array("idCasaFinal" => $idCasaFinal ), "id_cliente",  $idCliente);
+        if (!$update && !$updateClientes) {
             $banderaSuccess = false;
         }
 
@@ -4435,9 +4438,7 @@ class Casas extends BaseController
         $procesoData = array(
             "idLote" => $idLote,
             "proceso" => 1,
-            "comentario" => $comentario,
-            "idGerente" => $idGerente,
-            "idAsesor" => $idUsuario
+            "comentario" => $comentario
         );
 
         $this->db->trans_begin();
@@ -4561,5 +4562,10 @@ class Casas extends BaseController
 
         $this->output->set_content_type('application/json');
         $this->output->set_output($this->json([]));
+
+    public function modeloOptions () {
+        $idModelo = $this->input->post('idModelo');
+        $modeloData = $this->CasasModel->modeloOptions($idModelo)->result();
+        $this->json($modeloData);
     }
 }
