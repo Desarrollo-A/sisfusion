@@ -426,8 +426,9 @@ class Casas extends BaseController
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
+        $updateLotes = $this->General_model->updateRecord("lotes", array('idCliente' => $idCliente), 'idLote', $idLote);
 
-        if(!$update){
+        if(!$update || !$updateLotes){
             $banderaSuccess = false;
         }
 
@@ -4499,6 +4500,68 @@ class Casas extends BaseController
         $this->output->set_content_type('application/json');
         $this->output->set_output($this->json([]));
     }
+
+    public function clienteAccion () {
+        $nombre = $this->form('nombre');
+        $paterno = $this->form('paterno');
+        $materno = $this->form('materno');
+        $idLote = $this->form('idLote');
+        $accion = $this->form('altaAccion');
+        $flagStatus = true;
+        $this->db->trans_begin();
+        //INSERT
+        if($accion == 1) {
+            $insertArr = array(
+                'nombre' => $nombre,
+                'apellido_paterno' => $paterno,
+                'apellido_materno' => $materno,
+                'id_subdirector' => 0,
+                'id_regional' => 0,
+                'plan_comision' => 0,
+                'regimen_fac' => 0,
+                'cp_fac' => 0,
+                'banderaEscrituracion' => 0,
+                'proceso' => 0,
+                'tipoLiberacion' => 0,
+                'banderaComisionCl' => 0,
+                'totalNeto2Cl' => 0,
+                'total8P' => 0,
+                'venta_extranjero' => 0,
+                'tipoCancelacion' => 0,
+                'estatusSeguro' => 0,
+                'sedeRecepcion' => 0,
+                'id_asesor_c' => 0,
+                'id_gerente_c' => 0,
+                'id_subdirector_c' => 0,
+                'esquemaCreditoCasas' => 0,
+                'idLote' => $idLote
+            );
+
+            $insertCliente = $this->General_model->addRecord("clientes", $insertArr);
+            if(!$insertCliente) {
+                $flagStatus = false;
+            }
+        }
+
+        if($accion == 2) {
+            $idCliente = $this->form('idCliente');
+            $dataUpdate = array(
+                'nombre' => $nombre, 
+                'apellido_paterno' => $paterno,
+                'apellido_materno' => $materno
+            );
+            $updateCliente = $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
+            if(!$updateCliente) {
+                $flagStatus = false;
+            }
+        }
+        
+        if($flagStatus) {
+            $this->db->trans_commit();
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output($this->json([]));
 
     public function modeloOptions () {
         $idModelo = $this->input->post('idModelo');
