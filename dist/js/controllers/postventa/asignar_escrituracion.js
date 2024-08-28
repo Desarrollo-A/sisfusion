@@ -20,7 +20,7 @@ filtro_proyectos.onChange(function(option) {
             filtro_condominios.setOptions(response)
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, alog salió mal.", "danger");
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     })
 });
@@ -45,13 +45,13 @@ let columns = [
     {data: function(data) 
         {
             if (data.escrituraFinalizada == '0' || data.escrituraFinalizada == 0) {
-                return `<span class="label lbl-green">SIN MARCA DE ESCTRITURA</span>`;
+                return `<span class="label lbl-green">SIN MARCA DE ESCTRITURACIÓN</span>`;
             }
         }
     },
     { data: function(data) 
         {
-            let asignar_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Asignar', onClick: btn_assign, data})
+            let asignar_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Agregar Marca', onClick: btn_assign, data})
             return `<div class="d-flex justify-center">${asignar_button}</div>`;
         }
     }
@@ -86,7 +86,7 @@ let buttons = [
 btn_assign = function (data) {
     let form = new Form({
         title : 'Agregar marca de titulación',
-        text: `¿Deseas agregar la marca de titulación del lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas agregar la marca de titulación para el lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (dataForm) {
             form.loading(true);
             let formConfirm = new FormConfirm({
