@@ -280,7 +280,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
         searchable: false
     }],
     ajax: {
-        url: general_base_url+'Casas_Comisiones/getDataDispersionPago',
+        url: general_base_url+'Casas_comisiones/getDataDispersionPago',
         type: "POST",
         cache: false,
         data: function( d ){}

@@ -128,7 +128,7 @@ class Casas_comisiones extends CI_Controller
     $data = array(
       "fechasCorte" => $this->Casas_comisiones_model->getFechaCorteActual($diaActual)
       );
-    echo json_encode($data);
+    echo json_encode($data,JSON_NUMERIC_CHECK);
   }
 
   public function lista_proyecto() {
@@ -835,7 +835,7 @@ public function getDatosFechasProyecCondm(){
       $respuesta = false;
     }else{
       $this->db->trans_commit();
-      $respuesta = true;
+      $respuesta = 1;
     }
 
   echo json_encode( $respuesta );
