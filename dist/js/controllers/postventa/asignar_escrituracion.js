@@ -43,7 +43,7 @@ let columns = [
     {data: 'nombreResidencial'},
     {data: 'nombreCondominio'},
     {data: 'nombreLote'},
-    {data: 'nombreCompleto'},
+    {data: 'nombreCliente'},
     {data: function(data) 
         {
             if (data.escrituraFinalizada == '0' || data.escrituraFinalizada == 0) {

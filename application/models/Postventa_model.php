@@ -1645,7 +1645,7 @@ function checkBudgetInfo($idSolicitud){
 
     public function getEscrituraDisponible($idCondominio) 
     {
-        return $this->db->query("SELECT lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCompleto, 
+        return $this->db->query("SELECT lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, 
         cond.nombre nombreCondominio, lo.nombreLote, lo.sup , re.nombreResidencial, cl.id_cliente AS idCliente
         FROM lotes lo
         LEFT JOIN solicitudes_escrituracion se ON se.id_lote = lo.idLote
