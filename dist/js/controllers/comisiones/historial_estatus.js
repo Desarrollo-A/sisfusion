@@ -1,3 +1,24 @@
+
+const tipo_ventas =  [
+    {
+        id_venta:1,
+        ruta:'Comisiones/getDatosHistorialPagoEstatus'
+    },
+    {
+        id_venta:2,
+        ruta:'Comisiones/getDatosHistorialPagoEstatus'
+    },
+    {
+        id_venta:3,
+        ruta:'Casas_comisiones/getDatosHistorialCasas'
+    },
+    {
+        id_venta:0,
+        ruta: ''	
+    }
+];
+
+
 $(document).ready(function() {
     $("#tabla_historialGral").prop("hidden", true);
     $("#spiner-loader").removeClass('hide');
@@ -11,21 +32,6 @@ $(document).ready(function() {
         $("#catalogo_general").selectpicker('refresh');
     }, 'json');
 
-    $.get(`${general_base_url}Comisiones/getPuestoByIdOpts`, function (data) {
-        const puestos = JSON.parse(data);
-        puestos.forEach(puesto => {
-            const id = puesto.id_opcion;
-            const name = puesto.nombre.toUpperCase();
-            $('#puesto_general').append($('<option>').val(id).text(name));
-        });
-        $("#puesto_general").selectpicker('refresh');
-        $("#spiner-loader").addClass('hide');
-    });
-});
-
-$('#catalogo_general').change(function(ruta){
-    $("#estatus_general").empty().selectpicker('refresh');
-    $("#spiner-loader").removeClass('hide');
     $.ajax({
         url: general_base_url + 'Comisiones/lista_estatus',
         type: 'post',
@@ -41,56 +47,142 @@ $('#catalogo_general').change(function(ruta){
             $("#spiner-loader").addClass('hide');
         }
     });
-});
 
-$('#estatus_general').change(function(ruta){
-    $("#spiner-loader").removeClass('hide');
-    const proyecto = $('#catalogo_general').val();
-    let condominio = $('#estatus_general').val();
-    if(condominio === '' || condominio === null || condominio === undefined){
-        condominio = 0;
-    }
-    let usuario = $('#usuario_general').val();
-    if (usuario === undefined || usuario === null || usuario === '') {
-        usuario = 0;
-    }
-    asimiladoComisiones(proyecto, condominio, usuario);
-});
+    $.getJSON( general_base_url + "Incidencias/getUsers/").done( function( data ){
+        listaUsuarios = data;
+        gerente = data.filter((gere) => gere.id_rol == parseInt(3));
+        len3 = gerente.length;
+        for( let i3=0; i3<len3; i3++){
+            var id_usario_gerente = gerente[i3]['id_usuario'];
+            var nombre_gerente = gerente[i3]['name_user'];
 
-$('#puesto_general').change(function () {
-    $("#usuario_general").empty().selectpicker('refresh');
-    $("#spiner-loader").removeClass('hide');
+            var id3 = id_usario_gerente+','+nombre_gerente;
+            
+            $("#elegir_gerente").append($('<option>').val(id_usario_gerente).attr('data-value',id_usario_gerente ).text(id_usario_gerente+ "- "+ nombre_gerente));
+        }
+        coordinador = data.filter((coor) => coor.id_rol == parseInt(9));
+        len2 = coordinador.length;
+        for( var i2= 0; i2<len2; i2++){
+            var id_opcion_coordinador = coordinador[i2]['id_usuario'];
+            var nombre_coordinador = coordinador[i2]['name_user'];
+
+            var id2 = id_opcion_coordinador+','+nombre_coordinador;
+            $("#elegir_coordinador").append($('<option>').val(id_opcion_coordinador).attr('data-value',id_opcion_coordinador ).text(id_opcion_coordinador+ "- "+ nombre_coordinador)); 
+        }
+        asesor = data.filter((ases) => ases.id_rol == parseInt(7));
+        len = asesor.length;
+        for( var i= 0; i<len; i++){
+            var id_usuario_asesor = asesor[i]['id_usuario'];
+            var nombre_asesor = asesor[i]['name_user'];
+            
+            id =id_usuario_asesor+','+nombre_asesor; 
+            $("#elegir_asesor").append($('<option>').val(id_usuario_asesor).attr('data-value',id_usuario_asesor ).text(id_usuario_asesor+ "- "+ nombre_asesor));             
+        }
+        $("#elegir_coordinador, #elegir_gerente, #elegir_subdirector, #elegir_asesor").selectpicker('refresh');
+        
+    });
+
     $.ajax({
-        url: `${general_base_url}Comisiones/getUsersName`,
-        type: 'GET',
+        url: general_base_url + 'Casas_comisiones/selectTipo',
+        type: 'post',
         dataType: 'json',
-        success: function (data) {
-            const len = data.length;
-            for(let i = 0; i < len; i++){
-                const id = data[i]['id_usuario'];
-                const name = data[i]['name_user'].toUpperCase();
-                $("#usuario_general").append($('<option>').val(id).text(name));
+        success:function(response){
+            const len = response.length;
+            for(let i = 0; i<len; i++){
+                const id = response[i]['id_opcion'];
+                const name = response[i]['nombre'];
+
+                if(id != 4){
+                    $("#tipo_general").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+
             }
-            $("#usuario_general").selectpicker('refresh');
-            const proyecto = $('#catalogo_general').val();
-            let condominio = $('#estatus_general').val();
-            if (proyecto === undefined || proyecto === null || proyecto === '') {
-                return;
-            }
-            if(condominio === '' || condominio === null || condominio === undefined){
-                condominio = 0;
-            }
-            let usuario = $('#usuario_general').val();
-            if (usuario === undefined || usuario === null || usuario === '') {
-                usuario = 0;
-            }
-            asimiladoComisiones(proyecto, condominio, usuario);
+            $("#tipo_general").selectpicker('refresh');
+            $("#spiner-loader").addClass('hide');
         }
     });
+
+    
+
+});
+
+
+function validar(proyecto, condominio, ruta, usuario) { 
+
+    if(proyecto === '' || proyecto === null || proyecto === undefined || condominio === '' || condominio === null || condominio === undefined || ruta === '' || ruta === null || ruta === undefined ){
+
+    }else {
+
+        $('#puesto_general').html('');
+        $("#puesto_general").selectpicker("refresh");
+        $('#puesto_general').val('default');
+
+        $('#puesto_general').append($('<option>').val(1).text('GERENTE'));
+        $('#puesto_general').append($('<option>').val(2).text('ASESOR'));
+        $('#puesto_general').append($('<option>').val(3).text('COORDINADOR'));
+        $("#puesto_general").selectpicker('refresh');
+
+        if (usuario === undefined || usuario === null || usuario === '' || usuario === 0) {
+            usuario = 0;
+            $('#puesto_general').html('');
+            $("#puesto_general").selectpicker("refresh");
+            $('#puesto_general').val('default');
+            $('#puesto_general').append($('<option>').val(1).text('GERENTE'));
+            $('#puesto_general').append($('<option>').val(2).text('ASESOR'));
+            $('#puesto_general').append($('<option>').val(3).text('COORDINADOR'));
+            $("#puesto_general").selectpicker('refresh');
+            $('#add_coordinador, #add_asesor,#add_gerente').addClass('hidden'); 
+
+        }
+        $("#spiner-loader").removeClass('hide');
+
+        asimiladoComisiones(ruta, proyecto, condominio, usuario);
+      
+    }
+
+}
+
+$('#tipo_general, #catalogo_general, #estatus_general').change(function(ruta){
+    
+    var seleccionado = $('#tipo_general').val();
+    tipo_selec = seleccionado == '' ? 0 : seleccionado; 
+    const dataTipo = tipo_ventas.find((tipo) => tipo.id_venta == parseInt(tipo_selec));
+    var ruta = dataTipo.ruta;
+    var proyecto = $('#catalogo_general').val();
+    var condominio = $('#estatus_general').val();
+    var usuario = 0
+
+    validar(proyecto, condominio,ruta, usuario);
+    
+});
+
+$('#puesto_general').change(function(ruta){
+    $('#elegir_gerente, #elegir_asesor, #elegir_coordinador').val('default');
+    $("#elegir_gerente, #elegir_asesor, #elegir_coord inador").selectpicker("refresh");
+
+    let puesto_seleccionado = $(this).val();
+    puesto_seleccionado == 1 ? $('#add_coordinador, #add_asesor').addClass('hidden') && $('#add_gerente').removeClass('hidden') : '';  
+    puesto_seleccionado == 2 ? $('#add_coordinador, #add_gerente').addClass('hidden') && $('#add_asesor').removeClass('hidden') : '';  
+    puesto_seleccionado == 3 ? $('#add_asesor, #add_gerente').addClass('hidden') && $('#add_coordinador').removeClass('hidden') : '';  
+
+
+});
+
+$('.seleccionar_puesto').change(function () {
+   usuario = $(this).val();
+   var seleccionado = $('#tipo_general').val();
+   tipo_selec = seleccionado == '' ? 0 : seleccionado; 
+   const dataTipo = tipo_ventas.find((tipo) => tipo.id_venta == parseInt(tipo_selec));
+   var ruta = dataTipo.ruta;
+   var proyecto = $('#catalogo_general').val();
+   var condominio = $('#estatus_general').val();
+
+   validar(proyecto, condominio,ruta, usuario);
+    
 });
 
 $('#usuario_general').change(function () {
-    const proyecto = $('#catalogo_general').val();
+    let proyecto = $('#catalogo_general').val();
     let condominio = $('#estatus_general').val();
     $("#spiner-loader").removeClass('hide');
     if(condominio === '' || condominio === null || condominio === undefined){
@@ -135,7 +227,7 @@ const optPausado = `<div class="w-100"><input class="d-none" type="radio" name="
 const optPagado = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-pagado" value="11" required><label class="w-100" for="estatus-pagado"> Pagado</label></div>`;
 
 let seleccionados = [];
-function asimiladoComisiones(proyecto, condominio, usuario){
+function asimiladoComisiones(ruta, proyecto, condominio, usuario){
     $("#tabla_historialGral").prop("hidden", false);
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -276,7 +368,7 @@ function asimiladoComisiones(proyecto, condominio, usuario){
         },
         {
             "data": function( d ){
-                var lblPenalizacion = '';
+                var lblPenalizacion = '', p3='', p1='';
 
                 if (d.penalizacion == 1){
                     lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-orange">Penalización + 90 días</span></p>';
@@ -334,16 +426,16 @@ function asimiladoComisiones(proyecto, condominio, usuario){
                     return '';
                 } else if ( full.recision != '1' && estatus === '7' && (full.estatus === '1' || full.estatus === '6') && id_rol_general == 17 ) {
                     return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                } else if ($('#estatus_general').val() === '2' && id_rol_general == 17 ) {
-                    if (full.forma_pago.toLowerCase() !== 'factura' && id_rol_general == 17 && full.recision != '1' ) {
+                } else if ($('#estatus_general').val() === 2 && id_rol_general == 17 ) {
+                    if (full.forma_pago !== 2 && id_rol_general == 17 && full.recision != '1' ) {
                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     } else {
                         return '';
                     }
                 } else {
-                    if(id_rol_general == 17 && full.recision != '1'){
+                    if(id_rol_general == 17 && full.recision != '1' && full.estatus != 11 ){
                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                    }else{
+                    }else{     
                         return '';
                     }
                 }
@@ -354,7 +446,7 @@ function asimiladoComisiones(proyecto, condominio, usuario){
             },
         }],
         ajax: {
-            url: `${general_base_url}Comisiones/getDatosHistorialPagoEstatus/${proyecto}/${condominio}/${usuario}`,
+            url: `${general_base_url}${ruta}/${proyecto}/${condominio}/${usuario}`,
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -369,6 +461,8 @@ function asimiladoComisiones(proyecto, condominio, usuario){
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
+        let tipo = $('#tipo_general').val();
+        let ruta = tipo == 1 || tipo == 2 ? 'Comisiones/getComments' : 'Casas_comisiones/getComments';
         $("#nombreLote").html('');
         $("#comentariosListaAsimilados").html('');
         e.preventDefault();
@@ -403,7 +497,7 @@ function asimiladoComisiones(proyecto, condominio, usuario){
         showModal();
 
         $("#nombreLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+ruta+"/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comentariosListaAsimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });
@@ -412,15 +506,16 @@ function asimiladoComisiones(proyecto, condominio, usuario){
 }
 
 $('#estatus-form').on('submit', function (e) {
+    let tipo = $('#tipo_general').val();
+    let ruta = tipo == 1 || tipo == 2 ? 'Comisiones/cambiarEstatusComisiones' : 'Casas_comisiones/cambiarEstatusComisiones';
     e.preventDefault();
     const estatusId = $('input[name="estatus"]:checked').val();
     let comentario = $('#comentario').val();
-
-    if (estatusId === '1') {
+    if (estatusId === 1) {
         comentario = `Se marcó como NUEVA: ${comentario}`;
-    } else if (estatusId === '4') {
+    } else if (estatusId === 4) {
         comentario = `Se marcó como REVISIÓN CONTRALORÍA: ${comentario}`;
-    } else if (estatusId === '6') {
+    } else if (estatusId === 6) {
         comentario = `Se marcó como PAUSADA: ${comentario}`;
     }
 
@@ -431,7 +526,7 @@ $('#estatus-form').on('submit', function (e) {
 
     $.ajax({
         type: 'POST',
-        url: 'cambiarEstatusComisiones',
+        url: general_base_url+ruta,
         data: formData,
         contentType: false,
         cache: false,

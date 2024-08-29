@@ -1,11 +1,11 @@
-
-IF OBJECT_ID('MiProcedimiento', 'P') IS NOT NULL
+    IF OBJECT_ID('MiProcedimiento', 'P') IS NOT NULL
     DROP PROCEDURE MiProcedimiento;
 GO
 
 CREATE PROCEDURE MiProcedimiento
     @badera_real INT,
-    @esperarDatos INT OUTPUT,
+    @prioridad INT OUTPUT,
+	@esperarDatos INT OUTPUT,
     @esperarDatosComisiones INT OUTPUT,
     @comisionEntrada INT OUTPUT,
 
@@ -29,8 +29,14 @@ CREATE PROCEDURE MiProcedimiento
 	
 AS
 BEGIN
-    -- Asignar valor a @esperarDatos
-    SELECT @esperarDatos = COUNT(id_pagoc) 
+    -- Asignar valor a @espera	rDatos
+
+
+    SELECT @prioridad = registroComisionCasas
+    FROM clientes  
+    WHERE  id_cliente = @cliente;
+
+	SELECT @esperarDatos = COUNT(id_pagoc) 
     FROM pago_casas  
     WHERE id_lote = @idLote;
 
@@ -43,9 +49,16 @@ BEGIN
 	AND estatus = 1;
 	---PRINT 'Entró en el bloque de inserción10';
     -- Verificar si @porcentajes es mayor que 0 y no es nulo
-    IF (@badera_real = 1 AND @badera_real IS NOT NULL)
+/*	
+	PRINT @badera_real ;
+	PRINT '@badera_real';
+	PRINT '888888881311333';
+  */
+	IF (@badera_real = 1 AND @badera_real IS NOT NULL)
 		BEGIN
-			--PRINT 'Entró en el bloque de inserción1';
+	-- llave if  bandera_real = 1 
+
+	--	PRINT 'Entró en el bloque de inserción1';
         -- Si no existen registros previos para este lote, insertamos en pago_casas
 				IF (@esperarDatos = 0)
 				BEGIN
@@ -53,56 +66,82 @@ BEGIN
 					VALUES 
 					(@idLote, @totalComision, 
 					@abonado, @porcentajes,
-					@pendiente_pc, 1,
+					@pendiente_pc, @DispersadoPor,
 					GETDATE(), GETDATE(), 
 					1, @pagoNeodata, 0, GETDATE(), 
-					0, 0, 0, GETDATE(), 1, @cliente, 1,
+					@DispersadoPor, 0, 0, GETDATE(), 1, @cliente, 1,
 					0);
 
 					INSERT INTO pago_comision_casas
 					VALUES 
 					(@idLote, @totalComision, 
 					@abonado, @porcentajes,
-					@pendiente_pc, 1,
+					@pendiente_pc, @DispersadoPor,
 					GETDATE(), GETDATE(), 
 					1, @pagoNeodata, 0, GETDATE(), 
-					1, 0, 0,  1,  GETDATE());
-					-- PRINT 'Entró en el bloque de inserción2';
+					@DispersadoPor, 0, 0,  1,  GETDATE());
+					-- PRINT 'Entró en el bl	oque de inserción2';
 				END
         -- Si no existen registros previos en comisiones_casas para el lote y cliente
+						--	PRINT '@esperarDatosComisiones';
+							--PRINT @esperarDatosComisiones ;
 				IF (@esperarDatosComisiones = 0)
 				BEGIN
 				-- PRINT 'Entró en el bloque de inserción3';
-					INSERT INTO comisiones_casas 
-					VALUES 
-					(@idLote, @idUsuario, 
-					@ComisionTotalXUsuario, 1, 
-					@observaciones,0,'', @DispersadoPor,
-					GETDATE(), @porcentajeDecimal, 
-					GETDATE(), @rolGenerado, 
-					0, @cliente, 
-					@DispersadoPor, 0);
-
+							INSERT INTO comisiones_casas 
+							VALUES 
+							(@idLote, @idUsuario, 
+							@ComisionTotalXUsuario, 1, 
+							@observaciones,0,'', @DispersadoPor,
+							GETDATE(), @porcentajeDecimal, 
+							GETDATE(), @rolGenerado, 
+							0, @cliente, 
+							@DispersadoPor, 0);
 					DECLARE @ultimoID_COMISIONES INT;
 					SET @ultimoID_COMISIONES = SCOPE_IDENTITY();
-
 					-- Validación para evitar NULL en @ultimoID_COMISIONES
-							IF @ultimoID_COMISIONES IS NOT NULL
-							BEGIN
-			---				 PRINT 'Entró en el bloque de inserción4';
-								-- Insertar en pago_casas_ind
-								INSERT INTO pago_casas_ind 
-								VALUES
-								(@ultimoID_COMISIONES, @idUsuario,
-								@abonoNeodata, GETDATE(), GETDATE(),
-								@pagoNeodata, 1, @DispersadoPor, @comentario,
-								0, @abonoFinal, GETDATE(), @DispersadoPor);
-							END
-							ELSE
-							BEGIN
-								RAISERROR('Error: No se pudo obtener ID de comisiones.', 16, 1);
-								RETURN;
-							END
+			--	PRINT '88888888';
+								IF @ultimoID_COMISIONES IS NOT NULL
+								BEGIN
+							---				 PRINT 'Entró en el bloque de inserción4';
+									-- Insertar en pago_casas_ind
+							--	PRINT '2';
+							--	PRINT @prioridad;
+										IF (@prioridad = 1)
+										-- LLAVE IF PRIORIDAD
+										BEGIN
+										
+														--LLAVE IF ROLES
+														IF(@rolGenerado = 3 OR @rolGenerado = 7 )
+														BEGIN
+																INSERT INTO pago_casas_ind 
+																VALUES
+																(@ultimoID_COMISIONES, @idUsuario,
+																@abonoNeodata, GETDATE(), GETDATE(),
+																@pagoNeodata, 1, @DispersadoPor, @comentario,
+																0, @abonoFinal, GETDATE(), @DispersadoPor);
+														END 
+														-- LLAVE FIN ROLES
+										END
+										-- FIN DE LA LLAVE PRIORIDAD
+										ELSE 
+										-- LLAVE INICIO ELSE  PRIORIDAD
+										BEGIN
+												INSERT INTO pago_casas_ind 
+												VALUES
+												(@ultimoID_COMISIONES, @idUsuario,
+												@abonoNeodata, GETDATE(), GETDATE(),
+												@pagoNeodata, 1, @DispersadoPor, @comentario,
+												0, @abonoFinal, GETDATE(), @DispersadoPor);
+										END 
+										--- LLAVE FIN ELSE PRIORIDAD
+	
+									END
+									ELSE
+									BEGIN
+										RAISERROR('Error: No se pudo obtener ID de comisiones.', 16, 1);
+										RETURN;
+									END
 				END
 				ELSE
 				BEGIN
@@ -113,7 +152,7 @@ BEGIN
 					AND id_usuario = @idUsuario
 					AND idCliente = @cliente
 					AND estatus = 1;
-		--			 PRINT 'Entró en el bloque de inserción5';
+		-- PRINT 'Entró en el bloque de inserción5';
             -- Validación para evitar NULL en @comisionEntrada
 				IF @comisionEntrada IS NOT NULL
 				BEGIN
@@ -154,7 +193,7 @@ BEGIN
     END
 	ELSE
 	BEGIN
-	-- PRINT 'Entró 0000000';
+--	PRINT 'Entró 0000000';
 	--  PRINT @badera_real;
 
 	  	-- Obtener el ID de comisiones
@@ -198,11 +237,8 @@ BEGIN
 							RETURN;
 						END
 				END
-
-
-
-
-
 	END 
 END;
 GO
+
+

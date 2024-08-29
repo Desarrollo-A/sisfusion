@@ -51,8 +51,8 @@
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group overflow-hidden">
                                                     <label class="m-0" for="tipo_general">Tipo  (<span class="isRequired">*</span>)</label>
-                                                    <select class="selectpicker select-gral" id="tipo_general" name="tipo_general[]" data-style="btn " data-show-subtext="true" 
-                                                    data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <select class="selectpicker select-gral" id="tipo_general" name="tipo_general[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
@@ -79,20 +79,39 @@
                                                     <select class="selectpicker select-gral" id="estatus_general" name="estatus[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
-
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
-                                                <div class="form-group overflow-hidden">
-                                                    <label class="m-0" for="puesto_general">Puesto</label>
-                                                    <select class="selectpicker select-gral" name="puesto_general" id="puesto_general" data-container="body" required></select>
-                                                </div>
-                                            </div>
-
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="usuario_general">Usuario</label>
-                                                    <select class="selectpicker select-gral" id="usuario_general" name="usuario_general" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <label class="m-0" for="puesto_general"> Puesto</label>
+                                                    <select class="selectpicker select-gral" id="puesto_general" name="puesto_general" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3  hidden" id="add_gerente">
+                                                <div class="form-group ">
+                                                    <label class="m-0" for="elegir_gerente"> Gerente</label>
+                                                    <select class="selectpicker select-gral seleccionar_puesto" id="elegir_gerente" name="elegir_gerente" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3  hidden" id="add_asesor">
+                                                <div class="form-group ">
+                                                    <label class="m-0" for="elegir_asesor"> Asesor</label>
+                                                    <select class="selectpicker select-gral seleccionar_puesto" id="elegir_asesor" name="elegir_asesor" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3  hidden" id="add_coordinador">
+                                                <div class="form-group ">
+                                                    <label class="m-0" for="elegir_coordinador"> Coordinador</label>
+                                                    <select class="selectpicker select-gral seleccionar_puesto" id="elegir_coordinador" name="elegir_coordinador" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+
+                                            
+
+
+
+
                                         </div>
                                     </div>
                                 </div>
