@@ -720,7 +720,6 @@ class Reestructura extends CI_Controller{
 
         $checkApartado02 = $this->Reestructura_model->checkFechaApartado02($idLoteOriginal);
         $fechaCambio = "2024-03-09";
-
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
         if( $fechaUltimoEstatus2 >= $fechaCambio){
@@ -738,7 +737,7 @@ class Reestructura extends CI_Controller{
                 echo json_encode(array(
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
-                    'message' => 'No se encontro el Gerente correspondiente, reportarlo con SISTEMAS',
+                    'message' => 'No se encontró el Gerente correspondiente, reportarlo con SISTEMAS',
                     'color' => 'danger'
                 ));
                 exit; 
@@ -970,12 +969,6 @@ class Reestructura extends CI_Controller{
                     if(!empty($checkRescision)){
                         $bandera = $dataLote['idLote'];
                         $check = true;
-
-                        // $this->db->trans_rollback();
-                        // var_dump($check);
-                        // var_dump($dataLote['idLote']);
-                        // echo '<pre>';var_dump($checkRescision);echo '</pre>';
-                        // exit;
                     }
 
                     if (!$moverExpediente){
