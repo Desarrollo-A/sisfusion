@@ -140,7 +140,7 @@ function getDataFacturaCasas(proyecto, condominio){
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
                                 $("#autorizarFactura_casas").html(formatMoney(0));
-                                $("#all").prop('checked', false);
+                                $("#all_facturas").prop('checked', false);
                                 var fecha = new Date();
                                 tabla_factura_casas_2.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>facturas</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
