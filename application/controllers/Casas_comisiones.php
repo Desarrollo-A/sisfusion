@@ -41,7 +41,7 @@ class Casas_comisiones extends CI_Controller
 
   public function dispersionBonos(){
     $this->load->view('template/header');
-    $this->load->view("Comisiones/dispersion/dispersionBonosView");
+    $this->load->view("comisiones/dispersion/dispersionBonosView");
   }
 
   public function validateSession() {
