@@ -332,10 +332,25 @@ let columns = [
 
         return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
+    {data : function (data) {
+        if(data.escrituracionDisponible == 0) {
+            return `<span class="label lbl-warning">${data.statusEscrituracion}</span>`;
+        }
+        else {
+            return `<span class="label lbl-blueMaderas">${data.statusEscrituracion}</span>`;
+        }
+    }},
     { data: function(data){
+        let formas_pago = '';
+        if(data.escrituracionDisponible == 0){
+            formas_pago = new RowButton({icon: 'file_upload', label: 'Cargar formas de pago', onClick: set_formas_pago,data});
+        }
+        
         let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
 
         let upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
+
+        
 
         let nameFile = '';
 
@@ -368,15 +383,15 @@ let columns = [
 
         let pass_button = ''
 
-        if(idRol === 99 && data.adeudoOOAM != null ){
+        if(idRol === 99 && data.adeudoOOAM != null && data.escrituracionDisponible == 1){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-        }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null){
+        }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && data.escrituracionDisponible == 1){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
         }
 
         let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data })
 
-        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${adeudo_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${adeudo_button}${back_button}${formas_pago}</div>`
     } },
 ]
 
@@ -411,3 +426,39 @@ let table = new Table({
     url: `casas/lista_adeudos`,
     columns,
 })
+
+set_formas_pago = function(data) {
+    let nameFile = 'Formas de pago';
+    let form = new Form({
+        title: 'Cargar formas de pago',
+        onSubmit: function(data) {
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/upload_documento_new`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito.", "success");
+                    table.reload();
+                    form.hide();
+                },
+                error: function() {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false);
+                }
+            });
+        }, 
+        fields: [
+            new HiddenField({id: 'id_proceso', value: data.idProcesoCasas}),
+            new HiddenField({ id: 'tipo', value: 11}),
+            new HiddenField({ id: 'name_documento', value: nameFile}),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], required: true}),
+        ]
+    });
+    
+    form.show();
+}
