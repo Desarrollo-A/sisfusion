@@ -813,7 +813,7 @@ public function getDatosFechasProyecCondm(){
             $resta = $pending_1 - $pago;
             if($suma > 0){
             $respuesta = $this->Casas_comisiones_model->UpdateLoteDisponible($lote_1, $idCliente);
-            // $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
+            $respuesta = $this->Casas_comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
             }
     
             /*if ($respuesta === FALSE || $this->db->trans_status() === FALSE){

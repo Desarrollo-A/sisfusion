@@ -1021,29 +1021,29 @@ class Casas_comisiones_model extends CI_Model {
             DECLARE @resultadoPrioridad INT;
             
             EXEC MiProcedimiento 
-                @badera_real        = 1,
-                @prioridad          = @resultadoPrioridad OUTPUT,
-                @esperarDatos       = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
+                @badera_real            = 1,
+                @prioridad              = @resultadoPrioridad OUTPUT,
+                @esperarDatos           = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
                 @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
-                @comisionEntrada    = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
-                @abonoNeodata       = $abono,
-                @pagoNeodata        = $pago,
-                @comentario         = 'Nueva dispersión: casas',
-                @abonoFinal         = 0,
-                @porcentajes        = $porcentaje_abono,
-                @DispersadoPor      = $user,
-                @idLote             = $idLote,
-                @idUsuario          = $id_usuario,
-                @ComisionTotalXUsuario = $TotComisionXusuario,
-                @estatus            = 1,
-                @observaciones      = 'Nueva dispersión: casas',
-                @porcentajeDecimal  = $porcentaje,
-                @rolGenerado        = $rol,
-                @cliente            = $idCliente,
-                @totalComision      = $comisionesTotal,
-                @abonado            = $abonado,
-                @pendiente_pc       = $resta";
-        // var_dump($cmd);
+                @comisionEntrada        = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
+                @abonoNeodata           = $abono,
+                @pagoNeodata            = $pago,
+                @comentario             = 'Nueva dispersión: casas',
+                @abonoFinal             = 0,
+                @porcentajes            = $porcentaje_abono,
+                @DispersadoPor          = $user,
+                @idLote                 = $idLote,
+                @idUsuario              = $id_usuario,
+                @ComisionTotalXUsuario  = $TotComisionXusuario,
+                @estatus                = 1,
+                @observaciones          = 'Nueva dispersión: casas',
+                @porcentajeDecimal      = $porcentaje,
+                @rolGenerado            = $rol,
+                @cliente                = $idCliente,
+                @totalComision          = $comisionesTotal,
+                @abonado                = $abonado,
+                @pendiente_pc           = $resta";
+        // el query lo puedes encontrar en dist/
         $respuesta = $this->db->query($cmd);
 
         if (! $respuesta ) {
@@ -1346,4 +1346,21 @@ function getBonoHistorialPago($id_pago) {
             $query = "SELECT id_pago_i, abono_neodata,id_comision FROM pago_casas_ind WHERE id_pago_i IN (?)";
             return $this->db->query($query, [intval($idPagos)]); 
     }
+
+
+    function update_pago_dispersion($suma, $ideLote, $pago){
+        $respuesta = $this->db->query("UPDATE pago_comision_casas SET abonado = (abonado + ".$suma."), pendiente = (total_comision-abonado-".$suma."), bandera = 1, ultimo_pago = ".$pago." , ultima_dispersion = GETDATE() WHERE id_lote = ".$ideLote."");
+        if (! $respuesta ) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    
+
+
+
+
+
+
 }
