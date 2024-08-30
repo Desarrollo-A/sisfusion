@@ -1,20 +1,3 @@
-switch(idRol){
-    case 57: // titulacion
-        tipo = 1;
-        break;
-    
-    case 99: // OOAM
-        tipo = 2;
-        break;
-
-    case 33:
-    case 76:
-    case 81:
-    case 55: // postventa 
-        tipo = 3
-        break;
-}
-
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
 
@@ -36,33 +19,10 @@ function download_file(data) {
 
 function show_upload(data) {
 
-    let accept = '';
-
-    switch (data.tipo) {
-
-        case 3:
-        case 5:
-        case 7:
-        case 11:
-        case 12:
-        case 18:
-            accept = ['image/png','image/jpeg','application/pdf']
-        break;
-
-        case 14:
-            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        break;
-
-        case 25:
-            accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf']
-        break;
-
-        default:
-            accept = ['application/pdf'];
-    }
+    let accept = ['application/pdf'];
 
     let form = new Form({
-        title: `Cargar ${data.documento.toLowerCase()}`,
+        title: 'Subir ' + data.documento.toLowerCase(),
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -74,7 +34,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Se ha cargado el documento", "success");
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
 
                     table.reload()
 
@@ -99,7 +59,8 @@ function show_upload(data) {
 }
 
 backPage = function() {
-    window.location.href = `${general_base_url}casas/elaborarContrato`;
+    // window.location.href = `${general_base_url}casas/adeudos`
+    history.back();
 }
 
 let buttons = [
@@ -152,7 +113,7 @@ let columns = [
         if(data.archivo != 'Sin archivo'){
 
             if(extension == 'xlsx'){
-                view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: download_file, data})
+                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
             }else{
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
             }
@@ -167,8 +128,7 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: `casas/getDocumentosContratos/${idProcesoCasas}`,
-    params: {tipo},
+    url: `casas/lista_documentos_proveedor/${idProcesoCasas}`,
     buttons: buttons,
     columns,
 })
