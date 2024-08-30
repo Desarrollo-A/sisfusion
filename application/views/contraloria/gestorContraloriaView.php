@@ -82,6 +82,48 @@
             </div>
         </div>
         <!-- FIN MODAL CAMBIO REPRESENTANTE LEGAL POR LOTE -->
+        <!-- INICIO Agrega modelos casa-->
+        <div class="modal fade" id="modalmodelo" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center" id="titulomodelo"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div id="divNombreModelo">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <label class="control-label" for="nombreModelo">Nombre del modelo</label>
+                                    <input type="text" class="form-control input-gral" id="nombreModelo" pattern="[A-Za-z\s]+" title="Solo se permiten letras y espacios">
+                                </div>
+                            </div>
+                            <div id="divSuperficie">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <label class="control-label" for="superficie">Superficie</label>
+                                    <input type="number" class="form-control input-gral" id="superficie" placeholder="Ingrese solo datos númericos" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+                                </div>
+                            </div>
+                            <div id="divCosto">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <label class="control-label" for="costo">Costo</label>
+                                    <input type="number" class="form-control input-gral" id="costo" placeholder="Ingreso solo datos númericos" oninput="this.value = this.value.replace(/[^0-9.]/g, '')">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" id="divConfirmacionModelo">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <h6 id="confirmacion"></h6>
+                                </div>
+                            </div>          
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnAgregarCasa" class="btn btn-primary"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FIN Agrega modelos casa-->
         <!--INICIO DEL CONTENIDO DE LA PÁGINA -->
         <div class="content boxContent">
             <div class="container-fluid">
@@ -157,6 +199,24 @@
                                     </table>
                                 </div>
                                 <!-- FIN TABLA TABLA CAMBIO DE REPRESENTANTE LEGAL POR LOTE -->
+                                 <!-- INICIO TABLA MODELOS DE CASAS  -->
+                                <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divmodelosTable">
+                                    <div class="table-responsive">
+                                        <table class="table-striped table-hover" id="modelosTable" name="modelosTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>MODELO</th>
+                                                    <th>SUPERFICIE</th>
+                                                    <th>COSTO</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            <!-- FIN TABLA MODELOS DE CASAS-->
                             </div>
                         </div>
                     </div>
