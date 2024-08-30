@@ -489,7 +489,7 @@ class CasasModel extends CI_Model
 			$vobo = "AND vb.adm = 0";
 		}
 
-        $query = "SELECT pc.*,
+        $query = "SELECT  pc.*,
         CASE
             WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
             ELSE CONCAT('$', pc.adeudoOOAM) 
@@ -513,7 +513,8 @@ class CasasModel extends CI_Model
         oxc.nombre AS movimiento,
         doc.documentos, 
         CASE WHEN se.id_lote = lo.idLote THEN 1 ELSE 0 END AS escrituracionDisponible,
-        CASE WHEN oxc2.id_opcion IS NULL THEN 'SIN ESTATUS' ELSE oxc2.nombre END AS statusEscrituracion
+        CASE WHEN oxc2.id_opcion IS NULL THEN 'SIN ESTATUS' ELSE oxc2.nombre END AS statusEscrituracion,
+        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -527,6 +528,7 @@ class CasasModel extends CI_Model
 
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN (SELECT COUNT(*) AS cuentaDocumentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo = 11 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         WHERE pc.proceso IN (2, 3) AND pc.status = 1 AND cli.status = 1 $vobo";
 
         return $this->db->query($query)->result();

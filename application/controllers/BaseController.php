@@ -12,7 +12,8 @@ class BaseController extends CI_Controller {
             'keyFilePath' => APPPATH . 'config/google.json'
         ]);
 
-        $this->bucket = $storage->bucket('pruebas-crm');
+        //$this->bucket = $storage->bucket('bucket_prueba_php');
+        $this->bucket = $storage->bucket('pruebas-conecta-maderas');
     }
 
     public function json($object){
