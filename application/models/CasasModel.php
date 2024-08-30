@@ -512,9 +512,8 @@ class CasasModel extends CI_Model
 		END AS gerente,
         oxc.nombre AS movimiento,
         doc.documentos, 
-        CASE WHEN se.id_lote = lo.idLote THEN 1 ELSE 0 END AS escrituracionDisponible,
-        CASE WHEN oxc2.id_opcion IS NULL THEN 'SIN ESTATUS' ELSE oxc2.nombre END AS statusEscrituracion,
-        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos
+        CASE WHEN se.id_lote = lo.idLote THEN 0 ELSE 1 END AS cargaRequerida,
+        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -524,7 +523,6 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
         LEFT JOIN solicitudes_escrituracion se ON se.id_lote  = lo.idLote
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_catalogo = 59 AND oxc2.id_opcion = se.id_estatus
 
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas

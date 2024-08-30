@@ -333,24 +333,27 @@ let columns = [
         return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
     {data : function (data) {
-        if(data.escrituracionDisponible == 0) {
-            return `<span class="label lbl-warning">${data.statusEscrituracion}</span>`;
+        if(data.id_estatus == null) {
+            return `<span class="label lbl-warning">SIN ESTATUS</span>`;;
         }
-        else {
-            return `<span class="label lbl-blueMaderas">${data.statusEscrituracion}</span>`;
+        if(data.id_estatus == 49) {
+            return `<span class="label lbl-green">CONCLUIDO</span>`;
+        }
+        if(data.id_estatus != 49 && data.id_estatus != null) {
+            return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
         }
     }},
     { data: function(data){
         let formas_pago = '';
-        if(data.escrituracionDisponible == 0){
+
+        if(data.cargaRequerida == 1 && data.cuentaDocumentos == 0 && (idRol == 33))
+        {
             formas_pago = new RowButton({icon: 'file_upload', label: 'Cargar formas de pago', onClick: set_formas_pago,data});
         }
         
         let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
 
         let upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
-
-        
 
         let nameFile = '';
 
@@ -383,9 +386,9 @@ let columns = [
 
         let pass_button = ''
 
-        if(idRol === 99 && data.adeudoOOAM != null && data.cuentaDocumentos != 0){
+        if(idRol === 99 && data.adeudoOOAM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-        }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && data.cuentaDocumentos != 0){
+        }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
         }
 
