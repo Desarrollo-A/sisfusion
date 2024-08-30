@@ -489,7 +489,7 @@ class CasasModel extends CI_Model
 			$vobo = "AND vb.adm = 0";
 		}
 
-        $query = "SELECT  pc.*,
+        $query = "SELECT pc.*,
         CASE
             WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
             ELSE CONCAT('$', pc.adeudoOOAM) 
