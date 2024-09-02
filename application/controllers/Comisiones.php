@@ -5130,6 +5130,16 @@ for ($d=0; $d <count($dos) ; $d++) {
             'com' => $data->comOt2,
             'neo' => $data->neoOt2
         );
+        $info['comisiones'][] = array(
+          'puesto' => $data->otro3,
+          'com' => $data->comOt3,
+          'neo' => $data->neoOt3
+        );
+        $info['comisiones'][] = array(
+          'puesto' => $data->otro4,
+          'com' => $data->comOt4,
+          'neo' => $data->neoOt4
+        );
 
         echo json_encode($info);
     }

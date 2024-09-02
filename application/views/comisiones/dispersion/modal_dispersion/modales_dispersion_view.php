@@ -212,7 +212,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_NEODATA_Casas" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_NEODATA_Casas" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="post" id="form_NEODATA_Casas">
@@ -272,7 +272,6 @@
                                 <button type="submit" id="btnSubmit" class="btn btn-primary">Aceptar</button>
                             </div>
                         </div>
-                        <input type="hidden" id="prioridad" name="prioridad">
                     </form>
                 </div>
             </div>

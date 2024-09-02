@@ -1,5 +1,6 @@
 $(document).ready(function () {
 //  dani le quite este pedazo de codigo 
+numerosDispersionCasas();
 
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
@@ -279,7 +280,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
         searchable: false
     }],
     ajax: {
-        url: general_base_url+'Casas_Comisiones/getDataDispersionPago',
+        url: general_base_url+'Casas_comisiones/getDataDispersionPago',
         type: "POST",
         cache: false,
         data: function( d ){}
@@ -828,9 +829,10 @@ $("#form_NEODATA_Casas").submit( function(e) {
             type: 'POST', // For jQuery < 1.9
             success: function(data){
                 if( data == 1 ){
+                    numerosDispersionCasas();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
-                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
                     $("#modal_NEODATA_Casas").modal( 'hide' );
                     function_totales();
                     $('#dispersar').prop('disabled', false);
@@ -839,7 +841,7 @@ $("#form_NEODATA_Casas").submit( function(e) {
                 } else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otro usuario", "warning");
-                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
                     $("#modal_NEODATA_Casas").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
@@ -849,6 +851,8 @@ $("#form_NEODATA_Casas").submit( function(e) {
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
                 }
+                $('#tabla_dispersion_casas').DataTable().ajax.reload();
+                    $("#modal_NEODATA_Casas").modal( 'hide' );
             },error: function(){
                 $('#spiner-loader').addClass('hidden');
                 alerts.showNotification("top", "right", "EL LOTE NO SE PUEDE DISPERSAR, INTÉNTALO MÁS TARDE", "warning");
@@ -857,6 +861,18 @@ $("#form_NEODATA_Casas").submit( function(e) {
     }
 });
 
+
+function numerosDispersionCasas(){
+    $('.monto_labelC').html('');
+    $('.pagos_labelC').html('');
+    $('.lotes_labelC').html('');
+    $.post(general_base_url + "/Casas_comisiones/lotes", function (data) {
+        let montoLabel = data.monto ;
+        $('.monto_labelC').append(formatMoney(montoLabel));
+        $('.pagos_labelC').append(data.pagos);
+        $('.lotes_labelC').append(data.lotes);
+    }, 'json');
+}
 
 var maxWidth = window.matchMedia("(max-width: 992px)");
 responsive(maxWidth);
