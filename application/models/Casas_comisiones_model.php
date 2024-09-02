@@ -1022,29 +1022,29 @@ class Casas_comisiones_model extends CI_Model {
             DECLARE @resultadoPrioridad INT;
             
             EXEC MiProcedimiento 
-                @badera_real        = 1,
-                @prioridad          = @resultadoPrioridad OUTPUT,
-                @esperarDatos       = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
+                @badera_real            = 1,
+                @prioridad              = @resultadoPrioridad OUTPUT,
+                @esperarDatos           = @resultadoEsperarDatos OUTPUT,       -- Parámetro de salida
                 @esperarDatosComisiones = @resultadoEsperarComisiones OUTPUT, -- Parámetro de salida
-                @comisionEntrada    = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
-                @abonoNeodata       = $abono,
-                @pagoNeodata        = $pago,
-                @comentario         = 'Nueva dispersión: casas',
-                @abonoFinal         = 0,
-                @porcentajes        = $porcentaje_abono,
-                @DispersadoPor      = $user,
-                @idLote             = $idLote,
-                @idUsuario          = $id_usuario,
-                @ComisionTotalXUsuario = $TotComisionXusuario,
-                @estatus            = 1,
-                @observaciones      = 'Nueva dispersión: casas',
-                @porcentajeDecimal  = $porcentaje,
-                @rolGenerado        = $rol,
-                @cliente            = $idCliente,
-                @totalComision      = $comisionesTotal,
-                @abonado            = $abonado,
-                @pendiente_pc       = $resta";
-        // var_dump($cmd);
+                @comisionEntrada        = @resultadoComisionEntrada OUTPUT, -- Parámetro de salida
+                @abonoNeodata           = $abono,
+                @pagoNeodata            = $pago,
+                @comentario             = 'Nueva dispersión: casas',
+                @abonoFinal             = 0,
+                @porcentajes            = $porcentaje_abono,
+                @DispersadoPor          = $user,
+                @idLote                 = $idLote,
+                @idUsuario              = $id_usuario,
+                @ComisionTotalXUsuario  = $TotComisionXusuario,
+                @estatus                = 1,
+                @observaciones          = 'Nueva dispersión: casas',
+                @porcentajeDecimal      = $porcentaje,
+                @rolGenerado            = $rol,
+                @cliente                = $idCliente,
+                @totalComision          = $comisionesTotal,
+                @abonado                = $abonado,
+                @pendiente_pc           = $resta";
+        // el query lo puedes encontrar en dist/
         $respuesta = $this->db->query($cmd);
 
         if (! $respuesta ) {
