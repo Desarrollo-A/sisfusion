@@ -3712,11 +3712,16 @@ class Casas extends BaseController
         $this->General_model->addRecord("historial_proceso_casas", $insertData);
 
         if($vobo->titulacion && $vobo->ooam && $vobo->pv){
-            $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, 15, $comentario, 1);
+            $proceso = $this->CasasModel->getProceso($idProcesoCasas);
+            
+            $movimiento = 0;
+            if ($proceso->tipoMovimiento == 1) {
+                $movimiento = 2;
+            }
+
+            $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, 15, $comentario, $movimiento);
             
             if($is_ok){
-                $proceso = $this->CasasModel->getProceso($idProcesoCasas);
-
                 $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, 15, $comentario, 1);
             }else{
                 $response["result"] = false;
