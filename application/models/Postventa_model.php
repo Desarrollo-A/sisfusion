@@ -1625,5 +1625,40 @@ function checkBudgetInfo($idSolicitud){
         cl.apellido_paterno, cl.apellido_materno,  lo.ubicacion, sede.nombre, CAST(lo.comentario AS varchar(MAX)), hl.modificado,
         us.nombre, us.apellido_paterno, us.apellido_materno, hl3.modificado")->result_array();
     }
+
+    public function getResidencialesOptions()
+    {
+        $query = "SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) AS label, idResidencial AS value
+        FROM residenciales WHERE status = 1";
+        return $this->db->query($query)->result();
+    }
+
+    public function getCondominiosOptions($idResidencial)
+    {
+        $query = "SELECT nombre AS label, idCondominio AS value
+        FROM condominios
+        WHERE status = 1
+        AND idResidencial = $idResidencial";
+        
+        return $this->db->query($query)->result();
+    }
+
+    public function getEscrituraDisponible($idCondominio) 
+    {
+        return $this->db->query("SELECT lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, 
+        cond.nombre nombreCondominio, lo.nombreLote, lo.sup , re.nombreResidencial, cl.id_cliente AS idCliente
+        FROM lotes lo
+        LEFT JOIN solicitudes_escrituracion se ON se.id_lote = lo.idLote
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = cond.idResidencial
+        WHERE lo.status = 1 AND lo.idStatusLote = 2
+        AND cl.status = 1 AND lo.idLote NOT IN (SELECT se.id_lote  FROM solicitudes_escrituracion se)
+        AND cl.escrituraFinalizada = 0
+        AND cond.idCondominio = $idCondominio
+        GROUP BY lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cond.nombre, lo.nombreLote, lo.sup,
+        re.nombreResidencial, cl.id_cliente
+        ")->result_array();
+    }
     
 }
