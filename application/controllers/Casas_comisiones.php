@@ -41,7 +41,7 @@ class Casas_comisiones extends CI_Controller
 
   public function dispersionBonos(){
     $this->load->view('template/header');
-    $this->load->view("Comisiones/dispersion/dispersionBonosView");
+    $this->load->view("comisiones/dispersion/dispersionBonosView");
   }
 
   public function validateSession() {
@@ -646,7 +646,7 @@ public function getDatosFechasProyecCondm(){
     "sumaPagos" => $this->Casas_comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array(),
     "opinion" => $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array()
   );
-  echo json_encode($data);
+  echo json_encode($data,JSON_NUMERIC_CHECK);
   
 }
 
@@ -813,7 +813,7 @@ public function getDatosFechasProyecCondm(){
             $resta = $pending_1 - $pago;
             if($suma > 0){
             $respuesta = $this->Casas_comisiones_model->UpdateLoteDisponible($lote_1, $idCliente);
-            // $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
+            $respuesta = $this->Casas_comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
             }
     
             /*if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
@@ -951,7 +951,7 @@ public function getDatosFechasProyecCondm(){
       $data = array(
         "id_pago_i" => $datosPagos[$i]['id_pago_i'],
         "id_usuario" => $id_usuario,
-        "abono_bono" => $datosPagos[$i]['abono_neodata'],
+        "abono_bono" => floatval($datosPagos[$i]['abono_neodata']),
         "fecha_abono" => $this->hoy,
         "fecha_pago_intmex" => NULL,
         "pago_bono" => floatval($datosPagos[$i]['abono_neodata']),
