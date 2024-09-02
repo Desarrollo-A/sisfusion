@@ -12,8 +12,11 @@ class BaseController extends CI_Controller {
             'keyFilePath' => APPPATH . 'config/google.json'
         ]);
 
-        //$this->bucket = $storage->bucket('bucket_prueba_php');
-        $this->bucket = $storage->bucket('pruebas-conecta-maderas');
+        $this->config->load("google");
+
+        $bucket = $this->config->item("bucket");
+
+        $this->bucket = $storage->bucket($bucket);
     }
 
     public function json($object){
