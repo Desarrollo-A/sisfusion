@@ -189,7 +189,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
                                 $("#autorizar_factura_intmex_casas").html(formatMoney(0));
-                                $("#all").prop('checked', false);
+                                $("#all_facturas_intmex").prop('checked', false);
                                 tabla_facturas_casas.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
                                 modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
