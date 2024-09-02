@@ -4062,8 +4062,19 @@ class Casas extends BaseController
             }
         }
 
+        $dataUpdateLotes = [];
+        for ($i = 0; $i < count($idClientes); $i++) {
+            $idCliente = $idClientes[$i][0]; 
+            $idLoteIndividual = $idLote[$i][0]; 
+            $dataUpdateLotes[] = array(
+                "idLote" => $idLoteIndividual, 
+                "idCliente" => $idCliente, 
+            );
+        }
+
         // se hace update del esquema de credito y gerente en clientes 
         $update = $this->General_model->updateBatch('clientes', $dataUpdate, 'id_cliente');
+        $updateLotes = $this->General_model->updateBatch('lotes', $dataUpdateLotes, 'idLote');
         $getGerente = $this->CasasModel->getGerente($gerente);
         foreach ($idLote  as $lote) {
             foreach ($lote as $loteId) {
@@ -4071,7 +4082,7 @@ class Casas extends BaseController
             }
         }
 
-        if (!$update) {
+        if (!$update || !$updateLotes) {
             $banderaSuccess = false;
         }
 
@@ -4505,6 +4516,11 @@ class Casas extends BaseController
         $nombre = $this->form('nombre');
         $paterno = $this->form('paterno');
         $materno = $this->form('materno');
+        $telefono = $this->form('telefono');
+        $correo = $this->form('correo');
+        $domicilio = $this->form('domicilio');
+        $estadoCivil = $this->form('estado_civil');
+        $ocupacion = $this->form('ocupacion');
         $idLote = $this->form('idLote');
         $accion = $this->form('altaAccion');
         $flagStatus = true;
@@ -4515,6 +4531,11 @@ class Casas extends BaseController
                 'nombre' => $nombre,
                 'apellido_paterno' => $paterno,
                 'apellido_materno' => $materno,
+                'telefono1'=> $telefono,
+                'correo' => $correo,
+                'domicilio_particular' => $domicilio,
+                'estado_civil' => $estadoCivil,
+                'ocupacion' => $ocupacion,
                 'id_subdirector' => 0,
                 'id_regional' => 0,
                 'plan_comision' => 0,
@@ -4548,7 +4569,12 @@ class Casas extends BaseController
             $dataUpdate = array(
                 'nombre' => $nombre, 
                 'apellido_paterno' => $paterno,
-                'apellido_materno' => $materno
+                'apellido_materno' => $materno,
+                'telefono1' => $telefono,
+                'correo' => $correo,
+                'domicilio_particular' => $domicilio,
+                'estado_civil' =>$estadoCivil,
+                'ocupacion'=> $ocupacion
             );
             $updateCliente = $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
             if(!$updateCliente) {
