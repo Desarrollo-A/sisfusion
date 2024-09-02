@@ -387,10 +387,13 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13821)";
                     $filtroSede = "";
 				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11843)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11680)";
                     $filtroSede = "";
 				} else if ($id_usuario == 2987) { // Alan Michell Alba Sánchez
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6661)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 17029) { // Karen Ariadna Vazquez Muñoz
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13067)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";

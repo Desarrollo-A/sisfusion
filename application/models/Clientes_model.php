@@ -531,9 +531,11 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
                 $where = "pr.id_gerente IN ($id_lider, 13821)";
             else if ($id_usuario == 16813) // Vanessa Castro Muñoz
-                $where = "pr.id_gerente IN ($id_lider, 11843)";
+                $where = "pr.id_gerente IN ($id_lider, 11680)";
             else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
                 $where = "pr.id_gerente IN ($id_lider, 6661)";
+            else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
+                $where = "pr.id_gerente IN ($id_lider, 13067)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

@@ -5344,9 +5344,11 @@ function getDatosGralInternomex(){
         else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
             $id_lider .= ", 13821";
         else if ($id_usuario == 16813) // Vanessa Castro Muñoz
-            $id_lider .= ", 11843";
+            $id_lider .= ", 11680";
         else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
             $id_lider .= ", 6661";
+        else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
+            $id_lider .= ", 13067";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES

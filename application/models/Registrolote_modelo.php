@@ -3569,10 +3569,13 @@
 					$id_lider = $id_lider . ', 13821';
 					$sede = "";
 				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
-					$id_lider = $id_lider . ', 11843';
+					$id_lider = $id_lider . ', 11680';
 					$sede = "";
 				} else if ($id_usuario == 2987) { // Alan Michell Alba Sánchez
 					$id_lider = $id_lider . ', 6661';
+					$sede = "";
+				} else if ($id_usuario == 17029) { // Karen Ariadna Vazquez Muñoz
+					$id_lider = $id_lider . ', 13067';
 					$sede = "";
 				}
 
