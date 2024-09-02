@@ -44,7 +44,9 @@ $.ajax({
     },
     async: false
 });
-
+$('.monto_labelC').addClass('hidden')
+$('.pagos_labelC').addClass('hidden')
+$('.lotes_labelC').addClass('hidden')
 sp = {
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -130,9 +132,25 @@ numeroTabla = numTabla;
         $('.planllenado').addClass('hidden');
         $('.MainNavHelp').addClass('hidden');
 
+        $('.monto_labelC').removeClass('hidden')
+        $('.pagos_labelC').removeClass('hidden')
+        $('.lotes_labelC').removeClass('hidden')
+
+        $('#monto_label').addClass('hidden')
+        $('#pagos_label').addClass('hidden')
+        $('#lotes_label').addClass('hidden')
+
     }else if(numTabla == 1){
         $('.planllenado').removeClass('hidden');
         $('.MainNavHelp').removeClass('hidden');
+
+        $('.monto_labelC').addClass('hidden')
+        $('.pagos_labelC').addClass('hidden')
+        $('.lotes_labelC').addClass('hidden')
+
+        $('#monto_label').removeClass('hidden')
+        $('#pagos_label').removeClass('hidden')
+        $('#lotes_label').removeClass('hidden')
     }
 
 }

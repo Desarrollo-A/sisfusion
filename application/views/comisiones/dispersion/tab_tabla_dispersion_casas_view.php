@@ -1,7 +1,7 @@
 <div class="tab-pane" id="dispersionCasas">
    <div class="text-center">
         <h3 class="card-title center-align">Dispersión de pago Casas</h3>
-        <p class="card-title pl-1">Casas nuevos sin dispersar, con saldo disponible.</p>
+        <p class="card-title pl-1">Casas nuevas sin dispersar, con saldo disponible.</p>
     </div>
 
     <div class="toolbar">
@@ -22,7 +22,7 @@
                             <th>MODALIDAD</th>
                             <th>CONTRATACIÓN</th>
                             <th>PLAN DE VENTA</th>
-                            <th>PRECIO FINAL LOTE</th>
+                            <th>COSTO CONSTRUCCIÓN</th>
                             <th>% COMISION TOTAL</th>
                             <th>IMPORTE COMISIÓN PAGADA</th>
                             <th>IMPORTE COMISIÓN PENDIENTE</th>

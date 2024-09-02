@@ -67,7 +67,7 @@ $('#tabla_factura_casas thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllFacturas(this)"/>');
+        $(this).html('<input id="all_facturas" type="checkbox" style="width:20px; height:20px;" onchange="selectAllFacturas(this)"/>');
     }
 });
 
@@ -140,7 +140,7 @@ function getDataFacturaCasas(proyecto, condominio){
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
                                 $("#autorizarFactura_casas").html(formatMoney(0));
-                                $("#all").prop('checked', false);
+                                $("#all_facturas").prop('checked', false);
                                 var fecha = new Date();
                                 tabla_factura_casas_2.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>facturas</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
@@ -320,12 +320,21 @@ function getDataFacturaCasas(proyecto, condominio){
             "orderable": false,
             data: function( data ){
                 let btns = '';
+                
+                const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_factura" title="Detalles"><i class="fas fa-info"></i></button>`;
+                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus_casas" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
+                const BTN_ACTASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="Activar solicitud"><i class="fas fa-play"></i></button>`
 
-                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_factura" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
-                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus_casas" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
-                btns += BTN_HISTORIAL;
-                btns += BTN_PAUSAR;
+                if(data.estatus == 4){
+                    btns += BTN_DETASI;
+                    btns += BTN_PAUASI;
 
+                }
+                else{
+                    btns += BTN_DETASI;
+                    btns += BTN_ACTASI;
+                }
+                $('#spiner-loader').addClass('hide');
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
@@ -420,63 +429,76 @@ function getDataFacturaCasas(proyecto, condominio){
         });
     });
 
-    $('#tabla_factura_casas').on('click', 'input', function() {
-        tr2 = $(this).closest('tr');
-        var row = tabla_factura_casas_2.row(tr2).data();
-        if (row.monto == 0) {
-            row.monto = row.impuesto;
-            totaPago_casas += parseFloat(row.monto);
-            tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-        } 
-        else {
-            totaPago_casas -= parseFloat(row.monto);
-            row.monto = 0;
-        }
+    // $('#tabla_factura_casas').on('click', 'input', function() {
+    //     tr2 = $(this).closest('tr');
+    //     var row = tabla_factura_casas_2.row(tr2).data();
+    //     if (row.monto == 0) {
+    //         row.monto = row.impuesto;
+    //         totaPago_casas += parseFloat(row.monto);
+    //         tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+    //     } 
+    //     else {
+    //         totaPago_casas -= parseFloat(row.monto);
+    //         row.monto = 0;
+    //     }
+    //     $("#autorizarFactura_casas").html(formatMoney(numberTwoDecimal(totaPago_casas)));
+    // });
+
+    $('#tabla_factura_casas').on("click", 'input', function() {
+        totaPago_casas = 0;
+        tabla_factura_casas_2.$('input[type="checkbox"]').each(function () {
+            let totalChecados = tabla_factura_casas_2.$('input[type="checkbox"]:checked') ;
+            let totalCheckbox = tabla_factura_casas_2.$('input[type="checkbox"]');
+            if(this.checked){
+                trs = this.closest('tr');
+                row = tabla_factura_casas_2.row(trs).data();
+                totaPago_casas += parseFloat(row.impuesto); 
+            }
+            if( totalChecados.length == totalCheckbox.length ){
+                $("#all_facturas").prop("checked", true);
+            }else {
+                $("#all_facturas").prop("checked", false);
+            }
+        });
         $("#autorizarFactura_casas").html(formatMoney(numberTwoDecimal(totaPago_casas)));
     });
 
     $("#tabla_factura_casas tbody").on("click", ".cambiar_estatus_casas", function(){
-        var trl = $(this).closest('tr');
-        var row = tabla_factura_casas_2.row( trl );
+        var tr1 = $(this).closest('tr');
+        var row = tabla_factura_casas_2.row( tr1 );
+        id_pago_i = $(this).val(); 
+        
+        $("#modal_remanente_casas .modal-body").html("");
+        $("#modal_remanente_casas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+        $("#modal_remanente_casas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="6"><input type="text" class="text-modal observaciones" name="observaciones" rows="3" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modal_remanente_casas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
+        $("#modal_remanente_casas .modal-body").append(`<div class="row"><div class="col-md-6"></div><div class="d-flex justify-end"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button></div></div>`);
+        $("#modal_remanente_casas").modal('show');
+    });
+
+    $("#tabla_factura_casas tbody").on("click", ".regresar_estatus", function(){
+        var tr1 = $(this).closest('tr');
+        var row = tabla_factura_casas_2.row( tr1 );
         id_pago_i = $(this).val();
-        $("#modalPausarFacturaCasas .modal-body").html("");
-        $("#modalPausarFacturaCasas .modal-body").append(
-            '<div class="row">'+
-                '<div class="col-lg-12">'+
-                    '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
-                        '<i>'+row.data().usuario+'</i>?'+
-                    '</p>'+
-                '</div>'+
-            '</div>'+
-            '<div class="row">'+
-                '<div class="col-lg-12">'+
-                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe el motivo por el cual se pausara la solicitud"></input>'+
-                '</div>'+
-            '</div>'+
-            '<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">'+
-            '<div class="row">'+
-                '<div class="d-flex justify-end">'+
-                    '<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>'+
-                    '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar">PAUSAR</button>'+
-                '</div>'+
-            '</div>'
-        );
-        const buttonPausar = document.getElementById('btnPausar');
-        buttonPausar.addEventListener('click', function handleClick() {
-            $("#autorizarFactura_casas").html(formatMoney(0));
-        });
-        $("#modalPausarFacturaCasas").modal();
+
+        $("#modal_remanente_casas .modal-body").html("");
+        $("#modal_remanente_casas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de activar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+        $("#modal_remanente_casas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="2"><input type="hidden" name="estatus" value="4"><input type="text" class="text-modal observaciones"  rows="3" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modal_remanente_casas .modal-body").append(`<div class="d-flex justify-end"><input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="ACTIVAR">ACTIVAR</button></div>`);        
+        $("#modal_remanente_casas").modal();
     });
 }
 
-$("#formPausarFacturaCasas").submit( function(e) {
+$("#form_pausar_casas").submit( function(e) {
     e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
+        
         $.ajax({
-            url: general_base_url + "Pagos_casas/pausar_solicitudM/",
+            url: general_base_url + "Pagos_casas/despausar_solicitud",
             data: data,
             cache: false,
             contentType: false,
@@ -486,38 +508,27 @@ $("#formPausarFacturaCasas").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modalPausarFacturaCasas").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                    $("#modal_remanente_casas").modal('toggle' );
+                    $('#all_facturas').prop("checked", false);
+                    alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
-                        tabla_factura_casas_2.ajax.reload();
+                        tabla_factura_casas_2.ajax.reload(null, false);
+                        $('#spiner-loader').addClass('hide');
                     }, 3000);
                 }else{
+                    $('#spiner-loader').addClass('hide');
+
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
             },error: function( ){
+                $('#spiner-loader').addClass('hide');
+
                 alert("ERROR EN EL SISTEMA");
             }
         });
     }
 });
 
-$(document).on("click", ".checkPagosIndividual_casas", function() {
-    totaPago_casas = 0;
-    tabla_factura_casas_2.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_factura_casas_2.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_factura_casas_2.$('input[type="checkbox"]');
-        if(this.checked){
-            trl = this.closest('tr');
-            row = tabla_factura_casas_2.row(trl).data();
-            totaPago_casas += parseFloat(row.impuesto); 
-        }
-        if( totalChecados.length == totalCheckbox.length )
-            $("#all").prop("checked", true);
-        else 
-            $("#all").prop("checked", false);
-    });
-    $("#autorizarFactura_casas").html(formatMoney(numberTwoDecimal(totaPago_casas)));
-});
     
 function selectAllFacturas(e) {
     tota2 = 0;

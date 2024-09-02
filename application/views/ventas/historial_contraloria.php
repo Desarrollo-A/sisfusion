@@ -155,7 +155,7 @@
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
-                                                    <table class="table-striped table-hover hide" id="tabla_historialGral" name="tabla_historialGral">
+                                                    <table class="table-striped table-hover hidden" id="tabla_historialGral" name="tabla_historialGral">
                                                         <thead>
                                                             <tr>
                                                                 <th>ID</th>

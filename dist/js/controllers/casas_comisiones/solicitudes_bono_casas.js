@@ -419,7 +419,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de ' + d.porcentaje_abono + '% GENERAL </p>';
+                return '<p class="m-0"><b>' + parseFloat(d.porcentaje_decimal) + '%</b> de ' + parseFloat(d.porcentaje_abono) + '% GENERAL </p>';
             }
         },
         {
