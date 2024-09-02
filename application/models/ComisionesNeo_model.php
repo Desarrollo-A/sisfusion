@@ -5,7 +5,7 @@ class ComisionesNeo_model extends CI_Model {
     public function __construct()
     {
         parent::__construct();
-        //$this->gphsis = $this->load->database('GPHSIS', TRUE);
+        $this->gphsis = $this->load->database('GPHSIS', TRUE);
     }
 
     public function getStatusNeodata($lote){

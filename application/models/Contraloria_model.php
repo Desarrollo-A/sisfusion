@@ -2011,7 +2011,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     // Función que retorna los registros de las opciones para el gestor de contraloría
     function getOpcionesPorCatalogo()  {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (148, 77) AND estatus = 1");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (155) AND estatus = 1 ");
     }
 
     // Función que retorna los registros de los lotes para cambio de RL
@@ -2037,4 +2037,30 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             AND lo.nombreLote IN ('$nombreLote')")->result();
     }
     
+    public function getModelosdeCasa() {
+        $result = $this->db->query("SELECT idModelo,modelo,sup,costom2, estatus from modelos_casas");
+        return $result;
+    }
+    
+    public function addModelosdeCasa($NombreModelo, $superficie, $costo, $id_usuario) {
+        $query = "INSERT INTO modelos_casas (modelo, sup, costom2, creadoPor, modificadoPor, estatus) VALUES ('$NombreModelo', $superficie, $costo, $id_usuario, $id_usuario, 1)";
+      
+        $respuesta = $this->db->query($query);
+    
+        if (!$respuesta) {
+            return 0; 
+        } else {
+            return 1; 
+        }
+
+
+    }
+
+    public function updateEstatusModelosCasa($estatus, $idopcion_modelo,$id_usuario) {
+        $this->db->set('estatus', $estatus);
+        $this->db->set('modificadoPor', $id_usuario);  
+            $this->db->where('idModelo', $idopcion_modelo);
+        return $this->db->update('modelos_casas'); 
+    }
 }
+

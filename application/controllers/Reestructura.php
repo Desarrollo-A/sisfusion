@@ -19,7 +19,7 @@ class Reestructura extends CI_Controller{
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
 		//$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
         //$this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-        //$this->programacion = $this->load->database('programacion', TRUE);
+        $this->programacion = $this->load->database('programacion', TRUE);
     }
 
     public function validateSession() {

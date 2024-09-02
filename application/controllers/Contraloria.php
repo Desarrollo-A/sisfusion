@@ -3795,13 +3795,41 @@ class Contraloria extends CI_Controller {
                 "estatus" => 1,
                 "fecha_creacion" => date('Y-m-d H:i:s'),
                 "creado_por" => $this->session->userdata('id_usuario'),
-                "color" => NULL              
+                "color" => NULL           
             );
             $respuesta = $this->General_model->addRecord('opcs_x_cats', $insetarDatos);
         } else
             $respuesta = $this->General_model->updateRecord('opcs_x_cats', array("estatus" => $tipoTransaccion == 1 ? 1 : 0), 'id_opcion', $id_opcion, 'AND id_catalogo = 77');
         echo json_encode($respuesta);
     }
+
+    public function agregarModeloCasas() {
+        $nombreModelo = $this->input->post('nombreModelo');
+        $superficie = $this->input->post('superficie');
+        $costo = $this->input->post('costo');
+        $idopcion_modelo = $this->input->post('idopcion_modelo');
+        $tipoTransaccionModelo = $this->input->post('tipoTransaccionModelo');
+        $estatus = $this->input->post('estatus'); 
+        $id_usuario= $this->session->userdata('id_usuario');
+        if ($tipoTransaccionModelo == 0) {
+            if (!empty($nombreModelo) && !empty($superficie) && !empty($costo) && !empty($id_usuario)) {
+                $resultado = $this->Contraloria_model->addModelosdeCasa($nombreModelo, $superficie, $costo, $id_usuario);
+                $data['success'] = $resultado;
+            } else {
+                $data['success'] = false;
+                $data['message'] = 'Datos incompletos. Favor de ingresar todos los datos';
+            }
+        } else if (!empty($estatus) && !empty($idopcion_modelo)&&!empty($id_usuario)) {
+            $resultado = $this->Contraloria_model->updateEstatusModelosCasa($estatus, $idopcion_modelo,$id_usuario);
+            $data['success'] = $resultado;
+        } else {
+            $data['success'] = false;
+            $data['message'] = 'Error al actualizar el estatus';
+        }
+    
+        echo json_encode($data);
+    }
+    
     
     public function cambiarEstatusLote() {
         $idLote = $this->input->post("idLote");
@@ -3821,5 +3849,9 @@ class Contraloria extends CI_Controller {
     public function actualizarRlLote() {
         
     }
+    public function getModeloCasas() {
+		 echo json_encode($this->Contraloria_model->getModelosdeCasa()->result_array());
+	}
+
 
 }
