@@ -3946,6 +3946,16 @@ class Casas extends BaseController
             "proceso" => 14
         );
 
+        $vobos = [
+            "titulacion" => 0,
+            'pv' => 0,
+            'ooam' => 0,
+            "modificadoPor" => $this->session->userdata('id_usuario'),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->CasasModel->updateVobos($idProcesoCasas, 14, $vobos);
+
         // paso 1: hacer update del proceso
         $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
         if (!$update) {
