@@ -128,7 +128,7 @@ class Casas_comisiones extends CI_Controller
     $data = array(
       "fechasCorte" => $this->Casas_comisiones_model->getFechaCorteActual($diaActual)
       );
-    echo json_encode($data);
+    echo json_encode($data,JSON_NUMERIC_CHECK);
   }
 
   public function lista_proyecto() {
@@ -835,7 +835,7 @@ public function getDatosFechasProyecCondm(){
       $respuesta = false;
     }else{
       $this->db->trans_commit();
-      $respuesta = true;
+      $respuesta = 1;
     }
 
   echo json_encode( $respuesta );
@@ -1131,6 +1131,49 @@ public function getDatosFechasProyecCondm(){
     $dispersion["monto"] = $monto->nuevo_general;
 
     echo json_encode(  $dispersion);
+  }
+  public function getDatosHistorialCasas($proyecto, $condominio, $usuario) {
+
+    ini_set('max_execution_time', 900);
+    set_time_limit(900);
+    ini_set('memory_limit','2048M');
+
+    
+    $dat =  $this->Casas_comisiones_model->getDatosHistorialCasas($proyecto,$condominio, $usuario)->result_array();
+    for( $i = 0; $i < count($dat); $i++ ){
+        $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
+  }
+
+  public function selectTipo(){
+
+    echo json_encode($this->Casas_comisiones_model->selectTipo()->result_array());
+
+  }
+
+  public function cambiarEstatusComisiones()
+    {
+        $idPagos = explode(',', $this->input->post('idPagos'));
+        $userId = $this->session->userdata('id_usuario');
+        $estatus = $_POST['estatus'];
+        $comentario = $_POST['comentario'];
+        $historiales = array();
+
+        foreach($idPagos as $pago) {
+            $historiales[] = array(
+                'id_pago_i' => $pago,
+                'id_usuario' =>  $userId,
+                'fecha_movimiento' => date('Y-m-d H:i:s'),
+                'estatus' => 1,
+                'comentario' => $comentario
+            );
+        }
+
+        $resultUpdate = $this->Casas_comisiones_model->massiveUpdateEstatusComisionInd(implode(',', $idPagos), $estatus);
+        $resultMassiveInsert = $this->Casas_comisiones_model->insert_phc($historiales);
+
+        echo ($resultUpdate && $resultMassiveInsert);
     }
 
 }

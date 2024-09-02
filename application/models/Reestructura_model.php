@@ -100,7 +100,7 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) AS totalContratoFusionNumero FROM lotesFusion WHERE destino=1 GROUP BY idLotePvOrigen) lf4 ON lf4.idLotePvOrigen = lo.idLote
 		LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote 
 
-        LEFT JOIN (       
+        LEFT JOIN ( 
         select lf.idLotePvOrigen, lo.idLote, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico 
 			from lotes lo 
 			inner join lotesFusion lf on lf.idLote = lo.idLote 
@@ -2313,6 +2313,12 @@ class Reestructura_model extends CI_Model
 
     public function eliminarFusion($pvLote){
         $query = $this->db->query("DELETE FROM lotesFusion WHERE idLotePvOrigen = ?", $pvLote);
+        return $query;
+    }
+
+    public function checkRescision($idLote){
+        $query = $this->db->query("SELECT *FROM historial_documento WHERE idLote = ? AND status = ? AND tipo_doc IN(?, ?)", array($idLote, 1, 33, 35));
+
         return $query;
     }
 }
