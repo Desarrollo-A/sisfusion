@@ -16,17 +16,23 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Contratos: <?php echo $lote->nombreLote ?></h3>
+                                    <h3 class="card-title center-align">Paso 4: Tipo de proveedor</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID DOC</th>
-                                            <th>DOCUMENTO</th>
-                                            <th>ARCHIVO</th>
-                                            <th>FECHA DE CARGA</th>
+                                            <th>ID LOTE</th>
+                                            <th>NOMBRE LOTE</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
+                                            <th>TIPO PROVEEDOR</th>
+                                            <th>TIEMPO</th>
+                                            <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -44,10 +50,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script type="text/javascript">
-        const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>;
-        const ps = <?php echo $lote->proceso ?>;
-        const idRol = <?php echo $idRol ?>;
-    </script>
-    <script src="<?= base_url() ?>dist/js/controllers/casas/creditoBanco/documentacion_contratos.js?v=2"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/creditoBanco/tipo_proveedor.js"></script>
 </body>
