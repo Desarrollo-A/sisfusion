@@ -646,7 +646,7 @@ public function getDatosFechasProyecCondm(){
     "sumaPagos" => $this->Casas_comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array(),
     "opinion" => $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array()
   );
-  echo json_encode($data);
+  echo json_encode($data,JSON_NUMERIC_CHECK);
   
 }
 
@@ -951,7 +951,7 @@ public function getDatosFechasProyecCondm(){
       $data = array(
         "id_pago_i" => $datosPagos[$i]['id_pago_i'],
         "id_usuario" => $id_usuario,
-        "abono_bono" => $datosPagos[$i]['abono_neodata'],
+        "abono_bono" => floatval($datosPagos[$i]['abono_neodata']),
         "fecha_abono" => $this->hoy,
         "fecha_pago_intmex" => NULL,
         "pago_bono" => floatval($datosPagos[$i]['abono_neodata']),
