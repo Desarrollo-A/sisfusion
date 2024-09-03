@@ -60,6 +60,11 @@ function rechazoProcesoBanco(data){
         text: `¿Deseas rechazar el proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             form.loading(true);
+            if (selectOption == null || selectOption == 0) {
+                alerts.showNotification("top", "right", "Debes seleccionar un modelo.", "warning");
+                form.loading(false);
+                return;
+            }
 
             $.ajax({
                 type: 'POST',
@@ -69,14 +74,14 @@ function rechazoProcesoBanco(data){
                 processData: false,
                 success : function(response){
                     alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-
                     table.reload()
-                    form.hide()        
+                    form.hide();
+                    selectOption = null;        
                 },
                 error: function(){
                     alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
-
-                    form.loading(false)
+                    form.loading(false);
+                    selectOption = null;
                 }
             })
 
@@ -311,7 +316,20 @@ let buttons = [
             }
         }
     }
+})
+
+$(".modal").on("hidden.bs.modal", function(){
+    $("#paso3").prop("checked", false);
+    $("#paso2").prop("checked", false);
+
+    opcionRegreso = 0
+    datos = '';
+    selectOption = null;
+    $('.custom-div-id').remove();
+    console.log("Element removed");
+});
 ]
+
 
 let table = new Table({
     id: '#tableDoct',
