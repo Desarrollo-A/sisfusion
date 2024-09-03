@@ -293,7 +293,7 @@ class VentasAsistentes_model extends CI_Model {
         $validacionMktd = $id_rol == 54 ? "AND cl.lugar_prospeccion IN (52, 42)" : "";
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
-            if($id_usuario == 2815 || $id_usuario == 12931)
+            if (in_array($id_usuario, array(2815, 12931, 17043)))
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
             else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012, 16679))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
