@@ -94,6 +94,7 @@ class CasasModel extends CI_Model
             idProcesoCasas,
             procesoAnterior,
             procesoNuevo,
+            idMovimiento,
             creadoPor,
             descripcion,
             esquemaCreditoProceso
@@ -103,6 +104,7 @@ class CasasModel extends CI_Model
             $idProcesoCasas,
             $procesoAnterior,
             $procesoNuevo,
+            $idMovimiento,
             $idMovimiento,
             '$descripcion',
             $esquema
@@ -254,7 +256,7 @@ class CasasModel extends CI_Model
             INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
-            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas = 0 AND cli.pre_proceso_casas = 2 ", array($this->idUsuario));
+            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas IN (0,1) AND cli.pre_proceso_casas = 2 ", array($this->idUsuario));
         
         return $query;
     }
@@ -1716,7 +1718,7 @@ class CasasModel extends CI_Model
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
 
-        $query = $this->db->query("SELECT s
+        $query = $this->db->query("SELECT 
             pcd.*,
             oxc.color,
             oxc.nombre AS nombreMovimiento,

@@ -3271,8 +3271,8 @@ class Casas extends BaseController
         $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
         $tipoMovimiento = $form->tipoMovimiento;
-        $idCasaFinal = isset($form->idCasaFinal) ? $form->idCasaFinal : null;
-        $idCliente = isset($form->idCliente) ? $form->idCliente : null;
+        $idCasaFinal = $form->idCasaFinal ?? null;
+        $idCliente = $form->idCliente ?? null;
         $banderaSuccess = true;
 
         $dataHistorial = array(
