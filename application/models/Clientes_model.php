@@ -1524,7 +1524,8 @@ function getStatusMktdPreventa(){
                     UPPER(CONCAT(uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) AS gerente,
                     UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
                     UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
-                    UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2
+                    UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2,
+                    c.correo, c.telefono
                     FROM prospectos c
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1562,7 +1563,7 @@ function getStatusMktdPreventa(){
                     UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2, 
                     CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion, 
                     CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_creacion,
-                    c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
+                    c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp,
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1590,7 +1591,8 @@ function getStatusMktdPreventa(){
                             UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2, 
                             CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
                             CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
-                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
+                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp,
+                            c.correo, c.telefono
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1633,7 +1635,8 @@ function getStatusMktdPreventa(){
                             UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2, 
                             CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
                             CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
-                            c.estatus, UPPER(c.lugar_prospeccion) AS lugar_prospeccion, UPPER(oxc.nombre) nombre_lp, c.estatus_particular
+                            c.estatus, UPPER(c.lugar_prospeccion) AS lugar_prospeccion, UPPER(oxc.nombre) nombre_lp, c.estatus_particular,
+                            c.correo, c.telefono
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
