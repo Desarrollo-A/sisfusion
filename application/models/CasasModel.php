@@ -526,7 +526,7 @@ class CasasModel extends CI_Model
 
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
-        LEFT JOIN (SELECT COUNT(*) AS cuentaDocumentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo = 11 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN (SELECT COUNT(*) AS cuentaDocumentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo = 11 AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         WHERE pc.proceso IN (2, 3) AND pc.status = 1 AND cli.status = 1 $vobo";
 
         return $this->db->query($query)->result();

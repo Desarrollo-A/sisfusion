@@ -386,7 +386,7 @@ let columns = [
 
         let pass_button = ''
 
-        if(idRol === 99 && data.adeudoOOAM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
+        if(idRol === 99 && data.adeudoOOAM != null){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
         }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
