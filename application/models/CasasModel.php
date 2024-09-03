@@ -94,6 +94,7 @@ class CasasModel extends CI_Model
             idProcesoCasas,
             procesoAnterior,
             procesoNuevo,
+            idMovimiento,
             creadoPor,
             descripcion,
             esquemaCreditoProceso
@@ -103,6 +104,7 @@ class CasasModel extends CI_Model
             $idProcesoCasas,
             $procesoAnterior,
             $procesoNuevo,
+            $idMovimiento,
             $idMovimiento,
             '$descripcion',
             $esquema
@@ -259,7 +261,7 @@ class CasasModel extends CI_Model
             INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
-            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas = 0 AND cli.pre_proceso_casas = 2 ", array($this->idUsuario));
+            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas IN (0,1) AND cli.pre_proceso_casas = 2 ", array($this->idUsuario));
         
         return $query;
     }
@@ -538,7 +540,7 @@ class CasasModel extends CI_Model
 
         LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
-        LEFT JOIN (SELECT COUNT(*) AS cuentaDocumentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo = 11 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN (SELECT COUNT(*) AS cuentaDocumentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo = 11 AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         WHERE pc.proceso IN (2, 3) AND pc.status = 1 AND cli.status = 1 $vobo";
 
         return $this->db->query($query)->result();
@@ -2172,7 +2174,6 @@ class CasasModel extends CI_Model
     }
 
     public function modeloOptions($idModelo){
-        
         $query = $this->db->query("SELECT *, FORMAT(costom2, 'C')costoFinal FROM modelos_casas
         WHERE idModelo IN ($idModelo)");
         return $query;

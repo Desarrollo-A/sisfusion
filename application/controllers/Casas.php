@@ -869,7 +869,7 @@ class Casas extends BaseController
             http_response_code(400);
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 1);
+        $vobo = $this->CasasModel->getVobos($id, 2);
 
         $updateData = array(
             "adm"  => 1,
@@ -888,6 +888,7 @@ class Casas extends BaseController
         $new_status = 1;
 
         $proceso = $this->CasasModel->getProceso($id);
+        
 
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
@@ -3314,15 +3315,15 @@ class Casas extends BaseController
     public function creditoBancoAvance()
     {
         $form = $this->form();
-        
+
         $idLote = $form->idLote;
         $idProceso = $form->idProcesoCasas;
         $proceso = $form->proceso;
         $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
         $tipoMovimiento = $form->tipoMovimiento;
-        $idCasaFinal = $form->idCasaFinal;
-        $idCliente = $form->idCliente;
+        $idCasaFinal = $form->idCasaFinal ?? null;
+        $idCliente = $form->idCliente ?? null;
         $banderaSuccess = true;
 
         $dataHistorial = array(
