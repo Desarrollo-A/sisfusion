@@ -46,7 +46,7 @@ function getDataXML_casas(proyecto){
             total += parseFloat(v.total);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("disponibleXml").textContent = to;
+        document.getElementById("totpagarfactura").textContent = to;
     });
 
     $("#tabla_xml_casas").prop("hidden", false);
@@ -152,7 +152,7 @@ function getDataXML_casas(proyecto){
                 let btnpausar = '';
                 if(data.estatus_opinion == 1 || data.estatus_opinion == 2){
                     BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-warning verPDF" data-toggle="tooltip" data-placement="top" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="material-icons">description</i></a>';
-                    btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresar" data-placement="top" data-toggle="tooltip" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
+                    // btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresar" data-placement="top" data-toggle="tooltip" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
                 }
                 else{
                     BtnStats = '<button value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="Detalles">' +'<i class="fas fa-info"></i></button>';
@@ -183,6 +183,7 @@ function getDataXML_casas(proyecto){
     });
 
     $('#tabla_xml_casas tbody').on('click', 'td.details-control', function () {
+
         var tr = $(this).closest('tr');
         var row = tabla_xml_2.row(tr);
         if ( row.child.isShown() ) {
@@ -191,6 +192,7 @@ function getDataXML_casas(proyecto){
             $(this).parent().find('.animacion').removeClass("fa-caret-down").addClass("fa-caret-right");
         }
         else {
+
             if( row.data().solicitudes == null || row.data().solicitudes == "null" ){
                 $.post( general_base_url + "Pagos_casas/carga_listado_factura" , { "idResidencial" : row.data().idResidencial, "id_usuario" : row.data().id_usuario } ).done( function( data ){
                     data = JSON.parse( data );
@@ -208,9 +210,17 @@ function getDataXML_casas(proyecto){
                 });
             }
             else{
+
+                row.data().solicitudes;
+                tabla_xml_2.row( tr ).data( row.data() );
+                row = tabla_xml_2.row( tr );
+                row.child( construir_subtablas( row.data().solicitudes ) ).show();
                 tr.addClass('shown');
                 $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
-                row.child.hide()
+
+                // tr.addClass('shown');
+                // $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+                // row.child.hide()
             }
         }
     });

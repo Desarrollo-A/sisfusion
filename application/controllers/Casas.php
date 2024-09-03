@@ -284,6 +284,24 @@ class Casas extends BaseController
         $this->load->view("casas/creditoBanco/carga_kit_bancario");
     }
 
+    public function tipo_proveedor()
+    {
+        $this->load->view('template/header');
+        $this->load->view("casas/creditoBanco/tipo_proveedor");
+    }
+
+    public function documentos_proveedor($proceso)
+    {
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/creditoBanco/documentos_proveedor", $data);
+    }
+
     public function archivo($name)
     {
         $object = $this->bucket->object(urldecode($name));
@@ -426,8 +444,9 @@ class Casas extends BaseController
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
+        $updateLotes = $this->General_model->updateRecord("lotes", array('idCliente' => $idCliente), 'idLote', $idLote);
 
-        if(!$update){
+        if(!$update || !$updateLotes){
             $banderaSuccess = false;
         }
 
@@ -702,7 +721,7 @@ class Casas extends BaseController
         $id_proceso = $this->form('id_proceso');
         $id_documento = $this->form('id_documento');
         $name_documento = $this->form('name_documento');
-        $tipo_documento = $this->form('tipo_documento') != null ? $this->form('tipo_documento') : 0;
+        $tipo_documento = $this->form('tipo_documento') || 0;
 
         if (!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)) {
             http_response_code(400);
@@ -1001,15 +1020,17 @@ class Casas extends BaseController
         $rol = $this->idRol;
         $id = $this->form('id');
         $comentario = $this->form('comentario');
-        $tipo_proveedor = $this->form('tipo_proveedor');
+        // $tipo_proveedor = $this->form('tipo_proveedor');
 
         if (!isset($id)) {
             http_response_code(400);
         }
 
+        /*
         if($rol == 33){
             $this->CasasModel->setTipoProveedor($id, $tipo_proveedor);
         }
+        */
 
         $documentos = $this->CasasModel->getDocumentos([16]);
 
@@ -1073,7 +1094,7 @@ class Casas extends BaseController
 
             if ($is_ok) {
                 // Agregar documentos de proveedor
-                $this->CasasModel->insertDocumentosProveedor($proceso->idProcesoCasas, $proceso->tipoProveedor);
+                // $this->CasasModel->insertDocumentosProveedor($proceso->idProcesoCasas, $proceso->tipoProveedor);
 
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
@@ -3177,6 +3198,34 @@ class Casas extends BaseController
         $this->json($getLotes);
     }
 
+    public function lista_elaborar_contrato()
+    {
+        $tipo = $this->get('tipo');
+
+        switch ($tipo) {
+            case 1: //titulacion
+                $contrato = 'contratoTitulacion';
+                $vobo = 'titulacion';
+                $documentos = '33, 34, 35';
+                break;
+            case 2: // OOAM
+                $contrato = 'contratoOOAM';
+                $vobo = 'ooam';
+                $documentos = '23';
+                break;
+
+            case 3: // postventa
+                $contrato = 'contratoPV';
+                $vobo = 'pv';
+                $documentos = '24';
+                break;
+        }
+
+        $lotes = $this->CasasModel->getListaElaborarContrato($contrato, $vobo, $documentos);
+
+        $this->json($lotes);
+    }
+
     public function getVoboCierreCifras()
     {
         $data = $this->input->get();
@@ -3256,9 +3305,11 @@ class Casas extends BaseController
                 }
 
             }
+            
+            http_response_code(404);
+            $this->json([]);
         }
 
-        http_response_code(404);
     }
 
     public function creditoBancoAvance()
@@ -3611,76 +3662,82 @@ class Casas extends BaseController
         $idProcesoCasas = $form->idProcesoCasas;
 
         $tipo = $form->tipo;
-        $columna = '';
-        $avance = 0;
-        $banderaSuccess = true;
-        $depto = '';
-        $idUsuario = $this->session->userdata("id_usuario");
+        // $columna = '';
+        // $avance = 0;
+        // $banderaSuccess = true;
+        // $depto = '';
+        // $idUsuario = $this->session->userdata("id_usuario");
 
         switch ($tipo) {
             case 1: // titulacion
-                $avance = 1;
-
-                /*
-                if ($contratoOOAM == 1 && $contratoPV == 1) {
-                    $avance = 1;
-                }
-                */
-
-                $columna = 'contratoTitulacion';
-                $depto = 'titulación';
+                $new_vobo = [
+                    "titulacion"  => 1,
+                    "modificadoPor" => $this->idUsuario,
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
                 break;
 
             case 2: // ooam
-                if ($contratoTitulacion == 1 && $contratoPV == 1) {
-                    $avance = 0;
-                }
-
-                $columna = 'contratoOOAM';
-                $depto = 'OOAM';
+                $new_vobo = [
+                    "ooam"  => 1,
+                    "modificadoPor" => $this->idUsuario,
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
                 break;
 
             case 3: // postventa
-                if ($contratoTitulacion == 1 && $contratoOOAM == 1) {
-                    $avance = 0;
-                }
-
-                $columna = 'contratoPV';
-                $depto = 'Postventa';
+                $new_vobo = [
+                    "pv"  => 1,
+                    "modificadoPor" => $this->idUsuario,
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
                 break;
         }
 
-        $this->db->trans_begin();
+        // $this->db->trans_begin();
+
+        // $update = $this->CasasModel->setVoBoSaldos($columna, $idProcesoCasas, $idUsuario);
+        // if (!$update) $banderaSuccess = false;
+        $vobo = $this->CasasModel->updateVobos($idProcesoCasas, 14, $new_vobo);
+
         $insertData = array(
             "idProcesoCasas"  => $idProcesoCasas,
             "procesoAnterior" => 14,
             "procesoNuevo"    => 14,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "creadoPor"       => $idUsuario,
+            "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
         );
 
-        $update = $this->CasasModel->setVoBoSaldos($columna, $idProcesoCasas, $idUsuario);
-        if (!$update) $banderaSuccess = false;
+        $this->General_model->addRecord("historial_proceso_casas", $insertData);
 
-        $insertHistorial = $this->General_model->addRecord("historial_proceso_casas", $insertData);
-        if (!$insertHistorial) $banderaSuccess = false;
+        if($vobo->titulacion && $vobo->ooam && $vobo->pv){
+            $proceso = $this->CasasModel->getProceso($idProcesoCasas);
+            
+            $movimiento = 0;
+            if ($proceso->tipoMovimiento == 1) {
+                $movimiento = 2;
+            }
 
-        if ($banderaSuccess) {
-            $this->db->trans_commit();
-            $response["result"] = true;
-            $response["message"] = "Se avanzado el proceso";
-            $response["avance"] = $avance;
-        } else {
-            $this->db->trans_rollback();
-            $response["result"] = false;
-            $response["message"] = "Erro al avanzar el proceso";
-            $response["avance"] = 0;
+            $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, 15, $comentario, $movimiento);
+            
+            if($is_ok){
+                $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, 15, $comentario, 1);
+            }else{
+                $response["result"] = false;
+                $response["message"] = "Erro al avanzar el proceso";
+                $response["avance"] = 0;
+
+                $this->json($response);
+            }
         }
 
-        $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($response));
+        $response["result"] = true;
+        $response["message"] = "Se dio visto bueno al avance";
+        $response["avance"] = 1;
+
+        $this->json($response);
     }
 
     public function ingresoExpediente()
@@ -3797,6 +3854,7 @@ class Casas extends BaseController
         } else {
             $data = [
                 'lote' => $lote,
+                'idRol' => $this->idRol,
             ];
 
             $this->load->view('template/header');
@@ -3813,7 +3871,23 @@ class Casas extends BaseController
 
     public function getDocumentosContratos($proceso)
     {
-        $lotes = $this->CasasModel->getDocumentosContratos($proceso);
+        $tipo = $this->get('tipo');
+
+        switch($tipo){
+            case 1:
+                $documentos = '33, 34, 35';
+                break;
+
+            case 2:
+                $documentos = '23';
+                break;
+
+            case 3:
+                $documentos = '24';
+                break;
+        }
+
+        $lotes = $this->CasasModel->getDocumentosContratos($proceso, $documentos);
 
         $this->json($lotes);
     }
@@ -3885,6 +3959,16 @@ class Casas extends BaseController
             "contratoPV" => 0,
             "proceso" => 14
         );
+
+        $vobos = [
+            "titulacion" => 0,
+            'pv' => 0,
+            'ooam' => 0,
+            "modificadoPor" => $this->session->userdata('id_usuario'),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+        ];
+
+        $this->CasasModel->updateVobos($idProcesoCasas, 14, $vobos);
 
         // paso 1: hacer update del proceso
         $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
@@ -4062,8 +4146,19 @@ class Casas extends BaseController
             }
         }
 
+        $dataUpdateLotes = [];
+        for ($i = 0; $i < count($idClientes); $i++) {
+            $idCliente = $idClientes[$i][0]; 
+            $idLoteIndividual = $idLote[$i][0]; 
+            $dataUpdateLotes[] = array(
+                "idLote" => $idLoteIndividual, 
+                "idCliente" => $idCliente, 
+            );
+        }
+
         // se hace update del esquema de credito y gerente en clientes 
         $update = $this->General_model->updateBatch('clientes', $dataUpdate, 'id_cliente');
+        $updateLotes = $this->General_model->updateBatch('lotes', $dataUpdateLotes, 'idLote');
         $getGerente = $this->CasasModel->getGerente($gerente);
         foreach ($idLote  as $lote) {
             foreach ($lote as $loteId) {
@@ -4071,7 +4166,7 @@ class Casas extends BaseController
             }
         }
 
-        if (!$update) {
+        if (!$update || !$updateLotes) {
             $banderaSuccess = false;
         }
 
@@ -4402,12 +4497,12 @@ class Casas extends BaseController
         $this->json($esquema);
     }
 
-    public function options_modelo()
-    {
-        $modelo = $this->CasasModel->getModeloOptions()->result();
+    // public function options_modelo()
+    // {
+    //     $modelo = $this->CasasModel->getModeloOptions()->result();
 
-        $this->json($modelo);
-    }
+    //     $this->json($modelo);
+    // }
 
     public function to_asignacion_esquema()
     {
@@ -4501,9 +4596,166 @@ class Casas extends BaseController
         $this->output->set_output($this->json([]));
     }
 
+    public function clienteAccion () {
+        $nombre = $this->form('nombre');
+        $paterno = $this->form('paterno');
+        $materno = $this->form('materno');
+        $telefono = $this->form('telefono');
+        $correo = $this->form('correo');
+        $domicilio = $this->form('domicilio');
+        $estadoCivil = $this->form('estado_civil');
+        $ocupacion = $this->form('ocupacion');
+        $idLote = $this->form('idLote');
+        $accion = $this->form('altaAccion');
+        $flagStatus = true;
+        $this->db->trans_begin();
+        //INSERT
+        if($accion == 1) {
+            $insertArr = array(
+                'nombre' => $nombre,
+                'apellido_paterno' => $paterno,
+                'apellido_materno' => $materno,
+                'telefono1'=> $telefono,
+                'correo' => $correo,
+                'domicilio_particular' => $domicilio,
+                'estado_civil' => $estadoCivil,
+                'ocupacion' => $ocupacion,
+                'id_subdirector' => 0,
+                'id_regional' => 0,
+                'plan_comision' => 0,
+                'regimen_fac' => 0,
+                'cp_fac' => 0,
+                'banderaEscrituracion' => 0,
+                'proceso' => 0,
+                'tipoLiberacion' => 0,
+                'banderaComisionCl' => 0,
+                'totalNeto2Cl' => 0,
+                'total8P' => 0,
+                'venta_extranjero' => 0,
+                'tipoCancelacion' => 0,
+                'estatusSeguro' => 0,
+                'sedeRecepcion' => 0,
+                'id_asesor_c' => 0,
+                'id_gerente_c' => 0,
+                'id_subdirector_c' => 0,
+                'esquemaCreditoCasas' => 0,
+                'idLote' => $idLote
+            );
+
+            $insertCliente = $this->General_model->addRecord("clientes", $insertArr);
+            if(!$insertCliente) {
+                $flagStatus = false;
+            }
+        }
+
+        if($accion == 2) {
+            $idCliente = $this->form('idCliente');
+            $dataUpdate = array(
+                'nombre' => $nombre, 
+                'apellido_paterno' => $paterno,
+                'apellido_materno' => $materno,
+                'telefono1' => $telefono,
+                'correo' => $correo,
+                'domicilio_particular' => $domicilio,
+                'estado_civil' =>$estadoCivil,
+                'ocupacion'=> $ocupacion
+            );
+            $updateCliente = $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
+            if(!$updateCliente) {
+                $flagStatus = false;
+            }
+        }
+        
+        if($flagStatus) {
+            $this->db->trans_commit();
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output($this->json([]));
+    }
+
     public function modeloOptions () {
         $idModelo = $this->input->post('idModelo');
         $modeloData = $this->CasasModel->modeloOptions($idModelo)->result();
         $this->json($modeloData);
+    }
+
+    public function lista_tipo_proveedor(){
+        $lotes = $this->CasasModel->getListaTipoProveedor();
+
+        $this->json($lotes);
+    }
+
+    public function select_tipo_proveedor(){
+        $idProcesoCasas = $this->form('idProcesoCasas');
+        $tipoProveedor = $this->form('tipoProveedor');
+
+        if (!isset($idProcesoCasas) || !isset($tipoProveedor)) {
+            http_response_code(400);
+
+            $this->json([]);
+        }
+
+        $is_ok = $this->CasasModel->selectTipoProveedor($idProcesoCasas, $tipoProveedor);
+
+        if($is_ok){
+            $this->CasasModel->insertDocumentosProveedor($idProcesoCasas, $tipoProveedor);
+        }
+
+        $this->json([]);
+    }
+
+    public function lista_documentos_proveedor($proceso){
+        $documentos = $this->CasasModel->getListaDocumentosProveedor($proceso, [26, 27]);
+
+        $this->json($documentos);
+    }
+
+    public function to_precierre_cifras(){
+        $idProcesoCasas = $this->form('idProcesoCasas');
+        $comentario = $this->form('comentario');
+
+        switch ($this->idRol) {
+            case 62:
+                $new_vobo = [
+                    "proyectos"  => 1,
+                    "modificadoPor" => $this->idUsuario,
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
+                break;
+            default:
+                $new_vobo = [
+                    "comercializacion"  => 1,
+                    "modificadoPor" => $this->idUsuario,
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                ];
+                break;
+        }
+
+        if(!isset($new_vobo)){
+            http_response_code(301);
+
+            $this->json([]);
+        }
+
+        $vobo = $this->CasasModel->updateVobos($idProcesoCasas, 4, $new_vobo);
+
+        if($vobo->proyectos && $vobo->comercializacion){
+            $proceso = $this->CasasModel->getProceso($idProcesoCasas);
+
+            $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, 5, $comentario, 0);
+
+            if ($is_ok) {
+                $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, 5, 'Se avanzó el proceso a pre cierre de cifras | Comentario: ' . $comentario, 1);
+            }
+        }
+
+        $this->json([]);
+    }
+
+    public function lista_orden_compra_firma(){
+        $lotes = $this->CasasModel->getListaOrdenCompraFirma();
+
+        $this->json($lotes);
     }
 }

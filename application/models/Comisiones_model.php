@@ -4437,6 +4437,7 @@ function getDatosGralInternomex(){
         SELECT 7 AS idEstatus, 'PAGADAS' as nombre ");
     }
 
+
     function getDatosHistorialPagoEstatus($proyecto, $estado, $usuario) {
         $filtro_00 = ($proyecto === '0') ? '' : " AND re.idResidencial = $proyecto ";
         $userWhereClause = ($usuario != 0) ? "AND com.id_usuario = $usuario" : '';
@@ -4474,7 +4475,7 @@ function getDatosGralInternomex(){
         oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, (CASE WHEN cl.lugar_prospeccion IS NULL THEN 0 ELSE cl.lugar_prospeccion END) lugar_prospeccion, lo.referencia, com.estatus estado_comision, pac.bonificacion, u.estatus as activo, lo.tipo_venta, oxcest.color, (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, (CASE WHEN com.estatus = 8 THEN 1 ELSE 0 END) recision, 
 
         (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
-        (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0)
+        (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2
 
         FROM pago_comision_ind pci1 
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
@@ -5409,7 +5410,10 @@ function getDatosGralInternomex(){
 
     public function getDetallePlanesComisiones($idPlan)
     {
-        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comDi, pc.neoDi, rolDir.nombre AS director,  pc.comRe, pc.neoRe, 'Regional' AS regional, pc.comSu, pc.neoSu, 'Subdirector' AS subdirector, pc.comGe, pc.neoGe, rolGer.nombre AS gerente, pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador, pc.comAs, pc.neoAs, rolAse.nombre AS asesor, pc.comMk, pc.neoMk, rolMkt.nombre AS mktd, pc.comOt, pc.neoOt, (CASE WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro, pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ') ELSE rolOtr2.nombre END) AS otro2
+        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comDi, pc.neoDi, rolDir.nombre AS director,  pc.comRe, pc.neoRe, 'Regional' AS regional, pc.comSu, pc.neoSu, 'Subdirector' AS subdirector, pc.comGe, pc.neoGe, rolGer.nombre AS gerente, pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador, pc.comAs, pc.neoAs, rolAse.nombre AS asesor, pc.comMk, pc.neoMk, rolMkt.nombre AS mktd, pc.comOt, pc.neoOt, (CASE WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro, 
+            pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ') ELSE rolOtr2.nombre END) AS otro2,
+            pc.comOt3, pc.neoOt3, (CASE WHEN pc.id_o3 IS NOT NULL THEN CONCAT(usOtr3.nombre, ' ', usOtr3.apellido_paterno, ' ',usOtr3.apellido_materno, ' ') ELSE rolOtr3.nombre END) AS otro3,
+            pc.comOt4, pc.neoOt4, (CASE WHEN pc.id_o4 IS NOT NULL THEN CONCAT(usOtr4.nombre, ' ', usOtr4.apellido_paterno, ' ',usOtr4.apellido_materno, ' ') ELSE rolOtr4.nombre END) AS otro4
             FROM plan_comision pc
             LEFT JOIN opcs_x_cats rolDir ON rolDir.id_opcion = pc.director AND rolDir.id_catalogo = 1
             LEFT JOIN opcs_x_cats rolReg ON rolReg.id_opcion = pc.regional AND rolReg.id_catalogo = 1
@@ -5420,8 +5424,16 @@ function getDatosGralInternomex(){
             LEFT JOIN usuarios usOtr ON usOtr.id_usuario = pc.id_o 
             LEFT JOIN opcs_x_cats rolOtr ON rolOtr.id_opcion = usOtr.id_rol AND rolOtr.id_catalogo = 1
             LEFT JOIN opcs_x_cats rolMkt ON rolMkt.id_opcion = pc.mktd AND rolMkt.id_catalogo = 1
+
             LEFT JOIN usuarios usOtr2 ON usOtr2.id_usuario = pc.id_o2 
             LEFT JOIN opcs_x_cats rolOtr2 ON rolOtr2.id_opcion = usOtr2.id_rol AND rolOtr2.id_catalogo = 1
+
+			LEFT JOIN usuarios usOtr3 ON usOtr3.id_usuario = pc.id_o3 
+            LEFT JOIN opcs_x_cats rolOtr3 ON rolOtr3.id_opcion = usOtr3.id_rol AND rolOtr3.id_catalogo = 1
+
+			LEFT JOIN usuarios usOtr4 ON usOtr4.id_usuario = pc.id_o4 
+            LEFT JOIN opcs_x_cats rolOtr4 ON rolOtr4.id_opcion = usOtr4.id_rol AND rolOtr4.id_catalogo = 1
+
             WHERE pc.id_plan = $idPlan");
         return $query->row();
     }

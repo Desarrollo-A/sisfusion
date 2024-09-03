@@ -2,7 +2,7 @@
     <div class="card-content">
         <div class="text-center">
             <h3 class="card-title center-align" >Comisiones en revisión  <b>XML Casas</b></h3>
-            <p class="card-title pl-1">Concentrado de facturas solicitadas por el área comercial.</p>
+            <p class="card-title pl-1">Concentrado de facturas solicitadas por el área de casas.</p>
         </div>
         <div class="toolbar">
             <div class="container-fluid p-0">

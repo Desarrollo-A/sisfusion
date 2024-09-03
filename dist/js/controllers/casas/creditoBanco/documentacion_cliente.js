@@ -128,7 +128,10 @@ let columns = [
 
         }
 
-        let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
+        let upload_button = ''
+        if(data.tipo != 11){
+            upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
+        }
         
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },

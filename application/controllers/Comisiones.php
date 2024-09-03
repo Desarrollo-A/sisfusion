@@ -4334,19 +4334,19 @@ public function getDesarrolloSelectINTMEX($a = ''){
     echo json_encode($data);
   }
 
-public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
+  public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
 
-      ini_set('max_execution_time', 900);
-      set_time_limit(900);
-      ini_set('memory_limit','2048M');
+        ini_set('max_execution_time', 900);
+        set_time_limit(900);
+        ini_set('memory_limit','2048M');
 
-      
-  $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus($proyecto,$condominio, $usuario)->result_array();
-  for( $i = 0; $i < count($dat); $i++ ){
-      $dat[$i]['pa'] = 0;
+        
+    $dat =  $this->Comisiones_model->getDatosHistorialPagoEstatus($proyecto,$condominio, $usuario)->result_array();
+    for( $i = 0; $i < count($dat); $i++ ){
+        $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
   }
-  echo json_encode( array( "data" => $dat));
-}
 
 
 
@@ -5129,6 +5129,16 @@ for ($d=0; $d <count($dos) ; $d++) {
             'puesto' => $data->otro2,
             'com' => $data->comOt2,
             'neo' => $data->neoOt2
+        );
+        $info['comisiones'][] = array(
+          'puesto' => $data->otro3,
+          'com' => $data->comOt3,
+          'neo' => $data->neoOt3
+        );
+        $info['comisiones'][] = array(
+          'puesto' => $data->otro4,
+          'com' => $data->comOt4,
+          'neo' => $data->neoOt4
         );
 
         echo json_encode($info);

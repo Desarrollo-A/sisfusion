@@ -280,7 +280,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
         searchable: false
     }],
     ajax: {
-        url: general_base_url+'Casas_Comisiones/getDataDispersionPago',
+        url: general_base_url+'Casas_comisiones/getDataDispersionPago',
         type: "POST",
         cache: false,
         data: function( d ){}
@@ -832,7 +832,7 @@ $("#form_NEODATA_Casas").submit( function(e) {
                     numerosDispersionCasas();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
-                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
                     $("#modal_NEODATA_Casas").modal( 'hide' );
                     function_totales();
                     $('#dispersar').prop('disabled', false);
@@ -841,7 +841,7 @@ $("#form_NEODATA_Casas").submit( function(e) {
                 } else if (data == 2) {
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Ya se dispersó por otro usuario", "warning");
-                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
                     $("#modal_NEODATA_Casas").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
@@ -851,6 +851,8 @@ $("#form_NEODATA_Casas").submit( function(e) {
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
                 }
+                $('#tabla_dispersion_casas').DataTable().ajax.reload();
+                    $("#modal_NEODATA_Casas").modal( 'hide' );
             },error: function(){
                 $('#spiner-loader').addClass('hidden');
                 alerts.showNotification("top", "right", "EL LOTE NO SE PUEDE DISPERSAR, INTÉNTALO MÁS TARDE", "warning");

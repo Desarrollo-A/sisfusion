@@ -5,6 +5,7 @@ let arrayValores = []
 let arrayIdLotes = []
 let arrayIdClientes = []
 
+let estadoCivil = [];
 
 $.ajax({
     type: 'GET',
@@ -15,6 +16,15 @@ $.ajax({
     error: function () {
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
+})
+
+$(document).ready(function() {
+    $.post(`${general_base_url}General/getOpcionesPorCatalogo/18`, function(data) {
+        estadoCivil = data.map(item => ({
+            value: item.id_opcion,
+            label: item.nombre
+        }));
+    }, 'json');
 })
 
 filtro_proyectos.onChange(function(option){
@@ -104,7 +114,7 @@ select_lote = function(data) {
                         },
                         error: function (resp) {
                             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                            form2.loading(false)
+                            form.loading(false);
                             arrayValores = [];
                             arrayIdLotes = [];
                             arrayIdClientes = [];
@@ -200,15 +210,41 @@ let columns = [
     },
     { data: 'correo' },
     { data: 'lugar_prospeccion' },
-    { data: function(data)
-        {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
-            if (data.idCliente != 0)
-                return '<div class="d-flex justify-center">' + pass_button + '</div>'
-            else
-                return '';
-        } 
-    },
+    {data: function(data) {
+        let buttons = `<div class="d-flex justify-center">`;
+
+        if(data.idCliente != 0) {
+            let pass_button = new RowButton({
+                icon: 'thumb_up',
+                color: 'green',
+                label: 'Avanzar',
+                onClick: select_lote,
+                data: data
+            });
+            buttons += pass_button;
+        }
+
+        if (data.clienteExistente == 0 || data.clienteExistente == '0') {
+            let addCliente = new RowButton({
+                icon: 'assignment_ind',
+                label : 'Agregar Cliente',
+                onClick: subirCliente,
+                data: data
+            });
+            buttons += addCliente;
+        }
+        if(data.clienteNuevoEditar == 0 || data.clienteNuevoEditar == '0') {
+            let editCliente = new RowButton({
+                icon: 'edit', 
+                label: 'Editar Cliente',
+                onClick: editarCliente,
+                data: data
+            });
+            buttons += editCliente;
+        }
+        buttons += '</div>';
+        return buttons;
+    }}
 ]
 
 let table = new Table({
@@ -310,6 +346,7 @@ $(document).on('click', '.btn-asignar', () => {
                             let btn = document.getElementsByClassName("btn-asignar");
                             btn[0].classList.add('hide');
                             table.reload();
+                            form.loading(false);
                         },
                         error: function (response) {
                             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -326,5 +363,158 @@ $(document).on('click', '.btn-asignar', () => {
             //new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
-    form.show()
+    form.show();
+    form.loading(false);
  });
+
+
+subirCliente = function(data) {
+    let form = new Form({
+        title: 'Alta de cliente',
+        text: 'Rellena los campos',
+        onSubmit: function(dataForm){
+            form.loading(true);
+            let formConfirm = new FormConfirm({
+                title: '¿Estás seguro de crear el cliente?',
+                onSubmit: function () {
+                    formConfirm.loading(true);
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}/casas/clienteAccion`,
+                        data: dataForm,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            alerts.showNotification("top", "right", "Se ha agregado el cliente correctamente.", "success");
+                            table.reload();
+                            formConfirm.hide();
+                            formConfirm.loading(false);
+                            form.loading(false);
+                            form.hide();
+                        },
+                        error: function(response) {
+                            alerts.showNotification("top", "right", "Oops, algo algo salió mal.", "danger");
+                            formConfirm.loading(false);
+                            formConfirm.hide();
+                            form.loading(false);
+                        }
+                    })
+                }
+            });
+            formConfirm.onCancel = function(){form.loading(false);}
+            formConfirm.show();
+            form.loading(true);
+        }, 
+        fields : [
+            new TextField({id: 'nombre', label: 'Nombre', placeholder : 'Ingresa el nombre', width: 12, required : true}),
+            new TextField({id: 'paterno', label: 'Apellido Paterno', placeholder : 'Ingresa el apellido paterno', width: 12, required : true}),
+            new TextField({id: 'materno', label: 'Apellido Materno', placeholder : 'Ingresa el apellido materno', width: 12, required : true}),
+            new NumberField({id: 'telefono', label: 'Teléfono', placeholder: 'Ingresa el número telefónico.', width: 6, required: true}),
+            new TextField({id: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese el correo electrónico.', width: 6, required: true}),
+            new TextField({id: 'domicilio', label: 'Domicilio', placeholder: 'Ingresa el domicilio', width: 12, required: true}),
+            new SelectField({   id: 'estado_civil', label: 'Estado civil', placeholder: 'Selecciona una opción', width: '12', data: estadoCivil, required: true }),
+            new TextField({id: 'ocupacion', label: 'Ocupación', placeholder: 'Ingresa la ocupación', width: 12, required: true}),
+            new HiddenField({ id: 'altaAccion', value: 1}),
+            new HiddenField({ id: 'idLote', value: data.idLote })
+        ]
+    });
+    form.show();
+    form.loading(false);
+}
+
+editarCliente = function (data) {
+    let form = new Form({
+        title: 'Editar información del cliente',
+        text: 'Edita los campos',
+        onSubmit: function(dataForm) {
+            form.loading(true);
+            let formConfirm = new FormConfirm ({
+                title: '¿Estás seguro de actualizar la información?',
+                onSubmit: function() {
+                    formConfirm.loading(true);
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}/casas/clienteAccion`,
+                        data: dataForm,
+                        contentType: false, processData: false,
+                        success: function(response) {
+                            alerts.showNotification("top", "right", "Se ha modificado el cliente correctamente.", "success");
+                            table.reload();
+                            formConfirm.hide();
+                            formConfirm.loading(false);
+                            form.hide();
+                            form.loading(false);
+                        },
+                        error: function(resp) {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                            form.loading(false);
+                            formConfirm.hide();
+                            formConfirm.loading(false);
+                        }
+                    })
+                }
+            });
+            formConfirm.onCancel = function(){form.loading(false);}
+            formConfirm.show();
+            form.loading(true);
+        },
+        fields: [
+            new TextField({id: 'nombre', label: 'Nombre', placeholder : 'Ingresa el nombre', width: 12, required : true, value: data.nombreCliente}),
+            new TextField({id: 'paterno', label: 'Apellido Paterno', placeholder : 'Ingresa el apellido paterno', width: 12, required : true, value: data.apePaterno}),
+            new TextField({id: 'materno', label: 'Apellido Materno', placeholder : 'Ingresa el apellido materno', width: 12, required : true, value: data.apeMaterno}),
+            new NumberField({id: 'telefono', label: 'Teléfono', placeholder: 'Ingresa el número telefónico.', value: data.telefono1,width: 6, required: true}),
+            new TextField({id: 'correo', label: 'Correo Electrónico', placeholder: 'Ingrese el correo electrónico.', width: 6, required: true, value: data.correo}),
+            new TextField({id: 'domicilio', label: 'Domicilio', placeholder: 'Ingresa el domicilio', width: 12, required: true, value: data.domicilio_particular}),
+            new SelectField({   id: 'estado_civil', label: 'Estado civil', placeholder: 'Selecciona una opción', width: '12', data: estadoCivil, required: true , value: data.estado_civil}),
+            new TextField({id: 'ocupacion', label: 'Ocupación', placeholder: 'Ingresa la ocupación', width: 12, required: true, value: data.ocupacion}),
+            new HiddenField({id: 'idLote', value: data.idLote}),
+            new HiddenField({ id: 'altaAccion', value: 2}),
+            new HiddenField({ id: 'idCliente', value: data.idCliente })
+        ]
+    });
+    form.show();
+    form.loading(false);
+}
+
+$(document).on('input', '#telefono', function() {
+    let maxLength = 10;
+    if (this.value.length > maxLength) {
+        this.value = this.value.slice(0, maxLength);
+    }
+});
+
+const validarCorreo = (idCorreoInput) => {
+    const emailInput = $(idCorreoInput);
+    let feedback = emailInput.next('.validation-feedback');
+
+    if(feedback.length == 0) {
+        feedback = $('<span class="validation-feedback"></span>');
+        emailInput.after(feedback);
+    }
+
+    const email = emailInput.val();
+
+    feedback.text('');
+
+    if(validateEmail(email)) {
+        feedback.text('El correo es válido');
+        feedback.css('color', 'rgb(26 159 10)');
+    } else {
+        feedback.text('El correo es inválido');
+        feedback.css('color', 'red');
+    }
+};
+
+$(document).on('input', '#correo', function(){
+    validarCorreo('#correo');
+});
+
+const validateEmail = (email) => {
+    return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+}
+
+$('#form-modal3').on('hidden.bs.modal', function(e){
+    $('#ok-button-form-modal').prop('disabled', false);
+});

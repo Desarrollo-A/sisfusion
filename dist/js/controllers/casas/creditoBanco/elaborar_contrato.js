@@ -102,17 +102,10 @@ avance_contratos = function (data) {
                 processData: false,
                 success: function (response) {
                     if(response.result){
-                        if(response.avance == 1){
-                            avanceProceso(data, form);
-                        }
-                        else{
-                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-                            table.reload()
-                            form.hide() 
-                        }
-                       
-                    }
-                    else{
+                        alerts.showNotification("top", "right", response.message, "success")
+                        table.reload()
+                        form.hide() 
+                    }else{
                         alerts.showNotification("top", "right", response.message, "danger");
                         table.reload()
                         form.hide();
@@ -211,47 +204,25 @@ let columns = [
     },
     {
         data: function (data) {
-            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avance_contratos, data })
-            let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver documento', onClick: show_preview, data })
-            let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `Cargar documento`, onClick: file_upload, data })
+            let pass_button = ''
+            // let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver documento', onClick: show_preview, data })
+            // let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `Cargar documento`, onClick: file_upload, data })
             let subir_contratos = new RowButton({icon: 'toc', color: '', label: 'Subir contratos', onClick: go_to_documentos, data});
             let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data })
 
-            if( tipo == 1 && data.contratoTitulacion == 0){
-                if(data.documentos == 3){
-                    return `<div class="d-flex justify-center">${pass_button}${subir_contratos}${decline_button}</div>`
-                }
-                else{
-                    return `<div class="d-flex justify-center">${subir_contratos}${decline_button}</div>`
-                }                 
+            if( (tipo == 1 && data.documentos == 3) || (tipo == 2) || (tipo == 3) ){
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avance_contratos, data })
             }
-            if( tipo == 2 && data.contratoOOAM == 0){
-                if(data.documento != null){
-                    return `<div class="d-flex justify-center">${view_button}${upload_button}${decline_button}</div>`
-                }
-                else{
-                    return `<div class="d-flex justify-center">${upload_button}${decline_button}</div>`
-                }
-            }
-            if( tipo == 3 && data.contratoPV == 0){
-                if(data.documento != null){
-                    return `<div class="d-flex justify-center">${view_button}${upload_button}${decline_button}</div>` 
-                }
-                else{
-                    return `<div class="d-flex justify-center">${upload_button}${decline_button}</div>` 
-                }       
-            }
-            else{
-                return ''
-            }
+
+            return `<div class="d-flex justify-center">${pass_button}${subir_contratos}${decline_button}</div>`
         }
     }
 ]
 
 let table = new Table({
     id: '#tableDoct',
-    url: tipo == 1 ? 'casas/countDocumentos' : 'casas/getLotesProcesoBanco',
-    params: tipo == 1 ? { documentos: documentos, proceso: 14, campo: campo } : { proceso: 14, tipoDocumento: documentos, tipoSaldo: tipo, campo: campo },
+    url: 'casas/lista_elaborar_contrato',
+    params: { tipo: tipo },
     buttons: buttons,
     columns,
 })
