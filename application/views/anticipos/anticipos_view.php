@@ -179,11 +179,12 @@
                                                         <th>ID SOLICITANTE</th>
 
                                                         <th>NOMBRE SOLICITANTE</th>
-                                                        <th>PROCESO</th>
+                                                        <th>PUESTO</th>
+                                                        
                                                         
                                                         <th>EMPRESA</th>
 
-                                                        <th>PROCESO NOMBRE</th>
+                                                        
                                                         <th>COMENTARIO</th>
                                                         
                                                         <th>RÉGIMEN</th>
