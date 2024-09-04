@@ -1152,8 +1152,7 @@ public function getDatosFechasProyecCondm(){
 
   }
 
-  public function cambiarEstatusComisiones()
-    {
+  public function cambiarEstatusComisiones(){
         $idPagos = explode(',', $this->input->post('idPagos'));
         $userId = $this->session->userdata('id_usuario');
         $estatus = $_POST['estatus'];
@@ -1174,6 +1173,11 @@ public function getDatosFechasProyecCondm(){
         $resultMassiveInsert = $this->Casas_comisiones_model->insert_phc($historiales);
 
         echo ($resultUpdate && $resultMassiveInsert);
-    }
+  }
+
+  public function historial_bono($proyecto = null,$condominio = null ) {      
+    $dat =  $this->Casas_comisiones_model->historial_bono($proyecto,$condominio)->result_array();
+    echo json_encode( array( "data" => $dat));
+  }
 
 }

@@ -87,6 +87,8 @@ $("#tabla_plaza_1_casas").ready( function(){
                                 if(data == 1) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
+                                    $("#autorizar_intmex").html(formatMoney(0));
+                                    tota2 =0
                                     plaza_1.ajax.reload();
                                     var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
                                     modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
@@ -328,7 +330,7 @@ $(document).on("click", ".checkPagosIndividual", function() {
         else 
             $("#all").prop("checked", false);
     });
-    $("#myText_nuevas_casas").html(formatMoney(numberTwoDecimal(tota2)));
+    $("#autorizar_intmex").html(formatMoney(numberTwoDecimal(tota2)));
 });
 
 function selectAllS(e) {
@@ -342,7 +344,7 @@ function selectAllS(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#myText_nuevas_casas").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizar_intmex").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
         $(plaza_1.$('input[type="checkbox"]')).each(function (i, v) {
@@ -350,7 +352,7 @@ function selectAllS(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#myText_nuevas_casas").html(formatMoney(0));
+        $("#autorizar_intmex").html(formatMoney(0));
     }
 }
 
