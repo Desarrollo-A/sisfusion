@@ -287,7 +287,7 @@ $(document).on("click", ".checkPagosIndividual", function() {
         else 
             $("#all").prop("checked", false);
     });
-    $("#myText_nuevas_casas_intmex").html(formatMoney(numberTwoDecimal(tota2)));
+    $("#autorizar").html(formatMoney(numberTwoDecimal(tota2)));
 });
 
 function selectAllS(e) {
@@ -301,7 +301,7 @@ function selectAllS(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#myText_nuevas_casas_intmex").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizar").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
         $(plaza_intmex.$('input[type="checkbox"]')).each(function (i, v) {
@@ -309,7 +309,7 @@ function selectAllS(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#myText_nuevas_casas_intmex").html(formatMoney(0));
+        $("#autorizar").html(formatMoney(0));
     }
 }
 
