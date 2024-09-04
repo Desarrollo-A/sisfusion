@@ -189,7 +189,7 @@
         <div class="modal fade modal-alertas" id="Nopenalizacion-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header bg-red">
+                    <div class="modal-header text-center">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
                     </div>
                     <form method="post" class="row" id="Nopenalizacion-form" autocomplete="off">
@@ -215,9 +215,12 @@
         <div class="modal fade modal-alertas" id="modal_NEODATA_Casas" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
+                    <div class="modal-header bg-red">
+                    </div>
                     <form method="post" id="form_NEODATA_Casas">
                         <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
+                        <div class="modal-footer">
+                        </div>
                     </form>
                 </div>
             </div>

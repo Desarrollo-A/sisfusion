@@ -117,10 +117,16 @@
                                         <div class="toolbar">
                                             <div class="container-fluid p-0">
                                                 <div class="row">
-                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                                         <div class="form-group d-flex justify-center align-center m-0">
-                                                            <h4 class="title-tot center-align m-0">Disponible:</h4>
+                                                            <h4 class="title-tot center-align m-0">Disponible sin impuesto:</h4>
                                                             <p class="input-tot pl-1" name="myText_nuevas_casas_intmex" id="myText_nuevas_casas_intmex">$0.00</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                                        <div class="form-group d-flex justify-center align-center m-0">
+                                                            <h4 class="title-tot center-align m-0">Autorizar:</h4>
+                                                            <p class="input-tot pl-1" name="autorizar" id="autorizar">$0.00</p>
                                                         </div>
                                                     </div>
                                                 </div>
