@@ -473,7 +473,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                         disparador = parseInt(registroComisionCasas) == 1 ? 1 : 0;
                         if((disparador == 0)){
                             //COMISION NUEVA
-                            let total0 = esquemaCreditoCasas == 2 ? aplicadoNeodata : abonadoCliente;
+                            let total0 = aplicadoNeodata;
                             let total = 0;
                             if(total0 > 0){
                                 total = total0;
