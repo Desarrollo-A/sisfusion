@@ -1859,36 +1859,36 @@ class Reestructura extends CI_Controller{
 
 	public function getregistrosLotes() {
         $id_proyecto = $this->input->post('index_proyecto');
-
-        if ($this->session->userdata('id_usuario') == 13546 || $this->session->userdata('id_usuario') == 15625 || $this->session->userdata('id_usuario') == 13547  ) {
-            $union = "
-                AND re.idResidencial IN ($id_proyecto)
-            UNION ALL
-                SELECT re.idResidencial, re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.estatus_preproceso, lo.idCliente, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
-                    CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
-                    lo.observacionLiberacion AS observacion, CASE WHEN lo.liberaBandera = 1 THEN 'LIBERADO' ELSE 'SIN LIBERAR' END estatusLiberacion,
-                    lo.liberaBandera, lo.idStatusLote, '1' as consulta, ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion, lo.solicitudCancelacion,
-                    'SIN CANCELAR' AS estatusCancelacion,
-                    lo.solicitudCancelacion, lo.comentarioReubicacion, lo.comentarioLiberacion
-                FROM lotes lo 
-                    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-                    INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-                    LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
-                    LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
-                WHERE 
-                    lo.status = 1  AND re.idResidencial IN ($id_proyecto)
-                AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3, 17) )";
-        }else {
-            if ($id_proyecto == 0) {
-                $union = "";
-            }else {
-                $union = "AND re.idResidencial IN ($id_proyecto)";
-            }
-            // $union = "AND re.idResidencial IN ($id_proyecto)";
-            // $union = "";
+        $tipoTransaccion = $this->input->post('tipoTransaccion');
+        if (in_array($this->session->userdata('id_usuario'), [9897, 13655]))
+            $dato = $this->Reestructura_model->getLotes2($id_proyecto);
+        else {
+            if (in_array($this->session->userdata('id_usuario'), array(13546, 15625, 13547, 12113, 12668, 12115, 12112, 2896)) && $tipoTransaccion == 1) {
+                $union = "
+                    
+                UNION ALL
+                    SELECT re.idResidencial, re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.estatus_preproceso, lo.idCliente, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
+                        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
+                        lo.observacionLiberacion AS observacion, CASE WHEN lo.liberaBandera = 1 THEN 'LIBERADO' ELSE 'SIN LIBERAR' END estatusLiberacion,
+                        lo.liberaBandera, lo.idStatusLote, '1' as consulta, ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion, lo.solicitudCancelacion,
+                        'SIN CANCELAR' AS estatusCancelacion,
+                        lo.solicitudCancelacion, lo.comentarioReubicacion, lo.comentarioLiberacion, 'SIN ESPECIFICAR' usuarioLiberacion
+                    FROM lotes lo 
+                        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
+                        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
+                    WHERE 
+                        lo.status = 1  AND re.idResidencial IN ($id_proyecto)
+                    AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3, 17) )";
+            } else {
+                if ($id_proyecto == 0)
+                    $union = "";
+                else
+                    $union = "AND re.idResidencial IN ($id_proyecto)";
+            }        
+        $dato = $this->Reestructura_model->getLotes($union, $id_proyecto);
         }
-        
-        $dato = $this->Reestructura_model->getLotes($union);
         if ($dato != null)
             echo json_encode($dato);
         else

@@ -71,6 +71,7 @@
                                                     <th>COMENTARIO</th>
                                                     <th>TIPO DE CANCELACIÓN</th>
                                                     <th>ESTATUS</th>
+                                                    <th>USUARIO QUE CANCELÓ EL LOTE</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

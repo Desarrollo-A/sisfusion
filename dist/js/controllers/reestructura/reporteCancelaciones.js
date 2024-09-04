@@ -32,7 +32,7 @@ function cancelacionTable() {
                 titleAttr: 'Reestructuración',
                 title: 'Reestructuración',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -78,12 +78,7 @@ function cancelacionTable() {
                     return `<span class='label ${d.estatusCancelacion == 'CANCELADA' ? 'lbl-orange' : 'lbl-green'}'>${d.estatusCancelacion}</span>`;
                 }
             },
-            {
-                visible: false,
-                data: function (d) {
-                    return ``;
-                }
-            }
+            { data: 'usuarioLiberacion' }
         ],
         columnDefs: [{
             defaultContent: "",

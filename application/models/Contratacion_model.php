@@ -58,7 +58,11 @@ class Contratacion_model extends CI_Model {
       $filtroEstatus = "";
       $filtroEstatusLote = "";
       $unionCliente = "LEFT";
-      $ventasCompartidasQuery = "";
+
+      if(in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9))){
+          $filtroEstatusLote = "AND lot.idStatusLote IN (2, 3)";
+          $unionCliente = "INNER";
+      }
 
       $filtroClientesPropios = "";
       $id_usuario = $this->session->userdata('id_usuario');
@@ -84,7 +88,7 @@ class Contratacion_model extends CI_Model {
       else if (in_array($id_rol, [5])) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
          $filtroClientesPropios = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
 
-      if(in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9))){
+      if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9))){
          $filtroEstatusLote = "AND lot.idStatusLote IN (2, 3)";
          $unionCliente = "INNER";
          $ventasCompartidasQuery = $this->getVentasCompartidasQuery($id_rol, $id_usuario, $id_lider, $prospectingPlaceDetail, $filtroProyecto, $filtroCondominio, $filtroEstatus, $idsGerente);
@@ -205,13 +209,13 @@ class Contratacion_model extends CI_Model {
       sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa,
       sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion,
       ISNULL(oxc0.nombre, 'Normal') tipo_proceso 
-      , ds.clave, cl.telefono1, cl.telefono2, cl.correo, cl.fecha_nacimiento, catNaci.nombre nacionalidad, cl.originario_de, catEdoCivil.nombre estado_civil,
-      cl.nombre_conyuge, catRegMat.nombre regimen_matrimonial, cl.domicilio_particular, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, 
+      , '' clave, cl.telefono1, cl.telefono2, cl.correo, cl.fecha_nacimiento, '' nacionalidad, cl.originario_de, '' estado_civil,
+      cl.nombre_conyuge, '' regimen_matrimonial, cl.domicilio_particular, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, 
       cl.fecha_nacimiento as edad,
-     cl.domicilio_empresa, cl.telefono_empresa, catalogoTipoViv.nombre tipo_vivienda, ds.costom2f, ds.municipio, ds.importOferta, ds.letraImport, ds.saldoDeposito, 
-      ds.aportMensualOfer, ds.fecha1erAport, ds.fechaLiquidaDepo, ds.fecha2daAport, 
-     ISNULL(ref.nombreReferencias, 'SIN ESPECIFICAR') as referenciasPersonales, 
-      ds.observacion, cl.personalidad_juridica, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaMatrimonio_pf, ds.actaConstitutiva_pm, ds.poder_pm, ds.idOficialApoderado_pm, ds.idDomicilio_pm,
+     cl.domicilio_empresa, cl.telefono_empresa, '' tipo_vivienda, '' costom2f, '' municipio, '' importOferta, '' letraImport, '' saldoDeposito, 
+      '' aportMensualOfer, '' fecha1erAport, '' fechaLiquidaDepo, '' fecha2daAport, 
+     '' referenciasPersonales, 
+      '' observacion, cl.personalidad_juridica, '' idOficial_pf, '' idDomicilio_pf, '' actaMatrimonio_pf, '' actaConstitutiva_pm, '' poder_pm, '' idOficialApoderado_pm, '' idDomicilio_pm,
       cl.edadFirma, sds.nombre as sedeResidencial, cl.tipoEnganche, loxc.nombre, ISNULL(sds2.nombre,'Sin especificar') sedeCliente
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
@@ -242,12 +246,12 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
       LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
       --nuevo
-      LEFT JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+      /*LEFT JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
       LEFT JOIN (SELECT id_cliente, STRING_AGG(nombre, ', ') nombreReferencias FROM referencias WHERE estatus = 1 GROUP BY id_cliente) ref ON ref.id_cliente = cl.id_cliente
      LEFT JOIN opcs_x_cats catalogoTipoViv ON catalogoTipoViv.id_opcion = cl.tipo_vivienda AND catalogoTipoViv.id_catalogo = 20
      LEFT JOIN opcs_x_cats catRegMat ON catRegMat.id_opcion = cl.regimen_matrimonial AND catRegMat.id_catalogo = 19
      LEFT JOIN opcs_x_cats catEdoCivil ON catEdoCivil.id_opcion = cl.estado_civil AND catEdoCivil.id_catalogo = 18
-     LEFT JOIN opcs_x_cats catNaci ON catNaci.id_opcion = cl.nacionalidad AND catNaci.id_catalogo = 11
+     LEFT JOIN opcs_x_cats catNaci ON catNaci.id_opcion = cl.nacionalidad AND catNaci.id_catalogo = 11*/
      LEFT JOIN sedes sds ON sds.id_sede = res.sede_residencial
      LEFT JOIN sedes sds2 ON sds2.id_sede = cl.id_sede
       --nuevo 
@@ -621,8 +625,7 @@ class Contratacion_model extends CI_Model {
          $filtroClientesPropios = "AND (vcc.id_subdirector = $id_usuario OR vcc.id_regional = $id_usuario OR vcc.id_regional_2 = $id_usuario)";
       else if (in_array($id_rol, [5])) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
          $filtroClientesPropios = "AND (vcc.id_subdirector = $id_lider OR vcc.id_regional = $id_lider OR vcc.id_regional_2 = $id_lider)";
-      $consulta = "UNION ALL 
-         SELECT 
+      $consulta = "UNION ALL SELECT 
             lot.idLote, 
             lot.nombreLote, 
             con.nombre as nombreCondominio, 
@@ -670,17 +673,17 @@ class Contratacion_model extends CI_Model {
             ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, 
             ISNULL(vc.total, 0) venta_compartida, 
             ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion, 
-            ISNULL(oxc0.nombre, 'Normal') tipo_proceso, 
-            ds.clave, 
+            'Normal' tipo_proceso, 
+            '' clave, 
             cl.telefono1, 
             cl.telefono2, 
             cl.correo, 
             cl.fecha_nacimiento, 
-            catNaci.nombre nacionalidad, 
+            '' nacionalidad, 
             cl.originario_de, 
-            catEdoCivil.nombre estado_civil, 
+            '' estado_civil, 
             cl.nombre_conyuge, 
-            catRegMat.nombre regimen_matrimonial, 
+            '' regimen_matrimonial, 
             cl.domicilio_particular, 
             cl.ocupacion, 
             cl.empresa, 
@@ -689,26 +692,26 @@ class Contratacion_model extends CI_Model {
             cl.fecha_nacimiento as edad, 
             cl.domicilio_empresa, 
             cl.telefono_empresa, 
-            catalogoTipoViv.nombre tipo_vivienda, 
-            ds.costom2f, 
-            ds.municipio, 
-            ds.importOferta, 
-            ds.letraImport, 
-            ds.saldoDeposito, 
-            ds.aportMensualOfer, 
-            ds.fecha1erAport, 
-            ds.fechaLiquidaDepo, 
-            ds.fecha2daAport, 
+            '' tipo_vivienda, 
+            '' costom2f, 
+            '' municipio, 
+            '' importOferta, 
+            '' letraImport, 
+            '' saldoDeposito, 
+            '' aportMensualOfer, 
+            '' fecha1erAport, 
+            '' fechaLiquidaDepo, 
+             '' fecha2daAport, 
             ISNULL(ref.nombreReferencias, 'SIN ESPECIFICAR') as referenciasPersonales, 
-            ds.observacion, 
+            '' observacion, 
             cl.personalidad_juridica, 
-            ds.idOficial_pf, 
-            ds.idDomicilio_pf, 
-            ds.actaMatrimonio_pf, 
-            ds.actaConstitutiva_pm, 
-            ds.poder_pm, 
-            ds.idOficialApoderado_pm, 
-            ds.idDomicilio_pm, 
+            '' idOficial_pf, 
+            '' idDomicilio_pf, 
+            '' actaMatrimonio_pf, 
+            '' actaConstitutiva_pm, 
+            '' poder_pm, 
+            '' idOficialApoderado_pm, 
+            '' idDomicilio_pm, 
             cl.edadFirma, 
             sds.nombre as sedeResidencial, 
             cl.tipoEnganche, 
@@ -717,7 +720,7 @@ class Contratacion_model extends CI_Model {
          FROM 
             lotes lot 
             INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
-            INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.idResidencial = 14 $filtroProyecto
+            INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto --AND res.idResidencial = 14 
             INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
             LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
             INNER JOIN clientes cl ON cl.id_cliente = lot.idCliente
@@ -737,19 +740,13 @@ class Contratacion_model extends CI_Model {
             LEFT JOIN (SELECT nombreLote, STRING_AGG(CAST(comAdmon AS varchar(250)), ' | ') comAdmon FROM comentarios_administracion GROUP BY nombreLote) ca ON ca.nombreLote = lot.nombreLote 
             LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente 
             LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion 
-            LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97 --nuevo
-            LEFT JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente 
             LEFT JOIN (SELECT id_cliente, STRING_AGG(nombre, ', ') nombreReferencias FROM referencias WHERE estatus = 1 GROUP BY id_cliente) ref ON ref.id_cliente = cl.id_cliente 
-            LEFT JOIN opcs_x_cats catalogoTipoViv ON catalogoTipoViv.id_opcion = cl.tipo_vivienda AND catalogoTipoViv.id_catalogo = 20 
-            LEFT JOIN opcs_x_cats catRegMat ON catRegMat.id_opcion = cl.regimen_matrimonial AND catRegMat.id_catalogo = 19 
-            LEFT JOIN opcs_x_cats catEdoCivil ON catEdoCivil.id_opcion = cl.estado_civil AND catEdoCivil.id_catalogo = 18 
-            LEFT JOIN opcs_x_cats catNaci ON catNaci.id_opcion = cl.nacionalidad AND catNaci.id_catalogo = 11 
             LEFT JOIN sedes sds ON sds.id_sede = res.sede_residencial 
-            LEFT JOIN sedes sds2 ON sds2.id_sede = cl.id_sede --nuevo 
+            LEFT JOIN sedes sds2 ON sds2.id_sede = cl.id_sede
          WHERE 
             lot.status = 1 
             AND lot.idStatusLote IN (2, 3)
-            --AND lot.idLote IN (57976, 49180) --ORDER BY lot.nombreLote";
+            --AND lot.idLote IN (57976, 49180)";
       return $consulta;
    }
    
