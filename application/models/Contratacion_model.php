@@ -64,6 +64,7 @@ class Contratacion_model extends CI_Model {
       $id_usuario = $this->session->userdata('id_usuario');
       $id_rol = $this->session->userdata('id_rol');
       $id_lider = $this->session->userdata('id_lider');
+      $id_sede = $this->session->userdata('id_sede');
 
       if ($proyecto != 0)
           $filtroProyecto = "AND res.idResidencial = $proyecto";
@@ -77,7 +78,7 @@ class Contratacion_model extends CI_Model {
       if (in_array($id_rol, [7, 9, 3])) // LO CONSULTA UN USUARIO TIPO ASESOR, COORDINADOR O GERENTE
          $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario)";
       else if (in_array($id_rol, [6])) // LO CONSULTA UN USUARIO TIPO ASISTNTE GERENTE
-         $filtroClientesPropios = "AND (cl.id_gerente IN ($idsGerente))";
+         $filtroClientesPropios = "AND (cl.id_gerente IN ($idsGerente)) AND cl.id_sede = $id_sede";
       else if (in_array($id_rol, [2])) // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
          $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario)";
       else if (in_array($id_rol, [5])) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
