@@ -261,7 +261,8 @@ class CasasModel extends CI_Model
             INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
-            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas IN (0,1) AND cli.pre_proceso_casas = 2 ", array($this->idUsuario));
+            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas IN (0,1) AND cli.pre_proceso_casas = 2
+            AND cli.idPropuestaCasa IS NULL", array($this->idUsuario));
         
         return $query;
     }
