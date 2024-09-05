@@ -347,15 +347,18 @@ let columns = [
     }},
     { data: function(data){
         let formas_pago = '';
-
-        if(data.cargaRequerida == 1 && data.cuentaDocumentos == 0 && (idRol == 33))
-        {
-            formas_pago = new RowButton({icon: 'file_upload', label: 'Cargar formas de pago', onClick: set_formas_pago,data});
-        }
         
-        let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
+        let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
+        let upload_button = '';
 
-        let upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
+        if (idRol == 33) {
+            if(data.cargaRequerida == 1 && data.cuentaDocumentos == 0 && (idRol == 33)) {
+                upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
+            }
+        }
+        else {
+            upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
+        }
 
         let nameFile = '';
 
@@ -396,7 +399,7 @@ let columns = [
 
         let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data })
 
-        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${adeudo_button}${back_button}${formas_pago}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${adeudo_button}${back_button}</div>`
     } },
 ]
 

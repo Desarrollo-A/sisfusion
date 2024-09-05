@@ -4497,12 +4497,11 @@ class Casas extends BaseController
         $this->json($esquema);
     }
 
-    // public function options_modelo()
-    // {
-    //     $modelo = $this->CasasModel->getModeloOptions()->result();
-
-    //     $this->json($modelo);
-    // }
+    public function options_modelo()
+    {
+        $modelo = $this->CasasModel->getModeloOptions()->result();
+        $this->json($modelo);
+    }
 
     public function to_asignacion_esquema()
     {
@@ -4533,7 +4532,10 @@ class Casas extends BaseController
         $procesoData = array(
             "idLote" => $idLote,
             "proceso" => 1,
-            "comentario" => $comentario
+            "comentario" => $comentario, 
+            "idGerente" => $idGerente,
+            "idAsesor" => $this->session->userdata('id_usuario'),
+            "creadoPor" => $this->session->userdata('id_usuario')
         );
 
         $this->db->trans_begin();

@@ -7,6 +7,9 @@ let arrayIdClientes = []
 
 let estadoCivil = [];
 
+let typingTimer;
+let typingInterval = 100;
+
 $.ajax({
     type: 'GET',
     url: 'residenciales',
@@ -420,6 +423,10 @@ subirCliente = function(data) {
     });
     form.show();
     form.loading(false);
+    allowOnlyLetters('nombre');
+    allowOnlyLetters('ocupacion');
+    allowOnlyLetters('paterno');
+    allowOnlyLetters('materno');
 }
 
 editarCliente = function (data) {
@@ -474,6 +481,11 @@ editarCliente = function (data) {
     });
     form.show();
     form.loading(false);
+    
+    allowOnlyLetters('nombre');
+    allowOnlyLetters('ocupacion');
+    allowOnlyLetters('paterno');
+    allowOnlyLetters('materno');
 }
 
 $(document).on('input', '#telefono', function() {
@@ -485,28 +497,31 @@ $(document).on('input', '#telefono', function() {
 
 const validarCorreo = (idCorreoInput) => {
     const emailInput = $(idCorreoInput);
-    let feedback = emailInput.next('.validation-feedback');
+    let warningId = emailInput.attr('id') + '_warning';
 
-    if(feedback.length == 0) {
-        feedback = $('<span class="validation-feedback"></span>');
-        emailInput.after(feedback);
+    let feedback = $(`#${warningId}`);
+    let email = emailInput.val();
+
+    if(!email) {
+        feedback.text("Debes ingresar un correo").show();
+        return;
     }
-
-    const email = emailInput.val();
 
     feedback.text('');
 
-    if(validateEmail(email)) {
-        feedback.text('El correo es válido');
-        feedback.css('color', 'rgb(26 159 10)');
-    } else {
-        feedback.text('El correo es inválido');
-        feedback.css('color', 'red');
+    if (validateEmail(email)) {
+        feedback.text('El correo es válido').css('color', 'rgb(26 159 10').show();
+    }
+    else {
+        feedback.text('El correo es inválido').css('color', 'red').show();
     }
 };
 
 $(document).on('input', '#correo', function(){
-    validarCorreo('#correo');
+    clearTimeout(typingInterval);
+    typingTimer = setTimeout(() => {
+        validarCorreo('#correo');
+    }, typingInterval);
 });
 
 const validateEmail = (email) => {
@@ -518,3 +533,10 @@ const validateEmail = (email) => {
 $('#form-modal3').on('hidden.bs.modal', function(e){
     $('#ok-button-form-modal').prop('disabled', false);
 });
+
+function allowOnlyLetters(id) {
+    $(`#${id}`).on('input', function() {
+        let value = $(this).val();
+        $(this).val(value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''));
+    });
+}

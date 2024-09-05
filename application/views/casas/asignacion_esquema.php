@@ -76,7 +76,7 @@ input[type="checkbox"]:checked::after {
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Asignación de esquema y model de casa</h3>
+                                    <h3 class="card-title center-align">Asignación de esquema y modelo de casa</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 

@@ -31,7 +31,7 @@ avanzar_proceso = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `Para continuar el proceso del lote <b>${data.nombreLote}</b> se deben asignar un esquema de crédito y seleccionar un modelo de casa`,
+        text: `Para continuar el proceso del lote <b>${data.nombreLote}</b> se debe asignar un esquema de crédito y seleccionar un modelo de casa`,
         onSubmit: function(data){
             form.loading(true)
             let form2 = new FormConfirm({
@@ -71,6 +71,7 @@ avanzar_proceso = function(data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new HiddenField({ id: 'idGerente', value: data.id_gerente_c}),
+            new HiddenField({id: 'idSubdirector', value: data.id_subdirector_c}),
             new SelectField({ id: 'esquemaCredito', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true}),
             new MultiSelectField({ id: 'modeloCasa', label: 'Propuestas de casas', data: modeloCasa, placeholder: 'Seleccciona una opción', width: '12', required: true}),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
