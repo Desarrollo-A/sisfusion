@@ -165,11 +165,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
         }},
         { data: function (d) {
             var labelStatus;
-            if(d.idStatusContratacion == 15) {
-                labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
-            }else {
-                labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
-            }
+                labelStatus =`<span class="label lbl-violetBoots">${d.estatusConstruccion}</span>`;
             return labelStatus;
         }},
         { data: function (d) {
