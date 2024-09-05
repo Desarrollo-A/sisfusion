@@ -33,6 +33,8 @@ $(document).ready(function() {
 });
 
 $('#catalogo_factura_intmex_casas').change(function(ruta){
+    $("#autorizar_factura_intmex_casas").html(formatMoney(0));
+    $("#all_facturas_intmex").prop('checked', false);
     rol = $('#catalogo_factura_intmex_casas').val();
     $("#usuario_factura_intmex_casas").empty().selectpicker('refresh');
     $.ajax({
@@ -57,9 +59,14 @@ $('#catalogo_factura_intmex_casas').change(function(ruta){
             $("#usuario_factura_intmex_casas").selectpicker('refresh');
         }
     });
+    valuar = $('#usuario_factura_intmex_casas').val();
+    proyecto = $('#catalogo_factura_intmex_casas').val();
+    valuar == '' && tabla_facturas_casas == undefined ? '' : get_facturas_Intmex_casas(proyecto, 0);
 });
 
 $('#usuario_factura_intmex_casas').change(function(ruta){
+    $("#autorizar_factura_intmex_casas").html(formatMoney(0));
+    $("#all_facturas_intmex").prop('checked', false);
     proyecto = $('#catalogo_factura_intmex_casas').val();
     condominio = $('#usuario_factura_intmex_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
@@ -350,7 +357,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 8){
                     if(full.id_comision){
-                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                        return '<input type="checkbox" name="idTQ[]" class="individualFacturaCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';
                     }
@@ -436,6 +443,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
     });
 
     $('#tabla_facturas_intmex_casas').on('click', 'input', function() {
+         totaPen =0;
         trs = $(this).closest('tr');
         var row = tabla_facturas_casas.row(trs).data();
         if (row.pa == 0) {

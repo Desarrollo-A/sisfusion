@@ -17,6 +17,9 @@ $(document).ready(function() {
 });
 
 $('#proyectoAsimilados_casas').change(function(){
+    $("#autorizarAsimilados_casas").html(formatMoney(0));
+    $("#all_asimilado_casas").prop('checked', false);
+
 residencial = $('#proyectoAsimilados_casas').val();
 $("#condominioAsimilados_casas").empty().selectpicker('refresh');
     $.ajax({
@@ -37,6 +40,9 @@ $("#condominioAsimilados_casas").empty().selectpicker('refresh');
 });
 
 $('#proyectoAsimilados_casas').change(function(){
+    $("#autorizarAsimilados_casas").html(formatMoney(0));
+    $("#all_asimilado_casas").prop('checked', false);
+
     // alert(4555545554);
     proyecto = $('#proyectoAsimilados_casas').val();
     condominio = $('#condominioAsimilados_casas').val();
@@ -47,6 +53,8 @@ $('#proyectoAsimilados_casas').change(function(){
 });
 
 $('#condominioAsimilados_casas').change(function(){
+    $("#autorizarAsimilados_casas").html(formatMoney(0));
+    $("#all_asimilado_casas").prop('checked', false);
     proyecto = $('#proyectoAsimilados_casas').val();
     condominio = $('#condominioAsimilados_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
