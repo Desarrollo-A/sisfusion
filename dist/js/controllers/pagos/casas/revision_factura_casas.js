@@ -19,6 +19,8 @@ $(document).ready(function() {
 });
 
 $('#proyectoFactura_casas').change(function(){
+    $("#autorizarFactura_casas").html(formatMoney(0));
+    $("#all_facturas").prop("checked", false);
 residencial = $('#proyectoFactura_casas').val();
 $("#condominioFactura_casas").empty().selectpicker('refresh');
     $.ajax({
@@ -39,6 +41,8 @@ $("#condominioFactura_casas").empty().selectpicker('refresh');
 });
 
 $('#proyectoFactura_casas').change(function(){
+    $("#autorizarFactura_casas").html(formatMoney(0));
+    $("#all_facturas").prop("checked", false);
     proyecto = $('#proyectoFactura_casas').val();
     condominio = $('#condominioFactura_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
@@ -48,6 +52,8 @@ $('#proyectoFactura_casas').change(function(){
 });
 
 $('#condominioFactura_casas').change(function(){
+    $("#autorizarFactura_casas").html(formatMoney(0));
+    $("#all_facturas").prop("checked", false);
     proyecto = $('#proyectoFactura_casas').val();
     condominio = $('#condominioFactura_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
@@ -140,7 +146,7 @@ function getDataFacturaCasas(proyecto, condominio){
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
                                 $("#autorizarFactura_casas").html(formatMoney(0));
-                                $("#all_facturas").prop('checked', false);
+                                $("#all_facturas").prop("checked", false);
                                 var fecha = new Date();
                                 tabla_factura_casas_2.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>facturas</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
@@ -509,7 +515,8 @@ $("#form_pausar_casas").submit( function(e) {
             success: function(data){
                 if( data[0] ){
                     $("#modal_remanente_casas").modal('toggle' );
-                    $('#all_facturas').prop("checked", false);
+                    $("#autorizarFactura_casas").html(formatMoney(0));
+                    $("#all_facturas").prop("checked", false);
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
                         tabla_factura_casas_2.ajax.reload(null, false);

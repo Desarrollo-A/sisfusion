@@ -97,7 +97,8 @@ function llenarSumas(){
 }
 
 function getPagosComisiones(idProyecto,idCondominio,estatus){
-    // console.log(estatus);
+    $("#total_solicitar").html(formatMoney(0));
+    $("#all").prop('checked', false);
 
     var datosRespuesta = [];
     $.ajax({
