@@ -73,7 +73,7 @@ class Pagos_casas_model extends CI_Model {
         }
 
         $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, lo.nombreLote lote  ,oxcest.nombre  estatus_actual,
-        re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, 
+        re.nombreResidencial AS proyecto, cl.costo_construccion precio_lote, 
         com.comision_total, com.porcentaje_decimal, 
         pci2.abono_neodata solicitado, pci2.pago_neodata pago_cliente, 
         (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci2.abono_neodata) ELSE pci2.abono_neodata END) impuesto, 
@@ -104,7 +104,7 @@ class Pagos_casas_model extends CI_Model {
         WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1
         LEFT JOIN opcs_x_cats oest ON oest.id_opcion = u.estatus AND oest.id_catalogo = 3
         WHERE $filtro $whereFiltro AND com.id_usuario NOT IN(7689,6019)
-        GROUP BY pci2.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
+        GROUP BY pci2.id_comision, lo.nombreLote, re.nombreResidencial, cl.costo_construccion, com.comision_total, 
         com.porcentaje_decimal, pci2.abono_neodata, pci2.pago_neodata, pci2.estatus, pci2.fecha_pago_intmex, 
         pci2.id_usuario, u.forma_pago, pci2.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, 
         oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, u.rfc, oprol2.nombre, cl.estructura,

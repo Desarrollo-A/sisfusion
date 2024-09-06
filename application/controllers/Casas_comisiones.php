@@ -824,7 +824,7 @@ public function getDatosFechasProyecCondm(){
             $respuesta = true;
             }*/
     }
-    else if($responses[0]->bandera != 0) {
+    else if($responses[0]["bandera"] != 0) {
       $respuesta[0] = 2;
     } else{
       $respuesta[0] = 3;
@@ -871,7 +871,7 @@ public function getDatosFechasProyecCondm(){
 
   public function AsignarBono(){
     $this->db->trans_begin();
-    $usuariosBonos = [10460,15103];
+    $usuariosBonos = [16716,16719];
     $id_usuario = $this->input->post("usuarioBono");
     $id_pago_i = $this->input->post("id_pago_i");
     $id_comision = $this->input->post("id_comision");

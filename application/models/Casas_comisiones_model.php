@@ -1148,7 +1148,7 @@ public function getDataDispersionPago() {
     }
 
     public function getUsuariosBonos(){
-        return $this->db->query("SELECT * FROM usuarios WHERE id_usuario  IN(10460,15103)"); 
+        return $this->db->query("SELECT * FROM usuarios WHERE id_usuario  IN(16716,16719)"); 
     }
 
     public function getDatosAbonadoSuma11($idlote){
@@ -1252,14 +1252,13 @@ function getDatosBonoAsesor($estado){
         INNER JOIN usuarios u ON u.id_usuario = pcbo.id_usuario
         INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16
         LEFT JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote
-        /*INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23*/
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pcbo.estatus AND oxcest.id_catalogo = 23
         LEFT JOIN clientes  cl ON cl.id_cliente=com.idCliente
         LEFT JOIN prospectos pr ON pr.id_prospecto=cl.id_prospecto
 
         LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
         LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
-        WHERE pcbo.estatus IN ($estado) AND ( (lo.idStatusContratacion < 9 AND pci1.estatus IN (1,4,8)) OR (lo.idStatusContratacion > 8 AND pci1.estatus IN (1,4,8))) AND pcbo.id_usuario = $user_data /* en este and se modifica el com por pci1 añadiendo el 1 despues del*/
+        WHERE pcbo.estatus IN ($estado) AND pcbo.id_usuario = $user_data /* en este and se modifica el com por pci1 añadiendo el 1 despues del*/
         GROUP BY pcbo.id_pago_bono, pci1.id_comision,pr.id_arcus,cl.fechaApartado,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pcbo.abono_bono, pcbo.pago_bono, pcbo.estatus, pcbo.fecha_abono, pcbo.id_usuario, oxcpj.nombre, u.forma_pago,pcbo.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, opt.fecha_creacion, opt.estatus)
         ");
 }
