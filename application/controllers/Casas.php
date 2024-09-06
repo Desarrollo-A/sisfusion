@@ -4731,7 +4731,9 @@ class Casas extends BaseController
     public function to_precierre_cifras(){
         $idProcesoCasas = $this->form('idProcesoCasas');
         $comentario = $this->form('comentario');
-
+        $idCasaFinal = $this->form('idCasaFinal');
+        $idCliente = $this->form('idCliente');
+        
         switch ($this->idRol) {
             case 62:
                 $new_vobo = [
@@ -4756,6 +4758,7 @@ class Casas extends BaseController
         }
 
         $vobo = $this->CasasModel->updateVobos($idProcesoCasas, 4, $new_vobo);
+        $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
 
         if($vobo->proyectos && $vobo->comercializacion){
             $proceso = $this->CasasModel->getProceso($idProcesoCasas);
