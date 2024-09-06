@@ -294,7 +294,7 @@ go_to_documentos = function(data) {
 
 go_to_documentos_directo = function(data) {
     console.log("toggled");
-    //window.location.href = `documentacionDirecto/${data.idProceso}`;
+    window.location.href = `documentacionDirecto/${data.idProceso}`;
 }
 
 
@@ -353,12 +353,13 @@ let columns = [
         }
     }},
     { data: function(data){
+        console.log("data: ", data);
         let adeudo_button = "";
         let upload_button = "";
         let pass_button = "";
         let back_button = "";
         if(data.separator == 1) {
-            if(idRol == 11 ){
+            if(idRol == 11 || idRol == 33){
                 adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
                 if(data.cargaRequerida == 1 && data.cuentaDocumentos == 0 && (idRol == 33)) {
                     upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
@@ -382,6 +383,10 @@ let columns = [
             }
             if(idRol == 11) {
                 upload_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
+            }
+
+            if(idRol == 62) {
+
             }
         }
 
