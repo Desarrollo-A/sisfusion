@@ -60,6 +60,16 @@ class Casas extends BaseController
         $this->load->view("casas/creditoBanco/documentacion", $data);
     }
 
+    public function documentacionDirecto($proceso) {
+        $lote = $this->CasasModel->getProcesoDirecto($proceso);
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/creditoDirecto/documentacion", $data);
+    }
+
     public function proyecto_ejecutivo()
     {
         $this->load->view('template/header');
@@ -681,7 +691,9 @@ class Casas extends BaseController
         }
 
         $updateData = array(
-            "id_asesor_c" => 0
+            "id_asesor_c" => 0,
+            "pre_proceso_casas" => 1,
+            "idPropuestaCasa" => null
         );
 
         $update = $this->General_model->updateRecord("clientes", $updateData, "id_cliente", $idCliente);
@@ -4533,8 +4545,6 @@ class Casas extends BaseController
             "idLote" => $idLote,
             "proceso" => 1,
             "comentario" => $comentario, 
-            "idGerente" => $idGerente,
-            "idAsesor" => $this->session->userdata('id_usuario'),
             "creadoPor" => $this->session->userdata('id_usuario')
         );
 
@@ -4544,12 +4554,17 @@ class Casas extends BaseController
         if(!$update){
             $banderaSuccess = false;
         }
-
-        $insert = $this->CasasModel->insertProceso($procesoData, $tabla); // valor del id de casas que se inserta en el momento
-        if(!$insert){
-            $banderaSuccess = false;
+        $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla);
+        if($checkPreproceso != null) {
+            $update = $this->General_model->updateRecord($tabla, $procesoData, "idProcesoCasas", $checkPreproceso->idProcesoCasas);
+            $insert = $checkPreproceso->idProcesoCasas;
+        }else {
+            $insert = $this->CasasModel->insertProceso($procesoData, $tabla); // valor del id de casas que se inserta en el momento
+            if(!$insert){
+                $banderaSuccess = false;
+            }
         }
-
+        
         $dataHistorial = array(
             "idProcesoCasas" => $insert,
             "procesoAnterior" => 2,
@@ -4565,7 +4580,7 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
-        if($esquemaCredito == 1){
+        if($esquemaCredito == 1 && $checkPreproceso == null){
             $documentoData = array(
                 "idProcesoCasas" => $insert,
                 "documento" => "Carta de autorización",
@@ -4759,5 +4774,16 @@ class Casas extends BaseController
         $lotes = $this->CasasModel->getListaOrdenCompraFirma();
 
         $this->json($lotes);
+    }
+
+    public function lista_documentos_cliente_directo ($proceso) {
+        $documentos = [];
+
+        switch ($this->idRol) {
+            case '12':
+                $documentos = $this->CasasModel->getListaDocumentosClienteDirecto($proceso, [2]);
+                break;
+        }
+        $this->json($documentos);
     }
 }

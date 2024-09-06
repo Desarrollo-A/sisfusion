@@ -497,25 +497,42 @@ class CasasModel extends CI_Model
 
     public function getListaConcentradoAdeudos($rol){
         $vobo = "";
-
-        if($rol == 99){
-			$vobo  = "AND vb.ooam = 0";
-		}else if($rol == 11 || $rol == 33){
-			$vobo = "AND vb.adm = 0";
-		}
-
+        $extraColumns = "";
+        $columnName = "";
+        $tableName = "";
+        $estatus = "";
+        $tableSeparator = "";
+        if($rol == 99 || $rol == 11 || $rol == 33) {
+            $extraColumns = "CASE
+                WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
+                ELSE CONCAT('$', pc.adeudoOOAM) 
+                END AS adOOAM,
+                CASE
+                WHEN pc.adeudoADM IS NULL THEN 'Sin registro'
+                ELSE CONCAT('$', pc.adeudoADM) 
+                END AS adADM,";
+            $columnName = "idProcesoCasas";
+            $tableName = "proceso_casas_banco";
+            $estatus = "status";
+            $tableSeparator = " 1 AS separator";
+            if($rol == 99){
+			    $vobo  = "AND vb.ooam = 0";
+            }else if($rol == 11 || $rol == 33){
+                $vobo = "AND vb.adm = 0";
+            }
+        }
+        if($rol == 62) {
+            $tableName = "proceso_casas_directo";
+            $columnName = "idProceso";
+            $estatus = "estatus";
+            $tableSeparator = " 2 AS separator";
+        }
         $query = "SELECT pc.*,
-        CASE
-            WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
-            ELSE CONCAT('$', pc.adeudoOOAM) 
-        END AS adOOAM,
-        CASE
-            WHEN pc.adeudoADM IS NULL THEN 'Sin registro'
-            ELSE CONCAT('$', pc.adeudoADM) 
-        END AS adADM,
+        
         lo.nombreLote,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
+        $extraColumns
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         (CASE
             WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
@@ -528,8 +545,8 @@ class CasasModel extends CI_Model
         oxc.nombre AS movimiento,
         doc.documentos, 
         CASE WHEN se.id_lote = lo.idLote THEN 0 ELSE 1 END AS cargaRequerida,
-        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus
-        FROM proceso_casas_banco pc
+        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus, $tableSeparator
+        FROM $tableName pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -539,10 +556,12 @@ class CasasModel extends CI_Model
         LEFT JOIN solicitudes_escrituracion se ON se.id_lote  = lo.idLote
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
 
-        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
-        LEFT JOIN (SELECT COUNT(*) AS cuentaDocumentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo = 11 AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
-        WHERE pc.proceso IN (2, 3) AND pc.status = 1 AND cli.status = 1 $vobo";
+        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.$columnName AND vb.paso = 2
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.$columnName
+        LEFT JOIN (SELECT COUNT(*) AS cuentaDocumentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo = 11 AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.$columnName
+        WHERE pc.proceso IN (2, 3) AND pc.$estatus = 1 AND cli.status = 1 $vobo";
+
+        
 
         return $this->db->query($query)->result();
     }
@@ -2379,5 +2398,40 @@ class CasasModel extends CI_Model
             AND vobo.$vobo = 0";
 
         return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentosClienteDirecto($idProceso, $docs) {
+        $in = implode(',', $docs);
+
+        $query = "SELECT
+        idProceso, 
+        idDocumento
+        CASE WHEN archivo IS NULL THEN 'Sin archivo' ELSE archivo, END AS archivo, documento,
+        tipo, fechaModificacion
+        FROM documentos_proceso_casas_directo
+        WHERE idProceso = $idProceso
+        AND tipo IN ($in)
+        ";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getProcesoDirecto($idProceso) {
+        $query = "SELECT pc.*, lo.nombreLote 
+        FROM proceso_casas_directo pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE pc.idProceso = $idProceso";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function checkPreproceso($idLote, $tableName) {
+        if($tableName == 'proceso_casas_banco'){
+            $query = "SELECT idProcesoCasas FROM $tableName WHERE idLote = $idLote";
+        }
+        elseif($tableName == 'proceso_casas_directo') {
+            $query = "SELECT idProceso AS idProcesoCasasBanco FROM $tableName WHERE idLote = $idLote";
+        }
+        return $this->db->query($query)->row();
     }
 }

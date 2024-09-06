@@ -278,6 +278,7 @@ pass_to_proyecto_ejecutivo = function(data) {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 
                     form.loading(false)
+
                 }
             })
         },
@@ -290,6 +291,12 @@ pass_to_proyecto_ejecutivo = function(data) {
 go_to_documentos = function(data) {
     window.location.href = `documentacion/${data.idProcesoCasas}`;
 }
+
+go_to_documentos_directo = function(data) {
+    console.log("toggled");
+    //window.location.href = `documentacionDirecto/${data.idProceso}`;
+}
+
 
 let columns = [
     { data: 'idLote' },
@@ -346,60 +353,40 @@ let columns = [
         }
     }},
     { data: function(data){
-        let formas_pago = '';
-        
-        let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
-        let upload_button = '';
-
-        if (idRol == 33) {
-            if(data.cargaRequerida == 1 && data.cuentaDocumentos == 0 && (idRol == 33)) {
+        let adeudo_button = "";
+        let upload_button = "";
+        let pass_button = "";
+        let back_button = "";
+        if(data.separator == 1) {
+            if(idRol == 11 ){
+                adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
+                if(data.cargaRequerida == 1 && data.cuentaDocumentos == 0 && (idRol == 33)) {
+                    upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
+                }
+            }
+            if(idRol == 99) {
+                adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
                 upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
             }
+            back_button = new RowButton({icon: 'thumb-down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data});
+            if(idRol === 99 && data.adeudoOOAM != null){
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
+            }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
+            }
         }
-        else {
-            upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
-        }
-
-        let nameFile = '';
-
-        let view_button = '';
-
-        // switch (idRol) {
-        //     case 99:
-        //         nameFile = 'Estado de cuenta'
-        //         break;
-        //     case 33:
-        //         nameFile = 'Formas de pago administración'
-        //         break;
-        //     case 11:
-        //         nameFile = 'Formas de pago administración'
-        //         break;
-        // }
-
-        // if (data.archivo) {
-        //     let parts = data.archivo.split('.');
-        //     let extension = parts.pop();
-        //     if(extension == 'xlsx'){
-        //         view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
-        //     }else{
-        //         view_button = new RowButton({icon: 'visibility', label: `Visualizar ${nameFile}`, onClick: show_preview, data})
-        //     }
-        //     upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
-        // }else{
-        //     upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
-        // }
-
-        let pass_button = ''
-
-        if(idRol === 99 && data.adeudoOOAM != null){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-        }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
+        else if(data.separator == 2) {
+            if(idRol == 62) {
+                console.log("in here");
+                upload_button = new RowButton({icon : 'toc', label: 'Cargar documentos', onclick: go_to_documentos_directo, data});
+            }
+            if(idRol == 11) {
+                upload_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
+            }
         }
 
-        let back_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data })
-
-        return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${adeudo_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${upload_button}${adeudo_button}${back_button}</div>`;
+        
     } },
 ]
 
@@ -434,39 +421,3 @@ let table = new Table({
     url: `casas/lista_adeudos`,
     columns,
 })
-
-set_formas_pago = function(data) {
-    let nameFile = 'Formas de pago';
-    let form = new Form({
-        title: 'Cargar formas de pago',
-        onSubmit: function(data) {
-            form.loading(true);
-
-            $.ajax({
-                type: 'POST',
-                url: `${general_base_url}casas/upload_documento_new`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    alerts.showNotification("top", "right", "Archivo cargado con éxito.", "success");
-                    table.reload();
-                    form.hide();
-                },
-                error: function() {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-
-                    form.loading(false);
-                }
-            });
-        }, 
-        fields: [
-            new HiddenField({id: 'id_proceso', value: data.idProcesoCasas}),
-            new HiddenField({ id: 'tipo', value: 11}),
-            new HiddenField({ id: 'name_documento', value: nameFile}),
-            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], required: true}),
-        ]
-    });
-    
-    form.show();
-}
