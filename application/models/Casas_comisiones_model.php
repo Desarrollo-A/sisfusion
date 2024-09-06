@@ -901,8 +901,10 @@ class Casas_comisiones_model extends CI_Model {
         
         if($condominio == 0){
             $filtroExtra = ' AND com.id_usuario = '.$user_data.' AND re.idResidencial = '.$proyecto.'';
+            $filtroSuma = 'AND res.idResidencial = '.$proyecto.'';
         } else{
             $filtroExtra = ' AND com.id_usuario = '.$user_data.' AND co.idCondominio = '.$condominio.'';
+            $filtroSuma = ' AND co.idCondominio = '.$condominio.'';
         }
 
         return $this->db->query("SELECT pci1.id_pago_i, tot_suma,pci1.id_comision, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre AS pj_name, u.forma_pago, pac.porcentaje_abono, 0 AS factura, 1 expediente,oxcpj.color,
@@ -938,7 +940,7 @@ class Casas_comisiones_model extends CI_Model {
             INNER JOIN lotes lo ON lo.idLote = coc.id_lote AND lo.status IN (0,1)
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
             INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
-            WHERE paca.estatus = $estado AND res.idResidencial = $proyecto GROUP BY paca.id_usuario ) SumP ON Sump.id_usuario = pci1.id_usuario
+            WHERE paca.estatus = $estado $filtroSuma GROUP BY paca.id_usuario ) SumP ON Sump.id_usuario = pci1.id_usuario
         WHERE pci1.estatus IN ($estado) $filtroExtra
         GROUP BY pci1.id_comision,tot_suma,com.ooam,com.loteReubicado, lo.nombreLote, oxcpj.color, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2");
     }
