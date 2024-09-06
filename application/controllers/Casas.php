@@ -4731,7 +4731,9 @@ class Casas extends BaseController
     public function to_precierre_cifras(){
         $idProcesoCasas = $this->form('idProcesoCasas');
         $comentario = $this->form('comentario');
-
+        $idCasaFinal = $this->form('idCasaFinal');
+        $idCliente = $this->form('idCliente');
+        
         switch ($this->idRol) {
             case 62:
                 $new_vobo = [
@@ -4761,8 +4763,9 @@ class Casas extends BaseController
             $proceso = $this->CasasModel->getProceso($idProcesoCasas);
 
             $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, 5, $comentario, 0);
+            $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal, 'id_cliente', $idCliente));
 
-            if ($is_ok) {
+            if ($is_ok && $updateCliente) {
                 $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, 5, 'Se avanzó el proceso a pre cierre de cifras | Comentario: ' . $comentario, 1);
             }
         }
