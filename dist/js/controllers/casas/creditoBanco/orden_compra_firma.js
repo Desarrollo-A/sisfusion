@@ -53,7 +53,7 @@
 
 //     form.show();
 // }
-
+let selectOption = null;
 function rechazoProcesoBanco(data){
     let form = new Form({
         title: 'Rechazar proceso',
@@ -225,13 +225,20 @@ go_to_documentos_cliente = function(data) {
 //     opcionRegreso = 0
 //     datos = ''
 // });
-
+let idCasaFinal = new HiddenField({id: 'idCasaFinal', value: selectOption});
 function to_precierre_cifras(data) {
+    selectCasa('#form-form-modal', 'custom-div-id', data.idPropuestaCasa);
+
     let form = new Form({
         title: 'Avanzar proceso',
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true);
+            if (selectOption == null || selectOption == 0) {
+                alerts.showNotification("top", "right", "Debes seleccionar un modelo.", "warning");
+                form.loading(false);
+                return;
+            }            
 
             $.ajax({
                 type: 'POST',
@@ -256,6 +263,8 @@ function to_precierre_cifras(data) {
         fields: [
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            idCasaFinal,
+            new HiddenField({ id: 'idCliente', value: data.id_cliente}),
         ],
     })
 
@@ -316,19 +325,17 @@ let buttons = [
             }
         }
     }
-})
+]
 
 $(".modal").on("hidden.bs.modal", function(){
     $("#paso3").prop("checked", false);
     $("#paso2").prop("checked", false);
-
     opcionRegreso = 0
     datos = '';
     selectOption = null;
     $('.custom-div-id').remove();
-    console.log("Element removed");
 });
-]
+
 
 
 let table = new Table({
@@ -337,3 +344,47 @@ let table = new Table({
     buttons,
     columns,
 })
+
+
+
+function selectCasa(parentSelector, divId, idPropuestaCasa) {
+    $.post(`${general_base_url}/casas/modeloOptions`, { idModelo: idPropuestaCasa }, function(data) {
+        
+        const parent = document.querySelector(parentSelector);
+        const existingDivs = parent.querySelectorAll(`.${divId}`);
+        existingDivs.forEach(div => div.remove());
+
+        const modalBody = parent.querySelector('.modal-body');
+
+        data.forEach((item, index) => {
+            const newDiv = document.createElement('div');
+            newDiv.id = `${divId}-${index}`;
+            newDiv.className = `${divId} element-select`; 
+            
+            newDiv.innerHTML = `
+                <div id="checkDS" style="margin-bottom: 10px">
+                    <div class="container boxChecks p-0">
+                        <label class="m-0 checkstyleDS">
+                            <input type="radio" name="idPropuesta" id="idPropuesta-${index}" value="${item.idModelo}">
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Modelo <b>${item.modelo}</b></p>
+                            </span>
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Superficie <b>${item.sup}</b></p>
+                            </span>
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">COSTO M2 <b>${item.costoFinal}</b></p>
+                            </span>
+                        </label>
+                    </div>
+                </div>`;
+            
+            newDiv.addEventListener('change', function() {
+                const selectedOption = modalBody.querySelector('input[name="idPropuesta"]:checked').value;    
+                selectOption = selectedOption;
+                idCasaFinal.set(selectOption)
+            });
+            modalBody.appendChild(newDiv);
+        });
+    }, 'json');
+}
