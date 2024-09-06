@@ -4786,4 +4786,8 @@ class Casas extends BaseController
         }
         $this->json($documentos);
     }
+
+    public function ingresar_adeudo_directo() {
+        
+    }
 }
