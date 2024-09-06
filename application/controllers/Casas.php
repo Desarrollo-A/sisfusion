@@ -1094,7 +1094,7 @@ class Casas extends BaseController
 
         $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, $comentario, 1);
         
-        if($vobo->adm == 1 && $vobo->ooam == 1){
+        if($vobo->adm == 1 && $vobo->ooam == 1 && $vobo->proyectos == 1){
             $new_status = 4;
 
             $movimiento = 0;
