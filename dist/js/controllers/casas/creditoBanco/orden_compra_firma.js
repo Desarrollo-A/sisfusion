@@ -228,11 +228,17 @@ go_to_documentos_cliente = function(data) {
 let idCasaFinal = new HiddenField({id: 'idCasaFinal', value: selectOption});
 function to_precierre_cifras(data) {
     selectCasa('#form-form-modal', 'custom-div-id', data.idPropuestaCasa);
+
     let form = new Form({
         title: 'Avanzar proceso',
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true);
+            if (selectOption == null || selectOption == 0) {
+                alerts.showNotification("top", "right", "Debes seleccionar un modelo.", "warning");
+                form.loading(false);
+                return;
+            }            
 
             $.ajax({
                 type: 'POST',

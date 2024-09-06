@@ -4758,14 +4758,14 @@ class Casas extends BaseController
         }
 
         $vobo = $this->CasasModel->updateVobos($idProcesoCasas, 4, $new_vobo);
+        $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
 
         if($vobo->proyectos && $vobo->comercializacion){
             $proceso = $this->CasasModel->getProceso($idProcesoCasas);
 
             $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, 5, $comentario, 0);
-            $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal, 'id_cliente', $idCliente));
 
-            if ($is_ok && $updateCliente) {
+            if ($is_ok) {
                 $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, 5, 'Se avanzó el proceso a pre cierre de cifras | Comentario: ' . $comentario, 1);
             }
         }
