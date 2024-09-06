@@ -165,11 +165,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
         }},
         { data: function (d) {
             var labelStatus;
-            if(d.idStatusContratacion == 15) {
-                labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
-            }else {
-                labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
-            }
+                labelStatus =`<span class="label lbl-violetBoots">${d.estatusConstruccion}</span>`;
             return labelStatus;
         }},
         { data: function (d) {
@@ -230,9 +226,9 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                    
                         
                             if(d.esquemaCreditoCasas == 2){ //NEODATA
-                                disparador = d.registroComisionCasas == 1 ? 0 : 1;
+                                disparador = d.registroComisionCasas == 1 ? 1 : 1;
                             }else{ //BANCO
-                                disparador = d.registroComisionCasas == 1 ? 0 : 1;
+                                disparador = d.registroComisionCasas == 1 ? 1 : 1;
                             }
 
                         totalLote = d.costoTotalConstruccion;
@@ -267,6 +263,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         data-nombreMensualidad = "${d.nombreMensualidad}"
                         data-abonadoCliente ="${d.montoDepositado}"
                         data-esquemaCreditoCasas=${d.esquemaCreditoCasas}"
+                        data-registroComisionCasas=${d.registroComisionCasas}"
                         class = "btn-data ${varColor} verify_neodataCasas" data-prioridad="${d.prioridadComision}" data-toggle="tooltip"  data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                         
                         let colorPrioridad = d.prioridadComision == 1 ? 'btn-warning' : 'btn-blueMaderas' ;
@@ -435,6 +432,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
     prioridadDispersion = $(this).attr("data-prioridad");
     abonadoCliente = $(this).attr("data-abonadoCliente");
     esquemaCreditoCasas = $(this).attr("data-esquemaCreditoCasas");
+    registroComisionCasas = $(this).attr("data-registroComisionCasas");
     //disparador = 1;
     precioDestino = $(this).attr("data-precioDestino");
     if(parseFloat(totalNeto2) > 0){
@@ -468,9 +466,10 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                         $("#modal_NEODATA_Casas .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div></div>');
                     break;
                     case 1:
-                        if((disparador == 1)){
+                        disparador = parseInt(registroComisionCasas) == 1 ? 1 : 0;
+                        if((disparador == 0)){
                             //COMISION NUEVA
-                            let total0 = esquemaCreditoCasas == 2 ? aplicadoNeodata : abonadoCliente;
+                            let total0 = aplicadoNeodata;
                             let total = 0;
                             if(total0 > 0){
                                 total = total0;
@@ -479,10 +478,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                             }
                             bonificadoTotal = 0;
 
-                           /* if(parseFloat(data[0].Bonificado) > 0){
-                                bonificadoTotal = data[0].Bonificado;
-                            }*/
-                            //total = idLote == 16299 ? 20000 : total;
+
                             var porcentajeAbonado = ((total * 100) / totalNeto2);                            
                                 cadena = 
                                 `<div class="col-12">
@@ -886,7 +882,7 @@ function numerosDispersionCasas(){
     $('.monto_labelC').html('');
     $('.pagos_labelC').html('');
     $('.lotes_labelC').html('');
-    $.post(general_base_url + "/Casas_comisiones/lotes", function (data) {
+    $.post(general_base_url + "Casas_comisiones/lotes", function (data) {
         let montoLabel = data.monto ;
         $('.monto_labelC').append(formatMoney(montoLabel));
         $('.pagos_labelC').append(data.pagos);

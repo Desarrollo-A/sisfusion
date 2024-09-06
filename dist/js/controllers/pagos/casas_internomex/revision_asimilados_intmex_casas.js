@@ -17,6 +17,9 @@ $(document).ready(function() {
 });
 
 $('#puestoAsimilados_intmex_casas').change(function(ruta){
+    $("#all_asimilados_intmex").prop("checked", false);
+    $("#totpagarPen_intmex_casas").html(formatMoney(numberTwoDecimal(0)));
+    $(".individualCheck_casas").prop("checked", false);
     rol = $('#puestoAsimilados_intmex_casas').val();
     $("#usuarioAsimilados_intmex_casas").empty().selectpicker('refresh');
     $.ajax({
@@ -40,9 +43,16 @@ $('#puestoAsimilados_intmex_casas').change(function(ruta){
             $("#usuarioAsimilados_intmex_casas").selectpicker('refresh');
         }
     });
+    valuar = $('#usuarioAsimilados_intmex_casas').val();
+    proyecto = $('#puestoAsimilados_intmex_casas').val();
+
+    valuar == '' && tabla_asimilados2_intmex_casas == undefined ? '' : getAssimilatedCommissions_asimilados_casas(proyecto, 0);
+
 });
 
 $('#usuarioAsimilados_intmex_casas').change(function(ruta){
+    $("#all_asimilados_intmex").prop("checked", false);
+    $("#totpagarPen_intmex_casas").html(formatMoney(numberTwoDecimal(0)));
     proyecto = $('#puestoAsimilados_intmex_casas').val();
     condominio = $('#usuarioAsimilados_intmex_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
