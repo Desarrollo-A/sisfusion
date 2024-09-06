@@ -330,7 +330,6 @@ let buttons = [
 $(".modal").on("hidden.bs.modal", function(){
     $("#paso3").prop("checked", false);
     $("#paso2").prop("checked", false);
-
     opcionRegreso = 0
     datos = '';
     selectOption = null;
