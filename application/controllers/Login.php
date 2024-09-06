@@ -14,6 +14,7 @@ class Login extends CI_Controller
 		$this->load->model('login/login_model');
 		$this->load->model('Usuarios_modelo');
 		$this->load->model('Chat_modelo');
+		$this->load->model('General_model');
 		$this->load->library(array('session','form_validation','get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
@@ -37,7 +38,33 @@ class Login extends CI_Controller
 				redirect(base_url().$this->session->userdata('controlador'));
 			}
 		}
-}
+	}
+
+	public function google_login(){
+		$this->load->view('login/google_login');
+	}
+
+	public function google_register(){
+		$data = $this->input->post();
+
+		$credential = $data['credential'];
+
+		list($header, $payload, $signature) = explode('.', $credential);
+
+		$result = base64_decode($payload);
+
+		$google = json_decode($result, true);
+
+		$dataUpdate = [
+			'correo' => $google['email'],
+		];
+
+		$id_usuario = $this->session->userdata('id_usuario');
+
+		$this->General_model->updateRecord('usuarios', $dataUpdate, 'id_usuario', $id_usuario);
+
+		$this->index();
+	}
 
 	public function token()
 	{
@@ -48,8 +75,7 @@ class Login extends CI_Controller
 
 	public function new_user()
 	{
-		if($this->input->post('token') && $this->input->post('token') == $this->session->userdata('token'))
-		{
+		if($this->input->post('token') && $this->input->post('token') == $this->session->userdata('token')){
 			$this->form_validation->set_rules('username', 'nombre de usuario', 'required|trim|min_length[2]|max_length[150]|xss_clean');
 			$this->form_validation->set_rules('password', 'password', 'required|trim|min_length[5]|max_length[150]|xss_clean');
 			$this->form_validation->set_message('required', 'El %s es requerido');
@@ -66,13 +92,11 @@ class Login extends CI_Controller
 				$imagen_perfil = $this->input->post('imagen_perfil');
 				$check_user = $this->login_model->login_user($usuario,$contrasena);
 
-				if(empty($check_user))
-				{
+				if(empty($check_user)){
 					$this->session->set_userdata('errorLogin', 33);
 
 					redirect(base_url());
-				}
-				else{
+				}else{
 					if($check_user[0]->id_lider != 0)
 					{
 						$dataGr = $this->login_model->checkGerente($check_user[0]->id_lider);
@@ -246,11 +270,15 @@ class Login extends CI_Controller
 						$data['datos'] = $datos;
 						$data['opcionesMenu'] = array_column($opcionesMenu, 'pagina');
 						$this->session->set_userdata($data);
+						
+						if(!isset($check_user[0]->correo)){
+							redirect(base_url() . 'login/google_login' );
+						}
+					
 						$this->index();
 					}
 				}
-		}
-		else{
+		}else{
 			redirect(base_url().'login');
 		}
 	}
