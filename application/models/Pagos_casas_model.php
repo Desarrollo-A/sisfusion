@@ -84,7 +84,7 @@ class Pagos_casas_model extends CI_Model {
         u.forma_pago, 0 AS factura, 
         pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, 
         co.nombre AS condominio, lo.referencia,  u.rfc, 
-        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, 
+        (CASE WHEN cl.plan_comision_c IN (0) OR cl.plan_comision_c IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, 
         tv.tipo_venta, CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, cp.codigo_postal
         FROM pago_casas_ind pci2 
         INNER JOIN comisiones_casas com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8) 
@@ -98,7 +98,7 @@ class Pagos_casas_model extends CI_Model {
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci2.estatus AND oxcest.id_catalogo = 23
         INNER JOIN cp_usuarios cp ON cp.id_usuario = u.id_usuario AND cp.estatus = 1
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
-        LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+        LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision_c
         LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
         LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5
         WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1
@@ -108,7 +108,7 @@ class Pagos_casas_model extends CI_Model {
         com.porcentaje_decimal, pci2.abono_neodata, pci2.pago_neodata, pci2.estatus, pci2.fecha_pago_intmex, 
         pci2.id_usuario, u.forma_pago, pci2.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, 
         oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, u.rfc, oprol2.nombre, cl.estructura,
-        pl.descripcion, cl.plan_comision, tv.tipo_venta, cl.fechaApartado, sed.nombre, oest.nombre, cp.codigo_postal, sed.impuesto";
+        pl.descripcion, cl.plan_comision_c, tv.tipo_venta, cl.fechaApartado, sed.nombre, oest.nombre, cp.codigo_postal, sed.impuesto";
         $query = $this->db->query($cmd); 
         return $query->result_array();
     } 
@@ -163,7 +163,7 @@ class Pagos_casas_model extends CI_Model {
             CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto, 0 personalidad_juridica, u.forma_pago, 0 AS factura,
             pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, 
             re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia,  u.rfc, 
-            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, tv.tipo_venta, 
+            (CASE WHEN cl.plan_comision_c IN (0) OR cl.plan_comision_c IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, tv.tipo_venta, 
             CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, 'NA' AS codigo_postal
             FROM pago_casas_ind pci2 
             INNER JOIN comisiones_casas com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8)
@@ -176,7 +176,7 @@ class Pagos_casas_model extends CI_Model {
             INNER JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci2.estatus AND oxcest.id_catalogo = 23
             LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
-            LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+            LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision_c
             LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
             LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5
             WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1
@@ -186,7 +186,7 @@ class Pagos_casas_model extends CI_Model {
             com.porcentaje_decimal, pci2.abono_neodata, pci2.pago_neodata, pci2.estatus, pci2.fecha_pago_intmex, 
             pci2.id_usuario, u.forma_pago, pci2.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, 
             oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, u.rfc, oprol2.nombre, cl.estructura,
-            pl.descripcion, cl.plan_comision, tv.tipo_venta, cl.fechaApartado, sed.nombre, oest.nombre";
+            pl.descripcion, cl.plan_comision_c, tv.tipo_venta, cl.fechaApartado, sed.nombre, oest.nombre";
 
             $query = $this->db->query($cmd);
             return $query->result_array();
@@ -217,7 +217,7 @@ class Pagos_casas_model extends CI_Model {
             CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto,
             0 personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, 
             oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia, u.rfc, 
-            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion,
+            (CASE WHEN cl.plan_comision_c IN (0) OR cl.plan_comision_c IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion,
             CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, 'NA' AS codigo_postal 
             FROM pago_casas_ind pci2
             INNER JOIN comisiones_casas com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8) 
@@ -228,7 +228,7 @@ class Pagos_casas_model extends CI_Model {
             INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1 
             INNER JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote 
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci2.estatus AND oxcest.id_catalogo = 23 LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83 
-            LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision 
+            LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision_c 
             LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
             LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 WHEN 13546 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1 
             LEFT JOIN opcs_x_cats oest ON oest.id_opcion = u.estatus AND oest.id_catalogo = 3
@@ -236,7 +236,7 @@ class Pagos_casas_model extends CI_Model {
             GROUP BY pci2.id_comision, 
             lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci2.abono_neodata, pci2.pago_neodata, pci2.estatus, pci2.fecha_pago_intmex, pci2.id_usuario,
             u.forma_pago, pci2.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, u.rfc, 
-            oprol2.nombre, cl.estructura, pl.descripcion, cl.plan_comision, cl.fechaApartado, sed.nombre, oest.nombre";
+            oprol2.nombre, cl.estructura, pl.descripcion, cl.plan_comision_c, cl.fechaApartado, sed.nombre, oest.nombre";
 
             $query = $this->db->query($cmd);
             return $query->result_array();
