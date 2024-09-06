@@ -368,7 +368,7 @@ let columns = [
                 adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
                 upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
             }
-            back_button = new RowButton({icon: 'thumb-down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data});
+            back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data});
             if(idRol === 99 && data.adeudoOOAM != null){
                 pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
             }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
@@ -378,7 +378,7 @@ let columns = [
         else if(data.separator == 2) {
             if(idRol == 62) {
                 console.log("in here");
-                upload_button = new RowButton({icon : 'toc', label: 'Cargar documentos', onclick: go_to_documentos_directo, data});
+                upload_button = new RowButton({icon : 'toc', label: 'Cargar documentos', onClick: go_to_documentos_directo, data});
             }
             if(idRol == 11) {
                 upload_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
