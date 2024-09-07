@@ -148,7 +148,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Originación de cartera",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4],
+            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -189,7 +189,7 @@ let columns = [
     { data: 'cliente' },
     { data: function(data)
         {
-            if (data.telefono1 == ''){
+            if (data.telefono1 == '' || data.telefono1 == NULL){
                 return 'SIN ESPECIFICAR';
             }
             return `${data.telefono1}` 
@@ -211,7 +211,14 @@ let columns = [
             return `${data.telefono3}` 
         } 
     },
-    { data: 'correo' },
+    { data: function(data)
+        {
+            if (data.correo == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.correo}` 
+        } 
+    },
     { data: 'lugar_prospeccion' },
     {data: function(data) {
         let buttons = `<div class="d-flex justify-center">`;
