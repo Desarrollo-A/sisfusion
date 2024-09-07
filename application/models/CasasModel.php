@@ -688,7 +688,7 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
-            pc.proceso IN (2, 3) 
+            pc.proceso IN (4) 
         AND pc.status = 1
         AND cli.status = 1
         AND cli.id_gerente_c IN ($gerentes)";
