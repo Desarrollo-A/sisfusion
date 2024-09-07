@@ -403,7 +403,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Ingresar adeudo",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -424,5 +424,6 @@ if(idRol === 11 || idRol === 33){
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_adeudos`,
+    buttons:buttons,
     columns,
 })
