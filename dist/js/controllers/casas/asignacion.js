@@ -157,7 +157,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Asignación de cartera",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7],
+            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -222,7 +222,14 @@ let columns = [
             return `${data.telefono3}` 
         } 
     },
-    { data: 'correo' },
+    { data: function(data)
+        {
+            if (data.correo == ''){
+                return 'SIN ESPECIFICAR';
+            }
+            return `${data.correo}` 
+        } 
+    },
     { data: 'lugar_prospeccion' },
     {
         data: function (data) {

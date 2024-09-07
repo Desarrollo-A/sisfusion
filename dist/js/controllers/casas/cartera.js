@@ -189,7 +189,7 @@ let columns = [
     { data: 'cliente' },
     { data: function(data)
         {
-            if (data.telefono1 == '' || data.telefono1 == NULL){
+            if (data.telefono1 == '' || data.telefono1 == 'NULL'){
                 return 'SIN ESPECIFICAR';
             }
             return `${data.telefono1}` 
