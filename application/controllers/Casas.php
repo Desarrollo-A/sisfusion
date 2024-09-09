@@ -751,7 +751,7 @@ class Casas extends BaseController
         setlocale(LC_ALL, "es_MX");
         $dateNow = date("D-M-Y H:i:s");
 
-        if ($tipo_documento == 2) {
+        if ($tipo_documento === 2) {
             $this->email
             ->initialize()
             ->from('Ciudad Maderas')
