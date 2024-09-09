@@ -1596,7 +1596,7 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
-        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "idCliente", $idCliente);
+        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "id_cliente", $idCliente);
         if(!$updateCliente){
             $banderaSuccess = false;
         }
