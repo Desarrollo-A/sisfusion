@@ -1046,7 +1046,7 @@ class Casas extends BaseController
         }
         */
 
-        $documentos = $this->CasasModel->getDocumentos([16]);
+        $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36]);
 
         $is_ok = true;
         foreach ($documentos as $key => $documento) {
