@@ -735,6 +735,8 @@ class Casas extends BaseController
         $name_documento = $this->form('name_documento');
         $tipo_documento = $this->form('tipo_documento') || 0;
 
+        var_dump($tipo_documento);
+
         if (!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)) {
             http_response_code(400);
             $this->json([]);
