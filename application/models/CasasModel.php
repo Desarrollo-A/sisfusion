@@ -617,7 +617,7 @@ class CasasModel extends CI_Model
                            AND proveedor = 0)
             BEGIN
                 INSERT INTO documentos_proceso_casas (idProcesoCasas, tipo, documento, creadoPor)
-                VALUES ($idProcesoCasas, $tipo, '$documento', $idCreacion)
+                VALUES ($idProcesoCasas, $tipo, '$documento', $creadoPor)
             END
         END";
 
@@ -634,7 +634,7 @@ class CasasModel extends CI_Model
                            AND proveedor = 1)
             BEGIN
                 INSERT INTO documentos_proceso_casas (idProcesoCasas, tipo, documento, creadoPor, proveedor)
-                VALUES ($idProcesoCasas, $tipo, '$documento', $idCreacion, 1)
+                VALUES ($idProcesoCasas, $tipo, '$documento', $creadoPor, 1)
             END
         END";
 
@@ -648,7 +648,7 @@ class CasasModel extends CI_Model
             IF (SELECT COUNT(*) FROM cotizacion_proceso_casas WHERE idProcesoCasas = $idProcesoCasas) < 3
                 BEGIN
                     INSERT INTO cotizacion_proceso_casas (idProcesoCasas, nombre, status, fechaCreacion, idModificacion)
-                    VALUES ($idProcesoCasas, '', 1, GETDATE(), $idCreacion)
+                    VALUES ($idProcesoCasas, '', 1, GETDATE(), $creadoPor)
                 END
             END";
 
@@ -1535,7 +1535,7 @@ class CasasModel extends CI_Model
         $query = "INSERT INTO propuestas_proceso_casas
         (
             idProcesoCasas,
-            idCreacion,
+            creadoPor,
             idModificacion,
             fechaModificacion
         )
@@ -1568,7 +1568,7 @@ class CasasModel extends CI_Model
         $query = "INSERT INTO cotizacion_proceso_casas
         (
             idProcesoCasas,
-            idCreacion,
+            creadoPor,
             idModificacion,
             fechaModificacion
         )
@@ -2180,7 +2180,7 @@ class CasasModel extends CI_Model
                 documento,
                 tipo,
                 proveedor,
-                idCreacion,
+                creadoPor,
                 fechaCreacion
             ) VALUES (
                 $idProcesoCasas,
