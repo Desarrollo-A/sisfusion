@@ -264,7 +264,7 @@ let columns = [
         if (data.archivo) {
             view_button = new RowButton({icon: 'visibility', label: `Visualizar distribución de pagos`, onClick: show_preview, data})
             upload_button = new RowButton({ icon: 'file_upload', label: `Cargar distribución de pagos`, onClick: replace_upload, data })
-            if(data.tesoreria && data.serviciosArquitectonicos && data.obra){
+            if(data.tesoreria && data.serviciosArquitectonicos && data.obra && data.costo_construccion){
                 pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_solicitud_contratos, data})
             }
         }else{

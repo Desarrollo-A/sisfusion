@@ -200,7 +200,7 @@ addNotaria = function(data) {
         alerts.showNotification("top", "right", "El campo esta vacío.", "danger");
     }else{
         let form = new FormConfirm({
-            title: '¿Estás seguro de registrar la notaria?',
+            title: '¿Estás seguro de registrar la notaría?',
             onSubmit: function (data) {
                 form.loading(true)
     
