@@ -154,7 +154,8 @@
 				</div>
 			</div>
 		</div>
-		
+		<input type="hidden" id="idRol" value="<?php echo $idRol; ?>">
+
 
         <?php $this->load->view('template/footer_legend');?>
     </div>
