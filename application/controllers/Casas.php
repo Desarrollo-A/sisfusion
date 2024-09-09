@@ -4624,6 +4624,12 @@ class Casas extends BaseController
         $ocupacion = $this->form('ocupacion');
         $idLote = $this->form('idLote');
         $accion = $this->form('altaAccion');
+
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
         $flagStatus = true;
         $this->db->trans_begin();
         //INSERT

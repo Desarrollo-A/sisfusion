@@ -471,7 +471,7 @@ class NumberField {
         }
 
         this.field = $('<div />')
-            .addClass(`col-lg-${width}`)
+            .addClass(`col-lg-${width} mt-1`)
             .append(
                 $('<label />')
                     .addClass('control-label')
