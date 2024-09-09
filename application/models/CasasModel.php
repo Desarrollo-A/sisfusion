@@ -1051,6 +1051,7 @@ class CasasModel extends CI_Model
         $query = " SELECT
         pc.*,
         cli.id_cliente,
+        cli.costo_construccion,
         lo.nombreLote,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
