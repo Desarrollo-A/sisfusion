@@ -40,8 +40,38 @@ class Login extends CI_Controller
 		}
 	}
 
-	public function google_login(){
+	public function google(){
 		$this->load->view('login/google_login');
+	}
+
+	public function google_login(){
+		$data = $this->input->post();
+
+		$credential = $data['credential'];
+
+		list($header, $payload, $signature) = explode('.', $credential);
+
+		$result = base64_decode($payload);
+
+		$google = json_decode($result, true);
+
+		$usuario = $this->Usuarios_modelo->getUserByEmail($google['email']);
+
+		if($usuario){
+			$check_user = $this->login_model->login_user($usuario->usuario, desencriptar($usuario->contrasena));
+
+			if(empty($check_user)){
+				$this->session->set_userdata('errorLogin', 33);
+
+				redirect(base_url());
+			}else{
+				$this->setSession($check_user);
+			}
+		}else{
+			$this->session->set_userdata('errorLogin', 33);
+
+			redirect(base_url());
+		}
 	}
 
 	public function google_register(){
@@ -57,13 +87,43 @@ class Login extends CI_Controller
 
 		$dataUpdate = [
 			'correo' => $google['email'],
+			'new_login' => 1,
 		];
 
 		$id_usuario = $this->session->userdata('id_usuario');
 
-		$this->General_model->updateRecord('usuarios', $dataUpdate, 'id_usuario', $id_usuario);
+		$dominio = substr($google['email'], strpos($google['email'], '@') + 1);
 
-		$this->index();
+		$dominios = [
+			'ciudadmaderas.com',
+			'gph.mx',
+			'prohabitacion.com',
+			'fundacionlamat.com.mx',
+			'clubmaderas.com.mx',
+			'gphsis.com',
+			'impulsoinmobiliario.mx',
+			'nascaa.com.mx',
+			'nyssa.lat',
+			'ooam.com.mx',
+			'pagosciudadmaderas.com',
+			'refugioalebrije.com.mx',
+			'sociomaderas.com',
+			'universidadmaderas.com',
+			'inviertesuma.com',
+			'seguromaderas.com',
+			'unnati.com.mx',
+			'woodcity.us',
+			'gmail.com',
+		];
+
+		if(in_array($dominio, $dominios)){
+			$this->General_model->updateRecord('usuarios', $dataUpdate, 'id_usuario', $id_usuario);
+			$this->index();
+		}else{
+			// $this->logout_ci();
+		}
+
+
 	}
 
 	public function token()
@@ -97,191 +157,198 @@ class Login extends CI_Controller
 
 					redirect(base_url());
 				}else{
-					if($check_user[0]->id_lider != 0)
-					{
-						$dataGr = $this->login_model->checkGerente($check_user[0]->id_lider);
-						if(empty($dataGr))
-						{
-							$idGerente = "";
-							$nombreGerente = "";
-						}
-						else{
-							$idGerente = $dataGr[0]->id_usuario;
-							$nombreGerente = $dataGr[0]->nombre." ".$dataGr[0]->apellido_paterno." ".$dataGr[0]->apellido_materno;
-						}
-					}
-					else{
-						$idGerente	= "";
-						$nombreGerente	= "";
-					}
-					if($check_user[0]->id_rol != 0)
-					{
-						$dataRol = $this->login_model->getRolByUser($check_user[0]->id_rol);
-
-						if($dataRol[0]->nombre=="Asistente gerente")
-						{
-							$perfil = ($dataRol[0]->nombre=="Asistente gerente") ? "asistentesGerentes" : $dataRol[0]->nombre;
-						}
-						elseif($dataRol[0]->nombre=="Contraloría corporativa")
-                        {
-                            $perfil = ($dataRol[0]->nombre=="Contraloría corporativa") ? "contraloriaCorporativa" : $dataRol[0]->nombre;
-                        }
-                        elseif($dataRol[0]->nombre=="Subdirector contraloría")
-                        {
-                            $perfil = ($dataRol[0]->nombre=="Subdirector contraloría") ? "subdirectorContraloria" : $dataRol[0]->nombre;
-                        }
-                        elseif ($dataRol[0]->nombre=="Caja")
-                        {
-                            $perfil = ($dataRol[0]->nombre=="Caja") ? "caja" : $dataRol[0]->nombre;
-                        }
-						elseif ($dataRol[0]->nombre=="Jurídico")
-						{
-							$perfil = ($dataRol[0]->nombre=="Jurídico") ? "juridico" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Contraloría")
-						{
-							$perfil = ($dataRol[0]->nombre=="Contraloría") ? "contraloria" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Administración")
-						{
-							$perfil = ($dataRol[0]->nombre=="Administración") ? "administracion" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Facturación")
-						{
-							$perfil = ($dataRol[0]->nombre=="Facturación") ? "facturacion" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Asesor")
-						{
-							$perfil = ($dataRol[0]->nombre=="Asesor") ? "asesor" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Asesor de contenido RRSS")
-						{
-							$perfil = ($dataRol[0]->nombre=="Asesor de contenido RRSS") ? "AsesorContenidoRRSS" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Ejecutivo Administrativo")
-						{
-							$perfil = ($dataRol[0]->nombre=="Ejecutivo Administrativo") ? "ejecutivoAdministrativo" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Dirección finanzas")
-						{
-							$perfil = ($dataRol[0]->nombre=="Dirección finanzas") ? "direccionFinanzas" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Contabilidad")
-						{
-							$perfil = ($dataRol[0]->nombre=="Contabilidad") ? "contabilidad" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Internomex")
-						{
-							$perfil = ($dataRol[0]->nombre=="Internomex") ? "internomex" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Cobranza")
-						{
-							$perfil = ($dataRol[0]->nombre=="Cobranza") ? "cobranza" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Analista de comisiones")
-						{
-							$perfil = ($dataRol[0]->nombre=="Analista de comisiones") ? "analistaComisiones" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Subdirección consulta")
-						{
-							$perfil = ($dataRol[0]->nombre=="Subdirección consulta") ? "subdireccionConsulta" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Director SUMA")
-						{
-							$perfil = ($dataRol[0]->nombre=="Director SUMA") ? "directorSUMA" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="Asesor OOAM")
-						{
-							$perfil = ($dataRol[0]->nombre=="Asesor OOAM") ? "asesorOOAM" : $dataRol[0]->nombre;
-						}
-						elseif ($dataRol[0]->nombre=="OOAM casas")
-						{
-							$perfil = ($dataRol[0]->nombre=="OOAM casas") ? "administracion" : $dataRol[0]->nombre;
-						}
-
-					}
-					/*get ubicacion*/
-					$dataUbicacion = $this->login_model->getLocation($check_user[0]->id_sede);
-
-					if($check_user == TRUE)
-					{
-						echo '
-						<script>
-						document.write(localStorage.setItem("id_usuario", "'.$check_user[0]->id_usuario.'"));
-						document.write(localStorage.setItem("id_sede", "'.$check_user[0]->id_sede.'"));
-						document.write(localStorage.setItem("id_rol", "'.$check_user[0]->id_rol.'"));
-						document.write(localStorage.setItem("nombreUsuario", "'.$check_user[0]->nombre.' '.$check_user[0]->apellido_paterno.' '.$check_user[0]->apellido_materno.'"));
-						</script>';
-						
- 
-						$data = array(
-							'is_logued_in' 	        => 		TRUE,
-							'id_usuario' 	        => 		$check_user[0]->id_usuario,
-							'estatus'               =>      $check_user[0]->estatus,
-							'nombre' 		        => 		$check_user[0]->nombre,
-							'apellido_paterno' 		=> 		$check_user[0]->apellido_paterno,
-							'apellido_materno' 		=> 		$check_user[0]->apellido_materno,
-							'id_sede' 		        => 		$check_user[0]->id_sede,
-							'id_rol' 		        => 		$check_user[0]->id_rol,
-							'id_lider' 		        => 		$check_user[0]->id_lider,
-							'usuario' 		        => 		$check_user[0]->usuario,
-							'perfil' 		        => 		$perfil,
-							'id_lider_2' 		    => 		$check_user[0]->id_lider_2,
-							'id_lider_3' 		    => 		$check_user[0]->id_lider_3,
-							'id_lider_4' 		    => 		$check_user[0]->id_lider_4,
-							'id_lider_5' 		    => 		$check_user[0]->id_lider_5,
-							'id_regional_2' 		=> 		$check_user[0]->id_regional_2,
-							'imagen_perfil' 		=> 		$check_user[0]->imagen_perfil,
-							'jerarquia_user' 		=> 		$check_user[0]->jerarquia_user,
-							'ubicacion'			    =>	    $dataUbicacion[0]->abreviacion,
-							'idGerente'		        =>	    $idGerente,
-							'nombreGerente'	        =>	    $nombreGerente,
-							'forma_pago'	        =>	    $check_user[0]->forma_pago,
-							'controlador'			=>		$check_user[0]->controlador,
-							'tipo'       			=>		$check_user[0]->tipo
-						);
-						
-						if(session_status() === PHP_SESSION_NONE) session_start();
-
-						$_SESSION['rutaController'] = '';
-						$_SESSION['datos4'] = [];
-						$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
-						if($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 7)
-							$id_rol = 86;
-						else if ($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 3)
-							$id_rol = 92;
-						else if ($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 6)
-							$id_rol = 94;
-						else if ($check_user[0]->tipo == 2 && ($check_user[0]->id_rol == 2 ||  $check_user[0]->id_rol == 5))
-							$id_rol = 93;
-						else if ($check_user[0]->id_usuario == 12841)
-							$id_rol = 85;
-						else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 2)
-							$id_rol = 96;
-						else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 5)
-							$id_rol = 97;
-						else if ($check_user[0]->tipo == 4)
-							$id_rol = 98;
-						else
-							$id_rol = $check_user[0]->id_rol;
-						$datos = $this->get_menu->get_menu_data($id_rol, $check_user[0]->id_usuario, $check_user[0]->estatus);
-						$opcionesMenu = $this->get_menu->get_menu_opciones();
-						$_SESSION['rutaActual'] = $_SERVER["HTTP_HOST"] == 'prueba.gphsis.com' || $_SERVER["HTTP_HOST"] == 'localhost' ? '/sisfusion/' : '/';
-						$data['datos'] = $datos;
-						$data['opcionesMenu'] = array_column($opcionesMenu, 'pagina');
-						$this->session->set_userdata($data);
-						
-						if(!isset($check_user[0]->correo)){
-							redirect(base_url() . 'login/google_login' );
-						}
-					
-						$this->index();
-					}
+					$this->setSession($check_user);
 				}
 		}else{
 			redirect(base_url().'login');
 		}
 	}
+
+
+	private function setSession($check_user)
+	{
+		if($check_user[0]->id_lider != 0)
+		{
+			$dataGr = $this->login_model->checkGerente($check_user[0]->id_lider);
+			if(empty($dataGr))
+			{
+				$idGerente = "";
+				$nombreGerente = "";
+			}
+			else{
+				$idGerente = $dataGr[0]->id_usuario;
+				$nombreGerente = $dataGr[0]->nombre." ".$dataGr[0]->apellido_paterno." ".$dataGr[0]->apellido_materno;
+			}
+		}
+		else{
+			$idGerente	= "";
+			$nombreGerente	= "";
+		}
+		if($check_user[0]->id_rol != 0)
+		{
+			$dataRol = $this->login_model->getRolByUser($check_user[0]->id_rol);
+
+			if($dataRol[0]->nombre=="Asistente gerente")
+			{
+				$perfil = ($dataRol[0]->nombre=="Asistente gerente") ? "asistentesGerentes" : $dataRol[0]->nombre;
+			}
+			elseif($dataRol[0]->nombre=="Contraloría corporativa")
+            {
+                $perfil = ($dataRol[0]->nombre=="Contraloría corporativa") ? "contraloriaCorporativa" : $dataRol[0]->nombre;
+            }
+            elseif($dataRol[0]->nombre=="Subdirector contraloría")
+            {
+                $perfil = ($dataRol[0]->nombre=="Subdirector contraloría") ? "subdirectorContraloria" : $dataRol[0]->nombre;
+            }
+            elseif ($dataRol[0]->nombre=="Caja")
+            {
+                $perfil = ($dataRol[0]->nombre=="Caja") ? "caja" : $dataRol[0]->nombre;
+            }
+			elseif ($dataRol[0]->nombre=="Jurídico")
+			{
+				$perfil = ($dataRol[0]->nombre=="Jurídico") ? "juridico" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Contraloría")
+			{
+				$perfil = ($dataRol[0]->nombre=="Contraloría") ? "contraloria" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Administración")
+			{
+				$perfil = ($dataRol[0]->nombre=="Administración") ? "administracion" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Facturación")
+			{
+				$perfil = ($dataRol[0]->nombre=="Facturación") ? "facturacion" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Asesor")
+			{
+				$perfil = ($dataRol[0]->nombre=="Asesor") ? "asesor" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Asesor de contenido RRSS")
+			{
+				$perfil = ($dataRol[0]->nombre=="Asesor de contenido RRSS") ? "AsesorContenidoRRSS" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Ejecutivo Administrativo")
+			{
+				$perfil = ($dataRol[0]->nombre=="Ejecutivo Administrativo") ? "ejecutivoAdministrativo" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Dirección finanzas")
+			{
+				$perfil = ($dataRol[0]->nombre=="Dirección finanzas") ? "direccionFinanzas" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Contabilidad")
+			{
+				$perfil = ($dataRol[0]->nombre=="Contabilidad") ? "contabilidad" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Internomex")
+			{
+				$perfil = ($dataRol[0]->nombre=="Internomex") ? "internomex" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Cobranza")
+			{
+				$perfil = ($dataRol[0]->nombre=="Cobranza") ? "cobranza" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Analista de comisiones")
+			{
+				$perfil = ($dataRol[0]->nombre=="Analista de comisiones") ? "analistaComisiones" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Subdirección consulta")
+			{
+				$perfil = ($dataRol[0]->nombre=="Subdirección consulta") ? "subdireccionConsulta" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Director SUMA")
+			{
+				$perfil = ($dataRol[0]->nombre=="Director SUMA") ? "directorSUMA" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="Asesor OOAM")
+			{
+				$perfil = ($dataRol[0]->nombre=="Asesor OOAM") ? "asesorOOAM" : $dataRol[0]->nombre;
+			}
+			elseif ($dataRol[0]->nombre=="OOAM casas")
+			{
+				$perfil = ($dataRol[0]->nombre=="OOAM casas") ? "administracion" : $dataRol[0]->nombre;
+			}
+
+		}
+		/*get ubicacion*/
+		$dataUbicacion = $this->login_model->getLocation($check_user[0]->id_sede);
+
+		if($check_user == TRUE)
+		{
+			echo '
+			<script>
+			document.write(localStorage.setItem("id_usuario", "'.$check_user[0]->id_usuario.'"));
+			document.write(localStorage.setItem("id_sede", "'.$check_user[0]->id_sede.'"));
+			document.write(localStorage.setItem("id_rol", "'.$check_user[0]->id_rol.'"));
+			document.write(localStorage.setItem("nombreUsuario", "'.$check_user[0]->nombre.' '.$check_user[0]->apellido_paterno.' '.$check_user[0]->apellido_materno.'"));
+			</script>';
+			
+
+			$data = array(
+				'is_logued_in' 	        => 		TRUE,
+				'id_usuario' 	        => 		$check_user[0]->id_usuario,
+				'estatus'               =>      $check_user[0]->estatus,
+				'nombre' 		        => 		$check_user[0]->nombre,
+				'apellido_paterno' 		=> 		$check_user[0]->apellido_paterno,
+				'apellido_materno' 		=> 		$check_user[0]->apellido_materno,
+				'id_sede' 		        => 		$check_user[0]->id_sede,
+				'id_rol' 		        => 		$check_user[0]->id_rol,
+				'id_lider' 		        => 		$check_user[0]->id_lider,
+				'usuario' 		        => 		$check_user[0]->usuario,
+				'perfil' 		        => 		$perfil,
+				'id_lider_2' 		    => 		$check_user[0]->id_lider_2,
+				'id_lider_3' 		    => 		$check_user[0]->id_lider_3,
+				'id_lider_4' 		    => 		$check_user[0]->id_lider_4,
+				'id_lider_5' 		    => 		$check_user[0]->id_lider_5,
+				'id_regional_2' 		=> 		$check_user[0]->id_regional_2,
+				'imagen_perfil' 		=> 		$check_user[0]->imagen_perfil,
+				'jerarquia_user' 		=> 		$check_user[0]->jerarquia_user,
+				'ubicacion'			    =>	    $dataUbicacion[0]->abreviacion,
+				'idGerente'		        =>	    $idGerente,
+				'nombreGerente'	        =>	    $nombreGerente,
+				'forma_pago'	        =>	    $check_user[0]->forma_pago,
+				'controlador'			=>		$check_user[0]->controlador,
+				'tipo'       			=>		$check_user[0]->tipo
+			);
+			
+			if(session_status() === PHP_SESSION_NONE) session_start();
+
+			$_SESSION['rutaController'] = '';
+			$_SESSION['datos4'] = [];
+			$data['certificado'] = $_SERVER["HTTP_HOST"] == 'localhost' ? 'http://' : 'https://';
+			if($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 7)
+				$id_rol = 86;
+			else if ($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 3)
+				$id_rol = 92;
+			else if ($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 6)
+				$id_rol = 94;
+			else if ($check_user[0]->tipo == 2 && ($check_user[0]->id_rol == 2 ||  $check_user[0]->id_rol == 5))
+				$id_rol = 93;
+			else if ($check_user[0]->id_usuario == 12841)
+				$id_rol = 85;
+			else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 2)
+				$id_rol = 96;
+			else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 5)
+				$id_rol = 97;
+			else if ($check_user[0]->tipo == 4)
+				$id_rol = 98;
+			else
+				$id_rol = $check_user[0]->id_rol;
+			$datos = $this->get_menu->get_menu_data($id_rol, $check_user[0]->id_usuario, $check_user[0]->estatus);
+			$opcionesMenu = $this->get_menu->get_menu_opciones();
+			$_SESSION['rutaActual'] = $_SERVER["HTTP_HOST"] == 'prueba.gphsis.com' || $_SERVER["HTTP_HOST"] == 'localhost' ? '/sisfusion/' : '/';
+			$data['datos'] = $datos;
+			$data['opcionesMenu'] = array_column($opcionesMenu, 'pagina');
+			$this->session->set_userdata($data);
+			
+			if(!isset($check_user[0]->correo) || $check_user[0]->new_login != 1){
+				redirect(base_url() . 'login/google' );
+			}
+		
+			$this->index();
+		}
+	}
+
 	public function logout_ci()
 	{
 		if ($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 19 || $this->session->userdata('id_rol') == 20) {

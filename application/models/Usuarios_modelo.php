@@ -24,6 +24,13 @@ class Usuarios_modelo extends CI_Model
         }
     }
 
+    public function getUserByEmail($email)
+    {
+        $query = "SELECT * FROM usuarios WHERE correo = '$email' AND new_login = 1";
+
+        return $this->db->query($query)->row();
+    }
+
     function getUsersList(){
         $id_rol = $this->session->userdata('id_rol');
         $id_lider = $this->session->userdata('id_lider');
