@@ -58,41 +58,39 @@ class Contratacion_model extends CI_Model {
       $filtroEstatus = "";
       $filtroEstatusLote = "";
       $unionCliente = "LEFT";
-
-      if(in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9))){
-          $filtroEstatusLote = "AND lot.idStatusLote IN (2, 3)";
-          $unionCliente = "INNER";
-      }
-
+      
       $filtroClientesPropios = "";
+      $ventasCompartidasQuery = "";
       $id_usuario = $this->session->userdata('id_usuario');
       $id_rol = $this->session->userdata('id_rol');
       $id_lider = $this->session->userdata('id_lider');
       $id_sede = $this->session->userdata('id_sede');
+      $tipo = $this->session->userdata('tipo');
+      $idsGerente = $this->getIdsGerente($id_lider, $id_usuario);
 
       if ($proyecto != 0)
-          $filtroProyecto = "AND res.idResidencial = $proyecto";
+         $filtroProyecto = "AND res.idResidencial = $proyecto";
       if ($condominio != 0)
-          $filtroCondominio = "AND con.idCondominio = $condominio";
+         $filtroCondominio = "AND con.idCondominio = $condominio";
       if ($estatus != 0)
          $filtroEstatus = "AND lot.idStatusLote = $estatus";
 
-      $idsGerente = $this->getIdsGerente($id_lider, $id_usuario);
-
-      if (in_array($id_rol, [7, 9, 3])) // LO CONSULTA UN USUARIO TIPO ASESOR, COORDINADOR O GERENTE
-         $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario)";
-      else if (in_array($id_rol, [6])) // LO CONSULTA UN USUARIO TIPO ASISTNTE GERENTE
-         $filtroClientesPropios = "AND (cl.id_gerente IN ($idsGerente)) AND cl.id_sede = $id_sede";
-      else if (in_array($id_rol, [2])) // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
-         $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario)";
-      else if (in_array($id_rol, [5])) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
-         $filtroClientesPropios = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
-
-      if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9))){
+      if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $tipo == 1) { // NORMAL
          $filtroEstatusLote = "AND lot.idStatusLote IN (2, 3)";
          $unionCliente = "INNER";
          $ventasCompartidasQuery = $this->getVentasCompartidasQuery($id_rol, $id_usuario, $id_lider, $prospectingPlaceDetail, $filtroProyecto, $filtroCondominio, $filtroEstatus, $idsGerente);
       }
+      else if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $tipo == 3) // CASAS
+         $filtroEstatusLote = "AND lot.idStatusLote IN (2)";
+
+      if (in_array($id_rol, [7, 9, 3]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASESOR, COORDINADOR O GERENTE
+         $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario)";
+      else if (in_array($id_rol, [6]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTNTE GERENTE
+         $filtroClientesPropios = "AND (cl.id_gerente IN ($idsGerente)) AND cl.id_sede = $id_sede";
+      else if (in_array($id_rol, [2]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
+         $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario)";
+      else if (in_array($id_rol, [5]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
+         $filtroClientesPropios = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
 
       return $this->db->query("SELECT
          tbl.idLote, 
