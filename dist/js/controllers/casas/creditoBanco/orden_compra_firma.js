@@ -227,7 +227,12 @@ go_to_documentos_cliente = function(data) {
 // });
 let idCasaFinal = new HiddenField({id: 'idCasaFinal', value: selectOption});
 function to_precierre_cifras(data) {
-    selectCasa('#form-form-modal', 'custom-div-id', data.idPropuestaCasa);
+    let idRol = document.getElementById("idRol").value;
+
+    if(idRol == 33) {
+        selectCasa('#form-form-modal', 'custom-div-id', data.idPropuestaCasa);
+    }
+    
 
     let form = new Form({
         title: 'Avanzar proceso',

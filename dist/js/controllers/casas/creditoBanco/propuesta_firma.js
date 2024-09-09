@@ -581,3 +581,14 @@ let table = new Table({
     columns,
     buttons:buttons,
 })
+
+$('#form-modal').on('shown.bs.modal', function () {
+    $('.datepicker').each(function () {
+        $(this).data("DateTimePicker").options({
+            widgetPositioning: {
+                horizontal: 'auto',  
+                vertical: 'bottom'   
+            }
+        });
+    });
+});

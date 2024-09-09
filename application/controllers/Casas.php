@@ -3184,8 +3184,11 @@ class Casas extends BaseController
 
     public function ordenCompraFirma()
     {
+        $data = [
+            'idRol' => $this->idRol
+        ];
         $this->load->view('template/header');
-        $this->load->view('casas/creditoBanco/orden_compra_view');
+        $this->load->view('casas/creditoBanco/orden_compra_view', $data);
     }
 
     public function getLotesProcesoBanco()
