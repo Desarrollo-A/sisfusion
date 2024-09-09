@@ -608,7 +608,7 @@ class CasasModel extends CI_Model
     }
 
     public function inserDocumentsToProceso($idProcesoCasas, $tipo, $documento){
-        $idCreacion = $this->session->userdata('id_usuario');
+        $creadoPor = $this->session->userdata('id_usuario');
 
         $query = "BEGIN
             IF NOT EXISTS (SELECT * FROM documentos_proceso_casas 
@@ -625,7 +625,7 @@ class CasasModel extends CI_Model
     }
 
     public function insertDocumentosProveedorToProceso($idProcesoCasas, $tipo, $documento){
-        $idCreacion = $this->session->userdata('id_usuario');
+        $creadoPor = $this->session->userdata('id_usuario');
 
         $query = "BEGIN
             IF NOT EXISTS (SELECT * FROM documentos_proceso_casas 
@@ -642,7 +642,7 @@ class CasasModel extends CI_Model
     }
 
     public function insertCotizacion($idProcesoCasas){
-        $idCreacion = $this->session->userdata('id_usuario');
+        $creadoPor = $this->session->userdata('id_usuario');
 
         $query = "BEGIN
             IF (SELECT COUNT(*) FROM cotizacion_proceso_casas WHERE idProcesoCasas = $idProcesoCasas) < 3
