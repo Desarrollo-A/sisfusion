@@ -30,7 +30,7 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>NOTARIA</th>
+                                            <th>NOTARÍA</th>
                                             <th>FECHA DE FIRMA</th>
                                             <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
