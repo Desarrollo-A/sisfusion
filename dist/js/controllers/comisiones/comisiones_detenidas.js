@@ -1,3 +1,4 @@
+const usuariosContraloria = [2749, 2807, 2767, 11947, 11815];
 
 $('#comisiones-detenidas-table').ready(function () {
 
@@ -164,7 +165,7 @@ $('#comisiones-detenidas-table').ready(function () {
                 }
                 
                 if (id_rol_general != 63 && id_rol_general != 4) {
-                    if (id_usuario_general == 2749 || id_usuario_general == 2807 || id_usuario_general == 2767 || id_usuario_general == 11947) {
+                    if (usuariosContraloria.includes(id_usuario_general)) {
                         botton += `<div class="d-flex justify-center"><button value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-cambiar-estatus" data-toggle="tooltip" data-placement="top" title="REGRESAR A DISPERSIÓN"><i class="material-icons">undo</i></button></div>`;
                     } else {
                         // botton += `NO APLICA`;

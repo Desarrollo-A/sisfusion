@@ -14,6 +14,7 @@ class Restore_model extends CI_Model {
         $idCliente = $datos['idCliente'];
         $totalValidado = !isset($datos['totalValidado']) ? "N/A" : $datos['totalValidado'] ;
         $update .= $totalValidado == "N/A" ? "" : ', totalValidado='.str_replace($replace,"",$totalValidado) ;
+        $update .= $totalValidado == "N/A" ? "NULL" : ", validacionEnganche='VALIDADO'";
         $comentario = !isset($datos['comentario']) ? "N/A" : $datos['comentario'] ;
         $update .= $comentario == "N/A" ? "" : ", comentario='".$comentario."'";
         $tipo_venta = $datos['tipo_venta'];

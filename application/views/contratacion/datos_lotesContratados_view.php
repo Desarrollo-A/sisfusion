@@ -42,6 +42,7 @@
                                                     <th>ESTATUS LOTE</th>
                                                     <th>TIPO DE VENTA</th>
                                                     <th>RECEPCIÓN CONTRATO</th>
+                                                    <th>PORCENTAJE ENGANCHE</th>
                                                 </tr>
                                             </thead>
                                         </table>

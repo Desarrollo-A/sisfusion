@@ -856,7 +856,6 @@ $(document).on('click', '#guardarCliente', function (){
     if (
         !validateInputArray('nombre[]') ||
         !validateInputArray('apellido_p[]') ||
-        !validateInputArray('apellido_m[]') ||
         !validateInputArray('telefono2[]') ||
         !validateInputArray('correo[]') ||
         !validateInputArray('identificacion[]') ||
@@ -1963,6 +1962,7 @@ let BUTTONREGRESO = '';
         if(flagFusion==1){
             //en la segunda validacion se ocupa "totalCorridasRef" ya que trae el numero de corridas que debe haber(el mismo número que los contratos
             //firmados que debe de haber
+            // return (totalCorridas === totalCorridasRef && d.totalContratoFirmadoFusionNumero===d.totalContratoFirmadoFusion )
             return (totalCorridas === totalCorridasRef && d.totalContratoFirmadoFusionNumero===d.totalContratoFirmadoFusion )
                 ? BTN_AVANCE + BTN_REGRESO_PREPROCESO + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO // SE AGREGA BTN_REGRESO_PREPROCESO
                 : BTN_SUBIR_ARCHIVO + BTN_REGRESO_PREPROCESO + BTN_SUBIR_CONTRATO_FIRMADO; // SE AGREGA BTN_REGRESO_PREPROCESO

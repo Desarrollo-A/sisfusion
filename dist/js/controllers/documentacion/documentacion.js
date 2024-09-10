@@ -516,6 +516,7 @@ $(document).on('click', '.verDocumento', function () {
         window.location.href = `${pathUrl}`;
     }
     else{
+        fileExists(pathUrl);
         Shadowbox.open({
             content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
             player: "html",
@@ -874,3 +875,21 @@ function descargarArchivo(pathUrl, filename) {
     a.download = filename;
     a.click();
   }
+
+function fileExists(path) {
+    console.log('path', path);
+    /*fetch(path, { method: 'HEAD'})
+        .then(response => {
+            console.log('Respuesta check archivo:', response);
+            if(response.ok){
+                console.log('Foto existe');
+            }
+            else{
+                console.log('Foto no existe');
+            }
+        });*/
+    var http = new XMLHttpRequest();
+    http.open('HEAD', path, false);
+    http.send();
+    return http.status!=404;
+}

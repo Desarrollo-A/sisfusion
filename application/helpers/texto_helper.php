@@ -119,9 +119,18 @@
     $sedeString = $data_return->nombre;
     switch ($id_rol){
         case 7:
-            if($id_sede == 4){
-                //si es CDMX debe dejar 40 asesores
-                $maxAsesores = 40;//original: 40
+            if($id_sede == 4 || $id_sede == 1 || $id_sede == 12 || $id_sede == 8){
+                if($id_sede == 4){
+                    //si es CDMX debe dejar 40 asesores
+                    $maxAsesores = 40;//original: 40
+                }elseif($id_sede == 8){
+                    //si es Tijuana debe dejar 30 asesores TICKET #83992
+                    $maxAsesores = 30;
+                }elseif($id_sede == 1 || $id_sede == 12){
+                    //si es SLP o Guadalajara debe dejar 60 asesores
+                    $maxAsesores = 60;
+                }
+
             }else{
                 $maxAsesores = 20;//original: 20
             }

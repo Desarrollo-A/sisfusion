@@ -204,7 +204,10 @@ class Usuarios extends CI_Controller
     public function getUsersListAsesor()
     {
         $data['data'] = $this->Usuarios_modelo->getUserPassword()->result_array();
-        $data['data'][0]['contrasena'] = desencriptar($data['data'][0]['contrasena']);
+        for($i = 0; $i < count($data['data']); $i++)
+        {
+            $data['data'][$i]['contrasena'] = desencriptar($data['data'][$i]['contrasena']);
+        }        
         echo json_encode($data);
     }
 
@@ -399,15 +402,18 @@ class Usuarios extends CI_Controller
                 $simbolicoPropiedad = NULL;
             }
 
-            if($_POST['leader'] != 0){
+            /*
+                1	NORMAL
+                2	MADERAS UPGRADE
+                3	CASAS
+                4	SEGUROS
+            */
+            if ($_POST['leader'] != 0) {
                 $dataLiderAAsignar = $this->Services_model->getInfoLider($_POST['leader']);
-                if($dataLiderAAsignar->tipo==2){
+                if (in_array($dataLiderAAsignar->tipo, array(2, 3, 4)))
                     $tipoUsuario =  $dataLiderAAsignar->tipo;
-                }else{
+                else
                     $tipoUsuario = 1;//tipo de usuario 1: comercializacion, 2:oaam
-                }
-            }else{
-                $tipoUsuario = 1;//tipo de usuario 1: comercializacion, 2:oaam
             }
 
             $data = array( 
@@ -421,7 +427,6 @@ class Usuarios extends CI_Controller
                 "id_rol" => $_POST['member_type'],
                 "id_lider" => $_POST['leader'],
                 "usuario" => trim($_POST['username']),
-                "contrasena" => encriptar($_POST['contrasena']),
                 "nueva_estructura" =>  $nueva_estructura,
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                 "modificado_por" => $this->session->userdata('id_usuario'),
@@ -432,6 +437,9 @@ class Usuarios extends CI_Controller
                 "fac_humano"=> isset($_POST['fac_humano']) ? $_POST['fac_humano'] : null
 
             );
+
+            if ($this->session->userdata('id_usuario') != 12874)
+                $data["contrasena"] = encriptar($_POST['contrasena']);
         }
         $insertData = array();
         $commonData = array();
@@ -551,10 +559,10 @@ class Usuarios extends CI_Controller
         $hoy = date("Y-m-d");
 
 
-        $fileTmpPath = $_FILES['file-uploadE']['tmp_name'];
-        $fileName = $_FILES['file-uploadE']['name'];
-        $fileSize = $_FILES['file-uploadE']['size'];
-        $fileType = $_FILES['file-uploadE']['type'];
+        $fileTmpPath = $_FILES['fileElm']['tmp_name'];
+        $fileName = $_FILES['fileElm']['name'];
+        $fileSize = $_FILES['fileElm']['size'];
+        $fileType = $_FILES['fileElm']['type'];
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
         $newFileName = $nombre . $hoy . md5(time() . $fileName) . '.' . $fileExtension;
