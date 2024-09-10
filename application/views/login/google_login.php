@@ -114,7 +114,7 @@
                                                                         style="width: 70%;margin: 0px;"></h4>
                                         </div>
                                         <p class="category text-center" style="margin: 15px;">
-                                            Para continuar, regístrate con tu correo corporativo, a partir del 16 de septiembre tu usuario sera este correo
+                                            Para continuar, regístrate con tu correo corporativo. A partir del 16 de septiembre, este correo será tu usuario
                                         </p>
 
                                         <div style="margin: 15px;">
