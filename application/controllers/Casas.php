@@ -4682,7 +4682,7 @@ class Casas extends BaseController
 
         if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
             http_response_code(400);
-            $this->json([]);
+            $this->json(['El correo es inválido']);
         }
 
         $flagStatus = true;
