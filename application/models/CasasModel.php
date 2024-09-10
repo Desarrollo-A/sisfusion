@@ -119,10 +119,10 @@ class CasasModel extends CI_Model
                 IF NOT EXISTS (SELECT *FROM vobos_proceso_casas WHERE idProceso = ? AND paso = ?)
                 
                 BEGIN 
-                    INSERT INTO vobos_proceso_casas (idProceso, paso, adm, ooam, proyectos) 
+                    INSERT INTO vobos_proceso_casas (idProceso, paso, adm, ooam, proyectos, gph, pv, titulacion) 
                         VALUES(?, ?, ?, ?, ?)
                 END
-            END", array($idProcesoCasas, $paso, $idProcesoCasas, $paso, 0, 0, 0)                
+            END", array($idProcesoCasas, $paso, $idProcesoCasas, $paso, 0, 0, 0, 0, 0, 0)                
         );
 
         return $query;
