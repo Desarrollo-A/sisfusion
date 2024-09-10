@@ -233,127 +233,50 @@
 									
 	}
 
-	public function getLotesAsignadosTodos(){
-        $query = $this->db->query(
-            "WITH proceso0 AS(
-                SELECT
-	        	    usg.id_usuario,
-	        	    COUNT(lo.idLote) cantidadProceso0,
-	        	    CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
-	        	    usg.correo
-	        	    FROM 
-	        		    lotes lo
-	        	    INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
-	        	    INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
-	        	    WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 0
-	        	    AND lo.idLote NOT IN (SELECT idLote FROM propuestas_x_lote)
-	        	    AND lo.idLote NOT IN (SELECT idLotePvOrigen FROM lotesFusion)
-	        	    GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
-                ),
-            proceso1 AS(
-	            SELECT
-	            	usg.id_usuario,
-	            	COUNT(lo.idLote) cantidadProceso1,
-	            	CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
-	            	usg.correo
-	            	FROM 
-	            		lotes lo
-	            	INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
-	            	INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
-	            	WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 1
-	            	GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
-                ),
-            proceso3 AS(
-	            SELECT
-	        	    usg.id_usuario,
-	        	    COUNT(lo.idLote) cantidadProceso3,
-	        	    CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
-	        	    usg.correo
-	        	    FROM 
-	        		    lotes lo
-	        	    INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
-	        	    INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
-	        	    WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 3
-	        	    GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
-                ),
-            proceso6 AS(
-            	SELECT
-            		usg.id_usuario,
-            		COUNT(lo.idLote) cantidadProceso6,
-            		CONCAT(usg.nombre, ' ', usg.apellido_paterno, ' ', usg.apellido_materno) AS nombreGerente,
-            		usg.correo
-            		FROM 
-            			lotes lo
-            		INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
-            		INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
-            		WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 6
-            		GROUP BY usg.id_usuario, usg.correo, usg.id_usuario, usg.nombre, usg.apellido_paterno, usg.apellido_materno
-            )
-
-            SELECT 
-            	us.id_usuario,
-                us.correo,
-            	pr0.nombreGerente, pr0.cantidadProceso0,
-            	pr1.cantidadProceso1, pr3.cantidadProceso3,
-            	pr6.cantidadProceso6
-            	FROM
-            		usuarios us
-            	INNER JOIN proceso0 pr0 ON pr0.id_usuario = us.id_usuario
-            	INNER JOIN proceso1 pr1 ON pr1.id_usuario = us.id_usuario
-            	INNER JOIN proceso3 pr3 ON pr3.id_usuario = us.id_usuario
-            	INNER JOIN proceso6 pr6 ON pr6.id_usuario = us.id_usuario");
-
-        return $query;
-    }
-
-    public function getLotesAsignados6(){
-        $query = $this->db->query(
-            "WITH proceso6 AS(
-            	SELECT
-            		usa.id_usuario,
-            		COUNT(lo.idLote) cantidadProceso6,
-            		CONCAT(usa.nombre, ' ', usa.apellido_paterno, ' ', usa.apellido_materno) AS nombreAsesor,
-            		usa.correo
-            		FROM 
-            			lotes lo
-            		INNER JOIN usuarios usa ON usa.id_usuario = lo.id_usuario_asignado 
-            		INNER JOIN usuarios usg ON usg.id_usuario = usa.id_lider 
-            		WHERE id_usuario_asignado != 0 AND usg.id_rol = 3 AND lo.estatus_preproceso = 6
-            		GROUP BY usg.id_usuario, usa.correo, usa.id_usuario, usa.nombre, usa.apellido_paterno, usa.apellido_materno
-            )
-
-            SELECT
-            	us.id_usuario,
-                us.correo,
-				pr6.nombreAsesor,
-            	pr6.cantidadProceso6
-            	FROM
-            		usuarios us
-            	INNER JOIN proceso6 pr6 ON pr6.id_usuario = us.id_usuario"
-        );
-
-        return $query;
-    }
-
-    public function getLotesAsignadosContraloria(){
-        $query = $this->db->query("SELECT
-            		COUNT(lo.idLote) cantidadProceso2
-            		FROM 
-            			lotes lo
-					INNER JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote AND dxc.flagProcesoContraloria = 0
-            		WHERE id_usuario_asignado != 0 AND lo.estatus_preproceso = 2");
-        
-        return $query;
-    }
-
-    public function getLotesAsignadosJuridico(){
-        $query = $this->db->query("SELECT
-            		COUNT(lo.idLote) cantidadProceso2
-            		FROM 
-            			lotes lo
-					INNER JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote AND dxc.flagProcesoContraloria = 1 AND dxc.flagProcesoJuridico = 0
-            		WHERE id_usuario_asignado != 0 AND lo.estatus_preproceso = 2");
-        
-        return $query;
+	public function getInformacionRetrasos($tipo) {
+		$validacionEstatus = $tipo == 1 ? "AND (dxc4.flagProcesoContraloria = 0 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 0)" : "AND ((dxc4.flagProcesoJuridico = 0 OR dxc4.flagProcesoJuridico IS NULL AND dxc2.flagProcesoJuridico = 0) AND dxc4.flagProcesoContraloria = 1)";
+        return $this->db->query(
+			"SELECT 
+				ISNULL(oxc2.nombre, 'NUEVO') AS estatusModificacion, 
+				re.nombreResidencial,
+				co.nombre AS nombreCondominio,
+				lo.nombreLote,
+				UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+				lo.referencia,
+				CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+				hpl3.fechaUltimoEstatus, 
+				lo.fechaVencimiento,
+				DATEDIFF(DAY, hpl3.fechaUltimoEstatus, lo.fechaVencimiento) diasVencimiento
+			FROM lotes lo
+					LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6, 7)
+					LEFT JOIN (SELECT dxc.* 
+						FROM lotes lo 
+						INNER JOIN propuestas_x_lote pxl on pxl.idLote = lo.idLote 
+						LEFT JOIN datos_x_cliente dxc on dxc.idLote = pxl.idLote ) dxc2 ON dxc2.idLote = lo.idLote
+						INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+						INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+						LEFT JOIN (SELECT DISTINCT(idProyecto) idProyecto FROM loteXReubicacion WHERE estatus = 1) lr ON lr.idProyecto = re.idResidencial
+						LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+						LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
+							SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote
+					) 
+					LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = hpl.estatus AND oxc2.id_catalogo = 108
+					LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote 
+					LEFT JOIN (       
+					SELECT lf.idLotePvOrigen, lo.idLote, dxc.idLote AS loteDxc, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico 
+						FROM lotes lo 
+						INNER JOIN lotesFusion lf on lf.idLote = lo.idLote 
+						INNER JOIN datos_x_cliente dxc on dxc.idLote = lf.idLotePvOrigen 
+					) dxc4 ON dxc4.idLote = lo.idLote
+					LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
+					WHERE 
+					lo.liberaBandera = 1 
+					AND lo.status = 1 
+					AND lo.solicitudCancelacion NOT IN (2)
+					AND lo.idStatusLote NOT IN (18, 19) 
+					AND lo.estatus_preproceso IN (2)
+					AND DATEDIFF(DAY, hpl3.fechaUltimoEstatus, lo.fechaVencimiento) > 1
+					$validacionEstatus
+		");
     }
 }

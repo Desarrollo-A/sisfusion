@@ -112,7 +112,6 @@ let columns = [
     },
     { data: function(data){
         let btn_avance = '';
-        // let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazoProcesoBanco, data});
         let subir_proveedor = ''
 
         if(data.num_documentos){

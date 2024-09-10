@@ -734,7 +734,7 @@ class Casas extends BaseController
         $id_proceso = $this->form('id_proceso');
         $id_documento = $this->form('id_documento');
         $name_documento = $this->form('name_documento');
-        $tipo_documento = $this->form('tipo_documento') || 0;
+        $tipo_documento = $this->form('tipo_documento');
 
         if (!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)) {
             http_response_code(400);
@@ -753,12 +753,36 @@ class Casas extends BaseController
         $dateNow = date("D-M-Y H:i:s");
 
         if ($tipo_documento == 2) {
+
+            $data_mail = $this->CasasModel->getDataMail($id_proceso);
+
+            $encabezados = [
+                'idLote' => 'ID LOTE',
+                'proyecto' => 'PROYECTO',
+                'nombreCondominio'  => 'CONDOMINIO',
+                'nombreLote'        => 'LOTE',
+                'cliente'           => 'CLIENTE',
+                'usuarioAsignado'   => 'USUARIO ASIGNADO',
+            ];
+
+            $info[0] = [
+                'idLote' =>  $data_mail->idLote,
+                'proyecto' =>  $data_mail->proyecto,
+                'nombreCondominio' =>  $data_mail->condominio,
+                'nombreLote' =>  $data_mail->nombreLote,
+                'cliente' =>  $data_mail->cliente,
+                'usuarioAsignado'   =>  $data_mail->nombreAsesor,
+            ];
+            
             $this->email
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('coordinador1.desarrollo@ciudadmaderas.com')
             ->subject('Notificación de carga de orden de compra en proceso casas - '. $dateNow)
-            ->view($this->load->view('mail/casas/mailOrdenCompra', [ "dato" => 1], true));
+            ->view($this->load->view('mail/casas/mailOrdenCompra', [
+                'encabezados' => $encabezados,
+                'contenido' => $info
+            ], true));
             
             $this->email->send();            
         }
@@ -802,12 +826,12 @@ class Casas extends BaseController
         $proceso = $this->CasasModel->getProceso($id);
 
         // Aqui se asignara notaria si mas adelante nos piden poner mas notarias
-        $notaria = 1;
+        /* $notaria = 1;
         if ($tipo == 2) {
             $notaria = 2;
-        }
+        } */
 
-        $is_ok = $this->CasasModel->setTipoCredito($id, $tipo, $notaria);
+        $is_ok = $this->CasasModel->setTipoCredito($id, $tipo);
 
         // $vobo = $this->CasasModel->getVobos($id, 1);
 
@@ -1107,7 +1131,16 @@ class Casas extends BaseController
 
             if ($is_ok) {
                 // Agregar documentos de proveedor
-                // $this->CasasModel->insertDocumentosProveedor($proceso->idProcesoCasas, $proceso->tipoProveedor);
+                $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36]);
+
+                $is_ok = true;
+                foreach ($documentos as $key => $documento) {
+                    $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+                    if (!$is_ok) {
+                        break;
+                    }
+                }
 
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
@@ -1354,7 +1387,7 @@ class Casas extends BaseController
 
         if ($idRol == 101) {
 
-            $vobo = $this->CasasModel->getVobos($id, 3);
+            $vobo = $this->CasasModel->getVobos($id, 8);
 
             $updateData = array(
                 "gph"  => 1,
@@ -1371,6 +1404,24 @@ class Casas extends BaseController
 
         if ($idRol == 57) {
 
+            $vobo = $this->CasasModel->getVobos($id, 8);
+
+            $updateData = array(
+                "titulacion"  => 1,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if (!$update) {
+                http_response_code(400);
+            }
+        }
+
+        $checkVobos = $this->CasasModel->getVobos($id, 8);
+
+        if($checkVobos->gph == 1 && $checkVobos->titulacion == 1){
             $documentos = $this->CasasModel->getDocumentos([18]);
 
             $is_ok = true;
@@ -1421,10 +1472,11 @@ class Casas extends BaseController
             http_response_code(400);
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 3);
+        $vobo = $this->CasasModel->getVobos($id, 8);
 
         $updateData = array(
             "gph"  => 0,
+            "titulacion" => 0,
             "modificadoPor" => $this->session->userdata('id_usuario'),
             "fechaModificacion" => date("Y-m-d H:i:s"),
         );
@@ -3373,7 +3425,7 @@ class Casas extends BaseController
 
         if ($procesoNuevo == 8) {
 
-            $insertVobo = $this->CasasModel->insertVobo($idProceso, 3);
+            $insertVobo = $this->CasasModel->insertVobo($idProceso, 8);
 
             if (!$insertVobo) {
                 http_response_code(404);
@@ -4630,6 +4682,12 @@ class Casas extends BaseController
         $ocupacion = $this->form('ocupacion');
         $idLote = $this->form('idLote');
         $accion = $this->form('altaAccion');
+
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
         $flagStatus = true;
         $this->db->trans_begin();
         //INSERT

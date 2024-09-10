@@ -17,6 +17,8 @@ $(document).ready(function() {
 });
 
 $('#proyectoRemanente_casas').change(function(){
+    $("#autorizarRemanente_casas").html(formatMoney(0));
+    $("#all_casas").prop("checked", false);
 residencial = $('#proyectoRemanente_casas').val();
 $("#condominioRemanente_casas").empty().selectpicker('refresh');
     $.ajax({
@@ -37,6 +39,8 @@ $("#condominioRemanente_casas").empty().selectpicker('refresh');
 });
 
 $('#proyectoRemanente_casas').change(function(){
+    $("#autorizarRemanente_casas").html(formatMoney(0));
+    $("#all_casas").prop("checked", false);
     proyecto = $('#proyectoRemanente_casas').val();
     condominio = $('#condominioRemanente_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
@@ -46,6 +50,8 @@ $('#proyectoRemanente_casas').change(function(){
 });
 
 $('#condominioRemanente_casas').change(function(){
+    $("#autorizarRemanente_casas").html(formatMoney(0));
+    $("#all_casas").prop("checked", false);
     proyecto = $('#proyectoRemanente_casas').val();
     condominio = $('#condominioRemanente_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
@@ -140,7 +146,7 @@ function getDataRemanente_casas(proyecto, condominio){
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
                                 $("#autorizarRemanente_casas").html(formatMoney(0));
-                                $("#all").prop('checked', false);
+                                $("#all_casas").prop("checked", false);
                                 var fecha = new Date();
                                 tabla_remanente_casas.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>remanentes</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
@@ -499,7 +505,7 @@ $("#form_pausar_casas").submit( function(e) {
             success: function(data){
                 if( data[0] ){
                     $("#modal_remanente_casas").modal('toggle' );
-                    $('#all_facturas').prop("checked", false);
+                    $("#all_casas").prop("checked", false);
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
                         tabla_remanente_casas.ajax.reload(null, false);

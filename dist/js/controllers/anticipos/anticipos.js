@@ -62,7 +62,7 @@ $("#tabla_anticipos").ready(function () {
 
     tabla_anticipos = $("#tabla_anticipos").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
+        width: '99%',
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -98,8 +98,8 @@ $("#tabla_anticipos").ready(function () {
         },
         pagingType: "full_numbers",
         lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
+            [9, 25, 50, -1],
+            [9, 25, 50, "Todos"]
         ],
         bAutoWidth: false,
         fixedColumns: true,
@@ -113,14 +113,14 @@ $("#tabla_anticipos").ready(function () {
             { data: 'puesto' },
 
 
-            { data: 'prioridad_nombre' },
+            
         
             // { data: 'nombre_empresa' },
             {    data: function( d ){
                 var mostrar = d.nombre_empresa == null ? 'SELECIONA LA EMPRESA' : d.nombre_empresa;
                 return '<p class="m-0">'+mostrar+'</p>';
             } },
-            { data: 'proceso' },
+
             
             { data: 'comentario' },
             { data: 'formaNombre' },
@@ -565,6 +565,7 @@ $("#tabla_anticipos").ready(function () {
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' + v.comentario_general + '</a>\n' +
+                '       <br> <a> Fecha movimiento : ' + v.fechaAnticipo + '</a>\n' +
                 '      </div>\n' +
                 '    <h6>\n' +
                 '    </h6>\n' +

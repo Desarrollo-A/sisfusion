@@ -229,11 +229,10 @@ let idCasaFinal = new HiddenField({id: 'idCasaFinal', value: selectOption});
 function to_precierre_cifras(data) {
     let idRol = document.getElementById("idRol").value;
 
-    if(idRol == 33) {
+    if(idRol == 2) {
         selectCasa('#form-form-modal', 'custom-div-id', data.idPropuestaCasa);
     }
     
-
     let form = new Form({
         title: 'Avanzar proceso',
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
@@ -305,8 +304,8 @@ let columns = [
         let btn_rechazo = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazoProcesoBanco, data});
         // let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de proveedor', onClick: go_to_documentos, data});
         let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de cliente', onClick: go_to_documentos_cliente, data});
-        
-        if(data.documentos >= 9){
+
+        if(data.documentos === 9){
             btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: to_precierre_cifras, data})
         }
 
