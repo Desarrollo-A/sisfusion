@@ -119,10 +119,10 @@ class CasasModel extends CI_Model
                 IF NOT EXISTS (SELECT *FROM vobos_proceso_casas WHERE idProceso = ? AND paso = ?)
                 
                 BEGIN 
-                    INSERT INTO vobos_proceso_casas (idProceso, paso, adm, ooam, proyectos) 
+                    INSERT INTO vobos_proceso_casas (idProceso, paso, adm, ooam, proyectos, gph, pv, titulacion) 
                         VALUES(?, ?, ?, ?, ?)
                 END
-            END", array($idProcesoCasas, $paso, $idProcesoCasas, $paso, 0, 0, 0)                
+            END", array($idProcesoCasas, $paso, $idProcesoCasas, $paso, 0, 0, 0, 0, 0, 0)                
         );
 
         return $query;
@@ -1647,37 +1647,46 @@ class CasasModel extends CI_Model
     }
 
     public function getListaReporteCasas($proceso, $finalizado){
-        $query = " SELECT
-            pc.*,
-            lo.nombreLote,
-            con.nombre AS condominio,
-            resi.descripcion AS proyecto,
-            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-            (CASE
-                WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
-                ELSE 'Sin asignar'
-            END) AS nombreAsesor,
-            CASE
-                 WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
-                 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
-            END AS gerente,
-            oxc.nombre AS procesoNombre,
-            oxc2.nombre AS movimiento
-        FROM proceso_casas_banco pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        $query = " 
+        WITH HistorialCte AS (
+            SELECT CAST(SUBSTRING(hpc.descripcion, PATINDEX('%IDLOTE%', hpc.descripcion) + 7, LEN(hpc.descripcion)) AS INT) AS idLote,
+            LTRIM(RTRIM(LEFT(hpc.descripcion, PATINDEX('%IDLOTE%', hpc.descripcion) - 1))) AS descripcionFinal,
+            hpc.descripcion, hpc.fechaMovimiento
+            FROM historial_proceso_casas hpc
+            WHERE hpc.descripcion LIKE 'Pre proceso %IDLOTE%'
+        )
+
+        SELECT COALESCE(pc.idLote, hct.idLote) AS idLote, lo.nombreLote, con.nombre AS condominio,
+        CAST(resi.descripcion AS VARCHAR(MAX)) AS proyecto, 
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        CASE WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno,  ' ', us.apellido_materno)
+        ELSE 'Sin Asignar' END AS nombreAsesor,
+        CASE WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno) END AS gerente,
+        oxc.nombre AS procesoNombre, 
+        COALESCE(MAX(pc.fechaCreacion), MAX(hct.fechaMovimiento)) AS fechaCreacion,
+        COALESCE(pc.idProcesoCasas,0)idProcesoCasas,
+        COALESCE(MAX(pc.fechaProceso), MAX(hct.fechaMovimiento)) AS fechaProceso,
+        CASE WHEN pc.tipoMovimiento IS NULL THEN 'PRE PROCESO' ELSE oxc2.nombre END AS movimiento,
+        CASE WHEN pc.tipoMovimiento IS NULL THEN 0 ELSE pc.tipoMovimiento END AS tipoMovimiento
+        FROM HistorialCte hct
+        FULL OUTER JOIN proceso_casas_banco pc ON pc.idLote = hct.idLote
+        LEFT JOIN lotes lo ON lo.idLote = COALESCE(pc.idLote, hct.idLote) -- Join lotes based on either pc or hct idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
-        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
-        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 135 AND oxc.id_opcion = pc.proceso
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_catalogo = 136 AND oxc2.id_opcion = pc.tipoMovimiento
-        WHERE
-            pc.status = 1
-        AND cli.status = 1
-        AND pc.proceso IN ($proceso)
-        AND pc.finalizado IN ($finalizado)
-        ORDER BY pc.fechaCreacion";
+        WHERE (pc.status = 1 OR pc.status IS NULL)
+        AND (cli.status = 1)
+        AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
+        AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
+        GROUP BY hct.idLote ,lo.nombreLote, pc.idLote, con.nombre, CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno),
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), us.nombre, cli.id_gerente_c,
+        CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno), oxc.nombre, oxc2.nombre, 
+        CAST(resi.descripcion AS VARCHAR(MAX)), pc.fechaCreacion, pc.idProcesoCasas,pc.tipoMovimiento , oxc2.id_opcion 
+        ";
 
         return $this->db->query($query)->result();
     }
@@ -1857,16 +1866,24 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function getHistorialCreditoActual($idProceso, $tipoEsquema)
+    public function getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote)
     {
-        $query = $this->db->query("SELECT 
-	        hpc.*,
-	        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) as nombreUsuario
-	        FROM historial_proceso_casas hpc
-	        INNER JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
-            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
-	        WHERE idProcesoCasas = ?
-	        AND esquemaCreditoProceso = ?", array($idProceso, $tipoEsquema));
+        $query = $this->db->query("WITH CombinedData AS (
+        SELECT hpc.*, LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 
+        THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1)
+        ELSE descripcion END )) AS descripcionFinal,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) AS nombreUsuario,
+        ROW_NUMBER() OVER (PARTITION BY hpc.idHistorial ORDER BY hpc.fechaMovimiento DESC) AS rn
+        FROM historial_proceso_casas hpc
+        LEFT JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+        WHERE (idProcesoCasas = $idProceso AND esquemaCreditoProceso = $tipoEsquema)
+        OR (hpc.descripcion LIKE '%Pre proceso %$idLote%'))
+        
+        SELECT *
+        FROM CombinedData
+        WHERE rn = 1
+        ORDER BY idHistorial DESC;");
             
         return $query->result_array();
     }
