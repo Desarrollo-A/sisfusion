@@ -733,7 +733,7 @@ class Casas extends BaseController
         $id_proceso = $this->form('id_proceso');
         $id_documento = $this->form('id_documento');
         $name_documento = $this->form('name_documento');
-        $tipo_documento = $this->form('tipo_documento') || 0;
+        $tipo_documento = $this->form('tipo_documento');
 
         if (!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)) {
             http_response_code(400);
@@ -753,15 +753,37 @@ class Casas extends BaseController
 
         if ($tipo_documento == 2) {
 
-            var_dump($tipo_documento);
-            /* $this->email
+            $data_mail = $this->CasasModel->getDataMail($id_proceso);
+
+            $encabezados = [
+                'idLote' => 'ID LOTE',
+                'proyecto' => 'PROYECTO',
+                'nombreCondominio'  => 'CONDOMINIO',
+                'nombreLote'        => 'LOTE',
+                'cliente'           => 'CLIENTE',
+                'usuarioAsignado'   => 'USUARIO ASIGNADO',
+            ];
+
+            $info[0] = [
+                'idLote' =>  $data_mail->idLote,
+                'proyecto' =>  $data_mail->proyecto,
+                'nombreCondominio' =>  $data_mail->condominio,
+                'nombreLote' =>  $data_mail->nombreLote,
+                'cliente' =>  $data_mail->cliente,
+                'usuarioAsignado'   =>  $data_mail->nombreAsesor,
+            ];
+            
+            $this->email
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('coordinador1.desarrollo@ciudadmaderas.com')
             ->subject('Notificación de carga de orden de compra en proceso casas - '. $dateNow)
-            ->view($this->load->view('mail/casas/mailOrdenCompra', [ "dato" => 1], true));
+            ->view($this->load->view('mail/casas/mailOrdenCompra', [
+                'encabezados' => $encabezados,
+                'contenido' => $info
+            ], true));
             
-            $this->email->send();      */       
+            $this->email->send();            
         }
 
         if ($file) {

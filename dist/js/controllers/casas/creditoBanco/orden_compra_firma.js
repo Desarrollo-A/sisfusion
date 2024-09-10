@@ -229,11 +229,10 @@ let idCasaFinal = new HiddenField({id: 'idCasaFinal', value: selectOption});
 function to_precierre_cifras(data) {
     let idRol = document.getElementById("idRol").value;
 
-    if(idRol == 33) {
+    if(idRol == 2) {
         selectCasa('#form-form-modal', 'custom-div-id', data.idPropuestaCasa);
     }
     
-
     let form = new Form({
         title: 'Avanzar proceso',
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
