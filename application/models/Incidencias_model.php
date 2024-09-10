@@ -76,7 +76,7 @@ class Incidencias_model extends CI_Model {
         return $this->db->query("SELECT u.id_usuario,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS name_user,id_rol,r.idRol 
                                 FROM usuarios u
                                 LEFT JOIN (SELECT idRol, idUsuario FROM roles_x_usuario WHERE idRol = 59 GROUP BY idRol, idUsuario) r ON r.idUsuario=u.id_usuario
-                                WHERE u.id_usuario NOT IN (1) AND u.estatus IN (1,3) AND u.tipo IN (1,2) and u.id_rol IN (1,2,3,7,9,87,88,89,90,91,45)");
+                                WHERE u.id_usuario NOT IN (1) AND u.estatus IN (1,3) AND u.tipo IN (1,2,3) and u.id_rol IN (1,2,3,7,9,87,88,89,90,91,45)");
 
     }
     function updateUser($idLote,$comision,$id_cliente,$id_rol,$id_usuario,$porcentaje){

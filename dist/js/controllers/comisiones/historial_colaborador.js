@@ -23,20 +23,9 @@ $('#ano_historial').change(function(){
 
 $('#ano_historial').change(function(){
     $("#tipo_historial").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url+'Contratacion/nombreTipo/',
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-                var id = response[i]['tipo'];
-                var name = response[i]['nombre_tipo'];
-                $("#tipo_historial").append($('<option>').val(id).text(name));
-            }
-            $("#tipo_historial").selectpicker('refresh');
-        }
-    });
+    $("#tipo_historial").append($('<option>').val(1).text('NORMAL'));
+    $("#tipo_historial").append($('<option>').val(3).text('CASAS'));
+    $("#tipo_historial").selectpicker('refresh');
 });
 
 $('#catalogo_historial, #tipo_historial').change(function(){
@@ -48,21 +37,23 @@ $('#catalogo_historial, #tipo_historial').change(function(){
         proyecto = $('#ano_historial').val();
         condominio = $('#catalogo_historial').val();
         tipo = $('#tipo_historial').val();
+        console.log(tipo);
 
-        $('#tabla_historialGral').removeClass('hide');
-
+        
+    $('#tabla_historialGral').removeClass('hide');
+    
         if (condominio == '' || condominio == null || condominio == undefined) {
-            condominio = 0;
-        }
-
+        condominio = 0;
+    }
+    
         if (tipo == '' || tipo == null || tipo == undefined) {
             tipo = 0;
         }
 
         if (tabla_historialGral2) {
-            tabla_historialGral2.destroy();
-        }
-        getAssimilatedCommissions(proyecto, condominio, tipo);
+        tabla_historialGral2.destroy();
+    }
+    getAssimilatedCommissions(proyecto, condominio, tipo);
 
     }
 });
@@ -131,20 +122,22 @@ function modalHistorial(){
 }
 
 function getAssimilatedCommissions(proyecto, condominio, tipo){
-
     var Comisiones;
-
-    if(tipo == 1 || tipo == 2){
-        
+    if(tipo == 1 || tipo == 2 || tipo == 0){
+        tipo =  tipo == 0 ? 1 : tipo;
         Comisiones = "Comisiones/getDatosHistorialPago/";
+        $('#titulo_precio').text('PRECIO DEL LOTE');
 
     }else if(tipo == 4){
 
         Comisiones = "SegurosComision/getDatosHistorialPago/";
 
+    }else if(tipo == 3 ){
+        $('#titulo_precio').text('COSTO CONSTRUCCIÓN');
+        Comisiones = "Casas_comisiones/getDatosHistorialPago/";
     }else{
         alerts.showNotification("top", "right", "Tipo aún no existente en el sistema.", "alert");
-        return false;p
+        return false;
     }
 
 
@@ -166,7 +159,7 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
         }
     });
 
-    $("#tabla_historialGral").prop("hidden", false);
+    $('#tabla_historialGral').removeClass('hidden');
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%', 
@@ -195,6 +188,7 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        ordering: false,
         destroy: true,
         deferRender: true,
         columns: [{
@@ -308,21 +302,31 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
         {
             "data": function( d ){
                 var etiqueta;
-
+                var descuento = d.descuento_aplicado == 1 ? `<p class="m-0"><span class="label lbl-gray" style=""> DESCUENTO</span></p>` : '';
                     if(d.pago_neodata < 1){
                         etiqueta = '<p class="m-1">'+'<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span>'+'</p>'+'<p class="m-1">'+'<span class="label lbl-green">IMPORTACIÓN</span></p>';
                     }else{
                         etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color: '+d.color+'; ">'+d.estatus_actual+'</span></p>';
                     }
 
-                return etiqueta;
+                return etiqueta + descuento;
             }
         },
         { 
             "orderable": false,
             "data": function( data ){
-                var BtnStats;
-                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                var BtnStats = '';
+                const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                const BTN_BONOS = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow ver_bonos" data-toggle="tooltip" title="Bonos"><i class="fas fa-clipboard"></i></button>`;
+
+                if(data.cuantos_pagos > 0){
+                    BtnStats += BTN_DETASI;
+                    BtnStats += BTN_BONOS;
+                }
+                else{
+                    BtnStats += BTN_DETASI;
+                }
+ 
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -399,6 +403,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        ordering: false,
         destroy: true,
         deferRender: true,
         columns: [{
@@ -631,6 +636,7 @@ $(document).on('click', '.ver-info-asesor', function(){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        ordering: false,
         destroy: true,
         ordering: false,
         columns: [{
@@ -740,6 +746,7 @@ function tableComisionesSuma(anio){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        ordering: false,
         destroy: true,
         ordering: false,
         columns: [{
@@ -863,7 +870,24 @@ $('#tablaHistorialDescuentos thead tr:eq(0) th').each(function (i) {
 	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
-function consultarHistorialDescuentos() {
+$("#tipo_historial_casas").on("change", function(){
+    seleccion = $(this).val();
+
+    if(seleccion == 1) {
+        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
+        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+    } else if(seleccion == 3) {
+        var enlace = 'Casas_comisiones/getHistorialDescuentosPorUsuario'
+        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+    }
+
+    consultarHistorialDescuentos(enlace)
+});
+
+
+
+function consultarHistorialDescuentos(enlace) {
+    
     tablaHistorialDescuentos = $("#tablaHistorialDescuentos").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%', 
@@ -895,6 +919,7 @@ function consultarHistorialDescuentos() {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        ordering: false,
         destroy: true,
         deferRender: true,
         columns: [{
@@ -958,7 +983,7 @@ function consultarHistorialDescuentos() {
                 
                 var botonesMostrar = ``;
 
-            if(d.relacion_evidencia != '' ){
+            if(d.relacion_evidencia != '' && d.relacion_evidencia !== null){
                 if(d.relacion_evidencia != 'true' ){
                     botonesMostrar += `
                     <button href="#" value="${d.id_pago_i}"  id="preview" 
@@ -990,48 +1015,7 @@ function consultarHistorialDescuentos() {
                     }
             
             }
-            //     botonesMostrar += `
-            //         <div class="d-flex justify-center">
-            //             <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VeER MÁS DETALLES" data-toggle="tooltip" data-placement="top">
-            //                 <i class="fas fa-info">
-            //                 </i>
-            //             </button></div>`;
-            // if(d.RelacionMotivo == 'Sin préstamo relacionado'){
-
-            // }else if(d.RelacionMotivo == 'NA'){
-            //     if(d.evidenciaDocs != null ){
-            //         botonesMostrar += `
-            //                 <button href="#" value="${d.id_pago_i}"  
-            //                     id="preview" data-doc="${d.evidenciaDocs}"  
-            //                     data-ruta="static/documentos/evidencia_prestamo_auto" 
-            //                     class="btn-data btn-violetDeep " title="Ver Evidencia">
-            //                     <i class="fas fa-folder-open">
-            //                     </i>
-            //                 </button>`;
-            //         }else{
-            //            botonesMostrar += ``; 
-            //         }
-            // }else if(d.RelacionMotivo != null && d.evidenciaDocs == null ) {
-            //     botonesMostrar += `
-            //                 <button href="#" value="${d.id_pago_i}"  
-            //                     id="preview" data-doc="${d.RelacionMotivo}"  
-            //                     data-ruta="UPLOADS/EvidenciaGenericas" 
-            //                     class="btn-data lbl-melon " title="Ver Evidencia">
-            //                     <i class="fas fa-folder-open">
-            //                     </i>
-            //                 </button>`;
-                    
-            // }
-                // botonesMostrar += `
-                //     <button href="#" value="${d.id_prestamo}"  
-                //         id="preview" data-doc="${d.evidencia}"  
-                //         data-ruta="static/documentos/evidencia_prestamo_auto" 
-                //         class="btn-data btn-violetDeep " title="Ver Evidencia">
-                //         <i class="fas fa-folder-open">
-                //         </i>
-                //     </button>`;
-                        
-                return '<div class="d-flex justify-center">'+ botonesMostrar + '<div>';;
+                return `<div class="d-flex justify-center">${botonesMostrar} <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VER MÁS DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button><div>`;
             }
         }],
         columnDefs: [{
@@ -1044,7 +1028,7 @@ function consultarHistorialDescuentos() {
             $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
         },
         ajax: {
-            url: `${general_base_url}Comisiones/getHistorialDescuentosPorUsuario`,
+            url: `${general_base_url}${enlace}`,
             type: "POST",
             cache: false,
         }
@@ -1052,6 +1036,7 @@ function consultarHistorialDescuentos() {
 }
 
 $(document).on('click', '.consultarDetalleDelPago', function(e) {
+    let ruta = $('#tipo_historial').val() == 4 ? 'Seguros' : ($('#tipo_historial').val() == 3 || $('#tipo_historial_casas').val() == 3 ?'Casas_comisiones':'Pagos');
     $("#comments-list-asimilados").html('');
     $("#nameLote").html('');
     $('#spiner-loader').removeClass('hide');
@@ -1061,7 +1046,12 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
     lote = $(this).attr("data-value");
     modalHistorial();
     $("#nameLote").append(`<p><h5>HISTORIAL DEL PAGO DE: <b>${lote}</b></h5></p>`);
-    $.getJSON(`${general_base_url}Pagos/getComments/${id_pago}`).done( function( data ){
+    $.getJSON(`${general_base_url}${ruta}/getComments/${id_pago}`).done( function( data ){
+        if( data == '' || data == null || data == undefined){
+            $("#comments-list-asimilados").append(`<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>SIN HISTORIAL </small></a></div><h6></h6></div></div></li>`);
+            $('#spiner-loader').addClass('hide');
+
+        }
         $.each( data, function(i, v){
             $("#comments-list-asimilados").append(`<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Usuario: </small><b>${v.nombre_usuario}</b></a><br></div><div class="float-end text-right"><a>${v.fecha_movimiento}</a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>${v.comentario}</b></p></div><h6></h6></div></div></li>`);
             $('#spiner-loader').addClass('hide');
@@ -1070,6 +1060,12 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
 });
 
 $(document).ready(function () {
+
+    if(usuario_id !=3){
+    var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
+    $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+    consultarHistorialDescuentos(enlace)
+    }
 
     let titulosHistorialOOAM = [];
     $('#tablaHistorialOOAM thead tr:eq(0) th').each(function (i) {
@@ -1116,6 +1112,7 @@ function consultarHistorialOOAM() {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        ordering: false,
         destroy: true,
         deferRender: true,
         columns: [{
@@ -1254,5 +1251,171 @@ $(document).on("click", "#historial_previa", function () {
     
 });
 
+var tabla_bono =[];
 
+$(document).on('click', ".ver_bonos", function(e){
+
+    var id_pago_i = $(this).val();
+
+    asignarValorColumnasDT("tabla_bono");
+    $('#tabla_bono thead tr:eq(0) th').each( function (i) {
+        var title = $(this).text();
+        if (!excluir_column.includes(title)) {
+            columnas_datatable.tabla_bono.titulos_encabezados.push(title);
+            columnas_datatable.tabla_bono.num_encabezados.push(columnas_datatable.tabla_bono.titulos_encabezados.length-1);
+        }
+        let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+        if (title !== '') {
+            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+            $( 'input', this ).on('keyup change', function () {
+                if ($('#tabla_bono').DataTable().column(i).search() !== this.value ) {
+                    $('#tabla_bono').DataTable().column(i).search(this.value).draw();
+                }
+            });
+        }
+    });
+    $('#boton').prop('disabled', true);
+
+    $("#observar_bonos .modal-footer").html('');
+
+    $("#tabla_bono").prop("hidden", false);
+    tabla_bono = $("#tabla_bono").DataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%', 
+        scrollX:true,               
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'HISTORIAL BONOS',
+            exportOptions: {
+                columns: columnas_datatable.tabla_bono.num_encabezados,
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + columnas_datatable.tabla_bono.titulos_encabezados[columnIdx] + ' ';
+                    }
+                }
+            },
+        }],
+        pagingType: "full_numbers",
+        fixedHeader: true,
+        language: {
+            url: general_base_url+"/static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        ordering: false,
+        destroy: true,
+        deferRender: true,
+        columns: [{
+            "data": function( d ){
+                var lblStats;
+                lblStats ='<p class="m-0"><b>'+d.id_pago_bono+'</b></p>'; 
+                return lblStats;
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.proyecto+'</p>'; 
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.condominio+'</p>'; 
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.nombreLote+'</p>';    
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+formatMoney(d.precio_lote)+'</p>'; 
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+formatMoney(d.comision_total)+' </p>'; 
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0"><b>'+formatMoney(d.dispersado)+'</b></p>'; 
+            }
+        },
+        {
+            "data": function( d ){
+                if(d.activo == 0 || d.activo == '0'){
+                    return '<p class="m-0"><b>'+d.user_names+'</b></p><p><span class="label lbl-warning">BAJA</span></p>';
+                }
+                else{
+                    return '<p class="m-0"><b>'+d.user_names+'</b></p>'; 
+                }
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.puesto+'</p>'; 
+            }
+        },
+        {
+            "data": function( d ){
+                var etiqueta;
+                var descuento = d.descuento_aplicado == 1 ? `<p class="m-0"><span class="label lbl-gray" style=""> DESCUENTO</span></p>` : ''; 
+                    if(d.pago_neodata < 1){
+                        etiqueta = '<p class="m-1">'+'<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span>'+'</p>'+'<p class="m-1">'+'<span class="label lbl-green">IMPORTACIÓN</span></p>';
+                    }else{
+                        etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color: '+d.color+'; ">'+d.estatus_actual+'</span></p>';
+                    }
+
+                return etiqueta + descuento;
+            }
+        }
+        // ,
+        // { 
+        //     "orderable": false,
+        //     "data": function( data ){
+        //         var BtnStats = '';
+        //         const BTN_DETASI = `<button href="#" value="${data.id_pago_bono}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                
+        //          BtnStats += BTN_DETASI;
+ 
+        //         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+        //     }
+        // }
+    ],
+        columnDefs: [{
+            "orderable": false,
+
+        }],
+        ajax: {
+            "url": general_base_url +"Casas_comisiones/getBonoHistorialPago/" + id_pago_i,
+            "type": "POST",
+            cache: false,
+            "data": function( d ){}
+        },
+    });
+
+    $('#tabla_bono').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+    });
+
+
+
+
+
+
+
+    $("#observar_bonos .modal-footer").append(`
+      
+        <button data-toggle="tooltip" data-placement="top"type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CERRAR"> CERRAR</button>
+        
+    `);
+    $("#observar_bonos").modal();
+
+});
 

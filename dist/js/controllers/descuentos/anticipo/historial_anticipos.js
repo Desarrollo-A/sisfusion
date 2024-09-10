@@ -143,13 +143,12 @@ $("#historial_general").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input class="center-align" type="hidden"  value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-            <h4 class=" center-align">¿Ésta seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
+            <h4 class=" center-align">¿Está seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
                 <label class="label control-label">Mótivo del rechazo</label>
                 <textarea id="motivoDescuento" name="motivoDescuento" class="text-modal" rows="3" required></textarea>
             </div>
             <div class="form-group col-md-12 ">
-                    
                 <input  type="hidden" value="${monto1}" name="monto" id="monto">
             </div>
             <div class="form-group">
@@ -174,7 +173,7 @@ $("#historial_general").ready(function () {
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
-            <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
+            <h4>¿Está seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
                 <label class="label control-label">Prioridad</label>
 
@@ -236,7 +235,7 @@ $("#historial_general").ready(function () {
         Modalbody_subir.append(`
             <input type="hidden" value="${idAnticipo1}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
-            <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
+            <h4>¿Está seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
             <div class="form-group">
                 <label class="label control-label">Prioridad</label>
 
@@ -335,7 +334,7 @@ $("#historial_general").ready(function () {
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
-                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' +v.comentario_general + '</a>\n' +

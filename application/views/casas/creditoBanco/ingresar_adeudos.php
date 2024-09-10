@@ -49,6 +49,7 @@ if(in_array($idUsuario, [4512])){
                                             <th>ADEUDO <?php echo $adeudo ?></th>
                                             <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
+                                            <th>ESTATUS ESCRITURACIÓN</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

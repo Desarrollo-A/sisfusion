@@ -96,7 +96,8 @@ class Button {
 class HiddenField {
     constructor({ id, value }) {
         this.id = id
-        this.value = () => { return value }
+        this.value = () => { return this.data }
+        this.data = value
 
         this.field = $('<input />')
             .attr('type', 'hidden')
@@ -107,10 +108,14 @@ class HiddenField {
     }
 
     load() { }
+
+    set(value) {
+        this.data = value
+    }
 }
 
 class SelectField {
-    constructor({ id, label, placeholder, data = [], value, width, required = false }) {
+    constructor({ id, label, placeholder, data = [], value, width, required = false, onChange=undefined }) {
         this.id = id
         this.required = required
 
@@ -153,6 +158,7 @@ class SelectField {
                             .attr('title', placeholder)
                             .append(options)
                             .on('change', () => this.validate())
+                            .on('change', (event) => this.triggerOnChange(event))
                     )
                     .append(
                         $('<span />')
@@ -165,6 +171,19 @@ class SelectField {
 
         this.value = () => {
             return $(`#${this.id}`).val()
+        }
+
+        this.callback = onChange        
+    }
+
+    triggerOnChange = (event) => {
+        let value = $(event.target).val()
+        let label = $(event.target).find("option:selected").text()
+
+        let option = {value, label}
+        
+        if(this.callback){
+            this.callback(option)
         }
     }
 
@@ -193,6 +212,16 @@ class SelectField {
     }
 
     load() { }
+
+    hide(){
+        this.field.hide()
+        this.required = false
+    }
+
+    show(){
+        this.field.show()
+        this.required = true
+    }
 }
 
 class FileField {
@@ -309,9 +338,9 @@ class FileField {
 }
 
 class TextField {
-    constructor({ id, label, placeholder, width, required = false }) {
-        this.id = id
-        this.required = required
+    constructor({ id, label, placeholder, width, required = false, value = '' }) {
+        this.id = id;
+        this.required = required;
 
         this.field = $('<div />')
             .addClass(`col-lg-${width} mt-1`)
@@ -323,12 +352,13 @@ class TextField {
             )
             .append(
                 $('<input />')
-                    .addClass(`form-control input-gral`)
+                    .addClass('form-control input-gral')
                     .attr('id', id)
                     .attr('name', id)
                     .attr('type', 'text')
                     .prop('required', required)
                     .attr('placeholder', placeholder)
+                    .val(value)
                     .on('keyup', () => this.validate())
             )
             .append(
@@ -337,39 +367,40 @@ class TextField {
                     .addClass('text-danger h7 ml-1')
                     .text('Debes ingresar un texto')
                     .hide()
-            )
-
+            );
+        
         this.value = () => {
-            return $(`#${id}`).val()
-        }
+            return $(`#${id}`).val();
+        };
     }
 
     validate() {
-        let pass = true
+        let pass = true;
 
         if (this.required) {
-            let val = $(`#${this.id}`).val()
+            let val = $(`#${this.id}`).val();
 
             if (!val) {
-                pass = false
+                pass = false;
             }
 
             if (pass) {
-                $(`#${this.id}_warning`).hide()
+                $(`#${this.id}_warning`).hide();
             } else {
-                $(`#${this.id}_warning`).show()
+                $(`#${this.id}_warning`).show();
             }
         }
 
-        return pass
+        return pass;
     }
 
     get() {
-        return this.field
+        return this.field;
     }
 
     load() { }
 }
+
 
 class TextAreaField {
     constructor({ id, label, placeholder, width, required, value }) {
@@ -1379,3 +1410,93 @@ class FormConfirm {
         }
     }
 }
+
+class MultiSelectField {
+    constructor({ id, label, placeholder, data = [], value = [], width, required = false }) {
+        this.id = id;
+        this.required = required;
+        let options = [];
+        this.value = value;
+
+        for (let item of data) {
+            let option = $('<option>', {
+                value: item.value,
+                text: item.label
+            });
+            if (this.value.includes(item.value)) {
+                option.attr("selected", true);
+            }
+            options.push(option);
+        }
+
+        this.field = $('<div />')
+            .addClass(`col-lg-${width} col-md-12`)
+            .append(
+                $('<div />')
+                    .addClass('form-group select-is-empty overflow-hidden m-0 p-0')
+                    .append(
+                        $('<label />')
+                            .addClass('control-label m-1')
+                            .text(label)
+                    )
+                    .append(
+                        $('<select />')
+                            .addClass('selectpicker select-gral m-0')
+                            .attr('id', id)
+                            .attr('name', id)
+                            .attr('multiple', 'multiple')
+                            .data('style', 'btnSelect')
+                            .data('show-subtext', 'true')
+                            .data('live-search', 'true')
+                            .data('size', '7')
+                            .data('container', 'body')
+                            .attr('title', placeholder)
+                            .append(options)
+                            //.on('change', () => this.validate())
+                    )
+                    .append(
+                        $('<span />')
+                            .attr('id', `${id}_warning`)
+                            .addClass('text-danger h7 ml-1')
+                            .text('Debes escoger mínimo un elemento')
+                            .hide()
+                    )
+            );
+        this.value = () => {
+            return $(`#${this.id}`).val();
+        }
+        this.field.find('select').on('selected.bs.select', () => {
+            this.validate();
+        });
+        $(document).ready(() => this.initializeSelectPicker());
+        
+    }
+
+    initializeSelectPicker() {
+        $(`#${this.id}`).selectpicker('refresh');
+    }
+
+    validate() {
+        let pass = true;
+        if (this.required) {
+            let val = $(`#${this.id}`).val();
+            if (!val || val.length === 0) {
+                pass = false;
+            }
+            if (pass) {
+                $(`#${this.id}_warning`).hide();
+            } else {
+                $(`#${this.id}_warning`).show();
+            }
+        }
+        return pass;
+    }
+
+    get() {
+        return this.field;
+    }
+
+    load() { }
+}
+
+

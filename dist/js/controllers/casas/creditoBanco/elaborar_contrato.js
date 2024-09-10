@@ -24,9 +24,9 @@ switch(idRol){
     case 81:
     case 55: // postventa 
         tipo = 3
-        documento = 50
+        documento = 24
         tipoContrato = 'solicitud de medidor';
-        documentos = [ 50 ]
+        documentos = [ 24 ]
         campo = "contratoPV"
         break;
 }
@@ -102,17 +102,10 @@ avance_contratos = function (data) {
                 processData: false,
                 success: function (response) {
                     if(response.result){
-                        if(response.avance == 1){
-                            avanceProceso(data, form);
-                        }
-                        else{
-                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
-                            table.reload()
-                            form.hide() 
-                        }
-                       
-                    }
-                    else{
+                        alerts.showNotification("top", "right", response.message, "success")
+                        table.reload()
+                        form.hide() 
+                    }else{
                         alerts.showNotification("top", "right", response.message, "danger");
                         table.reload()
                         form.hide();
@@ -211,54 +204,28 @@ let columns = [
     },
     {
         data: function (data) {
-            let pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avance_contratos, data })
-            let decline_button = ''
-            let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver documento', onClick: show_preview, data })
-            let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `Cargar documento`, onClick: file_upload, data })
+            let pass_button = ''
+            // let view_button = new RowButton({ icon: 'visibility', color: '', label: 'Ver documento', onClick: show_preview, data })
+            // let upload_button = new RowButton({ icon: 'file_upload', color: '', label: `Cargar documento`, onClick: file_upload, data })
             let subir_contratos = new RowButton({icon: 'toc', color: '', label: 'Subir contratos', onClick: go_to_documentos, data});
+            let decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data })
 
-            if( tipo == 1 && data.contratoTitulacion == 0){
-                if(data.documentos == 3){
-                    return `<div class="d-flex justify-center">${pass_button}${subir_contratos}${decline_button}</div>`
-                }
-                else{
-                    return `<div class="d-flex justify-center">${subir_contratos}${decline_button}</div>`
-                }                 
+            if( (tipo == 1 && data.documentos == 3) || (tipo == 2) || (tipo == 3) ){
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avance_contratos, data })
             }
-            if( tipo == 2 && data.contratoOOAM == 0){
-                if(data.documento != null){
-                    return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>`
-                }
-                else{
-                    return `<div class="d-flex justify-center">${pass_button}${upload_button}${decline_button}</div>`
-                }
-            }
-            if( tipo == 3 && data.contratoPV == 0){
-                if(idUsuario == 2896){
-                    decline_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data })
-                }
-                if(data.documento != null){
-                    return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${decline_button}</div>` 
-                }
-                else{
-                    return `<div class="d-flex justify-center">${pass_button}${upload_button}${decline_button}</div>` 
-                }       
-            }
-            else{
-                return ''
-            }
+
+            return `<div class="d-flex justify-center">${pass_button}${subir_contratos}${decline_button}</div>`
         }
     }
 ]
 
-    let table = new Table({
-        id: '#tableDoct',
-        url: tipo == 1 ? 'casas/countDocumentos' : 'casas/getLotesProcesoBanco',
-        params: tipo == 1 ? { documentos: documentos, proceso: 14, campo: campo } : { proceso: 14, tipoDocumento: documentos, tipoSaldo: tipo, campo: campo },
-        buttons: buttons,
-        columns,
-    })
-
+let table = new Table({
+    id: '#tableDoct',
+    url: 'casas/lista_elaborar_contrato',
+    params: { tipo: tipo },
+    buttons: buttons,
+    columns,
+})
 
 function file_upload(data) {
     let form = new Form({
@@ -301,26 +268,21 @@ function file_upload(data) {
 rechazo_proceso = function (data) {
     let form = new Form({
         title: 'Rechazar proceso',
-        text: `¿Deseas rechazar el lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/rechazoPaso14`,
+                url: `${general_base_url}casas/creditoBancoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success : function(response){
-                    if(response.result){
-                        finalizar_rechazo(data, form)
-                    }
-                    else{
-                        alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "danger")
+                    alerts.showNotification("top", "right", "Se ha rechazado el proceso correctamente", "success")
         
-                        table.reload()
-                        form.hide() 
-                    }                                                
+                    table.reload()
+                    form.hide()                             
                 },
                 error: function(){
                     alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
@@ -332,9 +294,10 @@ rechazo_proceso = function (data) {
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'tipo', value: tipo }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 13 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
+            new HiddenField({ id: 'procesoNuevo', value: 8 }),
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

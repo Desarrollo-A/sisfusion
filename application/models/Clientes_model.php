@@ -1425,12 +1425,14 @@ function getStatusMktdPreventa(){
     }
 
     function getCoordsByGrs($id_gerente) {
+        if ($this->session->userdata('id_usuario') == 16186) // El ID del usuario pertenece a Carolina Coronado
+            $id_gerente .= ", 6942";
         return $this->db
             ->query(
                 "SELECT * 
                 FROM usuarios 
-                WHERE  (id_rol = 9 AND id_lider = $id_gerente) OR 
-                        (id_usuario = $id_gerente)
+                WHERE  (id_rol = 9 AND id_lider IN ($id_gerente)) OR 
+                        (id_usuario IN ($id_gerente))
                 ORDER BY nombre, apellido_paterno, apellido_materno")
             ->result();
     }

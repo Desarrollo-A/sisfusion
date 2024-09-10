@@ -3743,4 +3743,64 @@ public $controller = 'Postventa';
             echo json_encode(array());
     }
 
+    public function asignar_escrituracion () 
+    {
+        $this->load->view('template/header');
+        $this->load->view("postventa/asignar_escrituracion_view");
+    }
+
+    public function residenciales()
+    {
+        $residenciales = $this->Postventa_model->getResidencialesOptions();
+
+        $this->json($residenciales);
+    }
+
+    public function condominios()
+    {
+        $idResidencial = $this->input->get('proyecto');
+
+        $condominios = $this->Postventa_model->getCondominiosOptions($idResidencial);
+
+        $this->json($condominios);
+    }
+
+    public function escrituraDisponible() 
+    {
+        $idCondominio = $this->input->get('condominio');
+        if(!isset($idCondominio)) {
+            $this->json([]);
+        }
+        $lotesEscritura = $this->Postventa_model->getEscrituraDisponible($idCondominio);
+        
+        $this->json($lotesEscritura);
+    }
+
+    public function asignarMarca() {
+        $idCliente = $this->form('idCliente');
+        $accion = $this->form('accion');
+        $banderaSuccess = true;
+
+        $dataUpdate = array(
+            "escrituraFinalizada" => 1,
+        );
+        $this->db->trans_begin();
+        if($accion == 1) {
+            $update = $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
+        }
+        
+        if(!$update){
+            $banderaSuccess = false;
+        }
+
+        if($banderaSuccess) {
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output($this->json([]));
+    }
+
 }

@@ -1248,16 +1248,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $rol_actual = $this->session->userdata('id_rol');
 
         switch($rol_actual){
-            /*case 5:
-            case 4:
-                $estatus_permitido='1, 3, 4';
-                break;
-                */
             case 17:
-                $estatus_permitido='1,2,3';
+                $estatus_permitido='1,2,3,5';
                 break;
             case 70:
-                $estatus_permitido='1,2,3';
+                $estatus_permitido='1,2,3,5';
 
         }
         $query = $this->db->query("SELECT STRING_AGG(au.id_autorizacion, ', ') id_autorizacion, au.idResidencial, STRING_AGG(au.idCondominio, ', ') idCondominio, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0') lote, 
@@ -1270,7 +1265,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         WHERE op.id_catalogo=90 AND au.estatus_autorizacion IN (".$estatus_permitido.")
         GROUP BY au.idResidencial, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0'), CAST(au.comentario AS VARCHAR(MAX)), au.estatus_autorizacion, 
         au.estatus, au.fecha_creacion, au.creado_por, au.fecha_modificacion, au.modificado_por,
-        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0')");
+        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0') ORDER BY au.fecha_creacion DESC");
 
 
         return $query->result_array();
@@ -1951,7 +1946,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         }
     }
 
-    public function validarMensualidad($idLote, $idCliente){
+    public function validarMensualidad($idLote, $idCliente) {
         $cmd = "SELECT * FROM mensualidad_cliente WHERE id_lote = $idLote AND id_cliente = $idCliente";
         $query= $this->db->query($cmd);
         return  $query->num_rows() > 0 ? TRUE : FALSE ; 
@@ -1979,5 +1974,93 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $result = $this->db->query("DELETE FROM historial_documento WHERE idDocumento = $idDocumento AND tipo_doc = 55 AND status = 1");
         return $result;
     }
+
+    // Consulta Gestor Contraloría
+    public function getRegistrosRL() {
+        $query = $this->db->query("SELECT id_opcion, nombre, estatus, fecha_creacion FROM opcs_x_cats WHERE id_catalogo = 77");
+        return $query->result();
+    }
     
+    // Función que retorna el ultimo registro de la tabla opcs_x_cats
+    public function getUltimoRegistro() {
+        return $this->db->query("SELECT MAX(id_opcion) AS id_opcion FROM opcs_x_cats WHERE id_catalogo = 77")->row();
+    }
+
+    // Función que retorna los registros de los lotes contratados por intercambio
+    public function getRegistrosIntercambios() {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') referencia,
+                lo.idStatusLote,
+                sl.nombre nombreEstatusLote,
+                sl.background_sl,
+                sl.color
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+            WHERE
+                lo.status = 1
+                AND lo.idStatusLote IN (6)")->result();
+    }
+
+    // Función que retorna los registros de las opciones para el gestor de contraloría
+    function getOpcionesPorCatalogo()  {
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (155) AND estatus = 1 ");
+    }
+
+    // Función que retorna los registros de los lotes para cambio de RL
+    public function getRegistrosCambioRL($nombreLote) {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') referencia,
+                cl.id_cliente,
+                cl.rl idRl,
+                ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') nombreRl
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+            LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.rl AND oxc0.id_catalogo = 77
+            WHERE
+                lo.status = 1
+            AND lo.nombreLote IN ('$nombreLote')")->result();
+    }
+    
+    public function getModelosdeCasa() {
+        $result = $this->db->query("SELECT idModelo,modelo,sup,costom2, estatus from modelos_casas");
+        return $result;
+    }
+    
+    public function addModelosdeCasa($NombreModelo, $superficie, $costo, $id_usuario) {
+        $query = "INSERT INTO modelos_casas (modelo, sup, costom2, creadoPor, modificadoPor, estatus) VALUES ('$NombreModelo', $superficie, $costo, $id_usuario, $id_usuario, 1)";
+      
+        $respuesta = $this->db->query($query);
+    
+        if (!$respuesta) {
+            return 0; 
+        } else {
+            return 1; 
+        }
+
+
+    }
+
+    public function updateEstatusModelosCasa($estatus, $idopcion_modelo,$id_usuario) {
+        $this->db->set('estatus', $estatus);
+        $this->db->set('modificadoPor', $id_usuario);  
+            $this->db->where('idModelo', $idopcion_modelo);
+        return $this->db->update('modelos_casas'); 
+    }
 }
+

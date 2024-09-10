@@ -1,3 +1,20 @@
+switch(idRol){
+    case 57: // titulacion
+        tipo = 1;
+        break;
+    
+    case 99: // OOAM
+        tipo = 2;
+        break;
+
+    case 33:
+    case 76:
+    case 81:
+    case 55: // postventa 
+        tipo = 3
+        break;
+}
+
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
 
@@ -151,6 +168,7 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/getDocumentosContratos/${idProcesoCasas}`,
+    params: {tipo},
     buttons: buttons,
     columns,
 })

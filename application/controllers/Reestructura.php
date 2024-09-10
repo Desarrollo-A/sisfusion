@@ -698,6 +698,8 @@ class Reestructura extends CI_Controller{
 
     public function setReubicacion(){
         $this->db->trans_begin();
+        $bandera = '';
+        $check = false;
         $idLote = $this->input->post('idLote');
         if(!isset($idLote)){
             echo json_encode(array(
@@ -718,7 +720,6 @@ class Reestructura extends CI_Controller{
 
         $checkApartado02 = $this->Reestructura_model->checkFechaApartado02($idLoteOriginal);
         $fechaCambio = "2024-03-09";
-
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
         if( $fechaUltimoEstatus2 >= $fechaCambio){
@@ -736,7 +737,7 @@ class Reestructura extends CI_Controller{
                 echo json_encode(array(
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
-                    'message' => 'No se encontro el Gerente correspondiente, reportarlo con SISTEMAS',
+                    'message' => 'No se encontró el Gerente correspondiente, reportarlo con SISTEMAS',
                     'color' => 'danger'
                 ));
                 exit; 
@@ -961,8 +962,16 @@ class Reestructura extends CI_Controller{
                         return;
                     }
 
-                    if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'],
-                        $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion)) {
+                    $moverExpediente = $this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'], $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion);
+                    $checkRescision = $this->Reestructura_model->checkRescision($dataLote['idLote'])->result();
+                    
+                    
+                    if(!empty($checkRescision)){
+                        $bandera = $dataLote['idLote'];
+                        $check = true;
+                    }
+
+                    if (!$moverExpediente){
                         $this->db->trans_rollback();
             
                         echo json_encode(array(
@@ -973,6 +982,24 @@ class Reestructura extends CI_Controller{
                         ));
                         return;
                     }
+
+                    if (!$check){
+                        $this->db->trans_rollback();
+
+                        var_dump($check);
+                        var_dump($dataLote['idLote']);
+                        echo '<pre>';var_dump($checkRescision);echo '</pre>';
+                        echo '<pre>';var_dump($moverExpediente);echo '</pre>';
+            
+                        echo json_encode(array(
+                            'titulo' => 'ERROR',
+                            'resultado' => FALSE,
+                            'message' => 'Error al dar de alta la rescisión de contrato',
+                            'color' => 'danger'
+                        ));
+                        return;
+                    }
+
                     $banderaInsertResicion = $banderaInsertResicion + 1;
                 }
             }
@@ -2251,6 +2278,20 @@ class Reestructura extends CI_Controller{
         $idUsuario = $this->session->userdata('id_usuario');
         $idRol = $this->session->userdata('id_rol');
         $flagProcesoContraloriaJuridico = 0;
+
+        $check = $this->Reestructura_model->copiarDatosXCliente($idLote);
+        if(empty($check)){
+            $this->db->trans_rollback();
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error en la información del cliente',
+                'color' => 'danger'
+            ));
+            return;
+            exit;
+        }
 
         if ($idPreproceso == 2)
             $flagProcesoContraloriaJuridico = $this->Reestructura_model->validarEstatusContraloriaJuridico($idLote);

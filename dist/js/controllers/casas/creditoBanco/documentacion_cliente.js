@@ -22,25 +22,11 @@ function show_upload(data) {
     let accept = '';
 
     switch (data.tipo) {
-        case 3:
-        case 5:
-        case 7:
-        case 11:
-        case 12:
-        case 18:
-            accept = ['image/png','image/jpeg','application/pdf']
-        break;
-
-        case 25:
-            accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf']
-        break;
-
         case 38:
             accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
             break;
-
         default:
-            accept = ['application/pdf'];
+            accept = ['image/png','image/jpeg','application/pdf']
     }
 
     let form = new Form({
@@ -73,6 +59,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
+            new HiddenField({ id: 'tipo_documento', value: data.tipo }),
             new FileField({   id: 'file_uploaded',  label: 'Archivo', placeholder: 'Selecciona un archivo', accept, required: true }),
         ],
     })
@@ -141,7 +128,10 @@ let columns = [
 
         }
 
-        let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
+        let upload_button = ''
+        if(data.tipo != 11){
+            upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
+        }
         
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },

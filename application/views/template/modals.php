@@ -1,3 +1,14 @@
+<style>
+#form-modal2 .modal-dialog {
+    max-width: 600px; 
+    margin: 1.75rem auto; 
+}
+#form-modal2 .modal-body {
+    max-height: 70vh; 
+    overflow-y: auto; 
+}
+</style>
+
 <div id="alert-modal" class="modal fade" role="dialog" tabindex='-1'>
     <div class="modal-dialog">
         <div class="modal-content">
@@ -38,12 +49,12 @@
                 <div class="modal-header">
                     <h4 class="modal-title text-center"><b id="title-form-modal"></b></h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body scroll-styles" style="max-height:450px; padding:0 20px; overflow:auto">
                     <span id="text-form-modal"></span>
                     <div id="fields-form-modal" class="row">
 
                     </div>
-                    <div class="mt-4">ㅤ</div>
+                    <div class="mt-4"></div>
                 </div>
                 <div class="modal-footer">
                     <button id="cancel-button-form-modal" type="button" class="btn btn-danger btn-simple" data-dismiss="modal">cerrar</button>
@@ -56,19 +67,19 @@
     </div>
 </div>
 
-<div id="form-modal2" class="modal fade" role="dialog" tabindex='-1' style="overflow-y: auto;">
+<div id="form-modal2" class="modal fade" role="dialog" tabindex='-1'>
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="form-form-modal2" method="post" novalidate>
                 <div class="modal-header">
                     <h4 class="modal-title text-center"><b id="title-form-modal2"></b></h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body scroll-styles">
                     <span id="text-form-modal2"></span>
                     <div id="fields-form-modal2" class="row">
 
                     </div>
-                    <div class="mt-4">ㅤ</div>
+                    <div class="mt-4"></div>
                 </div>
                 <div class="modal-footer">
                     <button id="cancel-button-form-modal2" type="button" class="btn btn-danger btn-simple" data-dismiss="modal">cerrar</button>

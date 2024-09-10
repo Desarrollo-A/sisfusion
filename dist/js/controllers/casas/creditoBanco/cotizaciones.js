@@ -59,18 +59,60 @@ function edit_cotizacion(cotizacion) {
     form.show();
 }
 
+function delete_cotizacion(cotizacion) {
+    let accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+
+    let form = new Form({
+        title: 'Eliminar cotización',
+        text: '¿Deseas eliminar la cotización seleccionada?'
+    })
+
+    form.onSubmit = function(data){
+        form.loading(true)
+
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}casas/delete_cotizacion`,
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if(response.result){
+                    alerts.showNotification("top", "right", response.message, "success");
+                    table.reload()
+
+                    form.hide()
+                }
+                else{
+                    alerts.showNotification("top", "right", response.message, "warning");                
+                }                
+            },
+            error: function () {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                form.loading(false)
+            }
+        })
+    }
+
+    form.fields = [
+        new HiddenField({ id: 'idCotizacion',   value: cotizacion.idCotizacion }),
+        new HiddenField({ id: 'idProcesoCasas', value: cotizacion.idProcesoCasas }),
+    ]
+
+    form.show();
+}
+
 backPage = function() {
     window.location.href = `${general_base_url}casas/propuesta_firma`
 }
 
 function show_upload(data) {
-
     let accept = ['application/pdf']
 
     let form = new Form({
         title: `Subir ${data.documento}`,
         onSubmit: function(data){
-            //console.log(data)
             form.loading(true);
 
             $.ajax({
@@ -106,7 +148,14 @@ function show_upload(data) {
 
 let columns = [
     { data: 'idCotizacion' },
-    { data: 'nombre' },
+    { data: function(data){
+        if(data.nombre == '' || data.nombre == null){
+            return 'Sin nombre'
+        }
+        else{
+            return data.nombre
+        }
+    } },
     { data: function(data){
         if(data.archivo){
             return data.archivo
@@ -116,12 +165,15 @@ let columns = [
     } },
     { data: function(data){
         let view_button = ''
+        let edit_button = new RowButton({icon: 'edit', label: 'Editar cotización', onClick: edit_cotizacion, data})
+        let delete_button = ''
+
         if(data.archivo){
             view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.nombre}`, onClick: download_file, data})
+            delete_button = new RowButton({icon: 'delete', label: 'Editar cotización', color: 'warning', onClick: delete_cotizacion, data})
         }
-        let edit_button = new RowButton({icon: 'edit', label: 'Editar cotización', onClick: edit_cotizacion, data})
-
-        return `<div class="d-flex justify-center">${view_button}${edit_button}</div>`
+        
+        return `<div class="d-flex justify-center">${view_button}${edit_button}${delete_button}</div>`
     } },
 ]
 

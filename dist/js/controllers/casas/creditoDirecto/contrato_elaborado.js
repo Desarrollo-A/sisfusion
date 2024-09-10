@@ -19,14 +19,14 @@ let columns = [
             let pass_button = '';
             let view_button = '';
 
-            let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Subir archivo', onClick: upload_archivo, data })
+            let upload_button = new RowButton({icon: 'file_upload', color: '', label: 'Cargar archivo', onClick: upload_archivo, data })
 
             if(data.archivo){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar proceso al lote', onClick: nextProcess, data})
-                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: nextProcess, data})
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
             }
 
-            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar proceso del lote', onClick: returnProcess, data})
+            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: returnProcess, data})
             return '<div class="d-flex justify-center">' + pass_button + upload_button + view_button + return_button + '</div>'
         } 
     },
@@ -46,8 +46,8 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
     data.proceso = 19;
 
     let form = new Form({
-        title: '¿Rechazar lote?', 
-        text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
+        title: 'Rechazar lote', 
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             // console.log(data)
             form.loading(true)
@@ -88,8 +88,8 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
 nextProcess = function(data){ // funcion para el avance del lote
     
     let form = new Form({
-        title: '¿Avanzar lote?', 
-        text: `Se avanzara el proceso del lote  - <b>${data.nombreLote}</b>`,
+        title: 'Avanzar lote', 
+        text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true)
 
@@ -128,7 +128,7 @@ nextProcess = function(data){ // funcion para el avance del lote
 function upload_archivo(data) {
     
     let form = new Form({
-        title: `Subir contrato elaborado`,
+        title: `Subir archivo`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

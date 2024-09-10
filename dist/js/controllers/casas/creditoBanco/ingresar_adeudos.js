@@ -45,12 +45,12 @@ function set_adeudo(data) {
         case 33:
             adeudo = 'adeudoADM'
             value = data.adeudoADM
-            label = 'Adeudo ADM'
+            label = 'Adeudo administración'
             break
         case 11:
             adeudo = 'adeudoADM'
             value = data.adeudoADM
-            label = 'Adeudo ADM'
+            label = 'Adeudo administración'
             break
 
     }
@@ -236,7 +236,24 @@ function show_preview(data) {
     });
 }
 
+let tipos = [
+    {label: 'Persona moral', value: 1},
+    {label: 'Persona física', value: 2},
+]
+
 pass_to_proyecto_ejecutivo = function(data) {
+    let fields = [
+        new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+        new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+    ]
+
+    /*
+    if(idRol == 33){
+        let select = new SelectField({ id: 'tipo_proveedor', value: data.tipoProveedor, label: 'Tipo de proveedor', placeholder: 'Selecciona una opción', data: tipos, required: true })
+        fields.splice(0, 0, select)
+    }
+    */
+
     let form = new Form({
         title: 'Avanzar proceso', 
         text: `¿Deseas avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
@@ -264,15 +281,14 @@ pass_to_proyecto_ejecutivo = function(data) {
                 }
             })
         },
-        fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'rol', value: idRol }),
-            new HiddenField({ id: 'documentos', value: data.documentos }),
-        ],
+        fields: fields,
     })
 
     form.show()
+}
+
+go_to_documentos = function(data) {
+    window.location.href = `documentacion/${data.idProcesoCasas}`;
 }
 
 let columns = [
@@ -284,13 +300,10 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        if(idRol === 99 && data.adeudoOOAM){
+        if(idRol === 99 && data.adeudoOOAM != null){
             return formatter.format(data.adeudoOOAM)
         }
-        else if(idRol === 33 && data.adeudoADM){
-            return formatter.format(data.adeudoADM)
-        }
-        else if(idRol === 11 && data.adeudoADM){
+        else if((idRol === 33 || idRol === 11) && data.adeudoADM != null){
             return formatter.format(data.adeudoADM)
         }
         return 'Sin ingresar'
@@ -321,45 +334,66 @@ let columns = [
 
         return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
+    {data : function (data) {
+        if(data.id_estatus == null) {
+            return `<span class="label lbl-warning">SIN ESTATUS</span>`;;
+        }
+        if(data.id_estatus == 49) {
+            return `<span class="label lbl-green">CONCLUIDO</span>`;
+        }
+        if(data.id_estatus != 49 && data.id_estatus != null) {
+            return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
+        }
+    }},
     { data: function(data){
-        let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
-
+        let formas_pago = '';
+        
+        let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
         let upload_button = '';
+
+        if (idRol == 33) {
+            if(data.cargaRequerida == 1 && data.cuentaDocumentos == 0 && (idRol == 33)) {
+                upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
+            }
+        }
+        else {
+            upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
+        }
 
         let nameFile = '';
 
         let view_button = '';
 
-        switch (idRol) {
-            case 99:
-                nameFile = 'Estado de cuenta'
-                break;
-            case 33:
-                nameFile = 'Formas de pago administración'
-                break;
-            case 11:
-                nameFile = 'Formas de pago administración'
-                break;
-        }
+        // switch (idRol) {
+        //     case 99:
+        //         nameFile = 'Estado de cuenta'
+        //         break;
+        //     case 33:
+        //         nameFile = 'Formas de pago administración'
+        //         break;
+        //     case 11:
+        //         nameFile = 'Formas de pago administración'
+        //         break;
+        // }
 
-        if (data.archivo) {
-            let parts = data.archivo.split('.');
-            let extension = parts.pop();
-            if(extension == 'xlsx'){
-                view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
-            }else{
-                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${nameFile}`, onClick: show_preview, data})
-            }
-            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
-        }else{
-            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
-        }
+        // if (data.archivo) {
+        //     let parts = data.archivo.split('.');
+        //     let extension = parts.pop();
+        //     if(extension == 'xlsx'){
+        //         view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
+        //     }else{
+        //         view_button = new RowButton({icon: 'visibility', label: `Visualizar ${nameFile}`, onClick: show_preview, data})
+        //     }
+        //     upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
+        // }else{
+        //     upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
+        // }
 
         let pass_button = ''
 
-        if(idRol === 99 && data.adeudoOOAM && data.archivo){
+        if(idRol === 99 && data.adeudoOOAM != null){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-        }else if((idRol === 11 || idRol === 33) && data.adeudoADM && data.archivo){
+        }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
         }
 
@@ -398,6 +432,41 @@ if(idRol === 11 || idRol === 33){
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_adeudos`,
-    params: { tipoDoc: tipoDoc, rol: idRol},
     columns,
 })
+
+set_formas_pago = function(data) {
+    let nameFile = 'Formas de pago';
+    let form = new Form({
+        title: 'Cargar formas de pago',
+        onSubmit: function(data) {
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/upload_documento_new`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    alerts.showNotification("top", "right", "Archivo cargado con éxito.", "success");
+                    table.reload();
+                    form.hide();
+                },
+                error: function() {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false);
+                }
+            });
+        }, 
+        fields: [
+            new HiddenField({id: 'id_proceso', value: data.idProcesoCasas}),
+            new HiddenField({ id: 'tipo', value: 11}),
+            new HiddenField({ id: 'name_documento', value: nameFile}),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], required: true}),
+        ]
+    });
+    
+    form.show();
+}

@@ -16,10 +16,10 @@ let columns = [
     { data: 'tiempoProceso' },
     { data: function(data)
         {
-            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 18', onClick: select_lote, data})
-            let upload_button = new RowButton({icon: 'file_upload', color: '', label: 'Subir archivo', onClick: upload_archivo, data})
-            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar al paso 16', onClick: return_process, data})
-            let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
+            let upload_button = new RowButton({icon: 'file_upload', color: '', label: 'Cargar archivo', onClick: upload_archivo, data})
+            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: return_process, data})
+            let view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
 
             if(data.documento == null && data.voBoOrdenCompra == 0){
                 return '<div class="d-flex justify-center">' + upload_button + return_button + '</div>'
@@ -45,7 +45,7 @@ let table = new Table({
 return_process = function(data){ // funcion para el avance del lote
     let form = new Form({
         title: '¿Rechazar lote?', 
-        text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true)
 
@@ -56,7 +56,7 @@ return_process = function(data){ // funcion para el avance del lote
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido avanzdo en su proceso.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente.", "success");
                     return_flags(data);
     
                     form.hide();
@@ -139,8 +139,8 @@ upload_archivo = function(data){ // funcion para subir el archivo de adeudo
 
 select_lote = function(data){ // funcion para el avance del lote
     let form = new Form({
-        title: '¿Avanzar lote?', 
-        text: `Se avanzara el proceso del lote  - <b>${data.nombreLote}</b>`,
+        title: 'Avanzar lote', 
+        text:`¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true)
 

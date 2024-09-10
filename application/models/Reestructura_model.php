@@ -2332,4 +2332,10 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("DELETE FROM lotesFusion WHERE idLotePvOrigen = ?", $pvLote);
         return $query;
     }
+
+    public function checkRescision($idLote){
+        $query = $this->db->query("SELECT *FROM historial_documento WHERE idLote = ? AND status = ? AND tipo_doc IN(?, ?)", array($idLote, 1, 33, 35));
+
+        return $query;
+    }
 }

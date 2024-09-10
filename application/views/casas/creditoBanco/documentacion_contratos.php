@@ -45,10 +45,9 @@
     <?php $this->load->view('template/modals');?>
 
     <script type="text/javascript">
-        const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>
-    </script>
-    <script type="text/javascript">
+        const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>;
         const ps = <?php echo $lote->proceso ?>;
+        const idRol = <?php echo $idRol ?>;
     </script>
     <script src="<?= base_url() ?>dist/js/controllers/casas/creditoBanco/documentacion_contratos.js?v=2"></script>
 </body>

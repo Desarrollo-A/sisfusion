@@ -62,7 +62,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
     contenedorTitulo.text(nombreLote);
     let flagEditar = $(this).attr("data-editar");
 
-    if(flagFusion == 1){
+    if(flagFusion == 2){
         if (flagEditar == 1) {
             $("#archivosFusionEditar").modal();
         }
@@ -188,7 +188,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         nombreLotes.push(nombreLote);
     }
     
-        if (flagFusion == 1) {
+        if (flagFusion == 22) {
             renderizar(nuevosDatosDestino, idLote, columnWith, label, acceptFiles);
         }
         else {

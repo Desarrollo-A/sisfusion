@@ -3052,7 +3052,7 @@ class Contraloria extends CI_Controller {
         echo json_encode($data_response);
     }
 
-       function actualizaAutMSI() {
+    function actualizaAutMSI() {
         //$modo 1: LOTE 2:CONDOMINIO
         $id_autorizacion = $this->input->post('id_aut');
         $comentario = $this->input->post('comentario');
@@ -3061,9 +3061,8 @@ class Contraloria extends CI_Controller {
         $actualizar = array();
         $insert_historial = array();
         $update_lotes = array();
-        $flagUpdate = 0;
-
         $fecha_insercion = date('Y-M-d H:i:s');
+
         if($modo == 1){
             $data_actualizar = array(
                 "estatus_autorizacion" => $estatus_autorizacion,
@@ -3089,7 +3088,7 @@ class Contraloria extends CI_Controller {
             $table_historial = 'historial_autorizacionesPMSI';
             $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_autorizacion);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
             $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
-            if($actualizar && $insert_historial){$flagUpdate = 1;}
+            
 
             //if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
             //    $array_update_lotes = $this->actualizaMSI($id_autorizacion, $modo);
@@ -3102,6 +3101,7 @@ class Contraloria extends CI_Controller {
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
             $fecha_insercion = date('Y-m-d H:i:s');
+            
             foreach($arrayAutorizaciones as $id_aut){
                 $data_actualizar = array(
                     "estatus_autorizacion" => $estatus_autorizacion,
@@ -3129,9 +3129,6 @@ class Contraloria extends CI_Controller {
                 $table_historial = 'historial_autorizacionesPMSI';
                 $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_aut);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
                 $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
-                if($actualizar && $insert_historial){$flagUpdate = 1;}
-                
-                
 
 
                 //este proceso se debe dejar para que lo ejecute el servidor
@@ -3143,23 +3140,14 @@ class Contraloria extends CI_Controller {
                 }*/
             }
         }
-        /*if($actualizar && $insert_historial){
+
+        if($actualizar && $insert_historial){
             $data_response['message'] = 'OK';
-        }else{
+        }else {
             $data_response['message'] = 'ERROR';
         }
-        echo json_encode($data_response);
-        */
         //avanzar o rechazar autorizacion
-
-        if($flagUpdate == 1) {
-            $response = $this->activaMSIListos($id_autorizacion);
-            if($response) {
-                $data_response['message'] = 'OK';
-            }else {
-                $data_response['message'] = 'ERROR';
-            }
-        }
+        echo json_encode($data_response);
     }
 
     function actualizaMSI($id_autorizacion, $modo) {//esta funcion obtiene los lotes con msi diferentes y los que no para -
@@ -3780,6 +3768,98 @@ class Contraloria extends CI_Controller {
     }*/
     }
 
+    // Vista Gestor Contraloría
+    public function gestorContraloria() {
+        $this->load->view('template/header');
+        $this->load->view('contraloria/gestorContraloriaView');
+    }
 
+    // Modelo Gestor Contraloría
+    public function getDatosTabla($tipoOperacion) {
+        if ($tipoOperacion == 1) {
+            $datos = $this->Contraloria_model->getRegistrosRL();
+        } else if ($tipoOperacion == 2) {
+            $datos = $this->Contraloria_model->getRegistrosIntercambios();
+        } else if ($tipoOperacion == 3) {
+            $datos = $this->Contraloria_model->getRegistrosCambioRL($this->input->post("nombreLote"));
+        }
+        if($datos != null) {
+            echo json_encode($datos);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    // Agregar registros a la tabla Gestor Contraloría
+    public function agregarRegistroGestorContraloria() {
+        $nombre = $this->input->post("nombre");
+        $id_opcion = $this->input->post("id_opcion");
+        $tipoTransaccion = $this->input->post("tipoTransaccion");
+        if ($tipoTransaccion == 0) {
+            $ultimoRegistro = $this->Contraloria_model->getUltimoRegistro();
+            $insetarDatos = array(
+                "id_opcion" => $ultimoRegistro->id_opcion + 1,
+                "id_catalogo" => 77,
+                "nombre" => $nombre,
+                "estatus" => 1,
+                "fecha_creacion" => date('Y-m-d H:i:s'),
+                "creado_por" => $this->session->userdata('id_usuario'),
+                "color" => NULL           
+            );
+            $respuesta = $this->General_model->addRecord('opcs_x_cats', $insetarDatos);
+        } else
+            $respuesta = $this->General_model->updateRecord('opcs_x_cats', array("estatus" => $tipoTransaccion == 1 ? 1 : 0), 'id_opcion', $id_opcion, 'AND id_catalogo = 77');
+        echo json_encode($respuesta);
+    }
+
+    public function agregarModeloCasas() {
+        $nombreModelo = $this->input->post('nombreModelo');
+        $superficie = $this->input->post('superficie');
+        $costo = $this->input->post('costo');
+        $idopcion_modelo = $this->input->post('idopcion_modelo');
+        $tipoTransaccionModelo = $this->input->post('tipoTransaccionModelo');
+        $estatus = $this->input->post('estatus'); 
+        $id_usuario= $this->session->userdata('id_usuario');
+        if ($tipoTransaccionModelo == 0) {
+            if (!empty($nombreModelo) && !empty($superficie) && !empty($costo) && !empty($id_usuario)) {
+                $resultado = $this->Contraloria_model->addModelosdeCasa($nombreModelo, $superficie, $costo, $id_usuario);
+                $data['success'] = $resultado;
+            } else {
+                $data['success'] = false;
+                $data['message'] = 'Datos incompletos. Favor de ingresar todos los datos';
+            }
+        } else if (!empty($estatus) && !empty($idopcion_modelo)&&!empty($id_usuario)) {
+            $resultado = $this->Contraloria_model->updateEstatusModelosCasa($estatus, $idopcion_modelo,$id_usuario);
+            $data['success'] = $resultado;
+        } else {
+            $data['success'] = false;
+            $data['message'] = 'Error al actualizar el estatus';
+        }
     
+        echo json_encode($data);
+    }
+    
+    
+    public function cambiarEstatusLote() {
+        $idLote = $this->input->post("idLote");
+        $datosActualizar = array(
+            "idStatusLote" => 9,
+            "usuario" => $this->session->userdata('id_usuario')                    
+        );
+        $respuesta = $this->General_model->updateRecord('lotes', $datosActualizar, 'idLote', $idLote);
+        echo json_encode($respuesta);
+    }
+
+    public function getOpcionesPorCatalogo()
+    {
+        echo json_encode($this->Contraloria_model->getOpcionesPorCatalogo()->result_array());
+    }
+
+    public function actualizarRlLote() {
+        
+    }
+    public function getModeloCasas() {
+		 echo json_encode($this->Contraloria_model->getModelosdeCasa()->result_array());
+	}
+
+
 }
