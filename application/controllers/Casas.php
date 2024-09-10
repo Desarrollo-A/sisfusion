@@ -1130,7 +1130,7 @@ class Casas extends BaseController
 
             if ($is_ok) {
                 // Agregar documentos de proveedor
-                $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36]);
+                $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 38]);
 
                 $is_ok = true;
                 foreach ($documentos as $key => $documento) {
