@@ -735,8 +735,6 @@ class Casas extends BaseController
         $name_documento = $this->form('name_documento');
         $tipo_documento = $this->form('tipo_documento') || 0;
 
-        var_dump($tipo_documento);
-
         if (!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)) {
             http_response_code(400);
             $this->json([]);
@@ -753,15 +751,17 @@ class Casas extends BaseController
         setlocale(LC_ALL, "es_MX");
         $dateNow = date("D-M-Y H:i:s");
 
-        if ($tipo_documento === 2) {
-            $this->email
+        if ($tipo_documento == 2) {
+
+            var_dump($tipo_documento);
+            /* $this->email
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('coordinador1.desarrollo@ciudadmaderas.com')
             ->subject('Notificación de carga de orden de compra en proceso casas - '. $dateNow)
             ->view($this->load->view('mail/casas/mailOrdenCompra', [ "dato" => 1], true));
             
-            $this->email->send();            
+            $this->email->send();      */       
         }
 
         if ($file) {
