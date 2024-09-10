@@ -4281,7 +4281,7 @@ class Casas extends BaseController
             }            
         }
 
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote", 0);        
+        //$this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote", 0);        
 
         $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
 
