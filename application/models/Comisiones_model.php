@@ -233,7 +233,7 @@ class Comisiones_model extends CI_Model {
     public function getDataDispersionPago() {
         $this->db->query("SET LANGUAGE Español;");
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
-        (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' ELSE ' SIN DEFINIR' END) tipo_venta,
+        (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' WHEN l.tipo_venta = 9 THEN 'Maderas Upgrade' ELSE ' SIN DEFINIR' END) tipo_venta,
         (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,cl.estructura,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, 
@@ -295,7 +295,7 @@ class Comisiones_model extends CI_Model {
         AND l.status IN (0,1) 
         AND (l.registro_comision IN (0,8,2,9) OR (l.registro_comision IN (1,8,9) 
         AND pc.bandera IN (0,100))) 
-        AND ((l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2) AND ISNULL(l.totalNeto2, 0) > 0) OR (l.tipo_venta IN (8))) 
+        AND ((l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2,9) AND ISNULL(l.totalNeto2, 0) > 0) OR (l.tipo_venta IN (8))) 
         AND cl.fechaApartado >= '2020-03-01' 
         AND (cl.id_subdirector IS NOT NULL AND cl.id_subdirector != '' AND cl.id_subdirector != 0 )
         )
