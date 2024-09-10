@@ -943,8 +943,9 @@ class CasasModel extends CI_Model
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 17 AND oxc2.id_catalogo = 126
             LEFT JOIN UltimoValor u ON u.idProcesoCasas = pc.idProcesoCasas and u.rn = 1
             LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
+            LEFT JOIN (SELECT TOP 1 * FROM vobos_proceso_casas vb WHERE vb.paso = 8) vb ON vb.idProceso = pc.idProcesoCasas 
             WHERE pc.proceso = 8
-            AND pc.status = 1 AND cli.status = 1";
+            AND pc.status = 1 AND cli.status = 1 AND vb.titulacion = 0";
 
         }else if($rol == 101){
 
@@ -993,7 +994,7 @@ class CasasModel extends CI_Model
             LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 28 AND doc3.proveedor = 0
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 28 AND oxc2.id_catalogo = 126
             LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
-            LEFT JOIN (SELECT TOP 1 * FROM vobos_proceso_casas vb WHERE vb.paso = 3) vb ON vb.idProceso = pc.idProcesoCasas 
+            LEFT JOIN (SELECT TOP 1 * FROM vobos_proceso_casas vb WHERE vb.paso = 8) vb ON vb.idProceso = pc.idProcesoCasas 
             WHERE pc.proceso = 8
             AND pc.status = 1 AND cli.status = 1 AND vb.gph = 0";
         }
@@ -2230,7 +2231,7 @@ class CasasModel extends CI_Model
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
             pc.tipoMovimiento,
             CASE
-                WHEN pc.tipoProveedor = 1 THEN 10
+                WHEN pc.tipoProveedor = 1 THEN 9
                 WHEN pc.tipoProveedor = 2 THEN 4
                 ELSE NULL
             END AS num_documentos,
@@ -2248,7 +2249,7 @@ class CasasModel extends CI_Model
             INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
             INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
             LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (1,2,3,4,5,6,7,8,9,10) AND archivo IS NOT NULL AND proveedor = 1 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas AND pc.tipoProveedor = 1
+            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (1,2,3,4,5,6,7,8,9) AND archivo IS NOT NULL AND proveedor = 1 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas AND pc.tipoProveedor = 1
             LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (1,2,3,4) AND archivo IS NOT NULL AND proveedor = 1 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas AND pc.tipoProveedor = 2
             LEFT JOIN vobos_proceso_casas vobo ON vobo.paso = 4 AND vobo.idProceso = pc.idProcesoCasas
         WHERE 
