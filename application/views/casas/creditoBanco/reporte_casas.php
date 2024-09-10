@@ -16,43 +16,16 @@
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                 <li role="presentation" class="active" id="tab-venta">
-                                    <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verVenta">Historial actual</a>
-                                </li>
-                                <li role="presentation" id="tab-proceso">
-                                    <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verProceso" class="btn-historial" data-idLote="" data-flagFusion="">Historial general</a>
+                                    <a href="#tabHistorial" aria-controls="#tabHistorial" role="tab" data-toggle="tab" id="verVenta">Historial</a>
                                 </li>
                             </ul>
                             <div class="tab-content" id="venta">
-                                <div role="tabpanel" class="tab-pane active" id="tabHistorial">
-
-                                    <div class="tab-content">
-                                        <div role="tabpanel" class="tab-pane active" id="historialTap">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="card card-plain">
-                                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                            <ul class="timeline-3" id="historialActual"></ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-content hide" id="proceso">
-                                <div class="modal-body">
-                                    <div role="tabpanel">
-                                        <div class="tab-content">
-                                            <div role="tabpanel" class="tab-pane active" id="historialTap">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="card card-plain">
-                                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                                <ul class="timeline-3" id="historialGeneral"></ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                <div role="#tabpanel" class="tab-pane active" id="#tabHistorial">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="historialActual"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -60,9 +33,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR </button>
                     </div>
                 </div>
             </div>
