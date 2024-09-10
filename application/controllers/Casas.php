@@ -4802,6 +4802,11 @@ class Casas extends BaseController
             case 62:
                 $new_vobo = [
                     "proyectos"  => 1,
+                    "comercializacion"=> 0,
+                    "contraloria"=> 0,
+                    "gph" => 0,
+                    "pv" => 0,
+                    "titulacion"=> 0,
                     "modificadoPor" => $this->idUsuario,
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                 ];
@@ -4809,6 +4814,10 @@ class Casas extends BaseController
             default:
                 $new_vobo = [
                     "comercializacion"  => 1,
+                    "contraloria"=> 0,
+                    "gph" => 0,
+                    "pv" => 0,
+                    "titulacion"=> 0,
                     "modificadoPor" => $this->idUsuario,
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                 ];
