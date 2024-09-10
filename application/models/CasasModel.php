@@ -2436,4 +2436,27 @@ class CasasModel extends CI_Model
         }
         return $this->db->query($query)->row();
     }
+
+    public function getDataMail($idProceso){
+        $query = "SELECT 
+            pc.idLote,
+            resi.descripcion AS proyecto,
+            con.nombre AS condominio,
+            lo.nombreLote,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor
+        FROM
+            proceso_casas_banco pc
+            LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+            INNER JOIN clientes cli ON cli.idLote = lo.idLote
+            INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+            INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+            INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
+        WHERE pc.idProcesoCasas = $idProceso";
+
+        return $this->db->query($query)->row();
+    }
 }
