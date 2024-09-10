@@ -450,7 +450,7 @@ class Casas extends BaseController
         $this->db->trans_begin();
         
         $getGerente = $this->CasasModel->getGerente($gerente);    
-        $this->CasasModel->addHistorial(0, 'NULL', 1,"Pre proceso | se asigna el gerente: ". $getGerente->nombre. " con el ID: " .$getGerente->idUsuario, 0);
+        $this->CasasModel->addHistorial(0, 'NULL', 1,"Pre proceso | se asigna el gerente: ". $getGerente->nombre. " IDLOTE: $idLote", 0);
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
@@ -500,7 +500,7 @@ class Casas extends BaseController
 
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
         
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: '.$getAsesor->nombre. " con el ID: ".$getAsesor->idUsuario, 0);
+        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: '.$getAsesor->nombre. " IDLOTE: $idLote ", 0);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -532,6 +532,7 @@ class Casas extends BaseController
         $comentario = $this->form('comentario');
         $idCliente = $this->form('idCliente');
         $banderaSuccess = true;
+        $idLote = $this->form('idLote');
 
         if (!isset($id) || !isset($asesor) || !isset($idLote) || !isset($proceso) || !isset($esquemaCreditoCasas) || !isset($esquemaCreditoCasas) || !isset($idProcesoCasas) || !isset($update) || !isset($idCliente)) {
             http_response_code(400);
@@ -2451,6 +2452,7 @@ class Casas extends BaseController
     public function lista_reporte_casas()
     {
         $opcion = $this->input->get('opcion');
+        $idLote = $this->input->get('opcion');
 
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16";
         $finalizado = "0, 1";
@@ -3088,9 +3090,9 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
-    public function getHistorial($idProceso, $tipoEsquema)
+    public function getHistorial($idProceso, $tipoEsquema, $idLote)
     {
-        echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso, $tipoEsquema));
+        echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote));
     }
 
     public function options_procesos_directo()
@@ -4229,7 +4231,7 @@ class Casas extends BaseController
         $getGerente = $this->CasasModel->getGerente($gerente);
         foreach ($idLote  as $lote) {
             foreach ($lote as $loteId) {
-                $this->CasasModel->addHistorial(0, 'NULL', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " con el ID: " . $getGerente->idUsuario, 0);
+                $this->CasasModel->addHistorial(0, 'NULL', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $loteId", 0);
             }
         }
 
@@ -4279,7 +4281,7 @@ class Casas extends BaseController
             }            
         }
 
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " con el ID: ".$getAsesor->idUsuario, 0);        
+        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote", 0);        
 
         $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
 
@@ -4623,10 +4625,11 @@ class Casas extends BaseController
         $dataHistorial = array(
             "idProcesoCasas" => $insert,
             "procesoAnterior" => 2,
-            "procesoNuevo" => NULL,
+            "procesoNuevo" => 1,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor" => $this->session->userdata('id_usuario'),
-            "descripcion" => "Se inicio proceso | comentario: " . $comentario,
+            "idMovimiento" => $this->session->userdata('id_usuario'),
+            "descripcion" => "Pre proceso | se inicia proceso comentario: " . $comentario . " IDLOTE: $idLote",
             "esquemaCreditoProceso" => $esquemaCredito 
         );
 
