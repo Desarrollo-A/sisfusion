@@ -4,7 +4,16 @@
       <td class="v-container-padding-padding" style="overflow-wrap:break-word;word-break:break-word;padding:10px 45px;font-family:'Raleway',sans-serif; text-align: center;" align="left">
 
         <div class="v-text-align v-font-size" style="font-size: 14px; line-height: 140%; text-align: center; word-wrap: break-word;">
-          <p style="line-height: 140%;">Hola Usuario se ha cargado la orden de compra </p>
+          <p style="line-height: 140%;">Se ha cargado la orden de compra </p>
+          <br>
+          <div>
+            <?php
+            $this->load->view('template/mail/componentes/tabla', [
+              'encabezados' => $encabezados,
+              'contenido' => $contenido
+            ])
+            ?>
+          </div>
         </div>
 
       </td>
