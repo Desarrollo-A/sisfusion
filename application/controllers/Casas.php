@@ -825,12 +825,12 @@ class Casas extends BaseController
         $proceso = $this->CasasModel->getProceso($id);
 
         // Aqui se asignara notaria si mas adelante nos piden poner mas notarias
-        $notaria = 1;
+        /* $notaria = 1;
         if ($tipo == 2) {
             $notaria = 2;
-        }
+        } */
 
-        $is_ok = $this->CasasModel->setTipoCredito($id, $tipo, $notaria);
+        $is_ok = $this->CasasModel->setTipoCredito($id, $tipo);
 
         // $vobo = $this->CasasModel->getVobos($id, 1);
 

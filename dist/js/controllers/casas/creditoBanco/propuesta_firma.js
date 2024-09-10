@@ -184,7 +184,7 @@ selectNotarias = function(data) {
             fields: [
                 new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
                 
-                new SelectField({ id: 'notaria', label: 'Notaria', value: data.notaria, placeholder: 'Selecciona una opción', data: itemsNot, required: true }),
+                new SelectField({ id: 'notaria', label: 'Notaria', value: data.notaria, placeholder: 'Selecciona una opción',data: itemsNot, required: true }),
             ],
         });
 

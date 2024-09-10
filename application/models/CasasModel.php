@@ -943,7 +943,7 @@ class CasasModel extends CI_Model
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 17 AND oxc2.id_catalogo = 126
             LEFT JOIN UltimoValor u ON u.idProcesoCasas = pc.idProcesoCasas and u.rn = 1
             LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
-            LEFT JOIN (SELECT TOP 1 * FROM vobos_proceso_casas vb WHERE vb.paso = 8) vb ON vb.idProceso = pc.idProcesoCasas 
+            LEFT JOIN (SELECT * FROM vobos_proceso_casas vb WHERE vb.paso = 8) vb ON vb.idProceso = pc.idProcesoCasas 
             WHERE pc.proceso = 8
             AND pc.status = 1 AND cli.status = 1 AND vb.titulacion = 0";
 
@@ -994,7 +994,7 @@ class CasasModel extends CI_Model
             LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 28 AND doc3.proveedor = 0
             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 28 AND oxc2.id_catalogo = 126
             LEFT JOIN (SELECT idProcesoCasas, COUNT(*) AS cotizacionCargada  FROM cotizacion_proceso_casas WHERE archivo IS NOT NULL GROUP BY idProcesoCasas ) coti ON coti.idProcesoCasas = pc.idProcesoCasas 
-            LEFT JOIN (SELECT TOP 1 * FROM vobos_proceso_casas vb WHERE vb.paso = 8) vb ON vb.idProceso = pc.idProcesoCasas 
+            LEFT JOIN (SELECT * FROM vobos_proceso_casas vb WHERE vb.paso = 8) vb ON vb.idProceso = pc.idProcesoCasas 
             WHERE pc.proceso = 8
             AND pc.status = 1 AND cli.status = 1 AND vb.gph = 0";
         }
@@ -1625,11 +1625,10 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function setTipoCredito($idProcesoCasas, $tipoCredito, $notaria){
+    public function setTipoCredito($idProcesoCasas, $tipoCredito){
         $query = "UPDATE proceso_casas_banco
         SET
-            tipoCredito = $tipoCredito,
-            notaria = $notaria
+            tipoCredito = $tipoCredito
         WHERE
             idProcesoCasas = $idProcesoCasas";
 
