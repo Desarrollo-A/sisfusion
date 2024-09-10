@@ -60,6 +60,16 @@ class Casas extends BaseController
         $this->load->view("casas/creditoBanco/documentacion", $data);
     }
 
+    public function documentacionDirecto($proceso) {
+        $lote = $this->CasasModel->getProcesoDirecto($proceso);
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/creditoDirecto/documentacion", $data);
+    }
+
     public function proyecto_ejecutivo()
     {
         $this->load->view('template/header');
@@ -681,7 +691,9 @@ class Casas extends BaseController
         }
 
         $updateData = array(
-            "id_asesor_c" => 0
+            "id_asesor_c" => 0,
+            "pre_proceso_casas" => 1,
+            "idPropuestaCasa" => null
         );
 
         $update = $this->General_model->updateRecord("clientes", $updateData, "id_cliente", $idCliente);
@@ -723,6 +735,8 @@ class Casas extends BaseController
         $name_documento = $this->form('name_documento');
         $tipo_documento = $this->form('tipo_documento') || 0;
 
+        var_dump($tipo_documento);
+
         if (!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)) {
             http_response_code(400);
             $this->json([]);
@@ -739,7 +753,7 @@ class Casas extends BaseController
         setlocale(LC_ALL, "es_MX");
         $dateNow = date("D-M-Y H:i:s");
 
-        if ($tipo_documento == 2) {
+        if ($tipo_documento === 2) {
             $this->email
             ->initialize()
             ->from('Ciudad Maderas')
@@ -1082,7 +1096,7 @@ class Casas extends BaseController
 
         $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, $comentario, 1);
         
-        if($vobo->adm == 1 && $vobo->ooam == 1){
+        if($vobo->adm == 1 && $vobo->ooam == 1 && $vobo->proyectos == 1){
             $new_status = 4;
 
             $movimiento = 0;
@@ -1094,7 +1108,16 @@ class Casas extends BaseController
 
             if ($is_ok) {
                 // Agregar documentos de proveedor
-                // $this->CasasModel->insertDocumentosProveedor($proceso->idProcesoCasas, $proceso->tipoProveedor);
+                $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36]);
+
+                $is_ok = true;
+                foreach ($documentos as $key => $documento) {
+                    $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+                    if (!$is_ok) {
+                        break;
+                    }
+                }
 
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
@@ -1584,7 +1607,7 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
-        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "idCliente", $idCliente);
+        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "id_cliente", $idCliente);
         if(!$updateCliente){
             $banderaSuccess = false;
         }
@@ -3172,8 +3195,11 @@ class Casas extends BaseController
 
     public function ordenCompraFirma()
     {
+        $data = [
+            'idRol' => $this->idRol
+        ];
         $this->load->view('template/header');
-        $this->load->view('casas/creditoBanco/orden_compra_view');
+        $this->load->view('casas/creditoBanco/orden_compra_view', $data);
     }
 
     public function getLotesProcesoBanco()
@@ -4533,8 +4559,6 @@ class Casas extends BaseController
             "idLote" => $idLote,
             "proceso" => 1,
             "comentario" => $comentario, 
-            "idGerente" => $idGerente,
-            "idAsesor" => $this->session->userdata('id_usuario'),
             "creadoPor" => $this->session->userdata('id_usuario')
         );
 
@@ -4544,12 +4568,17 @@ class Casas extends BaseController
         if(!$update){
             $banderaSuccess = false;
         }
-
-        $insert = $this->CasasModel->insertProceso($procesoData, $tabla); // valor del id de casas que se inserta en el momento
-        if(!$insert){
-            $banderaSuccess = false;
+        $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla);
+        if($checkPreproceso != null) {
+            $update = $this->General_model->updateRecord($tabla, $procesoData, "idProcesoCasas", $checkPreproceso->idProcesoCasas);
+            $insert = $checkPreproceso->idProcesoCasas;
+        }else {
+            $insert = $this->CasasModel->insertProceso($procesoData, $tabla); // valor del id de casas que se inserta en el momento
+            if(!$insert){
+                $banderaSuccess = false;
+            }
         }
-
+        
         $dataHistorial = array(
             "idProcesoCasas" => $insert,
             "procesoAnterior" => 2,
@@ -4565,7 +4594,7 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
-        if($esquemaCredito == 1){
+        if($esquemaCredito == 1 && $checkPreproceso == null){
             $documentoData = array(
                 "idProcesoCasas" => $insert,
                 "documento" => "Carta de autorización",
@@ -4609,6 +4638,12 @@ class Casas extends BaseController
         $ocupacion = $this->form('ocupacion');
         $idLote = $this->form('idLote');
         $accion = $this->form('altaAccion');
+
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
         $flagStatus = true;
         $this->db->trans_begin();
         //INSERT
@@ -4716,7 +4751,9 @@ class Casas extends BaseController
     public function to_precierre_cifras(){
         $idProcesoCasas = $this->form('idProcesoCasas');
         $comentario = $this->form('comentario');
-
+        $idCasaFinal = $this->form('idCasaFinal');
+        $idCliente = $this->form('idCliente');
+        
         switch ($this->idRol) {
             case 62:
                 $new_vobo = [
@@ -4741,6 +4778,7 @@ class Casas extends BaseController
         }
 
         $vobo = $this->CasasModel->updateVobos($idProcesoCasas, 4, $new_vobo);
+        $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
 
         if($vobo->proyectos && $vobo->comercializacion){
             $proceso = $this->CasasModel->getProceso($idProcesoCasas);
@@ -4759,5 +4797,20 @@ class Casas extends BaseController
         $lotes = $this->CasasModel->getListaOrdenCompraFirma();
 
         $this->json($lotes);
+    }
+
+    public function lista_documentos_cliente_directo ($proceso) {
+        $documentos = [];
+
+        switch ($this->idRol) {
+            case '12':
+                $documentos = $this->CasasModel->getListaDocumentosClienteDirecto($proceso, [2]);
+                break;
+        }
+        $this->json($documentos);
+    }
+
+    public function ingresar_adeudo_directo() {
+        
     }
 }

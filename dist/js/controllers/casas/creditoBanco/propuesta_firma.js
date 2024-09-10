@@ -200,7 +200,7 @@ addNotaria = function(data) {
         alerts.showNotification("top", "right", "El campo esta vacío.", "danger");
     }else{
         let form = new FormConfirm({
-            title: '¿Estás seguro de registrar la notaria?',
+            title: '¿Estás seguro de registrar la notaría?',
             onSubmit: function (data) {
                 form.loading(true)
     
@@ -581,3 +581,14 @@ let table = new Table({
     columns,
     buttons:buttons,
 })
+
+$('#form-modal').on('shown.bs.modal', function () {
+    $('.datepicker').each(function () {
+        $(this).data("DateTimePicker").options({
+            widgetPositioning: {
+                horizontal: 'auto',  
+                vertical: 'bottom'   
+            }
+        });
+    });
+});

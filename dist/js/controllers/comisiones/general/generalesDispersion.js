@@ -83,7 +83,8 @@ $('.btn-detalle-plan').on('click', function () {
     $('#detalle-tabla-div').hide();
 });
 
-$('#planes').change(function () {
+$('#planes').change(function (e) {
+    e.stopImmediatePropagation();
     cleanElement('detalle-tabla-div');
     const idPlan = $(this).val();
     if (idPlan !== '0' || idPlan !== NULL) {
