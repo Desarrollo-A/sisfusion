@@ -4281,7 +4281,7 @@ class Casas extends BaseController
             }            
         }
 
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote", 0);        
+        //$this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote", 0);        
 
         $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
 
@@ -4802,6 +4802,11 @@ class Casas extends BaseController
             case 62:
                 $new_vobo = [
                     "proyectos"  => 1,
+                    "comercializacion"=> 0,
+                    "contraloria"=> 0,
+                    "gph" => 0,
+                    "pv" => 0,
+                    "titulacion"=> 0,
                     "modificadoPor" => $this->idUsuario,
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                 ];
@@ -4809,6 +4814,10 @@ class Casas extends BaseController
             default:
                 $new_vobo = [
                     "comercializacion"  => 1,
+                    "contraloria"=> 0,
+                    "gph" => 0,
+                    "pv" => 0,
+                    "titulacion"=> 0,
                     "modificadoPor" => $this->idUsuario,
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                 ];
