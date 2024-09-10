@@ -283,7 +283,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         LEFT JOIN (SELECT SUM(comision_total) AS sumComisiones,idCliente FROM comisiones WHERE estatus=8 GROUP BY idCliente) sumComisionReu ON sumComisionReu.idCliente = cl.id_cliente_reubicacion_2
         LEFT JOIN (SELECT SUM(totalNeto2) as sumaFusion,idLotePvOrigen FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lof ON lof.idLotePvOrigen=clr.idLote
-        LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote 
+        LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote AND mc.id_cliente = cl.id_cliente
         LEFT JOIN opcs_x_cats opc_mc ON opc_mc.id_opcion = mc.opcion AND opc_mc.id_catalogo= 127
         WHERE l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250,25836) 
         AND l.registro_comision not IN (7) 
@@ -5060,7 +5060,7 @@ function getDatosGralInternomex(){
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado, idStatusContratacion, idMovimiento FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 
         GROUP BY idLote, idCliente, idStatusContratacion, idMovimiento) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
         WHERE ((hl.idStatusContratacion = 9 AND hl.idMovimiento = 39) OR l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250)) AND l.idStatusContratacion >= 9
-        AND cl.status = 1 AND l.status IN (0,1) AND l.registro_comision IN (1) AND pc.bandera IN (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
+        AND cl.status = 1 AND l.status IN (0, 1) AND l.registro_comision IN (1, 9) AND pc.bandera IN (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
         ORDER BY l.idLote");
         return $query;
     }
@@ -5352,11 +5352,23 @@ function getDatosGralInternomex(){
         else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
             $id_lider .= ", 5604";
         else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
-            $id_lider .= ", 80, 664";
+            $id_lider .= ", 80, 664, 16458, 2599";
         else if ($id_usuario == 16186) // CAROLINA CORONADO YAÑEZ
             $id_lider .= ", 6942";
         else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
             $id_lider .= ", 654, 697, 5604, 10251, 12688";
+        else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
+            $id_lider .= ", 24, 10";
+        else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
+            $id_lider .= ", 7474";
+        else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
+            $id_lider .= ", 13821";
+        else if ($id_usuario == 16813) // Vanessa Castro Muñoz
+            $id_lider .= ", 11680";
+        else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
+            $id_lider .= ", 6661";
+        else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
+            $id_lider .= ", 13067";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES
@@ -6331,7 +6343,7 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
     public function getFechaCorteActual($tipoUsuario,$diaActual){
     $mesActual = date('m');
     $formaPago = $this->session->userdata('forma_pago');
-    $filtro = ($tipoUsuario == 2 || $tipoUsuario == 4) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($formaPago == 2 && $tipoUsuario == 2 ) ? " AND Day(fechaInicio) >= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
+    $filtro = ($tipoUsuario == 2 || $tipoUsuario == 4) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : ((in_array($formaPago, array(2, 3, 4)) && $tipoUsuario == 2 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
     $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
     $tipoUsuario =  $tipoUsuario == 1 ? 0 : ($tipoUsuario == 2 ? 1 : ($tipoUsuario == 4 ? 4 : 3) );
     return $this->db->query("SELECT mes,fechaInicio,corteOoam $filtro2 FROM fechasCorte WHERE estatus = 1 AND 

@@ -81,11 +81,11 @@
         </div> -->
         <div class="collapse navbar-collapse hide">
             <ul class="nav navbar-nav navbar-right">
-				<!--<li class=" active">
-					<a href="#">
-						<i class="material-icons">lock_outline</i> Login
-					</a>
-				</li>
+                <!--<li class=" active">
+                    <a href="#">
+                        <i class="material-icons">lock_outline</i> Login
+                    </a>
+                </li>
 
                 <li class="">
                     <a href="#">
@@ -107,21 +107,20 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
-                                <?=form_open(base_url().'login/new_user')?>
                                     <div class="card card-login card-hidden">
                                         <!--<img src="--><?//=base_url()?><!--static/images/gorro_navideno.png" width="50px" style="    position: absolute;top: -21%;width: 85px;z-index: 99;left: -4%;">-->
                                         <div class="card-header text-center" data-background-color="goldMaderas">
                                             <h4 class="card-title"><img src="<?=base_url()?>static/images/ciudadmaderas_white_2.png"
-        																style="width: 70%;margin: 0px;"></h4>
+                                                                        style="width: 70%;margin: 0px;"></h4>
                                         </div>
                                         <p class="category text-center" style="margin: 15px;">
-                                            Inicia sesión con cuenta de google
+                                            Para continuar, regístrate con tu correo corporativo, a partir del 16 de septiembre tu usuario sera este correo
                                         </p>
 
                                         <div style="margin: 15px;">
                                             <div id="g_id_onload"
                                                 data-client_id="474884879866-404nd37vojdrc4csaa84rvs66p9h9bbb.apps.googleusercontent.com"
-                                                data-login_uri="<?=base_url()?>login/google_login"
+                                                data-login_uri="<?=base_url()?>login/google_register"
                                                 data-auto_prompt="false">
                                             </div>
                                             <div class="g_id_signin"
@@ -133,38 +132,8 @@
                                                 data-logo_alignment="left">
                                             </div>
                                         </div>
-                                        <p class="category text-center">
-                                            o ingresa tus datos de usuario para poder continuar
-                                        </p>
-                                        <div class="card-content">
-        									<div id="msg" style="text-align: center"></div>
-                                            <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="material-icons">face</i>
-                                                    </span>
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Nombre de usuario</label>
-                                                    <input type="text" id="usuario" name="usuario" class="form-control" required>
-                                                </div>
-                                            </div>
-                                            <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="material-icons">lock_outline</i>
-                                                    </span>
-                                                <div class="form-group label-floating">
-                                                    <label class="control-label">Contraseña</label>
-                                                    <input type="password" id="contrasena" name="contrasena" class="form-control" required>
-                                                    <input type="checkbox" onclick="showPassword()">Mostrar contraseña
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="footer text-center">
-                                            <?=form_hidden('token',$token)?>
-                                            <button type="submit" class="btn btn-green btn-simple btn-wd btn-lg" id="btnEnter">INGRESAR</button>
-                                            <?=form_close()?>
-                                        </div>
+                                        
                                     </div>
-                                </form>
                             </div>
                         </div>
                     </div>

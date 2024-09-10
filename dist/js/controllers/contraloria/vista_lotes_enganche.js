@@ -32,6 +32,7 @@ function llenarSelectPrincipal(){
             document.getElementById('selects').innerHTML = precio + enganche;
         break;
         case 2754: //Gabriela Hernández Tovar vista_lotes_enganche_sede
+        case 14342: // Silvia Patricia Ramirez Ramirez
         case 14481: // MILDRED VARGAZ MUÑOZ
             subtitulo = "En esta vista podrás hacer la actualización del enganche y ubicación de un lote apartado.";
             $('#modificacion').append('<option value="Ubicacion">Ubicación</option>');
