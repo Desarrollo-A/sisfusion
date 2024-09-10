@@ -4628,7 +4628,7 @@ class Casas extends BaseController
             "procesoNuevo" => 1,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor" => $this->session->userdata('id_usuario'),
-            "idMovimiento" => $this->session->userdat('id_usuario'),
+            "idMovimiento" => $this->session->userdata('id_usuario'),
             "descripcion" => "Pre proceso | se inicia proceso comentario: " . $comentario . " IDLOTE: $idLote",
             "esquemaCreditoProceso" => $esquemaCredito 
         );
