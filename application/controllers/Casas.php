@@ -3269,7 +3269,7 @@ class Casas extends BaseController
             case 2: // OOAM
                 $contrato = 'contratoOOAM';
                 $vobo = 'ooam';
-                $documentos = '23';
+                $documentos = '49';
                 break;
 
             case 3: // postventa
