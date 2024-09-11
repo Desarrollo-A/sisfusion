@@ -4175,12 +4175,13 @@ class Casas extends BaseController
         $this->output->set_output(json_encode($response));
     }
 
-    public function to_asignacion_asesor()
-    {
+    
+    public function to_asignacion_asesor() {
         $form = $this->form();
-
         $asesor = $this->form('asesor');
         $idClientes = json_decode($this->form('idClientes'));
+        $idLotes = json_decode($this->form('idLotes'));
+        
         $idUsuario = $this->session->userdata('id_usuario');
         $banderaSuccess = true;
 
@@ -4191,7 +4192,6 @@ class Casas extends BaseController
         $dataUpdate = array();
         $getAsesor = $this->CasasModel->getAsesor($asesor);
 
-        // idLotes[0] -- es el idLote
         $this->db->trans_begin();
 
         foreach ($idClientes as $cliente) {
@@ -4205,8 +4205,12 @@ class Casas extends BaseController
             }
         }
 
-        //$this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote", 0);        
-
+        foreach($idLotes as $lote) {
+            foreach($lote as $loteId) {
+                $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $loteId", 0);        
+            }
+        }
+        
         $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
 
         if (!$update) $banderaSuccess = false;
