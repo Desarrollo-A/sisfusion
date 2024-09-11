@@ -3396,10 +3396,10 @@ class Casas extends BaseController
 
         if ($procesoNuevo == 12) {
 
-            $vobo = $this->CasasModel->getVobos($idProceso, 2);
+            $vobo = $this->CasasModel->getVobos($idProceso, 4);
 
             $updateData = array(
-                "contraloria"  => 0,
+                "proyectos"  => 0,
                 "comercializacion" => 0,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
                 "fechaModificacion" => date("Y-m-d H:i:s"),
