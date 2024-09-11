@@ -1129,9 +1129,20 @@ class Casas extends BaseController
             if ($is_ok) {
                 // Agregar documentos de proveedor
                 $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 38]);
+                
+                $vobo = $this->CasasModel->getVobos($id, 4);
+
+                if (!$vobo) {
+                    $insertVobo = $this->CasasModel->insertVobo($id, 4);
+
+                    if (!$insertVobo) {
+                        http_response_code(404);
+                    }
+                }
 
                 $is_ok = true;
                 foreach ($documentos as $key => $documento) {
+
                     $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
 
                     if (!$is_ok) {
@@ -1146,146 +1157,6 @@ class Casas extends BaseController
                 http_response_code(404);
             }
         }
-
-        /*
-        if ($doc == 3 && $vobo->adm == 1 && $vobo->ooam == 1) {
-
-            $updateData = array(
-                "proyectos" => 1,
-                "modificadoPor" => $this->session->userdata('id_usuario')
-            );
-
-            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
-
-            if (!$update) {
-                http_response_code(404);
-            }
-
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, $comentario, 1);
-
-            $new_status = 4;
-
-            $movimiento = 0;
-            if ($proceso->tipoMovimiento == 1) {
-                $movimiento = 2;
-            }
-
-            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
-
-            if ($is_ok) {
-                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
-
-                $this->json([]);
-            } else {
-                http_response_code(404);
-            }
-        } else if ($doc == 3 && ($vobo->adm == 0 || $vobo->ooam == 0)) {
-
-            if ($rol == 0) {
-
-                $updateData = array(
-                    "proyectos" => 1,
-                    "modificadoPor" => $this->session->userdata('id_usuario')
-                );
-
-                $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
-
-                if ($update) {
-                    $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, $comentario, 1);
-
-                    $this->json([]);
-                } else {
-                    http_response_code(404);
-                }
-            }
-
-            switch ($rol) {
-                case "99":
-                    $updateData = array(
-                        "ooam"  => 1,
-                        "modificadoPor" => $this->session->userdata('id_usuario'),
-                        "fechaModificacion" => date("Y-m-d H:i:s"),
-                    );
-                    break;
-                case "11":
-                    $updateData = array(
-                        "adm"  => 1,
-                        "modificadoPor" => $this->session->userdata('id_usuario'),
-                        "fechaModificacion" => date("Y-m-d H:i:s"),
-                    );
-                    break;
-                case "33":
-                    $updateData = array(
-                        "adm"  => 1,
-                        "modificadoPor" => $this->session->userdata('id_usuario'),
-                        "fechaModificacion" => date("Y-m-d H:i:s"),
-                    );
-                    break;
-            }
-
-            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
-
-            if (!$update) {
-                http_response_code(404);
-            }
-
-            $vobo = $this->CasasModel->getVobos($id, 1);
-
-            if ($vobo->ooam == 1 && $vobo->adm == 1 && $vobo->proyectos == 1) {
-                $new_status = 4;
-
-                $movimiento = 0;
-                if ($proceso->tipoMovimiento == 1) {
-                    $movimiento = 2;
-                }
-
-                $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
-
-                if ($is_ok) {
-                    $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
-
-                    $this->json([]);
-                } else {
-                    http_response_code(404);
-                }
-            }
-        } else {
-
-            switch ($rol) {
-                case "99":
-                    $updateData = array(
-                        "ooam"  => 1,
-                        "modificadoPor" => $this->session->userdata('id_usuario'),
-                        "fechaModificacion" => date("Y-m-d H:i:s"),
-                    );
-                    break;
-                case "11":
-                    $updateData = array(
-                        "adm"  => 1,
-                        "modificadoPor" => $this->session->userdata('id_usuario'),
-                        "fechaModificacion" => date("Y-m-d H:i:s"),
-                    );
-                    break;
-                case "33":
-                    $updateData = array(
-                        "adm"  => 1,
-                        "modificadoPor" => $this->session->userdata('id_usuario'),
-                        "fechaModificacion" => date("Y-m-d H:i:s"),
-                    );
-                    break;
-            }
-
-            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
-
-            if ($update) {
-                $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, $comentario, 1);
-
-                $this->json([]);
-            } else {
-                http_response_code(404);
-            }
-        }
-        */
     }
 
     public function lista_valida_comite()
@@ -3491,11 +3362,10 @@ class Casas extends BaseController
 
         if ($procesoNuevo == 3) { //para el rechazo al paso 3
 
-            $vobo = $this->CasasModel->getVobos($idProceso, 2);
+            $vobo = $this->CasasModel->getVobos($idProceso, 4);
 
             $updateData = array(
-                "adm"  => 1,
-                "ooam" => 1,
+                "comercializacion" => 0,
                 "proyectos" => 0,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
                 "fechaModificacion" => date("Y-m-d H:i:s"),
