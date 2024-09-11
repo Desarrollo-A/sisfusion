@@ -49,7 +49,7 @@ function replace_upload(data) {
             new HiddenField({ id: 'id_documento', value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             //new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
-            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Seleciona un archivo', accept: ['application/vnd.ms-excel'], required : true}), // Cambio pdf -> xls
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Seleciona un archivo', accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],  required : true}), // Cambio pdf -> xls
         ],
     })
 
@@ -154,6 +154,7 @@ let columns = [
     } },
     {
         data: function (data) {
+            console.log("data: ", data);
 
             let pass_button = ''
             let back_button = ''
@@ -162,10 +163,10 @@ let columns = [
                 back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazar_proceso, data})
             }
 
-            if (data.kitBancario) {
-            pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_vobo_cifras, data })
-            }
-            view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: show_preview, data})
+            //if (data.kitBancario) {
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_vobo_cifras, data })
+            //}
+            view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: download_file, data})
             upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: replace_upload, data })
 
             return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${back_button}</div>`
