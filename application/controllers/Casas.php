@@ -2637,6 +2637,7 @@ class Casas extends BaseController
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->session->userdata('id_usuario'),
+            "idMovimiento" => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -3400,6 +3401,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
             "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
@@ -3663,6 +3665,7 @@ class Casas extends BaseController
             "procesoAnterior" => 6,
             "procesoNuevo"    => 6,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento" => $idUsuario,
             "creadoPor"       => $idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
@@ -3774,6 +3777,7 @@ class Casas extends BaseController
             "procesoAnterior" => 14,
             "procesoNuevo"    => 14,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->idUsuario,
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
