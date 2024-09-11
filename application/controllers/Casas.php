@@ -851,7 +851,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 26, 27]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
@@ -1025,7 +1025,7 @@ class Casas extends BaseController
                 $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [13, 14, 15]);
                 break;
             case '99':
-                $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [26, 27]);
+                $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [36, 27]);
                 break;
         }
 
