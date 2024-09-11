@@ -1487,7 +1487,10 @@ class Reporte_model extends CI_Model {
     }
     
     public function getEstatusContratacionList(){
-        $query = $this->db->query("SELECT * FROM statuscontratacion WHERE idStatusContratacion NOT IN (8,11)");
+        $query = $this->db->query(
+            "SELECT idStatusContratacion, nombreStatus FROM statuscontratacion WHERE idStatusContratacion NOT IN (1, 4, 8, 11, 12)
+            UNION ALL
+            SELECT 16 idStatusContratacion, 'Contratados' nombreStatus");
         return $query;
     }
 
@@ -1836,6 +1839,8 @@ class Reporte_model extends CI_Model {
             $filtro = "AND lo.idMovimiento IN (43, 68)";
         else if ($estatusContratacion == 15)
             $filtro = "AND lo.idMovimiento IN (44, 69, 80)";
+        else if ($estatusContratacion == 16)
+            $filtro = "AND lo.idMovimiento IN (45)";
         return $filtro;
     }
 }

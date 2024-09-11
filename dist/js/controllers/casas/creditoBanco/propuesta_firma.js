@@ -159,7 +159,7 @@ estatusNotaria = function(data) {
 selectNotarias = function(data) {
     updateItemsNot().then(() => {
         let form = new Form({
-            title: 'Selección de notaria',
+            title: 'Selección de notaría',
             onSubmit: function(data){
                 form.loading(true);
 
@@ -184,7 +184,7 @@ selectNotarias = function(data) {
             fields: [
                 new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
                 
-                new SelectField({ id: 'notaria', label: 'Notaria', value: data.notaria, placeholder: 'Selecciona una opción',data: itemsNot, required: true }),
+                new SelectField({ id: 'notaria', label: 'Notaría', value: data.notaria, placeholder: 'Selecciona una opción', data: itemsNot, required: true }),
             ],
         });
 
@@ -197,7 +197,7 @@ selectNotarias = function(data) {
 addNotaria = function(data) {
 
     if(!data){
-        alerts.showNotification("top", "right", "El campo esta vacío.", "danger");
+        alerts.showNotification("top", "right", "El campo está vacío.", "danger");
     }else{
         let form = new FormConfirm({
             title: '¿Estás seguro de registrar la notaría?',

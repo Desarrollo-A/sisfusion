@@ -824,7 +824,7 @@ public function getDatosFechasProyecCondm(){
             $respuesta = true;
             }*/
     }
-    else if($responses[0]->bandera != 0) {
+    else if($responses[0]["bandera"] != 0) {
       $respuesta[0] = 2;
     } else{
       $respuesta[0] = 3;
