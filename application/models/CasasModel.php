@@ -2408,7 +2408,7 @@ class CasasModel extends CI_Model
             INNER JOIN usuarios usA ON usA.id_usuario = cl.id_asesor_c 
             INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente_c 
             LEFT JOIN vobos_proceso_casas vobo ON vobo.idProceso = pc.idProcesoCasas AND vobo.paso = 14
-            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.tipoMovimiento AND id_catalogo = 136 
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.tipoMovimiento AND id_catalogo = 136  
             LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN ($documentos) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         WHERE 
             pc.proceso = 14

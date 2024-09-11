@@ -4317,7 +4317,7 @@ class Casas extends BaseController
 
             $proceso = $this->CasasModel->getProceso($id);
 
-            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
+            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 0);
 
             if ($is_ok) {
 
