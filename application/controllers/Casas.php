@@ -450,7 +450,7 @@ class Casas extends BaseController
         $this->db->trans_begin();
         
         $getGerente = $this->CasasModel->getGerente($gerente);    
-        $this->CasasModel->addHistorial(0, 'NULL', 1,"Pre proceso | se asigna el gerente: ". $getGerente->nombre. " con el ID: " .$getGerente->idUsuario, 0);
+        $this->CasasModel->addHistorial(0, 'NULL', 1,"Pre proceso | se asigna el gerente: ". $getGerente->nombre. " IDLOTE: $idLote", 0);
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
@@ -500,7 +500,7 @@ class Casas extends BaseController
 
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
         
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: '.$getAsesor->nombre. " con el ID: ".$getAsesor->idUsuario, 0);
+        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: '.$getAsesor->nombre. " IDLOTE: $idLote ", 0);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -532,6 +532,7 @@ class Casas extends BaseController
         $comentario = $this->form('comentario');
         $idCliente = $this->form('idCliente');
         $banderaSuccess = true;
+        $idLote = $this->form('idLote');
 
         if (!isset($id) || !isset($asesor) || !isset($idLote) || !isset($proceso) || !isset($esquemaCreditoCasas) || !isset($esquemaCreditoCasas) || !isset($idProcesoCasas) || !isset($update) || !isset($idCliente)) {
             http_response_code(400);
@@ -850,7 +851,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 26, 27]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
@@ -1024,7 +1025,7 @@ class Casas extends BaseController
                 $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [13, 14, 15]);
                 break;
             case '99':
-                $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [26, 27]);
+                $documentos = $this->CasasModel->getListaDocumentosCliente($proceso, [36, 27]);
                 break;
         }
 
@@ -2442,6 +2443,7 @@ class Casas extends BaseController
     public function lista_reporte_casas()
     {
         $opcion = $this->input->get('opcion');
+        $idLote = $this->input->get('opcion');
 
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16";
         $finalizado = "0, 1";
@@ -2626,6 +2628,7 @@ class Casas extends BaseController
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->session->userdata('id_usuario'),
+            "idMovimiento" => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -3079,9 +3082,9 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
-    public function getHistorial($idProceso, $tipoEsquema)
+    public function getHistorial($idProceso, $tipoEsquema, $idLote)
     {
-        echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso, $tipoEsquema));
+        echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote));
     }
 
     public function options_procesos_directo()
@@ -3389,6 +3392,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
             "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
@@ -3670,6 +3674,7 @@ class Casas extends BaseController
             "procesoAnterior" => 6,
             "procesoNuevo"    => 6,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento" => $idUsuario,
             "creadoPor"       => $idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
@@ -3781,6 +3786,7 @@ class Casas extends BaseController
             "procesoAnterior" => 14,
             "procesoNuevo"    => 14,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->idUsuario,
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
@@ -4249,7 +4255,7 @@ class Casas extends BaseController
         $getGerente = $this->CasasModel->getGerente($gerente);
         foreach ($idLote  as $lote) {
             foreach ($lote as $loteId) {
-                $this->CasasModel->addHistorial(0, 'NULL', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " con el ID: " . $getGerente->idUsuario, 0);
+                $this->CasasModel->addHistorial(0, 'NULL', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $loteId", 0);
             }
         }
 
@@ -4299,7 +4305,7 @@ class Casas extends BaseController
             }            
         }
 
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " con el ID: ".$getAsesor->idUsuario, 0);        
+        //$this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote", 0);        
 
         $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
 
@@ -4650,10 +4656,11 @@ class Casas extends BaseController
         $dataHistorial = array(
             "idProcesoCasas" => $insert,
             "procesoAnterior" => 2,
-            "procesoNuevo" => NULL,
+            "procesoNuevo" => 1,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor" => $this->session->userdata('id_usuario'),
-            "descripcion" => "Se inicio proceso | comentario: " . $comentario,
+            "idMovimiento" => $this->session->userdata('id_usuario'),
+            "descripcion" => "Pre proceso | se inicia proceso comentario: " . $comentario . " IDLOTE: $idLote",
             "esquemaCreditoProceso" => $esquemaCredito 
         );
 
@@ -4830,7 +4837,13 @@ class Casas extends BaseController
 
                 $updateData = array(
                     "proyectos"  => 1,
-                    "modificadoPor" => $this->session->userdata('id_usuario'),
+
+                    "comercializacion"=> 0,
+                    "contraloria"=> 0,
+                    "gph" => 0,
+                    "pv" => 0,
+                    "titulacion"=> 0,
+                    "modificadoPor" => $this->idUsuario,
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                 );
     
@@ -4844,7 +4857,11 @@ class Casas extends BaseController
 
                 $updateData = array(
                     "comercializacion"  => 1,
-                    "modificadoPor" => $this->session->userdata('id_usuario'),
+                    "contraloria"=> 0,
+                    "gph" => 0,
+                    "pv" => 0,
+                    "titulacion"=> 0,
+                    "modificadoPor" => $this->idUsuario,
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                 );
     
