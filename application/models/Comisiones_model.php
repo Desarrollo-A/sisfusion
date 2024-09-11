@@ -4643,8 +4643,8 @@ function getDatosGralInternomex(){
            
         } else{
             $innerMktd = 4394;
-            $innerOtro = 'pl.id_o';
-            $innerOtro2 = 'pl.id_o2';
+            $innerOtro =  $plan_comision == 104 ? 'cA.especialistaEscuadron' : 'pl.id_o';
+            $innerOtro2 = $plan_comision == 104 ? 'cA.liderEscuadron' : 'pl.id_o2';
             $innerOtro3 = 'pl.id_o3';
             $innerOtro4 = 'pl.id_o4';
             $innerCoord = 'cA.id_coordinador';
@@ -4682,7 +4682,7 @@ function getDatosGralInternomex(){
         WHERE cA.id_cliente = @idCliente)
 
         UNION  /* OTRO PRIMERO - Contabilidad */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.id_o = 690 THEN 'Subdirector' WHEN pl.otro = 2 THEN 'Dr. Regional'  WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.id_plan=104 THEN 'Especialista Experiencia' WHEN pl.id_o = 690 THEN 'Subdirector' WHEN pl.otro = 2 THEN 'Dr. Regional'  WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' WHEN pl.id_o = 13395 THEN 'POSTVENTA' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro not in (0)
@@ -4691,7 +4691,7 @@ function getDatosGralInternomex(){
         WHERE cA.id_cliente = @idCliente)
         
         UNION  /* OTRO SEGUNDO - Titulación */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.otro2 = 2 THEN 'Dr. Regional' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Coordinador convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 8 END) as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.id_plan=104 THEN 'Líder escuadron Cancelación' WHEN pl.otro2 = 2 THEN 'Dr. Regional' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Coordinador convenio'  ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 8 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro2 not in (0)
@@ -5422,8 +5422,9 @@ function getDatosGralInternomex(){
 
     public function getDetallePlanesComisiones($idPlan)
     {
-        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comDi, pc.neoDi, rolDir.nombre AS director,  pc.comRe, pc.neoRe, 'Regional' AS regional, pc.comSu, pc.neoSu, 'Subdirector' AS subdirector, pc.comGe, pc.neoGe, rolGer.nombre AS gerente, pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador, pc.comAs, pc.neoAs, rolAse.nombre AS asesor, pc.comMk, pc.neoMk, rolMkt.nombre AS mktd, pc.comOt, pc.neoOt, (CASE WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro, 
-            pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ') ELSE rolOtr2.nombre END) AS otro2,
+        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comDi, pc.neoDi, rolDir.nombre AS director,  pc.comRe, pc.neoRe, 'Regional' AS regional, pc.comSu, pc.neoSu, 'Subdirector' AS subdirector, pc.comGe, pc.neoGe, rolGer.nombre AS gerente, pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador, pc.comAs, pc.neoAs, rolAse.nombre AS asesor, pc.comMk, pc.neoMk, rolMkt.nombre AS mktd, pc.comOt, pc.neoOt, 
+            (CASE WHEN pc.id_plan = 104 THEN 'Especialista Experiencia' WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro, 
+            pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_plan = 104 THEN 'Líder Escuadron Cancelación' WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ')  ELSE rolOtr2.nombre END) AS otro2,
             pc.comOt3, pc.neoOt3, (CASE WHEN pc.id_o3 IS NOT NULL THEN CONCAT(usOtr3.nombre, ' ', usOtr3.apellido_paterno, ' ',usOtr3.apellido_materno, ' ') ELSE rolOtr3.nombre END) AS otro3,
             pc.comOt4, pc.neoOt4, (CASE WHEN pc.id_o4 IS NOT NULL THEN CONCAT(usOtr4.nombre, ' ', usOtr4.apellido_paterno, ' ',usOtr4.apellido_materno, ' ') ELSE rolOtr4.nombre END) AS otro4
             FROM plan_comision pc

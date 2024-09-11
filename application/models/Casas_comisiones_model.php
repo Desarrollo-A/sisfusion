@@ -1121,7 +1121,7 @@ public function getDataDispersionPago() {
         $query = "SELECT 
             pci1.id_pago_i,'' id_arcus,cl.fechaApartado, pci1.id_comision, 
             lo.nombreLote  lote, 
-            re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, 
+            re.nombreResidencial as proyecto, cl.costo_construccion precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, 
             pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, 
             pac.porcentaje_abono, 0 as factura, 1 expediente, 
             lo.idLote,oxcest.nombre estatus_actual,
