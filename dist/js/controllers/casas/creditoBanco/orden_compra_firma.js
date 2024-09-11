@@ -55,6 +55,7 @@
 // }
 let selectOption = null;
 function rechazoProcesoBanco(data){
+    selectOption = 1;
     let form = new Form({
         title: 'Rechazar proceso',
         text: `¿Deseas rechazar el proceso del lote ${data.nombreLote}?`,
@@ -353,13 +354,13 @@ let table = new Table({
 
 function selectCasa(parentSelector, divId, idPropuestaCasa) {
     $.post(`${general_base_url}/casas/modeloOptions`, { idModelo: idPropuestaCasa }, function(data) {
-        
-        const parent = document.querySelector(parentSelector);
-        const existingDivs = parent.querySelectorAll(`.${divId}`);
+        let parent = document.querySelector(parentSelector);
+        let existingDivs = parent.querySelectorAll(`.${divId}`);
         existingDivs.forEach(div => div.remove());
 
-        const modalBody = parent.querySelector('.modal-body');
+        let modalBody = parent.querySelector('.modal-body');
 
+        const textAreaContainer = modalBody.querySelector('#fields-form-modal');
         data.forEach((item, index) => {
             const newDiv = document.createElement('div');
             newDiv.id = `${divId}-${index}`;
@@ -386,9 +387,10 @@ function selectCasa(parentSelector, divId, idPropuestaCasa) {
             newDiv.addEventListener('change', function() {
                 const selectedOption = modalBody.querySelector('input[name="idPropuesta"]:checked').value;    
                 selectOption = selectedOption;
-                idCasaFinal.set(selectOption)
+                idCasaFinal.set(selectOption);
             });
-            modalBody.appendChild(newDiv);
+            
+            modalBody.insertBefore(newDiv, textAreaContainer);
         });
     }, 'json');
 }
