@@ -1586,16 +1586,6 @@ class Casas extends BaseController
             }
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 2);
-
-        if (!$vobo) {
-            $insertVobo = $this->CasasModel->insertVobo($id, 2);
-
-            if (!$insertVobo) {
-                http_response_code(404);
-            }
-        }
-
         $new_status = 11;
 
         $proceso = $this->CasasModel->getProceso($id);
@@ -1608,6 +1598,17 @@ class Casas extends BaseController
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if ($is_ok) {
+
+            $vobo = $this->CasasModel->getVobos($id, 11);
+
+            if (!$vobo) {
+                $insertVobo = $this->CasasModel->insertVobo($id, 11);
+    
+                if (!$insertVobo) {
+                    http_response_code(404);
+                }
+            }
+
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
             $this->json([]);
@@ -1823,7 +1824,7 @@ class Casas extends BaseController
             http_response_code(400);
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 2);
+        $vobo = $this->CasasModel->getVobos($id, 11);
 
         if ($vobo->comercializacion == 0 && $vobo->contraloria == 0) {
 
@@ -1840,15 +1841,7 @@ class Casas extends BaseController
             }
         } else if ($vobo->comercializacion == 0 && $vobo->contraloria == 1) {
 
-            $vobo = $this->CasasModel->getVobos($id, 4);
-
-            if (!$vobo) {
-                $insertVobo = $this->CasasModel->insertVobo($id, 4);
-
-                if (!$insertVobo) {
-                    http_response_code(404);
-                }
-            }
+            $vobo = $this->CasasModel->getVobos($id, 11);
 
             $updateData = array(
                 "comercializacion"  => 1,
@@ -1860,12 +1853,6 @@ class Casas extends BaseController
 
             if (!$update) {
                 http_response_code(400);
-            }
-
-            $insertVobo = $this->CasasModel->insertVobo($id, 4);
-
-            if (!$insertVobo) {
-                http_response_code(404);
             }
 
             $new_status = 13;
@@ -1880,6 +1867,13 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
             if ($is_ok) {
+
+                $insertVobo = $this->CasasModel->insertVobo($id, 13);
+
+                if (!$insertVobo) {
+                    http_response_code(404);
+                }
+
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
                 $this->json([]);
@@ -1900,7 +1894,7 @@ class Casas extends BaseController
             http_response_code(400);
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 2);
+        $vobo = $this->CasasModel->getVobos($id, 11);
 
         if ($vobo->comercializacion == 0 && $vobo->contraloria == 0) {
 
@@ -1917,17 +1911,7 @@ class Casas extends BaseController
             }
         } else if ($vobo->comercializacion == 1 && $vobo->contraloria == 0) {
 
-            $vobo = $this->CasasModel->getVobos($id, 4);
-
-            if (!$vobo) {
-                $insertVobo = $this->CasasModel->insertVobo($id, 4);
-
-                if (!$insertVobo) {
-                    http_response_code(404);
-                }
-            }
-
-            $vobo = $this->CasasModel->getVobos($id, 4);
+            $vobo = $this->CasasModel->getVobos($id, 11);
 
             $updateData = array(
                 "contraloria"  => 1,
@@ -1953,6 +1937,13 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
             if ($is_ok) {
+
+                $insertVobo = $this->CasasModel->insertVobo($id, 13);
+
+                if (!$insertVobo) {
+                    http_response_code(404);
+                }
+
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
                 $this->json([]);
@@ -3430,6 +3421,24 @@ class Casas extends BaseController
             }
         }
 
+        if ($procesoNuevo == 4) {
+
+            $vobo = $this->CasasModel->getVobos($idProceso, 8);
+
+            $updateData = array(
+                "titulacion"  => 0,
+                "gph" => 0,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if (!$update) {
+                http_response_code(400);
+            }
+        }
+
         $this->db->trans_begin();
 
         $updateData = array(
@@ -3790,6 +3799,17 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, 15, $comentario, $movimiento);
             
             if($is_ok){
+
+                $vobo = $this->CasasModel->getVobos($idProcesoCasas, 15);
+
+                if (!$vobo) {
+                    $insertVobo = $this->CasasModel->insertVobo($idProcesoCasas, 15);
+    
+                    if (!$insertVobo) {
+                        http_response_code(404);
+                    }
+                }
+
                 $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, 15, $comentario, 1);
             }else{
                 $response["result"] = false;
@@ -4065,7 +4085,7 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
-        $vobo = $this->CasasModel->getVobos($idProcesoCasas, 4);
+        $vobo = $this->CasasModel->getVobos($idProcesoCasas, 13);
 
         $updateData = array(
             "adm"  => 0,
@@ -4320,7 +4340,7 @@ class Casas extends BaseController
             http_response_code(400);
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 4);
+        $vobo = $this->CasasModel->getVobos($id, 13);
 
         if (in_array($this->idUsuario, [5107])) {
             $updateData = array(
@@ -4374,7 +4394,7 @@ class Casas extends BaseController
             }
         }
 
-        $vobosGet = $this->CasasModel->getVobos($id, 4);
+        $vobosGet = $this->CasasModel->getVobos($id, 13);
 
         if ($vobosGet->adm == 1 && $vobosGet->ooam == 1 && $vobosGet->gph == 1 && $vobosGet->pv == 1) {
             $new_status = 14;
@@ -4394,6 +4414,13 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
             if ($is_ok) {
+
+                $insertVobo = $this->CasasModel->insertVobo($id, 14);
+
+                if (!$insertVobo) {
+                    http_response_code(404);
+                }
+
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
                 $this->json([]);
@@ -4414,8 +4441,8 @@ class Casas extends BaseController
             http_response_code(400);
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 4);
-        $voboPaso12 = $this->CasasModel->getVobos($id, 2);
+        $vobo = $this->CasasModel->getVobos($id, 11);
+        $voboPaso12 = $this->CasasModel->getVobos($id, 11);
 
         $updateData = array(
             "adm"  => 0,

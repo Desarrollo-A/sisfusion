@@ -1040,7 +1040,7 @@ class CasasModel extends CI_Model
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (31) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN documentos_proceso_casas doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas AND doc2.tipo = 31 AND doc2.proveedor = 0
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 31 AND oxc2.id_catalogo = 126
-        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
+        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 11
         WHERE pc.proceso IN (11, 12)
         AND pc.status = 1 AND cli.status = 1
         AND vb.comercializacion != 1";
@@ -1260,7 +1260,7 @@ class CasasModel extends CI_Model
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (11) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         LEFT JOIN documentos_proceso_casas doc3 ON doc3.idProcesoCasas = pc.idProcesoCasas AND doc3.tipo = 31 AND doc3.proveedor = 0
-        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
+        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 11
          LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = 38 AND oxc2.id_catalogo = 126
         WHERE
             pc.proceso IN (11, 12)
@@ -1941,17 +1941,17 @@ class CasasModel extends CI_Model
             CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
             pc.tipoMovimiento
-        FROM proceso_casas_banco pc
-        INNER JOIN lotes lo ON lo.idLote = pc.idLote
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN usuarios usA ON usA.id_usuario = cl.id_asesor_c
-        INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente_c
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.tipoMovimiento AND id_catalogo = 136
-		LEFT JOIN documentos_proceso_casas dpc ON dpc.idProcesoCasas = pc.idProcesoCasas AND dpc.tipo IN($tipoDocumento) AND dpc.proveedor = 0
-        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 4
-        WHERE $column pc.proceso IN ($placeholders) AND pc.status IN(1) AND pc.finalizado = 0 $condicionExtra", $procesoArray, 1);
+            FROM proceso_casas_banco pc
+            INNER JOIN lotes lo ON lo.idLote = pc.idLote
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN usuarios usA ON usA.id_usuario = cl.id_asesor_c
+            INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente_c
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.tipoMovimiento AND id_catalogo = 136
+            LEFT JOIN documentos_proceso_casas dpc ON dpc.idProcesoCasas = pc.idProcesoCasas AND dpc.tipo IN($tipoDocumento) AND dpc.proveedor = 0
+            LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 13
+            WHERE $column pc.proceso IN ($placeholders) AND pc.status IN(1) AND pc.finalizado = 0 $condicionExtra", $procesoArray, 1);
 
         return $query;
     }
