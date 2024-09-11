@@ -1286,7 +1286,7 @@ $('#Nopenalizacion-form').on('submit', function (e) {
 });
 
 $("#form_NEODATA").submit( function(e) {
-    $('#dispersar').prop('disabled', true);
+    $('#dispersar').prop('disabled', true); 
     document.getElementById('dispersar').disabled = true;
     e.preventDefault();
 }).validate({
@@ -1703,7 +1703,7 @@ function responsive(maxWidth) {
 
 function function_totales(){
     $.getJSON( general_base_url + "Comisiones/getMontoDispersado").done( function( data ){
-        $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
+        $cadena = '<b>'+formatMoney(data[0].monto)+'</b>';
         document.getElementById("monto_label").innerHTML = $cadena ;
     });
     $.getJSON( general_base_url + "Comisiones/getPagosDispersado").done( function( data ){
