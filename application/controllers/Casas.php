@@ -838,9 +838,9 @@ class Casas extends BaseController
         // if (!$vobo) {
         $insertVobo = $this->CasasModel->insertVobo($proceso->idProcesoCasas, 2);
 
-        // if (!$insertVobo) {
-        //     http_response_code(404);
-        // }
+        if (!$insertVobo) {
+            http_response_code(404);
+        }
         // }
 
         $movimiento = 0;

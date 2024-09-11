@@ -305,7 +305,7 @@ let columns = [
         // let subir_proveedor = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de proveedor', onClick: go_to_documentos, data});
         let subir_cliente = new RowButton({icon: 'toc', color: '', label: 'Cargar documentos de cliente', onClick: go_to_documentos_cliente, data});
 
-        if(data.documentos === 9){
+        if(data.documentos == 9){
             btn_avance = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: to_precierre_cifras, data})
         }
 
