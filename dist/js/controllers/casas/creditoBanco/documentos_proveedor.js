@@ -19,7 +19,7 @@ function download_file(data) {
 
 function show_upload(data) {
 
-    let accept = ['application/pdf'];
+    let accept = ['image/png','image/jpeg','application/pdf'];
 
     let form = new Form({
         title: 'Subir ' + data.documento.toLowerCase(),

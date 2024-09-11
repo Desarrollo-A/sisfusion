@@ -3400,10 +3400,10 @@ class Casas extends BaseController
 
         if ($procesoNuevo == 12) {
 
-            $vobo = $this->CasasModel->getVobos($idProceso, 2);
+            $vobo = $this->CasasModel->getVobos($idProceso, 4);
 
             $updateData = array(
-                "contraloria"  => 0,
+                "proyectos"  => 0,
                 "comercializacion" => 0,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
                 "fechaModificacion" => date("Y-m-d H:i:s"),
@@ -4828,11 +4828,16 @@ class Casas extends BaseController
         $comentario = $this->form('comentario');
         $idCasaFinal = $this->form('idCasaFinal');
         $idCliente = $this->form('idCliente');
-        
-        switch ($this->idRol) {
-            case 62:
-                $new_vobo = [
+
+        $vobo = $this->CasasModel->getVobos($idProcesoCasas, 4);
+
+        if ($vobo->proyectos == 0 && $vobo->comercializacion == 0) {
+
+            if($this->idRol == 62){
+
+                $updateData = array(
                     "proyectos"  => 1,
+
                     "comercializacion"=> 0,
                     "contraloria"=> 0,
                     "gph" => 0,
@@ -4840,10 +4845,17 @@ class Casas extends BaseController
                     "titulacion"=> 0,
                     "modificadoPor" => $this->idUsuario,
                     "fechaModificacion" => date("Y-m-d H:i:s"),
-                ];
-                break;
-            default:
-                $new_vobo = [
+                );
+    
+                $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+                if (!$update) {
+                    http_response_code(400);
+                }
+
+            }else{
+
+                $updateData = array(
                     "comercializacion"  => 1,
                     "contraloria"=> 0,
                     "gph" => 0,
@@ -4851,30 +4863,45 @@ class Casas extends BaseController
                     "titulacion"=> 0,
                     "modificadoPor" => $this->idUsuario,
                     "fechaModificacion" => date("Y-m-d H:i:s"),
-                ];
-                break;
-        }
+                );
+    
+                $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
 
-        if(!isset($new_vobo)){
-            http_response_code(301);
+                if (!$update) {
+                    http_response_code(400);
+                }
+            }
 
-            $this->json([]);
-        }
+        }else if($vobo->proyectos == 1 || $vobo->comercializacion == 1){
 
-        $vobo = $this->CasasModel->updateVobos($idProcesoCasas, 4, $new_vobo);
-        $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
+            $updateData = array(
+                "comercializacion"  => 1,
+                "proyectos"  => 1,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
 
-        if($vobo->proyectos && $vobo->comercializacion){
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if (!$update) {
+                http_response_code(400);
+            }
+
+            $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
+
             $proceso = $this->CasasModel->getProceso($idProcesoCasas);
 
             $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, 5, $comentario, 0);
 
             if ($is_ok) {
+                
                 $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, 5, 'Se avanzó el proceso a pre cierre de cifras | Comentario: ' . $comentario, 1);
             }
-        }
 
-        $this->json([]);
+            $this->json([]);
+
+        }
+        
     }
 
     public function lista_orden_compra_firma(){
