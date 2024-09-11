@@ -48,7 +48,8 @@ function replace_upload(data) {
             new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento', value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
-            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+            //new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Seleciona un archivo', accept: ['application/vnd.ms-excel'], required : true}), // Cambio pdf -> xls
         ],
     })
 
