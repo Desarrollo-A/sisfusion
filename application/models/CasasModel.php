@@ -1144,7 +1144,7 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
-            pc.proceso = 8
+            pc.proceso = 14
         AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
@@ -2329,7 +2329,7 @@ class CasasModel extends CI_Model
             INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
             INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
             LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2, 4, 5, 6, 7, 8, 10, 12, 36) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2, 4, 5, 6, 7, 8, 10, 12, 38) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
             LEFT JOIN vobos_proceso_casas vobo ON vobo.paso = 4 AND vobo.idProceso = pc.idProcesoCasas
         WHERE 
             pc.proceso IN (4)
