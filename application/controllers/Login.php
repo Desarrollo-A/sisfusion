@@ -68,7 +68,7 @@ class Login extends CI_Controller
 				$this->setSession($check_user);
 			}
 		}else{
-			$this->session->set_userdata('errorLogin', 33);
+			$this->session->set_userdata('errorLogin', 34);
 
 			redirect(base_url());
 		}
@@ -117,12 +117,22 @@ class Login extends CI_Controller
 		];
 
 		if(in_array($dominio, $dominios)){
-			$this->General_model->updateRecord('usuarios', $dataUpdate, 'id_usuario', $id_usuario);
-			$this->index();
-		}else{
-			// $this->logout_ci();
-		}
+			#Check if email already exist
+			$usuario = $this->Usuarios_modelo->getUserByEmail($google['email']);
 
+			if($usuario){
+				$this->session->set_userdata('errorLogin', 36);
+
+				redirect(base_url() . 'login/google' );
+			}else{
+				$this->General_model->updateRecord('usuarios', $dataUpdate, 'id_usuario', $id_usuario);
+				$this->index();
+			}
+		}else{
+			$this->session->set_userdata('errorLogin', 35);
+
+			redirect(base_url() . 'login/google' );
+		}
 
 	}
 

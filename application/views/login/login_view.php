@@ -118,21 +118,41 @@
                                             Inicia sesión con cuenta de google
                                         </p>
 
-                                        <div style="margin: 15px;">
+                                        <div style="margin: 15px; display: flex; justify-content: center; align-items: center;">
                                             <div id="g_id_onload"
                                                 data-client_id="474884879866-404nd37vojdrc4csaa84rvs66p9h9bbb.apps.googleusercontent.com"
                                                 data-login_uri="<?=base_url()?>login/google_login"
-                                                data-auto_prompt="false">
+                                                data-auto_prompt="false"
+                                                data-auto_select="false"
+                                                data-context="signin"
+                                                data-ux_mode="popup"
+                                                data-nonce=""
+                                            >
                                             </div>
                                             <div class="g_id_signin"
                                                 data-type="standard"
                                                 data-size="large"
-                                                data-theme="outline"
-                                                data-text="sign_in_with"
+                                                data-theme="filled_blue"
+                                                data-text="signin_with"
                                                 data-shape="rectangular"
-                                                data-logo_alignment="left">
+                                                data-logo_alignment="left"
+                                                data-width="260"
+                                                data-shape="rectangular"
+                                                >
                                             </div>
+
                                         </div>
+                                        <?php
+                                            if($this->session->userdata('errorLogin') == 34){
+                                        ?>
+                                        <div id="msg" style="color: red; text-align: center">El correo no está asociado a ninguna cuenta</div>
+
+                                        <?php
+                                            $this->session->unset_userdata('errorLogin');
+
+                                            }
+                                        ?>
+
                                         <p class="category text-center">
                                             o ingresa tus datos de usuario para poder continuar
                                         </p>
@@ -210,7 +230,6 @@ if($this->input->get('error')) : ?>
 <script src="<?=base_url()?>dist/js/material-dashboard2.js"></script>
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="<?=base_url()?>dist/js/demo.js"></script>
-
 
 <script type="text/javascript">
     $(document).ready(function() {

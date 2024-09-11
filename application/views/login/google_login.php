@@ -117,21 +117,40 @@
                                             Para continuar, regístrate con tu correo corporativo, a partir del 16 de septiembre tu usuario sera este correo
                                         </p>
 
-                                        <div style="margin: 15px;">
+                                        <div style="margin: 15px; display: flex; justify-content: center; align-items: center;">
                                             <div id="g_id_onload"
                                                 data-client_id="474884879866-404nd37vojdrc4csaa84rvs66p9h9bbb.apps.googleusercontent.com"
                                                 data-login_uri="<?=base_url()?>login/google_register"
-                                                data-auto_prompt="false">
+                                                data-auto_prompt="false"
+                                                data-auto_select="false"
+                                                data-context="signup"
+                                                data-ux_mode="popup"
+                                                data-nonce=""
+                                            >
                                             </div>
                                             <div class="g_id_signin"
                                                 data-type="standard"
                                                 data-size="large"
-                                                data-theme="outline"
-                                                data-text="sign_in_with"
+                                                data-theme="filled_blue"
+                                                data-text="continue_with"
                                                 data-shape="rectangular"
-                                                data-logo_alignment="left">
+                                                data-logo_alignment="left"
+                                                data-width="260"
+                                                data-shape="rectangular"
+                                                >
                                             </div>
                                         </div>
+
+                                        <?php
+                                            if($this->session->userdata('errorLogin') == 36){
+                                        ?>
+                                        <div id="msg" style="color: red; text-align: center">El correo ya está asociado a otra cuenta</div>
+
+                                        <?php
+                                            $this->session->unset_userdata('errorLogin');
+
+                                            }
+                                        ?>
                                         
                                     </div>
                             </div>
