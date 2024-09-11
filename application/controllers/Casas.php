@@ -1386,7 +1386,7 @@ class Casas extends BaseController
 
         if ($idRol == 101) {
 
-            $vobo = $this->CasasModel->getVobos($id, 3);
+            $vobo = $this->CasasModel->getVobos($id, 8);
 
             $updateData = array(
                 "gph"  => 1,
@@ -1403,6 +1403,24 @@ class Casas extends BaseController
 
         if ($idRol == 57) {
 
+            $vobo = $this->CasasModel->getVobos($id, 8);
+
+            $updateData = array(
+                "titulacion"  => 1,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if (!$update) {
+                http_response_code(400);
+            }
+        }
+
+        $checkVobos = $this->CasasModel->getVobos($id, 8);
+
+        if($checkVobos->gph == 1 && $checkVobos->titulacion == 1){
             $documentos = $this->CasasModel->getDocumentos([18]);
 
             $is_ok = true;
@@ -1453,10 +1471,11 @@ class Casas extends BaseController
             http_response_code(400);
         }
 
-        $vobo = $this->CasasModel->getVobos($id, 3);
+        $vobo = $this->CasasModel->getVobos($id, 8);
 
         $updateData = array(
             "gph"  => 0,
+            "titulacion" => 0,
             "modificadoPor" => $this->session->userdata('id_usuario'),
             "fechaModificacion" => date("Y-m-d H:i:s"),
         );
@@ -3404,7 +3423,7 @@ class Casas extends BaseController
 
         if ($procesoNuevo == 8) {
 
-            $insertVobo = $this->CasasModel->insertVobo($idProceso, 3);
+            $insertVobo = $this->CasasModel->insertVobo($idProceso, 8);
 
             if (!$insertVobo) {
                 http_response_code(404);
