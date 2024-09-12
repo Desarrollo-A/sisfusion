@@ -159,7 +159,7 @@ $("#tabla_plaza_1_casas_intmex").ready( function(){
         },
         {
             "data": function( d ){
-                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.abono_bono))+'</p>';
+                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.descuento))+'</p>';
             }
         },
         {
