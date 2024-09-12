@@ -403,7 +403,7 @@ subirCliente = function(data) {
                             form.hide();
                         },
                         error: function(response) {
-                            alerts.showNotification("top", "right", "Oops, algo algo salió mal.", "danger");
+                            alerts.showNotification("top", "right", response.responseJSON[0] ? response.responseJSON[0] : "Oops, algo salió mal.", "danger");
                             formConfirm.loading(false);
                             formConfirm.hide();
                             form.loading(false);

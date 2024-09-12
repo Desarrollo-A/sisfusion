@@ -55,7 +55,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title: "Validacion de documentación",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -76,7 +76,7 @@ let buttonsCredito = [
         titleAttr: 'Descargar archivo excel',
         title: "Validacion de documentación",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -100,6 +100,7 @@ let columns = [
     { data: 'procesoNombre' },
     {
         data: function (data) {
+            if(data.fechaCreacion)
             return data.fechaCreacion.substring(0, 16)
         }
     },
@@ -298,14 +299,13 @@ function lineCredito(timeLine) {
 }
 
 modalHistorialBanco = function (dt) {
-
+    
     let esquemaCredito = 1;
     $("#spiner-loader").removeClass('hide');
     $("#timeLineModal").modal();
     $("#historialActual").html("");
 
-    $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}`).done(function (data) {
-
+    $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}/${dt.idLote}`).done(function (data) {
         if (JSON.parse(data).length > 0) {
             $.each(JSON.parse(data), function (i, v) {
                 $("#spiner-loader").addClass('hide');
@@ -313,7 +313,7 @@ modalHistorialBanco = function (dt) {
                     title: v.nombreUsuario,
                     back: v.procesoAnterior,
                     next: v.procesoNuevo,
-                    description: v.descripcion,
+                    description: v.descripcionFinal,
                     date: v.fechaMovimiento
                 });
                 lineCredito(timeLine);

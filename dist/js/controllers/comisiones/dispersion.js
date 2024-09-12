@@ -1,45 +1,5 @@
-const pivoteMultiplicador =  [
-    {
-        id_plan:64,
-        valor:(100/0.5),
-        porcentaje:0.5
-    },
-    {
-        id_plan:65,
-        valor:(100/1),
-        porcentaje:1
-    },
-    {
-        id_plan:66,
-        valor:(100/9),
-        porcentaje:1
-    },
-    {
-        id_plan:84,
-        valor:(100/0.6),
-        porcentaje:0.6
-    },
-    {
-        id_plan:85,
-        valor:(100/1.2),
-        porcentaje:1.2
-    },
-    {
-        id_plan:86,
-        valor:(100/9.2),
-        porcentaje:1.2
-    },
-    {
-        id_plan:93,
-        valor:(100/8.5),
-        porcentaje:8.5
-    },
-    {
-        id_plan:99,
-        valor:(100/8.5),
-        porcentaje:8.5
-    } ];
-$(document).ready(function () {
+
+//$(document).ready(function () {
     numerosDispersion();
     let titulos_intxt = [];
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -1190,7 +1150,7 @@ $(document).ready(function () {
             $("#modal_NEODATA").modal();
         }
     }); //FIN VERIFY_NEODATA
-});
+//});
 
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -1326,7 +1286,7 @@ $('#Nopenalizacion-form').on('submit', function (e) {
 });
 
 $("#form_NEODATA").submit( function(e) {
-    $('#dispersar').prop('disabled', true);
+    $('#dispersar').prop('disabled', true); 
     document.getElementById('dispersar').disabled = true;
     e.preventDefault();
 }).validate({
@@ -1740,10 +1700,10 @@ function responsive(maxWidth) {
         $('.rowTitulos').removeClass('hide');
     }
 }
-
+ 
 function function_totales(){
     $.getJSON( general_base_url + "Comisiones/getMontoDispersado").done( function( data ){
-        $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
+        $cadena = '<b>'+formatMoney(data[0].monto)+'</b>';
         document.getElementById("monto_label").innerHTML = $cadena ;
     });
     $.getJSON( general_base_url + "Comisiones/getPagosDispersado").done( function( data ){

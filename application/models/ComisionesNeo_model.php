@@ -321,7 +321,7 @@ class ComisionesNeo_model extends CI_Model {
             INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
             INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
             LEFT JOIN prospectos ps ON ps.id_prospecto = cl.id_prospecto AND cl.lugar_prospeccion = 6
-            $whereRes AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' AND cl.id_sede NOT IN (0) AND (cl.plan_comision IS NULL OR cl.plan_comision IN (0)) )");
+            $whereRes AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7,9) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' AND cl.id_sede NOT IN (0) AND (cl.plan_comision IS NULL OR cl.plan_comision IN (0)) )");
     }
 
     public function getFlag(){

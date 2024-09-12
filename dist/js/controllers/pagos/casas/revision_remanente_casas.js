@@ -71,7 +71,7 @@ $('#tabla_remanente_casas thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all_casas" type="checkbox" style="width:20px; height:20px;" onchange="selectAllRemanenteSeguros(this)"/>');
+        $(this).html('<input id="all_casas" type="checkbox" style="width:20px; height:20px;" onchange="select_all_remanente_casas(this)"/>');
     }
 });
 // function obtenerModoSeleccionado() {
@@ -366,7 +366,7 @@ function getDataRemanente_casas(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos_casas/getDatosNuevasRemanenteSeguros/",
+            url: general_base_url + "Pagos_casas/getDatosNuevasRemanenteCasas/",
             type: "POST",
             cache: false,
             data :{
@@ -526,7 +526,7 @@ $("#form_pausar_casas").submit( function(e) {
     }
 });
 
-function selectAllRemanenteSeguros(e) {
+function select_all_remanente_casas(e) {
     tota2 = 0;
     if(e.checked == true){
         $(tabla_remanente_casas.$('input[type="checkbox"]')).each(function (i, v) {

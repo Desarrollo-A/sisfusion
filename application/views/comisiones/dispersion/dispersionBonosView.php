@@ -47,7 +47,7 @@
                                                                             <th>ID PAGO</th>
                                                                             <th>PROYECTO</th>
                                                                             <th>LOTE</th>
-                                                                            <th>PRECIO DEL LOTE</th>
+                                                                            <th>COSTO CONSTUCCIÓN</th>
                                                                             <th>TOTAL DE LA COMISIÓN</th>
                                                                             <th>PAGADO DEL CLIENTE</th>
                                                                             <th>DISPERSADO</th>
