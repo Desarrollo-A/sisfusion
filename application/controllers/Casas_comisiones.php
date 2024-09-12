@@ -776,7 +776,7 @@ public function getDatosFechasProyecCondm(){
     
       //TERMINA PRIMERA VALIDACION DE DISPERSION
     
-    } else if($responses[0]["bandera"] == 0 && $disparador == 0){
+    } else if($responses[0]["bandera"] == 0 && $disparador == 1){
 
         
             $lote_1 =  $this->input->post("idLote");
