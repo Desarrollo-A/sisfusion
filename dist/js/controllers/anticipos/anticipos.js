@@ -131,7 +131,7 @@ $("#tabla_anticipos").ready(function () {
             } },
             {   
                 data: function( d ){
-                var total_impuesto_monto = d.forma_pago == 2 ?  0 :  (d.idsede == 6 ) ? (d.monto*0.04) : (d.monto*0.03) ;    
+                var total_impuesto_monto = d.forma_pago == 2 ?  0 :   d.forma_pago == 4  ?  0:  ((d.idsede == 6 ) ? (d.monto*0.04) : (d.monto*0.03)) ;    
                 return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
             } 
             },

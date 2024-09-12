@@ -954,7 +954,7 @@ class Casas_comisiones_model extends CI_Model {
         return $this->db->query("EXEC porcentajesCom @idCliente = $idCliente, @precioTotal = $costoConstruccion,@planComision = $planComision");
     }
 
-    public function validateDispersionCommissions($lote){
+    public function validateDispersionCommissions($lote){ 
         return $this->db->query("SELECT count(*) dispersion, pc.bandera 
         FROM comisiones_casas com
         LEFT JOIN pago_comision_casas pc ON pc.id_lote = com.id_lote and pc.bandera = 0
@@ -1152,7 +1152,8 @@ public function getDataDispersionPago() {
     }
 
     public function getDatosAbonadoSuma11($idlote){
-        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion,cl.estructura
+        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, 
+        c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion,cl.estructura
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
         INNER JOIN comisiones_casas c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
@@ -1450,6 +1451,9 @@ function getBonoHistorialPago($id_pago) {
         return $this->db->query("UPDATE pago_casas_ind SET estatus = $estatus WHERE id_pago_i IN ($idPagos)");
     }
 
+
+
+
     function update_pago_dispersion($suma, $ideLote, $pago){
         $respuesta = $this->db->query("UPDATE pago_comision_casas SET abonado = (abonado + ".$suma."), pendiente = (total_comision-abonado-".$suma."), bandera = 1, ultimo_pago = ".$pago." , ultima_dispersion = GETDATE() WHERE id_lote = ".$ideLote."");
         if (! $respuesta ) {
@@ -1458,4 +1462,10 @@ function getBonoHistorialPago($id_pago) {
             return 1;
         }
     }
+    
+
+
+
+
+
 }
