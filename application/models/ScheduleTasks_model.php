@@ -232,4 +232,51 @@
 			WHERE fecha_creacion BETWEEN '$year-$mes-01 00:00:00' AND '$year-$mes-10 23:59:59')");
 									
 	}
+
+	public function getInformacionRetrasos($tipo) {
+		$validacionEstatus = $tipo == 1 ? "AND (dxc4.flagProcesoContraloria = 0 OR dxc4.flagProcesoContraloria IS NULL AND dxc2.flagProcesoContraloria = 0)" : "AND ((dxc4.flagProcesoJuridico = 0 OR dxc4.flagProcesoJuridico IS NULL AND dxc2.flagProcesoJuridico = 0) AND dxc4.flagProcesoContraloria = 1)";
+        return $this->db->query(
+			"SELECT 
+				ISNULL(oxc2.nombre, 'NUEVO') AS estatusModificacion, 
+				re.nombreResidencial,
+				co.nombre AS nombreCondominio,
+				lo.nombreLote,
+				UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+				lo.referencia,
+				CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+				hpl3.fechaUltimoEstatus, 
+				lo.fechaVencimiento,
+				DATEDIFF(DAY, hpl3.fechaUltimoEstatus, lo.fechaVencimiento) diasVencimiento
+			FROM lotes lo
+					LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6, 7)
+					LEFT JOIN (SELECT dxc.* 
+						FROM lotes lo 
+						INNER JOIN propuestas_x_lote pxl on pxl.idLote = lo.idLote 
+						LEFT JOIN datos_x_cliente dxc on dxc.idLote = pxl.idLote ) dxc2 ON dxc2.idLote = lo.idLote
+						INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+						INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+						LEFT JOIN (SELECT DISTINCT(idProyecto) idProyecto FROM loteXReubicacion WHERE estatus = 1) lr ON lr.idProyecto = re.idResidencial
+						LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+						LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
+							SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote
+					) 
+					LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = hpl.estatus AND oxc2.id_catalogo = 108
+					LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote 
+					LEFT JOIN (       
+					SELECT lf.idLotePvOrigen, lo.idLote, dxc.idLote AS loteDxc, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico 
+						FROM lotes lo 
+						INNER JOIN lotesFusion lf on lf.idLote = lo.idLote 
+						INNER JOIN datos_x_cliente dxc on dxc.idLote = lf.idLotePvOrigen 
+					) dxc4 ON dxc4.idLote = lo.idLote
+					LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
+					WHERE 
+					lo.liberaBandera = 1 
+					AND lo.status = 1 
+					AND lo.solicitudCancelacion NOT IN (2)
+					AND lo.idStatusLote NOT IN (18, 19) 
+					AND lo.estatus_preproceso IN (2)
+					AND DATEDIFF(DAY, hpl3.fechaUltimoEstatus, lo.fechaVencimiento) > 1
+					$validacionEstatus
+		");
+    }
 }

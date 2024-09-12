@@ -34,6 +34,8 @@ function CloseModalDelete2Seguros(){
 }
 
 $('#catalogo_remanente_intmex_casas').change(function(ruta){
+    $("#total_autorizar_intmex_casas").html(formatMoney(0));
+    $("#all_casas_intmex").prop('checked', false);
     rol = $('#catalogo_remanente_intmex_casas').val();
     $("#usuario_remanente_intmexCasas").empty().selectpicker('refresh');
     $.ajax({
@@ -57,9 +59,16 @@ $('#catalogo_remanente_intmex_casas').change(function(ruta){
             $("#usuario_remanente_intmexCasas").selectpicker('refresh');
         }
     });
+
+    valuar = $('#usuario_remanente_intmexCasas').val();
+    proyecto = $('#catalogo_remanente_intmex_casas').val();
+
+    valuar == '' && tabla_remanente_casas == undefined ? '' : getAssimilatedCommissionsIntmex_casas(proyecto, 0);
 });
 
 $('#usuario_remanente_intmexCasas').change(function(ruta){
+    $("#total_autorizar_intmex_casas").html(formatMoney(0));
+    $("#all_casas_intmex").prop('checked', false);
     proyecto = $('#catalogo_remanente_intmex_casas').val();
     condominio = $('#usuario_remanente_intmexCasas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
@@ -189,7 +198,7 @@ function getAssimilatedCommissionsIntmex_casas(proyecto, condominio){
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
                                 $("#total_autorizar_intmex_casas").html(formatMoney(0));
-                                $("#all").prop('checked', false);
+                                $("#all_casas_intmex").prop('checked', false);
                                 var fecha = new Date();
                                 tabla_remanente_casas.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente."
@@ -367,7 +376,7 @@ function getAssimilatedCommissionsIntmex_casas(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 8){
                     if(full.id_comision){
-                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                        return '<input type="checkbox" name="idTQ[]" class="individualremanenteCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }
                     else{
                         return '';

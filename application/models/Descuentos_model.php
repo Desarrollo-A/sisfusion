@@ -30,7 +30,7 @@ class Descuentos_model extends CI_Model {
     function busqueda_true($id_opcion){
 
         return $this->db->query("SELECT evidencia FROM motivosRelacionPrestamos WHERE id_opcion = $id_opcion")->row()->evidencia;
-
+ 
     }
 
     function getUsuariosRol($rol,$opc = ''){

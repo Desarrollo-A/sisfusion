@@ -85,7 +85,7 @@ $("#tabla_plaza_1_casas_intmex").ready( function(){
                                 response = JSON.parse(data);
                                 if(data == 1) {
                                     $('#spiner-loader').addClass('hide');
-                                    // $("#autorizarAsimilados").html(formatMoney(0));
+                                    $("#autorizar").html(formatMoney(0));
                                     $("#all").prop('checked', false);
                                     plaza_intmex.ajax.reload();
                                     var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
@@ -287,7 +287,7 @@ $(document).on("click", ".checkPagosIndividual", function() {
         else 
             $("#all").prop("checked", false);
     });
-    $("#myText_nuevas_casas_intmex").html(formatMoney(numberTwoDecimal(tota2)));
+    $("#autorizar").html(formatMoney(numberTwoDecimal(tota2)));
 });
 
 function selectAllS(e) {
@@ -301,7 +301,7 @@ function selectAllS(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#myText_nuevas_casas_intmex").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizar").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
         $(plaza_intmex.$('input[type="checkbox"]')).each(function (i, v) {
@@ -309,7 +309,7 @@ function selectAllS(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#myText_nuevas_casas_intmex").html(formatMoney(0));
+        $("#autorizar").html(formatMoney(0));
     }
 }
 

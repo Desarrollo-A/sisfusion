@@ -49,11 +49,10 @@ var datosProyectos = [], datosCondominios = [], datosFechaCorte = [], datosSumaP
 $(document).ready(function() {
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Casas_comisiones/getDatosFechasProyecCondm",function (data) {
-        console.log(data);
         data = JSON.parse(data);
         datosFechaCorte = data.fechasCorte;
         datosSumaPagos = data.sumaPagos;
-        console.log(datosSumaPagos);
+        // console.log(datosSumaPagos);
 
         datosOpinion = data.opinion;
         //[0]año [1]mes [2]dia
@@ -98,7 +97,8 @@ function llenarSumas(){
 }
 
 function getPagosComisiones(idProyecto,idCondominio,estatus){
-    console.log(estatus);
+    $("#total_solicitar").html(formatMoney(0));
+    $("#all").prop('checked', false);
 
     var datosRespuesta = [];
     $.ajax({
@@ -111,8 +111,26 @@ function getPagosComisiones(idProyecto,idCondominio,estatus){
             datosRespuesta = JSON.parse(result);
         },
         async:   false
-        });
-        return datosRespuesta;
+    });
+    let datosTbActual = datosTablas.filter(datos => datos.estatus == estatus);
+
+    if(datosRespuesta.length != 0 ){
+        console.log("entro");
+        if (datosRespuesta[0].tot_suma > 0) {
+            document.getElementById(`${datosTbActual[0].idTitle}`).textContent = formatMoney( datosRespuesta[0].tot_suma);
+        }else{
+            document.getElementById(`${datosTbActual[0].idTitle}`).textContent = formatMoney(0);
+
+        }
+        
+    }else{
+        document.getElementById(`${datosTbActual[0].idTitle}`).textContent = formatMoney(0);
+
+    }
+
+
+    return datosRespuesta;
+    
 }
 
 function getPagosEstatus(idTabla,idProyecto,idCondominio,estatus){
@@ -127,6 +145,7 @@ function getPagosEstatus(idTabla,idProyecto,idCondominio,estatus){
 
 for (let m = 0; m < datosTablas.length; m++) {
     if(datosTablas[m].estatus != 0)
+    // console.log(datosTablas[m].id);
     $(`#${datosTablas[m].id} thead tr:eq(0) th`).each( function (i) {
         if(i != 0){
             var title = $(this).text();
@@ -141,7 +160,6 @@ for (let m = 0; m < datosTablas.length; m++) {
                         var data = $(`#${datosTablas[m].id}`).DataTable().rows(index).data();
 
                     $.each(data, function(i, v) {
-                        // console.log(v)
                         total += parseFloat(v.impuesto);
                     });
                     var to1 = formatMoney(total);
@@ -160,16 +178,37 @@ for (let m = 0; m < datosTablas.length; m++) {
 
 async function crearTabla(idTabla,data2,estatus){
     // console.log(idTabla)
-    console.log(data2);
+    // console.log(data2);
     // console.log(estatus);
     let datosTbActual = datosTablas.filter(datos => datos.estatus == estatus);
+
+  
+     
     // console.log(datosTbActual);
     // console.log(datosTbActual[0].id)
     let idProyecto = $(`#${datosTbActual[0].idSelect}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelect}`).val() ,idCondominio = $(`#${datosTbActual[0].idSelectCond}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelectCond}`).val();  
     // console.log(idSelect);
     $(`#${idTabla}`).prop("hidden", false);
 
+    // console.log($(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr){
+
+    //     console.log(json);
+
+    // }));
+
+    // $(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr) {
+    //     // alert()
+    //     var total = 0;
+    //     $.each(json, function (i, v) {
+    //         total += parseFloat(v.impuesto);
+    //     });
+    //     var to = formatMoney(total);
+    //     console.log(to);
+    //     document.getElementById(`${datosTbActual[0].idTitle}`).textContent = to;
+    // });
+
    $(`#${idTabla}`).DataTable({
+    
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100",
         scrollX: true,
@@ -473,9 +512,23 @@ async function crearTabla(idTabla,data2,estatus){
             },
         }],
         initComplete: function () {
+            // console.log(tabla_nuevas.row());
+
+
 			//$('#spiner-loader').addClass('hide'); 
             if(estatus == 1){
-                tabla_nuevas = $(`#${idTabla}`).DataTable(); 
+
+                tabla_nuevas = $(`#${idTabla}`).DataTable();
+            //    $(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr) {
+            //     alert()
+            //     var total = 0;
+            //     $.each(json, function (i, v) {
+            //         total += parseFloat(v.impuesto);
+            //     });
+            //     var to = formatMoney(total);
+            //     document.getElementById(`${datosTbActual[0].idTitle}`).textContent = to;
+            // });
+
             }else if(estatus == 4){
                 tabla_revision = $(`#${idTabla}`).DataTable();
             }else if(estatus == 3){
@@ -484,16 +537,20 @@ async function crearTabla(idTabla,data2,estatus){
                 tabla_intmex = $(`#${idTabla}`).DataTable();
             }else if(estatus == 6){
                 tabla_pausadas = $(`#${idTabla}`).DataTable();
-            }           
-            $(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr) {
-                alert()
-                var total = 0;
-                $.each(json, function (i, v) {
-                    total += parseFloat(v.impuesto);
-                });
-                var to = formatMoney(total);
-                document.getElementById(`${datosTbActual[0].idTitle}`).textContent = to;
-            });
+            }    
+
+       
+            // $(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr) {
+            //     alert()
+            //     var total = 0;
+            //     $.each(json, function (i, v) {
+            //         total += parseFloat(v.impuesto);
+            //     });
+            //     var to = formatMoney(total);
+            //     document.getElementById(`${datosTbActual[0].idTitle}`).textContent = to;
+            // });
+
+            
 		},fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
             
         },

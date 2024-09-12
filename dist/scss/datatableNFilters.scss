@@ -123,6 +123,13 @@
                         cursor: not-allowed;
                         border: none;
                         opacity: 0.6;
+                        background-color: $blancoInput!important;
+                    }
+                    disabled{
+                        cursor: not-allowed;
+                        border: none;
+                        opacity: 0.6;
+                        background-color: $blancoInput!important;
                     }
                 }
                 .label-gral{
@@ -507,4 +514,10 @@ table{
 
 .text-red{
     color: #FF0000;
+}
+
+.disabledInput{
+        cursor: not-allowed;
+        border: none;
+        background-color: $blancoInput !important;
 }

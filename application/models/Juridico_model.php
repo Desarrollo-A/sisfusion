@@ -6,7 +6,7 @@ class Juridico_model extends CI_Model {
     {
         parent::__construct();
     }
- 
+
 	
 	public function registroStatusContratacion7 ($typeTransaction = "", $beginDate = "", $endDate = "", $idResidencial = "",$idCondominio = '') {
 	    if($this->session->userdata('id_usuario') == 2762 || $this->session->userdata('id_usuario') == 6096){
@@ -20,7 +20,7 @@ class Juridico_model extends CI_Model {
             } else if ($typeTransaction == 1) { // VA A CORRER FILTRO POR DESARROLLO
 				$complemento = '';
 				if($idCondominio != 0 && $idCondominio != ''){
-					$complemento = ' AND cond.idCondominio='.$idCondominio; 
+					$complemento = ' AND cond.idCondominio='.$idCondominio;
 
 				}
                 $whereOne = "";
@@ -66,7 +66,7 @@ class Juridico_model extends CI_Model {
 				$filtroAsignacion = "";
 			
 			if($id_sede == 8) // JURÍDICO TIJUANA TAMBIÉN VE EXPEDIENTES DE MIAMI
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '19')";
+				$filtroSede = "AND l.aa IN ('$id_sede', '19')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 

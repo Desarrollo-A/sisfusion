@@ -504,8 +504,6 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 455) AND pr.id_sede IN (12)";
             else if ($id_usuario == 14649) // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
                 $where = "pr.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435) AND pr.id_sede IN (10)";
-            else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
-                $where = "pr.id_gerente IN ($id_lider, 694, 4509) AND pr.id_sede IN (14)";
             else if ($id_usuario == 14952) // GUILLERMO HELI IZQUIERDO VIEYRA
                 $where = "pr.id_gerente IN ($id_lider, 13295, 7970) AND pr.id_sede IN (14)";
             else if ($id_usuario == 13348) // VIRIDIANA ZAMORA ORTIZ
@@ -515,15 +513,29 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 12292) // REYNALDO HERNANDEZ SANCHEZ
                 $where = "pr.id_gerente IN ($id_lider, 6661)";
             else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
-                $where = "pr.id_gerente IN ($id_lider, 80, 664)";
+                $where = "pr.id_gerente IN ($id_lider, 80, 664, 16458, 2599)";
             else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
-                $where = "pr.id_gerente IN ($id_lider, 495)";
-            else if ($id_usuario == 15761) // JACQUELINE GARCIA SOTELLO
-                $where = "pr.id_gerente IN ($id_lider, 13016)";
+                $where = "pr.id_gerente IN ($id_lider, 12688)";
             else if ($id_usuario == 15545) // PAMELA IVONNE LEE MORENO
                 $where = "pr.id_gerente IN ($id_lider, 13059, 11680)";
             else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
                 $where = "pr.id_gerente IN ($id_lider, 10251)";
+            else if ($id_usuario == 16186) // CAROLINA CORONADO YAÑEZ
+                $where = "pr.id_gerente IN ($id_lider, 6942)";
+            else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
+                $where = "pr.id_gerente IN ($id_lider, 654, 697, 5604, 10251, 12688)";
+            else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
+                $where = "pr.id_gerente IN ($id_lider, 24, 10)";
+            else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
+                $where = "pr.id_gerente IN ($id_lider, 7474)";
+            else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
+                $where = "pr.id_gerente IN ($id_lider, 13821)";
+            else if ($id_usuario == 16813) // Vanessa Castro Muñoz
+                $where = "pr.id_gerente IN ($id_lider, 11680)";
+            else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
+                $where = "pr.id_gerente IN ($id_lider, 6661)";
+            else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
+                $where = "pr.id_gerente IN ($id_lider, 13067)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
@@ -1413,12 +1425,14 @@ function getStatusMktdPreventa(){
     }
 
     function getCoordsByGrs($id_gerente) {
+        if ($this->session->userdata('id_usuario') == 16186) // El ID del usuario pertenece a Carolina Coronado
+            $id_gerente .= ", 6942";
         return $this->db
             ->query(
                 "SELECT * 
                 FROM usuarios 
-                WHERE  (id_rol = 9 AND id_lider = $id_gerente) OR 
-                        (id_usuario = $id_gerente)
+                WHERE  (id_rol = 9 AND id_lider IN ($id_gerente)) OR 
+                        (id_usuario IN ($id_gerente))
                 ORDER BY nombre, apellido_paterno, apellido_materno")
             ->result();
     }
@@ -1512,7 +1526,8 @@ function getStatusMktdPreventa(){
                     UPPER(CONCAT(uss.nombre, ' ', uss.apellido_paterno, ' ', uss.apellido_materno)) AS gerente,
                     UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) subdirector, 
                     UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
-                    UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2
+                    UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2,
+                    c.correo, c.telefono
                     FROM prospectos c
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1550,7 +1565,7 @@ function getStatusMktdPreventa(){
                     UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2, 
                     CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion, 
                     CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_creacion,
-                    c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
+                    c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp,
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1578,7 +1593,8 @@ function getStatusMktdPreventa(){
                             UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2, 
                             CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
                             CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
-                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp
+                            c.estatus,c.estatus_particular, c.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp,
+                            c.correo, c.telefono
                     FROM prospectos c 
                     LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                     LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador
@@ -1621,7 +1637,8 @@ function getStatusMktdPreventa(){
                             UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2, 
                             CONVERT(VARCHAR, c.fecha_creacion, 20) AS fecha_creacion,
                             CONVERT(VARCHAR, c.fecha_vencimiento, 20) AS fecha_vencimiento,
-                            c.estatus, UPPER(c.lugar_prospeccion) AS lugar_prospeccion, UPPER(oxc.nombre) nombre_lp, c.estatus_particular
+                            c.estatus, UPPER(c.lugar_prospeccion) AS lugar_prospeccion, UPPER(oxc.nombre) nombre_lp, c.estatus_particular,
+                            c.correo, c.telefono
                 FROM prospectos c 
                 LEFT JOIN usuarios u ON u.id_usuario = c.id_asesor
                 LEFT JOIN usuarios us ON us.id_usuario = c.id_coordinador

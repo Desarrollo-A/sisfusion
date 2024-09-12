@@ -17,6 +17,9 @@ $(document).ready(function() {
 });
 
 $('#proyectoAsimilados_casas').change(function(){
+    $("#autorizarAsimilados_casas").html(formatMoney(0));
+    $("#all_asimilado_casas").prop('checked', false);
+
 residencial = $('#proyectoAsimilados_casas').val();
 $("#condominioAsimilados_casas").empty().selectpicker('refresh');
     $.ajax({
@@ -37,6 +40,9 @@ $("#condominioAsimilados_casas").empty().selectpicker('refresh');
 });
 
 $('#proyectoAsimilados_casas').change(function(){
+    $("#autorizarAsimilados_casas").html(formatMoney(0));
+    $("#all_asimilado_casas").prop('checked', false);
+
     // alert(4555545554);
     proyecto = $('#proyectoAsimilados_casas').val();
     condominio = $('#condominioAsimilados_casas').val();
@@ -47,6 +53,8 @@ $('#proyectoAsimilados_casas').change(function(){
 });
 
 $('#condominioAsimilados_casas').change(function(){
+    $("#autorizarAsimilados_casas").html(formatMoney(0));
+    $("#all_asimilado_casas").prop('checked', false);
     proyecto = $('#proyectoAsimilados_casas').val();
     condominio = $('#condominioAsimilados_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
@@ -86,18 +94,14 @@ function obtenerModoSeleccionado() {
 
 function getDataAsimiladosCasas(proyecto, condominio){
     
-    // $('#tabla_asimilados_casas').on('xhr.dt', function(e, settings, json, xhr) {
-    //     var total = 0;
-    //     $.each(json.data, function(i, v) {
-    //         total += parseFloat(v.impuesto);
-    //     });
-    //     var to = formatMoney(numberTwoDecimal(total));
-    //     document.getElementById("disponibleAsimilados_casas").textContent = to;
-    // });
-
-    // var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    //console.log("prueba");
-    //console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
+    $('#tabla_asimilados_casas').on('xhr.dt', function(e, settings, json, xhr) {
+        var total = 0;
+        $.each(json.data, function(i, v) {
+            total += parseFloat(v.impuesto);
+        });
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("disponibleAsimilados_casas").textContent = to;
+    });
     
 
     $("#tabla_asimilados_casas").prop("hidden", false);
@@ -350,7 +354,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                            return '<input type="checkbox" name="idPagoAsimilados[]" class="checkPagosIndividual" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            return '<input type="checkbox" name="idPagoAsimilados[]" class="checkPagos" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';
                     }

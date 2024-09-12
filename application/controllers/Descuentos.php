@@ -835,6 +835,7 @@ class Descuentos extends CI_Controller
             $monto =  $this->input->post('monto');
             $id_anticipo =  $this->input->post('idAnticipo_Aceptar');
             $bandera= 0;
+            $banderaEvidencia = 0;
             $usuarioid = $this->session->userdata('id_usuario');
             if($this->input->post('proceso') != 0 ){
                 // viene por un por un un proceso diferente a cancelado

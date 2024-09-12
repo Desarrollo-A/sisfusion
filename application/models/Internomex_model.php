@@ -259,7 +259,15 @@ class Internomex_model extends CI_Model {
                 tbl.plan_pago,
                 tbl.nombre_notaria,
                 tbl.nombre_notario,
-                tbl.direccion_notaria
+                tbl.direccion_notaria, 
+                tbl.il_idLote,
+                tbl.il_calle,
+                tbl.il_colonia,
+                tbl.il_numExterior,
+                tbl.il_codigoPostal,
+                tbl.il_superficie,
+                tbl.il_regimen,
+                tbl.il_folio
             FROM (
                 SELECT lo.idlote,
                     oxc0.nombre tipo_persona,
@@ -267,8 +275,8 @@ class Internomex_model extends CI_Model {
                     UPPER(cl.nombre) nombre_denominacion,
                     ISNULL(UPPER(cl.apellido_paterno), '') apellido_paterno,
                     ISNULL(UPPER(cl.apellido_materno), '') apellido_materno,
-                    ISNULL(CONVERT(VARCHAR, TRY_PARSE(fecha_nacimiento as date), 103), '') fecha_nacimiento_constitucion,
-                    ISNULL(curp,'') curp,
+                    ISNULL(CONVERT(VARCHAR, TRY_PARSE(cl.fecha_nacimiento as date), 103), '') fecha_nacimiento_constitucion,
+                    ISNULL(cl.curp,'') curp,
                     ISNULL(cl.rfc, '') rfc,
                     oxc1.nombre nacionalidad,
                     cl.domicilio_particular direccion,
@@ -285,19 +293,27 @@ class Internomex_model extends CI_Model {
                     FORMAT(ISNULL(pc.total_comision, 0), 'C') monto_comision,
                     re.empresa,
                     ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR') fecha_estatus9,
-                    ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR') fecha_estatus7,
+                    ISNULL(CONVERT(varchar, ISNULL(hl2.modificado, hp.fechaEstatus7Preproceso), 103), 'SIN ESPECIFICAR') fecha_estatus7,
                     ISNULL(oxc3.nombre, 'SIN ESPECIFICAR')forma_pago_enganche,
                     ISNULL(oxc4.nombre, 'SIN ESPECIFICAR') instrumento_monetario,
                     ISNULL(oxc5.nombre, 'SIN ESPECIFICAR') moneda_divisa,
                     ISNULL(oxc6.nombre, 'SIN ESPECIFICAR') concepto_pago,
                     ISNULL(CAST(en.fechaPago AS varchar(55)), 'SIN ESPECIFICAR') fecha_pago,
-                    ISNULL(en.montoPago, 0.00) monto_pago,
+                    FORMAT(ISNULL(en.montoPago, 0.00), 'C') monto_pago,
                     ISNULL(oxc7.nombre, 'SIN ESPECIFICAR') plan_pago,
                     ISNULL(nt.nombre_notaria, 'SIN ESPECIFICAR') nombre_notaria,
                     ISNULL(nt.nombre_notario, 'SIN ESPECIFICAR') nombre_notario,
-                    ISNULL(nt.direccion, 'SIN ESPECIFICAR') direccion_notaria
+                    ISNULL(nt.direccion, 'SIN ESPECIFICAR') direccion_notaria,
+                    ISNULL(CAST(il.idLote AS VARCHAR(250)), 'SIN ESPECIFICAR') il_idLote,
+                    ISNULL(il.calle, 'SIN ESPECIFICAR') il_calle,
+                    ISNULL(il.colonia, 'SIN ESPECIFICAR') il_colonia,
+                    ISNULL(il.numExterior, 'SIN ESPECIFICAR') il_numExterior,
+                    ISNULL(CAST(il.codigoPostal AS VARCHAR(250)), 'SIN ESPECIFICAR') il_codigoPostal,
+                    ISNULL(CAST(il.superficie AS VARCHAR(250)), 'SIN ESPECIFICAR') il_superficie,
+                    ISNULL(CAST(il.regimen AS VARCHAR(250)), 'SIN ESPECIFICAR') il_regimen,
+                    ISNULL(CAST(il.folio AS VARCHAR(250)), 'SIN ESPECIFICAR') il_folio
                             FROM clientes cl
-                            INNER JOIN lotes lo ON lo.idcliente = lo.idcliente AND lo.idlote = cl.idlote AND lo.status = 1 --AND lo.idLote IN (855, 1512)
+                            INNER JOIN lotes lo ON lo.idcliente = lo.idcliente AND lo.idlote = cl.idlote AND lo.status = 1 --AND lo.nombreLote IN ('CHPYUC-TZAH-031', 'CMPYUC-BOSH-075') --AND lo.idLote IN (855, 1512)
                             INNER JOIN condominios co ON co.idcondominio = lo.idcondominio
                             INNER JOIN residenciales re ON re.idresidencial = co.idresidencial
                             LEFT JOIN corridas_financieras cf ON cf.id_lote = lo.idlote AND cf.id_cliente = cl.id_cliente AND cf.status = 1
@@ -334,7 +350,10 @@ class Internomex_model extends CI_Model {
                             LEFT JOIN opcs_x_cats oxc6 ON oxc6.id_opcion = en.conceptoPago AND oxc6.id_catalogo = 119
                             LEFT JOIN opcs_x_cats oxc7 ON oxc7.id_opcion = en.planPago AND oxc7.id_catalogo = 131
                             LEFT JOIN solicitudes_escrituracion se ON se.id_lote = lo.idLote AND se.id_cliente = cl.id_cliente
-                            LEFT JOIN Notarias nt ON nt.idNotaria = se.id_notaria                                
+                            LEFT JOIN Notarias nt ON nt.idNotaria = se.id_notaria               
+                            LEFT JOIN informacion_lotes il ON il.idLote = lo.idLote AND il.estatus = 1
+                            LEFT JOIN (SELECT idLote, id_cliente FROM clientes) cl2 ON cl2.id_cliente = cl.id_cliente_reubicacion_2
+                            LEFT JOIN (SELECT MAX(fecha_modificacion) fechaEstatus7Preproceso, idLote FROM historial_preproceso_lote WHERE id_preproceso = 2 AND modificado_por IN (SELECT id_usuario FROM usuarios WHERE id_rol = 15) GROUP BY idLote) hp ON hp.idLote = cl2.idLote            
                             WHERE cl.status = 1
                             GROUP BY lo.idlote,
                                     oxc0.nombre,
@@ -342,8 +361,8 @@ class Internomex_model extends CI_Model {
                                     cl.nombre,
                                     cl.apellido_paterno,
                                     cl.apellido_materno,
-                                    ISNULL(CONVERT(varchar, TRY_PARSE(fecha_nacimiento AS date), 103), ''),
-                                    ISNULL(curp,''),
+                                    ISNULL(CONVERT(varchar, TRY_PARSE(cl.fecha_nacimiento AS date), 103), ''),
+                                    ISNULL(cl.curp,''),
                                     ISNULL(cl.rfc, ''),
                                     oxc1.nombre,
                                     cl.domicilio_particular,
@@ -359,7 +378,6 @@ class Internomex_model extends CI_Model {
                                     pc.total_comision,
                                     re.empresa,
                                     ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR'),
-                                    ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR'),
                                     oxc2.nombre,
                                     oxc3.nombre,
                                     oxc4.nombre,
@@ -370,7 +388,17 @@ class Internomex_model extends CI_Model {
                                     ISNULL(oxc7.nombre, 'SIN ESPECIFICAR'),
                                     ISNULL(nt.nombre_notaria, 'SIN ESPECIFICAR'),
                                     ISNULL(nt.nombre_notario, 'SIN ESPECIFICAR'),
-                                    ISNULL(nt.direccion, 'SIN ESPECIFICAR')
+                                    ISNULL(nt.direccion, 'SIN ESPECIFICAR'), 
+                                    ISNULL(CAST(il.idLote AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    ISNULL(il.calle, 'SIN ESPECIFICAR'),
+                                    ISNULL(il.colonia, 'SIN ESPECIFICAR'),
+                                    ISNULL(il.numExterior, 'SIN ESPECIFICAR'),
+                                    ISNULL(CAST(il.codigoPostal AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    ISNULL(CAST(il.superficie AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    ISNULL(CAST(il.regimen AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    ISNULL(CAST(il.folio AS VARCHAR(250)), 'SIN ESPECIFICAR'),
+                                    hp.fechaEstatus7Preproceso,
+                                    hl2.modificado
                     ) tbl
             GROUP BY 
                     tbl.idlote,
@@ -402,7 +430,15 @@ class Internomex_model extends CI_Model {
                     tbl.plan_pago,
                     tbl.nombre_notaria,
                     tbl.nombre_notario,
-                    tbl.direccion_notaria
+                    tbl.direccion_notaria, 
+                    tbl.il_idLote, 
+                    tbl.il_calle, 
+                    tbl.il_colonia, 
+                    tbl.il_numExterior, 
+                    tbl.il_codigoPostal, 
+                    tbl.il_superficie, 
+                    tbl.il_regimen, 
+                    tbl.il_folio
             ORDER BY 
                     tbl.nombre_propiedad
             "
@@ -415,7 +451,7 @@ class Internomex_model extends CI_Model {
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_materno, ' ', cl.apellido_materno)) nombreCliente, fechaApartado,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_materno, ' ', u0.apellido_materno)) END nombreAsesor,
         tv.tipo_venta tipoVenta, se.nombre ubicacion, FORMAT(lo.totalNeto, 'C') engancheContraloria, FORMAT(lo.totalValidado, 'C') engancheAdministracion, 
-        eng.idEnganche, lo.idCliente
+        eng.idEnganche, lo.idCliente, eng.*
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $id_condominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -424,21 +460,23 @@ class Internomex_model extends CI_Model {
         LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
         LEFT JOIN sedes se ON se.id_sede = lo.ubicacion
         LEFT JOIN enganche eng ON lo.idLote = eng.idLote 
-        WHERE lo.status = 1 AND lo.idStatusLote IN (2, 3)")->result();
+        WHERE lo.status = 1 AND lo.idStatusLote IN (2, 3)")->result_array();
     }
 
     // CONSULTA PARA TRAER LA OPCIONES DEL CATÁLOGO FORMA DE PAGO, INSTRUMENTO MONETARIO Y MONEDA O DIVISA
     function getCatalogoFormaPago() {
-        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo IN (110, 111, 112, 119)");
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo IN (110, 111, 112, 119, 131)");
 	}
 
     // CONSULTA PARA TRAER LOS DATOS DE LOS ENGANCHES DE UN LOTE
     function getEnganches($idLote) {
-        return $this->db->query("SELECT *, opcFormaP.nombre nombreFormaPago, opcInsMon.nombre nombreInstrumentoMonetario, opcMonedaD.nombre nombreMonedaDivisa 
+        return $this->db->query("SELECT *, opcFormaP.nombre nombreFormaPago, opcInsMon.nombre nombreInstrumentoMonetario, 
+        opcMonedaD.nombre nombreMonedaDivisa, opcPlanPago.nombre nombrePlanPago
     FROM enganche eng
     INNER JOIN opcs_x_cats opcFormaP ON opcFormaP.id_opcion = eng.formaPago AND opcFormaP.id_catalogo = 110
     INNER JOIN opcs_x_cats opcInsMon ON opcInsMon.id_opcion = eng.instrumentoMonetario AND opcInsMon.id_catalogo = 111
     INNER JOIN opcs_x_cats opcMonedaD ON opcMonedaD.id_opcion = eng.monedaDivisa AND opcMonedaD.id_catalogo = 112
+    INNER JOIN opcs_x_cats opcPlanPago ON opcPlanPago.id_opcion = eng.planPago AND opcPlanPago.id_catalogo = 131
     WHERE eng.idEnganche IN(SELECT idEnganche FROM enganche eng WHERE eng.idLote=$idLote)");
 	}
 

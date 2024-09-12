@@ -1,4 +1,4 @@
-$(document).ready(function () {
+//$(document).ready(function () {
 //  dani le quite este pedazo de codigo 
 numerosDispersionCasas();
 
@@ -12,81 +12,14 @@ numerosDispersionCasas();
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario3').val('');
     })
-});
+//});
 
-
-/*
-
-$("#form_NEODATA").submit( function(e) {
-    $('#dispersar').prop('disabled', true);
-    document.getElementById('dispersar').disabled = true;
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        $('#spiner-loader').removeClass('hidden');
-        var data = new FormData( $(form)[0] );
-        $.ajax({
-            url: general_base_url + 'Comisiones/InsertNeo',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST', // For jQuery < 1.9
-            success: function(data){
-                if( data == 1 ){
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
-                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
-                    $("#modal_NEODATA_Casas").modal( 'hide' );
-                    function_totales();
-                    $('#dispersar').prop('disabled', false);
-                    document.getElementById('dispersar').disabled = false;
-                    $.ajax({
-                        url: general_base_url + 'Comisiones/ultimaDispersion',
-                        data: formulario,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        dataType: 'json',
-                        method: 'POST',
-                        type: 'POST',
-                        success:function(data){
-                        numerosDispersion();
-                        }
-                    })
-                } else if (data == 2) {
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "Ya se dispersó por otro usuario", "warning");
-                    $('#tabla_dispersion_casas').DataTable().ajax.reload();
-                    $("#modal_NEODATA_Casas").modal( 'hide' );
-                    $('#dispersar').prop('disabled', false);
-                    document.getElementById('dispersar').disabled = false;
-                }else{
-                    $('#spiner-loader').addClass('hidden');
-                    alerts.showNotification("top", "right", "No se pudo completar tu solicitud", "danger");
-                    $('#dispersar').prop('disabled', false);
-                    document.getElementById('dispersar').disabled = false;
-                }
-            },error: function(){
-                $('#spiner-loader').addClass('hidden');
-                alerts.showNotification("top", "right", "EL LOTE NO SE PUEDE DISPERSAR, INTÉNTALO MÁS TARDE", "warning");
-            }
-        });
-    }
-});*/
-
-
-
-// Cambiar tabla
-
-let titulos_intxt = [];
+let titulos_intxtC = [];
 
 $('#tabla_dispersion_casas thead tr:eq(0) th').each(function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
-    titulos_intxt.push(title);
+    titulos_intxtC.push(title);
     if (i != 0 ) {
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
@@ -116,7 +49,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
             columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             format: {
                 header: function (d, columnIdx) {
-                    return ' ' + titulos_intxt[columnIdx] + ' ';
+                    return ' ' + titulos_intxtC[columnIdx] + ' ';
                 }
             }
         }
@@ -165,11 +98,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
         }},
         { data: function (d) {
             var labelStatus;
-            if(d.idStatusContratacion == 15) {
-                labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
-            }else {
-                labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
-            }
+                labelStatus =`<span class="label lbl-violetBoots">${d.estatusConstruccion}</span>`;
             return labelStatus;
         }},
         { data: function (d) {
@@ -194,11 +123,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
             var reactivo;
             rescisionLote = '';
             reactivo = '';
-            
-
-                 reactivo = '<br><span class="label lbl-gray">DISPERSIÓN CASAS</span>';
-                
-            
+            reactivo = '<br><span class="label lbl-gray">DISPERSIÓN CASAS</span>';
             return reactivo;
         }},
         { data: function (d) {
@@ -232,7 +157,13 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                     disparador = 0;
                     var precioDestino = d.costoTotalConstruccion;
                    
-                        disparador = d.registroComisionCasas == 1 ? 0 : 1;
+                        
+                            if(d.esquemaCreditoCasas == 2){ //NEODATA
+                                disparador = d.registroComisionCasas == 1 ? 1 : 1;
+                            }else{ //BANCO
+                                disparador = d.registroComisionCasas == 1 ? 1 : 1;
+                            }
+
                         totalLote = d.costoTotalConstruccion;
                         reubicadas = 0;
                         nombreLote = d.nombreLote;
@@ -265,6 +196,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         data-nombreMensualidad = "${d.nombreMensualidad}"
                         data-abonadoCliente ="${d.montoDepositado}"
                         data-esquemaCreditoCasas=${d.esquemaCreditoCasas}"
+                        data-registroComisionCasas=${d.registroComisionCasas}"
                         class = "btn-data ${varColor} verify_neodataCasas" data-prioridad="${d.prioridadComision}" data-toggle="tooltip"  data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                         
                         let colorPrioridad = d.prioridadComision == 1 ? 'btn-warning' : 'btn-blueMaderas' ;
@@ -409,8 +341,8 @@ $('#tabla_dispersion_casas tbody').on('click', 'td.details-control', function ()
 
 $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async function(){
 
-        
-    $("#modal_NEODATA_Casas .modal-header").html("");
+    $("#modal_NEODATA_Casas .modal-header").html(``);
+    $("#modal_NEODATA_Casas .modal-header").html(`<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button></br>`);
     $("#modal_NEODATA_Casas .modal-body").html("");
     $("#modal_NEODATA_Casas .modal-footer").html("");
     var tr = $(this).closest('tr');
@@ -425,7 +357,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
     bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
     idCliente = $(this).attr("data-cliente");
     plan_comision = $(this).attr("data-plan");
-    disparador = $(this).attr("data-disparador");
+    disparador = parseInt($(this).attr("data-disparador"));
     tipo_venta = $(this).attr("data-tipov");
     descripcion_plan = $(this).attr("data-descplan");
     nombreOtro = $(this).attr("data-nombreOtro");
@@ -433,24 +365,44 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
     prioridadDispersion = $(this).attr("data-prioridad");
     abonadoCliente = $(this).attr("data-abonadoCliente");
     esquemaCreditoCasas = $(this).attr("data-esquemaCreditoCasas");
+    registroComisionCasas = $(this).attr("data-registroComisionCasas");
     //disparador = 1;
     precioDestino = $(this).attr("data-precioDestino");
     if(parseFloat(totalNeto2) > 0){
 
         $("#modal_NEODATA_Casas .modal-body").html("");
         $("#modal_NEODATA_Casas .modal-footer").html("");
-        $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
-            var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
+        let aplicadoNeodata = 0;
+        if(parseInt(esquemaCreditoCasas) == 2){
+            $.ajax({
+                url: general_base_url + 'ComisionesNeo/getStatusNeodata/'+idLote,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'GET',
+                success: function (response) {
+                    const data = JSON.parse(response);
+                    aplicadoNeodata = data[0].Aplicado;
+                },
+                async:false
+            });
+        }else{
+            aplicadoNeodata = abonadoCliente;
+        }
+
+       // $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
+           // var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
             
-            if(data.length > 0){
-                switch (data[0].Marca) {
+           // if(data.length > 0){
+                switch (disparador) {
                     case 0:
                         $("#modal_NEODATA_Casas .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div></div>');
                     break;
                     case 1:
-                        if((disparador == 1)){
+                        disparador = parseInt(registroComisionCasas) == 1 ? 1 : 0;
+                        if((disparador == 0)){
                             //COMISION NUEVA
-                            let total0 = esquemaCreditoCasas == 2 ? parseFloat(data[0].Aplicado) : abonadoCliente;
+                            let total0 = aplicadoNeodata;
                             let total = 0;
                             if(total0 > 0){
                                 total = total0;
@@ -459,10 +411,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                             }
                             bonificadoTotal = 0;
 
-                            if(parseFloat(data[0].Bonificado) > 0){
-                                bonificadoTotal = data[0].Bonificado;
-                            }
-                            total = idLote == 16299 ? 20000 : total;
+
                             var porcentajeAbonado = ((total * 100) / totalNeto2);                            
                                 cadena = 
                                 `<div class="col-12">
@@ -487,7 +436,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                         </div>
 
                                         <div class="col-md-3 p-0">
-                                            <h5>NEODATA: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">${formatMoney(data[0].Aplicado)}</b></h5>
+                                            <h5>Aportado: <b style="color:${aplicadoNeodata <= 0 ? 'black' : 'blue'};">${formatMoney(aplicadoNeodata)}</b></h5>
                                         </div>
 
                                         <div class="col-md-3 p-0">
@@ -679,7 +628,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                         }
                         else{
                             $.getJSON( general_base_url + "Casas_comisiones/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
-                                let total0 = parseFloat((data[0].Aplicado));
+                                let total0 = parseFloat((aplicadoNeodata));
                                 let total = 0;
                                 if(total0 > 0){
                                     total = total0;
@@ -697,13 +646,13 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                         <div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div>
                                     </div>
                                 `);
-                                if(parseFloat(data[0].Bonificado) > 0){
+                                /*if(parseFloat(data[0].Bonificado) > 0){
                                     cadena = `<h4>Bonificación: <b style="color:#D84B16;">$${formatMoney(data[0].Bonificado)}</b></h4>`;
                                 }else{
                                     cadena = `<h4>Bonificación: <b >${formatMoney(0)}</b></h4>`;
-                                }
+                                }*/
                                 $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
-                                <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
+                                <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(aplicadoNeodata)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                 </div><br>`);
 
                                 $.getJSON( general_base_url + "Casas_comisiones/getDatosAbonadoDispersion/"+idLote).done( function( data ){
@@ -758,7 +707,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                         }
                                         $("#modal_NEODATA_Casas .modal-body").append(`<div class="row">
                                         <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="${disparador}"><input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}"><input type="hidden" name="idCliente" id="idCliente" value="${idCliente}"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
-                                        <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                                        <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="bandera" id="bandera" value="1"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
                                         <input id="id_comision" type="hidden" name="id_comision[]" value="${v.id_comision}"><input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.rol_generado}">
                                         <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
                                         <b><p style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">${v.descuento != "1" ?  v.rol : v.rol +' Incorrecto' }</p></b></div>
@@ -797,12 +746,12 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                         $("#modal_NEODATA_Casas .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Aviso.</b></h4><br><h5>Sistema en mantenimiento: .</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                     break;
                 }
-            }
+           /* }
             else{
                 //QUERY SIN RESULTADOS
                 $("#modal_NEODATA_Casas .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
-            }
-        }); //FIN getStatusNeodata
+            }*/
+       // }); //FIN getStatusNeodata
 
         $("#modal_NEODATA_Casas").modal();
     }else{
@@ -866,7 +815,7 @@ function numerosDispersionCasas(){
     $('.monto_labelC').html('');
     $('.pagos_labelC').html('');
     $('.lotes_labelC').html('');
-    $.post(general_base_url + "/Casas_comisiones/lotes", function (data) {
+    $.post(general_base_url + "Casas_comisiones/lotes", function (data) {
         let montoLabel = data.monto ;
         $('.monto_labelC').append(formatMoney(montoLabel));
         $('.pagos_labelC').append(data.pagos);

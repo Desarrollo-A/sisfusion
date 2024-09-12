@@ -1,13 +1,15 @@
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 var typeTransaction = 1;
-$('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
+
+$('#prospects-datatable_dir thead tr:eq(0) th').each(function (i) {
+    $(this).css('text-align', 'center');
+    const title = $(this).text();
     titulos_encabezado.push(title);
     num_colum_encabezado.push(i);
-    $(this).html(`<input type="text" class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}"placeholder="${title}"/>`);
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
+    $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
+    $('input', this).on('keyup change', function () {
+        if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value) {
             $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
         }
     });
@@ -16,12 +18,17 @@ $('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
 //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
 num_colum_encabezado.pop();
 $(document).ready(function () {
+
     multirol();
+
     //gerente
-    setInitialDates();
+
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
+    setInitialValues();
 });
+
+
 
 function multirol(){
     $.post('../General/multirol', function(data){
@@ -39,22 +46,22 @@ function multirol(){
 function createFilters(rol){
     if(rol == 59){
         let div = `<div class="col-md-3 form-group">
-                        <div id="div1" class="form-group overflow-hidden">
+                        <div id="div1" class="form-group label-floating select-is-empty">
                             <label class="control-label">SUBDIRECTOR</label>
                         </div>
                     </div>`;
         div += `<div class="col-md-3 form-group">
-                    <div id="div2" class="form-group overflow-hidden">
+                    <div id="div2" class="form-group label-floating select-is-empty">
                         <label class="control-label">GERENTE</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-3 form-group">
-                    <div id="div3" class="form-group overflow-hidden">
+                    <div id="div3" class="form-group label-floating select-is-empty">
                         <label class="control-label">COORDINADOR</label>
                     </div>
                 </div>`;
-        div += `<div class="col-md-3 form-group overflow-hidden">
-                    <div id="div4" class="form-group">
+        div += `<div class="col-md-3 form-group">
+                    <div id="div4" class="form-group label-floating select-is-empty">
                         <label class="control-label">ASESOR</label>
                     </div>
                 </div>`;
@@ -66,7 +73,6 @@ function createFilters(rol){
                 'data-style':"btn btn-round",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'data-container':"body",
                 'title':"Selecciona una opción"
             });
         var $selectGer = 
@@ -77,7 +83,6 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'data-container':"body",
                 'title':"Selecciona una opción"
             });
         var $selectCoord = 
@@ -88,7 +93,6 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'data-container':"body",
                 'title':"Selecciona una opción"
             });
         var $selectAse =
@@ -99,7 +103,6 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'data-container':"body",
                 'title':"Selecciona una opción"
             });
         $('#filterContainer').append(div);
@@ -107,19 +110,21 @@ function createFilters(rol){
         $selectGer.appendTo('#div2').selectpicker('refresh');
         $selectCoord.appendTo('#div3').selectpicker('refresh');
         $selectAse.appendTo('#div4').selectpicker('refresh');
+        // $option.appendTo('#asesores');
+
     }else if(2){ 
         let div =   `<div class="col-md-4 form-group">
-                        <div id="div2" class="form-group">
+                        <div id="div2" class="form-group label-floating select-is-empty">
                             <label class="control-label">GERENTE</label>
                         </div>
                     </div>`;
         div += `<div class="col-md-4 form-group">
-                    <div id="div3" class="form-group">
+                    <div id="div3" class="form-group label-floating select-is-empty">
                         <label class="control-label">COORDINADOR</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-4 form-group">
-                    <div id="div4" class="form-group">
+                    <div id="div4" class="form-group label-floating select-is-empty">
                         <label class="control-label">ASESOR</label>
                     </div>
                 </div>`;
@@ -165,6 +170,7 @@ function getFirstFilter(rol, secondRol){
     $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
     $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
         var len = data.length;
+        // console.log('users', data);
         for( var i = 0; i<len; i++)
         {
             var id = data[i]['id_usuario'];
@@ -181,9 +187,9 @@ function getFirstFilter(rol, secondRol){
 $(document).on('change', '#subdirector',function () {
     var subdirector = $("#subdirector").val();
     $("#gerente").empty().selectpicker('refresh');
-    $('#prospects-datatable_dir').removeClass('hide');
-    $('#calendario').removeClass('hide');
     $("#coordinador").empty().selectpicker('refresh');
+   
+   
     $("#coordinador").selectpicker('refresh');
     $("#asesores").selectpicker('refresh');
 
@@ -202,6 +208,8 @@ $(document).on('change', '#subdirector',function () {
 
     /**/ //carga tabla
     var url =general_base_url + 'index.php/Clientes/getProspectsListBySubdirector/' + subdirector;
+    /*console.log("TypeTRans: " + typeTransaction);
+    updateTable(url, typeTransaction);*/
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0)
@@ -209,7 +217,6 @@ $(document).on('change', '#subdirector',function () {
 
 
 $(document).on('change','#gerente', function () {
-    $('#prospects-datatable_dir').removeClass('hide');
 
     /**/var gerente = $("#gerente").val();
 
@@ -237,6 +244,8 @@ $(document).on('change','#gerente', function () {
 
     /**///carga tabla
     var url = general_base_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
+    /*console.log("TypeTRans: " + typeTransaction);
+    updateTable(url, typeTransaction);*/
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0)
@@ -244,7 +253,6 @@ $(document).on('change','#gerente', function () {
 
 $(document).on('change', '#coordinador', function () {
     var coordinador = $("#coordinador").val();
-    $('#prospects-datatable_dir').removeClass('hide');
 
     //gerente
     $("#asesores").empty().selectpicker('refresh');
@@ -268,19 +276,20 @@ $(document).on('change', '#coordinador', function () {
     var url = general_base_url + 'index.php/Clientes/getProspectsListByCoord/'+coordinador;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    updateTable(url, 1, finalBeginDate, finalEndDate, 0);
+    updateTable(url, 1, finalBeginDate, finalEndDate, 0)
+    // updateTable(url, typeTransaction);
 });
 
 //asesor
 $(document).on('change', '#asesores',function () {
     var asesor = $("#asesores").val();
-    $('#prospects-datatable_dir').removeClass('hide');
 
     /**///carga tabla
     var url = general_base_url + 'index.php/Clientes/getProspectsListByAsesor/' +asesor;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    updateTable(url, 1, finalBeginDate, finalEndDate, 0);
+    updateTable(url, 1, finalBeginDate, finalEndDate, 0)
+    // updateTable(url, typeTransaction);
 });
 
 
@@ -289,30 +298,26 @@ $(document).on("click", "#searchByDateRange", function () {
     var url_interno;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    var subdirector = $("#subdirector").val();
     var gerente = $("#gerente").val();
     var coordinador = $("#coordinador").val();
     var asesor = $("#asesores").val();
 
-    if(subdirector != '' && gerente == '' && coordinador == '' && asesor==''){
-        url_interno =general_base_url + 'index.php/Clientes/getProspectsListBySubdirector/';
-    }
-    else if(gerente != '' && coordinador == '' && asesor==''){
+    if(gerente != '' && coordinador == '' && asesor==''){
         url_interno = general_base_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
     }else if(gerente != '' && coordinador != '' && asesor == ''){
         url_interno = general_base_url + 'index.php/Clientes/getProspectsListByCoord/' + coordinador;
     }else if(gerente != '' && coordinador != '' && asesor != ''){
         url_interno = general_base_url + 'index.php/Clientes/getProspectsListByAsesor/' + asesor;
     }
-    updateTable(url_interno, 3, finalBeginDate, finalEndDate, 0);
+    // console.log(url_interno);
+    updateTable(url_interno, 3, finalBeginDate, finalEndDate, 0);/**/
 });
+
 
 function updateTable(url, typeTransaction, beginDate, endDate, where)
 {
-    $('#prospects-datatable_dir').dataTable({
+    var prospectsTable = $('#prospects-datatable_dir').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "100%",
-        scrollX: true,
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -353,29 +358,22 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             },
             {
                 data: function (d) {
-                    if(d.estatus_particular <= 8){
-                        b = '<span class="label lbl-gray">Sin especificar</span>';
-                    }
-                    else if(d.estatus_particular == 1) { // DESCARTADO
+                    if(d.estatus_particular == 1) { // DESCARTADO
                         b = '<center><span class="label lbl-warning">Descartado</span><center>';
-                    } 
-                    else if(d.estatus_particular == 2) { // INTERESADO SIN CITA
+                    } else if(d.estatus_particular == 2) { // INTERESADO SIN CITA
                         b = '<center><span class="label lbl-brown">Interesado sin cita</span><center>';
-                    } 
-                    else if (d.estatus_particular == 3){ // CON CITA
+                    } else if (d.estatus_particular == 3){ // CON CITA
                         b = '<center><span class="label lbl-darkCyan">Con cita</span><center>';
-                    } 
-                    else if (d.estatus_particular == 4){ // SIN ESPECIFICAR
-                        b = '<center><span class="label lbl-brightBlue">Sin especificar</span><center>';
-                    } 
-                    else if (d.estatus_particular == 5){ // PAUSADO
+                    } else if (d.estatus_particular == 4){ // SIN ESPECIFICAR
+                        b = '<center><span class="label lbl-purple">Sin especificar</span><center>';
+                    } else if (d.estatus_particular == 5){ // PAUSADO
                         b = '<center><span class="label lbl-violetBoots">Pausado</span><center>';
-                    }
-                     else if (d.estatus_particular == 6){ // PREVENTA
+                    } else if (d.estatus_particular == 6){ // PREVENTA
                         b = '<center><span class="label lbl-azure">Preventa</span><center>';
-                    } 
-                    else if (d.estatus_particular == 7){ // CLIENTE
+                    } else if (d.estatus_particular == 7){ // CLIENTE
                         b = '<span class="label lbl-green">Cliente</span>';
+                    }else{ // CLIENTE
+                        b = '<span class="label lbl-gray">Sin especificar</span>';
                     }
                     return b;
                 }
@@ -396,21 +394,6 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                     return d.gerente;
                 }
             },
-            {
-                data: function (d) {
-                    return (d.subdirector === '  ') ? 'SIN ESPECIFICAR' : d.subdirector;
-                }
-            },
-            {
-                data: function (d) {
-                    return (d.regional === '  ') ? 'SIN ESPECIFICAR' : d.regional;
-                }
-            },
-            {
-                data: function (d) {
-                    return (d.regional_2 === '  ') ? 'SIN ESPECIFICAR' : d.regional_2;
-                }
-            },
             { data: function (d) {
                     return d.nombre_lp;
                 }
@@ -422,16 +405,30 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             { data: function (d) {
                     return d.fecha_vencimiento;
                 }
-            }
-            ,
+            },
+            { data: function (d) {
+                return d.correo;
+                }
+            },
+            { data: function (d) {
+                return d.telefono;
+                }
+            },
             { data: function (d) {
                     if(id_rol_general == 2 || id_rol_general == 5){
                         if(id_rol_general != 7 && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) { // NO ES ASESOR Y EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                             return '';
                         } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
                             return `<center>
-                                        <button class="btn-data btn-blueMaderas see-information" data-id-prospecto="${d.id_prospecto}"style="margin-right: 3px;"data-toggle="tooltip" data-placement="top"title="VER INFORMACIÓN">
-                                            <i class="material-icons">remove_red_eye</i>
+                                        <button class="btn-data btn-blueMaderas see-information" 
+                                                data-id-prospecto="${d.id_prospecto}"
+                                                style="margin-right: 3px;"
+                                                data-toggle="tooltip" 
+                                                data-placement="top"
+                                                title="Ver información">
+                                            <i class="material-icons">
+                                                remove_red_eye
+                                            </i>
                                         </button>
                                     </center>`;
                         }
@@ -461,7 +458,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
 sp = { //  SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
-            format: 'DD/MM/YYYY',
+            format: 'MM/DD/YYYY',
             icons: {
                 time: "fa fa-clock-o",
                 date: "fa fa-calendar",
@@ -478,14 +475,27 @@ sp = { //  SELECT PICKER
     }
 }
 
-function setInitialDates() {
-    var beginDt = moment().startOf('year').format('DD/MM/YYYY');
-    var endDt = moment().format('DD/MM/YYYY');
-    $('.beginDate').val(beginDt);
-    $('.endDate').val(endDt);
+function setInitialValues() {
+    // BEGIN DATE
+    const fechaInicio = new Date();
+    // Iniciar en este año, este mes, en el día 1
+    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+    // END DATE
+    const fechaFin = new Date();
+    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+    // console.log('Fecha inicio: ', finalBeginDate);
+    // console.log('Fecha final: ', finalEndDate);
+    $("#beginDate").val(convertDate(beginDate));
+    $("#endDate").val(convertDate(endDate));
+    // fillTable(1, finalBeginDate, finalEndDate, 0);
 }
 
 function compareDates(fecha_creacion){
+    let date1 = new Date(fecha_creacion);
+    let date2 = new Date('2022-01-01');
     var isBefore = moment(fecha_creacion).isBefore('2022-01-20T00:00:00Z');
     return isBefore;
 }

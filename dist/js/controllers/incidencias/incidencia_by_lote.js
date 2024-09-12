@@ -109,7 +109,7 @@ $("#modal_avisos").draggable({
 // ---------------------------Inicia funciones del botón con la clase Inventario-----------------------
 
 var rol  = id_rol_general;
-const id_usuariosPermisos = [1,2767,2826,11947,5957,2749,9775];
+const id_usuariosPermisos = [1, 2767, 2826, 11947, 5957, 2749, 9775, 11815];
 var id_user  = id_usuario_general;
 var banderaPermisos = id_usuariosPermisos.includes(id_usuario_general) ? 1 : 0;
 var idLote = 0;
