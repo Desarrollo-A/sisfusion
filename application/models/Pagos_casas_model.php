@@ -494,7 +494,9 @@ class Pagos_casas_model extends CI_Model {
             $filtro = "WHERE pcbo.estatus in (4,6) AND pcbo.abono_bono > 0 ";
         }
         return $this->db->query("SELECT pcbo.abono_bono , us.id_usuario, CONCAT(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) colaborador, UPPER(sed.nombre) sede, UPPER(oxc.nombre) forma_pago, pcbo.estatus, pcbo.id_pago_bono,
-        (CASE us.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pcbo.abono_bono) ELSE pcbo.abono_bono END) impuesto, sed.impuesto valimpuesto ,us.rfc, lo.nombreLote AS lote 
+        (CASE us.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pcbo.abono_bono) ELSE pcbo.abono_bono END) impuesto,
+        (CASE us.forma_pago WHEN 3 THEN ((pcbo.abono_bono *(sed.impuesto / 100)))  ELSE pcbo.abono_bono END) descuento,
+         sed.impuesto valimpuesto ,us.rfc, lo.nombreLote AS lote 
         FROM pago_comision_bono pcbo
         inner join pago_casas_ind coi on coi.id_pago_i = pcbo.id_pago_i 
         inner join comisiones_casas com on com.id_comision = coi.id_comision
