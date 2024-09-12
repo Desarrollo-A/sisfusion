@@ -77,7 +77,6 @@ back_to_carta_auth = function (data) {
         title: 'Regresar proceso',
         text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a carta de autorización?`,
         onSubmit: function(data){
-            //console.log(data)
             form.loading(true);
 
             $.ajax({
@@ -161,8 +160,6 @@ function replace_upload(data ) {
 }
 
 function upload(data) {
-    // console.log(data)
-
     let tipo = 0;
     let nameFile = '';
     let accept = '';
@@ -258,7 +255,6 @@ pass_to_proyecto_ejecutivo = function(data) {
         title: 'Avanzar proceso', 
         text: `¿Deseas avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
-            //console.log(data)
             form.loading(true);
 
             $.ajax({
@@ -293,7 +289,6 @@ go_to_documentos = function(data) {
 }
 
 go_to_documentos_directo = function(data) {
-    console.log("toggled");
     window.location.href = `documentacionDirecto/${data.idProceso}`;
 }
 
@@ -342,18 +337,17 @@ let columns = [
         return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
     {data : function (data) {
-        if(data.id_estatus == null) {
+        if(data.id_estatus == null && data.escrituraFinalizada == 0) {
             return `<span class="label lbl-warning">SIN ESTATUS</span>`;;
         }
         if(data.id_estatus == 49) {
             return `<span class="label lbl-green">CONCLUIDO</span>`;
         }
-        if(data.id_estatus != 49 && data.id_estatus != null) {
+        if(data.id_estatus != 49 && (data.id_estatus != null || data.escrituraFinalizada == 1)) {
             return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
         }
     }},
     { data: function(data){
-        console.log("data: ", data);
         let adeudo_button = "";
         let upload_button = "";
         let pass_button = "";
@@ -361,7 +355,7 @@ let columns = [
         if(data.separator == 1) {
             if(idRol == 11 || idRol == 33){
                 adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
-                if(data.cargaRequerida == 1 && (idRol == 33)) {
+                if(data.cargaRequerida == 1 && (idRol == 33) && (data.escrituraFinalizada != 1)) {
                     upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
                 }
             }
@@ -378,7 +372,6 @@ let columns = [
         }
         else if(data.separator == 2) {
             if(idRol == 62) {
-                console.log("in here");
                 upload_button = new RowButton({icon : 'toc', label: 'Cargar documentos', onClick: go_to_documentos_directo, data});
             }
             if(idRol == 11) {
