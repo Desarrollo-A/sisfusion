@@ -18,8 +18,17 @@ function download_file(data) {
 }
 
 function show_upload(data) {
+    let accept = '';
+    switch(data.tipo) {
+        case 11 :
+            accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+            break;
+        default:
+            accept = ['application/pdf'];
+            break;
+    }
 
-    let accept = ['application/pdf'];
+    //let accept = ['application/pdf'];
 
     let form = new Form({
         title: 'Subir ' + data.documento.toLowerCase(),
