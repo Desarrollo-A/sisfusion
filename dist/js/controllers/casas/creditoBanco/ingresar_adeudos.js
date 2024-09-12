@@ -361,7 +361,7 @@ let columns = [
         if(data.separator == 1) {
             if(idRol == 11 || idRol == 33){
                 adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
-                if(data.cargaRequerida == 1 && data.cuentaDocumentos == 0 && (idRol == 33)) {
+                if(data.cargaRequerida == 1 && (idRol == 33)) {
                     upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
                 }
             }
