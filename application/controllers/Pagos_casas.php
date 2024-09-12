@@ -54,7 +54,7 @@ class Pagos_casas extends CI_Controller
         exit;
     }
 
-    public function getDatosNuevasAsimiladosSeguros(){
+    public function getDatosNuevasAsimiladosCasas(){
 
         if($this->session->userdata('id_rol') == 31){
             $filtro1 = $this->input->post('puesto');  
@@ -65,7 +65,7 @@ class Pagos_casas extends CI_Controller
             $filtro2 = $this->input->post('condominio'); 
         }
 
-        $dat =  $this->Pagos_casas_model->getDatosNuevasAsimiladosSeguros($filtro1,$filtro2);
+        $dat =  $this->Pagos_casas_model->getDatosNuevasAsimiladosCasas($filtro1,$filtro2);
 
         for( $i = 0; $i < count($dat); $i++ ){
             $dat[$i]['pa'] = 0;
