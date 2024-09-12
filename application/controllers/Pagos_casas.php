@@ -122,20 +122,20 @@ class Pagos_casas extends CI_Controller
           }
       }
 
-      public function getDatosNuevasFacturasSeguros(){
+      public function getDatosNuevasFacturasCasas(){
         $proyecto = $this->input->post('proyecto');  
         $condominio =   $this->input->post('condominio');  
-        $dat =  $this->Pagos_casas_model->getDatosNuevasFacturasSeguros($proyecto,$condominio);
+        $dat =  $this->Pagos_casas_model->getDatosNuevasFacturasCasas($proyecto,$condominio);
         for( $i = 0; $i < count($dat); $i++ ){
           $dat[$i]['pa'] = 0;
         }
         echo json_encode( array( "data" => $dat));
       }
 
-      public function getDatosNuevasRemanenteSeguros(){
+      public function getDatosNuevasRemanenteCasas(){
         $proyecto = $this->input->post('proyecto');  
         $condominio = $this->input->post('condominio');
-        $dat =  $this->Pagos_casas_model->getDatosNuevasRemanenteSeguros($proyecto,$condominio);
+        $dat =  $this->Pagos_casas_model->getDatosNuevasRemanenteCasas($proyecto,$condominio);
         for( $i = 0; $i < count($dat); $i++ ){
           $dat[$i]['pa'] = 0;
         }

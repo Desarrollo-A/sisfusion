@@ -74,7 +74,7 @@ $('#tabla_asimilados_casas thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all_asimilado_casas" type="checkbox" style="width:20px; height:20px;" onchange="selectAllSeguros(this)"/>');
+        $(this).html('<input id="all_asimilado_casas" type="checkbox" style="width:20px; height:20px;" onchange="select_all_casas(this)"/>');
     }
 });
 
@@ -565,7 +565,7 @@ $("#form_interes_casas").submit( function(e) {
 //     }
 // });
     
-function selectAllSeguros(e) {
+function select_all_casas(e) {
     totaPago_asimilados_casas = 0;
     if(e.checked == true){
         $(tabla_asimilados_casas_2.$('input[type="checkbox"]')).each(function (i, v) {
