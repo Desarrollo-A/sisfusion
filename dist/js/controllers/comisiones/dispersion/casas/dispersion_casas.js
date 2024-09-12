@@ -20,7 +20,7 @@ $('#tabla_dispersion_casas thead tr:eq(0) th').each(function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
     titulos_intxtC.push(title);
-    if (i != 0 ) {
+   // if (i != 0 ) {
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_dispersion_casas').DataTable().column(i).search() !== this.value ) {
@@ -32,7 +32,7 @@ $('#tabla_dispersion_casas thead tr:eq(0) th').each(function (i) {
             }).indexes();
             var data = $('#tabla_dispersion_casas').DataTable().rows(index).data();
         });
-    }
+   // }
 });
 tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -113,7 +113,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
             return d.Comision_total ? `${parseFloat(d.Comision_total)}%`: 'SIN ESPECIFICAR';
         }},
         { data: function (d) {
-            return formatMoney(d.Comisiones_Pagadas);
+            return formatMoney(d.abonadoAnterior);
         }},
         { data: function (d) {
             return formatMoney(d.Comisiones_pendientes);
@@ -702,7 +702,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                             saldo = 0;
                                         }
                                         $("#modal_NEODATA_Casas .modal-body").append(`<div class="row">
-                                        <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="${disparador}"><input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}"><input type="hidden" name="idCliente" id="idCliente" value="${idCliente}"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
+                                        <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="0"><input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}"><input type="hidden" name="idCliente" id="idCliente" value="${idCliente}"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
                                         <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="bandera" id="bandera" value="0"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
                                         <input id="id_comision" type="hidden" name="id_comision[]" value="${v.id_comision}"><input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.rol_generado}">
                                         <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
