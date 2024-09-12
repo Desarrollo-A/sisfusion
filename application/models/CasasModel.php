@@ -1682,7 +1682,8 @@ class CasasModel extends CI_Model
         WHERE (pc.status = 1 OR pc.status IS NULL)
         AND (cli.status = 1)
         AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
-        AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
+        --AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
+        $finalizado
         GROUP BY hct.idLote ,lo.nombreLote, pc.idLote, con.nombre, CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno),
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), us.nombre, cli.id_gerente_c,
         CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno), oxc.nombre, oxc2.nombre, 
@@ -1869,7 +1870,7 @@ class CasasModel extends CI_Model
 
     public function getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote)
     {
-        $query = $this->db->query("WITH CombinedData AS (
+        $query = $this->db->query("WITH CombinedData AS (s
         SELECT hpc.*, 
         CASE WHEN descripcion = '' THEN 'SIN ESPECIFICAR' ELSE LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END )) END AS descripcionFinal,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) AS nombreUsuario,
