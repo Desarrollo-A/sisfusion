@@ -364,7 +364,7 @@ function getDataAsimiladosCasas(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos_casas/getDatosNuevasAsimiladosSeguros/" ,
+            url: general_base_url + "Pagos_casas/getDatosNuevasAsimiladosCasas/" ,
             type: "POST",
             cache: false,
             data :{
