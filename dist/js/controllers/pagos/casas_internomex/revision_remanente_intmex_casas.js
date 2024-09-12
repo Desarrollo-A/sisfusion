@@ -25,7 +25,7 @@ $(document).ready(function() {
     });
 });
 
-function CloseModalDelete2Seguros(){
+function CloseModalDelete2Casas(){
     document.getElementById("form_multiples_casas").reset();
     a = document.getElementById('borrarProyect');
     padre = a.parentNode;
@@ -81,7 +81,7 @@ $(document).on("click", ".pagar_remanente_casas", function() {
     $("#modal_multiples_intmexR_casas .modal-body").html("");
     $("#modal_multiples_intmexR_casas .modal-header").html("");
     $("#modal_multiples_intmexR_casas .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples_intmexR_casas .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2Seguros()">CANCELAR</button><button type="submit" disabled id="btn_aceptar_casas" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiples_intmexR_casas .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2Casas()">CANCELAR</button><button type="submit" disabled id="btn_aceptar_casas" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
     $("#modal_multiples_intmexR_casas .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'Pagos_casas/getDesarrolloSelectINTMEX/', {desarrollo: 4 } ,function(data) {
@@ -158,7 +158,7 @@ $('#tabla_remanente_intmex_casas thead tr:eq(0) th').each( function (i) {
         });
         } 
     else {
-        $(this).html('<input id="all_casas_intmex" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
+        $(this).html('<input id="all_casas_intmex" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexCasas(this)"/>');
     }
 });
 
@@ -353,7 +353,7 @@ function getAssimilatedCommissionsIntmex_casas(proyecto, condominio){
                 let btns = '';
 
                 const BTN_DETREM = `<button href="#" value="${data.id_pago_i}"  data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" title="DETALLES"><i class="fas fa-info"></i></button>`;
-                const BTN_STAREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus_seguros" title="PAUSAR SOLICITUD"><i class="fas fa-pause"></i></button>`;
+                const BTN_STAREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus_casas" title="PAUSAR SOLICITUD"><i class="fas fa-pause"></i></button>`;
                 const BTN_ACTREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="ACTIVAR SOLICITUD"><i class="fas fa-play"></i></button>`
 
                 if(data.estatus == 8){
@@ -392,7 +392,7 @@ function getAssimilatedCommissionsIntmex_casas(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Pagos_casas/getDatosNuevasRemanenteSeguros/",
+            "url": general_base_url + "Pagos_casas/getDatosNuevasRemanenteCasas/",
             "type": "POST",
             cache: false,
             data: {
@@ -482,7 +482,7 @@ function getAssimilatedCommissionsIntmex_casas(proyecto, condominio){
     });
 
 
-    $("#tabla_remanente_intmex_casas tbody").on("click", ".cambiar_estatus_seguros", function(){
+    $("#tabla_remanente_intmex_casas tbody").on("click", ".cambiar_estatus_casas", function(){
         var tr1 = $(this).closest('tr');
         var row = tabla_remanente_casas.row( tr1 );
         id_pago_i = $(this).val();
@@ -560,7 +560,7 @@ $("#form_interes_casas").submit( function(e) {
     }
 });
 
-$("#form_refresh_seguros").submit( function(e) {
+$("#form_refresh_casas").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -577,7 +577,7 @@ $("#form_refresh_seguros").submit( function(e) {
             type: 'POST', 
             success: function(data){
                 if( data[0] ){
-                    $("#modal_refresh_seguros").modal('toggle' );
+                    $("#modal_refresh_casas").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
                     setTimeout(function() {
                         tabla_remanente_casas.ajax.reload();
@@ -678,7 +678,7 @@ function vistapreviaInformacion(archivo){
 //     $("#total_autorizar_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen_intmex_casas)));
 // });
 
-function selectAllIntmexSeguros(e) {
+function selectAllIntmexCasas(e) {
     tota2 = 0;
     if(e.checked == true){
         $(tabla_remanente_casas.$('input[type="checkbox"]')).each(function (i, v) {
@@ -718,16 +718,16 @@ $("#form_multiples_casas").submit( function(e) {
             type: 'POST', 
             success: function(data){
                 if( data == 1){
-                    CloseModalDelete2Seguros();
+                    CloseModalDelete2Casas();
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     tabla_remanente_casas.ajax.reload();
                 }else{
-                    CloseModalDelete2Seguros();
+                    CloseModalDelete2Casas();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
                 $('#loader').addClass('hidden');
             },error: function( ){
-                CloseModalDelete2Seguros();
+                CloseModalDelete2Casas();
                 alert("ERROR EN EL SISTEMA");
                 $('#loader').addClass('hidden');
             }
