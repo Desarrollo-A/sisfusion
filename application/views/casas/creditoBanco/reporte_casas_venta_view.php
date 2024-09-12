@@ -18,9 +18,10 @@
                                 <li role="presentation" class="active" id="tab-venta">
                                     <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verVenta">Historial actual</a>
                                 </li>
+                                <!--
                                 <li role="presentation" id="tab-proceso">
                                     <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verProceso" class="btn-historial" data-idLote="" data-flagFusion="">Hitorial general</a>
-                                </li>
+                                </li> -->
                             </ul>
                             <div class="tab-content" id="venta">
                                 <div role="tabpanel" class="tab-pane active" id="tabHistorial">

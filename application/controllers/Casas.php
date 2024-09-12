@@ -2984,7 +2984,7 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
-    public function getHistorial($idProceso, $tipoEsquema, $idLote)
+    public function getHistorial($idProceso, $tipoEsquema, $idLote = null)
     {
         echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote));
     }
