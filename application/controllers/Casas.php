@@ -4135,6 +4135,10 @@ class Casas extends BaseController
             if (!$addHistorial) {
                 http_response_code(400);
             }
+
+            $this->db->trans_commit();
+            $this->json([]);
+            
         } else {
             http_response_code(400);
         }
