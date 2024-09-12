@@ -56,7 +56,7 @@ class Neodata_model extends CI_Model {
         @MonedaSATDefault = '" . $data['MonedaSATDefault'] . "',
         @IdCodigoPostalSAT = " . ($data['IdCodigoPostalSAT'] == '' ? 'NULL' : $data['IdCodigoPostalSAT']) . ",
         @IdPaisSAT = " . $data['IdPaisSAT'] . ",
-        @IdCatRegimen = " . $data['IdCatRegimen'] . ",
+        @IdCatRegimen = " . ($data['IdCatRegimen'] == '' ? 'NULL' : $data['IdCatRegimen']) . ",
         @CuentaClabeSTP = " . ($data['CuentaClabeSTP'] == '' ? 'NULL' : $data['CuentaClabeSTP']) . ",
         @Prospecto = " . $data['Prospecto'] . "")->result_array();
         
@@ -66,4 +66,28 @@ class Neodata_model extends CI_Model {
             return array("status" => -1, "message" => $response[0]['ErrorNumber'] . " - " . $response[0]['ErrorMessage']);
     }
 
+    public function cancelaPlanPagoNeo($data){
+
+        $nombreLote = $data['nombreLoteCancelado'];
+        $numeroPlanLote = $data['numeroPlanLoteCancelado'];
+
+//        print_r($nombreLote);
+//        echo '<br>';
+//        print_r($numeroPlanLote);
+//        exit;
+
+//        $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
+        /**/$response = $this->programacion2->query("
+        EXEC [192.168.16.23].[programacion].[dbo].[CDM302CancelarPlanPago]
+        @empresa = N'FRO2',
+        @lote = N'$nombreLote',
+        @numPlanPagoCRM = $numeroPlanLote /* Numeración que se acordó con Erik para enlazar los planes de CRM con los de neodata*/
+        ")->result_array();
+        return array("responseGeneral" => $response);
+
+//        if (isset($response[0]['idCliente']))
+//            return array("status" => 1, "message" => "Registro $messageDetail con éxito - " . $response[0]['idCliente'] . ".");
+//        else
+//            return array("status" => -1, "message" => $response[0]['ErrorNumber'] . " - " . $response[0]['ErrorMessage']);
+    }
 }

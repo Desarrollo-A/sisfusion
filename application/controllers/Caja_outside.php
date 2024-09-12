@@ -2485,38 +2485,39 @@ class Caja_outside extends CI_Controller {
         $dataJson = json_decode(file_get_contents("php://input"));
         $id_cliente = $dataJson->id_cliente;
         if ($dataJson->id_gerente != null) {
-            //$data['lider'] = $this->caja_model_outside->getLider($dataJson->id_gerente);
+            $data['lider'] = $this->caja_model_outside->getLider($dataJson->id_gerente);
+
             if ($dataJson->id_asesor == $dataJson->id_coordinador)
                 $id_coordinador = 0;
             else if($dataJson->id_coordinador == $dataJson->id_gerente)
                 $id_coordinador = 0;
             else
                 $id_coordinador = $dataJson->id_coordinador;
+            
             $data = array(
                 "id_asesor" => $dataJson->id_asesor,
                 "id_coordinador" => $id_coordinador,
                 "id_gerente" => $dataJson->id_gerente,
-                "id_subdirector" => $dataJson->id_subdirector,
-                "id_regional" => $dataJson->id_regional,
-                "id_regional_2" => $dataJson->id_regional_2,
+                "id_subdirector" => $data['lider'][0]['id_subdirector'],
+                "id_regional" => $data['lider'][0]['id_regional'],
+                "id_regional_2" => $data['lider'][0]['id_regional_2'],
+                "id_sede" => $data['lider'][0]['id_sede'],
                 "fecha_modificacion" => date("Y-m-d H:i:s"),
-                "modificado_por" => $dataJson->id_usuario_que_modifica
+                "modificado_por" => $dataJson->id_usuario
             );
             $res = $this->caja_model_outside->changeTitular($data, $id_cliente);
-
             if ($res == 1) {
                 $response['message'] = 'SUCCESS';
                 echo json_encode($response);
-            } else {
+            }
+            else {
                 $response['message'] = 'ERROR';
                 echo json_encode($response);
             }
-
         } else {
             $response['message'] = 'ERROR';
             echo json_encode($response);
         }
-
     }
 
 

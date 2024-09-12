@@ -97,7 +97,8 @@ function fillTable() {
                     let btnAceptar = `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" 
                     data-placement="top" title= "Aceptar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" 
                     data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="1" data-precioFinal="${d.precioFinal}"
-                    data-tipoTramite="${d.idTipoTramite}" data-escrituraNotariada="${d.escrituraNotariada}">
+                    data-tipoTramite="${d.idTipoTramite}" data-escrituraNotariada="${d.escrituraNotariada}"
+                    data-idCondominio="${d.idCondominio}" data-idProyecto="${d.idProyecto}">
                         <i class="fas fa-thumbs-up"></i>
                     </button>`;
                     let btnRechazar = `<button class="btn-data btn-warning btn-avanzar" data-toggle="tooltip" data-placement="top" title= "Rechazar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="0"><i class="fas fa-thumbs-down"></i></button>`;
@@ -158,6 +159,7 @@ $(document).on('click', '.btn-avanzar', function () {
     $('#comentarioAvanzar').val('');
     $('#tipoTramiteA').val($(this).attr('data-tipoTransaccion'));
     $('#valorTramite').val($(this).attr('data-tipoTramite'));
+    $('#idCondominio').val($(this).attr('data-idCondominio'));
 
 
     if(precioFinalCrudo == '' || precioFinalCrudo == null || precioFinalCrudo == ' ' || precioFinalCrudo == 'null' || precioFinalCrudo == '.00' ){
@@ -198,7 +200,7 @@ $(document).on('click', '.btn-avanzar', function () {
     if($(this).attr('data-tipoTramite') == 6){
         let escrituraNotariadaDiv = document.getElementById('escrituraNotariadaDiv');
         let contenidoHTML = '<h5>Escritura notariada</h5><hr>';
-        contenidoHTML    += '<iframe src="'+general_base_url+'static/documentos/cliente/escrituraNotariada/'+$(this).attr('data-escrituraNotariada')+'" width="100%" height="250px"></iframe>\n';
+        contenidoHTML    += '<iframe src="'+general_base_url+'documentacion/archivo/'+$(this).attr('data-escrituraNotariada')+'" width="100%" height="250px"></iframe>\n';
         contenidoHTML    += '<input type="hidden" name="escrituraNotariada" value="'+$(this).attr('data-escrituraNotariada')+'">';
 
         escrituraNotariadaDiv.innerHTML = contenidoHTML;

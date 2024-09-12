@@ -1456,6 +1456,7 @@ function checkBudgetInfo($idSolicitud){
                 co.nombre nombreCondominio, 
                 lo.nombreLote, 
                 lo.idLote, 
+                co.idResidencial as idProyecto,
                 UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
                 UPPER(CONCAT(cxl.nombre, ' ', cxl.apellido_paterno, ' ', cxl.apellido_materno)) nombreClienteNuevo, 
                 lo.idCliente,
@@ -1601,6 +1602,63 @@ function checkBudgetInfo($idSolicitud){
     function getCopropsActuales($id_cliente){
         $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente = ".$id_cliente);
         return $query->result_array();
+    }
+
+    function getHistorialEstatus3(){
+        return $this->db->query("SELECT res.abreviatura as nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote,
+        lo.idLote, lo.referencia, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
+        lo.ubicacion, sede.nombre as nombreSede, CAST(lo.comentario AS varchar(MAX)) comentario, 
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) as nombreGerente,
+        hl.modificado fechaEnvioPostventa, hl3.modificado fechaEnvioAsesor
+        FROM lotes lo
+        LEFT JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes hl WHERE hl.idMovimiento IN (4, 74, 101, 103) AND status = 1 GROUP BY idLote, idCliente) hl  ON hl.idLote = lo.idLote-- AND hl.idCliente = lo.idCliente
+        LEFT JOIN historial_lotes hl2 ON hl2.idLote = hl.idLote AND hl2.idCliente = hl.idCliente AND hl2.modificado = hl.modificado AND hl2.status = 1
+        INNER JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes hl3 WHERE hl3.idMovimiento IN (98, 100) AND status = 1 GROUP BY idLote, idCliente) hl3  ON hl3.idLote = lo.idLote-- AND hl.idCliente = lo.idCliente
+        INNER JOIN historial_lotes hl4 ON hl4.idLote = hl3.idLote AND hl4.idCliente = hl3.idCliente AND hl4.modificado = hl3.modificado AND hl4.status = 1
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        LEFT JOIN sedes sede ON sede.id_sede = lo.ubicacion
+        INNER JOIN usuarios us ON us.id_usuario = cl.id_gerente
+        WHERE lo.tipo_venta = 1 AND lo.status = 1 
+        GROUP BY res.abreviatura, co.nombre, lo.nombreLote, lo.idLote, lo.nombreLote, lo.referencia, cl.nombre,
+        cl.apellido_paterno, cl.apellido_materno,  lo.ubicacion, sede.nombre, CAST(lo.comentario AS varchar(MAX)), hl.modificado,
+        us.nombre, us.apellido_paterno, us.apellido_materno, hl3.modificado")->result_array();
+    }
+
+    public function getResidencialesOptions()
+    {
+        $query = "SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) AS label, idResidencial AS value
+        FROM residenciales WHERE status = 1";
+        return $this->db->query($query)->result();
+    }
+
+    public function getCondominiosOptions($idResidencial)
+    {
+        $query = "SELECT nombre AS label, idCondominio AS value
+        FROM condominios
+        WHERE status = 1
+        AND idResidencial = $idResidencial";
+        
+        return $this->db->query($query)->result();
+    }
+
+    public function getEscrituraDisponible($idCondominio) 
+    {
+        return $this->db->query("SELECT lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, 
+        cond.nombre nombreCondominio, lo.nombreLote, lo.sup , re.nombreResidencial, cl.id_cliente AS idCliente
+        FROM lotes lo
+        LEFT JOIN solicitudes_escrituracion se ON se.id_lote = lo.idLote
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = cond.idResidencial
+        WHERE lo.status = 1 AND lo.idStatusLote = 2
+        AND cl.status = 1 AND lo.idLote NOT IN (SELECT se.id_lote  FROM solicitudes_escrituracion se)
+        AND cl.escrituraFinalizada = 0
+        AND cond.idCondominio = $idCondominio
+        GROUP BY lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cond.nombre, lo.nombreLote, lo.sup,
+        re.nombreResidencial, cl.id_cliente
+        ")->result_array();
     }
     
 }

@@ -233,7 +233,7 @@ class Comisiones_model extends CI_Model {
     public function getDataDispersionPago() {
         $this->db->query("SET LANGUAGE Español;");
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
-        (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' ELSE ' SIN DEFINIR' END) tipo_venta,
+        (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' WHEN l.tipo_venta = 9 THEN 'Maderas Upgrade' ELSE ' SIN DEFINIR' END) tipo_venta,
         (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,cl.estructura,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, 
@@ -283,7 +283,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         LEFT JOIN (SELECT SUM(comision_total) AS sumComisiones,idCliente FROM comisiones WHERE estatus=8 GROUP BY idCliente) sumComisionReu ON sumComisionReu.idCliente = cl.id_cliente_reubicacion_2
         LEFT JOIN (SELECT SUM(totalNeto2) as sumaFusion,idLotePvOrigen FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lof ON lof.idLotePvOrigen=clr.idLote
-        LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote 
+        LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote AND mc.id_cliente = cl.id_cliente
         LEFT JOIN opcs_x_cats opc_mc ON opc_mc.id_opcion = mc.opcion AND opc_mc.id_catalogo= 127
         WHERE l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250,25836) 
         AND l.registro_comision not IN (7) 
@@ -295,7 +295,7 @@ class Comisiones_model extends CI_Model {
         AND l.status IN (0,1) 
         AND (l.registro_comision IN (0,8,2,9) OR (l.registro_comision IN (1,8,9) 
         AND pc.bandera IN (0,100))) 
-        AND ((l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2) AND ISNULL(l.totalNeto2, 0) > 0) OR (l.tipo_venta IN (8))) 
+        AND ((l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2,9) AND ISNULL(l.totalNeto2, 0) > 0) OR (l.tipo_venta IN (8))) 
         AND cl.fechaApartado >= '2020-03-01' 
         AND (cl.id_subdirector IS NOT NULL AND cl.id_subdirector != '' AND cl.id_subdirector != 0 )
         )
@@ -4643,8 +4643,8 @@ function getDatosGralInternomex(){
            
         } else{
             $innerMktd = 4394;
-            $innerOtro = 'pl.id_o';
-            $innerOtro2 = 'pl.id_o2';
+            $innerOtro =  $plan_comision == 104 ? 'cA.especialistaEscuadron' : 'pl.id_o';
+            $innerOtro2 = $plan_comision == 104 ? 'cA.liderEscuadron' : 'pl.id_o2';
             $innerOtro3 = 'pl.id_o3';
             $innerOtro4 = 'pl.id_o4';
             $innerCoord = 'cA.id_coordinador';
@@ -4682,7 +4682,7 @@ function getDatosGralInternomex(){
         WHERE cA.id_cliente = @idCliente)
 
         UNION  /* OTRO PRIMERO - Contabilidad */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.id_o = 690 THEN 'Subdirector' WHEN pl.otro = 2 THEN 'Dr. Regional'  WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt porcentaje_decimal, (($totalNeto/100)*(pl.comOt)) comision_total, (pl.neoOt) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 as id_rol, (CASE WHEN pl.otro = 45 THEN 'Empresa' WHEN pl.id_plan=104 THEN 'Especialista Experiencia' WHEN pl.id_o = 690 THEN 'Subdirector' WHEN pl.otro = 2 THEN 'Dr. Regional'  WHEN pl.id_o = 11053 THEN 'Internomex' WHEN pl.id_o = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN 'Asesor convenio' WHEN pl.id_o = 13395 THEN 'POSTVENTA' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 7 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro not in (0)
@@ -4691,7 +4691,7 @@ function getDatosGralInternomex(){
         WHERE cA.id_cliente = @idCliente)
         
         UNION  /* OTRO SEGUNDO - Titulación */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.otro2 = 2 THEN 'Dr. Regional' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Coordinador convenio' ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 8 END) as rolVal
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comOt2 porcentaje_decimal, (($totalNeto/100)*(pl.comOt2)) comision_total, (pl.neoOt2) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol5 as id_rol, (CASE WHEN pl.otro2 = 45 THEN 'Empresa' WHEN pl.id_plan=104 THEN 'Líder escuadron Cancelación' WHEN pl.otro2 = 2 THEN 'Dr. Regional' WHEN pl.id_o2 = 11054 THEN 'Internomex' WHEN pl.id_o2 = 12841 THEN 'Arcus' WHEN pl.id_plan IN (66,86) THEN 'Titulación' WHEN pl.id_plan = 70 THEN 'Coordinador convenio'  ELSE 'Influencer' END) detail_rol, (CASE WHEN pl.otro = 2 THEN 1 ELSE 8 END) as rolVal
         FROM clientes cA 
         $joinLotes  
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision and pl.otro2 not in (0)
@@ -5060,7 +5060,7 @@ function getDatosGralInternomex(){
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado, idStatusContratacion, idMovimiento FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 
         GROUP BY idLote, idCliente, idStatusContratacion, idMovimiento) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
         WHERE ((hl.idStatusContratacion = 9 AND hl.idMovimiento = 39) OR l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250)) AND l.idStatusContratacion >= 9
-        AND cl.status = 1 AND l.status IN (0,1) AND l.registro_comision IN (1) AND pc.bandera IN (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
+        AND cl.status = 1 AND l.status IN (0, 1) AND l.registro_comision IN (1, 9) AND pc.bandera IN (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
         ORDER BY l.idLote");
         return $query;
     }
@@ -5348,11 +5348,27 @@ function getDatosGralInternomex(){
         else if($id_usuario == 15109)
             $id_lider .= ", 10251";
         else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
-            $id_lider .= ", 495";
+            $id_lider .= ", 12688";
         else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
             $id_lider .= ", 5604";
         else if ($id_usuario == 16214) // JESSICA PAOLA CORTEZ VALENZUELA
-            $id_lider .= ", 80, 664";
+            $id_lider .= ", 80, 664, 16458, 2599";
+        else if ($id_usuario == 16186) // CAROLINA CORONADO YAÑEZ
+            $id_lider .= ", 6942";
+        else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
+            $id_lider .= ", 654, 697, 5604, 10251, 12688";
+        else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
+            $id_lider .= ", 24, 10";
+        else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
+            $id_lider .= ", 7474";
+        else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
+            $id_lider .= ", 13821";
+        else if ($id_usuario == 16813) // Vanessa Castro Muñoz
+            $id_lider .= ", 11680";
+        else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
+            $id_lider .= ", 6661";
+        else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
+            $id_lider .= ", 13067";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES
@@ -5406,8 +5422,9 @@ function getDatosGralInternomex(){
 
     public function getDetallePlanesComisiones($idPlan)
     {
-        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comDi, pc.neoDi, rolDir.nombre AS director,  pc.comRe, pc.neoRe, 'Regional' AS regional, pc.comSu, pc.neoSu, 'Subdirector' AS subdirector, pc.comGe, pc.neoGe, rolGer.nombre AS gerente, pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador, pc.comAs, pc.neoAs, rolAse.nombre AS asesor, pc.comMk, pc.neoMk, rolMkt.nombre AS mktd, pc.comOt, pc.neoOt, (CASE WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro, 
-            pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ') ELSE rolOtr2.nombre END) AS otro2,
+        $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comDi, pc.neoDi, rolDir.nombre AS director,  pc.comRe, pc.neoRe, 'Regional' AS regional, pc.comSu, pc.neoSu, 'Subdirector' AS subdirector, pc.comGe, pc.neoGe, rolGer.nombre AS gerente, pc.comCo, pc.neoCo, rolCoor.nombre AS coordinador, pc.comAs, pc.neoAs, rolAse.nombre AS asesor, pc.comMk, pc.neoMk, rolMkt.nombre AS mktd, pc.comOt, pc.neoOt, 
+            (CASE WHEN pc.id_plan = 104 THEN 'Especialista Experiencia' WHEN pc.id_o IS NOT NULL THEN CONCAT(usOtr.nombre, ' ', usOtr.apellido_paterno, ' ',usOtr.apellido_materno, ' ') ELSE rolOtr.nombre END) AS otro, 
+            pc.comOt2, pc.neoOt2, (CASE WHEN pc.id_plan = 104 THEN 'Líder Escuadron Cancelación' WHEN pc.id_o2 IS NOT NULL THEN CONCAT(usOtr2.nombre, ' ', usOtr2.apellido_paterno, ' ',usOtr2.apellido_materno, ' ')  ELSE rolOtr2.nombre END) AS otro2,
             pc.comOt3, pc.neoOt3, (CASE WHEN pc.id_o3 IS NOT NULL THEN CONCAT(usOtr3.nombre, ' ', usOtr3.apellido_paterno, ' ',usOtr3.apellido_materno, ' ') ELSE rolOtr3.nombre END) AS otro3,
             pc.comOt4, pc.neoOt4, (CASE WHEN pc.id_o4 IS NOT NULL THEN CONCAT(usOtr4.nombre, ' ', usOtr4.apellido_paterno, ' ',usOtr4.apellido_materno, ' ') ELSE rolOtr4.nombre END) AS otro4
             FROM plan_comision pc
@@ -6327,7 +6344,7 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
     public function getFechaCorteActual($tipoUsuario,$diaActual){
     $mesActual = date('m');
     $formaPago = $this->session->userdata('forma_pago');
-    $filtro = ($tipoUsuario == 2 || $tipoUsuario == 4) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($formaPago == 2 && $tipoUsuario == 2 ) ? " AND Day(fechaInicio) >= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
+    $filtro = ($tipoUsuario == 2 || $tipoUsuario == 4) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : ((in_array($formaPago, array(2, 3, 4)) && $tipoUsuario == 2 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
     $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
     $tipoUsuario =  $tipoUsuario == 1 ? 0 : ($tipoUsuario == 2 ? 1 : ($tipoUsuario == 4 ? 4 : 3) );
     return $this->db->query("SELECT mes,fechaInicio,corteOoam $filtro2 FROM fechasCorte WHERE estatus = 1 AND 

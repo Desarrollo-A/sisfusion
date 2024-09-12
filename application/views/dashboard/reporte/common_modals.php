@@ -209,8 +209,8 @@
                       <th>FECHA DE ÚLTIMO ESTATUS</th>
                       <th>DÍAS DE ÚLTIMO ESTATUS</th>
                       <th>ESTATUS DE CONTRATACÍON</th>
-                      <th>FECHA DE ESTATUS 9</th>
-                      <th>DÍAS EN ESTATUS 9</th>
+                      <th>FECHA REGISTRO ESTATUS 9</th>
+                      <th># DÍAS DESDE APARTADO HASTA REGISTRO ESTATUS 9</th>
                       <th>ESTATUS DEL LOTE</th>
                       <th>APARTADO</th>
                       <th>MODALIDAD</th>
@@ -259,8 +259,8 @@
                         <th>FECHA DE ÚLTIMO ESTATUS</th>
                         <th>DÍAS DE ÚLTIMO ESTATUS</th>
                         <th>ESTATUS DE CONTRATACÍON</th>
-                        <th>FECHA DE ESTATUS 9</th>
-                        <th>DÍAS EN ESTATUS 9</th>
+                        <th>FECHA REGISTRO ESTATUS 9</th>
+                      <th># DÍAS DESDE APARTADO HASTA REGISTRO ESTATUS 9</th>
                         <th>ESTATUS DEL LOTE</th>
                         <th>FECHA DE LIBERACIÓN</th>
                         <th>MOTIVO</th>

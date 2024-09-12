@@ -16,38 +16,28 @@ var getInfo1 = new Array(6);
 var getInfo2 = new Array(6);
 
 $(document).ready(function () {
-    $.post("get_tventa", function (data) {
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-            var id = data[i]['id_tventa'];
-            var name = data[i]['tipo_venta'];
-            $("#tipo_ventaenvARevCE").append($('<option>').val(id).text(name.toUpperCase()));
-      }
-        $("#tipo_ventaenvARevCE").selectpicker('refresh');
-    }, 'json');
-
-    $.post("get_sede", function (data) {
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-            var id = data[i]['id_sede'];
-            var name = data[i]['nombre'];
-            $("#ubicacion").append($('<option>').val(id).text(name.toUpperCase()));
-      }
-        $("#ubicacion").selectpicker('refresh');
-    }, 'json');
-
-    $.post(general_base_url + 'General/getCatalogOptions', { id_catalogo: 147 }, function (data) {
-        for (let i = 0; i < data.length; i++) {
-              const id = data[i]['id_opcion'];
-              const name = data[i]['nombre'];
+    $.post("selectores", function (data) {
+      for (let i = 0; i < data.length; i++) {
+            const id = data[i]['id_opcion'];
+            const name = data[i]['nombre'];
+            if (data[i]['tabla'] === 'tipo_venta') {
+              $("#tipo_ventaenvARevCE").append($('<option>').val(id).text(name.toUpperCase()));
+            }
+            if (data[i]['tabla'] === 'sedes') {
+              $("#ubicacion").append($('<option>').val(id).text(name.toUpperCase()));
+            }
+            if (data[i]['tabla'] === 'tipo_enganches') {
               $("#tipo_enganche").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-          $("#tipo_enganche").selectpicker('refresh');
-    }, 'json');
+            }
+      }
 
-    $("#anexa_complemento").append($('<option>').val(1).text('SI'));
-    $("#anexa_complemento").append($('<option>').val(0).text('NO'));
-    $("#anexa_complemento").selectpicker('refresh');
+      $("#anexa_complemento").append($('<option>').val(1).text('SÍ'));
+      $("#anexa_complemento").append($('<option>').val(0).text('NO'));
+      $("#anexa_complemento").selectpicker('refresh');
+      $("#ubicacion").selectpicker('refresh');
+      $("#tipo_enganche").selectpicker('refresh');
+      $("#tipo_ventaenvARevCE").selectpicker('refresh');
+    }, 'json');
 });
 
 $("#tabla_ingresar_5").ready(function () {
@@ -228,7 +218,9 @@ $("#tabla_ingresar_5").ready(function () {
                 data.fechaVenc +
                 '" data-ubic="' +
                 data.ubicacion +
-                '" title= "REGISTRAR STATUS" ' +
+                '" data-data=\'' +
+                JSON.stringify(data) +
+                '\' title="REGISTRAR STATUS" ' +
                 'data-tipo-venta="' +
                 data.tipo_venta +
                 '" data-proceso="'+data.proceso+'' +
@@ -249,8 +241,9 @@ $("#tabla_ingresar_5").ready(function () {
                 data.fechaVenc +
                 '" data-ubic="' +
                 data.ubicacion +
-                '" ' +
-                'class="rechazarStatus btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
+                '" data-data=\'' +
+                JSON.stringify(data) +
+                '\' class="rechazarStatus btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
                 '<i class="fas fa-thumbs-down"></i></button>';
             } else if (
               (data.idStatusContratacion == 2 && data.idMovimiento == 74) ||
@@ -270,8 +263,9 @@ $("#tabla_ingresar_5").ready(function () {
                 data.fechaVenc +
                 '" data-ubic="' +
                 data.ubicacion +
-                '" ' +
-                'class="revCont6 btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "REGISTRAR ESTATUS">' +
+                '" data-data=\'' +
+                JSON.stringify(data) +
+                '\' class="revCont6 btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "REGISTRAR ESTATUS">' +
                 '<i class="fas fa-thumbs-up"></i></button>';
 
               cntActions +=
@@ -288,8 +282,9 @@ $("#tabla_ingresar_5").ready(function () {
                 data.fechaVenc +
                 '" data-ubic="' +
                 data.ubicacion +
-                '" ' +
-                'class="edit2 btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
+                '" data-data=\'' +
+                JSON.stringify(data) +
+                '\' class="edit2 btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
                 '<i class="fas fa-thumbs-down"></i></button>';
             }
             else {
@@ -416,7 +411,8 @@ $(document).on('click', '.stat5Rev', function () {
   const tipoVenta = $(this).attr('data-tipo-venta');
   const proceso = $(this).attr('data-proceso');
   const ubicacion = $(this).attr('data-ubic');
-
+  let d = JSON.parse($(this).attr('data-data'));
+  
   $('#nombreLoteenvARevCE').val($(this).attr('data-nomLote'));
   $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
   $('#idCondominioenvARevCE').val($(this).attr('data-idCond')); //recibodeapartadoyenganche
@@ -445,40 +441,10 @@ $(document).on('click', '.stat5Rev', function () {
       $('#tipo_ventaenvARevCE').prop('disabled', false);
   }
 
-    $.post(general_base_url + 'Contraloria/getComplementoPago ', { idLote: idLote },
-    function (data) {
-        if (data.length >= 1){
-            $("#anexa_complemento").empty();
-            $("#anexa_complemento").append($('<option selected="selected">').val(1).text('SI'));
-            $("#anexa_complemento").append($('<option>').val(0).text('NO'));
-            $("#anexa_complemento").selectpicker('refresh');
-
-        }
-    },'json');
-
-  $.post(general_base_url + 'Contraloria/getTipoEnganche ', { idLote: idLote },
-    function (data) {
-        if (data[0].tipoEnganche){
-            $("#anexa_complemento").empty().selectpicker('refresh');
-            $.post(general_base_url + 'General/getCatalogOptions', { id_catalogo: 147 }, function (rs) {
-                for (let i = 0; i < rs.length; i++) {
-                      const id = rs[i]['id_opcion'];
-                      const name = rs[i]['nombre'];
-                      if (id == data[0].tipoEnganche){
-                        $("#tipo_enganche").append($('<option selected>').val(id).text(name.toUpperCase()));
-                      }else {
-                        $("#tipo_enganche").append($('<option>').val(id).text(name.toUpperCase()));
-                      }
-                }
-                $("#tipo_enganche").selectpicker('refresh');
-            }, 'json');
-        }
-        $("#tipo_enganche").selectpicker('refresh');
-    },'json');
-
   $('#enviarenvARevCE').removeAttr('onClick', 'preguntaenvARevCE2()');
   $('#enviarenvARevCE').attr('onClick', 'preguntaenvARevCE()');
   $("#comentarioenvARevCE").val('');
+  $("#envARevCEdata").val(JSON.stringify(d));
   $('#enviarenvARevCE').disabled = false;
   nombreLote = $(this).data("nomlote");
   $(".lote").html(nombreLote);
@@ -494,6 +460,7 @@ function preguntaenvARevCE() {
   var ubicacion = $("#ubicacion").val();
   var comentario = $("#comentarioenvARevCE").val();
   var tipo_venta = $('#tipo_ventaenvARevCE').val();
+  const d = JSON.parse($('#envARevCEdata').val());
 
   const tipo_enganche = $('#tipo_enganche').val();
   const anexa_complemento = $('#anexa_complemento').val();
@@ -516,56 +483,55 @@ function preguntaenvARevCE() {
   else if (comentario.length > 0 && validatventa != 0 && validaUbicacion != 0) {
     var botonEnviar = document.getElementById('enviarenvARevCE');
     // botonEnviar.disabled = true;
-
-    $.post(general_base_url + 'Contraloria/getComplementoPago ', { idLote: idLote },
-        function (data) {
-            if (data.length >= 1 && anexa_complemento == 0) {
-                // SI YA TIENE COMPLEMENTO Y LE DA QUE NO QUIERE ENTONCES BORRAMOS REGISTROS
-                if (!data[0].expediente) {
-                    $.post(`${general_base_url}Documentacion/eliminarArchivo`, { idDocumento: data[0].idDocumento, tipoDocumento: 55 },
-                        function (rs1) {
-                            if (rs1.code == 200) {
-                                $.post(`${general_base_url}Contraloria/deleteRamaComplementoPago`, { idDocumento: data[0].idDocumento },
-                                    function (rs2) {
-                                        if (!rs2.result){
-                                            alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago.', "warning");
-                                            return;
-                                        }
-                                    }
-                                ,'json');
+  
+    if (d.idDocumento != null && anexa_complemento == 0) {
+        // SI YA TIENE COMPLEMENTO Y LE DA QUE NO QUIERE ENTONCES BORRAMOS REGISTROS
+        if (d.expediente) {
+            $.post(`${general_base_url}Documentacion/eliminarArchivo`, { idDocumento: d.idDocumento, tipoDocumento: 55 },
+                function (rs1) {
+                    if (rs1.code == 200) {
+                        $.post(`${general_base_url}Contraloria/deleteRamaComplementoPago`, { idDocumento: d.idDocumento },
+                            function (rs2) {
+                                if (!rs2.result){
+                                    alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago.', "warning");
+                                    return;
+                                }
                             }
-    
-                            if (rs1.code == 500 ){
-                                alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago', "warning");
-                                return;
-                            }
-                        }
-                    ,'json');
-                }else {
-                    // SI NO TIENE
-                    $.post(`${general_base_url}Contraloria/deleteRamaComplementoPago`, { idDocumento: data[0].idDocumento },
-                        function (rs2) {
-                            if (!rs2.result){
-                                alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago.', "warning");
-                                return;
-                            }
-                        }
-                    ,'json');
+                        ,'json');
+                    }
+                    
+                    if (rs1.code == 500 ){
+                        alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago', "warning");
+                        return;
+                    }
                 }
-            }
-            if (data.length == 0 && anexa_complemento == 1){
-                // CREAR REGISTRO
-                $.post(general_base_url + 'Contraloria/insertRamaComplementoPago ', { idLote: idLote, idCondominio: idCondominio, idCliente: idCliente},
-                    function (data2) {
-                        if (!data2){
-                            alerts.showNotification("top", "right", 'Surgió un error al requerir el complemento de pago', "warning");
-                            return;
-                        }
-                    },'json'
-                );
-            }
+            ,'json');
+        }else {
+            // SI NO TIENE
+            $.post(`${general_base_url}Contraloria/deleteRamaComplementoPago`, { idDocumento: d.idDocumento },
+                function (rs2) {
+                    if (!rs2.result){
+                        alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago.', "warning");
+                        return;
+                    }
+                }
+            ,'json');
         }
-    ,'json');
+    }
+
+    if (d.idDocumento == null && anexa_complemento == 1){
+        // CREAR REGISTRO
+        
+        $.post(general_base_url + 'Contraloria/insertRamaComplementoPago', { idLote: idLote, idCondominio: idCondominio, idCliente: idCliente},
+            function (data2) {
+                if (!data2){
+                    alerts.showNotification("top", "right", 'Surgió un error al requerir el complemento de pago', "warning");
+                    return;
+                }
+            },'json'
+        );
+    }
+
 
     $.post(`${general_base_url}Contraloria/updateTipoEngancheEnCliente`, { idCliente: idCliente, tipoEnganche: tipo_enganche  },
         function (rs3) {
@@ -793,10 +759,15 @@ jQuery(document).ready(function () {
     jQuery('#envARevCE').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentarioenvARevCE').val('');
+        jQuery(this).find('#envARevCEdata').val('');
         jQuery(this).find('#tipo_ventaenvARevCE').val(null).trigger('change');
         jQuery(this).find('#ubicacion').val(null).trigger('change');
         jQuery(this).find('#tipo_enganche').val(null).trigger('change');
         jQuery(this).find('#anexa_complemento').val(null).trigger('change');
+        $("#anexa_complemento").selectpicker('refresh');
+        $("#ubicacion").selectpicker('refresh');
+        $("#tipo_enganche").selectpicker('refresh');
+        $("#tipo_ventaenvARevCE").selectpicker('refresh');
     })
 
     jQuery('#envARev2').on('hidden.bs.modal', function (e) {

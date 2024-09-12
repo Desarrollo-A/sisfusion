@@ -1,5 +1,5 @@
 let copropietarioCollapse = false;
-
+let usuariosContraloria = [2752, 2826, 2810, 5957, 6390, 4857, 2834, 11655];
 function validarMensaje(tipoMensaje) {
     if (tipoMensaje === 'danger_1') {
         alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
@@ -21,7 +21,7 @@ $(document).ready(function() {
     personaFisicaMoralOnChange();
 
 
-    let idPermitidos = [2752, 2826, 2810, 2855, 2815, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342];
+    let idPermitidos = [2752, 2826, 2810, 2855, 2815, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 11655, 16679, 17043];
     if(!idPermitidos.includes(id_usuario_general)){//si el id usuario no está aqui va a hacer la validación de M2 final
         $('#costoM2, #costom2f').on('change', function() {
             const tipoMensaje = validarCostos();
@@ -103,7 +103,63 @@ function esPersonaMoralDocs() {
 function resizeInput() {
     $(this).attr('size', $(this).val().length);
 }
+function validaLadas(){
+    if($('#telefono1').val() != '' || $('#telefono1').val() == undefined){
+        if($('#ladaTelN').val()=='' || $('#ladaTelN').val() == undefined){
+            alerts.showNotification('top', 'right', 'Debes seleccionar la lada para el teléfono 1', 'danger');
+        }
+    }
 
+    if($('#telefono2').val() != '' || $('#telefono2').val() != undefined){
+        if($('#ladaTel2').val()=='' || $('#ladaTel2').val() == undefined){
+            alerts.showNotification('top', 'right', 'Debes seleccionar la lada para el teléfono 2', 'danger');
+        }
+    }
+}
+
+function validaTipoVivienda()
+{
+    validaLadas();
+    if (!$("input[name='tipo_vivienda']").is(':checked')) {
+        alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+    }
+    else {
+        if (!$("input[name='tipoNc_valor']").is(':checked')) {
+            alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
+            $('#tipoNc_valor').focus();
+            $('#label1').addClass('hover_focus');
+            $('#label2').addClass('hover_focus');
+            setTimeout(()=>{
+                $('#label1').removeClass('hover_focus');
+                $('#label2').removeClass('hover_focus');
+            },1500)
+        }
+        else{
+            if(!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+                alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
+                $('.imprimePagare').focus();
+                $('#labelSi1').addClass('hover_focus');
+                $('#labelNo1').addClass('hover_focus');
+                setTimeout(() => {
+                    $('#labelSi1').removeClass('hover_focus');
+                    $('#labelNo1').removeClass('hover_focus');
+                }, 1500)
+            }
+            else{
+                if(!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
+                    alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
+                    $('.tipo_comprobante').focus();
+                    $('#labelSi2').addClass('hover_focus');
+                    $('#labelNo2').addClass('hover_focus');
+                    setTimeout(() => {
+                        $('#labelSi2').removeClass('hover_focus');
+                        $('#labelNo2').removeClass('hover_focus');
+                    }, 1500)
+                }
+            }
+        }
+    }
+}
 $('input[name="letraCantidad"]').keyup(resizeInput).each(resizeInput);
 
 function estaEnRango(valor, minimo = 1, maximo = 31) {
@@ -262,7 +318,7 @@ function historialCampoHtml(data) {
 
 }
 
-if(id_rol_general == 7 || id_usuario_general == 2752 || id_usuario_general == 2826 || id_usuario_general == 2810 || id_usuario_general == 5957 || id_usuario_general == 6390 || id_usuario_general == 4857 || id_usuario_general == 2834 || onlyView == 0){
+if(id_rol_general == 7 || usuariosContraloria.includes(id_usuario_general) || onlyView == 0){
     $("#nacionalidad").change(function(){
         let valor_nacionalidad = $('select[name="nacionalidad"] option:selected').text();
         $(".datos_select").append('<input type="hidden" name="nac_select" id="nac_select" value="'+valor_nacionalidad+'">');

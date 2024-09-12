@@ -1112,7 +1112,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     public function changePassword()
     {
         $key = "";
-        $pattern = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
+        $pattern = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ.;:/*-";
         $max = strlen($pattern) - 1;
         $length = 8;
         for ($i = 0; $i < $length; $i++) {
@@ -1354,6 +1354,73 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             return $updateData;
         }
     }
+
+    public function getLotesAsignados() {
+      set_time_limit(6000);
+      
+      $encabezados[] = array();
+      $informacionContraloria = $this->scheduleTasks_model->getInformacionRetrasos(1)->result();
+      $informacionContratacionTitulacion = $this->scheduleTasks_model->getInformacionRetrasos(2)->result();
+      $correosContraloria = ['mariela.sanchez@ciudadmaderas.com', 'coord.contraloria1@ciudadmaderas.com', 'silvia.ramirez@ciudadmaderas.com', 'irene.vallejo@ciudadmaderas.com', 'alejandro.gonzalez@ooam.com.mx', 'asael.fernandez@ciudadmaderas.com'];
+      $correosContratacionYTitulacion =['mariela.sanchez@ciudadmaderas.com', 'coord.contraloria1@ciudadmaderas.com', 'silvia.ramirez@ciudadmaderas.com', 'irene.vallejo@ciudadmaderas.com', 'cinthya.lopez@ciudadmaderas.com', 'coord.titulacion@ciudadmaderas.com', 'alejandro.gonzalez@ooam.com.mx', 'asael.fernandez@ciudadmaderas.com'];
+      $correosPruebas = ['mariadejesus.garduno@ciudadmaderas.com', 'coordinador1.desarrollo@ciudadmaderas.com'];
+
+      $encabezados = [
+        'estatusModificacion' => 'MOVIMIENTO',
+        'nombreResidencial'  => 'PROYECTO',
+        'nombreCondominio' => 'CONDOMINIO',
+        'nombreLote' => 'LOTE',
+        'nombreCliente' => 'CLIENTE',
+        'referencia' => 'REFERENCIA',
+        'nombreGerente' => 'GERENTE',
+        'fechaUltimoEstatus' => 'FECHA DE ÚLTIMO ESTATUS',
+        'fechaVencimiento' => 'FECHA DE VENCIMIENTO',
+        'diasVencimiento' => 'DÍAS DE VENCIMIENTO'
+    ];
+
+      // CORREO A CONTRALORÍA
+      if (count($informacionContraloria) > 0)
+        $this->enviarCorreoConRetrasos(1, $informacionContraloria, $correosContraloria, $encabezados);
+      else
+        $this->enviarCorreoSinRetrasos(1, $correosContraloria);
+
+      // CORREO A CONTRATACIÓN Y TITULACIÓN
+      if (count($informacionContratacionTitulacion) > 0)
+        $this->enviarCorreoConRetrasos(2, $informacionContratacionTitulacion, $correosContratacionYTitulacion, $encabezados);
+      else
+        $this->enviarCorreoSinRetrasos(2, $correosContratacionYTitulacion);
+  }
+
+  public function enviarCorreoConRetrasos ($tipo, $arregloDatos, $correos, $encabezados) {
+    $contenido[] = array();
+    foreach ($arregloDatos as $key => $valor) {
+      $contenido[$key] = array(
+        'estatusModificacion' => $valor->estatusModificacion,
+        'nombreResidencial'  => $valor->nombreResidencial,
+        'nombreCondominio' => $valor->nombreCondominio,
+        'nombreLote' => $valor->nombreLote,
+        'nombreCliente' => $valor->nombreCliente,
+        'referencia' => $valor->referencia,
+        'nombreGerente' => $valor->nombreGerente,
+        'fechaUltimoEstatus' => $valor->fechaUltimoEstatus,
+        'fechaVencimiento' => $valor->fechaVencimiento,
+        'diasVencimiento' => $valor->diasVencimiento
+      );
+    }
+    $subjectComplemento = $tipo == 1 ? "CONTRALORÍA" : "CONTRATACIÓN Y TITULACIÓN";
+    $this->email->initialize()->from('Ciudad Maderas')->to($correos)
+    ->subject("Trámites vencidos proceso de reestructura $subjectComplemento - " . date('d-m-Y'))
+    ->view($this->load->view('mail/reestructura/mailPendientesContraloria_ContratacionTitulacion.php', ['encabezados' => $encabezados, 'contenido' => $contenido], true));
+    $this->email->send();
+  }
+
+  public function enviarCorreoSinRetrasos ($tipo, $correos) {
+    $subjectComplemento = $tipo == 1 ? "CONTRALORÍA" : "CONTRATACIÓN Y TITULACIÓN";
+    $this->email->initialize()->from('Ciudad Maderas')->to($correos)
+    ->subject("Trámites vencidos proceso de reestructura $subjectComplemento - " . date('d-m-Y'))
+    ->view($this->load->view('mail/reestructura/mailSinRetrasos.php', [], true));
+    $this->email->send();
+  }
 
 }
 ?>

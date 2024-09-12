@@ -1,5 +1,5 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
 <div>
     <div class="wrapper">
@@ -13,13 +13,15 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Consulta contraseña</h3>
-                                <div class="material-datatables">
+                                <div class="toolbar">
+                                    <h3 class="card-title center-align">Consulta contraseña</h3>
+                                </div>
+                                <div class="">
                                     <table id="all_password_datatable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th class="disabled-sorting">USUARIO</th>
-                                                <th class="disabled-sorting">CONTRASEÑA</th>
+                                                <th>Usuario</th>
+                                                <th>Contraseña</th>
                                             </tr>
                                         </thead>
                                     </table>

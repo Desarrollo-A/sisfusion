@@ -77,8 +77,6 @@ class ServicesCRM extends CI_Controller {
                 }
         }
         else {
-            echo base64_encode(json_encode(array("result" => true, "message" => "sigue el proceso")));
-            exit;
             if($objDatos['id_rol'] != 3)
                 $getLider = $this->Services_model->getLider($objDatos['id_lider'],$objDatos['id_rol']);
             $id_gerente=0;

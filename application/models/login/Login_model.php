@@ -23,7 +23,7 @@ class login_model extends CI_Model {
 		(CASE WHEN u.id_usuario IN(2,607,1988,9471,9629) THEN 1 WHEN u.id_usuario IN(1981,1980,3) THEN 2 WHEN u.id_usuario IN(7092) THEN 4 ELSE u.id_sede END) id_sede,
 		 u.nombre, u.apellido_paterno, u.apellido_materno,
 		u.correo, u.usuario, u.contrasena, u.telefono, u.tiene_hijos, u.estatus, u.sesion_activa, u.imagen_perfil, u.fecha_creacion, u.creado_por, u.modificado_por, u.forma_pago, u.jerarquia_user,
-		hr.controlador, u.tipo
+		hr.controlador, u.tipo, u.new_login
 		FROM usuarios u
 		LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
 		LEFT JOIN usuarios ge ON ge.id_usuario = us.id_lider

@@ -19,7 +19,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Nombre (<small style="color: red;">*</small>)</label>
-                                        <input id="txtNombre" name="txtNombre" class="form-control input-gral" type="text" autocomplete="off">
+                                        <input id="txtNombre" name="txtNombre" class="form-control input-gral" type="text"
+                                                 autocomplete="off"  style="text-transform:uppercase">
                                     </div>
                                 </div>
                             </div>
@@ -27,13 +28,15 @@
                                 <div class="col-md-6">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Apellido paterno</label>
-                                        <input id="txtApellidop" name="txtApellidop" class="form-control input-gral" type="text" autocomplete="off">
+                                        <input id="txtApellidop" name="txtApellidop" class="form-control input-gral" type="text"
+                                                autocomplete="off"  style="text-transform:uppercase">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Apellido materno</label>
-                                        <input id="txtApellidom" name="txtApellidom" class="form-control input-gral" type="text" autocomplete="off">
+                                        <input id="txtApellidom" name="txtApellidom" class="form-control input-gral" type="text"
+                                                autocomplete="off"  style="text-transform:uppercase">
                                     </div>
                                 </div>
 
@@ -91,6 +94,8 @@
                                 <input type="hidden" id="tipoTransaccionA" name="tipoTransaccionA">
                                 <input type="hidden" id="tipo" name="tipo">
                                 <input type="hidden" id="valorTramite" name="valorTramite">
+                                <input type="hidden" id="idCondominio" name="idCondominio">
+                                <input type="hidden" id="idProyecto" name="idProyecto">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                                 <button type="submit" class="btn btn-primary">Aceptar</button>
                             </div>

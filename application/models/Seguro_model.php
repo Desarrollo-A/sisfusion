@@ -18,7 +18,7 @@ class Seguro_model extends CI_Model {
         INNER JOIN pago_seguro ps ON ps.id_lote = lo.idLote 
         INNER JOIN comisiones_seguro cs on cs.idCliente = lo.idCliente  
         LEFT JOIN  (SELECT SUM(abono_neodata) abono_pagado, id_comision 
-		FROM pago_seguro_ind WHERE (estatus in (1,3) OR descuento_aplicado = 1) 
+		FROM pago_seguro_ind WHERE (estatus in (1,3,8,11,4) OR descuento_aplicado = 1) 
 		GROUP BY id_comision) psi ON psi.id_comision = cs.id_comision
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial

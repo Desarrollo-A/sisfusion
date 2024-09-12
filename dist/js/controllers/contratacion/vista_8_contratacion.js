@@ -116,7 +116,7 @@ $(document).ready(function () {
                         if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-orangeYellow  " data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -704,7 +704,7 @@ const accionesComplementoPago = async (d) => {
         });
         rs1 = JSON.parse(rs1);
         if (rs1.code == 500) {
-            alerts.showNotification("top", "right", 'Surgió un error al sustituir el archivo', "warning");
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             return false;
         }
     }
@@ -739,7 +739,7 @@ const accionesComplementoPago = async (d) => {
     });
     rs = JSON.parse(rs);
     if (rs.code == 500) {
-        alerts.showNotification("top", "right", 'Surgió un error al remplazar el archivo', "warning");
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
         return false;
     } else {
         return true;
@@ -863,14 +863,14 @@ $(document).on("click", "#btn-accion", async function (e) {
 
     $('#spiner-loader').addClass('hide'); // Quito spinner 
     if (accion == false) {
-        return alerts.showNotification("top", "right", "Surgió un error al intentar subir el archivo", "warning");
+        return alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
     }else if (accion == true) {
         $('#accion-modal').modal('hide');
         $('#Jtabla').DataTable().ajax.reload();
         $('.btn-subir-archivo').attr('disabled', false);  // Lo vuelvo a activar 
-        return alerts.showNotification("top", "right", "¡El documento se ha subido!", "success");
+        return alerts.showNotification("top", "right", "¡El documento COMPLEMENTO DE PAGO se ha cargado con éxito.!", "success");
     }else {
-        return alerts.showNotification("top", "right", "Surgió un error desconocido, reportar a sistemas.", "warning");
+        return alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
     }
 });
 

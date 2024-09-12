@@ -1,8 +1,8 @@
 <?php
-    require_once 'static/autoload.php';//linea debe descomentarse en PROD
+    // require_once 'static/autoload.php';//linea debe descomentarse en PROD
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-//    require '../../vendor/autoload.php'; //linea debe descomentarse en local
+//require '../../vendor/autoload.php'; //linea debe descomentarse en local
 
 class Corrida extends CI_Controller
 {
@@ -10,7 +10,7 @@ class Corrida extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('registrolote_modelo', 'General_model'));
+        $this->load->model(array('registrolote_modelo', 'General_model', 'Neodata_model'));
         $this->load->model('model_queryinventario');
         $this->load->model('Corrida_model');
         $this->load->database('default');
@@ -21,7 +21,7 @@ class Corrida extends CI_Controller
         $val = $this->session->userdata('certificado') . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'), $rutaUrl[1], $this->session->userdata('opcionesMenu'));
+//      $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'), $rutaUrl[1], $this->session->userdata('opcionesMenu'));
     }
 
     public function index()
@@ -107,11 +107,28 @@ class Corrida extends CI_Controller
 
     public function editar_ds()
     {
-
         $objDatos = json_decode(file_get_contents("php://input"));
+        $idLote = (int)$objDatos->id_lote;
+
+
+
+
+        $rangos = array(
+            'rango0' => $objDatos->meses_diferir,
+            'rango1' => $objDatos->finalMesesp1,
+            'rango2' => $objDatos->finalMesesp2,
+            'rango3' => $objDatos->finalMesesp3,
+            'rango4' => $objDatos->finalMesesp4,
+        );
+        /****codigo de prueba para creacion de Planes de Pago*******/
+        $corrida_dump = json_encode($objDatos);
+        $this->Corrida_model->borrarPlanesPagoPorLote($idLote);
+        $this->getCorridaToPlanDePago($corrida_dump, $rangos);
+        /****************/
+
+
 //        echo '$objDatos';
 //        print_r($objDatos);
-//        exit;
 
 
         $idLote = (int)$objDatos->id_lote;
@@ -154,10 +171,12 @@ class Corrida extends CI_Controller
         $arreglo["msi_1p"] = ($objDatos->msi_1p == '' || $objDatos->msi_1p == NULL) ? 0 : $objDatos->msi_1p;
         $arreglo["msi_2p"] = ($objDatos->msi_2p == '' || $objDatos->msi_2p == NULL) ? 0 : $objDatos->msi_2p;
         $arreglo["msi_3p"] = ($objDatos->msi_3p == '' || $objDatos->msi_3p == NULL) ? 0 : $objDatos->msi_3p;
+        $arreglo["msi_4p"] = ($objDatos->msi_4p == '' || $objDatos->msi_4p == NULL) ? 0 : $objDatos->msi_4p;
         $arreglo["primer_mensualidad"] = $objDatos->primer_mensualidad;
         $arreglo["finalMesesp1"] = $objDatos->finalMesesp1;
         $arreglo["finalMesesp2"] = $objDatos->finalMesesp2;
         $arreglo["finalMesesp3"] = $objDatos->finalMesesp3;
+        $arreglo["finalMesesp4"] = $objDatos->finalMesesp4;
         $arreglo["observaciones"] = $objDatos->observaciones;
         $arreglo['status'] = 0;
         $arreglo["corrida_dump"] = json_encode($objDatos->corrida_dump);
@@ -267,7 +286,229 @@ class Corrida extends CI_Controller
             echo json_encode($response);
         }
     }
+    function getCorridaToPlanDePago($dump_data, $rangos){
 
+
+        $data_general = json_decode($dump_data);
+//        print_r($data_general->corrida_dump);
+//        echo '<br><br>';
+//        exit;
+//        $dump_data = json_decode($data_general->corrida_dump);
+        $dump_data = $data_general->corrida_dump;
+
+
+
+        $plan_pago0 = array();
+        $plan_pago1 = array();
+        $plan_pago2 = array();
+        $plan_pago3 = array();
+        $plan_pago4 = array();
+        if($rangos['rango0']==0){
+            $addArray = (object) array(
+                "fecha" => $data_general->primer_mensualidad,
+                "planPago" => 0,
+                "pago" => 0,
+                "capital" => $data_general->engancheFinalc,
+                "saldoCapital" => 0,
+                "interes" => 0,
+                "saldoInteres" => 0,
+                "iva" => 0,
+                "saldoIva" => 0,
+                "total" => $data_general->precioFinalc,
+                "saldo" => $data_general->saldoc
+            );
+            array_push($dump_data, $addArray);
+        }
+        foreach($dump_data as $index => $elemento){
+
+            switch ($elemento->planPago){
+                case 0:
+                    array_push($plan_pago0,  $elemento);
+                    break;
+                case 1:
+                    array_push($plan_pago1,  $elemento);
+                    break;
+                case 2:
+                    array_push($plan_pago2,  $elemento);
+                    break;
+                case 3:
+                    array_push($plan_pago3,  $elemento);
+                    break;
+                case 4:
+                    array_push($plan_pago4,  $elemento);
+                    break;
+            }
+        }
+
+        if(count($plan_pago0)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago Enganche',
+                "descripcion" => 'Plan de pago Enganche',
+                "tipoPlanPago" => 1,
+                "monto" => $data_general->engancheFinalc,
+                "moneda" => 1,
+                "tazaInteres" => 0,
+                "mensualidad" => ($data_general->meses_diferir==0) ? $data_general->engancheFinalc : $plan_pago0[0]->capital,
+                "numeroPeriodos" => ($data_general->meses_diferir == 0) ? 1 : $data_general->meses_diferir,
+                "periodicidad" => 2,
+                "fechaInicioPlan" =>  date("Y-m-d", strtotime($plan_pago0[0]->fecha) ),
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago0),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1,
+                "ordenPago" => 0,
+                "saldoInicialPlan" =>  $data_general->precioFinalc
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+            $last_id = $this->db->insert_id();
+            $insertData['idPlanPago'] = $last_id;
+            $insertData['estatusPlan'] = 1;
+            $response2 = $this->General_model->addRecord("plan_pago_original", $insertData);
+
+        }
+        if(count($plan_pago1)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago 1',
+                "descripcion" => 'Plan de pago 1',
+                "tipoPlanPago" => 2,
+                "monto" => $plan_pago1[0]->saldo,
+                "moneda" => 1,
+                "tazaInteres" => 0,
+                "mensualidad" => $data_general->msi_1p,
+                "numeroPeriodos" => $data_general->finalMesesp1,
+                "periodicidad" => 2,
+                "fechaInicioPlan" =>  date("Y-m-d", strtotime($plan_pago1[0]->fecha) ),
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago1),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1,
+                "ordenPago" => 1,
+                "saldoInicialPlan" => ($rangos['rango0']==0) ? $data_general->saldoc :  $plan_pago0[($rangos['rango0']-1)]->saldo
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+            $last_id = $this->db->insert_id();
+            $insertData['idPlanPago'] = $last_id;
+            $insertData['estatusPlan'] = 1;
+            $response2 = $this->General_model->addRecord("plan_pago_original", $insertData);
+        }
+        if(count($plan_pago2)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago 2',
+                "descripcion" => 'Plan de pago 2',
+                "tipoPlanPago" => 2,
+                "monto" => $plan_pago2[0]->saldo,
+                "moneda" => 1,
+                "tazaInteres" => 12,
+                "mensualidad" => $data_general->msi_2p,
+                "numeroPeriodos" => $data_general->finalMesesp2,
+                "periodicidad" => 2,
+                "fechaInicioPlan" => date("Y-m-d", strtotime($plan_pago2[0]->fecha) ),
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago2),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1,
+                "ordenPago" => 2,
+                "saldoInicialPlan" =>(count($plan_pago1)>0) ? $plan_pago1[($rangos['rango1']-1)]->saldo : (($rangos['rango0']==0) ? $data_general->saldoc :  $plan_pago0[($rangos['rango0']-1)]->saldo)
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+            $last_id = $this->db->insert_id();
+            $insertData['idPlanPago'] = $last_id;
+            $insertData['estatusPlan'] = 1;
+            $response2 = $this->General_model->addRecord("plan_pago_original", $insertData);
+        }
+
+        if(count($plan_pago3)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago 3',
+                "descripcion" => 'Plan de pago 3',
+                "tipoPlanPago" => 2,
+                "monto" => $plan_pago3[0]->saldo,
+                "moneda" => 1,
+                "tazaInteres" => 15,
+                "mensualidad" => $data_general->msi_3p,
+                "numeroPeriodos" => $data_general->finalMesesp3,
+                "periodicidad" => 2,
+                "fechaInicioPlan" =>  date("Y-m-d", strtotime($plan_pago3[0]->fecha) ),
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago3),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1,
+                "ordenPago" => 3,
+                "saldoInicialPlan" => $plan_pago2[($rangos['rango2']-1)]->saldo
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+            $last_id = $this->db->insert_id();
+            $insertData['idPlanPago'] = $last_id;
+            $insertData['estatusPlan'] = 1;
+            $response2 = $this->General_model->addRecord("plan_pago_original", $insertData);
+        }
+
+        if(count($plan_pago4)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago 4',
+                "descripcion" => 'Plan de pago 4',
+                "tipoPlanPago" => 2,
+                "monto" => $plan_pago4[0]->saldo,
+                "moneda" => 1,
+                "tazaInteres" => 18,
+                "mensualidad" => $data_general->msi_4p,
+                "numeroPeriodos" => $data_general->finalMesesp4,
+                "periodicidad" => 2,
+                "fechaInicioPlan" =>  date("Y-m-d", strtotime($plan_pago4[0]->fecha) ),
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago4),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1,
+                "ordenPago" => 4,
+                "saldoInicialPlan" => $plan_pago3[($rangos['rango3']-1)]->saldo
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+            $last_id = $this->db->insert_id();
+            $insertData['idPlanPago'] = $last_id;
+            $insertData['estatusPlan'] = 1;
+            $response2 = $this->General_model->addRecord("plan_pago_original", $insertData);
+        }
+    }
 
     public function inventario()
     {
@@ -1809,7 +2050,7 @@ legend {
 
     }
 
-    /*
+  /*
     That it is an implementation of the function money_format for the
     platforms that do not it bear.
 
@@ -3189,6 +3430,21 @@ legend {
             if ($resultado['status'] == 1) {
                 $data = $this->Corrida_model->actionMCorrida($id_corrida, $action);
                 //update rama de documentación
+                /*aqui se debe hacer la inserción del plan de pago*/
+                    $dataCorrida = $this->Corrida_model->getCorridaFinanciera($id_corrida);//traer la data de la corrida
+
+                    //asignar valor de los rangos
+                    $rangos = array(
+                        'rango0' => $dataCorrida[0]['meses_diferir'],
+                        'rango1' => $dataCorrida[0]['finalMesesp1'],
+                        'rango2' => $dataCorrida[0]['finalMesesp2'],
+                        'rango3' => $dataCorrida[0]['finalMesesp3'],
+                        'rango4' => $dataCorrida[0]['finalMesesp4']
+                    );
+                    //codigo creacion de Planes de Pago
+                    $corrida_dump = json_encode( $dataCorrida[0]); //se mandan los datos en formato json
+                    $this->getCorridaToPlanDePago($corrida_dump, $rangos);//manda la data como la ocupa la función
+                /*FIN aqui se debe hacer la inserción del plan de pago*/
                 $response['message'] = ($data == 1) ? 'OK' : 'ERROR';
             } else {
                 $response['message'] = 'ERROR';
@@ -3675,6 +3931,614 @@ legend {
         $data = $this->Corrida_model->getAsesorByID($objDatos->asesor);
         if ($data != null) {
             echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function test(){
+        $this->load->view("corrida/ejemplo");
+    }
+
+    public function planes_pagos(){
+        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
+        $this->load->view('template/header');
+        $this->load->view("planesPagos/planes_pagos", $datos);
+    }
+    function getPlanesPago($idLote){
+        $data = $this->Corrida_model->getPlanesPago($idLote);
+        foreach ($data as $index => $elemento){
+            $saldoSig = isset($data[($index+1)]['saldoInicialPlan']) ? $data[($index+1)]['saldoInicialPlan'] : 0;
+//            print_r( $saldoSig );
+//            echo '<br>';
+//            print_r($elemento);
+            $data[$index]['saldoSig'] = $saldoSig;
+//            echo '<br><br>';
+//            echo '<br><br>';
+        }
+        if ($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    function catalogosPlanPago(){
+        $idLote = $this->input->post("idLote");
+        $dtoCatalogos = $this->Corrida_model->catalogosPlanPago();
+        $dtoTotalPlanesPago = $this->Corrida_model->totalPlanesPago($idLote);
+        $dtoInfoLote = $this->Corrida_model->infoLotePlanPago($idLote);
+        $dtoPlanEngActuales = count($this->Corrida_model->getEnganchesDelPlan($idLote));
+
+
+        $flagEstatusPlan2 = 0;
+        foreach ($dtoTotalPlanesPago as $index => $elemento){
+            if($elemento['estatusPlan'] == 2){
+                $flagEstatusPlan2 = $flagEstatusPlan2 + 1;
+            }
+        }
+        $dtoTotalEnviadas = (count($dtoTotalPlanesPago)>0) ? (($flagEstatusPlan2 == count($dtoTotalPlanesPago)) ? 1 : 0) : 0; //si el valor está en 1 quiere decir que ya se mandó a NeoData, si no, aun no se ha mandado
+
+        if(count($dtoCatalogos) > 0)
+            $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos", "dtoCatalogos"=> $dtoCatalogos, "planesTotal" => count($dtoTotalPlanesPago), "infoLote" => $dtoInfoLote, "enviadoNeodata" => $dtoTotalEnviadas, "planDeEngancheActual" => $dtoPlanEngActuales);
+        else
+            $response = array( "status" => 0, "mensaje"=>"Error al traer los catalogos", "dtoCatalogos"=> []);
+        echo json_encode($response);
+    }
+
+    function guardaPlanPago(){
+
+
+        $idPlanPagoModal = $this->input->post("idPlanPagoModal");
+        $idLotePP = $this->input->post("idLotePP");
+        $idClientePP = $this->input->post("idClientePP");
+        $nombreLotePP = $this->input->post("nombreLotePP");
+
+        $tipoPP = $this->input->post("tipoPP");
+        $planPago = $this->input->post("planPago");
+        $descripcionPlanPago = $this->input->post("descripcionPlanPago");
+        $montoPP = $this->input->post("montoPP");
+        $monedaPP = $this->input->post("monedaPP");
+        $tazaInteresPP = $this->input->post("tazaInteresPP");
+        $noPeriodosPP = count(json_decode($this->input->post("dumpPlanPago"))); //$this->input->post("noPeriodosPP");
+        $periocidadPP= $this->input->post("periocidadPP");
+        $fechaInicioPP = $this->input->post("fechaInicioPP");
+        $ssi = $this->input->post("interesesSSI");
+        $ssi = isset($ssi) ? $ssi : 0;;
+        $ivaPP = $this->input->post("ivaPP");
+        $ivaPP = isset($ivaPP) ? $ivaPP : 0;;
+        $mensualidadPP = $this->input->post("mensualidadPP");
+        $porcentajeIvaPP = $this->input->post("porcentajeIvaPP");
+        $porcentajeIvaPP = isset($porcentajeIvaPP) ? $porcentajeIvaPP : '';
+        $cantidadIvaPP = $this->input->post("cantidadIvaPP");
+        $cantidadIvaPP = isset($cantidadIvaPP) ? $cantidadIvaPP : '';
+        $tipoPlanTxtPP = $this->input->post("tipoPlanTxtPP");//nombre del tipo de plan
+        $dumpPlanPago = $this->input->post("dumpPlanPago");
+        $prioridadCalculo = $this->input->post("tipoNc_valor");
+
+        $nombrePlan = ($tipoPlanTxtPP=='Enganche')  ? $tipoPlanTxtPP : $tipoPlanTxtPP.' '.($planPago);
+        $fecha_actual = date('Y-m-d H:i:s');
+//        echo 'periodos:<br>';
+//        print_r($noPeriodosPP);
+//        exit;
+
+        if($idPlanPagoModal != '' || !empty($idPlanPagoModal)){
+//            echo 'edicion:<br><br>';
+//            print_r($this->input->post());
+//            exit;
+            
+//            print_r($idLotePP);
+            $planDePagoGral = $this->Corrida_model->getPlanesPago($idLotePP);
+            $dataCorrida = $this->Corrida_model->getCorridaFincieraByLote($idLotePP);
+//            print_r(json_encode($planDePagoGral));
+//            echo '<br><br>';
+//            print_r(json_encode($dataCorrida));
+
+            $flagSigueCambio = false;
+            $enganchePosiciones = 0;
+
+
+
+                foreach($planDePagoGral as $index => $elemento){
+                        if($flagSigueCambio ){
+                            if($elemento['nombrePlan'] == 'Plan de pago 1'){
+//                                echo 'Se le debe restar al '.$elemento['idPlanPago'].' la cantidad de:'.$enganchePosiciones;
+//                                echo '<br>';
+//                                print_r($planDePagoGral[$index]);
+//                                echo '<br><br>';
+
+                                $DataGenerar = array(
+                                    'periodos' => $elemento['numeroPeriodos'] - $enganchePosiciones,
+                                    'mensualidadActual' => $elemento['mensualidad'],
+                                    'saldoInsoluto' => $elemento['saldoInicialPlan'],
+                                    'tazaInteres' => 0,
+                                    'fechaInicioPlan' => $elemento['fechaInicioPLan'],
+                                    'monto' => $elemento['mensualidad'] * $elemento['numeroPeriodos'],
+                                    'enganchePosiciones' => $enganchePosiciones
+                                );
+                                $update_plan = $this->generaCorridaDump($DataGenerar);
+                                $data_actualizar = array(
+                                    "dumpPlan" => $update_plan,
+                                    "fechaModificacion" => date('Y-m-d'),
+                                    "modificadoPor" => 1,
+                                    "numeroPeriodos" => $elemento['numeroPeriodos'] - $enganchePosiciones,
+                                );
+                                $table = 'planes_pago';
+                                $key = 'idPlanPago';
+                                $value = $elemento['idPlanPago'];
+                                $updatePlanDB2 = $this->General_model->updateRecord($table, $data_actualizar, $key, $value);
+                            }
+//                            echo 'Cambio en cascada ...'.$elemento['nombrePlan'].' ID:'.$elemento['idPlanPago'];
+//                            echo '<br><br>';
+                        }
+//                        print_r($elemento['nombrePlan']);
+//                        echo '<br><br>';
+//                        print_r($descripcionPlanPago);
+//                    echo '<br><br>';
+//                    echo '<br><br>';
+
+//                    if($elemento['nombrePlan'] == $descripcionPlanPago){
+                        if($elemento['tipoPlanPago'] == 1){
+                            $update_plan = array(
+                                "idLote" =>(int) $idLotePP,
+                                "idCliente" => (int) $idClientePP,
+                                "nombreLote" => $nombreLotePP,
+                                "nombrePlan" => $descripcionPlanPago, //se compone del plan y el numero del plan
+                                "descripcion" => $descripcionPlanPago,
+                                "tipoPlanPago" => (empty($tipoPP)) ? $planPago : $tipoPP,
+                                "monto" => (int) str_replace(array('$',','),'', $montoPP),
+                                "moneda" => (int) $monedaPP,
+                                "tazaInteres" => (float) $tazaInteresPP,
+                                "mensualidad" => json_decode($this->input->post('dumpPlanPago'))[0]->capital,
+                                "numeroPeriodos" => (int) $noPeriodosPP,
+                                "periodicidad" => (int) $periocidadPP,
+                                "fechaInicioPlan" => $fechaInicioPP,
+                                "iva" => $ivaPP,
+                                "montoIvaPorcentaje" => (int) $porcentajeIvaPP,
+                                "cantidadIva" => (int) $cantidadIvaPP,
+                                "ssi" => (int) $ssi,
+                                "dumpPlan" => $dumpPlanPago,//array del plande pago
+                                "fechaCreacion" => $fecha_actual,
+                                "creadoPor" => $this->session->userdata("id_usuario"),
+                                "fechaModificacion" => $fecha_actual,
+                                "modificadoPor" => null,
+                                "estatus" => 1,
+                                "prioridadCalculo" => $prioridadCalculo,
+                                "ordenPago" => $planPago
+                            );
+                            if($this->input->post('noPeriodosPP') != $noPeriodosPP){
+                                $enganchePosiciones = count(json_decode($dumpPlanPago));
+                            }
+//                            print_r($this->input->post('noPeriodosPP') );
+//                            echo '<br><br>';
+//                            print_r($noPeriodosPP);
+//                            echo '<br><br>';
+//                            echo '$enganchePosiciones<br><br>';
+//                            print_r($enganchePosiciones);
+//                            exit;
+
+
+                            $table = 'planes_pago';
+                            $key = 'idPlanPago';
+                            $value = $idPlanPagoModal;
+                            $updatePlanDB = $this->General_model->updateRecord($table, $update_plan, $key, $value);
+//                            echo 'El arreglo a actualizar es:<br>';
+//                            print_r($update_plan);
+//                            echo '<br><br>';
+//                            echo 'Enganche posiciones: <br>';
+//                            print_r($enganchePosiciones);
+//                            echo '<br><br>';
+                            $flagSigueCambio = true;
+                        }
+
+                }
+//                exit;
+
+//            print_r($update_plan);
+
+
+
+
+
+
+            if ( $updatePlanDB || $updatePlanDB2 ) {
+                $response = array( "status" => 1, "mensaje"=>"Se actualizó el enganche correctamente");
+            } else  {
+                $response = array( "status" => 0, "mensaje"=>"Error al insertar el enganche, inténtalo nuevamente");
+            }
+        }
+        else{
+
+
+            $insert_plan = array(
+                "idLote" =>(int) $idLotePP,
+                "idCliente" => (int) $idClientePP,
+                "nombreLote" => $nombreLotePP,
+                "nombrePlan" => $nombrePlan, //se compone del plan y el numero del plan
+                "descripcion" => $descripcionPlanPago,
+                "tipoPlanPago" => $tipoPP,
+                "monto" => (int) str_replace(array('$',','),'', $montoPP),
+                "moneda" => (int) $monedaPP,
+                "tazaInteres" => (float) $tazaInteresPP,
+                "mensualidad" => (int) str_replace(array('$',','),'', $mensualidadPP),
+                "numeroPeriodos" => (int) $noPeriodosPP,
+                "periodicidad" => (int) $periocidadPP,
+                "fechaInicioPlan" => $fechaInicioPP,
+                "iva" => $ivaPP,
+                "montoIvaPorcentaje" => (int) $porcentajeIvaPP,
+                "cantidadIva" => (int) $cantidadIvaPP,
+                "ssi" => (int) $ssi,
+                "dumpPlan" => $dumpPlanPago,//array del plan de pago
+                "fechaCreacion" => $fecha_actual,
+                "creadoPor" => $this->session->userdata("id_usuario"),
+                "fechaModificacion" => $fecha_actual,
+                "modificadoPor" => null,
+                "estatus" => 1,
+                "prioridadCalculo" => $prioridadCalculo,
+                "ordenPago" => $planPago
+            );
+
+            /*print_r($dumpPlanPago);
+            exit;*/
+            $insertPlanDB = $this->General_model->addRecord('planes_pago', $insert_plan);
+            if ( $insertPlanDB ) {
+                $response = array( "status" => 1, "mensaje"=>"Se actualizó el enganche correctamente");
+            } else  {
+                $response = array( "status" => 0, "mensaje"=>"Error al insertar el enganche, inténtalo nuevamente");
+            }
+        }
+        echo json_encode($response);
+
+    }
+
+    function getPlanPago($idPlanPago){
+        $data = $this->Corrida_model->getPlanPago($idPlanPago);
+        if ($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    function getPlanPagoEditar($idPlanPago){
+        $data = $this->Corrida_model->getPlanPago($idPlanPago);
+        $data->tipos_planes = $this->Corrida_model->getTipoPlanCatalogo();
+        $data->monedaLista = $this->Corrida_model->getMonedaTipos();
+        $data->periodicidadLista = $this->Corrida_model->getPeriodicidad();
+        if ($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    function getInfoByLote($idLote){
+        $data['cliente'] = $this->Corrida_model->getInfoByLote($idLote);
+        $data['planPago'] = $this->Corrida_model->totalPlanesPago($idLote);
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    //cmbiar query
+    public function lista_lotes($condominio){
+        echo json_encode($this->Corrida_model->getLoteLista($condominio)->result_array());
+    }
+
+    function testFuncion($id_corrida){
+        $dataCorrida = $this->Corrida_model->getCorridaFinanciera($id_corrida);//traer la data de la corrida
+
+        //asignar valor de los rangos
+        $rangos = array(
+            'rango0' => $dataCorrida[0]['meses_diferir'],
+            'rango1' => $dataCorrida[0]['finalMesesp1'],
+            'rango2' => $dataCorrida[0]['finalMesesp2'],
+            'rango3' => $dataCorrida[0]['finalMesesp3'],
+            'rango4' => $dataCorrida[0]['finalMesesp4']
+        );
+        //codigo creacion de Planes de Pago
+        $corrida_dump = json_encode( $dataCorrida[0]); //se mandan los datos en formato json
+
+        $this->getCorridaToPlanDePago($corrida_dump, $rangos);//manda la data como la ocupa la función
+    }
+
+    function generaPlanPagoEnvio()
+    {
+        $idLote = $this->input->post('idLote');
+        $datos = $this->Corrida_model->getPlanesPagoGenerar($idLote);
+
+        if(count($datos)>0){
+            $arrayFinal = array(
+                "lote" => $datos[0]['nombreLote'],
+                "empresa" => $datos[0]['empresa']
+            );
+
+            $arrayDump = array();
+            $arrayIdPagos = array();
+
+            foreach ($datos as $index => $elemento) {//recorre los planes de pago generales
+                $arrayIdPagosCompleto = array();
+                $arrayFinal['interes' . $index] = $datos[$index]['tazaInteres'];
+                $arrayIdPagosCompleto['numPlanPago'] = $elemento['ordenPago'];
+                $arrayIdPagosCompleto['idPlanPago'] = $elemento['idPlanPago'];
+                $arrayIdPagosCompleto = (object) $arrayIdPagosCompleto;
+                array_push($arrayIdPagos,  $arrayIdPagosCompleto);
+
+                foreach (json_decode($elemento['dumpPlan']) as $indice => $corridaElmnt) {//recorre la corrida financiera dentro del PP
+                    array_push($arrayDump, $corridaElmnt);
+                }
+            }
+            $arrayFinal['planesPago'] = $arrayDump;
+            $response = array(
+                "planesPagoIds" => $arrayIdPagos,
+                "respuesta" => (($arrayDump) > 0) ? 1 : 0,
+                "planServicio" => $arrayFinal
+            );
+        }
+        else{
+            $arrayFinal = array(
+                "lote" => NULL,
+                "empresa" => NULL
+            );
+            $response = array(
+                "planesPagoIds" => array(),
+                "respuesta" => -1,
+                "planServicio" => array()
+            );
+        }
+        /*print_r($response);
+        exit;*/
+        print_r(json_encode($response));
+        exit;
+    }
+    function generaPlanPagoEnvioidPago(){
+        $idPlanPago = $this->input->post('idPlanPago');
+        $datos = $this->Corrida_model->getPlanesPagoGenerarByPP($idPlanPago);
+        if(count($datos)>0){
+            $arrayFinal = array(
+                "lote" => $datos[0]['nombreLote'],
+                "empresa" => $datos[0]['empresa']
+            );
+
+            $arrayDump = array();
+            $arrayIdPagos = array();
+            foreach ($datos as $index => $elemento) {//recorre los planes de pago generales
+                $arrayIdPagosCompleto = array();
+                $arrayFinal['interes' . $index] = $datos[$index]['tazaInteres'];
+                $arrayIdPagosCompleto['numPlanPago'] = $elemento['ordenPago'];
+                $arrayIdPagosCompleto['idPlanPago'] = $elemento['idPlanPago'];
+                $arrayIdPagosCompleto = (object) $arrayIdPagosCompleto;
+                array_push($arrayIdPagos,  $arrayIdPagosCompleto);
+
+                foreach (json_decode($elemento['dumpPlan']) as $indice => $corridaElmnt) {//recorre la corrida financiera dentro del PP
+                    array_push($arrayDump, $corridaElmnt);
+                }
+            }
+            $arrayFinal['planesPago'] = $arrayDump;
+            $response = array(
+                "planesPagoIds" => $arrayIdPagos,
+                "respuesta" => (($arrayDump) > 0) ? 1 : 0,
+                "planServicio" => $arrayFinal
+            );
+        }
+        else{
+            $arrayFinal = array(
+                "lote" => NULL,
+                "empresa" => NULL
+            );
+            $response = array(
+                "planesPagoIds" => array(),
+                "respuesta" => -1,
+                "planServicio" => array()
+            );
+        }
+
+        print_r(json_encode($response));
+        exit;
+    }
+
+
+    private function calculatePlan($pagos, $saldoInicialPlan){
+        $montoInicial = $saldoInicialPlan;
+
+        $nuevo_capital = $montoInicial;
+        foreach ($pagos as $key => $pago) {
+            $nuevo_capital -= $pago->capital;
+
+            $pago->saldo = $nuevo_capital;
+        }
+
+        return $pagos;
+    }
+
+    public function guardarPlanPago($lote){
+        $plan_id = $this->input->get('plan');
+
+        $plan_data = json_decode(file_get_contents("php://input"));
+
+        $planes = $this->Corrida_model->getPlanesPagoRaw($lote);
+
+        $recalcular = false;
+        $last_saldo;
+        foreach ($planes as $key => $plan) {
+            $pagos = json_decode($planes[$key]->dumpPlan);
+
+            if($recalcular){
+                $new_pagos = json_encode($this->calculatePlan($pagos, $last_saldo));
+
+                $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $last_saldo, $new_pagos);
+            }
+
+            if($plan->idPlanPago == $plan_id){
+                $planes[$key]->dumpPlan = json_encode($plan_data);
+
+                $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $plan->saldoInicialPlan, $planes[$key]->dumpPlan);
+
+                $pagos = json_decode($planes[$key]->dumpPlan);
+            }
+
+            foreach ($pagos as $key => $pago) {
+                $last_saldo = $pago->saldo;
+            }
+        }
+
+        print_r(json_encode([]));
+    }
+
+    function actualizaPlanPagoIndividual(){//actualiza planes de pago individualmente por ID
+        $id = $this->input->post('idPlanPago');
+        $key = 'idPlanPago';
+        $tabla = 'planes_pago';
+        $flagUpdate = 0;
+        $array_update=array(
+            "estatusPlan" => 2,
+            "fechaModificacion" => date('Y-m-d H:i:s'),
+            "modificadoPor" => 1
+        );
+        if($this->General_model->updateRecord($tabla, $array_update, $key, $id)){
+            $flagUpdate += 1;
+        }
+        if($flagUpdate>=1){
+                $respuesta = array(
+                    "status" => true,
+                    "msj" => "Se actualizó correctamente el plan de pago [".$id."]."
+                );
+
+        }else{
+            $respuesta = array(
+                "status" => false,
+                "msj" => "Hubo un error al ejecutar la actualización, inténtalo nuevamente."
+            );
+        }
+        if ($respuesta != null) {
+            echo json_encode($respuesta);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    function actualizaPlanPagoStatus(){//actualiza planes de pagoq ue estén en esta forma [1,2,3,4,5]
+        $ids = $this->input->post();
+        $ids = str_replace(array('[', ']'), '', $ids);
+        $key = 'idPlanPago';
+        $tabla = 'planes_pago';
+        $flagUpdate = 0;
+        foreach ($ids['ids'] as $index =>  $elemento){
+            $array_update=array(
+                "estatusPlan" => 2,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "modificadoPor" => 1
+            );
+            if($this->General_model->updateRecord($tabla, $array_update, $key, $elemento)){
+                $flagUpdate += 1;
+            }
+        }
+
+        if($flagUpdate>0){
+            if($flagUpdate == count($ids['ids'])){
+                $respuesta = array(
+                    "status" => true,
+                    "msj" => "Se actualizaron correctamente los planes de pago."
+                );
+            }else{
+                $respuesta = array(
+                    "status" => true,
+                    "msj" => "Sólo se actualizaron algunos registros."
+                );
+            }
+        }else{
+            $respuesta = array(
+                "status" => false,
+                "msj" => "Hubo un error al ejecutar la actualización, inténtalo nuevamente."
+            );
+        }
+
+        if ($respuesta != null) {
+            echo json_encode($respuesta);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    function generaCorridaDump($datosCorrida){
+        $periodos = $datosCorrida['periodos'];
+        $mensualidadActual = $datosCorrida['mensualidadActual'];
+        $saldoInsoluto = $datosCorrida['saldoInsoluto'];
+        $tazaInteres = $datosCorrida['tazaInteres'];
+        $fechaInicioPlan = $datosCorrida['fechaInicioPlan'];
+        $montoACubrir = $datosCorrida['monto']; //es el monto real para descontarse en este plan
+
+        $fecha_actual = $fechaInicioPlan; // Cambia esta fecha según tus necesidades
+
+        $arrayGeneral = array();
+        $contadorPago = $datosCorrida['enganchePosiciones'] + 1;
+        $capital = $montoACubrir/$periodos;
+        $saldo = $saldoInsoluto;
+        $fecha_actual = date('Y-m-d', strtotime('+'.$datosCorrida['enganchePosiciones'].' month', strtotime($fecha_actual)));
+
+        for($i=1 ; $i<=$periodos; $i++){
+            $saldo = $saldo - $capital;
+            $fecha_actual = date('Y-m-d', strtotime('+1 month', strtotime($fecha_actual)));
+
+            $arrayInterno = array(
+                'fecha' => $fecha_actual,
+                'planPago' => 1,
+                'pago'  => $contadorPago,
+                'capital' => $capital,
+                'saldoCapital' => 0,
+                'interes' => 0,
+                'saldoInteres' => 0,
+                'iva' => 0,
+                'saldoIva' => 0,
+                "total" => $capital,
+                "saldo" => $saldo
+            );
+
+            // Aumentar la fecha actual al siguiente mes
+            //            print_r($fecha_actual);
+            //            echo'<br><br>';
+            $contadorPago = $contadorPago + 1;
+            array_push($arrayGeneral,  $arrayInterno);
+        }
+        return json_encode($arrayGeneral);
+        //print_r(json_encode($arrayGeneral));
+        exit;
+
+
+    }
+
+        public function cancelaPlanPagoNeo(){
+        $data = $this->input->post();
+        $response = $this->Neodata_model->cancelaPlanPagoNeo($data);
+        print_r( json_encode($response, JSON_NUMERIC_CHECK));
+    }
+
+    public function cancelaPlanPagoCRM(){
+        $idPlanPago = $this->input->post('idPlanPago');
+        $flagUpdate = 0;
+
+        $data_update = array(
+            "estatusPlan" => 3,
+            "fechaModificacion" => date('Y-m-d h:i:s')
+        );
+        if($this->General_model->updateRecord("planes_pago", $data_update, "idPlanPago", $idPlanPago)){// MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+            $flagUpdate = 1;
+        }
+
+        if($flagUpdate>0){
+                $respuesta = array(
+                    "status" => true,
+                    "msj" => "Se canceló correctamente el  plan de pago."
+                );
+
+        }else{
+            $respuesta = array(
+                "status" => false,
+                "msj" => "Hubo un error al actualizar, inténtalo nuevamente."
+            );
+        }
+
+        if ($respuesta != null) {
+            echo json_encode($respuesta);
         } else {
             echo json_encode(array());
         }
