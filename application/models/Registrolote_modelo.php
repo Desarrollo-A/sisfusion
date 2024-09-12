@@ -3575,7 +3575,7 @@
 					$id_lider = $id_lider . ', 6661';
 					$sede = "";
 				} else if ($id_usuario == 17029) { // Karen Ariadna Vazquez Muñoz
-					$id_lider = $id_lider . ', 13067';
+					$id_lider = $id_lider . ', 2080';
 					$sede = "";
 				}
 

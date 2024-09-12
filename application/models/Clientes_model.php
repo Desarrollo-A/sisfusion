@@ -535,7 +535,7 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
                 $where = "pr.id_gerente IN ($id_lider, 6661)";
             else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
-                $where = "pr.id_gerente IN ($id_lider, 13067)";
+                $where = "pr.id_gerente IN ($id_lider, 2080)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

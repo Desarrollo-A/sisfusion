@@ -5368,7 +5368,7 @@ function getDatosGralInternomex(){
         else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
             $id_lider .= ", 6661";
         else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
-            $id_lider .= ", 13067";
+            $id_lider .= ", 2080";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES
