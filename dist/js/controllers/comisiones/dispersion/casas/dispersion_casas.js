@@ -140,7 +140,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
         { data: function (d) {
             var BtnStats = '';
 
-            var Mensaje = 'Verificar en NEODATA';
+            var Mensaje = 'Verificar';
             varColor2  = 'btn-gray';
             var RegresaActiva = '';
 
@@ -176,9 +176,6 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         BtnStats += `<button href="#" 
                         value = "${d.idLote}" 
                         data-totalNeto2 = "${totalLote}"
-                        data-total8P = "${d.total8P}"
-                        data-precioDestino= "${precioDestino}"
-                        data-reubicadas = "${reubicadas}" 
                         data-penalizacion = "${d.penalizacion}"
                         data-nombreLote = "${nombreLote}" 
                         data-nombreOtro = "${nombreOtro}" 
@@ -351,7 +348,6 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
 
     idLote = $(this).val();
     totalNeto2 = $(this).attr("data-totalNeto2");
-    totalNeto2Cl = $(this).attr("data-totalNeto2Cl");
     penalizacion = $(this).attr("data-penalizacion");
     nombreLote = $(this).attr("data-nombreLote");
     bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
@@ -642,7 +638,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                 $("#modal_NEODATA_Casas .modal-body").append(`
                                     <div class="row">
                                         <div class="col-md-4 pl-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div>
-                                        <div class="col-md-4">Total abonado: <b style="color:green"></b></div>
+                                        <div class="col-md-4">Total abonado: <b style="color:green">${data1[0].abonado}</b></div>
                                         <div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div>
                                     </div>
                                 `);
@@ -651,8 +647,8 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                 }else{
                                     cadena = `<h4>Bonificación: <b >${formatMoney(0)}</b></h4>`;
                                 }*/
-                                $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
-                                <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(aplicadoNeodata)}</b></h4></div><div class="col-md-4">${cadena}</div>
+                                $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(totalNeto2)}</b></h4></div>
+                                <div class="col-md-4"><h4>Aplicado: <b>${formatMoney(aplicadoNeodata)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                 </div><br>`);
 
                                 $.getJSON( general_base_url + "Casas_comisiones/getDatosAbonadoDispersion/"+idLote).done( function( data ){
@@ -707,7 +703,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                         }
                                         $("#modal_NEODATA_Casas .modal-body").append(`<div class="row">
                                         <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="${disparador}"><input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}"><input type="hidden" name="idCliente" id="idCliente" value="${idCliente}"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
-                                        <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="bandera" id="bandera" value="1"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                                        <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="bandera" id="bandera" value="0"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
                                         <input id="id_comision" type="hidden" name="id_comision[]" value="${v.id_comision}"><input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.rol_generado}">
                                         <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
                                         <b><p style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">${v.descuento != "1" ?  v.rol : v.rol +' Incorrecto' }</p></b></div>
