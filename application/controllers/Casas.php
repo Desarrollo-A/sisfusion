@@ -4074,6 +4074,70 @@ class Casas extends BaseController
         $this->output->set_output(json_encode($response));
     }
 
+    public function rechazoPaso5()
+    {
+        $form = $this->form();
+
+        $idProceso = $form->idProcesoCasas;
+        $proceso = $form->proceso;
+        $procesoNuevo = $form->procesoNuevo;
+        $comentario = $form->comentario;
+
+        $updateData = array(
+            "comentario"        => $comentario,
+            "proceso"           => $procesoNuevo,
+            "cierreContraloria" => 0,
+            "saldoAdmon" => 0,
+            "saldoOOAM" => 0,
+            "saldoGPH" => 0,
+            "saldoPV" => 0,
+            "fechaProceso"      => date("Y-m-d H:i:s"),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "tipoMovimiento"    => 1
+        );
+
+        $dataHistorial = array(
+            "idProcesoCasas"  => $idProceso,
+            "procesoAnterior" => $proceso,
+            "procesoNuevo"    => $procesoNuevo,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
+            "descripcion"     => $comentario,
+            "esquemaCreditoProceso" => 1
+        );
+
+        $this->db->trans_begin();
+
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
+
+        if ($update) {
+
+            $vobo = $this->CasasModel->getVobos($idProceso, 4);
+
+            $updateData = array(
+                "proyectos"  => 0,
+                "comercializacion" => 0,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if (!$update) {
+                http_response_code(400);
+            }
+
+            $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+
+            if (!$addHistorial) {
+                http_response_code(400);
+            }
+        } else {
+            http_response_code(400);
+        }
+    }
+
     public function rechazoPaso6()
     {
         $form = $this->form();
