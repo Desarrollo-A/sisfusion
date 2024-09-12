@@ -85,7 +85,7 @@ $("#tabla_plaza_1_casas_intmex").ready( function(){
                                 response = JSON.parse(data);
                                 if(data == 1) {
                                     $('#spiner-loader').addClass('hide');
-                                    // $("#autorizarAsimilados").html(formatMoney(0));
+                                    $("#autorizar").html(formatMoney(0));
                                     $("#all").prop('checked', false);
                                     plaza_intmex.ajax.reload();
                                     var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
