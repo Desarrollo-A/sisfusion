@@ -55,7 +55,7 @@ class Pagos_casas_model extends CI_Model {
     }
 
 
-    function getDatosNuevasAsimiladosSeguros($proyecto, $condominio){
+    function getDatosNuevasAsimiladosCasas($proyecto, $condominio){
 
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci2.estatus IN (8,88) AND com.id_usuario = $condominio"; 
@@ -136,7 +136,7 @@ class Pagos_casas_model extends CI_Model {
     }
 
 
-    function getDatosNuevasFacturasSeguros($proyecto,$condominio){
+    function getDatosNuevasFacturasCasas($proyecto,$condominio){
 
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci2.estatus IN (8,88) AND com.id_usuario = $condominio"; 
@@ -192,7 +192,7 @@ class Pagos_casas_model extends CI_Model {
             return $query->result_array();
     }
 
-    function getDatosNuevasRemanenteSeguros($proyecto,$condominio){
+    function getDatosNuevasRemanenteCasas($proyecto,$condominio){
 
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci2.estatus IN (8, 88) AND com.id_usuario = $condominio";
@@ -459,7 +459,7 @@ class Pagos_casas_model extends CI_Model {
             $filtro = "WHERE pci1.estatus IN (4) ";
         }
         
-        return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote AS lote, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata,  pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre AS puesto, cl.personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, cl.lugar_prospeccion, co.nombre AS condominio, lo.referencia
+        return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote AS lote, re.nombreResidencial AS proyecto, cl.costo_construccion precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata,  pci1.estatus, pci1.fecha_pago_intmex fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario ,pci1.id_usuario, oprol.nombre AS puesto, cl.personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, cl.lugar_prospeccion, co.nombre AS condominio, lo.referencia
         FROM pago_casas_ind pci1 
         INNER JOIN comisiones_casas com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8)
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
@@ -471,7 +471,7 @@ class Pagos_casas_model extends CI_Model {
         INNER JOIN pago_comision_casas pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
         $filtro AND u.id_usuario = $id_usuario
-        GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion, co.nombre, lo.referencia ORDER BY lo.nombreLote")->result_array();
+        GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, cl.costo_construccion, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion, co.nombre, lo.referencia ORDER BY lo.nombreLote")->result_array();
     }
 
     function update_acepta_INTMEX_Bono($idsol) {

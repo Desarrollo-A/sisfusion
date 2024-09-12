@@ -154,7 +154,7 @@ function getAssimilatedCommissions_asimilados_casas(proyecto, condominio){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title_seguros:'Comisiones Asimilados - Revisión INTERNOMEX',
+            title_casas:'Comisiones Asimilados - Revisión INTERNOMEX',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
                 format: {
@@ -347,7 +347,7 @@ function getAssimilatedCommissions_asimilados_casas(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos_casas/getDatosNuevasAsimiladosSeguros/",
+            url: general_base_url + "Pagos_casas/getDatosNuevasAsimiladosCasas/",
             type: "POST",
             cache: false,
             data: {
@@ -579,39 +579,39 @@ $(document).on("click", ".PagarCasas", function() {
     });
 });
 
-$("#form_refresh_seguros").submit( function(e) {
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        var data = new FormData( $(form)[0] );
-        data.append("id_pago_i", id_pago_i);
-        $.ajax({
-            url: general_base_url + "Pagos/refresh_solicitud/",
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST',
-            success: function(data){
+// $("#form_refresh_seguros").submit( function(e) {
+//     e.preventDefault();
+// }).validate({
+//     submitHandler: function( form ) {
+//         var data = new FormData( $(form)[0] );
+//         data.append("id_pago_i", id_pago_i);
+//         $.ajax({
+//             url: general_base_url + "Pagos/refresh_solicitud/",
+//             data: data,
+//             cache: false,
+//             contentType: false,
+//             processData: false,
+//             dataType: 'json',
+//             method: 'POST',
+//             type: 'POST',
+//             success: function(data){
 
-                if( data[0] ){
-                    $("#modal_refresh").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
-                    setTimeout(function() {
-                        tabla_asimilados2_intmex_casas.ajax.reload();
-                    }, 3000);
-                }
-                else{
-                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-                }
-            },error: function( ){
-                alert("ERROR EN EL SISTEMA");
-            }
-        });
-    }
-});
+//                 if( data[0] ){
+//                     $("#modal_refresh").modal('toggle' );
+//                     alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
+//                     setTimeout(function() {
+//                         tabla_asimilados2_intmex_casas.ajax.reload();
+//                     }, 3000);
+//                 }
+//                 else{
+//                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
+//                 }
+//             },error: function( ){
+//                 alert("ERROR EN EL SISTEMA");
+//             }
+//         });
+//     }
+// });
 
 function cleanComments(){
     var myCommentsList = document.getElementById('documents');

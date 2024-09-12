@@ -363,7 +363,7 @@ function getDataFacturaCasas(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos_casas/getDatosNuevasFacturasSeguros/" ,
+            url: general_base_url + "Pagos_casas/getDatosNuevasFacturasCasas/" ,
             type: "POST",
             cache: false,
             data :{
