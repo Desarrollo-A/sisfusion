@@ -4284,6 +4284,7 @@ class Casas extends BaseController
                 $dataUpdate[] = array(
                     "id_cliente" => $id,
                     "id_asesor_c" => $asesor,
+                    "plan_comision_c" => 101,
                     "modificado_por" => $idUsuario,
                     "pre_proceso_casas" => 2
                 );
