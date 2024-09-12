@@ -796,13 +796,7 @@ public function getDatosFechasProyecCondm(){
 
             for($i=0;$i<sizeof($id_comision);$i++){
             $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-        
-                // $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
-                // $respuestaInsertNeoNew = $this->Casas_comisiones_model->getDataDispersionPagoInsertNeoNew($bandera_segunda,$lote_1,$id_usuario[$i],$idCliente,str_replace($replace,"",$comision_total[$i]), $this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]), str_replace($replace,"",$pago_neo),$id_rol[$i],$porcentaje_abono,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),str_replace($replace,"",$pendiente));
-    
                 $respuestaInsertNeoNew = $this->Casas_comisiones_model->getDataDispersionPagoInsertNeoNew($bandera_segunda,$lote_1,$id_usuario[$i],$idCliente,0,$this->session->userdata('id_usuario'),0,$var_n,$pago);
-      
-            
             }
             
             for($i=0;$i<sizeof($abono_nuevo);$i++){
