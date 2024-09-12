@@ -2349,14 +2349,14 @@ class Casas extends BaseController
 
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
         $finalizado = "0, 1";
+        $extraOptions = "";
 
-        if ($opcion != -1 && $opcion != -2 && isset($opcion)) {
-            $proceso = $opcion;
-            $finalizado = "0";
+        if ($opcion == -1 && $opcion != -2 && isset($opcion)) {
+            $finalizado = " AND (pc.finalizado IN(0) OR pc.finalizado IS NULL)";
         }
 
         if ($opcion == -2) {
-            $finalizado = "1";
+            $finalizado = " AND (pc.finalizado = 1)";
         }
 
         $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado);
@@ -2984,7 +2984,7 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
-    public function getHistorial($idProceso, $tipoEsquema, $idLote)
+    public function getHistorial($idProceso, $tipoEsquema, $idLote = null)
     {
         echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote));
     }
