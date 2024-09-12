@@ -6,6 +6,9 @@
                 <p class="category input-tot pl-1" id="monto_label">
                     <!-- monto o -->
                 </p>
+                <p class="monto_labelC category input-tot pl-1" id="monto_labelC">
+                    <!-- monto o -->
+                </p>
             </div>
         </div>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
@@ -14,12 +17,18 @@
                 <p class="category input-tot pl-1" id="pagos_label">
                         <!-- PAGOS HOY  -->
                 </p>
+                <p class="pagos_labelC category input-tot pl-1" id="pagos_labelC">
+                        <!-- PAGOS HOY  -->
+                </p>
             </div>
         </div>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2">
             <div class="form-group text-center">
                 <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
                 <p class="category input-tot pl-1" id="lotes_label">
+                    <!-- lOTES HOY -->
+                </p>
+                <p class="lotes_labelC category input-tot pl-1" id="lotes_labelC">
                     <!-- lOTES HOY -->
                 </p>
             </div>

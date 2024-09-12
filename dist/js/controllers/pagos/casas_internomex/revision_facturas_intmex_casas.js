@@ -1,10 +1,11 @@
 var trs;
 var tabla_facturas_casas;
 let titulos_casas = [];
-function CloseModalDelete2IntmexSeguros(){
+
+function CloseModalDelete2IntmexCasas(){
 
     document.getElementById("form_multiples_casas").reset();
-    a = document.getElementById('borrarProyectoIntmexSeguros');
+    a = document.getElementById('borrarProyectoIntmexCasas');
     padre = a.parentNode;
     padre.removeChild(a);
     $("#modal_multiples_IntmexF_casas").modal('toggle');  
@@ -79,7 +80,7 @@ $(document).on("click", ".PagarCasas", function() {
     $("#modal_multiples_IntmexF_casas .modal-body").html("");
     $("#modal_multiples_IntmexF_casas .modal-header").html("");
     $("#modal_multiples_IntmexF_casas .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples_IntmexF_casas .modal-footer").append(`<div id="borrarProyectoIntmexSeguros"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2IntmexSeguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptarIntmexSeguros" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiples_IntmexF_casas .modal-footer").append(`<div id="borrarProyectoIntmexCasas"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2IntmexCasas()">CANCELAR</button><button type="submit" disabled id="btn-aceptarIntmexCasas" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
     $("#modal_multiples_IntmexF_casas .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect_Int_casas" name="desarrolloSelect_Int_casas" class="selectpicker select-gral desarrolloSelect_Int_casas ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'Pagos_casas/getDesarrolloSelectINTMEX/', {desarrollo: 2 } ,function(data) {
@@ -123,7 +124,7 @@ $(document).on("click", ".PagarCasas", function() {
                     $("#modal_multiples_IntmexF_casas .modal-body #bodypago2").append(`
                     <input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
                 });
-                document.getElementById('btn-aceptarIntmexSeguros').disabled = false;
+                document.getElementById('btn-aceptarIntmexCasas').disabled = false;
             }
         });
     });
@@ -155,7 +156,7 @@ $('#tabla_facturas_intmex_casas thead tr:eq(0) th').each( function (i) {
         });
     }
     else {
-        $(this).html('<input id="all_facturas_intmex" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
+        $(this).html('<input id="all_facturas_intmex" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexCasas(this)"/>');
     }
 });
 
@@ -372,7 +373,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Pagos_casas/getDatosNuevasFacturasSeguros/" ,
+            "url": general_base_url + "Pagos_casas/getDatosNuevasFacturasCasas/" ,
             "type": "POST",
             data:{
                 proyecto:proyecto,
@@ -661,7 +662,7 @@ function preview_info(archivo){
 //     $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
 // });
 
-function selectAllIntmexSeguros(e) {
+function selectAllIntmexCasas(e) {
     tota2 = 0;
     if(e.checked == true){
         $(tabla_facturas_casas.$('input[type="checkbox"]')).each(function (i, v) {
@@ -701,17 +702,17 @@ $("#form_multiples_casas").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data == 1){
-                    CloseModalDelete2IntmexSeguros();
+                    CloseModalDelete2IntmexCasas();
                     $('#all_facturas_intmex').prop("checked", false);
 
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                 }else{
-                    CloseModalDelete2IntmexSeguros();
+                    CloseModalDelete2IntmexCasas();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
                 $('#loader').addClass('hidden');
             },error: function( ){
-                CloseModalDelete2IntmexSeguros();
+                CloseModalDelete2IntmexCasas();
                 alert("ERROR EN EL SISTEMA");
                 $('#loader').addClass('hidden');
             }
