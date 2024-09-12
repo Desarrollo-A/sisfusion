@@ -546,7 +546,7 @@ class CasasModel extends CI_Model
         oxc.nombre AS movimiento,
         doc.documentos, 
         CASE WHEN se.id_lote = lo.idLote THEN 0 ELSE 1 END AS cargaRequerida,
-        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus, $tableSeparator
+        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus, cli.escrituraFinalizada, $tableSeparator
         FROM $tableName pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
