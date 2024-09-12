@@ -641,7 +641,7 @@ class Descuentos_model extends CI_Model {
 
     function getComments($id){
         $cmd = "SELECT DISTINCT(hc.comentario) as comentario_general , hc.id_ha,hc.proceso ,
-		opcx.nombre, pci.comentario as comentario_anticipo,
+		opcx.nombre, pci.comentario as comentario_anticipo,hc.fecha_movimiento as  fechaAnticipo,
 		hc.id_anticipo, hc.id_usuario
         FROM historial_anticipo hc 
         INNER JOIN anticipo pci ON pci.id_anticipo = hc.id_anticipo

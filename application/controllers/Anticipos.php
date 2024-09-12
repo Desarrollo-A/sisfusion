@@ -60,9 +60,7 @@ class Anticipos extends CI_Controller {
 
     public function actualizarEstatus() {
 
-
         $montoReal = $this->input->post('montoReal');
-
         $comentario = $this->input->post('comentario');
         $id_usuario = $this->input->post('id_usuario');
         $id_anticipo = $this->input->post('id_anticipo');
@@ -79,10 +77,8 @@ class Anticipos extends CI_Controller {
         $result_2 = null;
         $result_3 = null;
         $success = false;
-    
         $result_5 = null;
         $result_6 = null;
-
         //parcialidades
         $nombreSwitch = $this->input->post('nombreSwitch');
         $catalogo = $this->input->post('tipo_pago_anticipo');
