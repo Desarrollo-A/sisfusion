@@ -1097,7 +1097,7 @@ public function getDataDispersionPago() {
 	LEFT JOIN proceso_casas_directo procd ON procd.idLote=l.idLote AND procd.estatus = 1 
 	LEFT JOIN opcs_x_cats opcDir ON opcDir.id_opcion=procd.proceso AND opcDir.id_catalogo=150
     INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor_c
-    LEFT JOIN pago_comision_casas pc ON pc.id_lote = l.idLote AND pc.bandera IN (0,100)
+    LEFT JOIN pago_comision_casas pc ON pc.id_lote = l.idLote AND pc.bandera IN (0,100,1)
     LEFT JOIN (SELECT id_cliente FROM ventas_compartidas_casas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
     LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente_c
     LEFT JOIN usuarios su ON su.id_usuario = cl.id_subdirector_c
