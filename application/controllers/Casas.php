@@ -848,7 +848,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 27, 38]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
@@ -3332,6 +3332,25 @@ class Casas extends BaseController
             $updateData = array(
                 "titulacion"  => 0,
                 "gph" => 0,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if (!$update) {
+                http_response_code(400);
+            }
+        }
+
+        if ($procesoNuevo == 3) {
+
+            $vobo = $this->CasasModel->getVobos($idProceso, 2);
+
+            $updateData = array(
+                "proyectos"  => 0,
+                "adm" => 0,
+                "ooam" => 0,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
                 "fechaModificacion" => date("Y-m-d H:i:s"),
             );
