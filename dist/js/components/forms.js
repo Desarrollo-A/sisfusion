@@ -599,7 +599,7 @@ class OptionField {
                 $('<span />')
                     .attr('id', `${id}_warning`)
                     .addClass('text-danger h7 ml-1')
-                    .text('Debes escoger una opcion')
+                    .text('Debes escoger una opción')
                     .hide()
             )
 
@@ -712,7 +712,7 @@ class OptionFieldAndView {
                 $('<span />')
                     .attr('id', `${id}_warning`)
                     .addClass('text-danger h7 ml-1')
-                    .text('Debes escoger un elemento')
+                    .text('DDebes escoger una opción')
                     .hide()
             )
 

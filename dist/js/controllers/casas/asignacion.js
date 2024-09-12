@@ -5,7 +5,8 @@ let form = new Form({
 
 
 let arrayValores = []
-let arrayIdLotes = []
+let arrayIdClientes = []
+let arrayIdLotes = [];
 
 form.onSubmit = function (data) {
     form.loading(true);
@@ -20,11 +21,11 @@ form.onSubmit = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    console.log("submitted");
                     alerts.showNotification("top", "right", "Se asignó el asesor correctamente.", "success");;
                     table.reload();
                     arrayValores = [];
-                    arrayIdLotes = [];
+                    arrayIdClientes = [];
+                    let arrayIdLotes = [];
                     let btn = document.getElementsByClassName("btn-asignar")
                     btn[0].classList.add('hide');
                     formConfirm.hide();
@@ -259,23 +260,28 @@ function verificarCheck(valorActual){
         let botonEnviar = document.getElementsByClassName('botonEnviar');
         let botonAsesor = document.getElementsByClassName('btn-blueMaderas');
         let arrayInterno = [];
-        let arrayId = [];
+        let arrayId_cliente = [];
+        let arrayId_lotes = [];
     
         if (valorActual.checked){
             arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
             arrayInterno.push($(valorActual).attr('data-idLote'));//[1]
 
-            arrayId.push($(valorActual).attr('data-idCliente'));//[0]
+            arrayId_cliente.push($(valorActual).attr('data-idCliente'));//[0]
+            arrayId_lotes.push($(valorActual).attr('data-idLote'));//[1]
     
             arrayValores.push(arrayInterno);
-            arrayIdLotes.push(arrayId);
+            arrayIdClientes.push(arrayId_cliente);
+            arrayIdLotes.push(arrayId_lotes);
         }
         else{
             let indexDelete = buscarValor($(valorActual).val(),arrayValores);
-            let indexDeleteId = buscarValor($(valorActual).val(),arrayIdLotes);
+            let indexDeleteId = buscarValor($(valorActual).val(),arrayIdClientes);
+            let indexDeleteIdLote = buscarValor($(valorActual).val(),arrayIdLotes);
 
             arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
-            arrayIdLotes = arrayIdLotes.slice(0, indexDeleteId).concat(arrayIdLotes.slice(indexDeleteId + 1));
+            arrayIdClientes = arrayIdClientes.slice(0, indexDeleteId).concat(arrayIdClientes.slice(indexDeleteId + 1));
+            arrayIdLotes = arrayIdLotes.slice(0, indexDeleteIdLote).concat(arrayIdLotes.slice(indexDeleteIdLote + 1));
         }
 
         if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
@@ -321,7 +327,8 @@ $(document).on('click', '.btn-asignar', () => {
         text: `¿Iniciar proceso de asignación del los siguientes lotes?<br> <b>${nombresLot}</b>`,
         onSubmit: function(data){
             form.loading(true)
-            data.append("idClientes", JSON.stringify(arrayIdLotes))
+            data.append("idClientes", JSON.stringify(arrayIdClientes));
+            data.append("idLotes", JSON.stringify(arrayIdLotes));
             formConfirm = new FormConfirm({
                 title: '¿Estás seguro de asignar los lotes?',
                 onSubmit: function() {
@@ -337,8 +344,9 @@ $(document).on('click', '.btn-asignar', () => {
                             table.reload();
                             form.hide();
                             formConfirm.hide();
-                            arrayValores = []
-                            arrayIdLotes = []
+                            arrayValores = [];
+                            arrayIdClientes = [];
+                            arrayIdLotes = [];
                             let btn = document.getElementsByClassName("btn-asignar")
                             btn[0].classList.add('hide');
                             formConfirm.loading(false);
@@ -348,6 +356,7 @@ $(document).on('click', '.btn-asignar', () => {
                             formConfirm.loading(false);
                             form.loading(false)
                             arrayValores = [];
+                            arrayIdClientes = [];
                             arrayIdLotes = [];
                             formConfirm.hide();
                         }
