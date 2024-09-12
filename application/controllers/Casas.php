@@ -2347,7 +2347,7 @@ class Casas extends BaseController
         $opcion = $this->input->get('opcion');
         $idLote = $this->input->get('opcion');
 
-        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16";
+        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
         $finalizado = "0, 1";
 
         if ($opcion != -1 && $opcion != -2 && isset($opcion)) {
@@ -4287,7 +4287,8 @@ class Casas extends BaseController
             foreach ($cliente as $id) {
                 $dataUpdate[] = array(
                     "id_cliente" => $id,
-                    "id_asesor_c" => $asesor,
+                    "id_asesor_c" => $asesor,,
+                    "plan_comision_c" => 101,
                     "modificado_por" => $idUsuario,
                     "pre_proceso_casas" => 2
                 );
