@@ -1870,9 +1870,8 @@ class CasasModel extends CI_Model
     public function getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote)
     {
         $query = $this->db->query("WITH CombinedData AS (
-        SELECT hpc.*, LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 
-        THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1)
-        ELSE descripcion END )) AS descripcionFinal,
+        SELECT hpc.*, 
+        CASE WHEN descripcion = '' THEN 'SIN ESPECIFICAR' ELSE LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END )) END AS descripcionFinal,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) AS nombreUsuario,
         ROW_NUMBER() OVER (PARTITION BY hpc.idHistorial ORDER BY hpc.fechaMovimiento DESC) AS rn
         FROM historial_proceso_casas hpc

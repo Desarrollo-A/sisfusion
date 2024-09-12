@@ -2334,7 +2334,7 @@ class Casas extends BaseController
         $is_ok = $this->CasasModel->updateCotizacion($form->idCotizacion, $form->nombre, $filename);
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se guardo cotizacion: $form->idCotizacion", 1);
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se guardó cotización: $form->idCotizacion", 1);
         } else {
             http_response_code(404);
         }
@@ -2530,7 +2530,7 @@ class Casas extends BaseController
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->session->userdata('id_usuario'),
-            "idMovimiento" => $this->session->userdata('id_usuario'),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2
         );
@@ -3510,6 +3510,7 @@ class Casas extends BaseController
             "procesoAnterior" => 6,
             "procesoNuevo"    => 6,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $idUsuario,
             "creadoPor"       => $idUsuario,
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
@@ -3767,6 +3768,7 @@ class Casas extends BaseController
             "procesoAnterior" => $proceso,
             "procesoNuevo"    => $procesoNuevo,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"       => $this->session->userdata('id_usuario'),
             "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
