@@ -213,7 +213,6 @@ $('#condominio_wp').change(function () {
 var totaPen = 0;
 var tr;
 $("#tabla_nuevas_comisiones").ready(function () {
-    console.log('volvio a entrar despues de recargar el ajax');
     asignarValorColumnasDT("tabla_nuevas_comisiones");
     $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
@@ -315,12 +314,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                 if (response.respuesta == 1) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#totpagarPen").html(formatMoney(0));
-                                    totaPen =0
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
                                     tabla_nuevas.ajax.reload();
-                                    tabla_revision_comisiones.ajax.reload();
-                                    // location.reload(); 
+                                    tabla_revision.ajax.reload();
                                 } else if (data.respuesta == 2) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
@@ -422,7 +419,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + parseFloat(d.porcentaje_decimal) + '%</b> de ' + parseFloat(d.porcentaje_abono) + '% GENERAL </p>';
+                return '<p class="m-0"><b>' + parseFloat(d.porcentaje_decimal).toFixed(2) + '%</b> de ' + parseFloat(d.porcentaje_abono).toFixed(2) + '% GENERAL </p>';
             }
         },
         {
@@ -531,8 +528,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                $('[data-toggle="tooltip_nuevas"]').tooltip({ trigger: "hover" });
-
                 let botones = ``;
                 let proceso = 0;
                 if(data.proceso == 6){
@@ -725,39 +720,38 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
 
     
-    $('#tabla_nuevas_comisiones').on('click', 'input', function () {
-        tr = $(this).closest('tr');
-        var row = tabla_nuevas.row(tr).data();
-        if (row.pa == 0) {
-            row.pa = row.impuesto;
-            totaPen += parseFloat(row.pa);
-            tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-        }
-        else {
-            totaPen -= parseFloat(row.pa);
-            row.pa = 0;
-        }
-        $("#totpagarPen").html(formatMoney(totaPen));
-    });
+    // $('#tabla_nuevas_comisiones').on('click', 'input', function () {
+    //     tr = $(this).closest('tr');
+    //     var row = tabla_nuevas.row(tr).data();
+    //     if (row.pa == 0) {
+    //         row.pa = row.impuesto;
+    //         totaPen += parseFloat(row.pa);
+    //         tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+    //     }
+    //     else {
+    //         totaPen -= parseFloat(row.pa);
+    //         row.pa = 0;
+    //     }
+    //     $("#totpagarPen").html(formatMoney(totaPen));
+    // });
 
-    $('#tabla_nuevas_comisiones').on("click", 'input', function() {
-        tota2 = 0;
+    $('#tabla_nuevas_comisiones').on("click", "input", function() {
+        totaPen = 0;
         tabla_nuevas.$('input[type="checkbox"]').each(function () {
             let totalChecados = tabla_nuevas.$('input[type="checkbox"]:checked') ;
             let totalCheckbox = tabla_nuevas.$('input[type="checkbox"]');
             if(this.checked){
                 trs = this.closest('tr');
                 row = tabla_nuevas.row(trs).data();
-                tota2 += parseFloat(row.impuesto); 
+                totaPen += parseFloat(row.impuesto); 
             }
-            if( totalChecados.length == totalCheckbox.length ){
+            if( totalChecados.length == totalCheckbox.length )
                 $("#all").prop("checked", true);
-            }else {
+            else 
                 $("#all").prop("checked", false);
-            }
         });
-        $("#autorizarAsimilados_casas").html(formatMoney(numberTwoDecimal(tota2)));
-        
+        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+
     });
 
     $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_nuevas", function (e) {
@@ -788,17 +782,17 @@ $("#tabla_revision_comisiones").ready(function () {
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_revision" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
         $('input', this).on('keyup change', function () {
-            if (tabla_revision_comisiones.column(i).search() !== this.value) {
-                tabla_revision_comisiones
+            if (tabla_revision.column(i).search() !== this.value) {
+                tabla_revision
                     .column(i)
                     .search(this.value)
                     .draw();
                 var total = 0;
-                var index = tabla_revision_comisiones.rows({
+                var index = tabla_revision.rows({
                     selected: true,
                     search: 'applied'
                 }).indexes();
-                var data = tabla_revision_comisiones.rows(index).data();
+                var data = tabla_revision.rows(index).data();
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
@@ -816,7 +810,7 @@ $("#tabla_revision_comisiones").ready(function () {
         document.getElementById("myText_revision").textContent = to;
     });
 
-    tabla_revision_comisiones = $("#tabla_revision_comisiones").DataTable({
+    tabla_revision = $("#tabla_revision_comisiones").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX:true,
@@ -938,10 +932,8 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (data) {
-                $('[data-toggle="tooltip_revision"]').tooltip({ trigger: "hover" });
-
                 return `<div class="d-flex justify-center">
-                            <button href="#" value="${data.id_pago_bono}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_revision" data-toggle="tooltip_revision" data-placement="top" title="DETALLES" ><i class="fas fa-info"></i></button>
+                            <button href="#" value="${data.id_pago_bono}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_revision" title="DETALLES" data-toggle="tooltip_revision" data-placement="top"><i class="fas fa-info"></i></button>
                         </div>`;
             }
         }],
@@ -959,7 +951,7 @@ $("#tabla_revision_comisiones").ready(function () {
             "data": function (d) { }
         },
         initComplete: function () {
-            // $('[data-toggle="tooltip_revision"]').tooltip("destroy");
+            $('[data-toggle="tooltip_revision"]').tooltip("destroy");
             $('[data-toggle="tooltip_revision"]').tooltip({ trigger: "hover" });
         }
     });
@@ -1520,7 +1512,7 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
 
 $(window).resize(function () {
     tabla_nuevas.columns.adjust();
-    tabla_revision_comisiones.columns.adjust();
+    tabla_revision.columns.adjust();
     tabla_pagadas.columns.adjust();
     tabla_otras.columns.adjust();
 });
@@ -1991,7 +1983,7 @@ function save2() {
                 alerts.showNotification("top", "right", "LA FACTURA SE SUBIÓ CORRECTAMENTE", "success");
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
-                tabla_revision_comisiones.ajax.reload();
+                tabla_revision.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 3) {
@@ -2144,26 +2136,15 @@ function close_modal_xml() {
     $("#modal_nuevas").modal('toggle');
 }
 
-// function selectAll(e) {
-//     tota2 = 0;
-//     $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
-//         if (!$(this).prop("checked")) {
-//             $(this).prop("checked", true);
-//             tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().pago_cliente);
-//         } else {
-//             $(this).prop("checked", false);
-//         }
-//         $("#totpagarPen").html(formatMoney(tota2));
-//     });
-// }
-
 function selectAll(e) {
+
     tota2 = 0;
     if(e.checked == true){
         $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
-            tr1 = this.closest('tr');
-            row = tabla_nuevas.row(tr1).data();
+            trs = this.closest('tr');
+            row = tabla_nuevas.row(trs).data();
             tota2 += parseFloat(row.impuesto);
+
             if(v.checked == false){
                 $(v).prop("checked", true);
             }

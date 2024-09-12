@@ -1,4 +1,5 @@
-$(document).ready(function () {
+
+//$(document).ready(function () {
     numerosDispersion();
     let titulos_intxt = [];
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -1149,7 +1150,7 @@ $(document).ready(function () {
             $("#modal_NEODATA").modal();
         }
     }); //FIN VERIFY_NEODATA
-});
+//});
 
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -1285,7 +1286,7 @@ $('#Nopenalizacion-form').on('submit', function (e) {
 });
 
 $("#form_NEODATA").submit( function(e) {
-    $('#dispersar').prop('disabled', true);
+    $('#dispersar').prop('disabled', true); 
     document.getElementById('dispersar').disabled = true;
     e.preventDefault();
 }).validate({
@@ -1699,10 +1700,10 @@ function responsive(maxWidth) {
         $('.rowTitulos').removeClass('hide');
     }
 }
-
+ 
 function function_totales(){
     $.getJSON( general_base_url + "Comisiones/getMontoDispersado").done( function( data ){
-        $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
+        $cadena = '<b>'+formatMoney(data[0].monto)+'</b>';
         document.getElementById("monto_label").innerHTML = $cadena ;
     });
     $.getJSON( general_base_url + "Comisiones/getPagosDispersado").done( function( data ){

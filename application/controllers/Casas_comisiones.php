@@ -871,7 +871,7 @@ public function getDatosFechasProyecCondm(){
 
   public function AsignarBono(){
     $this->db->trans_begin();
-    $usuariosBonos = [10460,15103];
+    $usuariosBonos = [16716,16719];
     $id_usuario = $this->input->post("usuarioBono");
     $id_pago_i = $this->input->post("id_pago_i");
     $id_comision = $this->input->post("id_comision");
@@ -881,15 +881,7 @@ public function getDatosFechasProyecCondm(){
     $idLote = $this->input->post("idLote");
     $idCliente = $this->input->post("idCliente");
     $porcentajeTotal = 0.4;
-    //$porcentajeAsignado = ($monto * 100) / $totalNeto2;
-    
-   /* $dataUpdateCom = array(
-      "comision_total" => $monto,
-      "id_usuario" => $id_usuario[0],
-      "rol_generado" => $id_usuario[1],
-      "porcentaje_abonado" => $porcentajeAsignado
-    );
-    $dbTransaction = $this->General_model->updateRecord('comisiones_casas', $dataUpdateCom, 'id_comision', $id_comision);*/
+
     $dataUpdatePago = array(
       "estatus" => 11,
       "modificado_por" => $this->creadoPor
@@ -899,7 +891,7 @@ public function getDatosFechasProyecCondm(){
     $data = array(
       "id_pago_i" => $id_pago_i,
       "id_usuario" => $id_usuario,
-      "abono_bono" => $monto,
+      "abono_bono" => floatval($monto),
       "fecha_abono" => $this->hoy,
       "fecha_pago_intmex" => NULL,
       "pago_bono" => floatval($montoActual),
@@ -914,7 +906,7 @@ public function getDatosFechasProyecCondm(){
     $data = array(
       "id_pago_i" => $id_pago_i,
       "id_usuario" => $id_usuario == $usuariosBonos[0] ? $usuariosBonos[1] : $usuariosBonos[0] ,
-      "abono_bono" => $montoActual - $monto,
+      "abono_bono" => floatval($montoActual - $monto),
       "fecha_abono" => $this->hoy,
       "fecha_pago_intmex" => NULL,
       "pago_bono" => floatval($montoActual),

@@ -152,6 +152,9 @@ class Incidencias_model extends CI_Model {
                     $respuesta = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagos[$i]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario2."')");
                 }  
             }
+
+            $respuesta =  $this->db->query("UPDATE pago_comision SET abonado = (SELECT SUM(abono_neodata) sumaTotal FROM pago_comision_ind WHERE id_comision IN (SELECT id_comision FROM comisiones WHERE estatus = 1 AND id_lote = $id_lote) ), pendiente = total_comision-(select SUM(abono_neodata) sumaTotal FROM pago_comision_ind WHERE id_comision IN (select id_comision from comisiones WHERE estatus = 1 AND id_lote = $id_lote) ) WHERE id_lote = $id_lote");
+
         }
 
         $respuesta = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE CAMBIO PORCENTAJE','comisiones',NULL, null, null, null)");
