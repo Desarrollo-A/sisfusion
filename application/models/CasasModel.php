@@ -2137,7 +2137,7 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 36, 37, 38)
+        AND tipo IN (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 23, 38)
         AND proveedor = 0";
 
         return $this->db->query($query)->result();

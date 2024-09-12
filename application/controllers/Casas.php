@@ -848,7 +848,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
