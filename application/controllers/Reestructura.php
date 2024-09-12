@@ -187,6 +187,7 @@ class Reestructura extends CI_Controller{
         
         // paso 1: revisar en que tipo de proceso se encuentra
         $checkFusion = $this->Reestructura_model->checkFusion($idLote)->result();
+        $checkReestructura = $this->Reestructura_model->checkReestructura($idLote)->result();
         $checkReubicacion = $this->Reestructura_model->checkReubicacion($idLote)->result();
 
         if(!isset($dataPost["idCliente"])){ // se cancela en caso de que no tenga el valor de cliente
@@ -254,7 +255,13 @@ class Reestructura extends CI_Controller{
                 }
             }            
         }
-        else if(!empty($checkFusion) && !empty($checkReubicacion)){ // esto en caso de que se encuentre entre 2 procesos, se mandara un error tipo 2 (solo afecta mensaje de respuesta y hace rollback)
+        else if(!empty($checkReestructura)){
+            $delete = $this->Reestructura_model->deletePropuestas($idLote);
+            if(!$delete){
+                $banderaSuccess = false;
+            }
+        }
+        else if(!empty($checkFusion) && !empty($checkReubicacion) || !empty($checkFusion) && !empty($checkReestructura) || !empty($checkReestructura) && !empty($checkReubicacion)){ // esto en caso de que se encuentre entre 2 procesos, se mandara un error tipo 2 (solo afecta mensaje de respuesta y hace rollback)
             $banderaSuccess = 0;
             $tipoError = 2;
         }
