@@ -212,7 +212,7 @@ rechazo_proceso = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/rechazoPaso5`,
                 data: data,
                 contentType: false,
                 processData: false,
