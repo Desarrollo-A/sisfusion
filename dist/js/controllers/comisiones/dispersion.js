@@ -1700,7 +1700,7 @@ function responsive(maxWidth) {
         $('.rowTitulos').removeClass('hide');
     }
 }
-
+ 
 function function_totales(){
     $.getJSON( general_base_url + "Comisiones/getMontoDispersado").done( function( data ){
         $cadena = '<b>'+formatMoney(data[0].monto)+'</b>';
