@@ -76,18 +76,18 @@ $(document).on('click', '#saveCancel', function () {
         processData: false,
         contentType: false,
         success: function (data) {
-            if (data == 1) {
+            if (data.result) {
                 $('#tabla_lotes').DataTable().ajax.reload(null, false);
                 $("#spiner-loader").addClass('hide');
                 $('#cancelarLote').modal('hide');
-                alerts.showNotification("top", "right", "Opción editada correctamente.", "success");
+                alerts.showNotification("top", "right", data.message, "success");
                 $('#idLote').val('');
                 $('#nombreLote').val('');
                 $('#idCliente').val('');
                 $('#obsSolicitudCancel').val('');
             }
             else{
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right", data.message, "danger");
             }
         },
         error: function () {

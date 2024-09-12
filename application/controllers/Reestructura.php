@@ -179,14 +179,112 @@ class Reestructura extends CI_Controller{
         $data['modificado_por'] = $this->input->post('idCliente');
         $data['tipoCancelacion'] = isset($dataPost['tipoCancelacion']) ? $dataPost['tipoCancelacion'] : 1;
         $update1 = TRUE;
+        $idLote = $dataPost["idLote"];
+        $banderaSuccess = true;
+        $tipoError = 1; // 1: error común de insert, 2: error por problemas si se encuentra en mas de 2 registros
 
-        if (isset($dataPost['idCliente']) )
-            $update1 = $this->General_model->updateRecord("clientes", $data, "id_cliente", $dataPost['idCliente']);
+        $this->db->trans_begin();
+        
+        // paso 1: revisar en que tipo de proceso se encuentra
+        $checkFusion = $this->Reestructura_model->checkFusion($idLote)->result();
+        $checkReubicacion = $this->Reestructura_model->checkReubicacion($idLote)->result();
+
+        if(!isset($dataPost["idCliente"])){ // se cancela en caso de que no tenga el valor de cliente
+            $banderaSuccess = false;
+        }
+
+        // paso 2: se revisa si es fusión o reubicación
+        if(!empty($checkFusion) && empty($checkReubicacion)){ // en caso de ser fusión
+            $dataUpdateOrigenes = array();
+            $dataUpdateDestinos = array();
+            
+            foreach($checkFusion as $fusion){
+                if($fusion->origen == 1 && $fusion->idLote != $fusion->idLotePvOrigen ){
+                    $dataUpdateOrigenes[] = array(
+                        "idLote"       => $fusion->idLote,
+                        "estatus_preproceso" => 0,
+                        "usuario"      => $this->session->userdata('id_usuario')
+                    );
+                }
+                else if($fusion->destino == 1){
+                    $dataUpdateDestinos[] = array(
+                        "idLote"       => $fusion->idLote,
+                        "idStatusLote" => $fusion->tipo_estatus_regreso == 2 ? 21 : $fusion->tipo_estatus_regreso == 1 ? 15 : 1,
+                        "usuario"      => $this->session->userdata('id_usuario')
+                    );
+                }
+            }
+
+            if(!empty($dataUpdateOrigenes)){
+                $update = $this->General_model->updateBatch("lotes", $dataUpdateOrigenes, "idLote");
+                if(!$update){
+                    $banderaSuccess = false;
+                }                 
+            }
+
+            if(!empty($dataUpdateDestinos)){
+                $update = $this->General_model->updateBatch("lotes", $dataUpdateDestinos, "idLote");
+                if(!$update){
+                    $banderaSuccess = false;
+                }
+            }
+            
+            $delete = $this->Reestructura_model->deleteFusion($idLote);
+            if(!$delete){
+                $banderaSuccess = false;
+            }
+        }
+        else if(!empty($checkReubicacion) && empty($checkFusion)){ // en caso de ser reubicación
+            $dataUpdate = array();
+
+            foreach($checkReubicacion as $destino){
+                $dataUpdate[] = array(
+                    "idLote"       => $destino->id_lotep,
+                    "idStatusLote" => $destino->tipo_estatus_regreso == 2 ? 21 : $destino->tipo_estatus_regreso == 1 ? 15 : 1,
+                    "usuario"      => $this->session->userdata('id_usuario')
+                );
+            }
+
+            if(!empty($dataUpdate)){ // se revisa que existan valores dentro del arreglo
+                $update = $this->General_model->updateBatch("lotes", $dataUpdate, "idLote");
+                $delete = $this->Reestructura_model->deletePropuestas($idLote);
+
+                if(!$update || !$delete){
+                    $banderaSuccess = false;
+                }
+            }            
+        }
+        else if(!empty($checkFusion) && !empty($checkReubicacion)){ // esto en caso de que se encuentre entre 2 procesos, se mandara un error tipo 2 (solo afecta mensaje de respuesta y hace rollback)
+            $banderaSuccess = 0;
+            $tipoError = 2;
+        }
+
+        // paso 3: se hace el ingreso del origen pivote a su cancelación
+        $update1 = $this->General_model->updateRecord("clientes", $data, "id_cliente", $dataPost['idCliente']);
+        if(!$update1){
+            $banderaSuccess = false;
+        }
+        
+        // paso 4: se aplica liberación
         $update2 = $this->Reestructura_model->aplicaLiberacion($dataPost);
-        if ($update1 == TRUE AND $update2 == TRUE)
-            echo json_encode(1);
-        else
-            echo json_encode(0);
+        if(!$update2){
+            $banderaSuccess = false;
+        }
+        
+        // paso 5: se finalizar proceso enviando mensajes de respuesta
+        if ($banderaSuccess){
+            $this->db->trans_commit();
+            $response["result"] = true;
+            $response["message"] = "Se ha realizado la cancelación correctamente";
+        }
+        else{
+            $this->db->trans_rollback();
+            $response["result"] = false;
+            $response["message"] = $tipoError == 1 ? "Error al hacer la cancelación" : "Error en los registros del lote";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));
 	}
 
     public function setReestructura(){
@@ -486,9 +584,6 @@ class Reestructura extends CI_Controller{
             //AA: Se asignan propuesta por primera vez
             if ($statusPreproceso == 0 || $flagFusion == 1) {
                 if($flagFusion == 1){
-                    $checkOpcion = $this->Reestructura_model->checkOpcion($idLoteOriginal)->result();
-                    $noOpcion = $checkOpcion[0]->noOpcion;
-
                     foreach ($idLotes as $elemento){
                         $arrayLote = array(
                             "idLote" => $elemento, //lote propuesta
@@ -504,8 +599,7 @@ class Reestructura extends CI_Controller{
                             "fechaModificacion" => null,
                             "contrato" => null,
                             "corrida" => null,
-                            "rescision" => null,
-                            "noOpcion" => (intval($noOpcion) + 1)
+                            "rescision" => null                            
                         );
 
                         array_push($arrayLotes, $arrayLote);
@@ -1890,7 +1984,8 @@ class Reestructura extends CI_Controller{
         if (in_array($this->session->userdata('id_usuario'), [9897, 13655]))
             $dato = $this->Reestructura_model->getLotes2($id_proyecto);
         else {
-            if (in_array($this->session->userdata('id_usuario'), array(13546, 15625, 13547, 12113, 12668, 12115, 12112, 2896)) && $tipoTransaccion == 1) {
+            if (in_array($this->session->userdata('id_usuario'), array(13546, 15625, 13547, 12113, 12668, 12115, 12112, 2896))) {
+                // if (in_array($this->session->userdata('id_usuario'), array(13546, 15625, 13547, 12113, 12668, 12115, 12112, 2896)) && $tipoTransaccion == 1) {
                 $union = "
                     
                 UNION ALL
