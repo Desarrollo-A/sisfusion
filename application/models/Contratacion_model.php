@@ -75,117 +75,24 @@ class Contratacion_model extends CI_Model {
       if ($estatus != 0)
          $filtroEstatus = "AND lot.idStatusLote = $estatus";
 
-      if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $tipo == 1) { // NORMAL
-         $filtroEstatusLote = "AND lot.idStatusLote IN (2, 3)";
-         $unionCliente = "INNER";
+      /*if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $tipo == 1) { // NORMAL
+         $filtroEstatusLote = "AND lot.idStatusLote IN (2, 3, 8)";
+         $unionCliente = "LEFT";
          $ventasCompartidasQuery = $this->getVentasCompartidasQuery($id_rol, $id_usuario, $id_lider, $prospectingPlaceDetail, $filtroProyecto, $filtroCondominio, $filtroEstatus, $idsGerente);
-      }
+      }*/
       else if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $tipo == 3) // CASAS
          $filtroEstatusLote = "AND lot.idStatusLote IN (2)";
 
       if (in_array($id_rol, [7, 9, 3]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASESOR, COORDINADOR O GERENTE
-         $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario)";
+         $filtroClientesPropios = "AND (((cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario) AND lot.idStatusLote IN (2)) OR lot.idStatusLote IN (8, 3))";
       else if (in_array($id_rol, [6]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTNTE GERENTE
-         $filtroClientesPropios = "AND (cl.id_gerente IN ($idsGerente)) AND cl.id_sede = $id_sede";
-      else if (in_array($id_rol, [2]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
-         $filtroClientesPropios = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario)";
-      else if (in_array($id_rol, [5]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
-         $filtroClientesPropios = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
+         $filtroClientesPropios = "AND ((cl.id_gerente IN ($idsGerente) AND cl.id_sede = $id_sede AND lot.idStatusLote IN (2)) OR lot.idStatusLote IN (8, 3))";
+      else if (in_array($id_rol, [1, 2, 4, 5]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
+         $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3, 8)";
+      /*else if (in_array($id_rol, [5]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
+         $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3, 8)";*/
 
-      return $this->db->query("SELECT
-         tbl.idLote, 
-         tbl.nombreLote, 
-         tbl.nombreCondominio, 
-         tbl.nombreResidencial, 
-         tbl.idStatusLote, 
-         tbl.idCondominio, 
-         tbl.superficie, 
-         tbl.sup, 
-         tbl.totalNeto2, 
-         tbl.total, 
-         tbl.referencia, 
-         CAST(tbl.comentario AS varchar(255)), 
-         tbl.comentarioLiberacion, 
-         tbl.observacionLiberacion, 
-         tbl.descripcion_estatus, 
-         tbl.color, 
-         tbl.tipo_venta, 
-         tbl.msni, 
-         tbl.asesor, 
-         tbl.coordinador, 
-         tbl.gerente, 
-         tbl.subdirector, 
-         tbl.regional, 
-         tbl.regional2, 
-         tbl.asesor2, tbl.coordinador2, tbl.gerente2, tbl.subdirector2, tbl.regional22, 
-         tbl.precio, 
-         tbl.fecha_modst, 
-         tbl.fechaApartado, 
-         tbl.apartadoXReubicacion, 
-         tbl.fechaAlta, 
-         tbl.observacionContratoUrgente, 
-         tbl.nombreCliente, 
-         tbl.motivo_change_status, 
-         tbl.lugar_prospeccion, 
-         tbl.fecha_creacion, 
-         tbl.cantidad_enganche, 
-         tbl.fecha_validacion, 
-         tbl.idStatusContratacion, 
-         tbl.nombreCopropietario, 
-         tbl.background_sl, 
-         tbl.tipo_casa, 
-         tbl.nombre_tipo_casa, 
-         tbl.casa, 
-         tbl.ubicacion, 
-         tbl.comentario_administracion, 
-         tbl.venta_compartida, 
-         tbl.statusContratacion, 
-         tbl.tipo_proceso, 
-         tbl.clave, 
-         tbl.telefono1, 
-         tbl.telefono2, 
-         tbl.correo, 
-         tbl.fecha_nacimiento, 
-         tbl.nacionalidad, 
-         tbl.originario_de, 
-         tbl.estado_civil, 
-         tbl.nombre_conyuge, 
-         tbl.regimen_matrimonial, 
-         tbl.domicilio_particular, 
-         tbl.ocupacion, 
-         tbl.empresa, 
-         tbl.puesto, 
-         tbl.antiguedad, 
-         tbl.edad, 
-         tbl.domicilio_empresa, 
-         tbl.telefono_empresa, 
-         tbl.tipo_vivienda, 
-         tbl.costom2f, 
-         tbl.municipio, 
-         tbl.importOferta, 
-         tbl.letraImport, 
-         tbl.saldoDeposito, 
-         tbl.aportMensualOfer, 
-         tbl.fecha1erAport, 
-         tbl.fechaLiquidaDepo, 
-         tbl.fecha2daAport, 
-         tbl.referenciasPersonales, 
-         CAST(tbl.observacion AS varchar(255)), 
-         tbl.personalidad_juridica, 
-         tbl.idOficial_pf, 
-         tbl.idDomicilio_pf, 
-         tbl.actaMatrimonio_pf, 
-         tbl.actaConstitutiva_pm, 
-         tbl.poder_pm, 
-         tbl.idOficialApoderado_pm, 
-         tbl.idDomicilio_pm, 
-         tbl.edadFirma, 
-         tbl.sedeResidencial, 
-         tbl.tipoEnganche, 
-         tbl.nombre, 
-         tbl.sedeCliente 
-         FROM (
-      SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, CONVERT(varchar, CONVERT(money, lot.sup), 1) as superficie, lot.sup, lot.totalNeto2,
+      return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, CONVERT(varchar, CONVERT(money, lot.sup), 1) as superficie, lot.sup, lot.totalNeto2,
       lot.total, lot.referencia, ISNULL(lot.comentario, 'SIN ESPECIFICAR') comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
       CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, lot.msi as msni,
       CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
@@ -220,7 +127,7 @@ class Contratacion_model extends CI_Model {
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
       INNER JOIN statuslote sl ON sl.idStatusLote = lot.idStatusLote 
       LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta 
-      $unionCliente JOIN clientes cl ON cl.id_cliente = lot.idCliente $filtroClientesPropios
+      $unionCliente JOIN clientes cl ON cl.id_cliente = lot.idCliente
       LEFT JOIN opcs_x_cats loxc ON loxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
       LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
       LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
@@ -253,103 +160,8 @@ class Contratacion_model extends CI_Model {
      LEFT JOIN sedes sds ON sds.id_sede = res.sede_residencial
      LEFT JOIN sedes sds2 ON sds2.id_sede = cl.id_sede
       --nuevo 
-      WHERE lot.status = 1 $filtroEstatusLote $filtroEstatus $whereProceso
-      --ORDER BY lot.nombreLote
-      $ventasCompartidasQuery
-      ) tbl
-         GROUP BY
-         tbl.idLote, 
-         tbl.nombreLote, 
-         tbl.nombreCondominio, 
-         tbl.nombreResidencial, 
-         tbl.idStatusLote, 
-         tbl.idCondominio, 
-         tbl.superficie, 
-         tbl.sup, 
-         tbl.totalNeto2, 
-         tbl.total, 
-         tbl.referencia, 
-         CAST(tbl.comentario AS varchar(255)), 
-         tbl.comentarioLiberacion, 
-         tbl.observacionLiberacion, 
-         tbl.descripcion_estatus, 
-         tbl.color, 
-         tbl.tipo_venta, 
-         tbl.msni, 
-         tbl.asesor, 
-         tbl.coordinador, 
-         tbl.gerente, 
-         tbl.subdirector, 
-         tbl.regional, 
-         tbl.regional2, 
-         tbl.asesor2, tbl.coordinador2, tbl.gerente2, tbl.subdirector2, tbl.regional22, 
-         tbl.precio, 
-         tbl.fecha_modst, 
-         tbl.fechaApartado, 
-         tbl.apartadoXReubicacion, 
-         tbl.fechaAlta, 
-         tbl.observacionContratoUrgente, 
-         tbl.nombreCliente, 
-         tbl.motivo_change_status, 
-         tbl.lugar_prospeccion, 
-         tbl.fecha_creacion, 
-         tbl.cantidad_enganche, 
-         tbl.fecha_validacion, 
-         tbl.idStatusContratacion, 
-         tbl.nombreCopropietario, 
-         tbl.background_sl, 
-         tbl.tipo_casa, 
-         tbl.nombre_tipo_casa, 
-         tbl.casa, 
-         tbl.ubicacion, 
-         tbl.comentario_administracion, 
-         tbl.venta_compartida, 
-         tbl.statusContratacion, 
-         tbl.tipo_proceso, 
-         tbl.clave, 
-         tbl.telefono1, 
-         tbl.telefono2, 
-         tbl.correo, 
-         tbl.fecha_nacimiento, 
-         tbl.nacionalidad, 
-         tbl.originario_de, 
-         tbl.estado_civil, 
-         tbl.nombre_conyuge, 
-         tbl.regimen_matrimonial, 
-         tbl.domicilio_particular, 
-         tbl.ocupacion, 
-         tbl.empresa, 
-         tbl.puesto, 
-         tbl.antiguedad, 
-         tbl.edad, 
-         tbl.domicilio_empresa, 
-         tbl.telefono_empresa, 
-         tbl.tipo_vivienda, 
-         tbl.costom2f, 
-         tbl.municipio, 
-         tbl.importOferta, 
-         tbl.letraImport, 
-         tbl.saldoDeposito, 
-         tbl.aportMensualOfer, 
-         tbl.fecha1erAport, 
-         tbl.fechaLiquidaDepo, 
-         tbl.fecha2daAport, 
-         tbl.referenciasPersonales, 
-         CAST(tbl.observacion AS varchar(255)), 
-         tbl.personalidad_juridica, 
-         tbl.idOficial_pf, 
-         tbl.idDomicilio_pf, 
-         tbl.actaMatrimonio_pf, 
-         tbl.actaConstitutiva_pm, 
-         tbl.poder_pm, 
-         tbl.idOficialApoderado_pm, 
-         tbl.idDomicilio_pm, 
-         tbl.edadFirma, 
-         tbl.sedeResidencial, 
-         tbl.tipoEnganche, 
-         tbl.nombre, 
-         tbl.sedeCliente
-      ORDER BY tbl.nombreLote
+      WHERE lot.status = 1 $filtroEstatusLote $filtroEstatus $whereProceso $filtroClientesPropios
+      ORDER BY lot.nombreLote
       ")->result_array();
    }
 
