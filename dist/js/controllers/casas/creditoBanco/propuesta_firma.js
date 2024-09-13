@@ -281,8 +281,8 @@ function gestorNotarias() {
                     placeholder: item.label,
                     width: '12',
                     required: 'required',
-                    icon: item.estatus === 0 ? 'close' : 'check',
-                    color: item.estatus === 0 ? 'warning' : 'green',
+                    icon: item.estatus === 0 ? 'check' : 'close',
+                    color: item.estatus === 0 ? 'green' : 'warning',
                     title: item.estatus === 0 ? 'Habilitar' : 'Inhabilitar',
                     disabled: true,
                     onClick: () => estatusNotaria(item)
