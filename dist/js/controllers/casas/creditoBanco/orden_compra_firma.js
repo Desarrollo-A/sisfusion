@@ -190,7 +190,7 @@ function selectCasa(parentSelector, divId, idPropuestaCasa) {
             newDiv.className = `${divId} element-select`; 
             
             newDiv.innerHTML = `
-                <div id="checkDS" style="margin-bottom: 10px">
+                <div id="checkDS" style="margin-bottom: 0px; margin-top: 30px;">
                     <div class="container boxChecks p-0">
                         <label class="m-0 checkstyleDS">
                             <input type="radio" name="idPropuesta" id="idPropuesta-${index}" value="${item.idModelo}">
