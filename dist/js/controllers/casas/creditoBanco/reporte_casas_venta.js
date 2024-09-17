@@ -234,13 +234,12 @@ function lineCredito(timeLine) {
 }
 
 modalHistorialBanco = function (dt) {
-
     let esquemaCredito = 1;
     $("#spiner-loader").removeClass('hide');
     $("#timeLineModal").modal();
     $("#historialActual").html("");
 
-    $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}`).done(function (data) {
+    $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}/${dt.idLote}`).done(function (data) {
 
         if (JSON.parse(data).length > 0) {
             $.each(JSON.parse(data), function (i, v) {
@@ -249,7 +248,7 @@ modalHistorialBanco = function (dt) {
                     title: v.nombreUsuario,
                     back: v.procesoAnterior,
                     next: v.procesoNuevo,
-                    description: v.descripcion,
+                    description: v.descripcionFinal,
                     date: v.fechaMovimiento
                 });
                 lineCredito(timeLine);

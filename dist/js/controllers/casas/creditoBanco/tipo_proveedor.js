@@ -30,7 +30,7 @@ function select_tipo_proveedor(data) {
         },
         fields: [
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new SelectField({ id: 'tipoProveedor', data: tipos, value: data.tipoProveedor }),
+            new SelectField({ id: 'tipoProveedor', placeholder: 'SELECCIONA UNA OPCIÓN',data: tipos, value: data.tipoProveedor }),
         ]
     })
 
@@ -88,7 +88,7 @@ let columns = [
     { data: function (data) {
         if(data.tipoProveedor == 1){
             return 'Persona moral'
-        }else if(data.tipoProveedor == 1){
+        }else if(data.tipoProveedor == 2){
             return 'Persona física'
         }else{
             return 'No seleccionado'
