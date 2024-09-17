@@ -1663,7 +1663,7 @@ class CasasModel extends CI_Model
         CASE WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno,  ' ', us.apellido_materno)
         ELSE 'Sin Asignar' END AS nombreAsesor,
         CASE WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno) END AS gerente,
-        oxc.nombre AS procesoNombre, 
+        CASE WHEN pc.idProcesoCasas IS NULL THEN 'PRE PROCESO' ELSE oxc.nombre END AS procesoNombre, 
         COALESCE(MAX(pc.fechaCreacion), MAX(hct.fechaMovimiento)) AS fechaCreacion,
         COALESCE(pc.idProcesoCasas,0)idProcesoCasas,
         COALESCE(MAX(pc.fechaProceso), MAX(hct.fechaMovimiento)) AS fechaProceso,
@@ -1873,15 +1873,20 @@ class CasasModel extends CI_Model
         $query = $this->db->query("WITH CombinedData AS (
         SELECT 
         
-        hpc.*, 
+        hpc.idHistorial, 
+        CASE WHEN hpc.descripcion LIKE '%Pre proceso %' THEN oxc4.nombre ELSE oxc2.nombre END AS procesoAnterior, 
+        CASE WHEN hpc.descripcion LIKE '%Pre proceso %' THEN oxc5.nombre ELSE oxc3.nombre END AS procesoNuevo,
         CASE WHEN hpc.descripcion LIKE '%Pre proceso%' THEN LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END)) ELSE CONCAT(oxc2.nombre, CASE WHEN oxc3.nombre IS NOT NULL THEN CONCAT(' -> ', oxc3.nombre)ELSE '' END)END AS descripcionFinal,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) AS nombreUsuario,
-        ROW_NUMBER() OVER (PARTITION BY hpc.idHistorial ORDER BY hpc.fechaMovimiento DESC) AS rn
+        ROW_NUMBER() OVER (PARTITION BY hpc.idHistorial ORDER BY hpc.fechaMovimiento DESC) AS rn,
+        CASE WHEN hpc.procesoAnterior = hpc.procesoNuevo THEN '1' ELSE '0' END AS cambioStatus
         FROM historial_proceso_casas hpc
         LEFT JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = hpc.procesoAnterior AND oxc2.id_catalogo = 135
 		LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = hpc.procesoNuevo AND oxc3.id_catalogo = 135
+        LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = hpc.procesoAnterior  AND oxc4.id_catalogo = 156
+		LEFT JOIN opcs_x_cats oxc5 ON oxc5.id_opcion = hpc.procesoNuevo AND oxc5.id_catalogo = 156
         WHERE (idProcesoCasas = $idProceso AND esquemaCreditoProceso = $tipoEsquema)
         OR (hpc.descripcion LIKE '%Pre proceso %$idLote%'))
         
