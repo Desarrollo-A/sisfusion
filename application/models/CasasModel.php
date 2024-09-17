@@ -569,41 +569,45 @@ class CasasModel extends CI_Model
 
     public function getConcentracionAdeudos(){
         $query = "SELECT 
-        pc.*,
-        CASE
-            WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
-            ELSE CONCAT('$', pc.adeudoOOAM) 
-        END AS adOOAM,
-        lo.nombreLote,
-        con.nombre AS condominio,
-        resi.descripcion AS proyecto,
-        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-        CASE
-            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
-            ELSE 'Sin asignar'
-        END AS nombreAsesor,
-        CASE
-            WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
-            ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
-        END AS gerente,
-        oxc.nombre AS movimiento,
-        doc2.documentos
-    FROM 
-        proceso_casas_banco pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
-        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
-        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
-        LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
-    WHERE 
-        pc.proceso IN (2, 3) 
-        AND pc.status = 1 
-        AND cli.status = 1
-        AND vb.proyectos != 1";
+pc.*,
+CASE
+    WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
+	ELSE FORMAT(pc.adeudoOOAM, 'C') 
+END AS adOOAM,
+CASE
+    WHEN pc.adeudoADM IS NULL THEN 'Sin registro'
+    ELSE FORMAT(pc.adeudoADM, 'C') 
+END AS adADM,
+lo.nombreLote,
+con.nombre AS condominio,
+resi.descripcion AS proyecto,
+CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+CASE
+    WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+    ELSE 'Sin asignar'
+END AS nombreAsesor,
+CASE
+    WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+    ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+END AS gerente,
+oxc.nombre AS movimiento,
+doc2.documentos
+FROM 
+proceso_casas_banco pc
+LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
+INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
+LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
+LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+WHERE 
+pc.proceso IN (2, 3) 
+AND pc.status = 1 
+AND cli.status = 1
+AND vb.proyectos != 1";
 
         return $this->db->query($query)->result();
     }
