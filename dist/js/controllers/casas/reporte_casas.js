@@ -25,14 +25,14 @@ function dataFunction(value) {
     if (valueTab == 1) {
         tableConfig = {
             id: '#tableDoct',
-            url: 'casas/lista_reporte_casas',
+            url: 'casas/lista_reporte_casas?opcion=-1',
             buttons: buttons,
             columns: columns,
         };
     } else if (valueTab == 2) {
         tableConfig = {
             id: '#tableCredito',
-            url: 'casas/getReporteProcesoCredito',
+            url: 'casas/getReporteProcesoCredito?opcion=-1',
             buttons: buttonsCredito,
             columns: columnsCredito,
         };

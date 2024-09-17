@@ -185,7 +185,7 @@ class CasasModel extends CI_Model
                 CASE WHEN cl.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente,
                 ISNULL(cl.id_cliente, 0) idCliente, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE 1 END AS clienteExistente, 
                 CASE WHEN cl.id_cliente IS NOT NULL THEN CASE WHEN cl.id_cliente = lo.idCliente THEN '1' ELSE '0' END END AS clienteNuevoEditar, 
-                cl.nombre AS nombreCliente, cl.apellido_paterno  AS apePaterno, cl.apellido_materno AS apeMaterno, cl.telefono1, cl.correo, cl.domicilio_particular,
+                cl.nombre AS nombreCliente, cl.apellido_paterno  AS apePaterno, cl.apellido_materno AS apeMaterno, cl.domicilio_particular,
                 cl.estado_civil, cl.ocupacion
 
             FROM 
@@ -1682,7 +1682,8 @@ class CasasModel extends CI_Model
         WHERE (pc.status = 1 OR pc.status IS NULL)
         AND (cli.status = 1)
         AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
-        AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
+        --AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
+        $finalizado
         GROUP BY hct.idLote ,lo.nombreLote, pc.idLote, con.nombre, CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno),
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), us.nombre, cli.id_gerente_c,
         CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno), oxc.nombre, oxc2.nombre, 
@@ -1870,13 +1871,17 @@ class CasasModel extends CI_Model
     public function getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote)
     {
         $query = $this->db->query("WITH CombinedData AS (
-        SELECT hpc.*, 
-        CASE WHEN descripcion = '' THEN 'SIN ESPECIFICAR' ELSE LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END )) END AS descripcionFinal,
+        SELECT 
+        
+        hpc.*, 
+        CASE WHEN hpc.descripcion LIKE '%Pre proceso%' THEN LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END)) ELSE CONCAT(oxc2.nombre, CASE WHEN oxc3.nombre IS NOT NULL THEN CONCAT(' -> ', oxc3.nombre)ELSE '' END)END AS descripcionFinal,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) AS nombreUsuario,
         ROW_NUMBER() OVER (PARTITION BY hpc.idHistorial ORDER BY hpc.fechaMovimiento DESC) AS rn
         FROM historial_proceso_casas hpc
         LEFT JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = hpc.procesoAnterior AND oxc2.id_catalogo = 135
+		LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = hpc.procesoNuevo AND oxc3.id_catalogo = 135
         WHERE (idProcesoCasas = $idProceso AND esquemaCreditoProceso = $tipoEsquema)
         OR (hpc.descripcion LIKE '%Pre proceso %$idLote%'))
         

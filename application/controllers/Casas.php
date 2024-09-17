@@ -492,7 +492,8 @@ class Casas extends BaseController
             "id_asesor_c"        => $idAsesor,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario'),
-            "pre_proceso_casas" => 2
+            "pre_proceso_casas" => 2,
+            "plan_comision_c" => 101
         );
 
         $getAsesor = $this->CasasModel->getAsesor($idAsesor);
@@ -574,6 +575,7 @@ class Casas extends BaseController
 
             $updateCliente = array(
                 "id_asesor_c"        => $asesor,
+                "plan_comision_c" => 101,
                 "fechaModificacion" => date("Y-m-d H:i:s"),
                 "modificadoPor" => $this->session->userdata('id_usuario')
             );
@@ -848,7 +850,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([11, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
@@ -2349,14 +2351,14 @@ class Casas extends BaseController
 
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
         $finalizado = "0, 1";
+        $extraOptions = "";
 
-        if ($opcion != -1 && $opcion != -2 && isset($opcion)) {
-            $proceso = $opcion;
-            $finalizado = "0";
+        if ($opcion == -1 && $opcion != -2 && isset($opcion)) {
+            $finalizado = " AND (pc.finalizado IN(0) OR pc.finalizado IS NULL)";
         }
 
         if ($opcion == -2) {
-            $finalizado = "1";
+            $finalizado = " AND (pc.finalizado = 1)";
         }
 
         $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado);
@@ -2984,7 +2986,7 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
-    public function getHistorial($idProceso, $tipoEsquema, $idLote)
+    public function getHistorial($idProceso, $tipoEsquema, $idLote = null)
     {
         echo json_encode($this->CasasModel->getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote));
     }
