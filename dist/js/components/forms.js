@@ -1048,7 +1048,7 @@ class title {
 class TimeLine {
     
 
-constructor({ title, back, next, description, date }) {
+constructor({ title, back = '', next = '', description, date, processText = '' }) {
 
 {/* <li>
     <div class="container-fluid">
@@ -1120,7 +1120,7 @@ constructor({ title, back, next, description, date }) {
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Proceso nuevo: ')
+                                        .text(processText == ''? 'Proceso nuevo: ' : processText)
                                         .append(
                                             $('<b />')
                                                 .text(next)
