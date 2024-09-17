@@ -1158,6 +1158,7 @@ constructor({ title, back, next, description, date }) {
 class HrTitle {
     constructor({ text }) {
         this.field = $('<div />')
+            .css('text-align', 'center')
             .append(
                 $('<strong/> ')
                     .addClass('control-label')

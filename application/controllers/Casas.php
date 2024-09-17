@@ -492,7 +492,8 @@ class Casas extends BaseController
             "id_asesor_c"        => $idAsesor,
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario'),
-            "pre_proceso_casas" => 2
+            "pre_proceso_casas" => 2,
+            "plan_comision_c" => 101
         );
 
         $getAsesor = $this->CasasModel->getAsesor($idAsesor);
@@ -574,6 +575,7 @@ class Casas extends BaseController
 
             $updateCliente = array(
                 "id_asesor_c"        => $asesor,
+                "plan_comision_c" => 101,
                 "fechaModificacion" => date("Y-m-d H:i:s"),
                 "modificadoPor" => $this->session->userdata('id_usuario')
             );
