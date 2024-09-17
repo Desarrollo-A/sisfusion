@@ -450,7 +450,7 @@ class Casas extends BaseController
         $this->db->trans_begin();
 
         $getGerente = $this->CasasModel->getGerente($gerente);
-        $this->CasasModel->addHistorial(0, 'NULL', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $idLote", 0);
+        $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $idLote", 0);
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
@@ -850,7 +850,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([11, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
@@ -4246,7 +4246,7 @@ class Casas extends BaseController
         $getGerente = $this->CasasModel->getGerente($gerente);
         foreach ($idLote  as $lote) {
             foreach ($lote as $loteId) {
-                $this->CasasModel->addHistorial(0, 'NULL', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $loteId", 0);
+                $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $loteId", 0);
             }
         }
 
