@@ -428,7 +428,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                        
 
                                         <div class="col-md-3 p-0">
-                                            <h5>Precio Lote: <b>${formatMoney(totalNeto2)}</b></h5>
+                                            <h5>Costo construcción: <b>${formatMoney(totalNeto2)}</b></h5>
                                         </div>
 
                                         <div class="col-md-3 p-0">
@@ -647,7 +647,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                 }else{
                                     cadena = `<h4>Bonificación: <b >${formatMoney(0)}</b></h4>`;
                                 }*/
-                                $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(totalNeto2)}</b></h4></div>
+                                $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Costo construcción: ${formatMoney(totalNeto2)}</b></h4></div>
                                 <div class="col-md-4"><h4>Aplicado: <b>${formatMoney(aplicadoNeodata)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                 </div><br>`);
 
