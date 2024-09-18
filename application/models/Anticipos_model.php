@@ -23,7 +23,7 @@ class Anticipos_model extends CI_Model {
     
         $data = $this->db->query("SELECT fa.nombre_archivo AS factura,
         oxc.nombre AS esquema, se.nombre AS sede, us.forma_pago,  oxcPago.nombre AS formaNombre,
-        opcE.id_opcion as clave_empresa , opcE.nombre as nombre_empresa,
+        opcE.id_opcion as clave_empresa , opcE.nombre as nombre_empresa,ea.empresa ,
         se.id_sede AS idsede,
 		oxcPago.nombre AS formaNombre,
         fa.nombre_archivo AS factura_nombre,
@@ -198,7 +198,6 @@ class Anticipos_model extends CI_Model {
     public function addEmpresa($id_anticipo, $empresa){
         $cmd = "INSERT INTO empresa_anticipo VALUES($id_anticipo,$empresa)";
         $query = $this->db->query($cmd);
-
         return $this->db->affected_rows() > 0 ? 1 : 0;
     }
 
