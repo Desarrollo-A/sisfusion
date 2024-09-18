@@ -865,7 +865,7 @@ class Casas extends BaseController
             }
 
             if ($is_ok) {
-                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1); // se agrega esquema 1 - credito de banco
+                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, "Se avanzó el proceso al paso 2 | Comentario: ".$comentario, 1); // se agrega esquema 1 - credito de banco
             } else {
                 http_response_code(404);
             }
