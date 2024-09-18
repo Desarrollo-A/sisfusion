@@ -304,9 +304,11 @@ $("#tabla_anticipos_internomex").ready(function () {
             type: 'POST',
             contentType: false,
             cache: false,
-            processData: false,
+            processData: false, 
+            
             dataType: 'json',
             success: function(response) {
+                console.log(response);
                 
                 if (response.success) {
                     $('#anticipoModalInternomex').modal("hide");
@@ -319,7 +321,7 @@ $("#tabla_anticipos_internomex").ready(function () {
                 
             },
             error: function(xhr, status, error) {
-                console.error("AJAX Error: ", status, error);
+                
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });
@@ -350,10 +352,11 @@ $("#tabla_anticipos_internomex").ready(function () {
             type: 'POST',
             contentType: false,
             cache: false,
-            processData: false,
+            processData: false, 
+            
             dataType: 'json',
             success: function(response) {
-                
+                console.log(response);
                 if (response.success) {
                     $('#anticipoModalInternomexFinal').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
@@ -365,7 +368,7 @@ $("#tabla_anticipos_internomex").ready(function () {
                 
             },
             error: function(xhr, status, error) {
-                console.error("AJAX Error: ", status, error);
+                
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });

@@ -37,14 +37,11 @@ $('#catalogo_historial, #tipo_historial').change(function(){
         proyecto = $('#ano_historial').val();
         condominio = $('#catalogo_historial').val();
         tipo = $('#tipo_historial').val();
-        console.log(tipo);
-
-        
-    $('#tabla_historialGral').removeClass('hide');
+        $('#tabla_historialGral').removeClass('hide');
     
         if (condominio == '' || condominio == null || condominio == undefined) {
         condominio = 0;
-    }
+         }
     
         if (tipo == '' || tipo == null || tipo == undefined) {
             tipo = 0;
@@ -52,8 +49,8 @@ $('#catalogo_historial, #tipo_historial').change(function(){
 
         if (tabla_historialGral2) {
         tabla_historialGral2.destroy();
-    }
-    getAssimilatedCommissions(proyecto, condominio, tipo);
+        }
+        getAssimilatedCommissions(proyecto, condominio, tipo);
 
     }
 });
@@ -1189,6 +1186,7 @@ $(document).on("click", "#preview", function () {
         height: 660
     });
 });
+
 $(document).on("click", "#historial_previa", function () {
     
     
@@ -1213,8 +1211,6 @@ $(document).on("click", "#historial_previa", function () {
 
     var com2 = new FormData();
     var conta = 0;
-//  <div class="col-md-4"><div class="d-flex justify-center "  style="padding-top: 25px;">
-
     com2.append("id_opcion", opcion);
     if(opcion != ''){
         $.ajax({
@@ -1403,12 +1399,6 @@ $(document).on('click', ".ver_bonos", function(e){
     $('#tabla_bono').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
-
-
-
-
-
-
 
     $("#observar_bonos .modal-footer").append(`
       

@@ -52,13 +52,9 @@ $(document).ready(function() {
         data = JSON.parse(data);
         datosFechaCorte = data.fechasCorte;
         datosSumaPagos = data.sumaPagos;
-        // console.log(datosSumaPagos);
-
         datosOpinion = data.opinion;
-        //[0]año [1]mes [2]dia
         fechaInicioCorteGlobal = datosFechaCorte[0].fechaInicio.split(' ')[0].split('-');
         fechaFinCorteGlobal = datosFechaCorte[0].fechaFin.split(' ')[0].split('-');
-        //[0] hora [1] minutos [2] segundos
         horaFinCorteGlobal = datosFechaCorte[0].fechaFin.split(' ')[1].split(':');
         llenarSumas();
         datosProyectos = data.proyectos;
@@ -85,6 +81,7 @@ $(document).ready(function() {
     });
     $('#spiner-loader').addClass('hide');
 });
+
 function llenarSumas(){
     //FUNCIÓN PARA MOSTRAR SALDOS EN CADA TAPS
     
@@ -115,7 +112,6 @@ function getPagosComisiones(idProyecto,idCondominio,estatus){
     let datosTbActual = datosTablas.filter(datos => datos.estatus == estatus);
 
     if(datosRespuesta.length != 0 ){
-        console.log("entro");
         if (datosRespuesta[0].tot_suma > 0) {
             document.getElementById(`${datosTbActual[0].idTitle}`).textContent = formatMoney( datosRespuesta[0].tot_suma);
         }else{
@@ -127,16 +123,12 @@ function getPagosComisiones(idProyecto,idCondominio,estatus){
         document.getElementById(`${datosTbActual[0].idTitle}`).textContent = formatMoney(0);
 
     }
-
-
     return datosRespuesta;
     
 }
 
 function getPagosEstatus(idTabla,idProyecto,idCondominio,estatus){
-    // console.log(idProyecto);
-    // console.log(idCondominio);
-    // console.log(estatus);
+   
     $('#spiner-loader').removeClass('hide');
     const data = getPagosComisiones(idProyecto,idCondominio,estatus);
     crearTabla(idTabla,data,estatus);
@@ -145,7 +137,6 @@ function getPagosEstatus(idTabla,idProyecto,idCondominio,estatus){
 
 for (let m = 0; m < datosTablas.length; m++) {
     if(datosTablas[m].estatus != 0)
-    // console.log(datosTablas[m].id);
     $(`#${datosTablas[m].id} thead tr:eq(0) th`).each( function (i) {
         if(i != 0){
             var title = $(this).text();
@@ -174,40 +165,11 @@ for (let m = 0; m < datosTablas.length; m++) {
     });    
 }
 
-
-
 async function crearTabla(idTabla,data2,estatus){
-    // console.log(idTabla)
-    // console.log(data2);
-    // console.log(estatus);
     let datosTbActual = datosTablas.filter(datos => datos.estatus == estatus);
-
-  
-     
-    // console.log(datosTbActual);
-    // console.log(datosTbActual[0].id)
     let idProyecto = $(`#${datosTbActual[0].idSelect}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelect}`).val() ,idCondominio = $(`#${datosTbActual[0].idSelectCond}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelectCond}`).val();  
-    // console.log(idSelect);
     $(`#${idTabla}`).prop("hidden", false);
-
-    // console.log($(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr){
-
-    //     console.log(json);
-
-    // }));
-
-    // $(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr) {
-    //     // alert()
-    //     var total = 0;
-    //     $.each(json, function (i, v) {
-    //         total += parseFloat(v.impuesto);
-    //     });
-    //     var to = formatMoney(total);
-    //     console.log(to);
-    //     document.getElementById(`${datosTbActual[0].idTitle}`).textContent = to;
-    // });
-
-   $(`#${idTabla}`).DataTable({
+    $(`#${idTabla}`).DataTable({
     
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100",
@@ -265,7 +227,6 @@ async function crearTabla(idTabla,data2,estatus){
                         }
                     }
                     else{
-                        console.log(datosFechaCorte);
 
                         $('#spiner-loader').addClass('hide');
                         alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al lunes y martes de la semana de corte", "warning");      
@@ -311,7 +272,6 @@ async function crearTabla(idTabla,data2,estatus){
                                     datosSumaPagos = data.data;
                                     llenarSumas();
                                     let datosPagos = getPagosComisiones(idProyecto,idCondominio,1);
-                                    console.log(datosPagos);
                                         crearTabla(datosTbActual[0].id,datosPagos,estatus);
                                     alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Resguardo.", "success");
 
@@ -434,41 +394,11 @@ async function crearTabla(idTabla,data2,estatus){
         },
         {
             "data": function(d) {
-                // revisar el uso de las siguientes dos lineas
-                        // let td = d.estatus == 1 ? `<br><span class="label ${d.forma_pago.split('/')[2]}">${d.forma_pago.split('/')[3]}  ${d.estatus_actual}</span></p>` : ``;
-                        // return `<p class="m-0"><span class="label ${d.forma_pago.split('/')[0]}">${d.forma_pago.split('/')[1]}</span>` + td;
-
-                        // switch (d.forma_pago) {
-                        //     case '1': 
-                        //     case 1:
-                        //         return `<p class="m-0"><span class="label lbl-gray">SIN DEFINIR FORMA DE PAGO</span><br><span class="label lbl-yellow">REVISAR CON RH  ${d.estatus_actual}</span></p>`;
-                        //     break;
-        
-                        //     case '2': 
-                        //     case 2: 
-                        //         return `<p class="m-0"><span class="label lbl-sky">FACTURA</span></p><p style="font-size: .5em"><span class="label lbl-melon" >SUBIR XML  ${d.estatus_actual}</span></p>`;
-                        //     break;
-        
-                        //     case '3':
-                        //     case 3: 
-                        //         return `<p class="m-0"><span class="label lbl-blueMaderas">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-oceanGreen">LISTA PARA APROBAR  ${d.estatus_actual}</span></p>`;
-                        //     break;
-        
-                        //     case '4': 
-                        //     case 4:
-                        //         return `<p class="m-0"><span class="label lbl-violetBoots">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-oceanGreen">LISTA PARA APROBAR  ${d.estatus_actual}</span></p>`;
-                        //     break;
-        
-                        //     default:
-                        //         return `<p class="m-0"><span class="label lbl-gray">DOCUMENTACIÓN FALTANTE</span><br><span class="label lbl-yellow">REVISAR CON RH  ${d.estatus_actual}</span></p>`;
-                        //     break;
-                        // }
-
-                        let valores = d.texto.split('/');
-                        var color = valores[0];
-                        var texto = valores[1];
-                        
-                     return `<p class="m-0"><span class="label lbl-${d.color}">${d.pj_name}</span><br><span class="label lbl-${color}">${texto}  ${d.estatus_actual}</span></p>`;
+                let valores = d.texto.split('/');
+                var color = valores[0];
+                var texto = valores[1];
+                
+                return `<p class="m-0"><span class="label lbl-${d.color}">${d.pj_name}</span><br><span class="label lbl-${color}">${texto}  ${d.estatus_actual}</span></p>`;
 
             }
         },
@@ -512,23 +442,8 @@ async function crearTabla(idTabla,data2,estatus){
             },
         }],
         initComplete: function () {
-            // console.log(tabla_nuevas.row());
-
-
-			//$('#spiner-loader').addClass('hide'); 
             if(estatus == 1){
-
                 tabla_nuevas = $(`#${idTabla}`).DataTable();
-            //    $(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr) {
-            //     alert()
-            //     var total = 0;
-            //     $.each(json, function (i, v) {
-            //         total += parseFloat(v.impuesto);
-            //     });
-            //     var to = formatMoney(total);
-            //     document.getElementById(`${datosTbActual[0].idTitle}`).textContent = to;
-            // });
-
             }else if(estatus == 4){
                 tabla_revision = $(`#${idTabla}`).DataTable();
             }else if(estatus == 3){
@@ -538,18 +453,6 @@ async function crearTabla(idTabla,data2,estatus){
             }else if(estatus == 6){
                 tabla_pausadas = $(`#${idTabla}`).DataTable();
             }    
-
-       
-            // $(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr) {
-            //     alert()
-            //     var total = 0;
-            //     $.each(json, function (i, v) {
-            //         total += parseFloat(v.impuesto);
-            //     });
-            //     var to = formatMoney(total);
-            //     document.getElementById(`${datosTbActual[0].idTitle}`).textContent = to;
-            // });
-
             
 		},fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
             
@@ -576,7 +479,6 @@ async function crearTabla(idTabla,data2,estatus){
     $(`#${idTabla}`).on('click', 'input', function () { //PAGOS SELECCIONADOS
         tr = $(this).closest('tr');
         var row = tabla_nuevas.row(tr).data();
-        // console.log(row)
             if($(`#${row.id_pago_i}`).is(':checked')){
                 tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
                 totalPen += parseFloat(row.impuesto);
@@ -635,10 +537,12 @@ $(document).on("click", ".individualCheck", function() {
     });
     $("#total_solicitar").html(formatMoney(totaPen));
 });
-function saveX() {
+
+function saveX(){
     document.getElementById('btng').disabled=true;
     guardar2();
 }
+
 function guardar2() {
     var formData = new FormData(document.getElementById("frmnewsol2"));
     formData.append("dato", "valor");
@@ -675,12 +579,14 @@ function guardar2() {
                 alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
             }
         },
+
         error: function() {
             document.getElementById('btng').disabled=false;
             alert("ERROR EN EL SISTEMA");
         }
     });
 }
+
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -695,6 +601,7 @@ function selectAll(e) {
         }); 
         $("#total_solicitar").html(formatMoney(tota2));
     }
+
     if(e.checked == false){
         $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
@@ -704,6 +611,7 @@ function selectAll(e) {
         $("#total_solicitar").html(formatMoney(0));
     }
 }
+
 function todos(){
     if($(".checkdata1:checked").length == 0){
         $(".checkdata1").prop("checked", true);
@@ -719,38 +627,40 @@ function todos(){
         sumCheck();
     }
 }
+
 $(document).on("click", ".subir_factura_multiple", function() {  
     alert();
     var hoy = new Date();
     var dia = hoy.getDate();
     var mes = hoy.getMonth()+1;
     var hora = hoy.getHours();    
-        if( ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
-            ||  (mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION VENTAS NORMAL
-            || (id_usuario_general == 7689)
-            ) {
-            $("#modal_multiples .modal-body").html("");
-            $("#modal_multiples .modal-header").html("");
-            $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12 text-right"><button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size:40px;">&times;</span></button></div><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
-            $.post('getDesarrolloSelect', function(data) {
-                c = 0;
-                if(data == 3){
-                    $("#desarrolloSelect").append('<option selected="selected" disabled>ESTÁS FUERA DE TIEMPO</option>');
+    if( ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+        ||  (mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION VENTAS NORMAL
+        || (id_usuario_general == 7689)
+        ) {
+        $("#modal_multiples .modal-body").html("");
+        $("#modal_multiples .modal-header").html("");
+        $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12 text-right"><button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size:40px;">&times;</span></button></div><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
+        $.post('getDesarrolloSelect', function(data) {
+            c = 0;
+            if(data == 3){
+                $("#desarrolloSelect").append('<option selected="selected" disabled>ESTÁS FUERA DE TIEMPO</option>');
+            }
+            else{
+                $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"))
+                var len = data.length;
+                for (var i = 0; i < len; i++) {
+                    var id = data[i]['id_usuario'];
+                    var name = data[i]['name_user'];
+                    $("#desarrolloSelect").append($('<option>').val(id).attr('data-value', id).text(name));
                 }
-                else{
-                    $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"))
-                    var len = data.length;
-                    for (var i = 0; i < len; i++) {
-                        var id = data[i]['id_usuario'];
-                        var name = data[i]['name_user'];
-                        $("#desarrolloSelect").append($('<option>').val(id).attr('data-value', id).text(name));
-                    }
-                    if (len <= 0) {
-                        $("#desarrolloSelect").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
-                    }
-                    $("#desarrolloSelect").val(0);
-                    $("#desarrolloSelect").selectpicker('refresh');
-                }}, 'json');
+                if (len <= 0) {
+                    $("#desarrolloSelect").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                }
+                $("#desarrolloSelect").val(0);
+                $("#desarrolloSelect").selectpicker('refresh');
+            }}, 'json');
+
         $('#desarrolloSelect').change(function() {
             c=0;    
             var valorSeleccionado = $(this).val();
