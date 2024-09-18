@@ -1874,6 +1874,7 @@ class CasasModel extends CI_Model
         SELECT 
         hpc.idHistorial, 
         hpc.procesoAnterior AS idAnterior,
+        hpc.fechaMovimiento,
         CASE WHEN hpc.descripcion LIKE '%Pre proceso %' THEN oxc4.nombre ELSE oxc2.nombre END AS procesoAnterior, 
         CASE WHEN hpc.descripcion LIKE '%Pre proceso %' THEN oxc5.nombre ELSE oxc3.nombre END AS procesoNuevo,
         --CASE WHEN hpc.descripcion LIKE '%Pre proceso%' THEN LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END)) ELSE CONCAT(oxc2.nombre, CASE WHEN oxc3.nombre IS NOT NULL THEN CONCAT(' -> ', oxc3.nombre)ELSE '' END)END AS descripcionFinal,
