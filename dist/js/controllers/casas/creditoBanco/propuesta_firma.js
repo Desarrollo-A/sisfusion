@@ -53,7 +53,7 @@ rechazar_proceso = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `creditoBancoAvance`,
+                url: `rechazoPaso8`,
                 data: data,
                 contentType: false,
                 processData: false,

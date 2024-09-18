@@ -86,9 +86,10 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'nombreGerente' },
     { data: function (data) {
+        console.log(data.tipoProveedor)
         if(data.tipoProveedor == 1){
             return 'Persona moral'
-        }else if(data.tipoProveedor == 1){
+        }else if(data.tipoProveedor == 2){
             return 'Persona física'
         }else{
             return 'No seleccionado'

@@ -39,6 +39,20 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
+    public function getPasos($idProceso, $bandera){
+
+        $query = "SELECT TOP 1 fj.pasoActual, fj.ultimoPaso, fj.avance, oxc.nombre AS tipoMovimiento 
+        FROM proceso_casas_banco pc
+        INNER JOIN historial_proceso_casas hpc ON hpc.idProcesoCasas = pc.idProcesoCasas
+        INNER JOIN flujo_proceso_casas_banco fj ON fj.pasoActual = hpc.procesoNuevo AND fj.ultimoPaso = hpc.procesoAnterior AND fj.tipoPaso = $bandera
+        INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = fj.tipoMovimiento 
+        WHERE pc.idProcesoCasas = $idProceso
+        ORDER BY hpc.idHistorial DESC;
+        ";
+
+        return $this->db->query($query)->row();
+    }
+
     public function updateNotaria($id_opcion, $estatus){
         $query = "UPDATE opcs_x_cats
         SET
