@@ -106,7 +106,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
             return d.Comision_total ? `${parseFloat(d.Comision_total)}%`: 'SIN ESPECIFICAR';
         }},
         { data: function (d) {
-            return formatMoney(d.Comisiones_Pagadas);
+            return formatMoney(d.abonadoAnterior);
         }},
         { data: function (d) {
             return formatMoney(d.Comisiones_pendientes);
@@ -415,7 +415,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                        
 
                                         <div class="col-md-3 p-0">
-                                            <h5>Precio Lote: <b>${formatMoney(totalNeto2)}</b></h5>
+                                            <h5>Costo construcción: <b>${formatMoney(totalNeto2)}</b></h5>
                                         </div>
 
                                         <div class="col-md-3 p-0">
@@ -682,7 +682,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                             saldo = 0;
                                         }
                                         $("#modal_NEODATA_Casas .modal-body").append(`<div class="row">
-                                        <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="${disparador}"><input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}"><input type="hidden" name="idCliente" id="idCliente" value="${idCliente}"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
+                                        <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="0"><input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}"><input type="hidden" name="idCliente" id="idCliente" value="${idCliente}"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
                                         <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="bandera" id="bandera" value="0"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
                                         <input id="id_comision" type="hidden" name="id_comision[]" value="${v.id_comision}"><input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.rol_generado}">
                                         <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
