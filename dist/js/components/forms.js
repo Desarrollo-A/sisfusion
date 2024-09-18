@@ -1046,40 +1046,73 @@ class title {
 }
 
 class TimeLine {
-    constructor({ title, back = '', next = '', description, date, previousText = '', newText = '' }) {
-        this.field = $('<li />')
-            .append(
-                $('<div />')
-                    .addClass('container-fluid')
-                    .append(
-                        $('<div />')
-                            .addClass('row')
-                            .append(
-                                $('<div />')
-                                    .addClass('col-xs-12 col-sm-6 col-md-6 col-lg-6')
-                                    .append(
-                                        $('<a />')
-                                            .append(
-                                                $('<b />')
-                                                    .addClass('m-0')
-                                                    .text(title)
-                                            )
-                                    )
-                            )
-                            .append(
-                                $('<div />')
-                                    .addClass('float-end text-right')
-                                    .append(
-                                        $('<a />')
-                                            .addClass('m-0')
-                                            .text(date)
-                                    )
-                            )
-                    )
-            );
+    
 
-        if (back) {
-            this.field
+constructor({ title, back = '', next = '', description, date, processText = '' }) {
+
+{/* <li>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <a><b>  dsdsds  </b></a><br>
+            </div>
+            <div class="float-end text-right">
+                <a> ddsdsds </a>
+            </div>
+            <div class="col-md-12">
+                <p class="m-0"><small>Estatus: </small><b>  xcxcx </b></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <p class="m-0"><small>Comentario: </small><b>  dsdsds </b></p>
+    </div>
+</li> */}
+
+    this.field = $('<li /><div />')
+        .addClass('container-fluid')
+        .append(
+            $('<div />')
+                .addClass('row')
+                .append(
+                    $('<div />')
+                        .addClass('col-xs-12 col-sm-6 col-md-6 col-lg-6')
+                        .append(
+                            $('<a />')
+                                .append(
+                                    $('<b />')
+                                        .addClass('m-0')
+                                        .text(title)
+                                )
+                        )
+                )
+                .append(
+                    $('<div />')
+                        .addClass('float-end text-right')
+                        .append(
+
+                            $('<a />')
+                                .addClass('m-0')
+                                .text(date)
+                        )
+                )
+                .append(
+                    $('<div />')
+                    
+                        .addClass('col-md-12')
+                        .append(
+                            $('<p />')
+                                .addClass('m-0')
+                                .append(
+                                    $('<small />')
+                                        .text(back != '' ? 'Proceso anterior: ' : '')
+                                        .append(
+                                            $('<b />')
+                                                .text(back != '' ? back : '')
+                                        )
+                                )
+                        )
+                )
                 .append(
                     $('<div />')
                         .addClass('col-md-12')
@@ -1088,56 +1121,38 @@ class TimeLine {
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Proceso anterior: ')
+                                        .text(processText == ''? 'Proceso nuevo: ' : processText)
                                         .append(
                                             $('<b />')
-                                                .text(back)
+                                                .text(next)
                                         )
                                 )
                         )
-                );
-        }
-
-        this.field
-            .append(
-                $('<div />')
-                    .addClass('col-md-12')
-                    .append(
-                        $('<p />')
-                            .addClass('m-0')
-                            .append(
-                                $('<small />')
-                                    .text(newText == '' ? 'Proceso nuevo: ' : newText)
-                                    .append(
-                                        $('<b />')
-                                            .text(next)
-                                    )
-                            )
-                    )
-            );
-
-        this.field
-            .append(
-                $('<div />')
-                    .addClass('col-md-12')
-                    .append(
-                        $('<p />')
-                            .addClass('m-0')
-                            .append(
-                                $('<small />')
-                                    .text('Descripción: ')
-                                    .append(
-                                        $('<b />')
-                                            .text(description)
-                                    )
-                            )
-                    )
-            );
-    }
+                )
+                .append(
+                    $('<div />')
+                        .addClass('col-md-12')
+                        .append(
+                            $('<p />')
+                                .addClass('m-0')
+                                .append(
+                                    $('<small />')
+                                        .text('Descripción: ')
+                                        .append(
+                                            $('<b />')
+                                                .text(description)
+                                        )
+                                )
+                        )
+                )
+        )
+        
+}
 
     toString() {
-        const ht = this.field;
-        return ht.prop('outerHTML');
+        const ht = this.field
+
+        return ht.prop('outerHTML')
     }
 }
 
