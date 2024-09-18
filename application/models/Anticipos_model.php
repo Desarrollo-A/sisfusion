@@ -23,7 +23,7 @@ class Anticipos_model extends CI_Model {
     
         $data = $this->db->query("SELECT fa.nombre_archivo AS factura,
         oxc.nombre AS esquema, se.nombre AS sede, us.forma_pago,  oxcPago.nombre AS formaNombre,
-        opcE.id_opcion as clave_empresa , opcE.nombre as nombre_empresa,
+        opcE.id_opcion as clave_empresa , opcE.nombre as nombre_empresa,ea.empresa ,
         se.id_sede AS idsede,
 		oxcPago.nombre AS formaNombre,
         fa.nombre_archivo AS factura_nombre,
@@ -63,8 +63,10 @@ class Anticipos_model extends CI_Model {
     }
 
     public function updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt){
+        
+        $cmd = "INSERT INTO historial_anticipo VALUES ($id_anticipo, $id_usuario, $procesoAnt, '$comentario', GETDATE())";
 
-        $query = $this->db->query("INSERT INTO historial_anticipo (id_anticipo, id_usuario, proceso, comentario) VALUES ($id_anticipo, $id_usuario, $procesoAnt, '$comentario')");
+        $query = $this->db->query($cmd);
         
         if ($query) {
             return 1;
@@ -115,8 +117,13 @@ class Anticipos_model extends CI_Model {
     }
 
     public function updateEstatusD($procesoAnt, $id_anticipo){
+        if($procesoAnt == 0)
+        {
+            $estatus = 0;
+        }else {
+            $estatus = ($procesoAnt == 7) ? 2 : 0;
 
-        $estatus = ($procesoAnt == 7) ? 2 : 0;
+        }
 
         $cmd = "UPDATE anticipo SET proceso=$procesoAnt, estatus=$estatus WHERE id_anticipo = $id_anticipo";
         $query = $this->db->query($cmd);
@@ -142,8 +149,6 @@ class Anticipos_model extends CI_Model {
     }
 
     public function updateMontoTotal($id_anticipo,$mensualidadParcialidad,$procesoAntInternomex){
-
-        var_dump($mensualidadParcialidad);
 
 
         $estatus = ($procesoAntInternomex == 0) ? 0 : 2;
@@ -198,9 +203,9 @@ class Anticipos_model extends CI_Model {
     public function addEmpresa($id_anticipo, $empresa){
         $cmd = "INSERT INTO empresa_anticipo VALUES($id_anticipo,$empresa)";
         $query = $this->db->query($cmd);
-
         return $this->db->affected_rows() > 0 ? 1 : 0;
     }
+
 
     public function inserPAGOS($tabla, $insert){
         $respuesta = $this->db->insert($tabla,$insert);
@@ -211,6 +216,8 @@ class Anticipos_model extends CI_Model {
                     return FALSE;
                 }  
     }
+
+
 
 
 
