@@ -298,31 +298,42 @@ function lineCredito(timeLine) {
     $("#historialActual").append(`${timeLine}`);
 }
 
-modalHistorialBanco = function (dt) {
+modalHistorialBanco =  function (dt) {
     let esquemaCredito = 1;
     $("#spiner-loader").removeClass('hide');
     $("#timeLineModal").modal();
-    $("#historialActual").html("");
+    $("#historialActual").html();
 
     $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}/${dt.idLote}`).done(function (data) {
-        console.log("data: ", JSON.parse(data));
-        if (JSON.parse(data).length > 0) {
-            $.each(JSON.parse(data), function (i, v) {
-                $("#spiner-loader").addClass('hide');
-                let timeLine = new TimeLine({
-                    title: v.nombreUsuario,
-                    back: v.procesoAnterior,
-                    next: v.procesoNuevo,
-                    description: v.descripcionFinal,
-                    date: v.fechaMovimiento,
-                    processText: 'Proceso actual: '
-                });
-                lineCredito(timeLine);
-            });
-        }
-        else {
-            emptyLog();
+      if (JSON.parse(data).length > 0)   {
+        $.each(JSON.parse(data), function(i, v) {
             $("#spiner-loader").addClass('hide');
-        }
+            let backProcess = '';
+            let previousText = '';
+            let newText = '';
+            let nextProcess = v.procesoNuevo;
+
+            if (v.cambioStatus == 0) {
+                backProcess = v.procesoAnterior;
+            }
+            else {
+                newText = 'Proceso actual: ';
+            }
+
+            let timeLine = new TimeLine({
+                title : v.nombreUsuario,
+                back : backProcess, 
+                next : nextProcess,
+                description : v.descripcionFinal,
+                date : v.fechaMovimiento,
+                previousText : previousText,
+                newText : newText
+            });
+            lineCredito(timeLine);
+        });
+      } else {
+        emptyLog();
+        $("#spiner-loader").addClass('hide');
+      }
     });
 }
