@@ -1098,16 +1098,17 @@ constructor({ title, back = '', next = '', description, date, processText = '' }
                 )
                 .append(
                     $('<div />')
+                    
                         .addClass('col-md-12')
                         .append(
                             $('<p />')
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Proceso anterior: ')
+                                        .text(back != '' ? 'Proceso anterior: ' : '')
                                         .append(
                                             $('<b />')
-                                                .text(back)
+                                                .text(back != '' ? back : '')
                                         )
                                 )
                         )
