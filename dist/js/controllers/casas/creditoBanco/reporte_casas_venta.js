@@ -240,16 +240,34 @@ modalHistorialBanco = function (dt) {
     $("#historialActual").html("");
 
     $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}/${dt.idLote}`).done(function (data) {
-
         if (JSON.parse(data).length > 0) {
             $.each(JSON.parse(data), function (i, v) {
                 $("#spiner-loader").addClass('hide');
+                let backProcess = '';
+                let previousText = '';
+                let newText = '';
+                let nextProcess = v.procesoNuevo;
+                
+                if(v.cambioStatus == 0 && v.idAnterior != 19) {
+                    backProcess = v.procesoAnterior;
+                }
+                else if (v.idAnterior == 19) {
+                    backProcess = '';
+                    newText = 'Proceso actual: ';
+                    nextProcess = v.procesoAnterior;
+                }
+                else {
+                    newText = 'Proceso actual: ';
+                }
+
                 let timeLine = new TimeLine({
-                    title: v.nombreUsuario,
-                    back: v.procesoAnterior,
-                    next: v.procesoNuevo,
+                    title: v.nombreUsuario, 
+                    back: backProcess,
+                    next: nextProcess,
                     description: v.descripcionFinal,
-                    date: v.fechaMovimiento
+                    date: v.fechaMovimiento,
+                    previousText: previousText,
+                    newText: newText
                 });
                 lineCredito(timeLine);
             });
