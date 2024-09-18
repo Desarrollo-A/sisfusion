@@ -2,7 +2,6 @@ const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
 $('#ano_historial').change(function(){
 
-
 proyecto =  $('#catalogo_historial').val();
 
 if(proyecto == ''){
@@ -31,20 +30,14 @@ if(proyecto == ''){
     $('#tabla_historialGral').removeClass('hide');
     
         if (condominio == '' || condominio == null || condominio == undefined) {
-        condominio = 0;
-    }
+            condominio = 0;
+        }
 
         if (tabla_historialGral2) {
-        tabla_historialGral2.destroy();
+            tabla_historialGral2.destroy();
+        }
+        getAssimilatedCommissions(proyecto, condominio);
     }
-    getAssimilatedCommissions(proyecto, condominio);
-
-
-}
-
-    
-
-
 });
 
 
@@ -56,16 +49,16 @@ $('#catalogo_historial').change(function(){
     if (catalogoSeleccionado && tipoSeleccionado) {
         proyecto = $('#ano_historial').val();
         condominio = $('#catalogo_historial').val();
-    $('#tabla_historialGral').removeClass('hide');
+        $('#tabla_historialGral').removeClass('hide');
     
         if (condominio == '' || condominio == null || condominio == undefined) {
-        condominio = 0;
-    }
+            condominio = 0;
+        }
     
         if (tabla_historialGral2) {
-        tabla_historialGral2.destroy();
-    }
-    getAssimilatedCommissions(proyecto, condominio);
+            tabla_historialGral2.destroy();
+        }
+     getAssimilatedCommissions(proyecto, condominio);
 
     }
 });
@@ -80,25 +73,6 @@ var totalCancun = 0;
 var tr;
 var tabla_historialGral2 ; 
 var totaPen = 0;
-
-// function modalHistorial(){
-//     changeSizeModal("modal-md");
-//     appendBodyModal(`<div class="modal-header"></div>
-//         <div class="modal-body">
-//             <div role="tabpanel">
-//                 <h6 id="nameLote"></h6>
-//                 <div class="container-fluid" id="changelogTab">
-//                     <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-//                         <ul class="timeline-3" id="comments-list-asimilados"></ul>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//         <div class="modal-footer">
-//             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
-//         </div>`);
-//     showModal();
-// }
 
 function getAssimilatedCommissions(proyecto, condominio){
 
@@ -217,18 +191,6 @@ function getAssimilatedCommissions(proyecto, condominio){
                 return etiqueta + descuento;
             }
         }
-        // ,
-        // { 
-        //     "orderable": false,
-        //     "data": function( data ){
-        //         var BtnStats = '';
-        //         const BTN_DETASI = `<button href="#" value="${data.id_pago_bono}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
-                
-        //          BtnStats += BTN_DETASI;
- 
-        //         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-        //     }
-        // }
     ],
     columnDefs: [{
         "orderable": false,
@@ -258,25 +220,6 @@ function asignarValorColumnasDT(nombre_datatable) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
 }
-
-// $(document).on('click', '.consultarDetalleDelPago', function(e) {
-//     $("#comments-list-asimilados").html('');
-//     $("#nameLote").html('');
-//     $('#spiner-loader').removeClass('hide');
-//     e.preventDefault();
-//     e.stopImmediatePropagation();
-//     id_pago = $(this).val();
-//     lote = $(this).attr("data-value");
-//     modalHistorial();
-//     $("#nameLote").append(`<p><h5>HISTORIAL DEL PAGO DE: <b>${lote}</b></h5></p>`);
-//     $.getJSON(general_base_url+ 'Casas_comisiones/getComments/'+id_pago).done( function( data ){
-//         $.each( data, function(i, v){
-//             $("#comments-list-asimilados").append(`<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Usuario: </small><b>${v.nombre_usuario}</b></a><br></div><div class="float-end text-right"><a>${v.fecha_movimiento}</a></div><div class="col-md-12"><p class="m-0"><small>Comentario: </small><b>${v.comentario}</b></p></div><h6></h6></div></div></li>`);
-//             $('#spiner-loader').addClass('hide');
-//         });
-//     });
-// });
-
 
 
 

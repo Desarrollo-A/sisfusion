@@ -26,7 +26,7 @@ $("#historial_general").ready(function () {
                 columns: [0,1, 2, 3, 4, 5, 7, 8, 9,10,11],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx - 1] + ' ';
+                        return ' ' + titulosInventario[columnIdx] + ' ';
                     }
                 }
             }

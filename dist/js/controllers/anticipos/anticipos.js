@@ -117,7 +117,9 @@ $("#tabla_anticipos").ready(function () {
         
             // { data: 'nombre_empresa' },
             {    data: function( d ){
-                var mostrar = d.nombre_empresa == null ? 'SELECIONA LA EMPRESA' : d.nombre_empresa;
+
+                
+                var mostrar = d.nombre_empresa == null ?  (d.empresa ==  100 ? 'NO APLICA' :'SELECIONA LA EMPRESA')     : d.nombre_empresa;
                 return '<p class="m-0">'+mostrar+'</p>';
             } },
 
@@ -131,13 +133,13 @@ $("#tabla_anticipos").ready(function () {
             } },
             {   
                 data: function( d ){
-                var total_impuesto_monto = d.forma_pago == 2 ?  0 :  (d.idsede == 6 ) ? (d.monto*0.04) : (d.monto*0.03) ;    
+                var total_impuesto_monto = d.forma_pago == 2 ?  0 :   d.forma_pago == 4  ?  0:  ((d.idsede == 6 ) ? (d.monto*0.04) : (d.monto*0.03)) ;    
                 return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
             } 
             },
 
             {  data: function( d ){
-                var total_impuesto = d.forma_pago == 2 ?  0 :  (d.idsede == 6 ) ? 4 : 3;
+                var total_impuesto = d.forma_pago == 2 ?  0 :  d.forma_pago == 4  ?  0 :   (d.idsede == 6 ) ? 4 : 3;
                 return '<p class="m-0">'+total_impuesto+'%</p>';
                 } 
             },
@@ -175,7 +177,7 @@ $("#tabla_anticipos").ready(function () {
                     }
 
 
-                    if (d.nombre_empresa == null) {
+                    if (d.nombre_empresa == null && d.empresa != 100) { 
                         botonesModal += `
                             <button href="#" id="empresasAgregar" name="empresasAgregar" 
                             data-anticipo="${d.id_anticipo}"  data-usuario="${d.id_usuario}"
@@ -198,7 +200,7 @@ $("#tabla_anticipos").ready(function () {
                                     <i class="fas fa-history"></i>
                                 </button>
                             </center>`;
-                    } else if( d.nombre_empresa != null)  {
+                    } else if( d.nombre_empresa != null || d.empresa == 100)  {
                         botonesModal += `
                             <center>
                                 <button class="btn-data btn-blueMaderas continuarParcialidad" data-monto="${d.monto}"
@@ -298,11 +300,13 @@ $("#tabla_anticipos").ready(function () {
         $.post(general_base_url + "/Anticipos/datosCatalogos", function (data) {
             // console.log(data);
             var len = data.length;
+            $("#empresaParcia").append($('<option>').val(100).text('No Aplica')); 
             for (var i = 0; i < len; i++) {
                 var id = data[i]['id_opcion'];
                 var name = data[i]['nombre'];
                 $("#empresaParcia").append($('<option>').val(id).text(name));     
             }
+            
             $("#empresaParcia").selectpicker('refresh');
         }, 'json');
         // mostrarOcultarCampos(proceso);

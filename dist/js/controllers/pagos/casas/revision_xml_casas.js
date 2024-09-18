@@ -152,7 +152,6 @@ function getDataXML_casas(proyecto){
                 let btnpausar = '';
                 if(data.estatus_opinion == 1 || data.estatus_opinion == 2){
                     BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-warning verPDF" data-toggle="tooltip" data-placement="top" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="material-icons">description</i></a>';
-                    // btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresar" data-placement="top" data-toggle="tooltip" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
                 }
                 else{
                     BtnStats = '<button value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="Detalles">' +'<i class="fas fa-info"></i></button>';
@@ -218,9 +217,6 @@ function getDataXML_casas(proyecto){
                 tr.addClass('shown');
                 $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
 
-                // tr.addClass('shown');
-                // $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
-                // row.child.hide()
             }
         }
     });
@@ -502,7 +498,6 @@ function subir_xml(input,id_user) {
                 input.val('');
                 alerts.showNotification("top", "right", data.respuesta[1], "success");
 
-                // alert(data.respuesta[1]);
             }
         },
         error: function(data) {
