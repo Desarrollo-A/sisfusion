@@ -848,7 +848,7 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            $documentos = $this->CasasModel->getDocumentos([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 23, 27, 38]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
@@ -3343,6 +3343,25 @@ class Casas extends BaseController
             }
         }
 
+        if ($procesoNuevo == 3) {
+
+            $vobo = $this->CasasModel->getVobos($idProceso, 2);
+
+            $updateData = array(
+                "proyectos"  => 0,
+                "adm" => 0,
+                "ooam" => 0,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if (!$update) {
+                http_response_code(400);
+            }
+        }
+
         $this->db->trans_begin();
 
         $updateData = array(
@@ -4055,6 +4074,70 @@ class Casas extends BaseController
 
         $this->output->set_content_type("application/json");
         $this->output->set_output(json_encode($response));
+    }
+
+    public function rechazoPaso5()
+    {
+        $form = $this->form();
+
+        $idProceso = $form->idProcesoCasas;
+        $proceso = $form->proceso;
+        $procesoNuevo = $form->procesoNuevo;
+        $comentario = $form->comentario;
+
+        $updateData = array(
+            "comentario"        => $comentario,
+            "proceso"           => $procesoNuevo,
+            "cierreContraloria" => 0,
+            "saldoAdmon" => 0,
+            "saldoOOAM" => 0,
+            "saldoGPH" => 0,
+            "saldoPV" => 0,
+            "fechaProceso"      => date("Y-m-d H:i:s"),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "tipoMovimiento"    => 1
+        );
+
+        $dataHistorial = array(
+            "idProcesoCasas"  => $idProceso,
+            "procesoAnterior" => $proceso,
+            "procesoNuevo"    => $procesoNuevo,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
+            "descripcion"     => $comentario,
+            "esquemaCreditoProceso" => 1
+        );
+
+        $this->db->trans_begin();
+
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
+
+        if ($update) {
+
+            $vobo = $this->CasasModel->getVobos($idProceso, 4);
+
+            $updateData = array(
+                "proyectos"  => 0,
+                "comercializacion" => 0,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+
+            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+
+            if (!$update) {
+                http_response_code(400);
+            }
+
+            $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+
+            if (!$addHistorial) {
+                http_response_code(400);
+            }
+        } else {
+            http_response_code(400);
+        }
     }
 
     public function rechazoPaso6()

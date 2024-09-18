@@ -132,27 +132,21 @@ $(document).on("submit", "#cpForm", function (e) {
 
 $(document).ready(function () {
     
-        $.ajax({
-            url: general_base_url + 'Casas_comisiones/getFechaCorteActual',
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'GET',
-            success: function (response) {
-                const data = JSON.parse(response);
-                datosFechaCorte = data.fechasCorte;
-                fechaInicioCorteGlobal = data.fechasCorte[0].fechaInicio.split(' ')[0].split('-');
-                fechaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[0].split('-');
-                //[0] hora [1] minutos [2] segundos
-                horaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[1].split(':');
-
-                console.log(fechaInicioCorteGlobal);
-                console.log(fechaFinCorteGlobal);
-                console.log(horaFinCorteGlobal);
-                console.log(datosFechaCorte);
-            },
-            async:false
-        });
+    $.ajax({
+        url: general_base_url + 'Casas_comisiones/getFechaCorteActual',
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'GET',
+        success: function (response) {
+            const data = JSON.parse(response);
+            datosFechaCorte = data.fechasCorte;
+            fechaInicioCorteGlobal = data.fechasCorte[0].fechaInicio.split(' ')[0].split('-');
+            fechaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[0].split('-');
+            horaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[1].split(':')
+        },
+        async:false
+    });
 
         // Queda pendiente para cambiar el controlador
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
@@ -164,6 +158,7 @@ $(document).ready(function () {
         }
         $("#proyecto_wp").selectpicker('refresh');
     }, 'json');
+
     var hoy = new Date(fechaServer);
     var dia = hoy.getDate();
     var mes = hoy.getMonth() + 1;
@@ -185,7 +180,6 @@ $('#proyecto_wp').change(function () {
     index_condominio = 0
     $("#condominio_wp").html("");
     $(document).ready(function () {
-        // Queda pendiente para cambiar el controlador
         $.post(general_base_url + "Contratacion/lista_condominio/" + index_proyecto, function (data) {
             var len = data.length;
             $("#condominio_wp").append($('<option disabled selected>Selecciona una opción</option>'));
@@ -592,7 +586,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2]) || (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
                             || (id_usuario_general == 7689)
                         ) {
-                            console.log(full.forma_pago);
 
                         switch (full.forma_pago) {
                             case '1': //SIN DEFINIR
@@ -654,10 +647,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         document.getElementById("exceMonto").innerHTML = '';
         document.getElementById("ExcedenteDinero").innerHTML = '';
         document.getElementById("porciento1").innerHTML = '';
-
-        // id_pago = $(this).val();
         idLote = $(this).attr("data-idLote");
-        
         proceso = $(this).attr("data-proceso");
         $("#modalExcedente").modal();
         var origenes = ``;
@@ -678,7 +668,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     v.destino == 0 ? origenes += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen} ) </div>` : ``;
                     v.destino == 1 ? destino += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen}) </div>` :  `` ;
     
-                    // v.destino == 0 ?  : ``;
                 });
                 document.getElementById("origenes").innerHTML = origenes;
                 document.getElementById("destino").innerHTML = destino;
@@ -717,23 +706,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
     });
 
     // fin de aqui empezamos con la nueva forma
-
-
-    
-    // $('#tabla_nuevas_comisiones').on('click', 'input', function () {
-    //     tr = $(this).closest('tr');
-    //     var row = tabla_nuevas.row(tr).data();
-    //     if (row.pa == 0) {
-    //         row.pa = row.impuesto;
-    //         totaPen += parseFloat(row.pa);
-    //         tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-    //     }
-    //     else {
-    //         totaPen -= parseFloat(row.pa);
-    //         row.pa = 0;
-    //     }
-    //     $("#totpagarPen").html(formatMoney(totaPen));
-    // });
 
     $('#tabla_nuevas_comisiones').on("click", "input", function() {
         totaPen = 0;
