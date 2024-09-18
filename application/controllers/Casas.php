@@ -815,6 +815,7 @@ class Casas extends BaseController
         $adm = $this->form('adm');
         $ooam = $this->form('ooam');
 
+
         if (!isset($id) || !isset($tipo)) {
             http_response_code(400);
             $this->json([]);
@@ -850,8 +851,9 @@ class Casas extends BaseController
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-            $documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
+            //$documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
 
+            $documentos = $this->CasasModel->getDocumentos([13, 14, 15, 27, 36]);
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
                 $is_ok = $this->CasasModel->inserDocumentsToProceso($proceso->idProcesoCasas, $documento->tipo, $documento->nombre);

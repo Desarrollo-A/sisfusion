@@ -546,7 +546,7 @@ class CasasModel extends CI_Model
         oxc.nombre AS movimiento,
         doc.documentos, 
         CASE WHEN se.id_lote = lo.idLote THEN 0 ELSE 1 END AS cargaRequerida,
-        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus, cli.escrituraFinalizada, $tableSeparator
+        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus, cli.escrituraFinalizada, cli.revisionEscrituracion,$tableSeparator
         FROM $tableName pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -2491,6 +2491,11 @@ AND vb.proyectos != 1";
             INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
         WHERE pc.idProcesoCasas = $idProceso";
 
+        return $this->db->query($query)->row();
+    }
+
+    public function checkDocument($idProceso) {
+        $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND tipo = 11";
         return $this->db->query($query)->row();
     }
 }

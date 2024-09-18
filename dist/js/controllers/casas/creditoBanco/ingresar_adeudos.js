@@ -294,68 +294,74 @@ go_to_documentos_directo = function(data) {
 
 
 let columns = [
-    { data: 'idLote' },
-    { data: 'nombreLote' },
-    { data: 'condominio' },
-    { data: 'proyecto' },
-    { data: 'cliente' },
-    { data: 'nombreAsesor' },
-    { data: 'gerente' },
-    { data: function(data){
-        if(idRol === 99 && data.adeudoOOAM != null){
-            return formatter.format(data.adeudoOOAM)
+    {data: 'idLote'},
+    {data: 'nombreLote'},
+    {data: 'condominio'},
+    {data: 'proyecto'},
+    {data: 'cliente'},
+    {data: 'nombreAsesor'},
+    {data: 'gerente'},
+    {data: function(data) {
+        if(idRol == 99 && data.adeudoOOAM != null) {
+            return formatter.format(data.adeudoOOAM);
         }
         else if((idRol === 33 || idRol === 11) && data.adeudoADM != null){
-            return formatter.format(data.adeudoADM)
+            return formatter.format(data.adeudoADM);
         }
-        return 'Sin ingresar'
-    } },
-    { data: function(data){
-        let inicio = new Date(data.fechaProceso)
-        let today = new Date()
-
-        let difference = today.getTime() - inicio.getTime()
-
-        let days = Math.floor(difference / (1000 * 3600 * 24))
-
-        let text = `Lleva ${days} día(s)`
-
-        return text
-    } },
-    { data: function (data) {
-        switch(data.tipoMovimiento){
-        case 1:
-            clase = 'warning'
-            break
-        case 2:
-            clase = 'orange'
-            break
-        default:
-            clase = 'blueMaderas'
+        return 'Sin ingresar';
+    }},
+    { data: function(data) {
+        let inicio = new Date(data.fechaProceso);
+        let today = new Date();
+        let difference = today.getTime() - inicio.getTime();
+        let days = Math.floor(difference / (1000 * 3600 *24));
+        let text = `LLeva ${days} dia(s)`;
+        return text;
+    }},
+    { data: function(data) {
+        switch(data.tipoMovimiento) {
+            case 1: 
+                clase: 'warning';
+                break;
+            case 2:
+                clase: 'orange';
+                break;
+            default:
+                clase = 'blueMaderas';
         }
-
         return `<span class="label lbl-${clase}">${data.movimiento}</span>`
-    } },
-    {data : function (data) {
-        if(data.id_estatus == null && data.escrituraFinalizada == 0) {
-            return `<span class="label lbl-warning">SIN ESTATUS</span>`;;
-        }
-        if(data.id_estatus == 49) {
+    }},
+    {data: function (data) {
+        //ESTATUS ESCRITURACIÓN
+        if(data.escrituraFinalizada == 1 || data.id_estatus == 49) {
+            //FINISHED
             return `<span class="label lbl-green">CONCLUIDO</span>`;
         }
-        if(data.id_estatus != 49 && (data.id_estatus != null || data.escrituraFinalizada == 1)) {
+        if(data.id_estatus != null && data.id_estatus != 49) {
+            if(data.revisionEscrituracion == null){
+                return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;
+            }
+            else {
+                return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
+            }
+            
+        }
+        if(data.id_estatus == null && data.escrituraFinalizada == 0 && data.revisionEscrituracion == null){
+            return `<span class="label lbl-warning">SIN ESTATUS</span>`;;
+        }
+        if(data.id_estatus == null || data.escrituraFinalizada == 0 && data.revisionEscrituracion == 1) {
             return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
         }
     }},
-    { data: function(data){
-        let adeudo_button = "";
-        let upload_button = "";
-        let pass_button = "";
-        let back_button = "";
+    {data: function(data) {
+        let adeudo_button = '';
+        let upload_button = '';
+        let pass_button = '';
+        let back_button = '';
         if(data.separator == 1) {
-            if(idRol == 11 || idRol == 33){
+            if(idRol == 11 || idRol == 33) {
                 adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
-                if(data.cargaRequerida == 1 && (idRol == 33) && (data.escrituraFinalizada != 1)) {
+                if(data.revisionEscrituracion == 1 && data.escrituraFinalizada != 1){
                     upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
                 }
             }
@@ -364,28 +370,31 @@ let columns = [
                 upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
             }
             back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_to_carta_auth, data});
+
             if(idRol === 99 && data.adeudoOOAM != null){
                 pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-            }else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0)){
+            } else if((idRol == 11 || idRol == 33) && data.adeudoADM != null) {
+                //FINISHED 100 %
+                if(data.escrituraFinalizada == 1 || data.id_estatus == 49){
+                    pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
+                }
+                if(data.cuentaDocumentos != 0 && data.revisionEscrituracion == 1) {
+                    pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
+                }
+            }
+            
+            
+            /*else if((idRol == 11 || idRol == 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0 || data.revisionEscrituracion != 0)) {
                 pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-            }
+            }*/
+            
+            /*else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0) && (data.revisionEscrituracion != 0)){
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
+            }*/
+           
         }
-        else if(data.separator == 2) {
-            if(idRol == 62) {
-                upload_button = new RowButton({icon : 'toc', label: 'Cargar documentos', onClick: go_to_documentos_directo, data});
-            }
-            if(idRol == 11) {
-                upload_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
-            }
-
-            if(idRol == 62) {
-
-            }
-        }
-
         return `<div class="d-flex justify-center">${pass_button}${upload_button}${adeudo_button}${back_button}</div>`;
-        
-    } },
+    }}
 ]
 
 let buttons = [

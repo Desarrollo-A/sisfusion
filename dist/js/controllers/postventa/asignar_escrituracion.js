@@ -51,8 +51,13 @@ let columns = [
     },
     { data: function(data) 
         {
-            let asignar_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Agregar Marca', onClick: btn_assign, data})
-            return `<div class="d-flex justify-center">${asignar_button}</div>`;
+            let vobo_button = '';
+            let asignar_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Agregar Marca', onClick: btn_assign, data});
+            
+            if(data.revisionEscrituracion == null) {
+                vobo_button = new RowButton({icon: 'check', color: 'green', label: 'Visto bueno', onClick: btn_vistoBueno, data});
+            }
+            return `<div class="d-flex justify-center">${asignar_button}${vobo_button}</div>`;
         }
     }
 ]
@@ -120,6 +125,38 @@ btn_assign = function (data) {
         fields: [
             new HiddenField({ id: 'idCliente', value: data.idCliente}),
             new HiddenField({ id: 'accion', value: 1})
+        ]
+    });
+    form.show();
+}
+
+btn_vistoBueno = function (data) {
+    let form = new Form({
+        title: 'Dar el visto bueno',
+        text: `¿Deseas dar el visto bueno para el lote: <b>${data.nombreLote}</b>?`,
+        onSubmit: function(dataForm) {
+            form.loading(false);
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}/postventa/asignarMarca`,
+                data: dataForm,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    alerts.showNotification("top", "right", "Se ha dado el visto bueno.", "success");
+                    table.reload(null, false);
+                    form.hide();
+                }, 
+                error: function (resp) {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    form.hide();
+                }
+            });
+        }, 
+        fields: [
+            new HiddenField({ id: 'idCliente', value: data.idCliente}),
+            new HiddenField({ id: 'accion', value: 2}),
+            new HiddenField({ id: 'idProceso', value: data.idProcesoCasas})
         ]
     });
     form.show();
