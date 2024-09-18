@@ -107,18 +107,8 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: function(data){
-        if(data.adeudoOOAM){
-            return formatter.format(data.adeudoOOAM)
-        }
-        return 'Sin ingresar'
-    } },
-    { data: function(data){
-        if(data.adeudoADM){
-            return formatter.format(data.adeudoADM)
-        }
-        return 'Sin ingresar'
-    } },
+    { data: 'adOOAM' },
+    { data: 'adADM'},
     {
         data: function (data) {
             let inicio = new Date(data.fechaProceso)
