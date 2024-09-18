@@ -1,38 +1,31 @@
-//$(document).ready(function () {
-//  dani le quite este pedazo de codigo 
 numerosDispersionCasas();
 
-    jQuery('#editReg').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario').val('');
-        jQuery(this).find('#totalNeto').val('');
-        jQuery(this).find('#totalNeto2').val('');
-    })
-    jQuery('#rechReg').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario3').val('');
-    })
-//});
-
-let titulos_intxtC = [];
-
+jQuery('#editReg').on('hidden.bs.modal', function (e) {
+    jQuery(this).removeData('bs.modal');
+    jQuery(this).find('#comentario').val('');
+    jQuery(this).find('#totalNeto').val('');
+    jQuery(this).find('#totalNeto2').val('');
+})
+jQuery('#rechReg').on('hidden.bs.modal', function (e) {
+    jQuery(this).removeData('bs.modal');
+    jQuery(this).find('#comentario3').val('');
+})
+let titulos_dispersion_casas = [];
 $('#tabla_dispersion_casas thead tr:eq(0) th').each(function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
-    titulos_intxtC.push(title);
-    if (i != 0 ) {
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_dispersion_casas').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_dispersion_casas').DataTable().column(i).search(this.value).draw();
-            }
-            var index = $('#tabla_dispersion_casas').DataTable().rows({
-            selected: true,
-            search: 'applied'
-            }).indexes();
-            var data = $('#tabla_dispersion_casas').DataTable().rows(index).data();
-        });
-    }
+    titulos_dispersion_casas.push(title);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tabla_dispersion_casas').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_dispersion_casas').DataTable().column(i).search(this.value).draw();
+        }
+        var index = $('#tabla_dispersion_casas').DataTable().rows({
+        selected: true,
+        search: 'applied'
+        }).indexes();
+        var data = $('#tabla_dispersion_casas').DataTable().rows(index).data();
+    });
 });
 tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -49,7 +42,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
             columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
             format: {
                 header: function (d, columnIdx) {
-                    return ' ' + titulos_intxtC[columnIdx] + ' ';
+                    return ' ' + titulos_dispersion_casas[columnIdx] + ' ';
                 }
             }
         }
@@ -71,10 +64,10 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
     ordering: false,
     columns: [
         {
-        className: 'details-control',
+        className: 'details-control ',
         orderable: false,
         data : null,
-        defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+        defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i></div>'
         },
         {data: 'nombreResidencial'},
         {data: 'nombreCondominio'},
@@ -197,9 +190,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
                         class = "btn-data ${varColor} verify_neodataCasas" data-prioridad="${d.prioridadComision}" data-toggle="tooltip"  data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                         
                         let colorPrioridad = d.prioridadComision == 1 ? 'btn-warning' : 'btn-blueMaderas' ;
-                        BtnStats += d.registroComisionCasas == 1 ? '' : `<button href="#" value="${d.idLote}" data-prioridad="${d.prioridadComision}" data-idCliente="${id_cliente}" data-nombreLote="${d.nombreLote}" class="btn-data ${colorPrioridad} btn-prioridad" data-toggle="tooltip"  data-placement="top" title="Prioridad"> <i class="material-icons">group</i></button>`;
-                        //BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
-                    
+                        BtnStats += d.registroComisionCasas == 1 ? '' : `<button href="#" value="${d.idLote}" data-prioridad="${d.prioridadComision}" data-idCliente="${id_cliente}" data-nombreLote="${d.nombreLote}" class="btn-data ${colorPrioridad} btn-prioridad" data-toggle="tooltip"  data-placement="top" title="Prioridad"> <i class="material-icons">group</i></button>`;                    
             
             return '<div class="d-flex justify-center">'+BtnStats+'</div>';
         }}
@@ -217,6 +208,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
     
 });
 
+
 $('#tabla_dispersion_casas').on('draw.dt', function() {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: "hover"
@@ -233,11 +225,14 @@ $("#tabla_dispersion_casas tbody").on("click", ".btn-prioridad", async function(
     let condicionFrase = prioridad == 1 ?  'cancelar' : 'cambiar';
 
     $("#modalPrioridad .modal-header").append(`
-        <h4 class="modal-title">
-            ¿Estas seguro ${condicionFrase} la priodad para el asesor y gerente de <b>${nombreLote}</b>?
-        </h4>
-        <input type="hidden" name="priridadActual" id="priridadActual">
-        <input type="hidden" name="idClienteCasas" id="idClienteCasas">`);
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <h4 class="modal-title">
+                ¿Estas seguro ${condicionFrase} la priodad para el asesor y gerente de <b>${nombreLote}</b>?
+            </h4>
+            <input type="hidden" name="priridadActual" id="priridadActual">
+            <input type="hidden" name="idClienteCasas" id="idClienteCasas">
+        </div>
+        `);
     $('#priridadActual').val(prioridad);
     $('#idClienteCasas').val(idCliente);
     $("#modalPrioridad").modal();
@@ -295,9 +290,7 @@ function operacionValidarFun(porcentajeAbonado,cuantosAsesores,cuantosCoor,id_ro
     if(porcentajeAbonado < 2){ //ATICIPO MENOR AL 1%
         let porcentajeRestante = 100;
             if([7,3].indexOf(parseInt(id_rol)) >= 0){
-                console.log('porcentaje restante'+porcentajeRestante);
                 nuevoPorcentaje = id_rol == 7 ? (8 * (((porcentajeRestante / 4) * 3)  / cuantosAsesores) /100): (8 *((porcentajeRestante / 4)  / cuantosCoor) /100);
-                console.log('nuevo porcentaje ' + nuevoPorcentaje)
             }else{
                 nuevoPorcentaje = 0;
             }
@@ -318,7 +311,6 @@ function operacionValidarFun(porcentajeAbonado,cuantosAsesores,cuantosCoor,id_ro
 $('#tabla_dispersion_casas tbody').on('click', 'td.details-control', function () {
     var tr = $(this).closest('tr');
     var row = $('#tabla_dispersion_casas').DataTable().row(tr);
-    console.log(row.data());
     if (row.child.isShown()) {
         row.child.hide();
         tr.removeClass('shown');
@@ -385,11 +377,6 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
         }else{
             aplicadoNeodata = abonadoCliente;
         }
-
-       // $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
-           // var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
-            
-           // if(data.length > 0){
                 switch (disparador) {
                     case 0:
                         $("#modal_NEODATA_Casas .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div></div>');
@@ -454,16 +441,13 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
 
                             if(total<(cincoporciento-1) && (disparador != 3)){
                             // *********Si el monto es menor al 5% se dispersará solo lo proporcional
-                            console.log('Si el monto es menor al 5% ');
                             $("#modal_NEODATA_Casas .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo menor al 5%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                 bandera_anticipo = 0;
                             }else if(total>=(ochoporciento) && (disparador != 3) ){
                             // *********Si el monto el igual o mayor a 8% se dispensará lo proporcional al 12.5% / se dispersa la mitad
-                            console.log('Si el monto el igual o mayor a 8% se dispensará lo proporcional al 12.5% ');
                                 $("#modal_NEODATA_Casas .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo mayor/igual al 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`); 
                                 bandera_anticipo = 1;
                             } else if(total>=(cincoporciento-1) && total<(ochoporciento) && (disparador != 3 ) ){
-                                console.log('Si el monto el igual o mayor a 5% y menor al 8% ');
                             // *********Si el monto el igual o mayor a 5% y menor al 8% se dispersará la 4° parte de la comisión
                                 $("#modal_NEODATA_Casas .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo entre 5% - 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                 bandera_anticipo = 2;
@@ -642,11 +626,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                                         <div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div>
                                     </div>
                                 `);
-                                /*if(parseFloat(data[0].Bonificado) > 0){
-                                    cadena = `<h4>Bonificación: <b style="color:#D84B16;">$${formatMoney(data[0].Bonificado)}</b></h4>`;
-                                }else{
-                                    cadena = `<h4>Bonificación: <b >${formatMoney(0)}</b></h4>`;
-                                }*/
+                                
                                 $("#modal_NEODATA_Casas .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(totalNeto2)}</b></h4></div>
                                 <div class="col-md-4"><h4>Aplicado: <b>${formatMoney(aplicadoNeodata)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                 </div><br>`);
@@ -742,12 +722,7 @@ $("#tabla_dispersion_casas tbody").on("click", ".verify_neodataCasas", async fun
                         $("#modal_NEODATA_Casas .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>Aviso.</b></h4><br><h5>Sistema en mantenimiento: .</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
                     break;
                 }
-           /* }
-            else{
-                //QUERY SIN RESULTADOS
-                $("#modal_NEODATA_Casas .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
-            }*/
-       // }); //FIN getStatusNeodata
+          
 
         $("#modal_NEODATA_Casas").modal();
     }else{
@@ -823,7 +798,10 @@ var maxWidth = window.matchMedia("(max-width: 992px)");
 responsive(maxWidth);
 maxWidth.addListener(responsive);
 
-
+$(window).resize(function(){
+    
+    tableDispersionCasas.columns.adjust();
+});
 
 
 

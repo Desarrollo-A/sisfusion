@@ -3,14 +3,12 @@ var tabla_facturas_casas;
 let titulos_casas = [];
 
 function CloseModalDelete2IntmexCasas(){
-
     document.getElementById("form_multiples_casas").reset();
     a = document.getElementById('borrarProyectoIntmexCasas');
     padre = a.parentNode;
     padre.removeChild(a);
     $("#modal_multiples_IntmexF_casas").modal('toggle');  
     tabla_facturas_casas.ajax.reload();
-
 }
 
 $(document).ready(function() {
@@ -444,7 +442,7 @@ function get_facturas_Intmex_casas(proyecto, condominio){
     });
 
     $('#tabla_facturas_intmex_casas').on('click', 'input', function() {
-         totaPen =0;
+        totaPen =0;
         trs = $(this).closest('tr');
         var row = tabla_facturas_casas.row(trs).data();
         if (row.pa == 0) {
@@ -477,29 +475,6 @@ function get_facturas_Intmex_casas(proyecto, condominio){
         });
         $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
     });
-
-    // $("#tabla_facturas_intmex_casas tbody").on("click", ".cambiar_estatus", function(){
-    //     var trs = $(this).closest('tr');
-    //     var row = tabla_facturas_casas.row( trs );
-    //     id_pago_i = $(this).val();
-    //     $("#modal_nuevas_Intmex_casas .modal-body").html("");
-    //     $("#modal_nuevas_Intmex_casas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-    //     $("#modal_nuevas_Intmex_casas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se pauso la solicitud"></input></div></div>');
-    //     $("#modal_nuevas_Intmex_casas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-    //     $("#modal_nuevas_Intmex_casas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-    //     $("#modal_nuevas_Intmex_casas").modal();
-    // });
-
-    // $("#tabla_facturas_intmex_casas tbody").on("click", ".despausar_estatus", function(){
-    //     var trs = $(this).closest('tr');
-    //     var row = tabla_facturas_casas.row( trs );
-    //     id_pago_i = $(this).val();
-    //     $("#modal_refresh .modal-body").html("");
-    //     $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-    //     $("#modal_refresh .modal-body").append('<input class="idComPau" name="id_comision" type="text" value="'+row.data().id_comision+'" hidden>');
-    //     $("#modal_refresh .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="CONFIRMAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-    //     $("#modal_refresh").modal();
-    // });
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -514,38 +489,6 @@ function cancela(){
     $("#modal_nuevas_Intmex_casas").modal('toggle');
 }
 
-// $("#form_interes_casas").submit( function(e) {
-//     e.preventDefault();
-// }).validate({
-//     submitHandler: function( form ) {
-//         var data = new FormData( $(form)[0] );
-//         console.log(data);
-//         data.append("id_pago_i", id_pago_i);
-//         $.ajax({
-//             url: general_base_url + "Pagos_casas/pausar_solicitud/",
-//             data: data,
-//             cache: false,
-//             contentType: false,
-//             processData: false,
-//             dataType: 'json',
-//             method: 'POST',
-//             type: 'POST',
-//             success: function(data){
-//                 if( data[0] ){
-//                     $("#modal_nuevas_Intmex_casas").modal('toggle' );
-//                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
-//                     setTimeout(function() {
-//                         tabla_facturas_casas.ajax.reload();
-//                     }, 3000);
-//                 }else{
-//                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-//                 }
-//             },error: function( ){
-//                 alert("ERROR EN EL SISTEMA");
-//             }
-//         });
-//     }
-// });
 
 $("#form_refresh").submit( function(e) {
     e.preventDefault();
@@ -579,37 +522,6 @@ $("#form_refresh").submit( function(e) {
     }
 });
 
-// $("#form_despausar").submit( function(e) {
-//     e.preventDefault();
-// }).validate({
-//     submitHandler: function( form ) {
-//         var data = new FormData( $(form)[0] );
-//         data.append("id_pago_i", id_pago_i);
-//         $.ajax({
-//             url: general_base_url + "Pagos_casas/despausar_solicitud/",
-//             data: data,
-//             cache: false,
-//             contentType: false,
-//             processData: false,
-//             dataType: 'json',
-//             method: 'POST',
-//             type: 'POST',
-//             success: function(data){
-//                 if( data[0] ){
-//                     $("#modal_despausar").modal('toggle' );
-//                     alerts.showNotification("top", "right", "Se ha regresado la comisión exitosamente", "success");
-//                     setTimeout(function() {
-//                         tabla_facturas_casas.ajax.reload();
-//                     }, 3000);
-//                 }else{
-//                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-//                 }
-//             },error: function( ){
-//                 alert("ERROR EN EL SISTEMA");
-//             }
-//         });
-//     }
-// });
 
 function preview_info(archivo){
     $("#documento_preview .modal-dialog").html("");
@@ -643,24 +555,6 @@ function preview_info(archivo){
 }
 
 
-// $(document).on("click", ".individualCheck", function() {
-//     totaPen = 0;
-//     tabla_facturas_casas.$('input[type="checkbox"]').each(function () {
-//         let totalChecados = tabla_facturas_casas.$('input[type="checkbox"]:checked') ;
-//         let totalCheckbox = tabla_facturas_casas.$('input[type="checkbox"]');
-//         if(this.checked){
-//             trs = this.closest('tr');
-//             row = tabla_facturas_casas.row(trs).data();
-//             totaPen += parseFloat(row.impuesto); 
-//         }
-
-//         if( totalChecados.length == totalCheckbox.length )
-//             $("#all").prop("checked", true);
-//         else 
-//             $("#all").prop("checked", false);
-//     });
-//     $("#autorizar_factura_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen)));
-// });
 
 function selectAllIntmexCasas(e) {
     tota2 = 0;
