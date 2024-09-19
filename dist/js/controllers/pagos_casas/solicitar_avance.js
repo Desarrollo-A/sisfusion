@@ -1,4 +1,4 @@
-pass_to_validar_avance = function(data) {
+pass_to_next = function(data) {
     let form = new Form({
         title: 'Validar avance', 
         text: `¿Enviar el lote <b>${data.nombreLote}</b> para validar avance?`,
@@ -129,7 +129,7 @@ let columns = [
 
         let pass_button = '' 
         if(data.nuevo_avance && data.monto){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_validar_avance, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_next, data})
         }
 
         // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
