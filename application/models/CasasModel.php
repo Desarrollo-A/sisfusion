@@ -277,7 +277,7 @@ class CasasModel extends CI_Model
             LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
             WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas IN (0,1) AND cli.pre_proceso_casas = 2
-            AND cli.idPropuestaCasa IS NULL", array($this->idUsuario));
+            AND cli.idPropuestaCasa = '0'", array($this->idUsuario));
         
         return $query;
     }
@@ -2509,7 +2509,17 @@ AND vb.proyectos != 1";
     }
 
     public function checkDocument($idProceso) {
+        if($idProceso == null) {
+            return null;
+        }
         $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND tipo = 11";
+        return $this->db->query($query)->row();
+    }
+
+    public function checkVoboEscrituracion($idLote) {
+        $query = "SELECT cl.revisionEscrituracion, sc.id_estatus, cl.escrituraFinalizada  FROM clientes cl 
+        LEFT JOIN solicitudes_escrituracion sc ON sc.id_lote = cl.idLote 
+        WHERE cl.idLote = $idLote AND status = 1";
         return $this->db->query($query)->row();
     }
 }

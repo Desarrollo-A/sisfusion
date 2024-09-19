@@ -132,6 +132,7 @@ pass_to_adeudos = function (data) {
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new SelectField({ id: 'tipo', label: 'Tipo de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipos, required: true }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idLote', value: data.idLote}),
         ],
     })
 

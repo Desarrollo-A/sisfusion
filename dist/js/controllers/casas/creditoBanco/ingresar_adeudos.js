@@ -337,23 +337,27 @@ let columns = [
             //FINISHED
             return `<span class="label lbl-green">CONCLUIDO</span>`;
         }
-        if(data.id_estatus != null && data.id_estatus != 49) {
-            if(data.revisionEscrituracion == null){
-                return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;
-            }
-            else {
-                return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
+        if(data.escrituraFinalizada == 0 || data.escrituraFinalizada == 2) {
+            if(data.id_estatus != null)  {
+                if(data.revisionEscrituracion == 0){
+                    return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;    
+                }else {
+                    return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
+                }
+                
             }
             
-        }
-        if(data.id_estatus == null && data.escrituraFinalizada == 0 && data.revisionEscrituracion == null){
-            return `<span class="label lbl-warning">SIN ESTATUS</span>`;;
-        }
-        if(data.id_estatus == null || data.escrituraFinalizada == 0 && data.revisionEscrituracion == 1) {
-            return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
+            if(data.revisionEscrituracion == 0) {
+                return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;
+            }
+
+            if(data.revisionEscrituracion == 1) {
+                return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
+            }
         }
     }},
     {data: function(data) {
+        console.log("data: ",data);
         let adeudo_button = '';
         let upload_button = '';
         let pass_button = '';

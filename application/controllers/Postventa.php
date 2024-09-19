@@ -3779,18 +3779,18 @@ public $controller = 'Postventa';
     public function asignarMarca() {
         $idCliente = $this->form('idCliente');
         $accion = $this->form('accion');
+        $marcaEscrituracion = $this->form('marcaEscrituracion');
         $idProceso = $this->form('idProceso') ?? null;
-
         $banderaSuccess = true;
 
         $this->db->trans_begin();
         if($accion == 1) {
-            $update = $this->General_model->updateRecord('clientes', array("escrituraFinalizada" => 1), 'id_cliente', $idCliente);
+            $update = $this->General_model->updateRecord('clientes', array("escrituraFinalizada" => $marcaEscrituracion), 'id_cliente', $idCliente);
         }
 
         if($accion == 2) {
             $update = $this->General_model->updateRecord('clientes', array("revisionEscrituracion" => 1), 'id_cliente', $idCliente);
-            $checkDocument = $this->CasasModel->checkDocument(11);
+            $checkDocument = $this->CasasModel->checkDocument($idProceso);
             if($checkDocument == null){
                 //CREAR DOCUMENTO FORMAS DE PAGO
                 $insertArray = array(

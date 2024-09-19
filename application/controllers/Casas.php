@@ -694,7 +694,7 @@ class Casas extends BaseController
         $updateData = array(
             "id_asesor_c" => 0,
             "pre_proceso_casas" => 1,
-            "idPropuestaCasa" => null
+            "idPropuestaCasa" => 0
         );
 
         $update = $this->General_model->updateRecord("clientes", $updateData, "id_cliente", $idCliente);
@@ -814,7 +814,8 @@ class Casas extends BaseController
         $tipoMovimiento = $this->form('tipoMovimiento');
         $adm = $this->form('adm');
         $ooam = $this->form('ooam');
-
+        $idLote = $this->form('idLote');
+        $responseTitulacion = $this->CasasModel->checkVoboEscrituracion($idLote);
 
         if (!isset($id) || !isset($tipo)) {
             http_response_code(400);
@@ -850,10 +851,15 @@ class Casas extends BaseController
 
         if ($is_ok) {
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
-
-            //$documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]); // cambio a partir del 23 se agregaron los documentos faltantes de cliente y proveedor
-
-            $documentos = $this->CasasModel->getDocumentos([13, 14, 15, 27, 36]);
+            
+            //NO TIENE VOBO DE TITULACIÓN
+            if($responseTitulacion->revisionEscrituracion == 0 && $responseTitulacion->escrituraFinalizada != 1) {
+                $documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]);
+            }
+            else {
+                $documentos = $this->CasasModel->getDocumentos([13, 14, 15, 27, 36]);
+            }
+            
             $is_okDoc = true;
             foreach ($documentos as $key => $documento) {
                 $is_ok = $this->CasasModel->inserDocumentsToProceso($proceso->idProcesoCasas, $documento->tipo, $documento->nombre);

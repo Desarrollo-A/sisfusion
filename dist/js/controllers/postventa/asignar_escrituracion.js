@@ -5,6 +5,7 @@ $.ajax({
     type: 'GET', 
     url: `residenciales`,
     success: function (response) {
+        console.log("response: ", response);
         filtro_proyectos.setOptions(response)
     },
     error: function() {
@@ -28,7 +29,12 @@ filtro_proyectos.onChange(function(option) {
 filtro_condominios.onChange(function(option) {    
     table.setParams({condominio: option.value})
     table.reload();
-})
+});
+
+let optionsEscrituracion = [
+    {label: 'NO', value: 2},
+    {label: 'SI', value: 1}
+];
 
 let columns = [
     {data: 'idLote'},
@@ -45,16 +51,26 @@ let columns = [
     {data: function(data) 
         {
             if (data.escrituraFinalizada == '0' || data.escrituraFinalizada == 0) {
-                return `<span class="label lbl-green">SIN MARCA DE ESCTRITURACIÓN</span>`;
+                return `<span class="label lbl-orange">SIN MARCA DE ESCTRITURACIÓN</span>`;
+            }
+            if(data.escrituraFinalizada == '1') {
+                return `<span class="label lbl-green">ESCRITURADO</span>`;
+            }
+            if(data.escrituraFinalizada == '2') {
+                return `<span class="label lbl-warning">NO ESCRITURADO</span>`;
             }
         }
     },
     { data: function(data) 
         {
             let vobo_button = '';
-            let asignar_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Agregar Marca', onClick: btn_assign, data});
+            let asignar_button = '';
+            if(data.escrituraFinalizada == 0){
+                asignar_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Agregar Marca', onClick: btn_assign, data});
+            }
             
-            if(data.revisionEscrituracion == null) {
+            
+            if(data.revisionEscrituracion == 0) {
                 vobo_button = new RowButton({icon: 'check', color: 'green', label: 'Visto bueno', onClick: btn_vistoBueno, data});
             }
             return `<div class="d-flex justify-center">${asignar_button}${vobo_button}</div>`;
@@ -90,8 +106,8 @@ let buttons = [
 
 btn_assign = function (data) {
     let form = new Form({
-        title : 'Agregar marca de titulación',
-        text: `¿Deseas agregar la marca de titulación para el lote <b>${data.nombreLote}</b>?`,
+        title : 'Marca de escrituración',
+        text: `¿Deseas agregar la marca de escrituración para el lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (dataForm) {
             form.loading(true);
             let formConfirm = new FormConfirm({
@@ -123,6 +139,7 @@ btn_assign = function (data) {
             form.loading(false);
         },
         fields: [
+            new SelectField({ id: 'marcaEscrituracion', label: 'Marca de escrituración', placeholder: 'Selecciona una opción', width: '12', data: optionsEscrituracion, required: true}),
             new HiddenField({ id: 'idCliente', value: data.idCliente}),
             new HiddenField({ id: 'accion', value: 1})
         ]
@@ -131,6 +148,7 @@ btn_assign = function (data) {
 }
 
 btn_vistoBueno = function (data) {
+    console.log("data: ", data);
     let form = new Form({
         title: 'Dar el visto bueno',
         text: `¿Deseas dar el visto bueno para el lote: <b>${data.nombreLote}</b>?`,
