@@ -21,7 +21,7 @@
 
     public function getPaquetes($idLote){
 
-        if(!empty($idLote)){
+        /*if(!empty($idLote)){
             $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote.'');
 
             if($query->result_array()[0]['id_descuento'] == ''){//se valida si tiene paquetes activos
@@ -38,8 +38,25 @@
         }
         else{
             return array();
-        }
+        }*/
 
+        if(!empty($idLote)){
+                $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote);
+                if($query->result_array()[0]['id_descuento'] == ''){//se valida si tiene paquetes activos
+                    return array();
+                  }
+      
+                $desc = $query->row();
+
+                if($desc->id_descuento){
+                    return $this->db-> query("SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ($desc->id_descuento)")->result_array();
+                }else{
+                    return [];
+                }
+        }else{
+            return array();
+        }
+        
     }
 
 

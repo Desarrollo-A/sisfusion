@@ -7486,8 +7486,27 @@
                         $('#yearplanID').select2();
                     },
                     function (response) {
-                    });
+                });
 
+                // AQUI
+
+                let id_condominio = condominio.idCondominio
+                let id_corrida = 0
+
+                $http.post('<?=base_url()?>index.php/Corrida/getPaquetesByCondominio', {id_condominio, id_corrida}).then(
+                    function(response){
+                        // console.log("response: ", response);
+                        // console.log("response: ", response.data.length);
+                        if(response.data.length!=undefined){
+                            $scope.planesAnteriores = response.data;
+                            let qw = JSON.parse(localStorage.getItem('plan_actual'));
+                            // console.log("Que onda xdxd", qw);
+                            // console.log("BLABLABLA: ", $scope.planesAnteriores);
+                            $scope.planesAnteriores.push(qw[0]);
+                        }
+                        // console.log(qw[0]);
+                    }
+                );
             }
             $scope.onSelectChangel = function(lote) {
                 document.getElementById('loaderDiv').classList.remove('hide');

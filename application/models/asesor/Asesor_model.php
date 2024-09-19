@@ -375,7 +375,7 @@ class Asesor_model extends CI_Model {
             WHERE lot.idLote = " . $lote . " AND idStatusLote IN(1,3)");
         } 
         else {
-            $query = $this->db->query("SELECT lot.idLote, nombreLote, total, sup, precio, porcentaje, enganche, lot.msi as msni, 
+            $query = $this->db->query("SELECT lot.idLote, lot.idCondominio, nombreLote, total, sup, precio, porcentaje, enganche, lot.msi as msni, 
             descSup1, descSup2, referencia, db.banco, db.cuenta, db.empresa, db.clabe, lot.casa, (
             CASE lot.casa
             WHEN 0 THEN ''

@@ -3372,6 +3372,7 @@ legend {
             echo json_encode(array("timestamp" => $time, "status" => 400, "error" => "Bad request", "exception" => "Some parameter does not have a specified value.", "message" => "Verify that all parameters contain a specified value."));
         else {
             $data = $this->Corrida_model->getPaquetesByCondominio($object->id_condominio, $object->id_corrida)->result_array();
+
             if (count($data) > 0) {
                 $array_descuentos = $data;
                 $array_validado = array();
@@ -3390,7 +3391,8 @@ legend {
                     }
                 };
                 //print_r($array_validado);
-                echo json_encode($array_validado);
+                //echo json_encode($array_validado);
+                echo json_encode($array_descuentos);
 
             } else {
                 echo json_encode(array("status" => 200, "message" => "No information to display.", "data" => array()));
