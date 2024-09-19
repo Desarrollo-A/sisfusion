@@ -159,7 +159,7 @@ let columns = [
             let pass_button = ''
             let back_button = ''
 
-            if(data.comercializacion == 0){
+            if(data.voboComercializacion == 1){
                 back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazar_proceso, data})
             }
 
@@ -213,7 +213,6 @@ rechazar_proceso = function(data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 10 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
