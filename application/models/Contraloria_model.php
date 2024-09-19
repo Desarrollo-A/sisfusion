@@ -58,7 +58,7 @@ class Contraloria_model extends CI_Model {
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
 		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc,
-		ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso, l.ubicacion
+		ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.proceso, l.ubicacion, hd.idDocumento, hd.expediente, cl.tipoEnganche, oxc1.id_opcion as tipoEnganche, oxc1.nombre
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -69,6 +69,8 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN sedes s ON cl.id_sede = s.id_sede 
 		LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        LEFT JOIN historial_documento as hd ON hd.idLote = l.idLote AND hd.tipo_doc = 55 AND hd.status = 1
+        LEFT JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = cl.tipoEnganche AND oxc1.id_catalogo = 147
 		WHERE l.status = 1 AND l.idStatusContratacion IN (2) AND l.idMovimiento IN (4, 74, 84, 93, 101, 103) AND cl.status = 1
         GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -77,7 +79,7 @@ class Contraloria_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, s.nombre, ISNULL(oxc0.nombre, 'Normal'), cl.proceso, l.ubicacion
+		cond.idCondominio, s.nombre, ISNULL(oxc0.nombre, 'Normal'), cl.proceso, l.ubicacion, hd.idDocumento, hd.expediente, cl.tipoEnganche, oxc1.id_opcion, oxc1.nombre
 		ORDER BY l.nombreLote");
 		return $query->result_array();
 	}
@@ -107,13 +109,13 @@ class Contraloria_model extends CI_Model {
         }
 	}
 
-
-    function get_sede(){
-        return $this->db->query("SELECT * FROM sedes WHERE id_sede NOT IN (7) AND estatus = 1");
-    }
-
-    function get_tventa(){
-        return $this->db->query("SELECT * FROM tipo_venta WHERE status = 1");
+    function selectores (){
+        return $this->db->query(
+            "SELECT id_tventa as id_opcion, tipo_venta as nombre, 'tipo_venta' as tabla FROM tipo_venta WHERE status = 1
+            UNION ALL
+            SELECT id_sede as id_opcion, nombre, 'sedes' as tabla FROM sedes WHERE id_sede NOT IN (7) AND estatus = 1
+            UNION ALL
+            SELECT id_opcion, nombre, 'tipo_enganches' as tabla FROM opcs_x_cats WHERE id_catalogo = 147 AND estatus = 1;");
     }
 
     function get_enganches(){
@@ -442,7 +444,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		LEFT JOIN sedes se ON se.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		WHERE l.status = 1 AND l.idStatusContratacion IN (12, 11, 10) AND l.idMovimiento IN (42, 41, 40) 
+		WHERE l.status = 1 AND l.idStatusContratacion IN (10) AND l.idMovimiento IN (40) 
 		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
 		AND l.totalNeto2 != 0.00 AND l.totalNeto2 != '0.00' AND l.totalNeto2 > 0.00
 		AND cl.status = 1 $filtroSede
@@ -461,7 +463,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     public function validateSt13($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (12, 11, 10) AND idMovimiento IN (42, 41, 40))");
+        $this->db->where("(idStatusContratacion IN (10) AND idMovimiento IN (40))");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
@@ -831,9 +833,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		FORMAT(lotes.totalNeto, 'C') enganche, FORMAT(lotes.totalNeto2, 'C') total, CONVERT(VARCHAR,cl.fechaApartado,120) AS fechaApartado, CONVERT(VARCHAR,hd.modificado,120) AS modificado,
 		UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
 		CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario, hd.comentario, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno )) nombreCliente,
-        cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
+        cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion, cl.tipoEnganche, oxc.nombre
 		FROM historial_lotes hd
 		INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente $filter
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoEnganche AND id_catalogo = 147
         LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
 		INNER JOIN lotes lotes ON hd.idLote = lotes.idLote AND lotes.status = 1
 		INNER JOIN condominios cond ON cond.idCondominio = lotes.idCondominio
@@ -1246,16 +1249,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $rol_actual = $this->session->userdata('id_rol');
 
         switch($rol_actual){
-            /*case 5:
-            case 4:
-                $estatus_permitido='1, 3, 4';
-                break;
-                */
             case 17:
-                $estatus_permitido='1,2,3';
+                $estatus_permitido='1,2,3,5';
                 break;
             case 70:
-                $estatus_permitido='1,2,3';
+                $estatus_permitido='1,2,3,5';
 
         }
         $query = $this->db->query("SELECT STRING_AGG(au.id_autorizacion, ', ') id_autorizacion, au.idResidencial, STRING_AGG(au.idCondominio, ', ') idCondominio, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0') lote, 
@@ -1268,7 +1266,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         WHERE op.id_catalogo=90 AND au.estatus_autorizacion IN (".$estatus_permitido.")
         GROUP BY au.idResidencial, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0'), CAST(au.comentario AS VARCHAR(MAX)), au.estatus_autorizacion, 
         au.estatus, au.fecha_creacion, au.creado_por, au.fecha_modificacion, au.modificado_por,
-        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0')");
+        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0') ORDER BY au.fecha_creacion DESC");
 
 
         return $query->result_array();
@@ -1893,7 +1891,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function setFilters($id_usuario, $id_sede) {
-        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799, 10088, 2827, 6012, 12931, 13053, 2875, 14342, 14481, 12276, 16679)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
+        if(in_array($id_usuario, array(2749, 2807, 2754, 6390, 9775, 2815, 12377, 2799, 10088, 2827, 6012, 12931, 13053, 2875, 14342, 14481, 12276, 16679, 17043)) || $this->session->userdata('id_rol') == 63) // MJ: VE TODO: CI - ARIADNA MARTINEZ MARTINEZ - MARIELA SANCHEZ SANCHEZ
 			$filtroSede = "";
 		else  if($id_usuario == 9453) // MJ: JARENI HERNANDEZ CASTILLO VE MÉRIDA, SLP, MONTERREY y TEXAS USA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
@@ -1949,7 +1947,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         }
     }
 
-    public function validarMensualidad($idLote, $idCliente){
+    public function validarMensualidad($idLote, $idCliente) {
         $cmd = "SELECT * FROM mensualidad_cliente WHERE id_lote = $idLote AND id_cliente = $idCliente";
         $query= $this->db->query($cmd);
         return  $query->num_rows() > 0 ? TRUE : FALSE ; 
@@ -1977,5 +1975,93 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $result = $this->db->query("DELETE FROM historial_documento WHERE idDocumento = $idDocumento AND tipo_doc = 55 AND status = 1");
         return $result;
     }
+
+    // Consulta Gestor Contraloría
+    public function getRegistrosRL() {
+        $query = $this->db->query("SELECT id_opcion, nombre, estatus, fecha_creacion FROM opcs_x_cats WHERE id_catalogo = 77");
+        return $query->result();
+    }
     
+    // Función que retorna el ultimo registro de la tabla opcs_x_cats
+    public function getUltimoRegistro() {
+        return $this->db->query("SELECT MAX(id_opcion) AS id_opcion FROM opcs_x_cats WHERE id_catalogo = 77")->row();
+    }
+
+    // Función que retorna los registros de los lotes contratados por intercambio
+    public function getRegistrosIntercambios() {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') referencia,
+                lo.idStatusLote,
+                sl.nombre nombreEstatusLote,
+                sl.background_sl,
+                sl.color
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+            WHERE
+                lo.status = 1
+                AND lo.idStatusLote IN (6)")->result();
+    }
+
+    // Función que retorna los registros de las opciones para el gestor de contraloría
+    function getOpcionesPorCatalogo()  {
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (155) AND estatus = 1 ");
+    }
+
+    // Función que retorna los registros de los lotes para cambio de RL
+    public function getRegistrosCambioRL($nombreLote) {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') referencia,
+                cl.id_cliente,
+                cl.rl idRl,
+                ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') nombreRl
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+            LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.rl AND oxc0.id_catalogo = 77
+            WHERE
+                lo.status = 1
+            AND lo.nombreLote IN ('$nombreLote')")->result();
+    }
+    
+    public function getModelosdeCasa() {
+        $result = $this->db->query("SELECT idModelo,modelo,sup,costom2, estatus from modelos_casas");
+        return $result;
+    }
+    
+    public function addModelosdeCasa($NombreModelo, $superficie, $costo, $id_usuario) {
+        $query = "INSERT INTO modelos_casas (modelo, sup, costom2, creadoPor, modificadoPor, estatus) VALUES ('$NombreModelo', $superficie, $costo, $id_usuario, $id_usuario, 1)";
+      
+        $respuesta = $this->db->query($query);
+    
+        if (!$respuesta) {
+            return 0; 
+        } else {
+            return 1; 
+        }
+
+
+    }
+
+    public function updateEstatusModelosCasa($estatus, $idopcion_modelo,$id_usuario) {
+        $this->db->set('estatus', $estatus);
+        $this->db->set('modificadoPor', $id_usuario);  
+            $this->db->where('idModelo', $idopcion_modelo);
+        return $this->db->update('modelos_casas'); 
+    }
 }
+

@@ -23,27 +23,27 @@ class Ventas extends CI_Controller {
     }
 
 	public function index() {
-        $id_rol = $this->session->userdata('id_rol');
-		if($id_rol == FALSE || ($id_rol != '1' && $id_rol != '2' && $id_rol != '3' && $id_rol != '4' && $id_rol != '5' && $id_rol != '7' && $id_rol != '9' && $id_rol != '6' && $id_rol != '18' && $id_rol != '63')) {
-			redirect(base_url().'login');
-		}
-        switch ($id_rol) {
-            case '1': // DIRECTOR
-            case '2': // SUBDIRECTOR
-            case '3': // GERENTE
-            case '4': // ASISTENTE DIRECCIÓN
-            case '5': // ASISTENTE SUBDIRECCIÓN
-            case '6': // ASISTENTE GERENCIA
-            case '7': // ASESOR
-            case '9': // COORDINADOR
-            case '18': // DIRECTOR TI
-            case '63': // CONTROL INTERNO
-            default: // POR DEFECTO
+        // $id_rol = $this->session->userdata('id_rol');
+		// if($id_rol == FALSE || ($id_rol != '1' && $id_rol != '2' && $id_rol != '3' && $id_rol != '4' && $id_rol != '5' && $id_rol != '7' && $id_rol != '9' && $id_rol != '6' && $id_rol != '18' && $id_rol != '63')) {
+		// 	redirect(base_url().'login');
+		// }
+        // switch ($id_rol) {
+        //     case '1': // DIRECTOR
+        //     case '2': // SUBDIRECTOR
+        //     case '3': // GERENTE
+        //     case '4': // ASISTENTE DIRECCIÓN
+        //     case '5': // ASISTENTE SUBDIRECCIÓN
+        //     case '6': // ASISTENTE GERENCIA
+        //     case '7': // ASESOR
+        //     case '9': // COORDINADOR
+        //     case '18': // DIRECTOR TI
+        //     case '63': // CONTROL INTERNO
+        //     default: // POR DEFECTO
                 $this->load->view('template/header');
                 $this->load->view("template/home");
                 $this->load->view('template/footer');
-            break;
-        }
+        //     break;
+        // }
 	}
 
     public function repoVtasAsesor(){

@@ -418,7 +418,7 @@
 
 // filtro de condominios por residencial PARA SUR Y SAN LUIS
 	public function getResidencialQro() {
-		$where = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73)) ? "AND idResidencial NOT IN (14)" : "";
+		$where = in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $this->session->userdata('tipo') == 1 ? "AND idResidencial NOT IN (14)" : "";
 		$query = $this->db-> query("SELECT CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) nombreResidencial, idResidencial, descripcion, 
 		ciudad, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1 $where");
 		return $query->result_array();
@@ -1217,6 +1217,10 @@
 		$id_usuario = $this->session->userdata('id_usuario');
 		$id_lider = $this->session->userdata('id_lider');
 		$id_rol = $this->session->userdata('id_rol');
+
+		if($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
+			$id_lider .= ", 24, 10";
+			
 		if($id_rol == 2 || $id_rol == 4 || $id_rol == 33) // DIRECCIÓN COMERCIAL || ASISTENTE DE DIRECCIÓN COMERCIAL
 			$lider = "";
 		else if ($id_rol == 3) // GERENTE
@@ -3525,9 +3529,6 @@
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
 					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
 					$sede = "";
-				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
-					$id_lider = $id_lider . ', 694, 4509';
-					$sede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
 					$id_lider = $id_lider . ', 13295, 7970';
 					$sede = "";
@@ -3541,13 +3542,10 @@
 					$id_lider = $id_lider . ', 6661';
 					$sede = "";
 				} else if ($id_usuario == 16214) { // JESSICA PAOLA CORTEZ VALENZUELA
-					$id_lider = $id_lider . ', 80, 664';
+					$id_lider = $id_lider . ', 80, 664, 16458, 2599';
 					$sede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
 					$id_lider = $id_lider . ', 12688';
-					$sede = "";
-				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
-					$id_lider = $id_lider . ', 13016, 12027';
 					$sede = "";
 				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
 					$id_lider = $id_lider . ', 13059, 11680';
@@ -3560,6 +3558,24 @@
 					$sede = "";
 				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
 					$id_lider = $id_lider . ', 654, 697, 5604, 10251, 12688';
+					$sede = "";
+				} else if ($id_usuario == 14556) { // KATTYA GUADALUPE CADENA CRUZ
+					$id_lider = $id_lider . ', 24, 10';
+					$sede = "";
+				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
+					$id_lider = $id_lider . ', 7474';
+					$sede = "";
+				} else if ($id_usuario == 16783) { // Mayra Alejandra Angulo Muñiz
+					$id_lider = $id_lider . ', 13821';
+					$sede = "";
+				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
+					$id_lider = $id_lider . ', 11680';
+					$sede = "";
+				} else if ($id_usuario == 2987) { // Alan Michell Alba Sánchez
+					$id_lider = $id_lider . ', 6661';
+					$sede = "";
+				} else if ($id_usuario == 17029) { // Karen Ariadna Vazquez Muñoz
+					$id_lider = $id_lider . ', 13067';
 					$sede = "";
 				}
 

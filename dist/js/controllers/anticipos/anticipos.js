@@ -62,7 +62,7 @@ $("#tabla_anticipos").ready(function () {
 
     tabla_anticipos = $("#tabla_anticipos").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
+        width: '99%',
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -71,7 +71,7 @@ $("#tabla_anticipos").ready(function () {
                 titleAttr: 'Reporte Anticipo',
                 title: "Reporte Anticipo",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + anticiposReporte[columnIdx] + ' ';
@@ -98,8 +98,8 @@ $("#tabla_anticipos").ready(function () {
         },
         pagingType: "full_numbers",
         lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
+            [9, 25, 50, -1],
+            [9, 25, 50, "Todos"]
         ],
         bAutoWidth: false,
         fixedColumns: true,
@@ -110,43 +110,57 @@ $("#tabla_anticipos").ready(function () {
             { data: 'id_usuario' },
             
             { data: 'nombreUsuario' },
-            { data: 'prioridad_nombre' },
+            { data: 'puesto' },
+
+
+            
         
             // { data: 'nombre_empresa' },
             {    data: function( d ){
-                var mostrar = d.nombre_empresa == null ? 'SELECIONA LA EMPRESA' : d.nombre_empresa;
+
+                
+                var mostrar = d.nombre_empresa == null ?  (d.empresa ==  100 ? 'NO APLICA' :'SELECIONA LA EMPRESA')     : d.nombre_empresa;
                 return '<p class="m-0">'+mostrar+'</p>';
             } },
 
-            { data: 'proceso' },
-            { data: 'comentario' },
             
+            { data: 'comentario' },
             { data: 'formaNombre' },
+
+
             {    data: function( d ){
                 return '<p class="m-0">'+formatMoney(d.monto)+'</p>';
             } },
-
-
             {   
                 data: function( d ){
-                var total_impuesto_monto = d.forma_pago == 2 ?  0 : (d.monto*0.03);    
+                var total_impuesto_monto = d.forma_pago == 2 ?  0 :   d.forma_pago == 4  ?  0:  ((d.idsede == 6 ) ? (d.monto*0.04) : (d.monto*0.03)) ;    
                 return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
             } 
             },
+
             {  data: function( d ){
-                var total_impuesto = d.forma_pago == 2 ?  0 : 3;
+                var total_impuesto = d.forma_pago == 2 ?  0 :  d.forma_pago == 4  ?  0 :   (d.idsede == 6 ) ? 4 : 3;
                 return '<p class="m-0">'+total_impuesto+'%</p>';
                 } 
             },
             
-
-
             { data: 'prioridad_nombre' },
             { data: 'sede' },
             
             {
                 data: function( d ){
-                    return '<p class="m-0">'+formatMoney(d.montoParcial)+'</p>';
+                    var infoModal = '';
+                    var Mensualidades = '';
+                    if(d.montoParcial1 != null ){
+                        infoModal =  '<p class="m-0">monto parcial: '+d.montoParcial1+'</p>'
+                        Mensualidades = '<p class="m-0"> mensualidades: '+d.mensualidades+'</p>' ;
+
+                    }else{
+                        Mensualidades = '<p class="m-0">monto actual'+d.monto+'</p>' ;
+                        // infoModal = d.montoParcial;
+                    }
+
+                    return infoModal+  Mensualidades;
                 }
             },
             {
@@ -163,7 +177,7 @@ $("#tabla_anticipos").ready(function () {
                     }
 
 
-                    if (d.nombre_empresa == null) {
+                    if (d.nombre_empresa == null && d.empresa != 100) { 
                         botonesModal += `
                             <button href="#" id="empresasAgregar" name="empresasAgregar" 
                             data-anticipo="${d.id_anticipo}"  data-usuario="${d.id_usuario}"
@@ -186,7 +200,7 @@ $("#tabla_anticipos").ready(function () {
                                     <i class="fas fa-history"></i>
                                 </button>
                             </center>`;
-                    } else if( d.nombre_empresa != null)  {
+                    } else if( d.nombre_empresa != null || d.empresa == 100)  {
                         botonesModal += `
                             <center>
                                 <button class="btn-data btn-blueMaderas continuarParcialidad" data-monto="${d.monto}"
@@ -225,10 +239,10 @@ $("#tabla_anticipos").ready(function () {
     $(document).on('click', '.anticiposEstatus', function (e) {
 
         var id_usuario = $(this).attr("data-usuario");
-        $("#id_usuario").val(id_usuario);
+        $("#id_usuario_p").val(id_usuario);
     
         var id_anticipo = $(this).attr("data-anticipo");
-        $("#id_anticipo").val(id_anticipo);
+        $("#id_anticipo_p").val(id_anticipo);
     
         var monto = $(this).attr("data-monto");
         $("#montoPrestado").val(monto);
@@ -286,11 +300,13 @@ $("#tabla_anticipos").ready(function () {
         $.post(general_base_url + "/Anticipos/datosCatalogos", function (data) {
             // console.log(data);
             var len = data.length;
+            $("#empresaParcia").append($('<option>').val(100).text('No Aplica')); 
             for (var i = 0; i < len; i++) {
                 var id = data[i]['id_opcion'];
                 var name = data[i]['nombre'];
                 $("#empresaParcia").append($('<option>').val(id).text(name));     
             }
+            
             $("#empresaParcia").selectpicker('refresh');
         }, 'json');
         // mostrarOcultarCampos(proceso);
@@ -378,37 +394,45 @@ $("#tabla_anticipos").ready(function () {
         });
     });
 
-    // $("#modal_parcialidad_form").on("submit", function(e) {
-    //     e.preventDefault();
-    //     var id_usuario = $("#id_usuario").val();
-    //     var id_anticipo = $("#id_anticipo").val();
-    //     var procesoParcialidad = $("#procesoParcialidad").val();
-    //     // 
-    //     var anticipoPData = new FormData(document.getElementById("modal_parcialidad_form"));
-    //     anticipoPData.append("id_usuario", id_usuario);
-    //     anticipoPData.append("id_anticipo", id_anticipo);
-    //     anticipoPData.append("procesoParcialidad", procesoParcialidad);
+    $("#modal_parcialidad_form").on("submit", function(e) {
+        e.preventDefault();
+        var id_usuario = $("#id_usuario").val();
+        var id_anticipo = $("#id_anticipo").val();
+        var procesoParcialidad = $("#procesoParcialidad").val();
 
-    //     $.ajax({
-    //         url: general_base_url + 'Anticipos/addEmpresa',
-    //         data: anticipoPData,
-    //         type: 'POST',
-    //         contentType: false,
-    //         cache: false,
-    //         processData: false,
-    //         dataType: "json",
-    //         success: function(response) {
-    //             // var jsonResponse = JSON.parse(response);
-    //             console.log(response);
-                
-    //         },
-    //         error: function() {
-    //             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-    //         }
-    //     });
+        var anticipoPData = new FormData();
+        anticipoPData.append("id_usuario", id_usuario);
+        anticipoPData.append("id_anticipo", id_anticipo);
+        anticipoPData.append("procesoParcialidad", procesoParcialidad);
+
+        $.ajax({
+            url: general_base_url + 'Anticipos/regresoInternomex',
+            data: anticipoPData,
+            type: 'POST',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(response) {
+                var jsonResponse = JSON.parse(response);
+
+                if (jsonResponse.result == 1) {
+                    $('#parcialidadModal').modal("hide");
+                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    $('#tabla_anticipos').DataTable().ajax.reload();
+                } else {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
+                }
+            },
+            error: function() {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
 
 
-    // });
+    });
+
+
+    
 
     $("#modal_anticipos_form").on("submit", function(e) {
         e.preventDefault();
@@ -424,10 +448,14 @@ $("#tabla_anticipos").ready(function () {
             type: 'POST',
             contentType: false,
             cache: false,
-            processData: false,
+            processData: false, 
+            
+            dataType: 'json',
             success: function(response) {
-                var jsonResponse = JSON.parse(response);
-                if (jsonResponse.success) {
+                console.log(response.success);
+
+              // if(response.success){
+                if (response.success) {
                     $('#anticipoModal').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                     $('#tabla_anticipos').DataTable().ajax.reload();
@@ -541,6 +569,7 @@ $("#tabla_anticipos").ready(function () {
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' + v.comentario_general + '</a>\n' +
+                '       <br> <a> Fecha movimiento : ' + v.fechaAnticipo + '</a>\n' +
                 '      </div>\n' +
                 '    <h6>\n' +
                 '    </h6>\n' +

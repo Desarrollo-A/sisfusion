@@ -25,14 +25,14 @@ function dataFunction(value) {
     if (valueTab == 1) {
         tableConfig = {
             id: '#tableDoct',
-            url: 'casas/lista_reporte_casas',
+            url: 'casas/lista_reporte_casas?opcion=-1',
             buttons: buttons,
             columns: columns,
         };
     } else if (valueTab == 2) {
         tableConfig = {
             id: '#tableCredito',
-            url: 'casas/getReporteProcesoCredito',
+            url: 'casas/getReporteProcesoCredito?opcion=-1',
             buttons: buttonsCredito,
             columns: columnsCredito,
         };
@@ -55,7 +55,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title: "Validacion de documentación",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -76,7 +76,7 @@ let buttonsCredito = [
         titleAttr: 'Descargar archivo excel',
         title: "Validacion de documentación",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -100,6 +100,7 @@ let columns = [
     { data: 'procesoNombre' },
     {
         data: function (data) {
+            if(data.fechaCreacion)
             return data.fechaCreacion.substring(0, 16)
         }
     },
@@ -297,31 +298,42 @@ function lineCredito(timeLine) {
     $("#historialActual").append(`${timeLine}`);
 }
 
-modalHistorialBanco = function (dt) {
-
+modalHistorialBanco =  function (dt) {
     let esquemaCredito = 1;
     $("#spiner-loader").removeClass('hide');
     $("#timeLineModal").modal();
-    $("#historialActual").html("");
+    $("#historialActual").html();
 
-    $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}`).done(function (data) {
-
-        if (JSON.parse(data).length > 0) {
-            $.each(JSON.parse(data), function (i, v) {
-                $("#spiner-loader").addClass('hide');
-                let timeLine = new TimeLine({
-                    title: v.nombreUsuario,
-                    back: v.procesoAnterior,
-                    next: v.procesoNuevo,
-                    description: v.descripcion,
-                    date: v.fechaMovimiento
-                });
-                lineCredito(timeLine);
-            });
-        }
-        else {
-            emptyLog();
+    $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}/${dt.idLote}`).done(function (data) {
+      if (JSON.parse(data).length > 0)   {
+        $.each(JSON.parse(data), function(i, v) {
             $("#spiner-loader").addClass('hide');
-        }
+            let backProcess = '';
+            let previousText = '';
+            let newText = '';
+            let nextProcess = v.procesoNuevo;
+
+            if (v.cambioStatus == 0) {
+                backProcess = v.procesoAnterior;
+            }
+            else {
+                newText = 'Proceso actual: ';
+            }
+
+            let timeLine = new TimeLine({
+                title : v.nombreUsuario,
+                back : backProcess, 
+                next : nextProcess,
+                description : v.descripcionFinal,
+                date : v.fechaMovimiento,
+                previousText : previousText,
+                newText : newText
+            });
+            lineCredito(timeLine);
+        });
+      } else {
+        emptyLog();
+        $("#spiner-loader").addClass('hide');
+      }
     });
 }

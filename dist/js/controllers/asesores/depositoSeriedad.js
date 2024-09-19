@@ -493,61 +493,59 @@ function fillDataTable(idCondominio) {
             },
             {
                 "data" : function(d){
-                    if (d.dsType != 1) {
+                    if (d.dsType != 1)
                         return '';
-                    }
-                    if (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION) {
+                    if (parseInt(d.idMovimiento) !== MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) !== STATUS_CONTRATACION)
                         return 'ASIGNADO CORRECTAMENTE';
-                    }
-                    if (d.id_prospecto != 0) {
+                    if (d.id_prospecto != 0)
                         return 'ASIGNADO CORRECTAMENTE';
-                    }
-                    if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
+                    if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806)
                         return 'ASIGNADO CORRECTAMENTE';
-                    }
-                return '<p>DEBES ASIGNAR EL PROSPECTO AL CLIENTE PARA PODER ACCEDER AL DEPÓSITO DE SERIEDAD O INTEGRAR EL EXPEDIENTE</p>';
+                    if (d.id_prospecto == 0 && d.proceso > 1)
+                        return 'ASIGNADO CORRECTAMENTE';
+                    return '<p>DEBES ASIGNAR EL PROSPECTOS AL CLIENTE PARA PODER ACCEDER AL DEPÓSITO DE SERIEDAD O INTEGRAR EL EXPEDIENTE</p>';
                 }
             },
-            {
-                "data": function (d) {
-                    if (d.autorizacion_correo === null) {
-                        return "<span class='label lbl-gray'>Sin envío de verificación</span>";
-                    }
-                    if (parseInt(d.total_sol_correo_pend) > 0) {
-                        return "<span class='label lbl-azure'>Solicitud de autorización</span>";
-                    }
-                    if (parseInt(d.total_sol_correo_rech) > 0 && parseInt(d.total_sol_correo_aut) === 0 && parseInt(d.total_sol_correo_pend) === 0) {
-                        return "<span class='label lbl-warning'>Solicitud rechazada</span>";
-                    }
-                    if (parseInt(d.autorizacion_correo) === 1) {
-                        return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.correo}</span>`;
-                    }
-                    if (parseInt(d.autorizacion_correo) === 2) {
-                        return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.correo}</span>`;
-                    }
-                    return '';
-                }
-            },
-            {
-                "data": function (d) {
-                    if (d.autorizacion_sms === null) {
-                        return "<span class='label lbl-gray'>Sin envío de verificación</span>";
-                    }
-                    if (parseInt(d.total_sol_sms_pend) > 0) {
-                        return "<span class='label lbl-azure'>Solicitud de autorización</span>";
-                    }
-                    if (parseInt(d.total_sol_sms_rech) > 0 && parseInt(d.total_sol_sms_aut) === 0 && parseInt(d.total_sol_sms_pend) === 0) {
-                        return "<span class='label lbl-warning'>Solicitud rechazada</span>";
-                    }
-                    if (parseInt(d.autorizacion_sms) === 1) {
-                        return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.telefono}</span>`;
-                    }
-                    if (parseInt(d.autorizacion_sms) === 2) {
-                        return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.telefono}</span>`;
-                    }
-                    return '';
-                }
-            },
+            // {
+            //     "data": function (d) {
+            //         if (d.autorizacion_correo === null) {
+            //             return "<span class='label lbl-gray'>Sin envío de verificación</span>";
+            //         }
+            //         if (parseInt(d.total_sol_correo_pend) > 0) {
+            //             return "<span class='label lbl-azure'>Solicitud de autorización</span>";
+            //         }
+            //         if (parseInt(d.total_sol_correo_rech) > 0 && parseInt(d.total_sol_correo_aut) === 0 && parseInt(d.total_sol_correo_pend) === 0) {
+            //             return "<span class='label lbl-warning'>Solicitud rechazada</span>";
+            //         }
+            //         if (parseInt(d.autorizacion_correo) === 1) {
+            //             return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.correo}</span>`;
+            //         }
+            //         if (parseInt(d.autorizacion_correo) === 2) {
+            //             return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.correo}</span>`;
+            //         }
+            //         return '';
+            //     }
+            // },
+            // {
+            //     "data": function (d) {
+            //         if (d.autorizacion_sms === null) {
+            //             return "<span class='label lbl-gray'>Sin envío de verificación</span>";
+            //         }
+            //         if (parseInt(d.total_sol_sms_pend) > 0) {
+            //             return "<span class='label lbl-azure'>Solicitud de autorización</span>";
+            //         }
+            //         if (parseInt(d.total_sol_sms_rech) > 0 && parseInt(d.total_sol_sms_aut) === 0 && parseInt(d.total_sol_sms_pend) === 0) {
+            //             return "<span class='label lbl-warning'>Solicitud rechazada</span>";
+            //         }
+            //         if (parseInt(d.autorizacion_sms) === 1) {
+            //             return `<span class='label lbl-yellow'>Verificación pendiente:</span></br>&nbsp;<span class='label lbl-yellow'>${d.telefono}</span>`;
+            //         }
+            //         if (parseInt(d.autorizacion_sms) === 2) {
+            //             return `<span class='label lbl-green'>Verificado:</span></br>&nbsp;<span class='label lbl-green'>${d.telefono}</span>`;
+            //         }
+            //         return '';
+            //     }
+            // },
             {
                 "data": function( d ){
                     let atributoButton = '';
@@ -556,8 +554,9 @@ function fillDataTable(idCondominio) {
                     const idStatusContratacion = parseInt(d.idStatusContratacion);
                     if(d.vl == '1') {
                         buttons = 'En proceso de Liberación';
-                    } else if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO && idStatusContratacion === STATUS_CONTRATACION) {
-                        if (d.id_prospecto == 0) {
+                    } else if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO && idStatusContratacion === STATUS_CONTRATACION ) {
+                        if (d.id_prospecto == 0 && d.proceso <= 1) {
+                        
                             if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
                                 buttons = construirBotonEstatus(d, d.fechaVenc, 'getInfo2');
                             } else {
@@ -592,8 +591,14 @@ function fillDataTable(idCondominio) {
                                 atributoButton = '';
                                 urlToGo  = general_base_url+'Asesor/deposito_seriedad/'+d.id_cliente+'/0';
                             } else {
+                                if(d.proceso > 1){
+                                    atributoButton = '';
+                                    urlToGo  = general_base_url+'Asesor/deposito_seriedad/'+d.id_cliente+'/0';
+                                }else{
                                 atributoButton = 'disabled';
                                 urlToGo  = '#';
+                                }
+                                
                             }
                         } else {
                             atributoButton = '';
@@ -616,6 +621,7 @@ function fillDataTable(idCondominio) {
                         (parseInt(d.idMovimiento) === MOVIMIENTOS.NUEVO_APARTADO && parseInt(d.idStatusContratacion) === STATUS_CONTRATACION) &&
                         d.id_prospecto == 0 &&
                         (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806)
+                        && d.proceso <= 1
                     ) {
                         buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}" data-idLote="${d.idLote}"> <i class="fas fa-user-check"></i></button>`;
                     }
@@ -623,7 +629,7 @@ function fillDataTable(idCondominio) {
                         buttons = construirBotonEstatus(d, d.fechaVenc, 'getInfo2');
 
                         if(idMovimiento == MOVIMIENTOS.NUEVO_APARTADO && idStatusContratacion === STATUS_CONTRATACION){
-                            if (d.id_prospecto == 0 && (d.id_coordinador !== 10807 || d.id_coordinador !== 10806 || d.id_gerente !== 10807 || d.id_gerente !== 10806)) {
+                            if (d.id_prospecto == 0 && (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806) && d.proceso <= 1) {
                                 buttons = construirBotonEstatus(d, d.id_coordinador, 'disabled', 'disabled');
                                 atributoButton = 'disabled';
                             }
@@ -638,7 +644,7 @@ function fillDataTable(idCondominio) {
                         }
 
                         if (d.dsType == 1 && (d.idMovimiento == MOVIMIENTOS.NUEVO_APARTADO && d.idStatusContratacion == STATUS_CONTRATACION) &&
-                             d.id_prospecto == 0 && (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806)) {
+                             d.id_prospecto == 0 && (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806) && d.proceso <= 1) {
                              buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                             }
                         }

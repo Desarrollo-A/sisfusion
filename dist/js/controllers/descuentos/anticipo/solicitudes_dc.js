@@ -71,8 +71,6 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 data-monto_parcialidad="${d.monto_parcialidad}"
                 data-id_parcialidad="${d.id_parcialidad}"
                 data-monto_formateado="${d.monto_formateado}"
-
-                
                 data-monto="${d.monto}"
                 data-name="${d.nombre}" class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
                 <i class="fas fa-forward"></i>
@@ -132,7 +130,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input class="center-align" type="hidden"  value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-            <h4 class=" center-align">¿Ésta seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
+            <h4 class=" center-align">¿Estás seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
                 <label class="label control-label">Mótivo del rechazo</label>
                 <textarea id="motivoDescuento" name="motivoDescuento" class="text-modal" rows="3" required></textarea>
@@ -197,7 +195,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         
 
 
-        <div class="form-group col-md-6 ">
+        <div class="form-group col-md-10">
             <label class="label control-label">Monto por mes</label>
             <input class="form-control input-gral" 
                 data-type="currency" maxlength="10" 
@@ -205,13 +203,15 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 type="text" value="${monto_parcialidad}" name="mensualidad" id="mensualidad">
         </div>
 
-        <div class="form-group col-md-6 ">
-                <a  
-                    name="nuevosNumeros"  
+        <div class="form-group col-md-2">
+            <label class="label control-label"></label>
+                <a  name="nuevosNumeros"  
                     id="nuevosNumeros" 
                     onclick="validar_nuevosNumeros()"
-                    class="btn btn-violetDeep">
-                    Validar nuevos valores
+                    title="Calcular datos"
+                    class="btn-data btn-green">
+                    <i class="fas fa-calculator" style="font-size: 24px;"></i>
+                    
                 </a>
         </div>` 
         : 
@@ -226,19 +226,19 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             required
             type="text" value="${monto1}" name="monto" id="monto">
         </div>
-        ` ;
+        ` ; 
 
 
         Modalbody.html('');
         Modalfooter.html('');
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-            <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
+            <h4>¿Estás seguro que deseas aceptar el anticipo de ${nombreUsuario}?</h4>
                 <div>
                     <h2 class="card_title">Detalles</h2>
                     <p class="center-align"> 
                         Monto solicitado : ${monto_formateado}.<br>
-                        Mendiante la modalidad : ${modalidad}
+                        Mediante la modalidad : ${modalidad}
                     </p>
                 </div>
 
@@ -299,7 +299,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalbody_subir.append(`
             <input type="hidden" value="${idAnticipo1}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
-            <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
+            <h4>¿Estás seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
             <div class="form-group">
                 <label class="label control-label">Prioridad</label>
 
@@ -398,7 +398,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
-                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' +v.comentario_general + '</a>\n' +

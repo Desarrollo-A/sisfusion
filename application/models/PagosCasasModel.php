@@ -50,22 +50,21 @@ class PagosCasasModel extends CI_Model
                 ELSE 'Sin asignar'
             END) AS nombreAsesor,
             CASE
-                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
-                 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+                    WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+                    ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
             END AS gerente
-        FROM proceso_casas pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN proceso_pagos pp ON pp.idProcesoCasas = pc.idProcesoCasas
-        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
-        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
-        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio 
-        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
-        WHERE
-            pc.proceso = 16
-        AND pc.status = 1
-        AND pc.finalizado = 1
-        AND pp.idProcesoCasas IS NULL";
+            FROM proceso_casas_banco pc
+            LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+            LEFT JOIN proceso_pagos pp ON pp.idProcesoCasas = pc.idProcesoCasas
+            LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+            LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
+            LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
+            LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio 
+            LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+            WHERE
+                pc.proceso >= 15
+            AND pc.status = 1
+            AND pp.idProcesoCasas IS NULL";
 
         return $this->db->query($query)->result();
     }
@@ -158,7 +157,7 @@ class PagosCasasModel extends CI_Model
                  ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
             END AS gerente
         FROM proceso_pagos pp
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
@@ -217,7 +216,7 @@ class PagosCasasModel extends CI_Model
             END AS gerente
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
@@ -247,7 +246,7 @@ class PagosCasasModel extends CI_Model
             END AS gerente
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
@@ -280,7 +279,7 @@ class PagosCasasModel extends CI_Model
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
@@ -335,7 +334,7 @@ class PagosCasasModel extends CI_Model
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
@@ -384,7 +383,7 @@ class PagosCasasModel extends CI_Model
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
@@ -431,7 +430,7 @@ class PagosCasasModel extends CI_Model
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
@@ -490,7 +489,7 @@ class PagosCasasModel extends CI_Model
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
@@ -525,7 +524,7 @@ class PagosCasasModel extends CI_Model
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
@@ -559,7 +558,7 @@ class PagosCasasModel extends CI_Model
             END AS gerente
         FROM avances_proceso_pagos app
         LEFT JOIN proceso_pagos pp ON pp.idProcesoPagos = app.idProcesoPagos
-        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
         LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial

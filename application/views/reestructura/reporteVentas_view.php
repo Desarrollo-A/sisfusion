@@ -107,6 +107,18 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="detailPayments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content" style="background-color:#ecedf0">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -142,6 +154,7 @@
                                                 <th>ESTATUS CONTRATACIÓN</th>
                                                 <th>FECHA ESTATUS 2 (PRE PROCESO)</th>
                                                 <th>FECHA ÚLTIMO STATUS</th>
+                                                <th>DISPERSIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

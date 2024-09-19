@@ -26,6 +26,17 @@
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" id="modal_nuevas_casas" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="form_interes_casas">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -49,7 +60,7 @@
         <div class="modal fade modal-alertas" id="modal_refresh_seguros" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form method="post" id="form_refresh_seguros">
+                    <form method="post" id="form_interes_seguros">
                         <div class="modal-body"></div>
                     </form>
                 </div>
@@ -69,7 +80,7 @@
             </div>
         </div>
     
-<div class="modal fade modal-alertas" id="modal_multiples_intmexR_seguros" role="dialog">
+        <div class="modal fade modal-alertas" id="modal_multiples_intmexR_seguros" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header"></div>
@@ -81,7 +92,20 @@
                 </div>
             </div>
         </div>
-    
+
+        <div class="modal fade modal-alertas" id="modal_multiples_intmexR_casas" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <form method="post" id="form_multiples_casas">
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
@@ -94,6 +118,7 @@
                         <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
                         <!-- <li><a href="#proceso-1_ooam" role="tab" data-toggle="tab">Pagos ooam</a></li> -->
                         <li><a href="#remanenteSeguros" role="tab" data-toggle="tab">Pagos lotes seguros</a></li>
+                        <li><a href="#remanenteCasas" role="tab" data-toggle="tab">Pagos casas</a></li>
                     </ul>
                     <div class="card no-shadow m-0 border-conntent__tabs">
                         <div class="card-content p-0">
@@ -177,6 +202,7 @@
                                     </div>
                                     <?php $this->load->view('pagos/seguros_internomex/revision_remanente_intmex_ooam_view'); ?>
                                     <?php $this->load->view('pagos/seguros_internomex/revision_remanente_intmex_seguros_view'); ?>
+                                    <?php $this->load->view('pagos/casas_internomex/revision_remanente_intmex_casas_view'); ?>
                                 </div>
                             </div>
                         </div>
@@ -191,4 +217,5 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_remanente_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros_internomex/revision_remanente_intmex_seguros.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/casas_internomex/revision_remanente_intmex_casas.js"></script>
 </body>

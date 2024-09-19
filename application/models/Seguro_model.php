@@ -18,7 +18,7 @@ class Seguro_model extends CI_Model {
         INNER JOIN pago_seguro ps ON ps.id_lote = lo.idLote 
         INNER JOIN comisiones_seguro cs on cs.idCliente = lo.idCliente  
         LEFT JOIN  (SELECT SUM(abono_neodata) abono_pagado, id_comision 
-		FROM pago_seguro_ind WHERE (estatus in (1,3) OR descuento_aplicado = 1) 
+		FROM pago_seguro_ind WHERE (estatus in (1,3,8,11,4) OR descuento_aplicado = 1) 
 		GROUP BY id_comision) psi ON psi.id_comision = cs.id_comision
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -205,9 +205,13 @@ class Seguro_model extends CI_Model {
             $query = $this->db->query("UPDATE pago_seguro_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
             return true;
         }
-        function insertComisionSeguroAbono($dataIndividual,$banderaAbono , $comision) {
+        function insertComisionSeguroAbono($dataIndividual,$banderaAbono , $comision,$dataHistorialSeguros) {
             if ($dataIndividual != '' && $dataIndividual != null){
                 $response = $this->db->insert('pago_seguro_ind', $dataIndividual);
+                $insertComision = $this->db->insert_id();
+                $dataHistorialSeguros['id_pago_i'] = $insertComision;
+
+                $response = $this->db->insert('historial_seguro', $dataHistorialSeguros);
                 if (!$response) {
                     return 0;
                 } else {
@@ -668,13 +672,13 @@ class Seguro_model extends CI_Model {
             ini_set('memory_limit', -1);  
             $cadena = $estatus != '' ? ( $estatus == 1 ? "WHERE  cl.estatusSeguro IN(".$estatus.",0)" : "WHERE  cl.estatusSeguro IN(".$estatus.")" ): "";  
     
-            $query = $this->db->query("SELECT re.descripcion nombreResidencial,l.referencia,co.nombre nombreCondominio,l.nombreLote,l.idLote,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+            $query = $this->db->query("SELECT pg.numero_dispersion,re.descripcion nombreResidencial,l.referencia,co.nombre nombreCondominio,l.nombreLote,l.idLote,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
 			tv.tipo_venta,st.nombreStatus,pg.totalLote Precio_Total,(pg.porcentaje_abono * 100) porcentaje,pg.total_comision Comision_total,pg.abonado Comisiones_Pagadas,pg.pendiente Comisiones_pendientes,pg.fecha_modificacion,
             (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'lbl-violetBoots' ELSE 'lbl-gray' END) colorContratacion,
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'CONTRATADO' ELSE CONVERT(VARCHAR,l.idStatusContratacion) END) idStatusContratacion,pl.descripcion plan_comision,pl.id_plan,
             (CASE WHEN cl.estatusSeguro = 0 THEN 'PENDIENTE' ELSE opc.nombre END) estatusSeguro,
-			(CASE WHEN cl.estatusSeguro IN (0,1) THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
+			(CASE WHEN cl.estatusSeguro IN (0,1,4) THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
 			FROM lotes l
 			INNER JOIN clientes cl ON cl.id_cliente=l.idCliente
 			INNER JOIN condominios co ON co.idCondominio=l.idCondominio
