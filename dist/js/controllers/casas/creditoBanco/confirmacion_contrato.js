@@ -45,7 +45,7 @@ let columns = [
     { data: function(data){
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avance_proceso, data})
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data})
+        /* let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data}) */
 
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },

@@ -39,6 +39,20 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
+    public function getPasos($idProceso, $bandera){
+
+        $query = "SELECT TOP 1 fj.pasoActual, fj.ultimoPaso, fj.avance, oxc.nombre AS tipoMovimiento 
+        FROM proceso_casas_banco pc
+        INNER JOIN historial_proceso_casas hpc ON hpc.idProcesoCasas = pc.idProcesoCasas
+        INNER JOIN flujo_proceso_casas_banco fj ON fj.pasoActual = hpc.procesoNuevo AND fj.ultimoPaso = hpc.procesoAnterior AND fj.tipoPaso = $bandera
+        INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = fj.tipoMovimiento 
+        WHERE pc.idProcesoCasas = $idProceso
+        ORDER BY hpc.idHistorial DESC;
+        ";
+
+        return $this->db->query($query)->row();
+    }
+
     public function updateNotaria($id_opcion, $estatus){
         $query = "UPDATE opcs_x_cats
         SET
@@ -1253,7 +1267,8 @@ AND vb.proyectos != 1";
                 WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
             END AS tiempoProceso,
             oxc.nombre AS movimiento,
-            oxc2.nombre AS nombreArchivo
+            oxc2.nombre AS nombreArchivo,
+            vb.comercializacion AS voboComercializacion
             FROM proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
             INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -2160,7 +2175,7 @@ AND vb.proyectos != 1";
     }
 
     public function rechazoPaso12($idProceso){
-        $query = $this->db->query("UPDATE vobos_proceso_casas SET comercializacion = ? WHERE idProceso = ? AND paso = ?", array(0, $idProceso, 2));
+        $query = $this->db->query("UPDATE vobos_proceso_casas SET comercializacion = ? WHERE idProceso = ? AND paso = ?", array(0, $idProceso, 11));
 
         return $query;
     }
