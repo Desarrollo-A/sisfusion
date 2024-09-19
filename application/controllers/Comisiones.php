@@ -925,7 +925,7 @@ function update_estatus(){
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
-    $consultaTipoUsuario = $this->db->query("SELECT tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 WHEN forma_pago = 5 THEN 5 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 
     if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
@@ -5687,7 +5687,7 @@ public function lista_usuarios($rol,$forma_pago){
     $data = array(
       "fechasCorte" => $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$diaActual)
     );
-    echo json_encode($data);
+    echo json_encode($data,JSON_NUMERIC_CHECK);
   }
 
   public function getDatosFechasProyecCondm(){
@@ -5704,7 +5704,7 @@ public function lista_usuarios($rol,$forma_pago){
       "sumaPagos" => $this->Comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array(),
       "opinion" => $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array()
     );
-    echo json_encode($data);
+    echo json_encode($data,JSON_NUMERIC_CHECK);
     
   }
 

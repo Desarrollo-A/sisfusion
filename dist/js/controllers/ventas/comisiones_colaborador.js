@@ -163,7 +163,7 @@ $(document).ready(function () {
     var hora = hoy.getHours();
     if(forma_pago == 3){
         if (
-            [0,1].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+            [0,1,5].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                             ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION FECHA CORTE
             ) {
             requestCodigoPostal();

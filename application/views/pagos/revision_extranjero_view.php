@@ -1,6 +1,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
-<body>
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+
+<body> 
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
         
@@ -181,4 +183,8 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_extranjero.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_invoice.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <script type="text/javascript">
+        Shadowbox.init();
+    </script>
 </body>

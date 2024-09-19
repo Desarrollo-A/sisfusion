@@ -632,7 +632,7 @@ class Pagos_model extends CI_Model {
 
     function getDatosNuevasExContraloria($proyecto,$condominio){
         if($this->session->userdata('id_rol') == 31) { // INTERNOMEX
-            $filtro = " pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
+            $filtro = " pci1.estatus IN (8, 88) AND co.idCondominio = $condominio";
             $whereFiltro = "";
         } else { // CONTRALORÍA
             $filtro = " pci1.estatus IN (4)";
