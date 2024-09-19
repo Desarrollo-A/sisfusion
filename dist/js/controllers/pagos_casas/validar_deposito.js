@@ -1,4 +1,4 @@
-back_to_documentacion = function(data) {
+back_to_previous = function(data) {
     let form = new Form({
         title: 'Regresar proceso', 
         text: `¿Regresar proceso del lote <b>${data.nombreLote}</b>?`,
@@ -7,7 +7,7 @@ back_to_documentacion = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `back_to_documentacion`,
+                url: `back_to_carga_comprobante`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -32,7 +32,7 @@ back_to_documentacion = function(data) {
     form.show()
 }
 
-pass_to_confirmar_pago = function(data) {
+pass_to_next = function(data) {
     let form = new Form({
         title: 'Validar depósito', 
         text: `¿Validar el depósito del lote <b>${data.nombreLote}</b>?<br>Ingresa el monto a pagar al constructor para inicio de obra.`,
@@ -41,7 +41,7 @@ pass_to_confirmar_pago = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_confirmar_pago`,
+                url: `to_documentacion`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -59,7 +59,7 @@ pass_to_confirmar_pago = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
-            new NumberField({  id: 'monto', label: 'Pago a realizar', required: true, mask: "#,##0.00" }),
+            // new NumberField({  id: 'monto', label: 'Pago a realizar', required: true, mask: "#,##0.00" }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -88,9 +88,9 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_confirmar_pago, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_next, data})
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_previous, data})
         
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },
