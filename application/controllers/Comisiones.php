@@ -202,7 +202,13 @@ class Comisiones extends CI_Controller
 
   public function solicitudRigel(){
     $this->load->view('template/header');
-    $this->load->view("casas_comisiones/casas_colaboradorRigel_view");
+    $rol = $this->session->userdata('id_rol');
+    if($rol == 2){
+      $this->load->view("casas_comisiones/casas_colaboradorRigel_view");
+    }else if($rol == 3){
+      $this->load->view("casas_comisiones/solicitudes_casas_comisiones");
+
+    }
   }
 
 
@@ -5685,7 +5691,7 @@ public function lista_usuarios($rol,$forma_pago){
   }
 
   public function getDatosFechasProyecCondm(){
-    $tipoUsuario = ($this->session->userdata('tipo') == 1 ? 0 : ($this->session->userdata('tipo') == 2 ? 1: $this->session->userdata('tipo')));
+    $tipoUsuario = $this->session->userdata('tipo');
     
     //$tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
     //var_dump(date('N') );
