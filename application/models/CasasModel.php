@@ -1263,7 +1263,8 @@ class CasasModel extends CI_Model
                 WHEN DATEDIFF(DAY, GETDATE() , pc.fechaProceso) < 0 THEN CAST(CONCAT(0, ' ', 'DIA(S)') AS VARCHAR) ELSE CAST(CONCAT(DATEDIFF(DAY, GETDATE() , pc.fechaProceso), ' ', 'DIA(S)') AS VARCHAR)
             END AS tiempoProceso,
             oxc.nombre AS movimiento,
-            oxc2.nombre AS nombreArchivo
+            oxc2.nombre AS nombreArchivo,
+            vb.comercializacion AS voboComercializacion
             FROM proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
             INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -2162,7 +2163,7 @@ class CasasModel extends CI_Model
     }
 
     public function rechazoPaso12($idProceso){
-        $query = $this->db->query("UPDATE vobos_proceso_casas SET comercializacion = ? WHERE idProceso = ? AND paso = ?", array(0, $idProceso, 2));
+        $query = $this->db->query("UPDATE vobos_proceso_casas SET comercializacion = ? WHERE idProceso = ? AND paso = ?", array(0, $idProceso, 11));
 
         return $query;
     }
