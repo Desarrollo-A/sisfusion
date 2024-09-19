@@ -6346,7 +6346,7 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
     $formaPago = $this->session->userdata('forma_pago');
     $filtro = ($tipoUsuario == 2 || $tipoUsuario == 4) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : ((in_array($formaPago, array(2, 3, 4)) && $tipoUsuario == 2 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
     $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
-    $tipoUsuario =  $tipoUsuario == 1 ? 0 : ($tipoUsuario == 2 ? 1 : ($tipoUsuario == 4 ? 4 : 3) );
+    $tipoUsuario =  $tipoUsuario == 1 ? ( $formaPago == 5 ? 5 : 0 ): ($tipoUsuario == 2 ? 1 : ($tipoUsuario == 4 ? 4 : 3) );
     return $this->db->query("SELECT mes,fechaInicio,corteOoam $filtro2 FROM fechasCorte WHERE estatus = 1 AND 
       corteOoam IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY corteOoam ASC")->result_array();
     }

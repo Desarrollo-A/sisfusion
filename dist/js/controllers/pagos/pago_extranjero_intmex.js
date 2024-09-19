@@ -273,7 +273,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             searchable:false,
             className: 'dt-body-center',
             render: function (d, type, full, meta){
-                if(full.estatus == 4){
+                if(full.estatus == 8){
                     if(full.id_comision){
                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }

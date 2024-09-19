@@ -25,7 +25,7 @@ function getDataInvoice(){
     $('#tabla_invoice').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
-            total += parseFloat(v.impuesto);
+            total += parseFloat(v.total);
         });
         var to = formatMoney(numberTwoDecimal(total));
         document.getElementById("disponibleInvoice").textContent = to;
@@ -38,6 +38,7 @@ function getDataInvoice(){
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
+        fixedHeader: true,
         buttons: [{
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -141,3 +142,4 @@ function getDataInvoice(){
 $(window).resize(function(){
     tabla_invoice.columns.adjust();
 });
+
