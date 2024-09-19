@@ -181,10 +181,7 @@
                                                         <th>NOMBRE SOLICITANTE</th>
                                                         <th>PUESTO</th>
                                                         
-                                                        
-                                                        <th>EMPRESA</th>
-
-                                                        
+                                                        <th>EMPRESA</th>             
                                                         <th>COMENTARIO</th>
                                                         
                                                         <th>RÉGIMEN</th>
@@ -192,6 +189,10 @@
 
                                                         <th>TOTAL IMPUESTO</th>
                                                         <th>DESCUENTO</th>
+
+                                                        <th>PARCIALIDAD</th>
+                                                        <th>MENSUALIDAD</th>
+
 
                                                         <th>PRIORIDAD</th>                                                        
                                                         <th>SEDE</th>
