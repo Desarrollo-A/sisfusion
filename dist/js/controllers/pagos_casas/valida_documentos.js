@@ -1,4 +1,4 @@
-back_to_documentacion = function(data) {
+back_to_proevious = function(data) {
     let form = new Form({
         title: 'Regresar proceso', 
         text: `¿Regresar proceso del lote <b>${data.nombreLote}</b>?`,
@@ -32,7 +32,7 @@ back_to_documentacion = function(data) {
     form.show()
 }
 
-pass_to_validar_deposito = function(data) {
+pass_to_next = function(data) {
     let form = new Form({
         title: 'Validar documentación', 
         text: `¿Validar la documentación del lote <b>${data.nombreLote}</b>?`,
@@ -41,7 +41,7 @@ pass_to_validar_deposito = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_validar_deposito`,
+                url: `to_confirmar_pago`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -110,9 +110,9 @@ let columns = [
     { data: function(data){
         let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar documentación', onClick: pass_to_validar_deposito, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar documentación', onClick: pass_to_next, data})
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_proevious, data})
         
         return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
     } },
