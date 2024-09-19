@@ -4,17 +4,42 @@
     {
         parent::__construct();
     }
+/*función respaldada del servidor*/
+    /*#05092024
+        public function getPaquetes($idLote){
+			$query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote.'');
+			foreach ($query->result_array() as $desc)
+			{
+			}
+			$query = $this->db-> query('SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ('.$desc['id_descuento'].')');
+			return $query->result_array();
+		}
+     * */
+
+
+
 
     public function getPaquetes($idLote){
 
-        $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote.'');
+        if(!empty($idLote)){
+            $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote.'');
 
-        foreach ($query->result_array() as $desc)
-        {
+            if($query->result_array()[0]['id_descuento'] == ''){//se valida si tiene paquetes activos
+              return array();
+            }
+
+            foreach ($query->result_array() as $desc)
+            {
+            }
+
+            $query = $this->db-> query('SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ('.$desc['id_descuento'].')');
+
+            return $query->result_array();
         }
-        $query = $this->db-> query('SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ('.$desc['id_descuento'].')');
+        else{
+            return array();
+        }
 
-        return $query->result_array();
     }
 
 
@@ -74,8 +99,8 @@
     }
     public function getinfoCorrida($id_corrida) {
         $query = $this->db->query("SELECT id_lote, nombre, edad, telefono, correo, id_asesor, id_coordinador, id_gerente, plan_corrida, anio, dias_pagar_enganche, porcentaje_enganche, cantidad_enganche, 
-                            meses_diferir, apartado, paquete, opcion_paquete, precio_m2_final, saldo, precio_final, fecha_limite, pago_enganche, msi_1p, msi_2p, msi_3p, primer_mensualidad, observaciones, 
-                            finalMesesp1, finalMesesp2, finalMesesp3 FROM corridas_financieras WHERE id_corrida = ".$id_corrida);
+                            meses_diferir, apartado, paquete, opcion_paquete, precio_m2_final, saldo, precio_final, fecha_limite, pago_enganche, msi_1p, msi_2p, msi_3p, msi_4p, primer_mensualidad, observaciones, 
+                            finalMesesp1, finalMesesp2, finalMesesp3, finalMesesp4 FROM corridas_financieras WHERE id_corrida = ".$id_corrida);
         return $query->row();
 
     }
@@ -346,7 +371,7 @@
             case '4': // ASISTENTE DIRECTOR
             case '5': // ASISTENTE SUBDIRECTOR
             case '6': // ASISTENTE GERENTE
-            case '9': // COORDINADOR
+             case '9': // COORDINADOR
             case '13': // CONTRALORIA
             case '17': // CONTRALORIA
             case '32': // CONTRALORIA

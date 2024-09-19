@@ -77,7 +77,7 @@ class Neodata_model extends CI_Model {
 //        exit;
 
 //        $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
-        /**/$response = $this->programacion2->query("
+        /**/$response = $this->db->query("
         EXEC [192.168.16.23].[programacion].[dbo].[CDM302CancelarPlanPago]
         @empresa = N'FRO2',
         @lote = N'$nombreLote',

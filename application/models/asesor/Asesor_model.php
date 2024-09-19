@@ -12,11 +12,12 @@ class Asesor_model extends CI_Model {
             cl.nacionalidad, cl.originario_de as originario, cl.estado_civil, cl.regimen_matrimonial, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, cl.edadFirma, cl.domicilio_empresa, ds.noRefPago, 
             ds.costoM2, ds.costoM2_casas, ds.proyecto, ds.municipio as municipioDS, ds.importOferta, ds.letraImport, ds.cantidad, ds.letraCantidad, ds.saldoDeposito, aportMensualOfer, ds.fecha1erAport, 
             ds.plazo, ds.fechaLiquidaDepo, ds.fecha2daAport, ds.municipio2, ds.dia, ds.mes, ds.anio, ds.observacion, ds.nombreFirmaAsesor, ds.fechaCrate, ds.id_cliente, lot.referencia, 
-            ds.costom2f, oc4.nombre AS reg_nom, cl.cp_fac FROM clientes cl  
+            ds.costom2f, oc4.nombre AS reg_nom, cl.cp_fac, cl.especialistaEscuadron, CONCAT(liderEscuadron.nombre,' ', liderEscuadron.apellido_paterno,' ', liderEscuadron.apellido_materno) as liderEscuadron FROM clientes cl  
         INNER JOIN lotes lot ON cl.idLote = lot.idLote 
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio  
         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial  
         INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+        LEFT JOIN usuarios liderEscuadron ON liderEscuadron.id_usuario = cl.liderEscuadron
         LEFT JOIN opcs_x_cats oc ON oc.id_opcion = cl.nacionalidad AND oc.id_catalogo = 11
         LEFT JOIN opcs_x_cats oc2 ON oc2.id_opcion = cl.estado_civil AND oc2.id_catalogo = 18
         LEFT JOIN opcs_x_cats oc3 ON oc3.id_opcion = cl.regimen_matrimonial AND oc3.id_catalogo = 19
@@ -542,7 +543,9 @@ class Asesor_model extends CI_Model {
                                         cl.municipio, 
                                         cl.localidad, 
                                         cl.calle, 
-                                        cl.colonia
+                                        cl.colonia,
+                                        cl.especialistaEscuadron,
+                                        cl.liderEscuadron
                                 FROM clientes cl
                                 INNER JOIN lotes lot ON cl.idLote = lot.idLote
                                 INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
@@ -1805,6 +1808,11 @@ class Asesor_model extends CI_Model {
         if($option == 'select') {
             $query = $this->db->query("SELECT * FROM codigo_postales WHERE id_estado = $valor;");
         }
+        return $query->result_array();
+    }
+
+    function getLideresRescates(){
+        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario IN(11728, 2807, 2809)");
         return $query->result_array();
     }
 }

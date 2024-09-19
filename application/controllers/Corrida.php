@@ -1,8 +1,18 @@
 <?php
 //    require_once 'static/autoload.php';//linea debe descomentarse en PROD
-    //use PhpOffice\PhpSpreadsheet\Spreadsheet;
-    //use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-    //require '../../vendor/autoload.php'; //linea debe descomentarse en local
+    use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+    require '../../vendor/autoload.php'; //linea debe descomentarse en local
+
+    require_once(APPPATH . "libraries/http/IClient.php");
+    require_once(APPPATH . "libraries/http/IRequest.php");
+    require_once(APPPATH . "libraries/http/Request.php");
+    require_once(APPPATH . "libraries/http/IResponse.php");
+    require_once(APPPATH . "libraries/http/Response.php");
+    require_once(APPPATH . "libraries/http/Client.php");
+
+    use RestClient\Client;
+
 
 class Corrida extends CI_Controller
 {
@@ -54,7 +64,7 @@ class Corrida extends CI_Controller
 
     public function cf2()
     {
-        $this->load->view("corrida/cf_view2");
+        $this->load->view("corrida/cf_view");
     }
 
     public function pagos_capital()
@@ -70,6 +80,11 @@ class Corrida extends CI_Controller
     public function cf_testing()
     {
         $this->load->view("corrida/cf_cambios");
+
+    }
+        public function cfap()
+    {
+        $this->load->view("corrida/archivo_dinamico");
 
     }
 
@@ -315,7 +330,7 @@ class Corrida extends CI_Controller
                 "iva" => 0,
                 "saldoIva" => 0,
                 "total" => $data_general->precioFinalc,
-                "saldo" => $data_general->saldoc
+                "saldo" => (isset($data_general->saldoc) ? $data_general->saldoc : 0)
             );
             array_push($dump_data, $addArray);
         }
@@ -880,6 +895,7 @@ class Corrida extends CI_Controller
         $informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
 
 
+
         $informacion_vendedor = array(
             "idAsesor" => ($data_asesor->idAsesor == "") ? 'NA' : $data_asesor->idAsesor,
             "nombreAsesor" => ($data_asesor->nombreAsesor == "") ? 'NA' : $data_asesor->nombreAsesor,
@@ -1204,7 +1220,19 @@ legend {
 								<td style="font-size: 1.4em;"></td>
 								<td style="font-size: 1.4em;"></td>
 							</tr>
-						</table>
+					</table>
+
+                    <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
+
+							<tr>
+								<td style="font-size: 1.4em;"><b></b></td>
+								<td style="font-size: 1.4em;"><br></td>
+								<td style="font-size: 1.4em;"><b>Mensualidades con interés (1.50% S.S.I.) </b></td>
+								<td style="font-size: 1.4em;"> <b>' . $informacion_corrida->finalMesesp4 . ' </b> ' . money_format('%(#10n', $informacion_corrida->msi_4p) . '</td>
+								<td style="font-size: 1.4em;"></td>
+								<td style="font-size: 1.4em;"></td>
+							</tr>
+					</table>
 
 						
 					<br><br>
@@ -1934,7 +1962,19 @@ legend {
 								<td style="font-size: 1.4em;"></td>
 								<td style="font-size: 1.4em;"></td>
 							</tr>
-						</table>
+					  </table>
+					  
+					  <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">
+
+							<tr>
+								<td style="font-size: 1.4em;"><b></b></td>
+								<td style="font-size: 1.4em;"><br></td>
+								<td style="font-size: 1.4em;"><b>Mensualidades con interés (1.50% S.S.I.) </b></td>
+								<td style="font-size: 1.4em;"> <b>' . $informacion_corrida->finalMesesp4 . ' </b> ' . money_format('%(#10n', $informacion_corrida->msi_4p) . '</td>
+								<td style="font-size: 1.4em;"></td>
+								<td style="font-size: 1.4em;"></td>
+							</tr>
+					  </table>
 
 						
 					<br><br>
@@ -2436,7 +2476,8 @@ legend {
         //exit;
         //$id_corrida = 76515;
         $data_corrida = $this->Corrida_model->getAllInfoCorrida($id_corrida);
-        //print_r($data_corrida);
+//        print_r($data_corrida);
+//        exit;
         $residencial = $data_corrida->residencial;
         $informacion_descCorrida = $this->Corrida_model->getinfoDescLoteCorrida($data_corrida->id_lote, $id_corrida);
 
@@ -2507,7 +2548,7 @@ legend {
             if (count($extras_general) > 0) {
                 $precio_m2_casa = 16000;
             }
-            $i = 30;
+            $i = 31;
             $range1 = 'C1';
             $range2 = 'I1';
             $sheet->mergeCells("$range1:$range2");
@@ -2540,7 +2581,7 @@ legend {
             $sheet->getStyle('F5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
             $sheet->setCellValue('G5', $precio_casa);
             $sheet->getStyle('G5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->setCellValue('H5', ($data_corrida->finalMesesp1 + $data_corrida->finalMesesp2 + $data_corrida->finalMesesp3));
+            $sheet->setCellValue('H5', ($data_corrida->finalMesesp1 + $data_corrida->finalMesesp2 + $data_corrida->finalMesesp3 + $data_corrida->finalMesesp4));
             $sheet->setCellValue('I5', $data_corrida->apartado);
             $sheet->getStyle('I5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
@@ -2851,9 +2892,10 @@ legend {
             #termina encabezado
 
 
-        } else {
+        }
+        else {
 
-            $i = 19;
+            $i = 20;
             #aqui empieza el rango de de las corridas normales
             $range1 = 'C1';
             $range2 = 'I1';
@@ -2878,7 +2920,7 @@ legend {
             $sheet->setCellValue('F4', 'Superficie');
             $sheet->setCellValue('G4', 'Precio m2');
             $sheet->setCellValue('H4', 'Plazo');
-            $sheet->setCellValue('I4', '10% precio m2');
+            $sheet->setCellValue('I4', 'Precio Final m2');
 
             #set values
             $sheet->setCellValue('D5', $data_corrida->nombreCondominio);
@@ -2886,7 +2928,7 @@ legend {
             $sheet->setCellValue('F5', $data_corrida->superficie);
             $sheet->setCellValue('G5', $data_corrida->preciom2);
             $sheet->getStyle('G5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->setCellValue('H5', ($data_corrida->finalMesesp1 + $data_corrida->finalMesesp2 + $data_corrida->finalMesesp3));
+            $sheet->setCellValue('H5', ($data_corrida->finalMesesp1 + $data_corrida->finalMesesp2 + $data_corrida->finalMesesp3  + $data_corrida->finalMesesp4));
             $sheet->setCellValue('I5', $data_corrida->precio_m2_final);
             $sheet->getStyle('I5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
@@ -2959,15 +3001,16 @@ legend {
             $sheet->getStyle('G11:H11')->getFont()->setBold(true);
             $sheet->getStyle("G11")->getFont()->setSize(10);
             $sheet->getStyle("H11")->getFont()->setSize(12);
-            $sheet->setCellValue('H11', $data_corrida->apartado);
+            $sheet->setCellValue('H11', ($data_corrida->apartado != 0) ? $data_corrida->apartado : 0);
             $sheet->getStyle('H11')->getFont()->setName('Arial');
             $sheet->getStyle('H11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
             $sheet->getStyle('H11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
 
             $sheet->setCellValue('C13', 'Mensualidad sin/Int. ');
-            $sheet->setCellValue('E13', $data_corrida->finalMesesp1);
-            $sheet->setCellValue('F13', $data_corrida->msi_1p);
+            $sheet->setCellValue('D13', '0%');
+            $sheet->setCellValue('E13', (($data_corrida->finalMesesp1 != 0) ? $data_corrida->finalMesesp1 : 0));
+            $sheet->setCellValue('F13', (($data_corrida->msi_1p != 0) ? $data_corrida->msi_1p : 0) );
             $sheet->getStyle('C13:E13')->getFont()->setBold(true);
             $sheet->getStyle('E13')->getFont()->getColor()->setARGB('FF003A');
             $sheet->getStyle('F13')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
@@ -2983,8 +3026,8 @@ legend {
 
             $sheet->setCellValue('C14', 'Mensualidad Con/Int. SSI');
             $sheet->setCellValue('D14', '1.00%');
-            $sheet->setCellValue('E14', $data_corrida->finalMesesp2);
-            $sheet->setCellValue('F14', $data_corrida->msi_2p);
+            $sheet->setCellValue('E14', (($data_corrida->finalMesesp2 != 0) ? $data_corrida->finalMesesp2 : 0));
+            $sheet->setCellValue('F14', (($data_corrida->msi_2p != 0) ? $data_corrida->msi_2p : 0));
             $sheet->getStyle('C14:E14')->getFont()->setBold(true);
             $sheet->getStyle('E14')->getFont()->getColor()->setARGB('FF003A');
             $sheet->getStyle('F14')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
@@ -2993,13 +3036,24 @@ legend {
 
             $sheet->setCellValue('C15', 'Mensualidad Con/Int. SSI ');
             $sheet->setCellValue('D15', '1.25%');
-            $sheet->setCellValue('E15', $data_corrida->finalMesesp3);
-            $sheet->setCellValue('F15', $data_corrida->msi_3p);
+            $sheet->setCellValue('E15', (($data_corrida->finalMesesp3 != 0) ? $data_corrida->finalMesesp3 : 0));
+            $sheet->setCellValue('F15', (($data_corrida->msi_3p != 0) ? $data_corrida->msi_3p : 0));
             $sheet->getStyle('C15:E15')->getFont()->setBold(true);
             $sheet->getStyle('E15')->getFont()->getColor()->setARGB('FF003A');
             $sheet->getStyle('F15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
             $sheet->getStyle('C15:F15')->getFont()->setName('Arial');
             $sheet->getStyle("C15")->getFont()->setSize(9);
+
+            $sheet->setCellValue('C16', 'Mensualidad Con/Int. SSI ');
+            $sheet->setCellValue('D16', '1.50%');
+            $sheet->setCellValue('E16', (($data_corrida->finalMesesp4 != 0) ? $data_corrida->finalMesesp4 : 0));
+            $sheet->setCellValue('F16', (($data_corrida->msi_4p != 0) ? $data_corrida->msi_4p : 0));
+            $sheet->getStyle('C16:E16')->getFont()->setBold(true);
+            $sheet->getStyle('E16')->getFont()->getColor()->setARGB('FF003A');
+            $sheet->getStyle('F16')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+            $sheet->getStyle('F16')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('C16:F16')->getFont()->setName('Arial');
+            $sheet->getStyle("C16")->getFont()->setSize(9);
 
 
             $sheet->setCellValue('H17', 'Tasa Anual');
@@ -3040,6 +3094,43 @@ legend {
             $sheet->getStyle('C19:I19')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             #termina encabezado
         }
+
+        #aqui se muestra el registro uno para la validación de juridico en el proceso de contratgación
+        #fecha
+        $sheet->setCellValue('C' . 20, '');
+        $sheet->getStyle('C' . 20)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        #mes
+        $sheet->setCellValue('D' . 20, 0);
+        $sheet->getStyle('D' . 20)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        #capital
+        $sheet->setCellValue('E' . 20, '');
+        $sheet->getStyle('E' . 20)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle('E' . 20)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+        #intereses
+        $sheet->setCellValue('F' . 20, '');
+        $sheet->getStyle('F' . 20)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle('F' . 20)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+        #pago
+        $sheet->setCellValue('G' . 20, '');
+        $sheet->getStyle('G' . 20)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle('G' . 20)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+        #saldo
+
+        $sheet->setCellValue('H' . 20, $data_corrida->saldo);
+        $sheet->getStyle('H' . 20)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle('H' . 20)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+        #esquema
+        $sheet->setCellValue('I' . 20, '');
+        $sheet->getStyle('I' . 20)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
 
         $array_dump = $data_corrida->corrida_dump;
@@ -3214,6 +3305,7 @@ legend {
         $arreglo["finalMesesp1"] = $objDatos->finalMesesp1;
         $arreglo["finalMesesp2"] = $objDatos->finalMesesp2;
         $arreglo["finalMesesp3"] = $objDatos->finalMesesp3;
+        $arreglo["finalMesesp4"] = $objDatos->finalMesesp4;
         $arreglo["observaciones"] = $objDatos->observaciones;
         $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
         $arreglo["fechaApartado"] = $objDatos->fechaApartado;
@@ -4542,5 +4634,24 @@ legend {
         } else {
             echo json_encode(array());
         }
+    }
+
+
+    public function regPlanPagoCompleto()
+    {
+        $data = json_decode(file_get_contents("php://input"));
+
+        #http://192.168.16.20/neodata_reps/back/index.php
+        $url = "https://bi-maderas.gphsis.com/reps/back/index.php/ServiciosNeo/regPlanPagoCompleto";
+
+        $client = new Client();
+
+        $request = $client->newRequest($url, 'POST', json_encode($data));
+
+        $response = $request->getResponse();
+
+        print_r(json_encode(json_decode($response->getParsedResponse())));
+
+        exit;
     }
 }

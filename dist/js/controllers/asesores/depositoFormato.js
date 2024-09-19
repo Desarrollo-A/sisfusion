@@ -346,6 +346,7 @@ if(id_rol_general == 7 || usuariosContraloria.includes(id_usuario_general) || on
     const campo5 = document.getElementById("codigol");
     const campo6 = document.getElementById("cp_fac");
     checkbox.addEventListener("change", function() {
+        console.log('checkLider:', checkLider);
         if (checkbox.checked) {
             $('#regimenFiscal').prop('required',true);
             $('#rfc').prop('required',true);
@@ -370,6 +371,27 @@ if(id_rol_general == 7 || usuariosContraloria.includes(id_usuario_general) || on
         const nav = document.querySelector('#sectionBtns');
         if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
     };
+
+    //LIDER ESCUADRON
+    const checkLider = document.getElementById("escuadronRescate");
+    const selectLiderDiv = document.getElementById("liderEscuadronDiv");
+    let selectLider = document.getElementById("liderEscuadronSelect");
+    checkLider.addEventListener("change", function() {
+        console.log('checkLider:', checkLider);
+        if (checkLider.checked) {
+            $('#liderEscuadronSelect').prop('required', true);
+            selectLiderDiv.classList.remove('d-none');
+            checkLider.value = 1;
+            $("#liderEscuadronSelect").selectpicker("refresh");
+        } else {
+            $('#liderEscuadronSelect').prop('required', false);
+            selectLiderDiv.classList.add("d-none");
+            checkLider.value = 0;
+            selectLider.value = 0;
+        }
+    });
+
+
 }
 
 $(document).on('click', '#copropietario-collapse', function () {

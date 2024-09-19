@@ -1605,9 +1605,9 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getHistorialEstatus3(){
-        return $this->db->query("SELECT res.abreviatura as nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote,
+        /*SELECT res.abreviatura as nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote,
         lo.idLote, lo.referencia, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
-        lo.ubicacion, sede.nombre as nombreSede, CAST(lo.comentario AS varchar(MAX)) comentario, 
+        lo.ubicacion, sede.nombre as nombreSede, CAST(lo.comentario AS varchar(MAX)) comentario,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) as nombreGerente,
         hl.modificado fechaEnvioPostventa, hl3.modificado fechaEnvioAsesor
         FROM lotes lo
@@ -1620,10 +1620,63 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
         LEFT JOIN sedes sede ON sede.id_sede = lo.ubicacion
         INNER JOIN usuarios us ON us.id_usuario = cl.id_gerente
+        WHERE lo.tipo_venta = 1 AND lo.status = 1
+        GROUP BY res.abreviatura, co.nombre, lo.nombreLote, lo.idLote, lo.nombreLote, lo.referencia, cl.nombre,
+        cl.apellido_paterno, cl.apellido_materno,  lo.ubicacion, sede.nombre, CAST(lo.comentario AS varchar(MAX)), hl.modificado,
+        us.nombre, us.apellido_paterno, us.apellido_materno, hl3.modificado*/
+        return $this->db->query("SELECT res.abreviatura as nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote,
+        lo.idLote, lo.referencia, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) as nombreCliente,
+        lo.ubicacion, sede.nombre as nombreSede, CAST(lo.comentario AS varchar(MAX)) comentario, 
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) as nombreGerente,
+        hl.modificado fechaEnvioPostventa, hl3.modificado fechaEnvioAsesor, 
+        hl0.cantidadRechazos,
+        hl01.fechaEstatus01,
+        hl02.fechaEstatus02,
+        hl05.fechaEstatus05,
+        hl06.fechaEstatus06,
+        hl07.fechaEstatus07,
+        hl08.fechaEstatus08,
+        hl09.fechaEstatus09,
+        hl10.fechaEstatus10,
+        hl11.fechaEstatus11,
+        hl12.fechaEstatus12,
+        hl13.fechaEstatus13,
+        hl14.fechaEstatus14,
+        hl15.fechaEstatus15
+        FROM lotes lo
+        LEFT JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes hl WHERE hl.idMovimiento IN (4, 74, 101, 103) AND status = 1 GROUP BY idLote, idCliente) hl  ON hl.idLote = lo.idLote-- AND hl.idCliente = lo.idCliente
+        LEFT JOIN historial_lotes hl2 ON hl2.idLote = hl.idLote AND hl2.idCliente = hl.idCliente AND hl2.modificado = hl.modificado AND hl2.status = 1
+        INNER JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes hl3 WHERE hl3.idMovimiento IN (98, 100) AND status = 1 GROUP BY idLote, idCliente) hl3  ON hl3.idLote = lo.idLote-- AND hl.idCliente = lo.idCliente
+        INNER JOIN historial_lotes hl4 ON hl4.idLote = hl3.idLote AND hl4.idCliente = hl3.idCliente AND hl4.modificado = hl3.modificado AND hl4.status = 1
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        LEFT JOIN sedes sede ON sede.id_sede = lo.ubicacion
+        INNER JOIN usuarios us ON us.id_usuario = cl.id_gerente
+
+        ---nuevos campos--
+        LEFT JOIN (SELECT count(*) cantidadRechazos, hl.idLote, hl.idCliente FROM historial_lotes hl  WHERE hl.idMovimiento IN(99, 102, 104, 108, 110, 113, 114) GROUP BY hl.idCliente, hl.idLote) hl0 ON hl0.idLote = lo.idLote AND hl0.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus01 FROM historial_lotes WHERE idMovimiento = 31 GROUP BY idLote, idCliente) hl01 ON hl01.idLote = lo.idLote AND hl01.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus02 FROM historial_lotes WHERE idMovimiento = 84 GROUP BY idLote, idCliente) hl02 ON hl02.idLote = lo.idLote AND hl02.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus03 FROM historial_lotes WHERE idMovimiento = 101 GROUP BY idLote, idCliente) hl03 ON hl03.idLote = lo.idLote AND hl03.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus05 FROM historial_lotes WHERE idMovimiento = 35 GROUP BY idLote, idCliente) hl05 ON hl05.idLote = lo.idLote AND hl05.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus06 FROM historial_lotes WHERE idMovimiento = 36 GROUP BY idLote, idCliente) hl06 ON hl06.idLote = lo.idLote AND hl06.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus07 FROM historial_lotes WHERE idMovimiento = 37 GROUP BY idLote, idCliente) hl07 ON hl07.idLote = lo.idLote AND hl07.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus08 FROM historial_lotes WHERE idMovimiento IN (38, 65) GROUP BY idLote, idCliente) hl08 ON hl08.idLote = lo.idLote AND hl08.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus09 FROM historial_lotes WHERE idMovimiento = 39 GROUP BY idLote, idCliente) hl09 ON hl09.idLote = lo.idLote AND hl09.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus10 FROM historial_lotes WHERE idMovimiento = 40 GROUP BY idLote, idCliente) hl10 ON hl10.idLote = lo.idLote AND hl10.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus11 FROM historial_lotes WHERE idMovimiento = 41 GROUP BY idLote, idCliente) hl11 ON hl11.idLote = lo.idLote AND hl11.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus12 FROM historial_lotes WHERE idMovimiento = 42 GROUP BY idLote, idCliente) hl12 ON hl12.idLote = lo.idLote AND hl12.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus13 FROM historial_lotes WHERE idMovimiento = 43 GROUP BY idLote, idCliente) hl13 ON hl13.idLote = lo.idLote AND hl13.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus14 FROM historial_lotes WHERE idMovimiento = 44 GROUP BY idLote, idCliente) hl14 ON hl14.idLote = lo.idLote AND hl14.idCliente = lo.idCliente
+        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaEstatus15 FROM historial_lotes WHERE idMovimiento = 45 GROUP BY idLote, idCliente) hl15 ON hl15.idLote = lo.idLote AND hl15.idCliente = lo.idCliente
+        --terminan nuevos campos
         WHERE lo.tipo_venta = 1 AND lo.status = 1 
         GROUP BY res.abreviatura, co.nombre, lo.nombreLote, lo.idLote, lo.nombreLote, lo.referencia, cl.nombre,
         cl.apellido_paterno, cl.apellido_materno,  lo.ubicacion, sede.nombre, CAST(lo.comentario AS varchar(MAX)), hl.modificado,
-        us.nombre, us.apellido_paterno, us.apellido_materno, hl3.modificado")->result_array();
+        us.nombre, us.apellido_paterno, us.apellido_materno, hl3.modificado, hl01.fechaEstatus01,
+        hl02.fechaEstatus02, hl05.fechaEstatus05, hl06.fechaEstatus06, hl07.fechaEstatus07, hl08.fechaEstatus08, hl09.fechaEstatus09, hl10.fechaEstatus10, hl11.fechaEstatus11, hl12.fechaEstatus12, hl13.fechaEstatus13, hl14.fechaEstatus14, hl15.fechaEstatus15, hl0.cantidadRechazos
+        ")->result_array();
     }
     
 }

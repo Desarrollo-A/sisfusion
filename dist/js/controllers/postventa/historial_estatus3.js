@@ -85,7 +85,80 @@ $(document).ready(()=>{
                 data: function (d) {
                     return d.comentario;
                 }
-            }
+            },
+            {
+                // data: 'cantidadRechazos'
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.cantidadRechazos);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus01);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus02);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus05);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus06);
+                }
+
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus07);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus08);
+                }
+
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus09);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus10);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus11);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus12);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus13);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus14);
+                }
+            },
+            {
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaEstatus15);
+                }
+            },
         ],
         columnDefs: [
             {

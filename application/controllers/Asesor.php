@@ -1070,6 +1070,7 @@ class Asesor extends CI_Controller {
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
         $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
         $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
+        $datos['lideresRescateLista'] = $this->Asesor_model->getLideresRescates();
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
@@ -1500,6 +1501,7 @@ class Asesor extends CI_Controller {
             $html = '</td></tr>';
         }
 
+
         $html .= '</table>
             </td>
             </tr>
@@ -1509,6 +1511,29 @@ class Asesor extends CI_Controller {
             </td>
             </tr>
             
+            ';
+
+        if ($informacion_cliente->row()->especialistaEscuadron != '' && $informacion_cliente->row()->especialistaEscuadron != null && $informacion_cliente->row()->especialistaEscuadron != 0) {
+            $html .= '<tr>
+            <td width="40%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
+            <label>LÍDER ESCUADRÓN(<b><span style="color: red;">*</span></b>):</label><br><br><b>&nbsp;' . $informacion_cliente->row()->liderEscuadron . ' <br></b>
+            </td>
+            <td width="30%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
+            
+            </td>
+            <td width="30%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
+            
+            </td>
+            </tr>
+                ';
+
+
+
+
+
+        }
+
+        $html .= '              
             <tr>
             <td width="40%" colspan="2" style="border-bottom: 1px solid #CCCCCC; margin: 0px 0px 150px 0px">
             <label>NOMBRE(<b><span style="color: red;">*</span></b>):</label><br><br><b>&nbsp;' . $informacion_cliente->row()->nombre . ' <br></b>
@@ -1950,6 +1975,7 @@ class Asesor extends CI_Controller {
 
     public function editar_ds()
     {
+
         setlocale(LC_MONETARY, 'en_US');
         $emailCopArray = $this->input->post("email_cop[]");
         $telefono1CopArray = $this->input->post("telefono1_cop[]");
@@ -1975,6 +2001,9 @@ class Asesor extends CI_Controller {
         $regimenFacArray = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
         $ventaExtranjero = $this->input->post('venta_check') == 'on' ? 2 : 1;
+        $escuadronRescate = (isset($_POST['escuadronRescate']) ? (($_POST['escuadronRescate']=='') ? 0 : $_POST['escuadronRescate']) : 0 );
+        $idLiderEscuadron = (isset($_POST['liderEscuadron']) ? (($_POST['liderEscuadron']=='') ? 0 : $_POST['liderEscuadron']) : 0 );
+
 
         if ($numOfCoprops > 0) {
             for ($i = 0; $i < $numOfCoprops; $i++) {
@@ -2260,7 +2289,7 @@ class Asesor extends CI_Controller {
             "Prospecto" => 0
         );
         
-        $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
+       // $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
 
         /*****MARTHA DEBALE OPTION*******/
         $des_casa = $this->input->post('des_hide');
@@ -2351,6 +2380,8 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["printPagare"] = $printPagare;
         $arreglo_cliente["tipo_comprobanteD"] = $tipo_comprobante;
         $arreglo_cliente["venta_extranjero"] = $ventaExtranjero; 
+        $arreglo_cliente["especialistaEscuadron"] = $escuadronRescate;
+        $arreglo_cliente["liderEscuadron"] = $idLiderEscuadron;
 
         //ARRAY REFERENCIAS
         $arreglo_referencia1 = array();

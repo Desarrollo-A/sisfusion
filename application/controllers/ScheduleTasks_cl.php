@@ -1204,7 +1204,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         //token autorizado para esta operación
         //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4MTAzNTgsImV4cCI6MTcwNDg5Njc1OCwiZGF0YSI6eyJ1c2VybmFtZSI6IjAwNE1fQ09NNTAyIiwicGFzc3dvcmQiOiIyMjM1JjgzMlNEVlcifX0.bqVjnDZeaHVvFQdDoTN8zxhvNOt5owMOYqdG1jCf6k4
 
-        if (!isset(apache_request_headersxxx()["Authorization"])) //solicitud de autorización
+        if (!isset(apache_request_headers()["Authorization"])) //solicitud de autorización
             echo json_encode(array("status" => 360, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
             if (apache_request_headers()["Authorization"] == "") // validar headers autorización
@@ -1246,6 +1246,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                 $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
                                 $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                                print_r($array_update_lotes);
+                                exit;
                                 $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
                             }
                             else if($autorizacion['modoActualizacion'] == 2){
@@ -1280,6 +1282,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                 /**/
 
                                 $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                                print_r($array_update_lotes);
+                                exit;
                                 $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
 
 
@@ -1325,6 +1329,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                         $arrayManejo = array(
                             'idLote'       =>  (int) $item2['ID'], //id del lote en el arreglo que son difernetes
                             'msi'          =>   (int) $item2['MSNI'],
+                            'msi_respaldo' =>   (int) $item2['MSNI'],
                         );
                         array_push($arrayVista, $arrayManejo );
                     }
@@ -1332,7 +1337,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 if($flag==0){
                     $arrayManejo = array(
                         'idLote' =>   $item['idLote'], //id del lote en el arreglo que son difernetes
-                        'msi'    =>   $data_autorizacion[0]['msi']//los demás se actualizan con los MSI que se definieron al principio
+                        'msi'    =>   $data_autorizacion[0]['msi'],//los demás se actualizan con los MSI que se definieron al principio
+                        'msi_respaldo' =>   (int) $item2['MSNI'],
                     );
                     array_push($arrayVista, $arrayManejo);
                 }

@@ -227,6 +227,36 @@
                     </div>    
                 </div>
                 <!-- row factura -->
+                <!-- radios 3 -->
+                <!-- row especialista escuadron -->
+                <div class="row pt-1" id="boxEscuadronLider">
+                    <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
+                        <div class="pb-1">
+                            <h4 class="label-on-left m-0">ESCUADRON RESCATE</h4>
+                            <input type="checkbox" name="escuadronRescate" id="escuadronRescate" <?php echo $statsInput; ?>  <?php if ($cliente[0]->especialistaEscuadron != '' && $cliente[0]->especialistaEscuadron != null) {echo "checked value='1'";}?>>
+                            <label class="switch" for="escuadronRescate"></label>
+                        </div>
+                    </div>
+                    <div class="col col-xs-12 col-sm-3 col-md-6 col-lg-6 <?php echo ($cliente[0]->especialistaEscuadron == 1) ?  '':  'd-none'; ?>" id="liderEscuadronDiv">
+                        <h4 class="label-on-left m-0">LIDER ESCUADRON RESCATE</h4>
+                        <select id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
+                                data-size="7" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
+                                data-live-search="true" data-container="body" data-width="100%">
+                            <?php
+                            for($n=0; $n < count($lideresRescateLista) ; $n++){
+                                if($lideresRescateLista[$n]['id_usuario'] == $cliente[0]->liderEscuadron){
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" selected>'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                }
+                                else{
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+
+                    </div>
+                </div>
+                <!-- fin especialista escuadron -->
                 <div class="row pt-1">
                     <div class="col-sm-6 checkbox-radios" id="radioDS">
                         <h4 class="label-on-left m-0">RESIDENCIA (<small style="color: red;">*</small>)</h4>
@@ -267,7 +297,7 @@
                     <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
                         <div class="pb-1">
                             <h4 class="label-on-left m-0">VENTA EXTRANJERO</h4>
-                            <input type="checkbox" name="venta_check" id="venta_check" <?php echo $statsInput; ?><?php if ($cliente[0]->venta_extranjero == 2) {echo "checked";}?>>
+                            <input type="checkbox" name="venta_check" id="venta_check" <?php echo $statsInput; ?> <?php if ($cliente[0]->venta_extranjero == 2) {echo "checked";}?>>
                             <label class="switch" for="venta_check"></label>
                         </div>
                     </div>
@@ -373,7 +403,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">PAÍS(<small style="color: red;">*</small>)</label>
-                        <select name="pais" id="pais" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                        <select name="pais" id="pais"  title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
 
                                 for($n=0; $n < count($paises) ; $n++){
@@ -390,7 +420,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group label-floating select-is-empty overflow-hidden">
                             <label class="label-on-left m-0">ESTADO  (<small style="color: red;">*</small>)</label>
-                            <select name="estado" id="estado" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
+                            <select name="estado" id="estado"  title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
                                 <?php
                                     for($n=0; $n < count($estados) ; $n++){
                                         if($estados[$n]['id_opcion'] == $cliente[0]->estado){
@@ -409,17 +439,17 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">CIUDAD(<small style="color: red;">*</small>)</label>
-                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="ciudad" id="ciudad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ciudad?>"/>
+                        <input type="text"  class="form-control m-0 input-gral letrasCaracteres"  name="ciudad" id="ciudad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ciudad?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">MUNICIPIO(<small style="color: red;">*</small>)</label>
-                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="municipio" id="municipio" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->municipio?>"/>
+                        <input type="text" class="form-control m-0 input-gral letrasCaracteres"  name="municipio" id="municipio" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->municipio?>"/>
                     </div>
                 </div>
                  <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">COLONIA(<small style="color: red;">*</small>)</label>
-                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="colonia" id="colonia" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->colonia?>"/>
+                        <input type="text"  class="form-control m-0 input-gral letrasCaracteres"  name="colonia" id="colonia" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->colonia?>"/>
                     </div>
                 </div>
 
@@ -429,14 +459,14 @@
                             LOCALIDAD
                             (<small style="color: red;">*</small>)
                         </label>
-                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="localidad" id="localidad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->localidad?>"/>
+                        <input type="text" class="form-control m-0 input-gral letrasCaracteres"  name="localidad" id="localidad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->localidad?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">
                             CALLE
                             (<small style="color: red;">*</small>)
                         </label>
-                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="calle" id="calle" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->calle?>"/>
+                        <input type="text"  class="form-control m-0 input-gral letrasCaracteres"  name="calle" id="calle" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->calle?>"/>
                     </div>
                 </div>
 
@@ -501,11 +531,11 @@
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">#INTERIOR(<small style="color: red;">*</small>)</label>
-                                <input type="text" required="true" class="form-control m-0 input-gral"  name="interior" id="interior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->interior?>"/>
+                                <input type="text"  class="form-control m-0 input-gral"  name="interior" id="interior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->interior?>"/>
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">#EXTERIOR(<small style="color: red;">*</small>)</label>
-                                <input type="text" required="true" class="form-control m-0 input-gral"  name="exterior" id="exterior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->exterior?>"/>
+                                <input type="text" class="form-control m-0 input-gral"  name="exterior" id="exterior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->exterior?>"/>
                             </div>
                         </div>
                     </div>

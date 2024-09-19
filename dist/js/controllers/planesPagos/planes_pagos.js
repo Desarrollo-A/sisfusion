@@ -6,6 +6,7 @@ let monedaCatalogo;
 let periodicidadCatalogo;
 let planesPagoCatalogo;
 let catalogos;
+var numeroPlanConsecutivo;
 $(document).ready(function () {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -348,9 +349,9 @@ function loadInputsCatalogos(dto){
     $('#interesesSSI').removeAttr('disabled');
 
     let planPago = document.getElementById("planPago");
-    planPago.value = (dto.planesTotal + 1);
+    planPago.value = (dto.planesTotal);
     planPago.readOnly = true;
-
+    numeroPlanConsecutivo = dto.planesTotal;
 }
 
 function activarIva(checkboxElem) {
@@ -509,6 +510,7 @@ $(document).on('change','#tipoPP', function(){
     let tipoPP = parseInt($(this).val());
     let tazaInteresPP = $('#tazaInteresPP');
     let interesesSSI = $('#interesesSSI');
+    let planPago = $('#planPago');
     let tipoNc_valor1 = document.getElementById("tipoNc_valor1");
     let tipoNc_valor2 = document.getElementById("tipoNc_valor2");
 
@@ -520,6 +522,8 @@ $(document).on('change','#tipoPP', function(){
 
     console.log('tipoPP', tipoPP);
     if(tipoPP==1){
+        //seleccionó enganche
+        planPago.val(0);
         tazaInteresPP.attr('readonly','true');
         tazaInteresPP.val(0);
         interesesSSI.attr('disabled', 'disabled');
@@ -533,6 +537,7 @@ $(document).on('change','#tipoPP', function(){
         descripcionPlanPago.attr("readonly", true);
         descripcionPlanPago.val("Plan de pago Enganche");
     }else{
+        planPago.val((numeroPlanConsecutivo == 0) ? numeroPlanConsecutivo + 1 : numeroPlanConsecutivo);
         tazaInteresPP.removeAttr('readonly');
         tazaInteresPP.val(0);
         descripcionPlanPago.attr("readonly", false);
@@ -1133,7 +1138,7 @@ function servicioNeoData(response){
 
     $.ajax({
         data:JSON.stringify(response.planServicio),
-        url: 'http://192.168.16.20/neodata_reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
+        url: 'https://bi-maderas.gphsis.com/reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
         type: 'POST',
         success: function (response) {
             console.log('RESPUES NEODATA:'+response);
@@ -1273,7 +1278,7 @@ $(document).on('click', '.cancelarPlanPago', function(){
 
     console.log('numeroPlanPago', numeroPlanPago);
     console.log('nombrePlan', nombrePlan);
-    /*$.ajax({
+    $.ajax({
         data:{data:1},
         url: 'Corrida/cancelaPlanPagoNeo',
         type: 'POST',
@@ -1289,7 +1294,7 @@ $(document).on('click', '.cancelarPlanPago', function(){
             alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
 
         }
-    });*/
+    });
 });
 
 $(document).on('click', '#cancelarPP', ()=>{

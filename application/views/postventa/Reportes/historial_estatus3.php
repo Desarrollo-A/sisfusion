@@ -32,6 +32,20 @@
                                         <th>FECHA SOLICITUD (avance de expediente)</th>
                                         <th>FECHA EXPEDIENTE</th>
                                         <th>COMENTARIO</th>
+                                        <th>CANTIDAD RECHAZOS</th>
+                                        <th>FECHA ESTATUS 1</th>
+                                        <th>FECHA ESTATUS 2</th>
+                                        <th>FECHA ESTATUS 5</th>
+                                        <th>FECHA ESTATUS 6</th>
+                                        <th>FECHA ESTATUS 7</th>
+                                        <th>FECHA ESTATUS 8</th>
+                                        <th>FECHA ESTATUS 9</th>
+                                        <th>FECHA ESTATUS 10</th>
+                                        <th>FECHA ESTATUS 11</th>
+                                        <th>FECHA ESTATUS 12</th>
+                                        <th>FECHA ESTATUS 13</th>
+                                        <th>FECHA ESTATUS 14</th>
+                                        <th>FECHA ESTATUS 15</th>
                                     </tr>
                                     </thead>
                                 </table>

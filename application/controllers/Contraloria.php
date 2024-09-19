@@ -2446,7 +2446,7 @@ class Contraloria extends CI_Controller {
         if ($msni != NULL){
             echo json_encode($msni);
         }else{
-            echo json_encode();
+            echo json_encode(array());
         }
     }
 
@@ -3720,7 +3720,7 @@ class Contraloria extends CI_Controller {
 
                     $table = 'autorizaciones_msi';
                     $key = 'id_autorizacion';
-                    $table_historial = 'historiail_autorizacionesPSMI';
+                    $table_historial = 'historial_autorizacionesPMSI';
                     $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);
                     $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
