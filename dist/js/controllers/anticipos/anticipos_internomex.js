@@ -49,7 +49,7 @@ $("#tabla_anticipos_internomex").ready(function () {
             [10, 25, 50, "Todos"]
         ],
         bAutoWidth: false,
-        fixedColumns: true,
+        
         ordering: false,
         scrollX: true,
         columns: [
@@ -59,15 +59,17 @@ $("#tabla_anticipos_internomex").ready(function () {
             { data: 'proceso' },
             { data: 'comentario' },
             { data: 'prioridad_nombre' },
-            { data: 'impuesto' },
+            { data: function (d) { 
+                    var total_impuesto = d.forma_pago == 2 ? 0 : ( d.forma_pago == 4 ? 0 : 3);
+                return '<p class="m-0">'+total_impuesto+'</p>';
+            }},
             {  
                 data: function( d ){
-                var total_impuesto_monto = d.forma_pago == 2 ?  0 : (d.monto*0.03);    
+                var total_impuesto_monto =  d.forma_pago == 2 ? 0 : (d.forma_pago == 4 ? 0: (d.montoParcial1*0.03));    
+                // regresar = '<p class="m-0">'+ d.forma_pago == 2 ? d.montoParcial1 : (d.forma_pago == 4 ? d.montoParcial1: (d.montoParcial1*0.03)) + '</p>';
                 return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
             }
             } ,
-            
-            
             { data: 'sede' },
             { data: 'esquema' },
             { data: 'nombre_empresa' },
