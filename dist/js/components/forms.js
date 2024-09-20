@@ -1048,7 +1048,7 @@ class title {
 class TimeLine {
     
 
-constructor({ title, back, next, description, date }) {
+constructor({ title, back = '', next = '', description, date, processText = '' }) {
 
 {/* <li>
     <div class="container-fluid">
@@ -1098,16 +1098,17 @@ constructor({ title, back, next, description, date }) {
                 )
                 .append(
                     $('<div />')
+                    
                         .addClass('col-md-12')
                         .append(
                             $('<p />')
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Proceso anterior: ')
+                                        .text(back != '' ? 'Proceso anterior: ' : '')
                                         .append(
                                             $('<b />')
-                                                .text(back)
+                                                .text(back != '' ? back : '')
                                         )
                                 )
                         )
@@ -1120,7 +1121,7 @@ constructor({ title, back, next, description, date }) {
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Proceso nuevo: ')
+                                        .text(processText == ''? 'Proceso nuevo: ' : processText)
                                         .append(
                                             $('<b />')
                                                 .text(next)
@@ -1158,6 +1159,7 @@ constructor({ title, back, next, description, date }) {
 class HrTitle {
     constructor({ text }) {
         this.field = $('<div />')
+            .css('text-align', 'center')
             .append(
                 $('<strong/> ')
                     .addClass('control-label')

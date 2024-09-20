@@ -60,9 +60,7 @@ class Anticipos extends CI_Controller {
 
     public function actualizarEstatus() {
 
-
         $montoReal = $this->input->post('montoReal');
-
         $comentario = $this->input->post('comentario');
         $id_usuario = $this->input->post('id_usuario');
         $id_anticipo = $this->input->post('id_anticipo');
@@ -79,10 +77,8 @@ class Anticipos extends CI_Controller {
         $result_2 = null;
         $result_3 = null;
         $success = false;
-    
         $result_5 = null;
         $result_6 = null;
-
         //parcialidades
         $nombreSwitch = $this->input->post('nombreSwitch');
         $catalogo = $this->input->post('tipo_pago_anticipo');
@@ -98,12 +94,24 @@ class Anticipos extends CI_Controller {
             $numero_mensualidades = $this->input->post('numero_mensualidades');
             // $mP = intval($numero_mensualidades);
 
+            if($procesoAntInternomex == 0){
+
+
+                $result_3 = $this->Anticipos_model->updateEstatusD($procesoAntInternomex,$id_anticipo);
+                $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomex);
+
+                $result = true;
+                $success = true;
+
+
+            }
+
+
             if (empty($procesoAntInternomex) && !empty($procesoAntInternomexFinal)) {
                 $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomexFinal);
             } elseif (!empty($procesoAntInternomex) && empty($procesoAntInternomexFinal)) {
                 $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomex);
             }
-
 
             if($procesoAntInternomex == 1 || $procesoAntInternomexFinal == 1 ){
                 $pagos_anticipos = 'pagos_anticipos';
@@ -118,9 +126,7 @@ class Anticipos extends CI_Controller {
             }
 
 
-
-            $mP=$numero_mensualidades;
-            
+            $mP=$numero_mensualidades;            
             if ($mP == "null") {
                 $mP = "null";
             }else {
@@ -174,22 +180,24 @@ class Anticipos extends CI_Controller {
                 $id_usuario = $this->input->post('id_usuario');
                 $id_anticipo = $this->input->post('id_anticipo');
                 $success = true;
-
+                $result = true;
                 }
                     
             }
 
             if($procesoAnt == 0){
                 
-            } else {
+                $result_3 = $this->Anticipos_model->updateEstatusD($procesoAnt,$id_anticipo);
+                $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
 
+                $result = true;
+                $success = true;
                 
-                // if ($procesoTipo == 0 ) {
 
-                //     $result_3 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
 
-                // }
-            }
+
+
+            } 
             
             $success = ($result != null && $result_2 != null && $result_3 != null);
             $success = true;
@@ -218,6 +226,8 @@ class Anticipos extends CI_Controller {
         } else {
             $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad);
         }
+        $result = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, 'proceso :', $procesoParcialidad);
+
     
         echo json_encode(['result' => $result]);
     }

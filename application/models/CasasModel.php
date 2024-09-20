@@ -199,7 +199,7 @@ class CasasModel extends CI_Model
                 CASE WHEN cl.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno) END gerente,
                 ISNULL(cl.id_cliente, 0) idCliente, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE 1 END AS clienteExistente, 
                 CASE WHEN cl.id_cliente IS NOT NULL THEN CASE WHEN cl.id_cliente = lo.idCliente THEN '1' ELSE '0' END END AS clienteNuevoEditar, 
-                cl.nombre AS nombreCliente, cl.apellido_paterno  AS apePaterno, cl.apellido_materno AS apeMaterno, cl.telefono1, cl.correo, cl.domicilio_particular,
+                cl.nombre AS nombreCliente, cl.apellido_paterno  AS apePaterno, cl.apellido_materno AS apeMaterno, cl.domicilio_particular,
                 cl.estado_civil, cl.ocupacion
 
             FROM 
@@ -583,41 +583,45 @@ class CasasModel extends CI_Model
 
     public function getConcentracionAdeudos(){
         $query = "SELECT 
-        pc.*,
-        CASE
-            WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
-            ELSE CONCAT('$', pc.adeudoOOAM) 
-        END AS adOOAM,
-        lo.nombreLote,
-        con.nombre AS condominio,
-        resi.descripcion AS proyecto,
-        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-        CASE
-            WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
-            ELSE 'Sin asignar'
-        END AS nombreAsesor,
-        CASE
-            WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
-            ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
-        END AS gerente,
-        oxc.nombre AS movimiento,
-        doc2.documentos
-    FROM 
-        proceso_casas_banco pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
-        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
-        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
-        LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
-        LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
-    WHERE 
-        pc.proceso IN (2, 3) 
-        AND pc.status = 1 
-        AND cli.status = 1
-        AND vb.proyectos != 1";
+pc.*,
+CASE
+    WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
+	ELSE FORMAT(pc.adeudoOOAM, 'C') 
+END AS adOOAM,
+CASE
+    WHEN pc.adeudoADM IS NULL THEN 'Sin registro'
+    ELSE FORMAT(pc.adeudoADM, 'C') 
+END AS adADM,
+lo.nombreLote,
+con.nombre AS condominio,
+resi.descripcion AS proyecto,
+CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+CASE
+    WHEN cli.id_asesor_c IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+    ELSE 'Sin asignar'
+END AS nombreAsesor,
+CASE
+    WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+    ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+END AS gerente,
+oxc.nombre AS movimiento,
+doc2.documentos
+FROM 
+proceso_casas_banco pc
+LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
+INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
+LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+LEFT JOIN vobos_proceso_casas vb ON vb.idProceso = pc.idProcesoCasas AND vb.paso = 2
+LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc2 ON doc2.idProcesoCasas = pc.idProcesoCasas
+WHERE 
+pc.proceso IN (2, 3) 
+AND pc.status = 1 
+AND cli.status = 1
+AND vb.proyectos != 1";
 
         return $this->db->query($query)->result();
     }
@@ -1678,7 +1682,7 @@ class CasasModel extends CI_Model
         CASE WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno,  ' ', us.apellido_materno)
         ELSE 'Sin Asignar' END AS nombreAsesor,
         CASE WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno) END AS gerente,
-        oxc.nombre AS procesoNombre, 
+        CASE WHEN pc.idProcesoCasas IS NULL THEN 'PRE PROCESO' ELSE oxc.nombre END AS procesoNombre, 
         COALESCE(MAX(pc.fechaCreacion), MAX(hct.fechaMovimiento)) AS fechaCreacion,
         COALESCE(pc.idProcesoCasas,0)idProcesoCasas,
         COALESCE(MAX(pc.fechaProceso), MAX(hct.fechaMovimiento)) AS fechaProceso,
@@ -1887,16 +1891,24 @@ class CasasModel extends CI_Model
     {
         $query = $this->db->query("WITH CombinedData AS (
         SELECT 
-        
-        hpc.*, 
-        CASE WHEN hpc.descripcion LIKE '%Pre proceso%' THEN LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END)) ELSE CONCAT(oxc2.nombre, CASE WHEN oxc3.nombre IS NOT NULL THEN CONCAT(' -> ', oxc3.nombre)ELSE '' END)END AS descripcionFinal,
+        hpc.idHistorial, 
+        hpc.procesoAnterior AS idAnterior,
+        hpc.fechaMovimiento,
+        CASE WHEN hpc.descripcion LIKE '%Pre proceso %' THEN oxc4.nombre ELSE oxc2.nombre END AS procesoAnterior, 
+        CASE WHEN hpc.descripcion LIKE '%Pre proceso %' THEN oxc5.nombre ELSE oxc3.nombre END AS procesoNuevo,
+        --CASE WHEN hpc.descripcion LIKE '%Pre proceso%' THEN LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END)) ELSE CONCAT(oxc2.nombre, CASE WHEN oxc3.nombre IS NOT NULL THEN CONCAT(' -> ', oxc3.nombre)ELSE '' END)END AS descripcionFinal,
+        CASE WHEN hpc.descripcion LIKE '%Pre proceso%' THEN LTRIM(RTRIM(CASE WHEN CHARINDEX('IDLOTE:', descripcion) > 0 THEN LEFT(descripcion, CHARINDEX('IDLOTE:', descripcion) - 1) ELSE descripcion END)) 
+        ELSE hpc.descripcion END AS descripcionFinal,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (', oxc.nombre, ')' ) AS nombreUsuario,
-        ROW_NUMBER() OVER (PARTITION BY hpc.idHistorial ORDER BY hpc.fechaMovimiento DESC) AS rn
+        ROW_NUMBER() OVER (PARTITION BY hpc.idHistorial ORDER BY hpc.fechaMovimiento DESC) AS rn,
+        CASE WHEN hpc.procesoAnterior = hpc.procesoNuevo THEN '1' ELSE '0' END AS cambioStatus
         FROM historial_proceso_casas hpc
         LEFT JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = hpc.procesoAnterior AND oxc2.id_catalogo = 135
 		LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = hpc.procesoNuevo AND oxc3.id_catalogo = 135
+        LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = hpc.procesoAnterior  AND oxc4.id_catalogo = 156
+		LEFT JOIN opcs_x_cats oxc5 ON oxc5.id_opcion = hpc.procesoNuevo AND oxc5.id_catalogo = 156
         WHERE (idProcesoCasas = $idProceso AND esquemaCreditoProceso = $tipoEsquema)
         OR (hpc.descripcion LIKE '%Pre proceso %$idLote%'))
         

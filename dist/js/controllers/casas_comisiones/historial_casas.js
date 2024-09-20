@@ -48,11 +48,11 @@ $('#catalogo_historial, #tipo_historial').change(function(){
         proyecto = $('#ano_historial').val();
         condominio = $('#catalogo_historial').val();
         tipo = $('#tipo_historial').val();
-    $('#tabla_historialGral').removeClass('hide');
+        $('#tabla_historialGral').removeClass('hide');
     
         if (condominio == '' || condominio == null || condominio == undefined) {
-        condominio = 0;
-    }
+            condominio = 0;
+        }
     
         if (tipo == '' || tipo == null || tipo == undefined) {
             tipo = tipo_usuario;
@@ -60,9 +60,8 @@ $('#catalogo_historial, #tipo_historial').change(function(){
 
         if (tabla_historialGral2) {
         tabla_historialGral2.destroy();
-    }
-    getAssimilatedCommissions(proyecto, condominio, tipo);
-
+        }
+        getAssimilatedCommissions(proyecto, condominio, tipo);
     }
 });
 
@@ -71,7 +70,6 @@ $('#ano_canceladas').change(function(){
     param = $('#param').val();
     $("#catalogo_canceladas").empty().selectpicker('refresh');
     $.ajax({
-        //queda pendiente para cambio
         url: general_base_url+'Contratacion/lista_proyecto/',
         type: 'post',
         dataType: 'json',
@@ -131,17 +129,12 @@ function modalHistorial(){
 }
 
 function getAssimilatedCommissions(proyecto, condominio, tipo){
-    console.log(proyecto);
-    console.log(condominio);
-    console.log(tipo);
-
     var Comisiones;
     if(tipo == 1 || tipo == 2 || tipo == 0){
         tipo =  tipo == 0 ? 1 : tipo;
         Comisiones = "Casas_comisiones/getDatosHistorialPago/";
 
     }else if(tipo == 4){
-        //queda pendiente para cambio
         Comisiones = "SegurosComision/getDatosHistorialPago/";
 
     }else if(tipo ==3){
@@ -798,7 +791,6 @@ function tableComisionesSuma(anio){
             }
         }],
         ajax: {
-            // pendiente para revisar el cambio 
             url: general_base_url + "Suma/getAllComisionesByUser",
             type: "POST",
             data: {anio : anio},
@@ -1133,7 +1125,6 @@ function consultarHistorialOOAM() {
             $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
         },
         ajax: {
-            // revisar para el cambio
             url: `${general_base_url}Ooam/getDatosHistorialOOAM`,
             type: "POST",
             cache: false,
@@ -1181,12 +1172,9 @@ $(document).on("click", "#historial_previa", function () {
 
     var com2 = new FormData();
     var conta = 0;
-//  <div class="col-md-4"><div class="d-flex justify-center "  style="padding-top: 25px;">
-
     com2.append("id_opcion", opcion);
     if(opcion != ''){
         $.ajax({
-            //pendiente para realizar el cambio
             url: general_base_url+'Descuentos/historial_evidencia_general',
             data: com2,
             method: 'POST',

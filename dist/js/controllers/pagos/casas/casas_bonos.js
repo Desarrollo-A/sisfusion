@@ -1,7 +1,6 @@
 var tr;
 var totaPagoBonos = 0;
 
-
 let titulosp = [];
     $('#tabla_plaza_1_casas thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -162,7 +161,6 @@ $("#tabla_plaza_1_casas").ready( function(){
         {
             "data": function( d ){
                 return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.descuento))+'</p>';
-                // verificar que dato pasara en esta linea
             }
         },
         {

@@ -30,7 +30,7 @@ function select_tipo_proveedor(data) {
         },
         fields: [
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new SelectField({ id: 'tipoProveedor', data: tipos, value: data.tipoProveedor }),
+            new SelectField({ id: 'tipoProveedor', placeholder: 'SELECCIONA UNA OPCIÓN',data: tipos, value: data.tipoProveedor }),
         ]
     })
 
