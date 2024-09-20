@@ -691,13 +691,19 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
-        $updateData = array(
-            "id_asesor_c" => 0,
-            "pre_proceso_casas" => 1,
+        $updateDataClientes = array(
+            "pre_proceso_casas" => 2,
             "idPropuestaCasa" => 0
+        );
+        $updateDataProceso = array(
+            "tipoMovimiento" => 4,
+            "idPropuestaCasa" => 0,
+            "status" => 0,
+
         );
 
         $update = $this->General_model->updateRecord("clientes", $updateData, "id_cliente", $idCliente);
+        $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $updateDataProceso, "id_cliente", $idCliente);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -2991,7 +2997,6 @@ class Casas extends BaseController
         $proceso = $this->CasasModel->getProceso($id_proceso);
 
         $file = $this->file('file_uploaded');
-
         if (!$file) {
             http_response_code(400);
         }
