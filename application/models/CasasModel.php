@@ -46,7 +46,7 @@ class CasasModel extends CI_Model
         INNER JOIN historial_proceso_casas hpc ON hpc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN flujo_proceso_casas_banco fj ON fj.pasoActual = hpc.procesoNuevo AND fj.ultimoPaso = hpc.procesoAnterior AND fj.tipoPaso = $bandera
         INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = fj.tipoMovimiento 
-        WHERE pc.idProcesoCasas = $idProceso
+        WHERE pc.idProcesoCasas = $idProceso AND hpc.procesoAnterior != hpc.procesoNuevo 
         ORDER BY hpc.idHistorial DESC;
         ";
 
