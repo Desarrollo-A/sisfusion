@@ -1,4 +1,3 @@
-let nuevo_proceso = 9
 
 pass_to_propuestas = function(data) {
     if(data.procesoNuevo < data.procesoAnterior){
@@ -35,7 +34,6 @@ pass_to_propuestas = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'idRol', value: idRol }),
-            new HiddenField({ id: 'nuevo_proceso', value: nuevo_proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

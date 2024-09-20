@@ -244,13 +244,6 @@ pass_to_proyecto_ejecutivo = function(data) {
         new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
     ]
 
-    /*
-    if(idRol == 33){
-        let select = new SelectField({ id: 'tipo_proveedor', value: data.tipoProveedor, label: 'Tipo de proveedor', placeholder: 'Selecciona una opción', data: tipos, required: true })
-        fields.splice(0, 0, select)
-    }
-    */
-
     let form = new Form({
         title: 'Avanzar proceso', 
         text: `¿Deseas avanzar el proceso del lote <b>${data.nombreLote}</b>?`,
