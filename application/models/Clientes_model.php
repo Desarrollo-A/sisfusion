@@ -525,7 +525,7 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
                 $where = "pr.id_gerente IN ($id_lider, 654, 697, 5604, 10251, 12688)";
             else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
-                $where = "pr.id_gerente IN ($id_lider, 24, 10)";
+                $where = "pr.id_gerente IN ($id_lider, 113, 24)";
             else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
                 $where = "pr.id_gerente IN ($id_lider, 7474)";
             else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
@@ -536,6 +536,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 6661)";
             else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
                 $where = "pr.id_gerente IN ($id_lider, 2080)";
+            else if ($id_usuario == 15716) // ADRIAN TREJO GUTIERREZ
+                $where = "pr.id_gerente IN ($id_lider, 7944)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

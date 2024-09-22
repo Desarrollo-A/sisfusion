@@ -212,7 +212,7 @@
         $idCondominio = $datos['idCondominio'];
         $nombreLote = $datos['nombreLote'];
         $userLiberacion = $datos['userLiberacion'];
-        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.status, lo.sup, cl.lugar_prospeccion, pr.id_arcus, lo.tipo_venta
+        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.status, lo.sup, cl.lugar_prospeccion, pr.id_arcus, lo.tipo_venta, lo.msi_reslpado
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.lugar_prospeccion = 47
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
@@ -310,7 +310,8 @@
                 precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
                 enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
                 saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1)),
-                asig_jur = 0
+                asig_jur = 0,
+                msi = " . $row['msi_respaldo'] . "
                 WHERE idLote IN (".$row['idLote'].") and status = 1 ");
             } else if ($datos['activeLE'] == 1) {
                 $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
@@ -332,7 +333,8 @@
                 precio = ".$datos['precio'].", total = ((".$row['sup'].") * ".$datos['precio']."),
                 enganche = (((".$row['sup'].") * ".$datos['precio'].") * 0.1), 
                 saldo = (((".$row['sup'].") * ".$datos['precio'].") - (((".$row['sup'].") * ".$datos['precio'].") * 0.1)),
-                asig_jur = 0
+                asig_jur = 0,
+                msi = " . $row['msi_respaldo'] . "
                 WHERE idLote IN (".$row['idLote'].") and status = 1 ");
             }
             if ($this->db->trans_status() === FALSE) {
