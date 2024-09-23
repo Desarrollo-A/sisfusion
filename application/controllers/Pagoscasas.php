@@ -56,14 +56,29 @@ class Pagoscasas extends BaseController {
         $this->load->view("pagos_casas/confirmar_pago");
     }
 
+    public function confirmar_pago_dos(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/confirmar_pago_dos");
+    }
+
     public function carga_complemento(){
         $this->load->view('template/header');
         $this->load->view("pagos_casas/carga_complemento");
     }
 
+    public function carga_complemento_dos(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/carga_complemento_dos");
+    }
+
     public function validar_pago(){
         $this->load->view('template/header');
         $this->load->view("pagos_casas/validar_pago");
+    }
+
+    public function validar_pago_dos(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/validar_pago_dos");
     }
 
     public function solicitar_avance(){
@@ -334,7 +349,13 @@ class Pagoscasas extends BaseController {
     }
 
     public function lista_confirmar_pago(){
-        $lotes = $this->PagosCasasModel->getListaConfirmarPago();
+        $lotes = $this->PagosCasasModel->getListaConfirmarPago($idProceso = 5);
+
+        $this->json($lotes);
+    }
+
+    public function lista_confirmar_pago_dos(){
+        $lotes = $this->PagosCasasModel->getListaConfirmarPago($idProceso = 9);
 
         $this->json($lotes);
     }
@@ -342,28 +363,37 @@ class Pagoscasas extends BaseController {
     public function to_carga_complemento(){
         $id = $this->form('id');
         $comentario = $this->form('comentario');
+        $paso = $this->form('paso');
 
         if(!isset($id)){
             http_response_code(400);
         }
 
         $proceso = $this->PagosCasasModel->getProceso($id);
-
-        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 6, $comentario);
+        
+        if($paso == 5) {
+            $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 6, $comentario);
+        }
+        if($paso == 9) {
+            $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 10, $comentario);
+        }
 
         if($is_ok){
-            //$is_ok = $this->PagosCasasModel->setPagadoAvance();
-
-            // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
         }else{
             http_response_code(404);
         }
 
         $this->json([]);
     }
-
+    
     public function lista_carga_complemento(){
-        $lotes = $this->PagosCasasModel->getListaCargaComplemento();
+        $lotes = $this->PagosCasasModel->getListaCargaComplemento($paso = 6);
+
+        $this->json($lotes);
+    }
+
+    public function lista_carga_complemento_dos(){
+        $lotes = $this->PagosCasasModel->getListaCargaComplemento($paso = 10);
 
         $this->json($lotes);
     }
@@ -410,6 +440,7 @@ class Pagoscasas extends BaseController {
     public function to_validar_pago(){
         $id = $this->form('id');
         $comentario = $this->form('comentario');
+        $paso = $this->form('paso');
 
         if(!isset($id)){
             http_response_code(400);
@@ -417,7 +448,13 @@ class Pagoscasas extends BaseController {
 
         $proceso = $this->PagosCasasModel->getProceso($id);
 
-        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 7, $comentario);
+        if($paso == 6) {
+            $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 7, $comentario);
+        }
+        if($paso == 10) {
+            $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 11, $comentario);
+        }
+        
 
         if($is_ok){
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
@@ -429,7 +466,13 @@ class Pagoscasas extends BaseController {
     }
 
     public function lista_validar_pago(){
-        $lotes = $this->PagosCasasModel->getListaValidarPago();
+        $lotes = $this->PagosCasasModel->getListaValidarPago($paso = 7);
+
+        $this->json($lotes);
+    }
+
+    public function lista_validar_pago_dos(){
+        $lotes = $this->PagosCasasModel->getListaValidarPago($paso = 11);
 
         $this->json($lotes);
     }
@@ -459,6 +502,7 @@ class Pagoscasas extends BaseController {
         $id = $this->form('id');
         $id_avance = $this->form('id_avance');
         $comentario = $this->form('comentario');
+        $paso = $this->form('paso');
 
         if(!isset($id)){
             http_response_code(400);
@@ -466,8 +510,14 @@ class Pagoscasas extends BaseController {
         }
 
         $proceso = $this->PagosCasasModel->getProceso($id);
-
-        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 8, $comentario);
+        if($paso == 7) {
+            $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 8, $comentario);
+        }
+        if($paso == 11) {
+            $this->PagosCasasModel->insertarAvance($proceso->idProcesoPagos, 0, 0);
+            $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 7, $comentario);
+        }
+        
 
         if($is_ok){
             $is_ok = $this->PagosCasasModel->setPagadoAvance($id_avance);
@@ -525,8 +575,8 @@ class Pagoscasas extends BaseController {
         $proceso = $this->PagosCasasModel->getProceso($id);
 
         $nuevo_avance = $proceso->avanceObra + $avance;
-
-        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 5, $comentario);
+        
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 9, $comentario);
 
         if($is_ok){
             $is_ok = $this->PagosCasasModel->setAvanceToProceso($id, $nuevo_avance);
@@ -711,5 +761,24 @@ class Pagoscasas extends BaseController {
         }
 
         $this->json([]);
+    }
+
+    public function back_to_step_7 (){
+        $id = $this->form('id');
+        $comentario = $this->form('comentario');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $proceso = $this->PagosCasasModel->getProceso($id);
+
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 7, $comentario);
+
+        if($is_ok) {
+
+        }else {
+            http_response_code(404);
+        }
     }
 }

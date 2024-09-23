@@ -4,7 +4,7 @@ class Asesor extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('asesor/Asesor_model');
-        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model'));
+        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model', 'Neodata_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
@@ -2205,12 +2205,10 @@ class Asesor extends CI_Controller {
             }
         }
         $infoCliente = $this->caja_model_outside->getInformaciongGeneralPorCliente($id_cliente);
-        $Cliente = explode('-', $infoCliente->nombreLote);
-        $Cliente[2] = 0 . $Cliente[2];
-        $Cliente = implode('-', $Cliente);
-            $dataNeoData = array (
+
+        $dataNeoData = array (
             "accion" => "upd",
-            "Cliente" => $Cliente,
+            "Cliente" => 'CDMAGS-JAZH-0014',
             "IdProyecto" => $infoCliente->idProyectoNeoData,
             "IdVivienda" => $infoCliente->idViviendaNeoData,
             "IdCredito" => 2,

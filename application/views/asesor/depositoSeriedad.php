@@ -359,8 +359,8 @@
                                             <th>FECHA DE VENCIMIENTO</th>
                                             <th>COMENTARIO</th>
                                             <th>PROSPECTO</th>
-                                            <th>VERIFICACIÓN DE CORREO</th>
-                                            <th>VERIFICACIÓN DE SMS</th>
+                                            <!--<th>VERIFICACIÓN DE CORREO</th>
+                                            <th>VERIFICACIÓN DE SMS</th>-->
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
