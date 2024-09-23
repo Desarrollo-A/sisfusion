@@ -278,7 +278,7 @@ class CasasModel extends CI_Model
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
             WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas IN (0,1) AND cli.pre_proceso_casas = 2
             AND (cli.idPropuestaCasa = '0' OR cli.idPropuestaCasa IS NULL)", array($this->idUsuario));
-        
+
         return $query;
     }
 
@@ -560,7 +560,7 @@ class CasasModel extends CI_Model
         oxc.nombre AS movimiento,
         doc.documentos, 
         CASE WHEN se.id_lote = lo.idLote THEN 0 ELSE 1 END AS cargaRequerida,
-        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus, cli.escrituraFinalizada, $tableSeparator
+        COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus, cli.escrituraFinalizada, cli.revisionEscrituracion,$tableSeparator
         FROM $tableName pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -2506,6 +2506,21 @@ AND vb.proyectos != 1";
             INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
         WHERE pc.idProcesoCasas = $idProceso";
 
+        return $this->db->query($query)->row();
+    }
+
+    public function checkDocument($idProceso) {
+        if($idProceso == null) {
+            return null;
+        }
+        $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND tipo = 11";
+        return $this->db->query($query)->row();
+    }
+
+    public function checkVoboEscrituracion($idLote) {
+        $query = "SELECT cl.revisionEscrituracion, sc.id_estatus, cl.escrituraFinalizada  FROM clientes cl 
+        LEFT JOIN solicitudes_escrituracion sc ON sc.id_lote = cl.idLote 
+        WHERE cl.idLote = $idLote AND status = 1";
         return $this->db->query($query)->row();
     }
 }
