@@ -444,12 +444,6 @@ class Caja_outside extends CI_Controller {
         $id_prospecto = $datosView->id_prospecto;
         $id_lote = $datosView->lotes[0]->idLote;
 
-        $Cliente = explode('-', $datosView->lotes[0]->nombre);
-        $Cliente[2] = 0 . $Cliente[2];
-        $Cliente = implode('-', $Cliente);
-
-        $ClienteInfo = $this->caja_model_outisde->getInformationGeneralPorCliente($id_cliente);
-
         $validateLote = $this->caja_model_outside->validate($id_lote);
         $validateLote = TRUE;
         ($validateLote == 1) ? TRUE : FALSE;
@@ -537,7 +531,7 @@ class Caja_outside extends CI_Controller {
 
         $dataNeoData = array (
             "accion" => "ins",
-            "Cliente" => $Cliente,
+            "Cliente" => NULL,
             "IdProyecto" => $data['condominio'][0]['idProyectoNeoData'],
             "IdVivienda" => $data['condominio'][0]['idViviendaNeoData'],
             "IdCredito" => 2,
@@ -588,7 +582,8 @@ class Caja_outside extends CI_Controller {
         );
 
         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
-        exit;
+        //echo json_encode($responseInsertClienteNeoData);
+        //exit;
 
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,
@@ -1002,6 +997,7 @@ class Caja_outside extends CI_Controller {
         $response['resultado'] = TRUE;
         $response['message'] = 'Proceso realizado correctamente ' . date('y-m-d H:i:s');
         $response['id_cliente'] = $last_id;
+        $response['respuestaNeodata'] = $responseInsertClienteNeoData;
         echo json_encode($response);
     }
 
@@ -2527,13 +2523,10 @@ class Caja_outside extends CI_Controller {
         $personalidad_juridica = $data->personalidad_juridica;
 
         $infoCliente = $this->caja_model_outside->getInformaciongGeneralPorCliente($id_cliente);
-        $Cliente = explode('-', $infoCliente->nombreLote);
-        $Cliente[2] = 0 . $Cliente[2];
-        $Cliente = implode('-', $Cliente);
 
         $dataNeoData = array (
             "accion" => "upd",
-            "Cliente" => $Cliente,
+            "Cliente" => "CDMAGS-JAZH-0014",
             "IdProyecto" => $infoCliente->idProyectoNeoData,
             "IdVivienda" => $infoCliente->idViviendaNeoData,
             "IdCredito" => 2,
@@ -2584,7 +2577,7 @@ class Caja_outside extends CI_Controller {
         );
 
         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
-        echo json_encode($responseInsertClienteNeoData, JSON_UNESCAPED_UNICODE);
+        //echo json_encode($responseInsertClienteNeoData, JSON_UNESCAPED_UNICODE);
         //exit;
 
         $data_cliente = $this->caja_model_outside->checkTipoJuridico($id_cliente);
@@ -2718,9 +2711,11 @@ class Caja_outside extends CI_Controller {
         }
         if ($res == 1) {
             $response['message'] = 'SUCCESS';
+            $response['respuestaNeodata'] = $responseInsertClienteNeoData;
             echo json_encode($response);
         } else {
             $response['message'] = 'ERROR';
+            $response['respuestaNeodata'] = $responseInsertClienteNeoData;
             echo json_encode($response);
         }
     }

@@ -1,5 +1,8 @@
 
-//$(document).ready(function () {
+
+
+
+$(document).ready(function () {
     numerosDispersion();
     let titulos_intxt = [];
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -9,7 +12,7 @@
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
-        if (i != 0 ) {
+        // if (i != 0 ) {
             $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
             $( 'input', this ).on('keyup change', function () {
                 if ($('#tabla_dispersar_comisiones').DataTable().column(i).search() !== this.value ) {
@@ -21,7 +24,7 @@
                 }).indexes();
                 var data = $('#tabla_dispersar_comisiones').DataTable().rows(index).data();
             });
-        }
+        // }
     });
 
     dispersionDataTable = $('#tabla_dispersar_comisiones').dataTable({
@@ -64,7 +67,7 @@
             className: 'details-control',
             orderable: false,
             data : null,
-            defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+            defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i></div>'
             },
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
@@ -1150,7 +1153,7 @@
             $("#modal_NEODATA").modal();
         }
     }); //FIN VERIFY_NEODATA
-//});
+});
 
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -1700,7 +1703,7 @@ function responsive(maxWidth) {
         $('.rowTitulos').removeClass('hide');
     }
 }
- 
+
 function function_totales(){
     $.getJSON( general_base_url + "Comisiones/getMontoDispersado").done( function( data ){
         $cadena = '<b>'+formatMoney(data[0].monto)+'</b>';

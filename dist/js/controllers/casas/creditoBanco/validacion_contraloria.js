@@ -51,7 +51,7 @@ back_to_adeudos = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `creditoBancoAvance`,
+                url: `rechazoPaso10`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -110,6 +110,7 @@ pass_to_solicitud_contratos = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

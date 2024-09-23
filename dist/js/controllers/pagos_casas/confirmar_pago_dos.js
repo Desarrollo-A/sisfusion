@@ -1,18 +1,18 @@
-back_to_previous = function(data) {
+back_to_seven = function(data) {
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Regresar proceso del lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas regresar el lote <b>${data.nombreLote}</b> al proceso 7?`,
         onSubmit: function(data){
             //console.log(data)
 
             $.ajax({
                 type: 'POST',
-                url: `back_to_carga_comprobante`,
+                url: `back_to_step_7`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El proceso del lote ha sido regresado.", "success");
+                    alerts.showNotification("top", "right", "El lote ha sido regresado al paso 7.", "success");
         
                     table.reload()
 
@@ -31,22 +31,23 @@ back_to_previous = function(data) {
 
     form.show()
 }
+
 
 pass_to_next = function(data) {
     let form = new Form({
-        title: 'Validar depósito', 
-        text: `¿Validar el depósito del lote <b>${data.nombreLote}</b>?<br>Ingresa el monto a pagar al constructor para inicio de obra.`,
+        title: 'Confirmar pago', 
+        text: `¿Confirmar pago del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
 
             $.ajax({
                 type: 'POST',
-                url: `to_documentacion`,
+                url: `to_carga_complemento`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El depósito del lote ha sido validado.", "success");
+                    alerts.showNotification("top", "right", "El pago del lote ha sido confirmado.", "success");
         
                     table.reload()
 
@@ -59,13 +60,18 @@ pass_to_next = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
-            // new NumberField({  id: 'monto', label: 'Pago a realizar', required: true, mask: "#,##0.00" }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'paso', value: 9 }),
         ],
     })
 
     form.show()
 }
+
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
 
 let columns = [
     { data: 'idLote' },
@@ -75,6 +81,18 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
+    { data: function(data){
+        return `${data.avanceObra} %`
+    } },
+    { data: function(data){
+        return `${data.avance} %`
+    } },
+    { data: function(data) {
+        if(data.monto){
+            return formatter.format(data.monto)
+        }
+        return 'Sin ingresar'
+    } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)
         let today = new Date()
@@ -88,9 +106,11 @@ let columns = [
         return text
     } },
     { data: function(data){
+        // let docu_button = new RowButton({icon: 'toc', label: 'Subir documentos', onClick: 'go_to_documentos', data})
+
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_next, data})
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_previous, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_seven, data})
         
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },
@@ -98,6 +118,6 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'pagoscasas/lista_validar_deposito',
+    url: 'pagoscasas/lista_confirmar_pago_dos',
     columns,
 })
