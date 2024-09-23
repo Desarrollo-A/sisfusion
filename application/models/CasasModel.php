@@ -2445,7 +2445,6 @@ AND vb.proyectos != 1";
             pc.proceso = 14
             AND pc.status = 1
             AND pc.finalizado = 0
-            AND $contrato = 0
             AND vobo.$vobo = 0";
 
         return $this->db->query($query)->result();
