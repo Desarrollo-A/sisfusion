@@ -613,7 +613,7 @@ function cargarZip (data) {
             form.loading(false);
             $.ajax({
                 type: 'POST',
-                url: 'upload_documento_new',
+                url: 'upload_documento',
                 data: data,
                 contentType: false,
                 processData: false,
