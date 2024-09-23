@@ -1261,6 +1261,8 @@ class Casas extends BaseController
 
             $vobo = $this->CasasModel->getVobos($id, 8);
 
+            $proceso = $this->CasasModel->getProceso($id);
+
             $updateData = array(
                 "gph"  => 1,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
@@ -1335,6 +1337,7 @@ class Casas extends BaseController
                         break;
                     }
                 }
+
 
                 $movimiento = 0;
                 if ($proceso->tipoMovimiento == 1) {
@@ -1429,6 +1432,7 @@ class Casas extends BaseController
         $this->form();
 
         $id = $this->form('id');
+        $proceso = $this->form('proceso');
         $comentario = $this->form('comentario');
 
         if (!isset($id)) {
@@ -1459,6 +1463,23 @@ class Casas extends BaseController
         }
 
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
+
+        $dataHistorial = array(
+            "idProcesoCasas"  => $id,
+            "procesoAnterior" => $proceso,
+            "procesoNuevo"    => $new_status,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "idMovimiento"    => $this->session->userdata('id_usuario'),
+            "creadoPor"       => $this->session->userdata('id_usuario'),
+            "descripcion"     => $comentario,
+            "esquemaCreditoProceso" => 1
+        );
+
+        $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+
+            if (!$addHistorial) {
+                http_response_code(400);
+            }
 
         if ($is_ok) {
 
@@ -3254,7 +3275,6 @@ class Casas extends BaseController
 
         // 1 es avance y 2 rechazo
         $bandera = 1;
-
         $new_status = $this->CasasModel->getPasos($idProceso, $bandera)->avance;
 
         if ($new_status == 12) {
@@ -4412,7 +4432,6 @@ class Casas extends BaseController
         }
 
         $this->CasasModel->updateVobos($idProceso, 8, $vobos2);
-
         $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
 
         if (!$addHistorial) {
@@ -4555,15 +4574,11 @@ class Casas extends BaseController
 
         // 1 es avance y 2 rechazo
         $bandera = 2;
-
         $new_status = $this->CasasModel->getPasos($idProceso, $bandera)->avance;
-
         $proceso = $this->CasasModel->getProceso($idProceso);
-
         $is_ok = $this->CasasModel->setProcesoTo($idProceso, $new_status, $comentario, 1);
 
         if (!$is_ok) {
-
             http_response_code(404);
         }
 
@@ -4669,13 +4684,10 @@ class Casas extends BaseController
 
         // 1 es avance y 2 rechazo
         $bandera = 2;
-
         $new_status = $this->CasasModel->getPasos($idProceso, $bandera)->avance;
-
         $proceso = $this->CasasModel->getProceso($idProceso);
-
         $is_ok = $this->CasasModel->setProcesoTo($idProceso, $new_status, $comentario, 1);
-        
+
         if ($is_ok) {
             $this->CasasModel->addHistorial($idProceso, $proceso->proceso, $new_status, $comentario, 1);
 
