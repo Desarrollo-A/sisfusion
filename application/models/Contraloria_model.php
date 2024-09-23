@@ -632,12 +632,12 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     public function getMsni($typeTransaction, $key) {
         if($typeTransaction == 1) {
             $query = $this->db-> query("SELECT co.idCondominio ID, co.nombre, lo.msi msni FROM condominios co 
-			INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.status = 1 AND lo.idStatusLote = 1
+			INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.status = 1 AND lo.idStatusLote IN (1, 3, 8)  --lo.idStatusLote = 1
 			WHERE co.status = 1 AND co.idResidencial = $key
 			GROUP BY co.idCondominio, co.nombre, lo.msi ORDER BY co.idCondominio");
         } else if($typeTransaction == 2) {
             $query = $this->db-> query("SELECT *, idLote as ID, nombreLote as nombre, msi as msni FROM lotes 
-                                        WHERE status = 1 AND lotes.status = 1  AND lotes.idStatusLote=1 AND idCondominio =".$key);
+                                        WHERE status = 1 AND lotes.status = 1  AND lotes.idStatusLote IN (1, 3, 8)  AND idCondominio =".$key);
         }
         return $query->result_array();
     }
@@ -1287,7 +1287,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return $query->result_array();
     }
     function getLotesByResCond($idCondominio){
-        $query = $this->db->query("SELECT * FROM lotes WHERE idCondominio=$idCondominio"); //sólo trae los lotes que estén en status Disponible o Bloqueado
+        $query = $this->db->query("SELECT * FROM lotes WHERE idCondominio=$idCondominio "); //sólo trae los lotes que estén en status Disponible o Bloqueado
         return $query->result_array();
     }
 

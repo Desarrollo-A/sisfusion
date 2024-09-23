@@ -203,7 +203,7 @@
         FROM lotes l 
         INNER JOIN condominios c ON c.idCondominio=l.idCondominio
         WHERE c.idResidencial NOT IN (3, 13, 22) 
-        AND l.idStatusLote = 1
+        AND l.idStatusLote IN(1, 8) 
         AND msni > 0 
         AND (l.fecha_creacion < DATEADD(DAY, -15, GETDATE()) OR l.fecha_creacion IS NULL) ");
 

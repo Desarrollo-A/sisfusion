@@ -1242,10 +1242,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                 $table = 'autorizaciones_msi';
                                 $key = 'id_autorizacion';
                                 $table_historial = 'historial_autorizacionesPMSI';
-                                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
-                                $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+                                //$actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+                                //$insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
                                 $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                                echo 'Modo 1:<br><br>';
                                 print_r($array_update_lotes);
                                 exit;
                                 $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
@@ -1274,14 +1275,16 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                 $table = 'autorizaciones_msi';
                                 $key = 'id_autorizacion';
                                 $table_historial = 'historial_autorizacionesPMSI';
-                                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
-                                $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+                                //$actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+                                //$insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
 
                                 //este proceso se debe dejar para que lo ejecute el servidor
                                 /**/
 
                                 $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                                echo 'Modo 2:<br><br>';
+
                                 print_r($array_update_lotes);
                                 exit;
                                 $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
@@ -1326,20 +1329,35 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 foreach($lotes_diferentes as $item2){
                     if($item['idLote'] == $item2['ID']){
                         $flag = 1;//flag para que no se inserte doble vez la posicion de ambos arrays
-                        $arrayManejo = array(
-                            'idLote'       =>  (int) $item2['ID'], //id del lote en el arreglo que son difernetes
-                            'msi'          =>   (int) $item2['MSNI'],
-                            'msi_respaldo' =>   (int) $item2['MSNI'],
-                        );
+                        if($item['idStatusLote'] == 3 || $item['idStatusLote'] == 2){
+                            $arrayManejo = array(
+                                'idLote'       =>  (int) $item2['ID'], //id del lote en el arreglo que son difernetes
+                                'msi_respaldo' =>   (int) $item2['MSNI'],
+                            );
+                        }else if($item['idStatusLote'] == 1 || $item['idStatusLote'] == 8){
+                            $arrayManejo = array(
+                                'idLote'       =>  (int) $item2['ID'], //id del lote en el arreglo que son difernetes
+                                'msi'          =>   (int) $item2['MSNI'],
+                                'msi_respaldo' =>   (int) $item2['MSNI'],
+                            );
+                        }
                         array_push($arrayVista, $arrayManejo );
                     }
                 }
                 if($flag==0){
-                    $arrayManejo = array(
-                        'idLote' =>   $item['idLote'], //id del lote en el arreglo que son difernetes
-                        'msi'    =>   $data_autorizacion[0]['msi'],//los demás se actualizan con los MSI que se definieron al principio
-                        'msi_respaldo' =>   (int) $item2['MSNI'],
-                    );
+                    if($item['idStatusLote'] == 3 || $item['idStatusLote'] == 2){
+                        $arrayManejo = array(
+                            'idLote' =>   $item['idLote'], //id del lote en el arreglo que son difernetes
+                            'msi_respaldo' =>  $data_autorizacion[0]['msi'],//los demás se actualizan con los MSI que se definieron al principio
+                        );
+                    }else if($item['idStatusLote'] == 1 || $item['idStatusLote'] == 8){
+                        $arrayManejo = array(
+                            'idLote' =>   $item['idLote'], //id del lote en el arreglo que son difernetes
+                            'msi'    =>   $data_autorizacion[0]['msi'],//los demás se actualizan con los MSI que se definieron al principio
+                            'msi_respaldo' =>  $data_autorizacion[0]['msi'],
+                        );
+                    }
+
                     array_push($arrayVista, $arrayManejo);
                 }
             }
@@ -1352,8 +1370,15 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio);
             $arrayVista = array(); //el array que armaremos par amandarlo a la vista
             foreach ($lotes_general as $item) {
-                $arrayManejo['idLote'] = $item['idLote'];
-                $arrayManejo['msi'] = $data_autorizacion[0]['msi'];
+                if($item['idStatusLote'] == 3 || $item['idStatusLote'] == 2){
+                    $arrayManejo['idLote'] = $item['idLote'];
+                    $arrayManejo['msi_respaldo'] = $data_autorizacion[0]['msi'];
+                }else if($item['idStatusLote'] == 1 || $item['idStatusLote'] == 8){
+                    $arrayManejo['idLote'] = $item['idLote'];
+                    $arrayManejo['msi'] = $data_autorizacion[0]['msi'];
+                    $arrayManejo['msi_respaldo'] = $data_autorizacion[0]['msi'];
+                }
+
                 array_push($arrayVista, $arrayManejo);
             }
             $updateData = $arrayVista;
