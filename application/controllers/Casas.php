@@ -5216,10 +5216,10 @@ class Casas extends BaseController
     public function to_precierre_cifras()
     {
         $idProcesoCasas = $this->form('idProcesoCasas');
-        $proceso = $this->form('proceso');
         $comentario = $this->form('comentario');
         $idCasaFinal = $this->form('idCasaFinal');
         $idCliente = $this->form('idCliente');
+        $proceso = $this->CasasModel->getProceso($idProcesoCasas);
 
         $vobo = $this->CasasModel->getVobos($idProcesoCasas, 4);
 
@@ -5229,7 +5229,6 @@ class Casas extends BaseController
 
                 $updateData = array(
                     "proyectos"  => 1,
-
                     "comercializacion" => 0,
                     "contraloria" => 0,
                     "gph" => 0,
@@ -5240,8 +5239,9 @@ class Casas extends BaseController
                 );
 
                 $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
+                $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $proceso->proceso, 'Se da visto bueno | Comentario: ' . $comentario, 1);
 
-                if (!$update) {
+                if (!$update || !$historial) {
                     http_response_code(400);
                 }
             } else {
@@ -5257,7 +5257,7 @@ class Casas extends BaseController
                 );
 
                 $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
-                $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso, $proceso, 'Se da visto bueno | Comentario: ' . $comentario, 1);
+                $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $proceso->proceso, 'Se da visto bueno | Comentario: ' . $comentario, 1);
 
                 if (!$update || !$historial) {
                     http_response_code(400);
@@ -5279,28 +5279,16 @@ class Casas extends BaseController
             }
 
             $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
-            $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso, $proceso, 'Se da visto bueno' , 1);
 
             $bandera = 1;
 
             $new_status = $this->CasasModel->getPasos($idProcesoCasas, $bandera)->avance;
 
             $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, $new_status, $comentario, 0);
-
-            $dataHistorial = array(
-                "idProcesoCasas"  => $idProcesoCasas,
-                "procesoAnterior" => $proceso,
-                "procesoNuevo"    => $new_status,
-                "fechaMovimiento" => date("Y-m-d H:i:s"),
-                "creadoPor"       => $this->session->userdata('id_usuario'),
-                "idMovimiento"    => $this->session->userdata('id_usuario'),
-                "descripcion"     => $comentario,
-                "esquemaCreditoProceso" => 1
-            );
     
-            $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+            $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $new_status, $comentario, 1);
     
-            if (!$addHistorial) {
+            if (!$historial) {
                 http_response_code(404);
             }
 
