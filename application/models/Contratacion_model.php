@@ -87,8 +87,13 @@ class Contratacion_model extends CI_Model {
          $filtroClientesPropios = "AND (((cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario) AND lot.idStatusLote IN (2)) OR lot.idStatusLote IN (8, 3))";
       else if (in_array($id_rol, [6]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTNTE GERENTE
          $filtroClientesPropios = "AND ((cl.id_gerente IN ($idsGerente) AND cl.id_sede = $id_sede AND lot.idStatusLote IN (2)) OR lot.idStatusLote IN (8, 3))";
-      else if (in_array($id_rol, [1, 2, 4, 5]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
-         $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3, 8)";
+      else if (in_array($id_rol, [1, 2, 4, 5]) && $tipo == 1) { // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
+         if ($id_usuario == 16661) // Cinthia Guadalupe Vergara Martínez
+            $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3) AND cl.id_sede IN (4, 13, 13)";
+         else
+            $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3, 8)";
+
+      }
       /*else if (in_array($id_rol, [5]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
          $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3, 8)";*/
 
