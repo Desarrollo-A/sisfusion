@@ -97,6 +97,11 @@ class Pagoscasas extends BaseController {
         $this->load->view("pagos_casas/reporte_pagos");
     }
 
+    public function reporte_pagos_casas(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/reporte_pagos_casas");
+    }
+
     public function avances($proceso){
         $lote = $this->PagosCasasModel->getProceso($proceso);
 

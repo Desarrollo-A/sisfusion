@@ -141,14 +141,7 @@ let columns = [
     },
     {
         data: function (data) {
-            // let docu_button = new RowButton({ icon: 'toc', label: 'Ver historial', onClick: go_to_historial, data })
-           
             let button = new RowButton({ icon: 'info', label: 'HISTORIAL DE MOVIMIENTOS', onClick: modalHistorialBanco, data })
-
-            // let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a solicitud de contratos', onClick: pass_to_solicitud_contratos, data})
-
-            // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentración de adeudos', onClick: back_to_adeudos, data})
-
             return `<div class="d-flex justify-center">${button}</div>`
         }
     },
