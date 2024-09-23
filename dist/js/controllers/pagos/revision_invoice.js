@@ -9,14 +9,16 @@ $(document).ready(function() {
 
 
 $('#tabla_invoice thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        titulosInvoice.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_invoice').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_invoice').DataTable().column(i).search(this.value).draw();
-            }
-        });
+    $(this).css('text-align', 'center');
+    var title = $(this).text();
+    titulosInvoice.push(title);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tabla_invoice').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_invoice').DataTable().column(i).search(this.value).draw();
+        }
+        $('#tabla_invoice').DataTable().column(i).search(this.value).draw();
+    });
 });
 
 
@@ -138,6 +140,10 @@ function getDataInvoice(){
     });
 
 }
+
+var maxWidth = window.matchMedia("(max-width: 992px)");
+responsive(maxWidth);
+maxWidth.addListener(responsive);
 
 $(window).resize(function(){
     tabla_invoice.columns.adjust();

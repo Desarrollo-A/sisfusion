@@ -154,20 +154,24 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                        <table class="table-striped table-hover" id="tabla_invoice" name="tabla_invoice">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>USUARIO</th>
+                                                                    <th>TOTAL</th>
+                                                                    <th>FORMA DE PAGO</th>
+                                                                    <th>NACIONALIDAD</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>ACCIONES</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div> 
                                             </div>
-                                            <table class="table-striped table-hover" id="tabla_invoice" name="tabla_invoice">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>USUARIO</th>
-                                                        <th>TOTAL</th>
-                                                        <th>FORMA DE PAGO</th>
-                                                        <th>NACIONALIDAD</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
                                         </div>
                                     </div>
                                 </div>
