@@ -129,7 +129,7 @@ back_to_propuesta_firma = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `back_to_propuesta_firma`,
+                url: `rechazoPaso9`,
                 data: data,
                 contentType: false,
                 processData: false,

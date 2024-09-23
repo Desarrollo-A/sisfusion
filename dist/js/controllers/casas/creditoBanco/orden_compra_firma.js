@@ -14,7 +14,7 @@ function rechazoProcesoBanco(data){
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/rechazoPaso4`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -90,6 +90,7 @@ function to_precierre_cifras(data) {
         },
         fields: [
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
             idCasaFinal,
             new HiddenField({ id: 'idCliente', value: data.id_cliente}),
