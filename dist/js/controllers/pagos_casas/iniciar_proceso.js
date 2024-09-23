@@ -1,4 +1,5 @@
 function show_preview(data) {
+    console.log("data: ", data);
     let url = `${general_base_url}pagoscasas/archivo/${data.archivo}`
 
     Shadowbox.init();
@@ -6,7 +7,7 @@ function show_preview(data) {
     Shadowbox.open({
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
         player: "html",
-        title: `Visualizando archivo: ${data.documento}`,
+        title: `Visualizando archivo: ${data.archivo}`,
         width: 985,
         height: 660
     });
