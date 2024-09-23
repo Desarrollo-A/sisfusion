@@ -631,6 +631,7 @@ function cargarZip (data) {
             new HiddenField({id: 'id_proceso', value: data.idProcesoCasas}),
             new HiddenField({id: 'id_documento', value: data.idDocumento}),
             new HiddenField({id: 'name_documento', value: data.nombreArchivo}),
+            new HiddenField({id: 'tipo', value: 17}),
             new FileField({id: 'file_uploaded', label: 'Carga el archivo .zip', placeholder: 'No has seleccionado un archivo', accept: accept, required: true, maxSizeMB: 2}),
         ],
     });
