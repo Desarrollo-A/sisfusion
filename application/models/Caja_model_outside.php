@@ -1585,7 +1585,7 @@
                 cl.ladaTel1,
                 cl.telefono2,
                 cl.correo,
-                cl.fecha_nacimiento,
+                REPLACE(cl.fecha_nacimiento, ' 00:00:00.000', '') fecha_nacimiento,
                 CONVERT(varchar, cl.fechaApartado, 23) fechaApartado,
                 lo.referencia,
                 cl.rfc,
@@ -1603,7 +1603,6 @@
                 cl.cp_fac, 
                 cl.colonia,
                 cl.pais
-
             FROM
                 clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente
