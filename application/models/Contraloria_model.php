@@ -260,14 +260,14 @@ class Contraloria_model extends CI_Model {
                     AND l.validacionEnganche != 'NULL' 
                     AND l.validacionEnganche IS NOT NULL 
                     --AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL) 
-                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (0, 1) $filtroSede 
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (0, 1, 8) $filtroSede 
                 ) 
                 OR
                 (
                     l.status = 1 
                     AND l.idMovimiento IN (36, 41) 
                     --AND ISNULL(l.totalNeto, 0.00) > 0.00
-                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1 $filtroSede 
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (2, 3, 4, 5, 6, 7) $filtroSede 
                 )
             GROUP BY 
                 l.idLote, 

@@ -132,6 +132,7 @@ pass_to_adeudos = function (data) {
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new SelectField({ id: 'tipo', label: 'Tipo de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipos, required: true }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idLote', value: data.idLote}),
         ],
     })
 
@@ -167,13 +168,13 @@ let columns = [
 
             let view_button = ''
             let pass_button = ''
-            let cancel_button = '';
+            //let cancel_button = '';
             if (data.archivo) {
                 view_button = new RowButton({ icon: 'visibility', label: 'Visualizar archivo', onClick: show_preview, data })
                 pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_adeudos, data })
             }
 
-           // let cancel_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_process, data })
+            let cancel_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_process, data })
 
             return `<div class="d-flex justify-center">${pass_button}${view_button}${upload_button}${cancel_button}</div>`
         }

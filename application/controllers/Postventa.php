@@ -9,7 +9,7 @@ public $controller = 'Postventa';
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model', 'caja_model_outside', 'PaquetesCorrida_model'));
+        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model', 'caja_model_outside', 'PaquetesCorrida_model', 'CasasModel'));
         $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'email','permisos_sidebar'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
@@ -3779,14 +3779,35 @@ public $controller = 'Postventa';
     public function asignarMarca() {
         $idCliente = $this->form('idCliente');
         $accion = $this->form('accion');
+        $marcaEscrituracion = $this->form('marcaEscrituracion');
+        $idProceso = $this->form('idProceso') ?? null;
         $banderaSuccess = true;
 
-        $dataUpdate = array(
-            "escrituraFinalizada" => 1,
-        );
         $this->db->trans_begin();
         if($accion == 1) {
-            $update = $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
+            $update = $this->General_model->updateRecord('clientes', array("escrituraFinalizada" => $marcaEscrituracion), 'id_cliente', $idCliente);
+        }
+
+        if($accion == 2) {
+            $update = $this->General_model->updateRecord('clientes', array("revisionEscrituracion" => 1), 'id_cliente', $idCliente);
+            $checkDocument = $this->CasasModel->checkDocument($idProceso);
+            if($checkDocument == null){
+                //CREAR DOCUMENTO FORMAS DE PAGO
+                $insertArray = array(
+                    "idProcesoCasas" => $idProceso,
+                    "documento" => "Formas de pago",
+                    "archivo" => null,
+                    "tipo" => 11,
+                    "fechaCreacion" => date('Y-m-d H:i:s'),
+                    "creadoPor" => $this->session->userdata('id_usuario')
+                );
+                
+                $insertDocumento = $this->General_model->addRecord('documentos_proceso_casas', $insertArray);
+                if(!$insertDocumento) {
+                    $banderaSuccess = false;
+                }
+            }
+            
         }
         
         if(!$update){

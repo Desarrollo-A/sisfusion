@@ -86,7 +86,7 @@ pass_to_next = function(data) {
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
             new HiddenField({ id: 'id_avance', value: data.idAvance }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'paso', value: 6}),
+            new HiddenField({ id: 'paso', value: 10}),
         ],
     })
 
@@ -154,6 +154,6 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'pagoscasas/lista_carga_complemento',
+    url: 'pagoscasas/lista_carga_complemento_dos',
     columns,
 })

@@ -277,7 +277,7 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function getListaConfirmarPago(){
+    public function getListaConfirmarPago($idProceso){
         $query = "SELECT
             pp.*,
             app.idAvance,
@@ -307,7 +307,7 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
         LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
         WHERE
-            pp.proceso = 5
+            pp.proceso = $idProceso
         AND pp.status = 1";
 
         return $this->db->query($query)->result();
@@ -332,7 +332,7 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getListaCargaComplemento(){
+    public function getListaCargaComplemento($paso){
         $query = "SELECT
             pp.*,
             lo.nombreLote,
@@ -362,7 +362,7 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
         LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
         WHERE
-            pp.proceso = 6
+            pp.proceso = $paso 
         AND pp.status = 1";
 
         return $this->db->query($query)->result();
@@ -381,7 +381,7 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getListaValidarPago(){
+    public function getListaValidarPago($paso){
         $query = "SELECT
             pp.*,
             lo.nombreLote,
@@ -411,7 +411,7 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
         LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
         WHERE
-            pp.proceso = 7
+            pp.proceso = $paso 
         AND pp.status = 1
         AND pp.finalizado = 0";
 
