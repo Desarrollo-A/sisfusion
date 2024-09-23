@@ -1,3 +1,38 @@
+back_to_seven = function(data) {
+    let form = new Form({
+        title: 'Regresar proceso', 
+        text: `¿Deseas regresar el lote <b>${data.nombreLote}</b> al proceso 7?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `back_to_step_7`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha sido regresado al paso 7.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoPagos }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
+
 pass_to_next = function(data) {
     let form = new Form({
         title: 'Confirmar pago', 
@@ -26,7 +61,7 @@ pass_to_next = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'paso', value: 5 }),
+            new HiddenField({ id: 'paso', value: 9 }),
         ],
     })
 
@@ -75,14 +110,14 @@ let columns = [
 
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_next, data})
 
-        // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_seven, data})
         
-        return `<div class="d-flex justify-center">${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },
 ]
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'pagoscasas/lista_confirmar_pago',
+    url: 'pagoscasas/lista_confirmar_pago_dos',
     columns,
 })

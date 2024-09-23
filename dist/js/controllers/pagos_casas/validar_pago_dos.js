@@ -1,37 +1,3 @@
-back_to_previous = function(data) {
-    let form = new Form({
-        title: 'Regresar proceso', 
-        text: `¿Regresar proceso del lote <b>${data.nombreLote}</b>?`,
-        onSubmit: function(data){
-            //console.log(data)
-
-            $.ajax({
-                type: 'POST',
-                url: `back_to_carga_complementos`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "El proceso del lote ha sido regresado.", "success");
-        
-                    table.reload()
-
-                    form.hide();
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoPagos }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-        ],
-    })
-
-    form.show()
-}
-
 pass_to_next = function(data) {
     let form = new Form({
         title: 'Enviar a solicitar avance', 
@@ -61,7 +27,7 @@ pass_to_next = function(data) {
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
             new HiddenField({ id: 'id_avance',  value: data.idAvance }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'paso', value: 7})
+            new HiddenField({ id: 'paso', value: 11})
         ],
     })
 
@@ -171,15 +137,12 @@ let columns = [
         if(data.avanceObra >= 100){
             pass_button = new RowButton({icon: 'check', color: 'green', label: 'Validar y finalizar proceso', onClick: finalizar_proceso, data})
         }
-
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_previous, data})
-        
-        return `<div class="d-flex justify-center">${view_button}${download_button}${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${view_button}${download_button}${pass_button}</div>`
     } },
 ]
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'pagoscasas/lista_validar_pago',
+    url: 'pagoscasas/lista_validar_pago_dos',
     columns,
 })
