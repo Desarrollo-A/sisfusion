@@ -292,6 +292,13 @@ function gestorNotarias() {
     form2.show();
 }
 
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    let url = `${general_base_url}casas/archivo/${data.archivo}`;
+
+    window.open(url, '_blank').focus();
+}
+
 $.ajax({
     type: 'GET',
     url: 'getNotarias',
@@ -521,9 +528,12 @@ let columns = [
             notarias = new RowButton({icon: 'gavel', label: 'Selección de notarías', onClick: selectNotarias, data})
 
             if (data.titulacion) {
-                view_button = new RowButton({icon: 'visibility', label: `Visualizar títulos de propiedad`, onClick: show_preview, data})
+                
+                //view_button = new RowButton({icon: 'visibility', label: `Visualizar títulos de propiedad`, onClick: show_preview, data})
+                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.nombreArchivo}`, onClick: download_file, data });
             }
-            upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
+            //upload_button = new RowButton({ icon: 'file_upload', label: `Cargar títulos de propiedad`, onClick: upload, data })
+            upload_button = new RowButton({ icon: 'file_upload', label: 'Cargar archivo zip', onClick: cargarZip, data});
         }
         
         if(data.fechaFirma1 && data.cotizacionCargada >=1 && data.documentos == 1 && data.notarias != 0 && idRol === 57 && data.notaria !=0 && data.notaria != null){
@@ -590,3 +600,40 @@ $('#form-modal').on('shown.bs.modal', function () {
         });
     });
 });
+
+
+function cargarZip (data) {
+    let accept = ['application/zip', 'application/x-zip-compressed', 'application/x-rar-compressed', 'application/x-7z-compressed', 'application/octet-stream'];
+    let form = new Form({
+        title: 'Carga el archivo zip',
+        text: 'Recuerda que el archivo zip no puede ser mayor a 8MB',
+        onSubmit: function(data) {
+            let file = data.get('file_uploaded');
+            form.loading(false);
+            $.ajax({
+                type: 'POST',
+                url: 'upload_documento_new',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
+                    table.reload();
+                    form.hide();
+                },
+                error: function() {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    form.loading(false);
+                }
+            })
+        }, 
+        fields: [
+            new HiddenField({id: 'id_proceso', value: data.idProcesoCasas}),
+            new HiddenField({id: 'id_documento', value: data.idDocumento}),
+            new HiddenField({id: 'name_documento', value: data.nombreArchivo}),
+            new HiddenField({id: 'tipo', value: 17}),
+            new FileField({id: 'file_uploaded', label: 'Carga el archivo .zip', placeholder: 'No has seleccionado un archivo', accept: accept, required: true, maxSizeMB: 2}),
+        ],
+    });
+    form.show();
+}

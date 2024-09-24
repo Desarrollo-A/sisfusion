@@ -1219,7 +1219,7 @@
 		$id_rol = $this->session->userdata('id_rol');
 
 		if($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
-			$id_lider .= ", 24, 10";
+			$id_lider .= ", 113, 24";
 			
 		if($id_rol == 2 || $id_rol == 4 || $id_rol == 33) // DIRECCIÓN COMERCIAL || ASISTENTE DE DIRECCIÓN COMERCIAL
 			$lider = "";
@@ -3575,7 +3575,10 @@
 					$id_lider = $id_lider . ', 6661';
 					$sede = "";
 				} else if ($id_usuario == 17029) { // Karen Ariadna Vazquez Muñoz
-					$id_lider = $id_lider . ', 13067';
+					$id_lider = $id_lider . ', 2080';
+					$sede = "";
+				} else if ($id_usuario == 15716) { // ADRIAN TREJO GUTIERREZ
+					$id_lider = $id_lider . ', 7944';
 					$sede = "";
 				}
 

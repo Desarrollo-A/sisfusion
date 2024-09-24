@@ -5358,7 +5358,7 @@ function getDatosGralInternomex(){
         else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
             $id_lider .= ", 654, 697, 5604, 10251, 12688";
         else if ($id_usuario == 14556) // KATTYA GUADALUPE CADENA CRUZ
-            $id_lider .= ", 24, 10";
+            $id_lider .= ", 113, 24";
         else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
             $id_lider .= ", 7474";
         else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
@@ -5368,7 +5368,9 @@ function getDatosGralInternomex(){
         else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
             $id_lider .= ", 6661";
         else if ($id_usuario == 17029) // Karen Ariadna Vazquez Muñoz
-            $id_lider .= ", 13067";
+            $id_lider .= ", 2080";
+        else if ($id_usuario == 15716) // ADRIAN TREJO GUTIERREZ
+            $id_lider .= ", 7944";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES
