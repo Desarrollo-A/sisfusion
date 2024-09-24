@@ -1443,7 +1443,7 @@ class Casas extends BaseController
         $this->form();
 
         $id = $this->form('id');
-        $proceso = $this->form('proceso');
+        $proceso = $this->CasasModel->getProceso($id);
         $comentario = $this->form('comentario');
 
         if (!isset($id)) {
@@ -1466,8 +1466,6 @@ class Casas extends BaseController
 
         $new_status = $this->CasasModel->getPasos($id, $bandera)->avance;
 
-        $proceso = $this->CasasModel->getProceso($id);
-
         $movimiento = 0;
         if ($proceso->tipoMovimiento == 1) {
             $movimiento = 2;
@@ -1475,7 +1473,7 @@ class Casas extends BaseController
 
         $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
-        $addHistorial = $this->CasasModel->addHistorial($id, $proceso, $new_status, $comentario, 1);
+        $addHistorial = $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, $comentario, 1);
 
         if (!$addHistorial) {
             http_response_code(400);
@@ -1493,7 +1491,7 @@ class Casas extends BaseController
                 }
             }
 
-            $this->CasasModel->addHistorial($id, $proceso, $new_status, "Se avanzó el proceso a la carga de kit bancario | Comentario: ".$comentario, 1);
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, "Se avanzó el proceso a la carga de kit bancario | Comentario: ".$comentario, 1);
 
             $this->json([]);
         } else {
@@ -3151,24 +3149,21 @@ class Casas extends BaseController
 
         switch ($tipo) {
             case 1: //titulacion
-                $contrato = 'contratoTitulacion';
                 $vobo = 'titulacion';
                 $documentos = '33, 34, 35';
                 break;
             case 2: // OOAM
-                $contrato = 'contratoOOAM';
                 $vobo = 'ooam';
                 $documentos = '49';
                 break;
 
             case 3: // postventa
-                $contrato = 'contratoPV';
                 $vobo = 'pv';
                 $documentos = '24';
                 break;
         }
 
-        $lotes = $this->CasasModel->getListaElaborarContrato($contrato, $vobo, $documentos);
+        $lotes = $this->CasasModel->getListaElaborarContrato($vobo, $documentos);
 
         $this->json($lotes);
     }
@@ -3672,10 +3667,6 @@ class Casas extends BaseController
     public function setAvanceContratos()
     {
         $form = $this->form();
-
-        $contratoTitulacion = $form->contratoTitulacion;
-        $contratoOOAM = $form->contratoOOAM;
-        $contratoPV = $form->contratoPV;
         $comentario = $form->comentario;
         $idProcesoCasas = $form->idProcesoCasas;
 
@@ -4396,9 +4387,6 @@ class Casas extends BaseController
 
         $updateData = array(
             "fechaModificacion" => date("Y-m-d H:i:s"),
-            "contratoTitulacion" => 0,
-            "contratoOOAM" => 0,
-            "contratoPV" => 0,
             "proceso" => $new_status
         );
 
@@ -5291,7 +5279,7 @@ class Casas extends BaseController
 
             $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
 
-            $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso, $proceso, 'Se da visto bueno' , 1);
+            $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $proceso->proceso, 'Se da visto bueno' , 1);
 
             $bandera = 1;
 
