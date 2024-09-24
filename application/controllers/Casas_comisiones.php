@@ -569,18 +569,18 @@ class Casas_comisiones extends CI_Controller
   
 // ----------------------------------- controladores casas_colaboradorRigel --------------------------------
 
-public function getDatosFechasProyecCondm(){
-  $diaActual = date('d'); 
-  $data = array(
-    "proyectos" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
-    "fechasCorte" => $this->Casas_comisiones_model->getFechaCorteActual($diaActual),
-    "condominios" => $this->Casas_comisiones_model->get_condominios_lista()->result_array(),
-    "sumaPagos" => $this->Casas_comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array(),
-    "opinion" => $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array()
-  );
-  echo json_encode($data,JSON_NUMERIC_CHECK);
-  
-}
+  public function getDatosFechasProyecCondm(){
+    $diaActual = date('d'); 
+    $data = array(
+      "proyectos" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
+      "fechasCorte" => $this->Casas_comisiones_model->getFechaCorteActual($diaActual),
+      "condominios" => $this->Casas_comisiones_model->get_condominios_lista()->result_array(),
+      "sumaPagos" => $this->Casas_comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array(),
+      "opinion" => $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array()
+    );
+    echo json_encode($data,JSON_NUMERIC_CHECK);
+    
+  }
 
   public function getDatosComisionesRigel(){
     $proyecto = $this->input->post('idProyecto');
@@ -778,7 +778,7 @@ public function getDatosFechasProyecCondm(){
   }
 
   public function getUsuariosBonos(){
-     echo json_encode($this->Casas_comisiones_model->getUsuariosBonos()->result_array());
+    echo json_encode($this->Casas_comisiones_model->getUsuariosBonos()->result_array());
   }
 
   public function AsignarBono(){
