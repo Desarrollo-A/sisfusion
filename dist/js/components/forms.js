@@ -1050,7 +1050,7 @@ class title {
 class TimeLine {
     
 
-constructor({ title, back = '', next = '', description, date, processText = '' }) {
+constructor({title, back = '', next = '', description, date, processText = '', previousText = '', newText = ''}) {
 
 {/* <li>
     <div class="container-fluid">
@@ -1107,7 +1107,7 @@ constructor({ title, back = '', next = '', description, date, processText = '' }
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text(back != '' ? 'Proceso anterior: ' : '')
+                                        .text(back != '' ? previousText: '')
                                         .append(
                                             $('<b />')
                                                 .text(back != '' ? back : '')
@@ -1123,7 +1123,7 @@ constructor({ title, back = '', next = '', description, date, processText = '' }
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text(processText == ''? 'Proceso nuevo: ' : processText)
+                                        .text(newText)
                                         .append(
                                             $('<b />')
                                                 .text(next)

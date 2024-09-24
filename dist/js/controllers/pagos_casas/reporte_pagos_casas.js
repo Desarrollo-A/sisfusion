@@ -64,40 +64,40 @@ show_historial = function (dt) {
     $("#spiner-loader").removeClass('hide');
     $("#timeLineModal").modal();
     $("#historialActual").html("");
-    console.log("data: ", dt);
-
-    $.post(`getHistorial/${dt.idProcesoPagos}/${esquemaCredito}`).done(function (data) {
-        console.log("data: ", data);
-        // Check if data is not empty before parsing
-        if (data && data.trim() !== "") {
-            let parsedData = JSON.parse(data); // Parse only if data is not empty
-
-            if (parsedData.length > 0) {
-                $.each(parsedData, function (i, v) {
-                    $("#spiner-loader").addClass('hide');
-                    let timeLine = new TimeLine({
-                        title: v.nombreUsuario,
-                        back: v.procesoAnterior,
-                        next: v.procesoNuevo,
-                        description: v.descripcion,
-                        date: v.fechaMovimiento
-                    });
-                    lineCredito(timeLine);
-                });
-            } else {
-                emptyLog();
+    $.post(`${general_base_url}/Pagoscasas/getHistorial/${dt.idProcesoPagos}/${esquemaCredito}`).done(function (data) {
+        if (JSON.parse(data).length > 0) {
+            $.each(JSON.parse(data), function(i, v) {
                 $("#spiner-loader").addClass('hide');
-            }
+                let backProcess = '';
+                let previousText = '';
+                let newText = '';
+                let nextProcess = v.procesoNuevo;
+
+                if (v.cambioStatus == '0') {
+                    backProcess = v.procesoAnterior;
+                    previousText = 'Proceso anterior: ';
+                    newText = 'Proceso nuevo: ';
+                }
+                else {
+                    backProcess = '';
+                    newText = 'Proceso actual: ';
+                }
+
+                let timeLine = new TimeLine({
+                    title: v.nombreUsuario,
+                    back: backProcess,
+                    next: nextProcess,
+                    description: v.descripcionFinal,
+                    date: v.fechaMovimiento,
+                    previousText: previousText,
+                    newText: newText
+                });
+                lineCredito(timeLine);
+            });
         } else {
-            // Handle empty or invalid data
             emptyLog();
             $("#spiner-loader").addClass('hide');
-            console.warn("Empty or invalid JSON data received.");
         }
-    }).fail(function () {
-        // Handle AJAX request failure
-        $("#spiner-loader").addClass('hide');
-        console.error("Failed to fetch data.");
     });
 }
 

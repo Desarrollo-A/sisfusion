@@ -270,12 +270,28 @@ modalHistorial = function (dt) {
         if (JSON.parse(data).length > 0) {
             $.each(JSON.parse(data), function (i, v) {
                 $("#spiner-loader").addClass('hide');
+                let backProcess = '';
+                let previousText = '';
+                let newText = '';
+                let nextProcess = v.procesoNuevo;
+                
+                if (v.cambioStatus == '0') {
+                    backProcess = v.procesoAnterior;
+                    previousText = 'Proceso anterior: ';
+                    newText = 'Proceso nuevo: ';
+                }
+                else {
+                    backProcess = '';
+                    newText = 'Proceso actual: ';
+                }
                 let timeLine = new TimeLine({
                     title: v.nombreUsuario,
-                    back: v.procesoAnterior,
-                    next: v.procesoNuevo,
+                    back: backProcess,
+                    next: nextProcess,
                     description: v.descripcion,
-                    date: v.fechaMovimiento
+                    date: v.fechaMovimiento,
+                    previousText: previousText,
+                    newText: newText
                 });
                 lineCredito(timeLine);
             });
@@ -306,10 +322,13 @@ modalHistorialBanco =  function (dt) {
             let newText = '';
             let nextProcess = v.procesoNuevo;
 
-            if (v.cambioStatus == 0) {
+            if (v.cambioStatus == '0') {
                 backProcess = v.procesoAnterior;
+                previousText = 'Proceso anterior: ';
+                newText = 'Proceso nuevo: ';
             }
             else {
+                backProcess = '';
                 newText = 'Proceso actual: ';
             }
 

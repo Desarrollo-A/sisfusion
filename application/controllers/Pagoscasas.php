@@ -265,7 +265,7 @@ class Pagoscasas extends BaseController {
         $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 4, $comentario);
 
         if($is_ok){
-            $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 3, 4, 'Se avanzó al proceso 4 | Comentario: '. $comentario);
+            $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 3, 4, 'Se avanzó el proceso al paso 4 | Comentario: '. $comentario);
         }else{
             http_response_code(404);
         }
@@ -406,6 +406,7 @@ class Pagoscasas extends BaseController {
     public function upload_complemento(){
         $id_proceso = $this->form('id_proceso');
         $id_avance = $this->form('id_avance');
+        $paso = $this->form('paso');
 
         $file_pdf = $this->file('file_pdf');
         $file_xml = $this->file('file_xml');
@@ -431,8 +432,8 @@ class Pagoscasas extends BaseController {
             $is_ok = $this->PagosCasasModel->setComplementosAvance($id_avance, $filename_pdf, $filename_xml);
 
             if($is_ok){
-                $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 6, 6, 'Se subió archivo: '. $filename_pdf);
-                $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 6, 6, 'Se subió archivo: '. $filename_xml);
+                $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, $paso, $paso, 'Se subió archivo: '. $filename_pdf);
+                $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, $paso, $paso, 'Se subió archivo: '. $filename_xml);
             }else{
                 http_response_code(404);
             }
@@ -559,8 +560,11 @@ class Pagoscasas extends BaseController {
 
         if(isset($id_avance)){
             $is_ok = $this->PagosCasasModel->updateAvance($id_avance, $avance, $monto);
+            $this->PagosCasasModel->addHistorial($id_proceso, 8, 8, 'Se actualizó el avance');
+            
         }else{
             $is_ok = $this->PagosCasasModel->insertarAvance($id_proceso, $avance, $monto);
+            $this->PagosCasasModel->addHistorial($id_proceso, 8, 8, 'Se insertó el avance de '.$avance.'% con el monto de $'.$monto);
         }
 
         if($is_ok){
@@ -587,6 +591,7 @@ class Pagoscasas extends BaseController {
         $nuevo_avance = $proceso->avanceObra + $avance;
         
         $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 9, $comentario);
+        $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 8, 9, 'Se avanzó el proceso al paso 9 | Comentario: '. $comentario);
 
         if($is_ok){
             $is_ok = $this->PagosCasasModel->setAvanceToProceso($id, $nuevo_avance);
@@ -793,7 +798,6 @@ class Pagoscasas extends BaseController {
     }
 
     public function getHistorial($idProceso, $estatus) {
-        
         echo json_encode($this->PagosCasasModel->getHistorialPagosCasas($idProceso, $estatus));
     }
 }
