@@ -3,27 +3,26 @@ var tabla_invoice ;
 var totaPago = 0;
 let titulosInvoice = [];
 
-$(document).ready(function() {
-    getDataInvoice();
-});
+ 
+ function llamar_tabla(){
 
+    getDataInvoice();
+ }
 
 $('#tabla_invoice thead tr:eq(0) th').each(function (i) {
     $(this).css('text-align', 'center');
-    var title = $(this).text();
-    titulosInvoice.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    var titles = $(this).text();
+    titulosInvoice.push(titles);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top"  placeholder="' + titles + '"/>');
     $( 'input', this ).on('keyup change', function () {
         if ($('#tabla_invoice').DataTable().column(i).search() !== this.value ) {
             $('#tabla_invoice').DataTable().column(i).search(this.value).draw();
         }
-        $('#tabla_invoice').DataTable().column(i).search(this.value).draw();
     });
 });
 
 
-function getDataInvoice(){
-    
+ function getDataInvoice(){
     $('#tabla_invoice').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
@@ -46,7 +45,7 @@ function getDataInvoice(){
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title:'Comprobantes Fiscales Invoice - Revisión Contraloría',
+                titles:'Comprobantes Fiscales Invoice - Revisión Contraloría',
                 exportOptions: {
                     columns: [0,1,2,3,4,5,6],
                     format: {
@@ -58,6 +57,7 @@ function getDataInvoice(){
             }],
         pagingType: "full_numbers",
         fixedHeader: true,
+        scrollX: true,
         language: {
             url: general_base_url+"/static/spanishLoader_v2.json",
             paginate: {
@@ -67,7 +67,9 @@ function getDataInvoice(){
         },
         destroy: true,
         ordering: false,
-        columns: [{
+        columns: [
+         
+            {
             data: function(d) {
                 return `<p class="m-0"><b>${d.id_usuario}</b></p>`;
             }
@@ -108,7 +110,8 @@ function getDataInvoice(){
                         </button>
                     </div>`;
             }
-        }],
+        }
+        ],
         ajax: {
             "url": general_base_url+"Pagos/getComprobantesExtranjero",
             "type": "GET",
@@ -116,14 +119,10 @@ function getDataInvoice(){
         },
     });
 
-    $('#tabla_invoice').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
-
+    
 
     $('#tabla_invoice tbody').on('click', '.consultar-archivo', function () {
+
         const $itself = $(this);
         Shadowbox.open({
             content: `
@@ -139,13 +138,8 @@ function getDataInvoice(){
         });
     });
 
-}
 
-var maxWidth = window.matchMedia("(max-width: 992px)");
-responsive(maxWidth);
-maxWidth.addListener(responsive);
 
-$(window).resize(function(){
-    tabla_invoice.columns.adjust();
-});
 
+ }
+    
