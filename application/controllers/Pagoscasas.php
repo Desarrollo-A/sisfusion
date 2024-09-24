@@ -786,4 +786,9 @@ class Pagoscasas extends BaseController {
             http_response_code(404);
         }
     }
+
+    public function getHistorial($idProceso, $estatus) {
+        
+        echo json_encode($this->PagosCasasModel->getHistorialPagosCasas($idProceso, $estatus));
+    }
 }

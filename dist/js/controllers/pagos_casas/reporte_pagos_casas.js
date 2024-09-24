@@ -59,31 +59,53 @@ filtro_proceso.onChange(function(option){
     table.reload()
 });
 
-show_historial = function(data) {
-    let status = 1;
+show_historial = function (dt) {
+    let esquemaCredito = 2;
     $("#spiner-loader").removeClass('hide');
     $("#timeLineModal").modal();
-    $("#historialActual").html();
-    console.log("data: ", data);
+    $("#historialActual").html("");
+    console.log("data: ", dt);
 
-    $.post(`getHistorial/${data.idProcesoPagos}/${status}`).done(function (data) {
-        if (JSON.parse(data).length > 0) {
-            $.each(JSON.parse(data), function(i, v) {
+    $.post(`getHistorial/${dt.idProcesoPagos}/${esquemaCredito}`).done(function (data) {
+        console.log("data: ", data);
+        // Check if data is not empty before parsing
+        if (data && data.trim() !== "") {
+            let parsedData = JSON.parse(data); // Parse only if data is not empty
+
+            if (parsedData.length > 0) {
+                $.each(parsedData, function (i, v) {
+                    $("#spiner-loader").addClass('hide');
+                    let timeLine = new TimeLine({
+                        title: v.nombreUsuario,
+                        back: v.procesoAnterior,
+                        next: v.procesoNuevo,
+                        description: v.descripcion,
+                        date: v.fechaMovimiento
+                    });
+                    lineCredito(timeLine);
+                });
+            } else {
+                emptyLog();
                 $("#spiner-loader").addClass('hide');
-                let timeLine = new TimeLine({
-                    title: v.nombreUsuario,
-                    back: 'back',
-                    next: 'next',
-                    description: 'test',
-                    date: v.fechaMovimiento
-                })
-                lineCredito(timeLine);
-            });
+            }
         } else {
-            cleanModal();
+            // Handle empty or invalid data
+            emptyLog();
             $("#spiner-loader").addClass('hide');
+            console.warn("Empty or invalid JSON data received.");
         }
-    })
+    }).fail(function () {
+        // Handle AJAX request failure
+        $("#spiner-loader").addClass('hide');
+        console.error("Failed to fetch data.");
+    });
+}
+
+
+
+
+function lineCredito(timeLine) {
+    $("#historialActual").append(`${timeLine}`);
 }
 
 $.ajax({

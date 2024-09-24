@@ -629,4 +629,19 @@ class PagosCasasModel extends CI_Model
 
         return $this->db->query($query);
     }
+
+    public function getHistorialPagosCasas($idProceso, $estatus) {
+        $query = "SELECT 
+        hpc.idHistorial, 
+        hpc.procesoAnterior,
+        hpc.procesoNuevo,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (',oxc.nombre, ')')AS nombreUsuario
+        
+        FROM historial_proceso_pago_casas hpc
+        LEFT JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1";
+
+        return $this->db->query($query);
+        
+    }
 }
