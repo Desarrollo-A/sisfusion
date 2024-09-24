@@ -2389,7 +2389,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->result();
     }
 
-    public function getListaElaborarContrato($contrato, $vobo, $documentos)
+    public function getListaElaborarContrato($vobo, $documentos)
     {
         $query = "SELECT 
             pc.*, 
