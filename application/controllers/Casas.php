@@ -856,7 +856,7 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
             
             //NO TIENE VOBO DE TITULACIÓN
-            if($responseTitulacion->revisionEscrituracion == 0 && $responseTitulacion->escrituraFinalizada != 1) {
+            if(($responseTitulacion->revisionEscrituracion == 0 || $responseTitulacion->revisionEscrituracion == null) && $responseTitulacion->escrituraFinalizada != 1) {
                 $documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]);
             }
             else {
