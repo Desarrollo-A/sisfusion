@@ -17,8 +17,8 @@ $(document).ready(function() {
 });
 
 $('#proyectoExtranjero').change(function(){
-residencial = $('#proyectoExtranjero').val();
-$("#condominioExtranjero").empty().selectpicker('refresh');
+    residencial = $('#proyectoExtranjero').val();
+    $("#condominioExtranjero").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
