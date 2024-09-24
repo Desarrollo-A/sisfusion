@@ -631,23 +631,26 @@ class Pagoscasas extends BaseController {
         $this->json([]);
     }
 
-    public function lista_reporte_pagos(){
+    public function lista_reporte_pagos($tableValue){
         $opcion = $this->input->get('opcion');
-        
-        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16";
-        $finalizado = "0, 1";
+        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16";
+        //$finalizado = "0, 1";
+        $finalizado = '';
+        if($tableValue == 0){
+            $finalizado = '0';
+        }
+        else {
+            $finalizado = '1';
+        }
 
-        if($opcion != -1 && $opcion != -2 && isset($opcion)){
+        if($opcion != -1 && isset($opcion)){
             $proceso = $opcion;
-            $finalizado = "0";
         }
 
         if($opcion == -2){
-            $finalizado = "1";
         }
 
         $lotes = $this->PagosCasasModel->getListaReportePagos($proceso, $finalizado);
-
         $this->json($lotes);
     }
 
@@ -682,8 +685,8 @@ class Pagoscasas extends BaseController {
         $this->json([]);
     }
 
-    public function options_procesos(){
-        $asesores = $this->PagosCasasModel->getProcesosOptions();
+    public function options_procesos($finalizado){
+        $asesores = $this->PagosCasasModel->getProcesosOptions($finalizado);
 
         $this->json($asesores);
     }

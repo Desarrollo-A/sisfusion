@@ -596,7 +596,7 @@ class PagosCasasModel extends CI_Model
     public function setProcesoFinalizado($idProcesoPagos, $comentario){
         $query = "UPDATE proceso_pagos
         SET
-            proceso = 8,
+            proceso = 11,
             comentario = '$comentario',
             finalizado = 1,
             fechaProceso = GETDATE(),
@@ -608,14 +608,18 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getProcesosOptions(){
+    public function getProcesosOptions($finalizado = ''){
+        $extra = '';
+        if($finalizado == 1) {
+            $extra = " AND id_opcion != 8";
+        }
         $query = "SELECT
             id_opcion AS value,
             nombre AS label
         FROM opcs_x_cats
         WHERE
             id_catalogo = 141
-        AND estatus = 1";
+        AND estatus = 1 $extra";
 
         return $this->db->query($query)->result();
     }
@@ -647,6 +651,7 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
         WHERE hpc.idProcesoCasas = $idProceso
+        ORDER BY idHistorial DESC
         ";
 
         $query = $this->db->query($query);

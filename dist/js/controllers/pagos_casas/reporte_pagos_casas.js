@@ -1,5 +1,89 @@
 let valueTab;
 let valueTabline;
+document.addEventListener('DOMContentLoaded', function() {
+    dataFunction(1);
+});
+
+function cleanTable(tableId) {
+    if ($.fn.DataTable.isDataTable(tableId)) {
+        let table = $(tableId).DataTable();
+        table.clear().draw(); 
+        table.rows().remove().draw();  
+    }
+}
+
+function dataFunction(value) {
+    valueTab = value;
+
+    cleanTable('#tableDoct');
+    cleanTable('#tableCredito');
+
+    let tableConfig;
+
+    if (valueTab == 1) {
+        tableConfig = {
+            id: '#tableDoct',
+            url: `pagoscasas/lista_reporte_pagos/0`,
+            buttons: buttons,
+            columns: columns,
+        };
+    } else if (valueTab == 2) {
+        tableConfig = {
+            id: '#tableCredito',
+            url: `pagoscasas/lista_reporte_pagos/1`,
+            buttons: buttonActivo,
+            columns: columnsFinalizado,
+        };
+    }
+
+    if (tableConfig) {
+        table = new Table(tableConfig);
+    }
+}
+
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title: "Validacion de documentación",
+        exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
+let buttonActivo = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title: "Validacion de documentación",
+        exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -46,11 +130,58 @@ let columns = [
     } },
 ]
 
-let table = new Table({
+let columnsFinalizado = [
+    { data: 'idLote'},
+    { data: 'nombreLote'},
+    { data: 'condominio'},
+    { data: 'proyecto'},
+    { data: 'cliente'},
+    { data: 'nombreAsesor'},
+    { data: 'gerente'},
+    { data: function(data){
+        console.log("Data: ", data);
+        if(data.finalizado){
+            return 'finalizado'
+        }
+
+        return data.procesoNombre
+    } },
+    { data: function(data){
+        return `${data.avanceObra} %`
+    } },
+    { data: function(data){
+        return data.fechaCreacion.substring(0, 16)
+    } },
+    { data: function(data){
+        return data.fechaProceso ? data.fechaProceso.substring(0, 16) : ''
+    } },
+    { data: function(data){
+        let inicio = new Date(data.fechaProceso)
+        let today = new Date()
+
+        let difference = today.getTime() - inicio.getTime()
+
+        let days = Math.floor(difference / (1000 * 3600 * 24))
+
+        let text = `Lleva ${days} día(s)`
+
+        if(data.finalizado){
+            text = 'FINALIZADO'
+        }
+
+        return text
+    } },
+    { data: function(data){
+        let button = new RowButton({icon: 'info', label: 'HISTORIAL DE MOVIMIENTOS', onClick: show_historial, data});
+        return `<div class="d-flex justify-center">${button}</div>`;
+    } },
+]
+
+/*let table = new Table({
     id: '#tableDoct',
     url: 'pagoscasas/lista_reporte_pagos',
     columns,
-})
+})*/
 
 let filtro_proceso = new SelectFilter({ id: 'opcion', label: 'Proceso',  placeholder: 'Selecciona una opción'})
 
@@ -101,22 +232,18 @@ show_historial = function (dt) {
     });
 }
 
-
-
-
 function lineCredito(timeLine) {
     $("#historialActual").append(`${timeLine}`);
 }
 
 $.ajax({
     type: 'GET',
-    url: 'options_procesos',
+    url: valueTab == 1 ? 'options_procesos/0' : 'options_procesos/1',
     success: function (response) {
         let status_option = [
             {value: -1, label: 'Todos'},
-            ...response,
-            {value: -2, label: 'Finalizado'},
-        ]
+            ...response
+        ];
         filtro_proceso.setOptions(status_option)
     },
     error: function () {
