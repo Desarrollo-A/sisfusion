@@ -1655,7 +1655,7 @@ function checkBudgetInfo($idSolicitud){
         LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote
         WHERE lo.status = 1 AND lo.idStatusLote = 2
         AND cl.status = 1 --AND lo.idLote NOT IN (SELECT se.id_lote  FROM solicitudes_escrituracion se)
-        AND (cl.escrituraFinalizada = 0 OR (cl.revisionEscrituracion = 0))
+        AND (cl.escrituraFinalizada = 0 OR (cl.revisionEscrituracion = 0 OR cl.revisionEscrituracion IS NULL))
         AND cond.idCondominio = $idCondominio
         AND cl.escrituraFinalizada != 1
         GROUP BY lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cond.nombre, lo.nombreLote, lo.sup,
