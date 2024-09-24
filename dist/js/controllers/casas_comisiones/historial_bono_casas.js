@@ -1,29 +1,27 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
 $('#ano_historial').change(function(){
-
-proyecto =  $('#catalogo_historial').val();
-
-if(proyecto == ''){
-    residencial = $('#ano_historial').val();
-    param = $('#param').val();
-    condominio = '';
-    $("#catalogo_historial").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url+'Contratacion/lista_proyecto/',
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-                var id = response[i]['idResidencial'];
-                var name = response[i]['descripcion'];
-                $("#catalogo_historial").append($('<option>').val(id).text(name.toUpperCase()));
+    proyecto =  $('#catalogo_historial').val();
+    if(proyecto == ''){
+        residencial = $('#ano_historial').val();
+        param = $('#param').val();
+        condominio = '';
+        $("#catalogo_historial").empty().selectpicker('refresh');
+        $.ajax({
+            url: general_base_url+'Contratacion/lista_proyecto/',
+            type: 'post',
+            dataType: 'json',
+            success:function(response){
+                var len = response.length;
+                for( var i = 0; i<len; i++){
+                    var id = response[i]['idResidencial'];
+                    var name = response[i]['descripcion'];
+                    $("#catalogo_historial").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+                $("#catalogo_historial").selectpicker('refresh');
             }
-            $("#catalogo_historial").selectpicker('refresh');
-        }
-    });
-}else{
+        });
+    }else{
 
     proyecto = $('#ano_historial').val();
     condominio = $('#catalogo_historial').val();

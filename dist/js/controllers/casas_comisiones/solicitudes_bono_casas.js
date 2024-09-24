@@ -148,7 +148,6 @@ $(document).ready(function () {
         async:false
     });
 
-        // Queda pendiente para cambiar el controlador
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -1493,7 +1492,6 @@ $(document).on("click", ".subir_factura", function () {
     resear_formulario();
     id_comision = $(this).val();
     total = $(this).attr("data-total");
-    // La funcion no existe en el controlador
     link_post = "Comisiones/guardar_solicitud/" + id_comision;
     $("#modal_formulario_solicitud").modal({
         backdrop: 'static',
@@ -1637,7 +1635,6 @@ $(document).on("click", ".subir_factura_multiple", function() {
                     $("#desarrolloSelect").append($('NO TIENES PAGOS.'));
                 }
                 else {
-                    // $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"));
                     var len = data.length;
                     for (var i = 0; i < len; i++) {
                         var id = data[i]['id_usuario'];
@@ -1725,7 +1722,6 @@ function subir_xml(input) {
     data.append("xmlfile", documento_xml);
     resear_formulario();
     $.ajax({
-        // No existe la función en el controlador
         url: general_base_url + "Comisiones/cargaxml",
         data: data,
         cache: false,
