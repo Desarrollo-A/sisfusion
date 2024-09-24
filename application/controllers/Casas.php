@@ -3709,8 +3709,6 @@ class Casas extends BaseController
         // if (!$update) $banderaSuccess = false;
         $vobo = $this->CasasModel->updateVobos($idProcesoCasas, 14, $new_vobo);
 
-
-
         $insertData = array(
             "idProcesoCasas"  => $idProcesoCasas,
             "procesoAnterior" => 14,
@@ -3975,8 +3973,6 @@ class Casas extends BaseController
     public function rechazoPaso15()
     {
         $form = $this->form();
-
-        $idLote = $form->idLote;
         $idProceso = $form->idProcesoCasas;
         $proceso = $form->proceso;
         $comentario = $form->comentario;
@@ -4010,16 +4006,19 @@ class Casas extends BaseController
             "esquemaCreditoProceso" => 1
         );
 
+        $updateData = array(
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "proceso" => $new_status
+        );
+
         $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
 
         if (!$addHistorial) {
             http_response_code(404);
         }
 
-
-        $is_ok = $this->CasasModel->setProcesoTo($idProceso, $new_status, $comentario, 1);
-
-        if (!$is_ok) {
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
+        if (!$update) {
             $banderaSuccess = false;
         }
 
@@ -4046,24 +4045,39 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
+        // Consulta al vobo paso 14
         $vobo = $this->CasasModel->getVobos($idProceso, 14);
+
+        // Consulta al vobo paso 8
+        $vobo2 = $this->CasasModel->getVobos($idProceso, 8);
 
         // 1 es avance y 2 rechazo
         $bandera = 2;
 
         $new_status = $this->CasasModel->getPasos($idProceso, $bandera)->avance;
 
-        $vobos = array(
-            "adm"  => 0,
+        //reset vobos paso 14
+        $vobosData = array(
+            "titulacion"  => 0,
             "ooam" => 0,
-            "gph" => 0,
             "pv" => 0,
             "modificadoPor" => $this->session->userdata('id_usuario'),
             "fechaModificacion" => date("Y-m-d H:i:s"),
         );
 
-        $vobos = $this->General_model->updateRecord("vobos_proceso_casas", $vobos, "idVobo", $vobo->idVobo);
-        if (!$vobos) {
+        //reset vobos paso 8
+        $vobosData2 = array(
+            "titulacion"  => 0,
+            "gph" => 0,
+            "modificadoPor" => $this->session->userdata('id_usuario'),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+        );
+
+        $vobos = $this->General_model->updateRecord("vobos_proceso_casas", $vobosData, "idVobo", $vobo->idVobo);
+
+        $vobos2 = $this->General_model->updateRecord("vobos_proceso_casas", $vobosData2, "idVobo", $vobo2->idVobo);
+
+        if (!$vobos || !$vobos2) {
             $banderaSuccess = false;
         }
 
