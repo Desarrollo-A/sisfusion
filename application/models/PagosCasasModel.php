@@ -642,6 +642,15 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1";
 
         return $this->db->query($query);
-        
     }
-}
+
+    public function addHistorial($idProceso, $procesoAnterior, $procesoNuevo, $descripcion) {
+        $idMovimiento = $this->session->userdata('id_usuario');
+        
+        $query = "INSERT INTO historial_proceso_pago_casas
+        (idProcesoCasas, procesoAnterior, procesoNuevo, idMovimiento, descripcion, creadoPor)
+        VALUES ($idProceso, $procesoAnterior, $procesoNuevo, $idMovimiento, '$descripcion', $idMovimiento)";
+
+         return $this->db->query($query);
+    }
+} 
