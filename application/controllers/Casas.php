@@ -2328,11 +2328,8 @@ class Casas extends BaseController
     public function lista_reporte_casas()
     {
         $opcion = $this->input->get('opcion');
-        $idLote = $this->input->get('opcion');
-
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
         $finalizado = "0, 1";
-        $extraOptions = "";
 
         if ($opcion == -1 && $opcion != -2 && isset($opcion)) {
             $finalizado = " AND (pc.finalizado IN(0) OR pc.finalizado IS NULL)";
