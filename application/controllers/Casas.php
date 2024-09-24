@@ -1072,10 +1072,20 @@ class Casas extends BaseController
 
         $vobo = $this->CasasModel->updateVobos($idProceso, 2, $newVobos);
 
-        $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual, "Se da visto bueno | Comentario: " . $comentario, 1);
+        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual, "Se da visto bueno | Comentario: " . $comentario, 1);
+
+        if ($vobo && $agregarHistorial) {
+            $response["result"] = true;
+            $this->db->trans_commit(); 
+        } else {
+            $this->db->trans_rollback(); 
+            $response["result"] = false;
+        }
+
+        $this->output->set_output(json_encode($response));
 
         if ($vobo->adm == 1 && $vobo->ooam == 1 && $vobo->proyectos == 1) {
-            
+
             // Determinar el nuevo estado y tipo de movimiento del proceso (1 es avance, 2 es rechazo)
             $banderaRechazo = 2;
             $pasos = $this->CasasModel->getPasos($idProceso, $banderaRechazo);
