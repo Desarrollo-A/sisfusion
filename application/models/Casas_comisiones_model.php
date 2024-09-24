@@ -1060,7 +1060,7 @@ class Casas_comisiones_model extends CI_Model {
         (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,cl.estructura,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, 
         CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion,cl.costo_construccion costoTotalConstruccion,
-        pcp.montoDepositado,
+        pcp.montoDepositado,pcp.proceso as procesoBanco,
         (CASE WHEN year(pc.fecha_modificacion) < 2019 THEN NULL ELSE convert(nvarchar,  pc.fecha_modificacion , 6) END) fecha_sistema, se.nombre AS sede, l.referencia, cl.id_cliente,
         CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, 
         CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, 
@@ -1089,7 +1089,7 @@ class Casas_comisiones_model extends CI_Model {
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision_c
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede       
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        WHERE l.idStatusContratacion IN (15)
+        --WHERE procsb.proceso >= 15
         "); 
         return $query;
     }

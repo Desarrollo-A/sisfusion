@@ -754,7 +754,6 @@ $("#form_NEODATA_Casas").submit( function(e) {
                     alerts.showNotification("top", "right", "Dispersión guardada con éxito", "success");
                     $('#tabla_dispersion_casas').DataTable().ajax.reload();
                     $("#modal_NEODATA_Casas").modal( 'hide' );
-                    function_totales();
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
                     

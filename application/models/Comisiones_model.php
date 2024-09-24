@@ -281,7 +281,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
-        LEFT JOIN (SELECT SUM(comision_total) AS sumComisiones,idCliente FROM comisiones WHERE estatus=8 GROUP BY idCliente) sumComisionReu ON sumComisionReu.idCliente = cl.id_cliente_reubicacion_2
+        LEFT JOIN (SELECT SUM(comision_total) AS sumComisiones,idCliente FROM comisiones WHERE estatus IN(8) GROUP BY idCliente) sumComisionReu ON sumComisionReu.idCliente = cl.id_cliente_reubicacion_2
         LEFT JOIN (SELECT SUM(totalNeto2) as sumaFusion,idLotePvOrigen FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lof ON lof.idLotePvOrigen=clr.idLote
         LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote AND mc.id_cliente = cl.id_cliente
         LEFT JOIN opcs_x_cats opc_mc ON opc_mc.id_opcion = mc.opcion AND opc_mc.id_catalogo= 127
@@ -3891,15 +3891,15 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
     } 
 
     function getMontoDispersado(){
-        return $this->db->query("SELECT SUM(abono_neodata) monto FROM pago_comision_ind WHERE id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono)");
+        return $this->db->query("SELECT SUM(abono_neodata) monto FROM pago_comision_ind WHERE id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND YEAR(GETDATE()) = YEAR(fecha_abono)");
     }
 
     function getPagosDispersado(){
-        return $this->db->query("SELECT count(id_pago_i) pagos FROM pago_comision_ind WHERE id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND abono_neodata>0");
+        return $this->db->query("SELECT count(id_pago_i) pagos FROM pago_comision_ind WHERE id_comision IN (select id_comision from comisiones) AND MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND abono_neodata>0 AND YEAR(GETDATE()) = YEAR(fecha_abono)");
     }
 
     function getLotesDispersado(){
-        return $this->db->query("SELECT count(distinct(id_lote)) lotes FROM comisiones WHERE id_comision IN (select id_comision from pago_comision_ind WHERE MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND id_comision IN (SELECT id_comision FROM comisiones))");
+        return $this->db->query("SELECT count(distinct(id_lote)) lotes FROM comisiones WHERE id_comision IN (select id_comision from pago_comision_ind WHERE MONTH(GETDATE()) = MONTH(fecha_abono) AND Day(GetDate()) = Day(fecha_abono) AND YEAR(GETDATE()) = YEAR(fecha_abono) AND id_comision IN (SELECT id_comision FROM comisiones))");
     }
  
     function getMontoDispersadoDates($fecha1, $fecha2){
