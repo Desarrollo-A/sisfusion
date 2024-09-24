@@ -81,7 +81,7 @@ back_to_carta_auth = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `back_to_carta_auth`,
+                url: `rechazoPaso2`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -100,6 +100,7 @@ back_to_carta_auth = function (data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -241,6 +242,7 @@ let tipos = [
 pass_to_proyecto_ejecutivo = function(data) {
     let fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+        new HiddenField({ id: 'proceso', value: data.proceso }),
         new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
     ]
 
@@ -252,7 +254,7 @@ pass_to_proyecto_ejecutivo = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_valida_comite`,
+                url: `avancePaso2`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -350,7 +352,6 @@ let columns = [
         }
     }},
     {data: function(data) {
-        console.log("data: ",data);
         let adeudo_button = '';
         let upload_button = '';
         let pass_button = '';
@@ -379,15 +380,6 @@ let columns = [
                     pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
                 }
             }
-            
-            
-            /*else if((idRol == 11 || idRol == 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0 || data.revisionEscrituracion != 0)) {
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-            }*/
-            
-            /*else if((idRol === 11 || idRol === 33) && data.adeudoADM != null && (data.cuentaDocumentos != 0 || data.cargaRequerida == 0) && (data.revisionEscrituracion != 0)){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
-            }*/
            
         }
         return `<div class="d-flex justify-center">${pass_button}${upload_button}${adeudo_button}${back_button}</div>`;
