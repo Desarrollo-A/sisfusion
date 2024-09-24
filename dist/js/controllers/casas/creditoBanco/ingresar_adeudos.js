@@ -288,6 +288,7 @@ go_to_documentos_directo = function(data) {
 }
 
 
+
 let columns = [
     {data: 'idLote'},
     {data: 'nombreLote'},
@@ -314,17 +315,18 @@ let columns = [
         return text;
     }},
     { data: function(data) {
+        let clase;
         switch(data.tipoMovimiento) {
             case 1: 
-                clase: 'warning';
+                clase = 'warning';
                 break;
             case 2:
-                clase: 'orange';
+                clase = 'orange';
                 break;
             default:
                 clase = 'blueMaderas';
         }
-        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`;
     }},
     {data: function (data) {
         //ESTATUS ESCRITURACIÓN
