@@ -1072,9 +1072,9 @@ class Casas extends BaseController
 
         $vobo = $this->CasasModel->updateVobos($idProceso, 2, $newVobos);
 
-        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual, "Se da visto bueno | Comentario: " . $comentario, 1);
+        $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual, "Se da visto bueno | Comentario: " . $comentario, 1);
 
-        if ($vobo && $agregarHistorial) {
+        if ($vobo && $addHistorial) {
             $response["result"] = true;
             $this->db->trans_commit(); 
         } else {
@@ -1087,7 +1087,7 @@ class Casas extends BaseController
         if ($vobo->adm == 1 && $vobo->ooam == 1 && $vobo->proyectos == 1) {
 
             // Determinar el nuevo estado y tipo de movimiento del proceso (1 es avance, 2 es rechazo)
-            $banderaRechazo = 2;
+            $banderaRechazo = 1;
             $pasos = $this->CasasModel->getPasos($idProceso, $banderaRechazo);
             $nuevoEstado = $pasos->avance;
             $tipoMovimiento = $pasos->tipoMovimiento;
@@ -1117,16 +1117,139 @@ class Casas extends BaseController
                 }
 
             // Update proceso banco
-            $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
+            $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
 
             // Insert nuevos vobos
             $insertVobo = $this->CasasModel->insertVobo($idProceso, 4);
 
             // Insert historial
-            $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanza al paso 4 comentario: | Comentario: ' . $comentario, 1);
+            $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanza al paso 4 comentario: | Comentario: ' . $comentario, 1);
 
             // Verificar todas las operaciones
-            if ($actualizarProceso && $insertVobo && $agregarHistorial) {
+            if ($updateProceso && $insertVobo && $addHistorial) {
+                $response["result"] = true;
+                $this->db->trans_commit(); 
+            } else {
+                $this->db->trans_rollback(); 
+                $response["result"] = false;
+            }
+
+            $this->output->set_output(json_encode($response));
+        }
+    }
+
+    public function avancePaso4()
+    {
+        $idProceso = $this->form('idProcesoCasas');
+        $procesoActual = $this->form('proceso');
+        $comentario = $this->form('comentario');
+        $idCasaFinal = $this->form('idCasaFinal');
+        $idCliente = $this->form('idCliente');
+
+        $this->db->trans_begin();
+
+        $vobo = $this->CasasModel->getVobos($idProceso, 4);
+
+        if ($vobo->proyectos == 0 && $vobo->comercializacion == 0) {
+
+            if ($this->idRol == 62) {
+
+                $dataVobo = array(
+                    "proyectos"  => 1,
+                    "comercializacion" => 0,
+                    "contraloria" => 0,
+                    "gph" => 0,
+                    "pv" => 0,
+                    "titulacion" => 0,
+                    "modificadoPor" => $this->idUsuario,
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                );
+
+                $updateVobos = $this->General_model->updateRecord("vobos_proceso_casas", $dataVobo, "idVobo", $vobo->idVobo);
+                $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual, 'Se da visto bueno | Comentario: ' . $comentario, 1);
+
+                // Verificar todas las operaciones
+                if ($updateVobos && $addHistorial) {
+                    $response["result"] = true;
+                    $this->db->trans_commit(); 
+                } else {
+                    $this->db->trans_rollback(); 
+                    $response["result"] = false;
+                }
+
+                $this->output->set_output(json_encode($response));
+
+            } else {
+
+                $dataVobo = array(
+                    "comercializacion"  => 1,
+                    "contraloria" => 0,
+                    "gph" => 0,
+                    "pv" => 0,
+                    "titulacion" => 0,
+                    "modificadoPor" => $this->idUsuario,
+                    "fechaModificacion" => date("Y-m-d H:i:s"),
+                );
+
+                $updateVobos = $this->General_model->updateRecord("vobos_proceso_casas", $dataVobo, "idVobo", $vobo->idVobo);
+                $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual, 'Se da visto bueno | Comentario: ' . $comentario, 1);
+
+                // Verificar todas las operaciones
+                if ($updateVobos && $addHistorial) {
+                    $response["result"] = true;
+                    $this->db->trans_commit(); 
+                } else {
+                    $this->db->trans_rollback(); 
+                    $response["result"] = false;
+                }
+
+                $this->output->set_output(json_encode($response));
+            }
+
+        } else if ($vobo->proyectos == 1 || $vobo->comercializacion == 1) {
+
+            // Determinar el nuevo estado y tipo de movimiento del proceso (1 es avance, 2 es rechazo)
+            $banderaRechazo = 1;
+            $pasos = $this->CasasModel->getPasos($idProceso, $banderaRechazo);
+            $nuevoEstado = $pasos->avance;
+            $tipoMovimiento = $pasos->tipoMovimiento;
+
+            $dataVobo = array(
+                "comercializacion"  => 1,
+                "proyectos"  => 1,
+                "modificadoPor" => $this->session->userdata('id_usuario'),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+            );
+
+            // Datos para actualizar el proceso
+            $dataProceso = array(
+                "comentario"        => $comentario,
+                "proceso"           => $nuevoEstado,
+                "cierreContraloria" => 0,
+                "saldoAdmon"        => 0,
+                "saldoOOAM"         => 0,
+                "saldoGPH"          => 0,
+                "saldoPV"           => 0,
+                "fechaProceso"      => date("Y-m-d H:i:s"),
+                "fechaModificacion" => date("Y-m-d H:i:s"),
+                "tipoMovimiento"    => $tipoMovimiento,
+                "modificadoPor"     => $this->session->userdata('id_usuario'),
+            );
+
+            $updateVobos = $this->General_model->updateRecord("vobos_proceso_casas", $dataVobo, "idVobo", $vobo->idVobo);
+
+            $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
+
+            $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual, 'Se da visto bueno | Comentario: ' . $comentario, 1);
+            
+            // Update proceso banco
+            $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
+
+            // Insert historial
+            $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanzó proceso | Comentario: ' . $comentario, 1);
+    
+            // Verificar todas las operaciones
+            if ($actualizarProceso && $updateVobos && $addHistorial) {
                 $response["result"] = true;
                 $this->db->trans_commit(); 
             } else {
@@ -3970,16 +4093,16 @@ class Casas extends BaseController
         );
 
         // Update proceso banco
-        $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
+        $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
 
         // Update vobos
         $actualizarVobo = $this->General_model->updateRecord("vobos_proceso_casas", $dataVobo, "idVobo", $vobo->idVobo);
 
         // Insert historial
-        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se rechazó proceso | Comentario: ' . $comentario, 1);
+        $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se rechazó proceso | Comentario: ' . $comentario, 1);
 
         // Verificar todas las operaciones
-        if ($actualizarProceso && $actualizarVobo && $agregarHistorial) {
+        if ($updateProceso && $actualizarVobo && $addHistorial) {
             $response["result"] = true;
             $this->db->trans_commit(); 
         } else {
@@ -4113,24 +4236,29 @@ class Casas extends BaseController
     public function rechazoPaso4()
     {
         $form = $this->form();
-        $idProcesoCasas = $form->idProcesoCasas;
-        $proceso = $form->proceso;
-        $banderaSuccess = true;
+        $idProceso = $form->idProcesoCasas;
+        $procesoActual = $form->proceso;
         $comentario = $form->comentario;
 
         $this->db->trans_begin();
 
-        // 1 es avance y 2 rechazo
-        $bandera = 2;
-        $new_status = $this->CasasModel->getPasos($idProcesoCasas, $bandera)->avance;
+         // Determinar el nuevo estado y tipo de movimiento del proceso (1 es avance, 2 es rechazo)
+         $banderaRechazo = 2;
+         $pasos = $this->CasasModel->getPasos($idProceso, $banderaRechazo);
+         $nuevoEstado = $pasos->avance;
+         $tipoMovimiento = $pasos->tipoMovimiento;
 
-        $updateData = array(
+        // Datos para actualizar el proceso
+        $dataProceso = array(
+            "comentario"        => $comentario,
+            "proceso"           => $nuevoEstado,
+            "fechaProceso"      => date("Y-m-d H:i:s"),
             "fechaModificacion" => date("Y-m-d H:i:s"),
-            "proceso" => $new_status
-
+            "tipoMovimiento"    => $tipoMovimiento,
+            "modificadoPor"     => $this->session->userdata('id_usuario'),
         );
 
-        $vobos = [
+        $dataVobo = [
             "proyectos"  => 0,
             "adm" => 0,
             "ooam" => 0,
@@ -4138,45 +4266,32 @@ class Casas extends BaseController
             "fechaModificacion" => date("Y-m-d H:i:s"),
         ];
 
-        $vobos2 = [
+        $dataVobo2 = [
             "proyectos"  => 0,
             "comercializacion" => 0,
             "modificadoPor" => $this->session->userdata('id_usuario'),
             "fechaModificacion" => date("Y-m-d H:i:s"),
         ];
 
-        $dataHistorial = array(
-            "idProcesoCasas"  => $idProcesoCasas,
-            "procesoAnterior" => $proceso,
-            "procesoNuevo"    => $new_status,
-            "fechaMovimiento" => date("Y-m-d H:i:s"),
-            "idMovimiento"    => $this->session->userdata('id_usuario'),
-            "creadoPor"       => $this->session->userdata('id_usuario'),
-            "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 1
-        );
+        // Update proceso banco
+        $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
 
-        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProcesoCasas);
-        
-        $vobosUpdate = $this->CasasModel->updateVobos($idProcesoCasas, 2, $vobos);
+        $vobosUpdate = $this->CasasModel->updateVobos($idProceso, 2, $dataVobo);
 
-        $vobosUpdate2 = $this->CasasModel->updateVobos($idProcesoCasas, 4, $vobos2);
+        $vobosUpdate2 = $this->CasasModel->updateVobos($idProceso, 4, $dataVobo2);;
 
-        $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+        // Insert historial
+        $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se rechazó proceso | Comentario: ' . $comentario, 1);
 
-        if (!$update || !$vobosUpdate || !$addHistorial || !$vobosUpdate2 ) {
-            $banderaSuccess = false;
-        }
-
-        if ($banderaSuccess) {
-            $this->db->trans_commit();
+        // Verificar todas las operaciones
+        if ($updateProceso && $vobosUpdate && $vobosUpdate2 && $addHistorial) {
             $response["result"] = true;
+            $this->db->trans_commit(); 
         } else {
-            $this->db->trans_rollback();
+            $this->db->trans_rollback(); 
             $response["result"] = false;
         }
 
-        $this->output->set_content_type("application/json");
         $this->output->set_output(json_encode($response));
     }
 
@@ -4220,16 +4335,16 @@ class Casas extends BaseController
         );
 
         // Update proceso banco
-        $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
+        $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
 
         // Update vobos
         $actualizarVobo = $this->General_model->updateRecord("vobos_proceso_casas", $dataVobo, "idVobo", $vobo->idVobo);
 
         // Insert historial
-        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se rechazó proceso | Comentario: ' . $comentario, 1);
+        $addHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se rechazó proceso | Comentario: ' . $comentario, 1);
 
         // Verificar todas las operaciones
-        if ($actualizarProceso && $actualizarVobo && $agregarHistorial) {
+        if ($updateProceso && $actualizarVobo && $addHistorial) {
             $response["result"] = true;
             $this->db->trans_commit(); 
         } else {
@@ -5199,97 +5314,6 @@ class Casas extends BaseController
         $documentos = $this->CasasModel->getListaDocumentosProveedor($proceso, [26, 27]);
 
         $this->json($documentos);
-    }
-
-    public function to_precierre_cifras()
-    {
-        $idProcesoCasas = $this->form('idProcesoCasas');
-        $comentario = $this->form('comentario');
-        $idCasaFinal = $this->form('idCasaFinal');
-        $idCliente = $this->form('idCliente');
-        $proceso = $this->CasasModel->getProceso($idProcesoCasas);
-
-        $vobo = $this->CasasModel->getVobos($idProcesoCasas, 4);
-
-        if ($vobo->proyectos == 0 && $vobo->comercializacion == 0) {
-
-            if ($this->idRol == 62) {
-
-                $updateData = array(
-                    "proyectos"  => 1,
-                    "comercializacion" => 0,
-                    "contraloria" => 0,
-                    "gph" => 0,
-                    "pv" => 0,
-                    "titulacion" => 0,
-                    "modificadoPor" => $this->idUsuario,
-                    "fechaModificacion" => date("Y-m-d H:i:s"),
-                );
-
-                $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
-                $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $proceso->proceso, 'Se da visto bueno | Comentario: ' . $comentario, 1);
-
-                if (!$update || !$historial) {
-                    http_response_code(400);
-                }
-            } else {
-
-                $updateData = array(
-                    "comercializacion"  => 1,
-                    "contraloria" => 0,
-                    "gph" => 0,
-                    "pv" => 0,
-                    "titulacion" => 0,
-                    "modificadoPor" => $this->idUsuario,
-                    "fechaModificacion" => date("Y-m-d H:i:s"),
-                );
-
-                $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
-                $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $proceso->proceso, 'Se da visto bueno | Comentario: ' . $comentario, 1);
-
-                if (!$update || !$historial) {
-                    http_response_code(400);
-                }
-            }
-        } else if ($vobo->proyectos == 1 || $vobo->comercializacion == 1) {
-
-            $updateData = array(
-                "comercializacion"  => 1,
-                "proyectos"  => 1,
-                "modificadoPor" => $this->session->userdata('id_usuario'),
-                "fechaModificacion" => date("Y-m-d H:i:s"),
-            );
-
-            $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
-
-            if (!$update) {
-                http_response_code(400);
-            }
-
-            $updateCliente = $this->General_model->updateRecord('clientes', array('idCasaFinal' => $idCasaFinal), 'id_cliente', $idCliente);
-
-            $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $proceso->proceso, 'Se da visto bueno' , 1);
-
-            $bandera = 1;
-
-
-            $new_status = $this->CasasModel->getPasos($idProcesoCasas, $bandera)->avance;
-
-            $is_ok = $this->CasasModel->setProcesoTo($idProcesoCasas, $new_status, $comentario, 0);
-    
-            $historial = $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $new_status, $comentario, 1);
-    
-            if (!$historial) {
-                http_response_code(404);
-            }
-
-            if (!$is_ok) {
-
-                http_response_code(404);
-            }
-
-            $this->json([]);
-        }
     }
 
     public function lista_orden_compra_firma()
