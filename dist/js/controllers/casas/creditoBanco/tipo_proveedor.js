@@ -46,7 +46,7 @@ function to_precierre_cifras(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/to_precierre_cifras`,
+                url: `${general_base_url}casas/avancePaso4`,
                 data: data,
                 contentType: false,
                 processData: false,
