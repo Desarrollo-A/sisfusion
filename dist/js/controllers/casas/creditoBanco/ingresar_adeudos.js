@@ -334,7 +334,7 @@ let columns = [
         }
         if(data.escrituraFinalizada == 0 || data.escrituraFinalizada == 2) {
             if(data.id_estatus != null)  {
-                if(data.revisionEscrituracion == 0){
+                if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null){
                     return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;    
                 }else {
                     return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
@@ -342,7 +342,7 @@ let columns = [
                 
             }
             
-            if(data.revisionEscrituracion == 0) {
+            if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null) {
                 return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;
             }
 
