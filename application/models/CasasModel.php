@@ -41,7 +41,7 @@ class CasasModel extends CI_Model
 
     public function getPasos($idProceso, $bandera){
 
-        $query = "SELECT TOP 1 fj.pasoActual, fj.ultimoPaso, fj.avance, oxc.nombre AS tipoMovimiento 
+        $query = "SELECT TOP 1 fj.pasoActual, fj.ultimoPaso, fj.avance, oxc.id_opcion AS tipoMovimiento 
         FROM proceso_casas_banco pc
         INNER JOIN historial_proceso_casas hpc ON hpc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN flujo_proceso_casas_banco fj ON fj.pasoActual = hpc.procesoNuevo AND fj.ultimoPaso = hpc.procesoAnterior AND fj.tipoPaso = $bandera
