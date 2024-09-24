@@ -3993,8 +3993,6 @@ class Casas extends BaseController
             "fechaModificacion" => date("Y-m-d H:i:s"),
         ];
 
-        $this->CasasModel->updateVobos($idProceso, 14, $vobos);
-
         $dataHistorial = array(
             "idProcesoCasas"  => $idProceso,
             "procesoAnterior" => $proceso,
@@ -4006,42 +4004,30 @@ class Casas extends BaseController
             "esquemaCreditoProceso" => 1
         );
 
-        $updateData = array(
-            "fechaModificacion" => date("Y-m-d H:i:s"),
-            "proceso" => $new_status
-        );
+        $is_ok = $this->CasasModel->setProcesoTo($idProceso, $new_status, $comentario, 1);
 
         $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
 
-        if (!$addHistorial) {
-            http_response_code(404);
-        }
+        $vobosUpdate = $this->CasasModel->updateVobos($idProceso, 14, $vobos);
 
-        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
-        if (!$update) {
-            $banderaSuccess = false;
-        }
-
-        if ($banderaSuccess) {
-            $this->db->trans_commit();
+        if ($is_ok && $vobosUpdate && $addHistorial) {
             $response["result"] = true;
-        } else {
+            $this->db->trans_commit();
+            
+        }else{
             $this->db->trans_rollback();
             $response["result"] = false;
         }
 
-        $this->output->set_content_type("application/json");
         $this->output->set_output(json_encode($response));
     }
 
     public function rechazoPaso14()
     {
         $form = $this->form();
-        $idLote = $form->idLote;
         $idProceso = $form->idProcesoCasas;
         $proceso = $form->proceso;
         $comentario = $form->comentario;
-        $banderaSuccess = true;
 
         $this->db->trans_begin();
 
@@ -4073,13 +4059,9 @@ class Casas extends BaseController
             "fechaModificacion" => date("Y-m-d H:i:s"),
         );
 
-        $vobos = $this->General_model->updateRecord("vobos_proceso_casas", $vobosData, "idVobo", $vobo->idVobo);
+        $vobosUpdate = $this->General_model->updateRecord("vobos_proceso_casas", $vobosData, "idVobo", $vobo->idVobo);
 
-        $vobos2 = $this->General_model->updateRecord("vobos_proceso_casas", $vobosData2, "idVobo", $vobo2->idVobo);
-
-        if (!$vobos || !$vobos2) {
-            $banderaSuccess = false;
-        }
+        $vobosUpdate2 = $this->General_model->updateRecord("vobos_proceso_casas", $vobosData2, "idVobo", $vobo2->idVobo);
 
         $dataHistorial = array(
             "idProcesoCasas"  => $idProceso,
@@ -4094,49 +4076,36 @@ class Casas extends BaseController
 
         $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
 
-        if (!$addHistorial) {
-            $banderaSuccess = false;
-        }
-
         $is_ok = $this->CasasModel->setProcesoTo($idProceso, $new_status, $comentario, 1);
 
-        if (!$is_ok) {
-            $banderaSuccess = false;
-        }
-
-        if ($banderaSuccess) {
-            $this->db->trans_commit();
+        if ($is_ok && $vobosUpdate && $vobosUpdate2 && $addHistorial) {
             $response["result"] = true;
-        } else {
+            $this->db->trans_commit();
+            
+        }else{
             $this->db->trans_rollback();
             $response["result"] = false;
         }
 
-        $this->output->set_content_type("application/json");
         $this->output->set_output(json_encode($response));
     }
 
     public function rechazoPaso4()
     {
         $form = $this->form();
-
-        $idLote = $form->idLote;
         $idProcesoCasas = $form->idProcesoCasas;
         $proceso = $form->proceso;
         $banderaSuccess = true;
         $comentario = $form->comentario;
+
         $this->db->trans_begin();
 
         // 1 es avance y 2 rechazo
         $bandera = 2;
-
         $new_status = $this->CasasModel->getPasos($idProcesoCasas, $bandera)->avance;
 
         $updateData = array(
             "fechaModificacion" => date("Y-m-d H:i:s"),
-            /* "contratoTitulacion" => 0,
-            "contratoOOAM" => 0,
-            "contratoPV" => 0, */
             "proceso" => $new_status
 
         );
@@ -4194,14 +4163,14 @@ class Casas extends BaseController
     public function rechazoPaso5()
     {
         $form = $this->form();
-
         $idProceso = $form->idProcesoCasas;
         $proceso = $form->proceso;
         $comentario = $form->comentario;
 
+        $this->db->trans_begin();
+
         // 1 es avance y 2 rechazo
         $bandera = 2;
-
         $new_status = $this->CasasModel->getPasos($idProceso, $bandera)->avance;
 
         $updateData = array(
@@ -4227,8 +4196,6 @@ class Casas extends BaseController
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 1
         );
-
-        $this->db->trans_begin();
 
         $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
 

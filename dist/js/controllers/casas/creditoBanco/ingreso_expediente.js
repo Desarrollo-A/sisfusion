@@ -210,16 +210,10 @@ rechazo_proceso = function (data) {
                 contentType: false,
                 processData: false,
                 success : function(response){
-                    if(response.result){
-                        finalizar_rechazo(data, form)
-                        form.hide()
-                    }
-                    else{
-                        alerts.showNotification("top", "right", "Error al rechazar el proceso", "danger")
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
         
-                        table.reload()
-                        form.hide()  
-                    }                                               
+                    table.reload()
+                    form.hide()                             
                 },
                 error: function(){
                     alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
