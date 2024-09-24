@@ -124,10 +124,7 @@ avance_contratos = function (data) {
             new HiddenField({ id: 'tipo', value: tipo }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 15 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
-            new HiddenField({ id: 'contratoTitulacion', value: data.contratoTitulacion }),
-            new HiddenField({ id: 'contratoOOAM', value: data.contratoOOAM }),
-            new HiddenField({ id: 'contratoPV', value: data.contratoPV }),           
+            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),        
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
