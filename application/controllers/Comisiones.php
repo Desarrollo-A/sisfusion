@@ -217,9 +217,8 @@ class Comisiones extends CI_Controller
     $rol = $this->session->userdata('id_rol');
     if($rol == 1){
       $this->load->view("casas_comisiones/casas_colaboradorRigel_view");
-    }else if($rol == 3){
+    }else if(in_array($rol,[3,7,5])){
       $this->load->view("casas_comisiones/solicitudes_casas_comisiones");
-
     }
   }
 
