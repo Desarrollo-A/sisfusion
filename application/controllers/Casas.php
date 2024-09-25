@@ -1441,52 +1441,6 @@ class Casas extends BaseController
         }
     }
 
-    public function capturaContratos()
-    {
-        $this->form();
-
-        $id = $this->form('id');
-        $idCliente = $this->form('idCliente');
-        $obra = $this->form('obra');
-        $tesoreria = $this->form('tesoreria');
-        $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
-        $costoConstruccion = $this->form('costoConstruccion');
-
-        $banderaSuccess = true;
-
-        if (!isset($id) || !isset($idCliente)) {
-            http_response_code(400);
-        }
-
-        $updateData = array(
-            "obra"  => $obra,
-            "tesoreria" => $tesoreria,
-            "serviciosArquitectonicos" => $serviciosArquitectonicos
-        );
-
-        $dataCliente = array(
-            "costo_construccion" => $costoConstruccion
-        );
-
-        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $id);
-        if (!$update) {
-            $banderaSuccess = false;
-        }
-
-        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "id_cliente", $idCliente);
-        if (!$updateCliente) {
-            $banderaSuccess = false;
-        }
-
-        if ($banderaSuccess) {
-            $proceso = $this->CasasModel->getProceso($id);
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
-            $this->json([]);
-        } else {
-            http_response_code(404);
-        }
-    }
-
     public function to_cierre_cifras()
     {
         $this->form();
@@ -3774,6 +3728,52 @@ class Casas extends BaseController
         }
 
         $this->output->set_output(json_encode($response));
+    }
+
+    public function avancePaso10()
+    {
+        $this->form();
+
+        $id = $this->form('id');
+        $idCliente = $this->form('idCliente');
+        $obra = $this->form('obra');
+        $tesoreria = $this->form('tesoreria');
+        $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
+        $costoConstruccion = $this->form('costoConstruccion');
+
+        $banderaSuccess = true;
+
+        if (!isset($id) || !isset($idCliente)) {
+            http_response_code(400);
+        }
+
+        $updateData = array(
+            "obra"  => $obra,
+            "tesoreria" => $tesoreria,
+            "serviciosArquitectonicos" => $serviciosArquitectonicos
+        );
+
+        $dataCliente = array(
+            "costo_construccion" => $costoConstruccion
+        );
+
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $id);
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "id_cliente", $idCliente);
+        if (!$updateCliente) {
+            $banderaSuccess = false;
+        }
+
+        if ($banderaSuccess) {
+            $proceso = $this->CasasModel->getProceso($id);
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
+            $this->json([]);
+        } else {
+            http_response_code(404);
+        }
     }
 
     public function validacionProyecto()
