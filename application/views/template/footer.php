@@ -81,7 +81,7 @@
 
     
 	$(document).ready(function() {
-		demo.initDashboardPageCharts();
+		//demo.initDashboardPageCharts();
 	});
 
     function validaCheckSession(){
