@@ -1662,7 +1662,7 @@ function checkBudgetInfo($idSolicitud){
         re.nombreResidencial, cl.id_cliente, cl.revisionEscrituracion, pc.idProcesoCasas
         ")->result_array();
     }
-
+  
     public function checkDocument($idProceso) {
         if($idProceso == null) {
             return null;
@@ -1670,5 +1670,5 @@ function checkBudgetInfo($idSolicitud){
         $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND tipo = 11";
         return $this->db->query($query)->row();
     }
-    
+  
 }

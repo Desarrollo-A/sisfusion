@@ -12,15 +12,13 @@ class CasasModel extends CI_Model
         $this->idUsuario = $this->session->userdata('id_usuario');
     }
 
-    public function getProceso($idProcesoCasas){
-        $query = "SELECT
+    public function getProceso($idProcesoCasas){        $query = "SELECT
             pc.*,
             lo.nombreLote
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         WHERE
             pc.idProcesoCasas = $idProcesoCasas";
-
         return $this->db->query($query)->row();
     }
 
@@ -345,7 +343,7 @@ class CasasModel extends CI_Model
 
     public function getAsesoresOptions(){
         $query = "SELECT
-            concat(nombre, ' ', apellido_paterno) AS label,
+            concat(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS label,
             id_usuario AS value
         FROM usuarios
         WHERE
