@@ -20,7 +20,6 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         WHERE
             pp.idProcesoPagos = $idProcesoPagos";
-
         return $this->db->query($query)->row();
     }
 

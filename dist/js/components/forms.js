@@ -1345,10 +1345,6 @@ class FormConfirm {
         this.fields = fields || []
         this.onSubmit = onSubmit || undefined
 
-        /* if(!text){
-            $('#text-form-modal').hide()
-        } */
-
         $("#ok-button-form-modal3").prop('disabled', false)
     }
 
