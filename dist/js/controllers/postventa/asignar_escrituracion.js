@@ -69,7 +69,7 @@ let columns = [
             }
             
             
-            if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null1) {
+            if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null) {
                 vobo_button = new RowButton({icon: 'check', color: 'green', label: 'Visto bueno', onClick: btn_vistoBueno, data});
             }
             return `<div class="d-flex justify-center">${asignar_button}${vobo_button}</div>`;
