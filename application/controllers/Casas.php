@@ -1896,7 +1896,7 @@ class Casas extends BaseController
             $update = $this->General_model->updateRecord("vobos_proceso_casas", $updateData, "idVobo", $vobo->idVobo);
             $historialResponse = $this->CasasModel->addHistorial($id, 12, 12, "Se da visto bueno", 1);
 
-            if (!$update || $historialResponse) {
+            if (!$update || !$historialResponse) {
                 http_response_code(400);
             }
 
