@@ -30,7 +30,7 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>COSTO DE CONSTRUCCION</th>
+                                            <th>COSTO DE CONSTRUCCIÓN</th>
                                             <th>MONTO DEPOSITADO</th>
                                             <th>TIEMPO</th>
                                             <th>ACCIONES</th>
