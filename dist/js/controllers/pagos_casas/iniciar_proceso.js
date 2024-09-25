@@ -112,7 +112,7 @@ show_form = function(proceso) {
         fields: [
             new HiddenField({ id: 'id_proceso', value: proceso.idProcesoPagos }),
             new HiddenField({ id: 'id_casas',   value: proceso.idProcesoCasas }),
-            new NumberField({ id: 'monto',      value: proceso.montoDepositado,          label: 'Monto a pagar', placeholder: 'Ingresa la cantidad', width:'12', required: true, mask: "#,##0.00" }),
+            new NumberField({ id: 'monto',      value: proceso.montoDepositado,          label: '', placeholder: 'Ingresa la cantidad', width:'12', required: true, mask: "#,##0.00" }),
         ],
     })
 

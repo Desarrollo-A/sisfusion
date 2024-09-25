@@ -1859,7 +1859,6 @@ class Casas extends BaseController
     public function to_vobo_cifras_contraloria()
     {
         $this->form();
-
         $id = $this->form('id');
         $proceso = $this->CasasModel->getProceso($id);
         $comentario = $this->form('comentario');
@@ -2352,7 +2351,7 @@ class Casas extends BaseController
         }
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se actualizo propuesta del proceso: $idProcesoCasas", 1);
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se actualizó propuesta del proceso: $idProcesoCasas", 1);
         } else {
             http_response_code(404);
         }
@@ -2374,7 +2373,7 @@ class Casas extends BaseController
         $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->idPropuesta, $form->fecha, $form->cotizacion);
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se selecciono cotizacion: $form->cotizacion", 1);
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se seleccionó cotización: $form->cotizacion", 1);
         } else {
             http_response_code(404);
         }
