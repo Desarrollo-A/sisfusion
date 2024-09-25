@@ -4687,7 +4687,7 @@ class Casas extends BaseController
     {
         $this->form();
 
-        $idProceso = $this->form('id');
+        $idProceso = $this->form('idProcesoCasas');
         $comentario = $this->form('comentario');
 
         // 1 es avance y 2 rechazo
