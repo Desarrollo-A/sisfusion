@@ -703,6 +703,8 @@ $("#form_multiples_casas").submit( function(e) {
                     CloseModalDelete2Casas();
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     tabla_remanente_casas.ajax.reload();
+                    $("#total_autorizar_intmex_casas").html(formatMoney(0));
+                    $("#all_casas_intmex").prop('checked', false);
                 }else{
                     CloseModalDelete2Casas();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
