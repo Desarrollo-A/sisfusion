@@ -4394,12 +4394,11 @@ class Casas extends BaseController
         // Determinar el nuevo estado y tipo de movimiento del proceso (1 es avance, 2 es rechazo)
         $banderaRechazo = 2;
         $pasos = $this->CasasModel->getPasos($idProceso, $banderaRechazo);
-        $nuevoEstado = $pasos->avance;
         $tipoMovimiento = $pasos->tipoMovimiento;
 
         $dataProceso = array(
             "comentario"        => $comentario,
-            "proceso"           => $nuevoEstado,
+            "proceso"           => 5,
             "fechaProceso"      => date("Y-m-d H:i:s"),
             "fechaModificacion" => date("Y-m-d H:i:s"),
             "tipoMovimiento"    => $tipoMovimiento,
@@ -4415,7 +4414,7 @@ class Casas extends BaseController
         $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
 
         // Insert historial
-        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se rechazó proceso | Comentario: ' . $comentario, 1);
+        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, 5, 'Se rechazó proceso | Comentario: ' . $comentario, 1);
 
         // Verificar todas las operaciones
         if ($actualizarProceso && $agregarHistorial) {
