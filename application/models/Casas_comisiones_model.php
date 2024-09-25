@@ -1469,26 +1469,4 @@ class Casas_comisiones_model extends CI_Model {
         }
     }
 
-    function historial_bono($anio,$condominio) {
-
-        $filtro_00 = ' re.idResidencial = '.$condominio.' AND YEAR(pcbo.fecha_abono) = '.$anio.' ';
-        $userId = $this->session->userdata('id_usuario');
-
-        return $this->db->query("
-            SELECT pcbo. id_pago_bono, lo.nombreLote AS nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio, opc.nombre AS puesto, u.id_usuario, pci.descuento_aplicado, oxcest.color,
-            oxcest.nombre AS estatus_actual, lo.totalNeto2 AS precio_lote, com.comision_total, pcbo.abono_bono AS dispersado, pci.descuento_aplicado,
-            CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names
-            FROM pago_comision_bono pcbo
-            INNER JOIN pago_casas_ind pci on pci.id_pago_i = pcbo.id_pago_i
-            INNER JOIN comisiones_casas com ON pci.id_comision = com.id_comision and com.estatus = 1 
-            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1    
-            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
-            INNER JOIN usuarios u on u.id_usuario = pcbo.id_usuario
-            INNER JOIN opcs_x_cats opc on opc.id_opcion = u.id_rol and opc.id_catalogo =1
-            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pcbo.estatus AND oxcest.id_catalogo = 23
-            WHERE $filtro_00 AND pcbo.id_usuario = $userId
-        ");
-    }
-
 }

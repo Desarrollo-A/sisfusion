@@ -639,7 +639,9 @@ $("#form_multiples_casas").submit( function(e) {
                     $("#all_asimilados_intmex").prop("checked", false);
                     $("#totpagarPen_intmex_casas").html(formatMoney(numberTwoDecimal(0)));
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
-                    tabla_asimilados2_intmex_casas.ajax.reload();
+                    if(tabla_asimilados2_intmex_casas != undefined){
+                        tabla_asimilados2_intmex_casas.ajax.reload();
+                    }
                 }else{
                     CloseModalDelete2Intmex_casas();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
