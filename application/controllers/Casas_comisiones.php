@@ -120,7 +120,8 @@ class Casas_comisiones extends CI_Controller
 
     // Validacion de un usuario multitipo
     $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user_Vl")->result_array();
-    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
+    $tipo = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 3 : 1) : $this->session->userdata('tipo');
+    // $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
     $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
     $consultaTipoUsuario = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 
@@ -372,7 +373,8 @@ class Casas_comisiones extends CI_Controller
     $diaActual = date('d'); 
 
     $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = ".$this->session->userdata('id_usuario')." ")->result_array();
-    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
+    $tipo = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 3 : 1) : $this->session->userdata('tipo');
+    // $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
     $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
 
     $forma_Pago = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario IN (".$this->session->userdata('id_usuario').")")->result_array();
@@ -471,7 +473,8 @@ class Casas_comisiones extends CI_Controller
     $id_user = $this->session->userdata('id_usuario');
 
     $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user")->result_array();
-    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
+    $tipo = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 3 : 1) : $this->session->userdata('tipo');
+    // $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
     $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
 
     $consultaTipoUsuario = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario IN (".$id_user.")")->result_array();
@@ -915,7 +918,8 @@ class Casas_comisiones extends CI_Controller
 
     // Validacion de un usuario multitipo
     $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user_Vl")->result_array();
-    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
+    $tipo = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 3 : 1) : $this->session->userdata('tipo');
+    // $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
     $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
     $consultaTipoUsuario = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 

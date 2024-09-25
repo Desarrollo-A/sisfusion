@@ -114,7 +114,9 @@ class Casas_comisiones_model extends CI_Model {
     public function getFechaCorteActual($diaActual){
         $id_user_Vl = $this->session->userdata('id_usuario');
         $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user_Vl")->result_array();
-        $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
+        $tipo = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 3 : 1) : $this->session->userdata('tipo');
+
+        // $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
         $tipoUsuario = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
         $mesActual = date('m');
         $formaPago = $this->session->userdata('forma_pago');
@@ -1299,6 +1301,27 @@ class Casas_comisiones_model extends CI_Model {
             INNER JOIN opcs_x_cats opc on opc.id_opcion = u.id_rol and opc.id_catalogo =1
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pcbo.estatus AND oxcest.id_catalogo = 23
             WHERE pcbo.id_pago_i = $id_pago
+        ");
+    }
+
+    function historial_bono($anio,$condominio) {
+        $filtro_00 = ' re.idResidencial = '.$condominio.' AND YEAR(pcbo.fecha_abono) = '.$anio.' ';
+        $userId = $this->session->userdata('id_usuario');
+
+        return $this->db->query("
+            SELECT pcbo. id_pago_bono, lo.nombreLote AS nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio, opc.nombre AS puesto, u.id_usuario, pci.descuento_aplicado, oxcest.color,
+            oxcest.nombre AS estatus_actual, lo.totalNeto2 AS precio_lote, com.comision_total, pcbo.abono_bono AS dispersado, pci.descuento_aplicado,
+            CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names
+            FROM pago_comision_bono pcbo
+            INNER JOIN pago_casas_ind pci on pci.id_pago_i = pcbo.id_pago_i
+            INNER JOIN comisiones_casas com ON pci.id_comision = com.id_comision and com.estatus = 1 
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1	
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+            INNER JOIN usuarios u on u.id_usuario = pcbo.id_usuario
+            INNER JOIN opcs_x_cats opc on opc.id_opcion = u.id_rol and opc.id_catalogo =1
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pcbo.estatus AND oxcest.id_catalogo = 23
+            WHERE $filtro_00 AND pcbo.id_usuario = $userId
         ");
     }
 

@@ -174,7 +174,20 @@ class Comisiones extends CI_Controller
          $tipo = $this->session->userdata('tipo');
 
         if($tipo == 3){
-          $this->load->view("casas_comisiones/solicitudes_casas_comisiones", $datos);
+          $id_user_Vl = $this->session->userdata('id_usuario');
+
+          $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user_Vl")->result_array();
+          $tipo_valido = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
+          
+          if( !isset($multitipo[0]["tipo"]) ){
+            $this->load->view("casas_comisiones/solicitudes_casas_comisiones", $datos);
+
+          }else if($multitipo[0]["tipo"]==1){
+            $this->load->view("ventas/comisiones_colaborador", $datos);
+
+          }
+
+
 
         }else{
           $this->load->view("ventas/comisiones_colaborador", $datos);
@@ -203,7 +216,7 @@ class Comisiones extends CI_Controller
   public function solicitudRigel(){
     $this->load->view('template/header');
     $rol = $this->session->userdata('id_rol');
-    if($rol == 2){
+    if($rol == 1){
       $this->load->view("casas_comisiones/casas_colaboradorRigel_view");
     }else if($rol == 3){
       $this->load->view("casas_comisiones/solicitudes_casas_comisiones");
@@ -221,16 +234,20 @@ class Comisiones extends CI_Controller
   public function historial_colaborador()
   { // Validacion de un usuario multitipo
     $id_user = $this->session->userdata('id_usuario');
+    $tipo_default = $this->session->userdata('tipo');
     $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user")->result_array();
     $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
     $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
     $validacion_multitipo = $multitipo != null ? True : False;
 
     $this->load->view('template/header');
-    if($validacion_multitipo == True && $tipo ==3){
+    if($validacion_multitipo == True && $tipo ==3 ){
       $this->load->view("ventas/historial_contraloria");
-    }else if($this->session->userdata('tipo') == 3 && $validacion_multitipo == False ){
+    }else if($tipo_default == 3 && $validacion_multitipo == False ){
       $this->load->view("casas_comisiones/historial_casas_comisiones");
+    }else if($tipo_default == 3 && $tipo ==1){
+      $this->load->view("ventas/historial_contraloria");
+
     }else{
       $this->load->view("comisiones/colaborador/historial_comisiones_contraloria_view");
 

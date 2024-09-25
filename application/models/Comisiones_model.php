@@ -3466,15 +3466,9 @@ class Comisiones_model extends CI_Model {
     }
 
     public function getDirectivos(){
-        // $resultado = $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS nombre FROM usuarios us WHERE us.id_rol in (1,2)");
         $resultado = $this->db->query("SELECT us.id_usuario, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS nombre, us.tipo, mul.tipo AS tipo_2 FROM usuarios us
                     LEFT JOIN multitipo mul ON us.id_usuario = mul.id_usuario 
                     WHERE us.id_rol in (1,2)");
-
-        
-
-        
-
         return  $resultado->result_array();
     }
 
@@ -6344,10 +6338,19 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
     }
 
     public function getFechaCorteActual($tipoUsuario,$diaActual){
+        $id_user_Vl = $this->session->userdata('id_usuario');
         $mesActual = date('m');
         $formaPago = $this->session->userdata('forma_pago');
         $filtro = ($tipoUsuario == 2 || $tipoUsuario == 4) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : ((in_array($formaPago, array(2)) && $tipoUsuario == 2 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
         $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
+       
+       
+        $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user_Vl")->result_array();
+        // $multitipo_validado =  $multitipo[0]["tipo"];
+
+        $tipoUsuario = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 1 : 3) : $tipoUsuario;
+
+
         $tipoUsuario =  $tipoUsuario == 1 ? ( $formaPago == 5 ? 5 : 0 ) : ($tipoUsuario == 2 ? 1 : ($tipoUsuario == 4 ? 4 : 3) );
         return $this->db->query("SELECT mes,fechaInicio,corteOoam $filtro2 FROM fechasCorte WHERE estatus = 1 AND 
           corteOoam IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY corteOoam ASC")->result_array();
