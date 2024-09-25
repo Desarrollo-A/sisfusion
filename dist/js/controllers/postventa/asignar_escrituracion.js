@@ -44,7 +44,7 @@ filtro_condominios.onChange(function(option) {
 
 let optionsEscrituracion = [
     {label: 'NO', value: 2},
-    {label: 'SI', value: 1}
+    {label: 'SÍ', value: 1}
 ];
 
 let columns = [
