@@ -8,7 +8,6 @@ function CloseModalDelete2IntmexCasas(){
     padre = a.parentNode;
     padre.removeChild(a);
     $("#modal_multiples_IntmexF_casas").modal('toggle');  
-    tabla_facturas_casas.ajax.reload();
 }
 
 $(document).ready(function() {
@@ -600,8 +599,10 @@ $("#form_multiples_casas").submit( function(e) {
                     $('#all_facturas_intmex').prop("checked", false);
                     $("#autorizar_factura_intmex_casas").html(formatMoney(0));
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
-                    console.log("hola");
-                    tabla_facturas_casas.ajax.reload();
+                    if(tabla_facturas_casas != undefined){
+                        tabla_facturas_casas.ajax.reload();
+                    }
+                    
                 }else{
                     CloseModalDelete2IntmexCasas();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
