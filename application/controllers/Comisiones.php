@@ -178,7 +178,6 @@ class Comisiones extends CI_Controller
 
         }else{
           $this->load->view("ventas/comisiones_colaborador", $datos);
-
         }
       break;
     }
@@ -203,7 +202,7 @@ class Comisiones extends CI_Controller
   public function solicitudRigel(){
     $this->load->view('template/header');
     $rol = $this->session->userdata('id_rol');
-    if($rol == 2){
+    if($rol == 1){
       $this->load->view("casas_comisiones/casas_colaboradorRigel_view");
     }else if($rol == 3){
       $this->load->view("casas_comisiones/solicitudes_casas_comisiones");
