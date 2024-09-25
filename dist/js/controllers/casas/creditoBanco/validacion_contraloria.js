@@ -90,7 +90,7 @@ pass_to_solicitud_contratos = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_solicitud_contratos`,
+                url: `avancePaso10`,
                 data: data,
                 contentType: false,
                 processData: false,

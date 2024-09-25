@@ -3734,7 +3734,7 @@ class Casas extends BaseController
     {
         $this->form();
 
-        $id = $this->form('id');
+        $idProceso = $this->form('id');
         $idCliente = $this->form('idCliente');
         $obra = $this->form('obra');
         $tesoreria = $this->form('tesoreria');
@@ -3757,7 +3757,7 @@ class Casas extends BaseController
             "costo_construccion" => $costoConstruccion
         );
 
-        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $id);
+        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
         if (!$update) {
             $banderaSuccess = false;
         }
@@ -3768,8 +3768,8 @@ class Casas extends BaseController
         }
 
         if ($banderaSuccess) {
-            $proceso = $this->CasasModel->getProceso($id);
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
+            $proceso = $this->CasasModel->getProceso($idProceso);
+            $this->CasasModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
             $this->json([]);
         } else {
             http_response_code(404);
