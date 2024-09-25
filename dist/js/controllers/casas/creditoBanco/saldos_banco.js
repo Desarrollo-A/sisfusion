@@ -126,19 +126,21 @@ function avanceProcesoBanco(data){
                 contentType: false,
                 processData: false,
                 success : function(response){
+                    response = JSON.parse(response);
+                    console.log(response.avance);
                     if(response.result){
                         if(response.avance == 1){
                             avanceProceso(data, form);
                         }
                         else{
-                            alerts.showNotification("top", "right", response.message, "success")
+                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
 
                             table.reload()
                             form.hide()  
                         }                        
                     }
                     else{
-                        alerts.showNotification("top", "right", response.message, "danger")
+                        alerts.showNotification("top", "right", "Error al avanzar el proceso", "danger")
                     }                          
                 },
                 error: function(){
