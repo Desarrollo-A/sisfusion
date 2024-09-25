@@ -3741,11 +3741,9 @@ class Casas extends BaseController
         $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
         $costoConstruccion = $this->form('costoConstruccion');
 
-        $banderaSuccess = true;
+        $this->db->trans_begin();
 
-        if (!isset($id) || !isset($idCliente)) {
-            http_response_code(400);
-        }
+        $proceso = $this->CasasModel->getProceso($idProceso);
 
         $updateData = array(
             "obra"  => $obra,
@@ -3758,22 +3756,21 @@ class Casas extends BaseController
         );
 
         $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
-        if (!$update) {
-            $banderaSuccess = false;
-        }
 
         $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "id_cliente", $idCliente);
-        if (!$updateCliente) {
-            $banderaSuccess = false;
+        
+        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
+
+        // Verificar todas las operaciones
+        if ($update && $updateCliente && $agregarHistorial) {
+            $response["result"] = true;
+            $this->db->trans_commit(); 
+        } else {
+            $this->db->trans_rollback(); 
+            $response["result"] = false;
         }
 
-        if ($banderaSuccess) {
-            $proceso = $this->CasasModel->getProceso($idProceso);
-            $this->CasasModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
-            $this->json([]);
-        } else {
-            http_response_code(404);
-        }
+        $this->output->set_output(json_encode($response));
     }
 
     public function validacionProyecto()
