@@ -5,7 +5,6 @@ $.ajax({
     type: 'GET', 
     url: `residenciales`,
     success: function (response) {
-        console.log("response: ", response);
         filtro_proyectos.setOptions(response)
     },
     error: function() {
@@ -70,7 +69,7 @@ let columns = [
             }
             
             
-            if(data.revisionEscrituracion == 0) {
+            if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null1) {
                 vobo_button = new RowButton({icon: 'check', color: 'green', label: 'Visto bueno', onClick: btn_vistoBueno, data});
             }
             return `<div class="d-flex justify-center">${asignar_button}${vobo_button}</div>`;
@@ -148,7 +147,6 @@ btn_assign = function (data) {
 }
 
 btn_vistoBueno = function (data) {
-    console.log("data: ", data);
     let form = new Form({
         title: 'Dar el visto bueno',
         text: `¿Deseas dar el visto bueno para el lote: <b>${data.nombreLote}</b>?`,
