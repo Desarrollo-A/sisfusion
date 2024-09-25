@@ -4762,11 +4762,6 @@ class Casas extends BaseController
 
         $idProceso = $this->form('id');
         $comentario = $this->form('comentario');
-
-        if (!isset($id)) {
-            http_response_code(400);
-        }
-
         $vobo = $this->CasasModel->getVobos($idProceso, 11);
         $voboPaso12 = $this->CasasModel->getVobos($idProceso, 11);
 
