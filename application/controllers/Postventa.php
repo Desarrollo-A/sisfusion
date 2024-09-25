@@ -3782,10 +3782,12 @@ public $controller = 'Postventa';
         $marcaEscrituracion = $this->form('marcaEscrituracion');
         $idProceso = $this->form('idProceso') ?? null;
         $banderaSuccess = true;
+        $idLote = $this->form('idLote');
 
         $this->db->trans_begin();
         if($accion == 1) {
             $update = $this->General_model->updateRecord('clientes', array("escrituraFinalizada" => $marcaEscrituracion), 'id_cliente', $idCliente);
+            $updateLotes = $this->General_model->updateRecord("lotes", array('idCliente' => $idCliente), 'idLote', $idLote);
         }
 
         if($accion == 2) {
