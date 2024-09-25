@@ -85,7 +85,7 @@ function avanceProcesoBanco(data){
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/avancePreCierre`,
+                url: `${general_base_url}casas/voboPaso5`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -117,7 +117,6 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 7 }),
             new HiddenField({ id: 'saldoAdmon', value: data.saldoAdmon }),
             new HiddenField({ id: 'saldoOOAM', value: data.saldoOOAM }),
             new HiddenField({ id: 'saldoGPH', value: data.saldoGPH }),
@@ -133,7 +132,7 @@ function avanceProcesoBanco(data){
 function avanceProceso(data, form){
     $.ajax({
         type: 'POST',
-        url: `${general_base_url}casas/creditoBancoAvance`,
+        url: `${general_base_url}casas/avancePaso5_6`,
         data: data,
         contentType: false,
         processData: false,

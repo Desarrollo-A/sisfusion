@@ -69,8 +69,8 @@
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0 hide">Autorizar:</h4>
-                                                                <p class="input-tot pl-1 hide" name="totpagarPen" id="totpagarPen">$0.00</p>
+                                                                <h4 class="title-tot center-align m-0 ">Autorizar:</h4>
+                                                                <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -126,7 +126,7 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total</h4>
                                                                 <p class="input-tot pl-1" id="myText_proceso">$0.00</p>

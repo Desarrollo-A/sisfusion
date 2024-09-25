@@ -20,7 +20,6 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         WHERE
             pp.idProcesoPagos = $idProcesoPagos";
-
         return $this->db->query($query)->row();
     }
 
@@ -596,7 +595,7 @@ class PagosCasasModel extends CI_Model
     public function setProcesoFinalizado($idProcesoPagos, $comentario){
         $query = "UPDATE proceso_pagos
         SET
-            proceso = 8,
+            proceso = 11,
             comentario = '$comentario',
             finalizado = 1,
             fechaProceso = GETDATE(),
@@ -608,14 +607,18 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getProcesosOptions(){
+    public function getProcesosOptions($finalizado = ''){
+        $extra = '';
+        if($finalizado == 1) {
+            $extra = " AND id_opcion != 8";
+        }
         $query = "SELECT
             id_opcion AS value,
             nombre AS label
         FROM opcs_x_cats
         WHERE
             id_catalogo = 141
-        AND estatus = 1";
+        AND estatus = 1 $extra";
 
         return $this->db->query($query)->result();
     }
@@ -629,4 +632,38 @@ class PagosCasasModel extends CI_Model
 
         return $this->db->query($query);
     }
-}
+
+    public function getHistorialPagosCasas($idProceso, $estatus) {
+        $query = "SELECT 
+        hpc.idHistorial, 
+        hpc.procesoAnterior,
+        hpc.procesoNuevo,
+        CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno, ' (',oxc.nombre, ')')AS nombreUsuario,
+        hpc.idMovimiento,
+        hpc.fechaMovimiento,
+        CASE WHEN CHARINDEX('$', CONVERT(VARCHAR(MAX), descripcion)) > 0  THEN LEFT(CONVERT(VARCHAR(MAX), descripcion), CHARINDEX('$', CONVERT(VARCHAR(MAX), descripcion)) - 1)
+        + '$' + FORMAT( TRY_CAST(SUBSTRING(CONVERT(VARCHAR(MAX), descripcion), CHARINDEX('$', CONVERT(VARCHAR(MAX), descripcion)) + 1, LEN(CONVERT(VARCHAR(MAX), descripcion))) 
+        AS MONEY), 'N', 'es-MX') 
+        ELSE CONVERT(VARCHAR(MAX), descripcion) END AS descripcionFinal,
+        CASE WHEN hpc.procesoAnterior = hpc.procesoNuevo THEN '1' ELSE '0' END AS cambioStatus
+        FROM historial_proceso_pago_casas hpc
+        LEFT JOIN usuarios us ON us.id_usuario = hpc.idMovimiento
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+        WHERE hpc.idProcesoCasas = $idProceso
+        ORDER BY idHistorial DESC
+        ";
+
+        $query = $this->db->query($query);
+        return $query->result_array(); 
+    }
+
+    public function addHistorial($idProceso, $procesoAnterior, $procesoNuevo, $descripcion) {
+        $idMovimiento = $this->session->userdata('id_usuario');
+        
+        $query = "INSERT INTO historial_proceso_pago_casas
+        (idProcesoCasas, procesoAnterior, procesoNuevo, idMovimiento, descripcion, creadoPor)
+        VALUES ($idProceso, $procesoAnterior, $procesoNuevo, $idMovimiento, '$descripcion', $idMovimiento)";
+
+         return $this->db->query($query);
+    }
+} 

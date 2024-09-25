@@ -12,15 +12,13 @@ class CasasModel extends CI_Model
         $this->idUsuario = $this->session->userdata('id_usuario');
     }
 
-    public function getProceso($idProcesoCasas){
-        $query = "SELECT
+    public function getProceso($idProcesoCasas){        $query = "SELECT
             pc.*,
             lo.nombreLote
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         WHERE
             pc.idProcesoCasas = $idProcesoCasas";
-
         return $this->db->query($query)->row();
     }
 
@@ -41,7 +39,7 @@ class CasasModel extends CI_Model
 
     public function getPasos($idProceso, $bandera){
 
-        $query = "SELECT TOP 1 fj.pasoActual, fj.ultimoPaso, fj.avance, oxc.nombre AS tipoMovimiento 
+        $query = "SELECT TOP 1 fj.pasoActual, fj.ultimoPaso, fj.avance, oxc.id_opcion AS tipoMovimiento 
         FROM proceso_casas_banco pc
         INNER JOIN historial_proceso_casas hpc ON hpc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN flujo_proceso_casas_banco fj ON fj.pasoActual = hpc.procesoNuevo AND fj.ultimoPaso = hpc.procesoAnterior AND fj.tipoPaso = $bandera
@@ -345,7 +343,7 @@ class CasasModel extends CI_Model
 
     public function getAsesoresOptions(){
         $query = "SELECT
-            concat(nombre, ' ', apellido_paterno) AS label,
+            concat(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS label,
             id_usuario AS value
         FROM usuarios
         WHERE
@@ -2389,7 +2387,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->result();
     }
 
-    public function getListaElaborarContrato($contrato, $vobo, $documentos)
+    public function getListaElaborarContrato($vobo, $documentos)
     {
         $query = "SELECT 
             pc.*, 
@@ -2445,7 +2443,6 @@ AND vb.proyectos != 1";
             pc.proceso = 14
             AND pc.status = 1
             AND pc.finalizado = 0
-            AND $contrato = 0
             AND vobo.$vobo = 0";
 
         return $this->db->query($query)->result();
