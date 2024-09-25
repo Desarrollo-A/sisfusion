@@ -10,7 +10,7 @@ capturaContratos = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `capturaContratos`,
+                url: `avancePaso10`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -72,7 +72,6 @@ back_to_adeudos = function(data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 4 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],

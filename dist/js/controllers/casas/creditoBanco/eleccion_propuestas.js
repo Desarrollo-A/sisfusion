@@ -73,7 +73,7 @@ pass_to_validacion_contraloria = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_validacion_contraloria`,
+                url: `avancePaso9`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -93,6 +93,7 @@ pass_to_validacion_contraloria = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -149,6 +150,7 @@ back_to_propuesta_firma = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
