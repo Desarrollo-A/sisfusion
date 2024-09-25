@@ -12,7 +12,7 @@ pass_to_next = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a solicitar avance.", "success");
+                    alerts.showNotification("top", "right", "El lote ha sido enviado al paso 7 de nuevo.", "success");
         
                     table.reload()
 

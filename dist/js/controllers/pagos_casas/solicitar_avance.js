@@ -27,6 +27,7 @@ pass_to_next = function(data) {
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
             new HiddenField({ id: 'avance', value: data.nuevo_avance }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'paso', value: 8 }),
         ],
     })
 
@@ -100,6 +101,7 @@ let columns = [
         return `${data.avanceObra} %`
     } },
     { data: function(data){
+        console.log("data: ", data);
         if(data.nuevo_avance){
             return `${data.nuevo_avance} %`
         }

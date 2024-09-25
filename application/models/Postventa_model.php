@@ -1662,5 +1662,4 @@ function checkBudgetInfo($idSolicitud){
         re.nombreResidencial, cl.id_cliente, cl.revisionEscrituracion, pc.idProcesoCasas
         ")->result_array();
     }
-    
 }
