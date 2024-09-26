@@ -10,7 +10,7 @@ capturaContratos = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `avancePaso10`,
+                url: `capturaContratos`,
                 data: data,
                 contentType: false,
                 processData: false,
