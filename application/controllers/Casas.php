@@ -3732,6 +3732,8 @@ class Casas extends BaseController
 
         $idProceso = $this->form('id');
         $idCliente = $this->form('idCliente');
+        $proceso = $this->form('proceso');
+        $comentario = $this->form('comentario');
         $obra = $this->form('obra');
         $tesoreria = $this->form('tesoreria');
         $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
@@ -3739,9 +3741,19 @@ class Casas extends BaseController
 
         $this->db->trans_begin();
 
-        $proceso = $this->CasasModel->getProceso($idProceso);
+         // Determinar el nuevo estado y tipo de movimiento del proceso (1 es avance, 2 es rechazo)
+         $banderaRechazo = 1;
+         $pasos = $this->CasasModel->getPasos($idProceso, $banderaRechazo);
+         $nuevoEstado = $pasos->avance;
+         $tipoMovimiento = $pasos->tipoMovimiento;
 
         $updateData = array(
+            "comentario"        => $comentario,
+            "proceso"           => $nuevoEstado,
+            "fechaProceso"      => date("Y-m-d H:i:s"),
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "tipoMovimiento"    => $tipoMovimiento,
+            "modificadoPor"     => $this->session->userdata('id_usuario'),
             "obra"  => $obra,
             "tesoreria" => $tesoreria,
             "serviciosArquitectonicos" => $serviciosArquitectonicos
@@ -3751,14 +3763,14 @@ class Casas extends BaseController
             "costo_construccion" => $costoConstruccion
         );
 
-        $update = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
+        $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
 
         $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "id_cliente", $idCliente);
         
-        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, 'Se ingresaron la captura de contratos', 1);
+        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $proceso, $nuevoEstado, 'Se ingresaron la captura de contratos', 1);
 
         // Verificar todas las operaciones
-        if ($update && $updateCliente && $agregarHistorial) {
+        if ($actualizarProceso && $updateCliente && $agregarHistorial) {
             $response["result"] = true;
             $this->db->trans_commit(); 
         } else {
