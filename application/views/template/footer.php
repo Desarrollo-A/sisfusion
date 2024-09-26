@@ -81,7 +81,7 @@
 
     
 	$(document).ready(function() {
-		demo.initDashboardPageCharts();
+		//demo.initDashboardPageCharts();
 	});
 
     function validaCheckSession(){
@@ -101,3 +101,59 @@
 <script src="<?= base_url() ?>dist/js/components/table.js"></script>
 <script src="<?= base_url() ?>dist/js/components/dialogs.js"></script>
 <script src="<?= base_url() ?>dist/js/components/forms.js?v=3"></script>
+
+<!-- jquery.i18n -->
+
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.messagestore.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.fallbacks.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.parser.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.emitter.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.language.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/languages/he.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/languages/fi.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/languages/ml.js"></script>
+<script type="text/javascript">
+    let locale = localStorage.getItem('locale')
+
+    $.i18n().load('<?= base_url() ?>dist/js/jquery.i18n/langs.json')
+    .done(function() {
+        $('body').i18n()
+    })
+
+    $.i18n( { 
+        locale: 'es' // Locale is English 
+    });
+
+    // Load locale from config
+    if(locale){
+        $.i18n().locale = locale;
+    }
+
+    $(document).ready(function() {
+        changeIcon(locale)
+    })
+
+    function changeIcon(lang) {
+        $('#lang_icon').attr("src", `<?= base_url() ?>static/images/langs/${lang}.png`)
+    }
+
+    function changeLanguaje() {
+        let locale = localStorage.getItem('locale')
+
+        if(locale == 'en'){
+            new_locale = 'es'
+        }else{
+            new_locale = 'en'
+        }
+
+        $.i18n().locale = new_locale
+        localStorage.setItem('locale', new_locale)
+        changeIcon(new_locale)
+
+        $('body').i18n()
+    }
+
+    _ = $.i18n
+
+</script>

@@ -207,8 +207,8 @@ class CasasModel extends CI_Model
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9 
-            WHERE 
-                lo.idStatusLote = 2            
+            WHERE lo.status = 1
+            AND lo.idStatusLote = 2            
             AND (cl.pre_proceso_casas = 0 OR cl.pre_proceso_casas IS NULL)
             ORDER BY lo.idLote
             ")->result();
@@ -1664,7 +1664,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query);
     }
 
-    public function getListaReporteCasas($proceso, $finalizado){
+    public function getListaReporteCasas($proceso, $finalizado, $extraFields){
         $query = " 
         WITH HistorialCte AS (
             SELECT CAST(SUBSTRING(hpc.descripcion, PATINDEX('%IDLOTE%', hpc.descripcion) + 7, LEN(hpc.descripcion)) AS INT) AS idLote,
@@ -1685,7 +1685,8 @@ AND vb.proyectos != 1";
         COALESCE(pc.idProcesoCasas,0)idProcesoCasas,
         COALESCE(MAX(pc.fechaProceso), MAX(hct.fechaMovimiento)) AS fechaProceso,
         CASE WHEN pc.tipoMovimiento IS NULL THEN 'PRE PROCESO' ELSE oxc2.nombre END AS movimiento,
-        CASE WHEN pc.tipoMovimiento IS NULL THEN 0 ELSE pc.tipoMovimiento END AS tipoMovimiento
+        CASE WHEN pc.tipoMovimiento IS NULL THEN 0 ELSE pc.tipoMovimiento END AS tipoMovimiento,
+        pp.idProcesoPagos
         FROM HistorialCte hct
         FULL OUTER JOIN proceso_casas_banco pc ON pc.idLote = hct.idLote
         LEFT JOIN lotes lo ON lo.idLote = COALESCE(pc.idLote, hct.idLote) -- Join lotes based on either pc or hct idLote
@@ -1696,15 +1697,17 @@ AND vb.proyectos != 1";
         LEFT JOIN usuarios us ON us.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 135 AND oxc.id_opcion = pc.proceso
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_catalogo = 136 AND oxc2.id_opcion = pc.tipoMovimiento
+        LEFT JOIN proceso_pagos pp ON pp.idProcesoCasas = pc.idProcesoCasas
         WHERE (pc.status = 1 OR pc.status IS NULL)
         AND (cli.status = 1)
-        AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
-        --AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
-        $finalizado
+        --AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
+        $extraFields
+        AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
         GROUP BY hct.idLote ,lo.nombreLote, pc.idLote, con.nombre, CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno),
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), us.nombre, cli.id_gerente_c,
         CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno), oxc.nombre, oxc2.nombre, 
-        CAST(resi.descripcion AS VARCHAR(MAX)), pc.fechaCreacion, pc.idProcesoCasas,pc.tipoMovimiento , oxc2.id_opcion 
+        CAST(resi.descripcion AS VARCHAR(MAX)), pc.fechaCreacion, pc.idProcesoCasas,pc.tipoMovimiento , oxc2.id_opcion,
+        pp.idProcesoPagos
         ";
 
         return $this->db->query($query)->result();
