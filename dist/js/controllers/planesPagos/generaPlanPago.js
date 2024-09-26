@@ -3,10 +3,7 @@ var day;
 var mes;
 
 function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva, idPlanPagoModal, saldoSiguienteModal, prioridadCalculo){
-
-    console.log('Before:', planPago);
-    planPago = planPago - 1;
-    console.log('After:', planPago);
+    console.log();
     //prioridadCalculo: Es para ver como se va a cálcular, haciendole caso a la mensualidad o bien al número de periodos
     //1: por mensualidad Eje. totalMonto/mensualidad = numero de periodos
     //2: por periodos    Eje. totalMonto/periodos = valor de la mensualidad

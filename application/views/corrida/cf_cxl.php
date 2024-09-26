@@ -776,7 +776,7 @@
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <!--<div ng-if="checkEngDif">-->
-                                            <div class="col-md-5 form-group" >
+                                            <div class="col-md-5 form-group hide" id="apartadoContainer" >
                                                 <label>Apartado ($):</label>
                                                 <div class="input-group" >
                                                     <span class="input-group-addon" id="basic-addon1">$</span>
@@ -784,7 +784,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4 form-group" >
+                                            <div class="col-md-4 form-group hide" id="mesesDiferirContainer">
                                                 <label>Meses a diferir:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon" id="basic-addon1">#</span>
@@ -1448,6 +1448,10 @@
             $scope.validaDiasPagarEnganche = function(){
                 if($scope.day.day == 'Diferido'){
                     document.getElementById("select_mce").classList.remove('hide');
+                    document.getElementById("apartadoContainer").classList.remove('hide');
+                    document.getElementById("mesesDiferirContainer").classList.remove('hide');
+
+
                 }else{
 
 
@@ -1463,6 +1467,9 @@
                     let btnSimular = angular.element(document.getElementById("btnSimular"));
                     btnSimular.addClass("hide");
                     $scope.inicioMensualidad = 2;
+                    document.getElementById("apartadoContainer").classList.add('hide');
+                    document.getElementById("select_mce").classList.add('hide');
+                    document.getElementById("mesesDiferirContainer").classList.add('hide');
 
                 }
             };
@@ -1670,6 +1677,7 @@
                 var d = 0;
                 var f = 0;
                 var g = 0;
+
                 var tot = $scope.total;
                 var arreglo = [];
                 var arreglo2 = [];
@@ -1804,6 +1812,7 @@
                             console.log('condicion 1 DESCONTAR AL TOTAL');
                             enganche = ($scope.engancheFinal == 0 || $scope.engancheFinal == '') ? ($scope.porcentaje * $scope.precioFinal) / 100 : 0 ;//= ($scope.porcentaje * r1) / 100;
                             $scope.engancheFinal = $scope.cantidad;
+                            console.log('VACOND1:', $scope.engancheFinal);
                         }
                         if( item.id_condicion == 2){
                             console.log('CONDICION 2 IOTEM:', item);
@@ -1896,9 +1905,16 @@
                         }
                         else{
                             // console.log('logica normal');
+                            console.log('------------------');
                             a +=  porcentaje2;
+                            console.log('a', a);
+                            console.log('porcentaje2', porcentaje2);
+                            console.log('tot', tot);
                             b = (tot - a);
+                            console.log('b', b);
                             c = b/supLote;
+                            console.log('supLote', supLote);
+                            console.log('c', c);
                         }
 
                         // a +=  porcentaje2;
@@ -1906,8 +1922,8 @@
                         // c = (b/supLote);
                         arreglo.push({
                             ahorro: a,
-                            pm: (item.id_condicion==12 && orderTotal.length==1) ? e : c,
-                            pt: b, td:1,
+                            pm: (item.id_condicion==12) ? e : c,
+                            pt: b, td:item.id_condicion,
                             porcentaje: item.porcentaje,
                             id_condicion: item.id_condicion,
                             msiExtra: item.msi_descuento
@@ -1949,7 +1965,7 @@
                     }
 
 
-
+                    console.log('Enganche original:', $scope.cantidad);
                 }
                 else if(porcentajeDeEnganche != 0  && orderTotal.length > 0){
                     console.log('>C');
@@ -2826,7 +2842,7 @@
                     $scope.precioFinal = ($scope.precioFinal + (engancheSum));// (engancheSum-apartadoSum)
                     console.log('>>>>$scope.precioFinal II ', $scope.precioFinal );
 
-                    $scope.engancheFinal = ($scope.decFin.length<=0)  ? $scope.precioFinal * $scope.porcentaje / 100: $scope.engancheFinal;
+                    //$scope.engancheFinal = ($scope.decFin.length<=0)  ? $scope.precioFinal * $scope.porcentaje / 100: $scope.engancheFinal;
                     console.log('>>>>$scope.engancheFinal  III ', $scope.engancheFinal  );
                     console.log('>>>>$scope.decFin ', $scope.decFin  );
 
@@ -2896,7 +2912,7 @@
 
                 // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
 
-                $scope.engancheFinal = ($scope.infoLote.engancheF <= 0 || $scope.infoLote.engancheF =='') ? 0: $scope.infoLote.engancheF  - $scope.apartado;
+                //$scope.engancheFinal = ($scope.infoLote.engancheF <= 0 || $scope.infoLote.engancheF =='') ? 0: $scope.infoLote.engancheF  - $scope.apartado;
 
                 console.log('FINAL xd ',$scope.engancheFinal);
                 // $scope.engancheFinal = ($scope.infoLote.r1>500000) ? $scope.infoLote.engancheF : ;
@@ -7158,9 +7174,9 @@
                 else{
                     let pe = porcentajeEnganche.val();
                     var cantidadFromPorcnt = (pe*r1)/100;
-                    cantidadEnganche.val(parseFloat(cantidadFromPorcnt));
-                    $scope.engancheFinal = cantidadFromPorcnt;
-                    $scope.cantidad = cantidadFromPorcnt;
+                    //cantidadEnganche.val(parseFloat(cantidadFromPorcnt));
+                    //$scope.engancheFinal = cantidadFromPorcnt;
+                    //$scope.cantidad = cantidadFromPorcnt;
                 }
 
 
@@ -8850,10 +8866,10 @@
                             }, 2000)
                             calcularCF();
                             //volver a calcular los porcentajes  --- REVISAR QUE SE VAYA ACTUALZIANCO LOS DESCUENTOS
-                            $scope.cantidad = $scope.precioFinal * $scope.porcentaje / 100; //angular - back
-                            $scope.engancheFinal = $scope.cantidad;
-                            document.getElementById('cantidadEnganche').value = $scope.precioFinal * $scope.porcentaje / 100; //js jquery front
-                            console.log('Cantidad en descuento:', $scope.cantidad);
+                            //$scope.cantidad = $scope.precioFinal * $scope.porcentaje / 100; //angular - back
+                            //$scope.engancheFinal = $scope.cantidad;
+                            //document.getElementById('cantidadEnganche').value = $scope.precioFinal * $scope.porcentaje / 100; //js jquery front
+                            //console.log('Cantidad en descuento:', $scope.cantidad);
                         }
                         /*Termina Reinicia los valores del arreglo que trae descuentos*/
 

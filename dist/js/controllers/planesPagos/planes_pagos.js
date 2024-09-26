@@ -616,6 +616,7 @@ function generarPlanPagoFunction(){
     // let noPeriodosPP = Math.round(montoPP/mensualidadPP); // //$('#noPeriodosPP').val();
     let noPeriodosPP = $('#noPeriodosPP').val();
     let prioridadCalculo = $('input[name="tipoNc_valor"]:checked').val();
+    console.log('planPago>>>', planPago);
     dumpPlanPago = generarPlanPago(fechaInicio, noPeriodosPP, montoPP, tazaInteresPP, periocidadPP, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva, idPlanPagoModal, saldoSiguienteModal, prioridadCalculo);
 }
 
