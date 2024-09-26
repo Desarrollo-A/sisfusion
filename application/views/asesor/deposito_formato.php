@@ -1,3 +1,4 @@
+
 <link href="<?= base_url() ?>dist/css/depositoSeriedad.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -229,7 +230,7 @@
                 <!-- row factura -->
                 <!-- radios 3 -->
                 <!-- row especialista escuadron -->
-                <div class="row pt-1" id="boxEscuadronLider">
+                <div class="row pt-1">
                     <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
                         <div class="pb-1">
                             <h4 class="label-on-left m-0">ESCUADRON RESCATE</h4>
@@ -255,7 +256,20 @@
                         </select>
 
                     </div>
+
+                    <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                        <h4 class="label-on-left mb-0">IDIOMA</h4>
+                        <div class="radio_container">
+                            <input type="radio" name="idiomaValor"  id="idiomaValor1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 1) { echo "checked=true"; } ?>>
+                            <label for="idiomaValor1">ESPAÑOL</label>
+
+                            <input type="radio" name="idiomaValor"  id="idiomaValor2" value="2" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 2) { echo "checked=true"; } ?>>
+                            <label for="idiomaValor2">INGLÉS</label>
+
+                        </div>
+                    </div>
                 </div>
+
                 <!-- fin especialista escuadron -->
                 <div class="row pt-1">
                     <div class="col-sm-6 checkbox-radios" id="radioDS">

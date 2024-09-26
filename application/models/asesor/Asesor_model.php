@@ -545,7 +545,8 @@ class Asesor_model extends CI_Model {
                                         cl.calle, 
                                         cl.colonia,
                                         cl.especialistaEscuadron,
-                                        cl.liderEscuadron
+                                        cl.liderEscuadron, 
+                                        cl.idioma
                                 FROM clientes cl
                                 INNER JOIN lotes lot ON cl.idLote = lot.idLote
                                 INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
