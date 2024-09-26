@@ -29,6 +29,7 @@ capturaContratos = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new NumberField({  id: 'obra', value: data.obra, label: 'Contrato de obra a mano alzada', width: '12', required:true, mask: "#,##0.00" }),
             new NumberField({  id: 'tesoreria', value: data.tesoreria, label: 'Contrato de tesorería', width: '12', required:true, mask: "#,##0.00" }),

@@ -56,8 +56,8 @@
                         <div class="card wizard-card" data-color="green" id="wizardProfile">
                             <form id="my-form" name="my-form" method="post">
                                 <div class="wizard-header">
-                                    <h3 class="wizard-title">Construye su perfil</h3>
-                                    <h5>Esta información nos permitirá saber más sobre él.
+                                    <h3 class="wizard-title" data-i18n="build-his-profile">Construye su perfil</h3>
+                                    <h5><span data-i18n="this-information-know-about-him">Esta información nos permitirá saber más sobre él.</span>
                                         <a href="https://youtu.be/pj80dBMw6y4" class="p-0 ml-3 d-flex align-center justify-center u2be" target="_blank">
                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                         </a>
@@ -66,7 +66,7 @@
                                 <div class="wizard-navigation" id="wiz-nav" name="wiz-nav">
                                     <ul>
                                         <li>
-                                            <a href="#about" data-toggle="tab">Acerca de</a>
+                                            <a href="#about" data-toggle="tab" data-i18n="about-him">Acerca de</a>
                                         </li>
                                         <li>
                                             <a href="#job" data-toggle="tab">Empleo</a>
@@ -80,7 +80,7 @@
                                     <div class="tab-pane" id="about">
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <h4 class="info-text"> Comencemos con la información básica </h4>
+                                                <h4 class="info-text" data-i18n="start-with-basic-info"> Comencemos con la información básica </h4>
                                             </div>
                                             <div class="col-sm-12 box-alert" style="display:none">
                                                 <div class="alert alert-danger" role="alert">
@@ -92,7 +92,7 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">
-                                                            Nacionalidad (<span class="isRequired">*</span>)
+                                                            <span data-i18n="nationality">Nacionalidad</span>(<span class="isRequired">*</span>)
                                                         </label>
                                                         <select id="nationality" name="nationality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" onchange="validateSelect('nationality')" required></select>
                                                     </div>

@@ -277,6 +277,11 @@
                     <input type="hidden" id="uri2" value="<?=$url?>">
                     <input type="hidden" id="uri" value="<?=base_url()?>Usuarios/Chat">
                     <!------------------------------------------------------------------------->
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Idioma">
+                        <a onClick="changeLanguaje()">
+                            <img id="lang_icon" src="<?= base_url() ?>static/images/langs/es.png" width="20" height="20">
+                        </a>
+                    </li>
                     <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes">
 						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
                             <span class="material-icons">settings</span>
