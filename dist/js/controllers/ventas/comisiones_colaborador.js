@@ -1,7 +1,6 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
 var fin = userSede == 8 ? 15 : 14;
-var fechaGlobal;
 var fechaInicioCorteGlobal, fechaFinCorteGlobal, horaFinCorteGlobal,datosFechaCorte = [];
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
@@ -21,7 +20,7 @@ $(document).on("click", ".subir-archivo", function (e) {
         dataType: 'JSON',
         success: function (data) {
             $('#total-comision').html("");
-            $('#total-comision').append(`Total: ${formatMoney(data.total)}`);
+            $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
             $('#addFileExtranjero').modal('show');
         }
     });
@@ -131,23 +130,22 @@ $(document).on("submit", "#cpForm", function (e) {
 });
 
 $(document).ready(function () {
-        $.ajax({
-            url: general_base_url + 'Comisiones/getFechaCorteActual',
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'GET',
-            success: function (response) {
-                const data = JSON.parse(response);
-                datosFechaCorte = data.fechasCorte;
-                fechaInicioCorteGlobal = data.fechasCorte[0].fechaInicio.split(' ')[0].split('-');
-                fechaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[0].split('-');
-                //[0] hora [1] minutos [2] segundos
-                horaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[1].split(':');
-            },
-            async:false
-        });
-
+    $.ajax({
+        url: general_base_url + 'Comisiones/getFechaCorteActual',
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'GET',
+        success: function (response) {
+            const data = JSON.parse(response);
+            datosFechaCorte = data.fechasCorte;
+            fechaInicioCorteGlobal = data.fechasCorte[0].fechaInicio.split(' ')[0].split('-');
+            fechaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[0].split('-');
+            //[0] hora [1] minutos [2] segundos
+            horaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[1].split(':');
+        },
+        async:false
+    });
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -161,13 +159,16 @@ $(document).ready(function () {
     var dia = hoy.getDate();
     var mes = hoy.getMonth() + 1;
     var hora = hoy.getHours();
+
     if(forma_pago == 3){
         if (
-            [0,1].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+            [0,1,3].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                             ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION FECHA CORTE
             ) {
-            requestCodigoPostal();
+                requestCodigoPostal();
         }
+
+
     }
 });
 
@@ -224,7 +225,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     $.each(data, function (i, v) {
                         total += parseFloat(v.pago_cliente);
                     });
-                    document.getElementById("myText_nuevas").textContent = formatMoney(total);
+                    document.getElementById("myText_nuevas").textContent = '$' + formatMoney(total);
                 }
             });
         } else {
@@ -274,7 +275,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 if(
                     ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                     ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
-                    || (id_usuario_general == 7689)
+                        || (id_usuario_general == 7689)
                     ) {
             
                     if ($('input[name="idT[]"]:checked').length > 0) {
@@ -385,27 +386,27 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -422,7 +423,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -554,7 +555,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
                     </button>`;
-                }
+                } 
                 
 
                 return `<div class="d-flex justify-center">
@@ -675,6 +676,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 ExcedenteDinero = formatMoney(data[0].ExcedenteDinero);
                 porciento1 = formatMoney(data[0].porciento1);
                 $.each(data, function (i, v) {
+                    console.log(v);
                     v.destino == 0 ? origenes += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen} ) </div>` : ``;
                     v.destino == 1 ? destino += `<div class="col-lg-12 col-md-12 "> (-. ${v.nombreOrigen}) </div>` :  `` ;
     
@@ -707,7 +709,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 document.getElementById("exceMonto").innerHTML = exceMonto;
                 document.getElementById("ExcedenteDinero").innerHTML = ExcedenteDinero;
                 document.getElementById("porciento1").innerHTML = porciento1;
-                $('#spiner-loader').addClass('hide');
+            $('#spiner-loader').addClass('hide');
             });
 
             
@@ -718,23 +720,21 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
     // fin de aqui empezamos con la nueva forma
 
-    $('#tabla_nuevas_comisiones').on("click", 'input', function() {
-        tota2 = 0;
-        tabla_nuevas.$('input[type="checkbox"]').each(function () {
-            let totalChecados = tabla_nuevas.$('input[type="checkbox"]:checked') ;
-            let totalCheckbox = tabla_nuevas.$('input[type="checkbox"]');
-            if(this.checked){
-                trs = this.closest('tr');
-                row = tabla_nuevas.row(trs).data();
-                tota2 += parseFloat(row.impuesto); 
-            }
-            if( totalChecados.length == totalCheckbox.length ){
-                $("#all").prop("checked", true);
-            }else {
-                $("#all").prop("checked", false);
-            }
-        });
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+
+
+    $('#tabla_nuevas_comisiones').on('click', 'input', function () {
+        tr = $(this).closest('tr');
+        var row = tabla_nuevas.row(tr).data();
+        if (row.pa == 0) {
+            row.pa = row.impuesto;
+            totaPen += parseFloat(row.pa);
+            tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+        }
+        else {
+            totaPen -= parseFloat(row.pa);
+            row.pa = 0;
+        }
+        $("#totpagarPen").html(formatMoney(totaPen));
     });
 
     $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_nuevas", function (e) {
@@ -779,7 +779,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
-                document.getElementById("myText_revision").textContent = formatMoney(total);
+                document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
             }
         });
     });
@@ -790,7 +790,7 @@ $("#tabla_revision_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_revision").textContent = to;
+        document.getElementById("myText_revision").textContent = '$' + to;
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
@@ -848,27 +848,27 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -885,7 +885,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -979,7 +979,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                     total += parseFloat(v.pago_cliente);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("myText_pagadas").textContent = formatMoney(total);
+                document.getElementById("myText_pagadas").textContent = '$' + formatMoney(total);
             }
         });
     });
@@ -990,7 +990,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pagadas").textContent = to;
+        document.getElementById("myText_pagadas").textContent = '$' + to;
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
@@ -1048,27 +1048,27 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$ ' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$ ' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -1085,7 +1085,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -1178,7 +1178,7 @@ $("#tabla_otras_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
-                document.getElementById("myText_pausadas").textContent = formatMoney(total);
+                document.getElementById("myText_pausadas").textContent = '$' + formatMoney(total);
             }
         });
     });
@@ -1189,7 +1189,7 @@ $("#tabla_otras_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pausadas").textContent = to;
+        document.getElementById("myText_pausadas").textContent = '$' + to;
     });
 
     tabla_otras = $("#tabla_otras_comisiones").DataTable({
@@ -1247,27 +1247,27 @@ $("#tabla_otras_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$ ' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$ ' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -1284,7 +1284,7 @@ $("#tabla_otras_comisiones").ready(function () {
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -1926,7 +1926,7 @@ function sumCheck() {
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
-    myCommentsList.innerHTML = 'Suma seleccionada: ' + formatMoney(suma.toFixed(3));
+    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
 } 
 
 function disabled() {
@@ -2116,25 +2116,15 @@ function close_modal_xml() {
 
 function selectAll(e) {
     tota2 = 0;
-    if(e.checked == true){
-        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
-            tr1 = this.closest('tr');
-            row = tabla_nuevas.row(tr1).data();
-            tota2 += parseFloat(row.impuesto);
-            if(v.checked == false){
-                $(v).prop("checked", true);
-            }
-        }); 
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
-    }
-    if(e.checked == false){
-        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
-            if(v.checked == true){
-                $(v).prop("checked", false);
-            }
-        }); 
-        $("#totpagarPen").html(formatMoney(0));
-    }
+    $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+        if (!$(this).prop("checked")) {
+            $(this).prop("checked", true);
+            tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().pago_cliente);
+        } else {
+            $(this).prop("checked", false);
+        }
+        $("#totpagarPen").html(formatMoney(tota2));
+    });
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -2147,12 +2137,3 @@ function asignarValorColumnasDT(nombre_datatable) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
 }
-
-
-
-
-
-
-
-
-

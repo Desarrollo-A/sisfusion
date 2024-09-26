@@ -298,7 +298,6 @@
                                                                 <label for="tipo" class="control-label">Tipo:</label>
                                                                 <select name="tipo_historial_casas" id="tipo_historial_casas" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                                                     <option value="1">Normal</option>
-                                                                    <option value="2">Maderas Upgrade</option>
                                                                     <option value="3">Casas</option>
                                                                 </select>
                                                             </div>

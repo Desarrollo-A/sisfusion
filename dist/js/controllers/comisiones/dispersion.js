@@ -1068,7 +1068,7 @@ $(document).ready(function () {
                                                 console.log('procesoReestructura::'+procesoReestructura);
                                                 console.log('plan_comision::'+plan_comision);
                                                 console.log('idLote::'+idLote);
-                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && [64,65,66,84,85,86,56].indexOf(plan_comision) < 0 ) || ([64,65,66,84,85,86,56].indexOf(plan_comision) >= 0 || [57154,48216,55933,52454,54261,63123,30499,40165,37107,40002,98054,98065,98066,98067,98068,98098,98104,98116,51295,56931,94223,98755,98756,98757,99924,100361,101117,102611,100059,85996,97891,54769].indexOf(parseInt(idLote)) >= 0) || parseInt(plan_comision) == 56) ? saldo : ( saldo-v.abono_pagado );
+                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || ([64,65,66,84,85,86,56].indexOf(plan_comision) >= 0 || [57154,48216,55933,52454,54261,63123,30499,40165,37107,40002,98054,98065,98066,98067,98068,98098,98104,98116,51295,56931,94223,98755,98756,98757,99924,100361,101117,102611,100059].indexOf(parseInt(idLote)) >= 0)) ? saldo : ( saldo-v.abono_pagado );
                                                 console.log('RESTA'+resta_1);
                                                 if(parseFloat(resta_1) <= 0){
                                                     saldo = 0;
@@ -1080,7 +1080,7 @@ $(document).ready(function () {
                                                     else{
                                                         console.log('entra hasta aca')
                                                         console.log(saldo)
-                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && [64,65,66,84,85,86,56].indexOf(plan_comision) < 0) || ([64,65,66,84,85,86,56].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933,52454,54261,63123,30499,40165,37107,40002,98054,98065,98066,98067,98068,98098,98104,98116,51295,56931,94223,98755,98756,98757,99924,100059,100361,101117,102611,85996,97891,54769].indexOf(parseInt(idLote)) >= 0) || parseInt(plan_comision) == 56) ? saldo : saldo-v.abono_pagado;
+                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86,56].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933,52454,54261,63123,30499,40165,37107,40002,98054,98065,98066,98067,98068,98098,98104,98116,51295,56931,94223,98755,98756,98757,99924,100059,100361,101117,102611].indexOf(parseInt(idLote)) >= 0)) ? saldo : saldo-v.abono_pagado;
                                                         console.log(saldo)
                                                     }
                                                 }
@@ -1706,7 +1706,7 @@ function responsive(maxWidth) {
 
 function function_totales(){
     $.getJSON( general_base_url + "Comisiones/getMontoDispersado").done( function( data ){
-        $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
+        $cadena = '<b>'+formatMoney(data[0].monto)+'</b>';
         document.getElementById("monto_label").innerHTML = $cadena ;
     });
     $.getJSON( general_base_url + "Comisiones/getPagosDispersado").done( function( data ){
