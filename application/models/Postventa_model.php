@@ -1666,7 +1666,10 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote
+        LEFT JOIN solicitudes_escrituracion se ON se.id_lote  = lo.idLote  
         WHERE lo.status = 1 AND lo.idStatusLote = 2 AND (cl.revisionEscrituracion = 0 OR  cl.revisionEscrituracion IS NULL)
+        AND (se.id_estatus IS NULL OR se.id_estatus != 49)
+        AND (cl.escrituraFinalizada != 1)
         ORDER BY lo.idLote
         ")->result_array();
     }

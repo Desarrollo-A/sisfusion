@@ -80,7 +80,6 @@ let columns = [
             let editCliente = '';
             //AGREGAR MARCA
             if(data.escrituraFinalizada == 0){
-                console.log("idLote: ", data.idLote);
                 asignar_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Agregar Marca', onClick: btn_assign, data});
             }
             //VOBO
