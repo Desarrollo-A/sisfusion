@@ -1,10 +1,23 @@
 {
     "en": {
         "build-his-profile": "Build his profile",
-        "about-him": "About him"
+        "about-him": "About him",
+        "inventario-lotes": "Inventory of lots",
+        "descargar-inventario-sede": "Download lots inventory by headquarters",
+        "proyecto": "Project",
+        "condominio": "Condominium",
+        "estatus": "Status",
+        "select-prederteminado": "Choose an option"
+        
     },
     "es": {
         "build-his-profile": "Construye su perfil",
-        "about-him": "Acerca de"
+        "about-him": "Acerca de",
+        "inventario-lotes": "Inventario lotes",
+        "descargar-inventario-sede": "Descargar inventario sede",
+        "proyecto": "Proyecto",
+        "condominio": "Condominio",
+        "estatus": "Estatus",
+        "select-prederteminado": "Selecciona una opción"
     }
 }
