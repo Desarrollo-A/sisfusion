@@ -44,7 +44,7 @@ let titulosInventario = [];
 $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosInventario.push(title);
-    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${_(title)}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
             $('#tablaInventario').DataTable().column(i).search(this.value).draw();
@@ -1124,3 +1124,4 @@ function fillTableInventario(sede) {
         tabla_inventario.columns.adjust();
     });
 }
+

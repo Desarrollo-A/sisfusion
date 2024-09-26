@@ -7,7 +7,13 @@
         "proyecto": "Project",
         "condominio": "Condominium",
         "estatus": "Status",
-        "select-prederteminado": "Choose an option"
+        "select-prederteminado": "Choose an option",
+        "lote": "Lote",
+        "id-lote": "ID LOT",
+        "superficie":"surface",
+        "precio-lista":"Price list",
+        "total-con-descuentos": "Total with discounts",
+        "m2": "m2"
         
     },
     "es": {
@@ -18,6 +24,12 @@
         "proyecto": "Proyecto",
         "condominio": "Condominio",
         "estatus": "Estatus",
-        "select-prederteminado": "Selecciona una opción"
+        "select-prederteminado": "Selecciona una opción",
+        "lote": "Lote",
+        "id-lote": "ID LOTE",
+        "superficie":"superficie",
+        "precio-lista":"Precio de lista",
+        "total-con-descuentos": "Total con descuentos",
+        "m2": "m2"
     }
 }
