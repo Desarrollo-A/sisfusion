@@ -3686,7 +3686,7 @@ class Casas extends BaseController
     public function avancePaso9()
     {
         $form = $this->form();
-        $idProceso = $form->idProcesoCasas;
+        $idProceso = $form->id;
         $procesoActual = $form->proceso;
         $comentario = $form->comentario;
 
@@ -4564,7 +4564,7 @@ class Casas extends BaseController
     public function rechazoPaso9()
     {
         $form = $this->form();
-        $idProceso = $form->idProcesoCasas;
+        $idProceso = $form->id;
         $procesoActual = $form->proceso;
         $comentario = $form->comentario;
         $this->db->trans_begin();
