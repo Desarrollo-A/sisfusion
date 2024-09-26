@@ -13,7 +13,7 @@ pass_to_propuestas = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_propuestas`,
+                url: `avancePaso8`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -33,6 +33,7 @@ pass_to_propuestas = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'idRol', value: idRol }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
