@@ -633,7 +633,7 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getHistorialPagosCasas($idProceso, $estatus) {
+    public function getHistorialPagosCasas($idProceso) {
         $query = "SELECT 
         hpc.idHistorial, 
         hpc.procesoAnterior,

@@ -91,17 +91,6 @@ class Pagoscasas extends BaseController {
         $this->load->view("pagos_casas/validar_avance");
     }
 
-    
-    public function reporte_pagos(){
-        $this->load->view('template/header');
-        $this->load->view("pagos_casas/reporte_pagos");
-    }
-
-    public function reporte_pagos_casas(){
-        $this->load->view('template/header');
-        $this->load->view("pagos_casas/reporte_pagos_casas");
-    }
-
     public function avances($proceso){
         $lote = $this->PagosCasasModel->getProceso($proceso);
 
@@ -644,20 +633,17 @@ class Pagoscasas extends BaseController {
     public function lista_reporte_pagos($tableValue){
         $opcion = $this->input->get('opcion');
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16";
-        //$finalizado = "0, 1";
-        $finalizado = '';
-        if($tableValue == 0){
-            $finalizado = '0';
-        }
-        else {
-            $finalizado = '1';
-        }
-
-        if($opcion != -1 && isset($opcion)){
+        $finalizado = "0, 1";
+        
+        if ($opcion != -1 && $opcion != -2 && isset($opcion)) {
             $proceso = $opcion;
+            $finalizado = "0";
         }
-
-        if($opcion == -2){
+        if ($opcion == -2) {
+            $finalizado = "1";
+        }
+        if($opcion == -3) {
+            $finalizado = "0";
         }
 
         $lotes = $this->PagosCasasModel->getListaReportePagos($proceso, $finalizado);
@@ -693,12 +679,6 @@ class Pagoscasas extends BaseController {
         }
 
         $this->json([]);
-    }
-
-    public function options_procesos($finalizado){
-        $asesores = $this->PagosCasasModel->getProcesosOptions($finalizado);
-
-        $this->json($asesores);
     }
 
     public function add_monto_depositado(){
@@ -810,7 +790,7 @@ class Pagoscasas extends BaseController {
         }
     }
 
-    public function getHistorial($idProceso, $estatus) {
-        echo json_encode($this->PagosCasasModel->getHistorialPagosCasas($idProceso, $estatus));
+    public function getHistorial($idProceso) {
+        echo json_encode($this->PagosCasasModel->getHistorialPagosCasas($idProceso));
     }
 }

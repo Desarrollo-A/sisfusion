@@ -2225,16 +2225,24 @@ class Casas extends BaseController
         $opcion = $this->input->get('opcion');
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
         $finalizado = "0, 1";
+        $extraFields = "";
 
-        if ($opcion == -1 && $opcion != -2 && isset($opcion)) {
-            $finalizado = " AND (pc.finalizado IN(0) OR pc.finalizado IS NULL)";
+        if ($opcion != -1 && $opcion != -2 && isset($opcion)) {
+            $proceso = $opcion;
+            $finalizado = "0";
+            $extraFields = "AND (pc.proceso IN ($proceso))";
         }
-
         if ($opcion == -2) {
-            $finalizado = " AND (pc.finalizado = 1)";
+            $finalizado = "1";
+            $extraFields = "AND (pc.proceso IN ($proceso))";
+        }
+        if($opcion == -3) {
+            $finalizado = "0";
+            $extraFields = "AND (pc.idProcesoCasas IS NULL)";
+
         }
 
-        $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado);
+        $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado, $extraFields);
 
         $this->json($lotes);
     }

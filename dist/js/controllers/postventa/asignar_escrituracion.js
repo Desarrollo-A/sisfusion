@@ -79,7 +79,7 @@ let columns = [
             let addCliente = '';
             let editCliente = '';
             //AGREGAR MARCA
-            if(data.escrituraFinalizada == 0 && data.idCliente != null){
+            if(data.escrituraFinalizada == 0){
                 asignar_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Agregar Marca', onClick: btn_assign, data});
             }
             //VOBO

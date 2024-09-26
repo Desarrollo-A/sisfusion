@@ -25,14 +25,14 @@ function dataFunction(value) {
     if (valueTab == 1) {
         tableConfig = {
             id: '#tableDoct',
-            url: 'casas/lista_reporte_casas?opcion=-1',
+            url: 'casas/lista_reporte_casas',
             buttons: buttons,
             columns: columns,
         };
     } else if (valueTab == 2) {
         tableConfig = {
             id: '#tableCredito',
-            url: 'casas/getReporteProcesoCredito?opcion=-1',
+            url: 'casas/getReporteProcesoCredito',
             buttons: buttonsCredito,
             columns: columnsCredito,
         };
@@ -224,6 +224,7 @@ $.ajax({
             { value: -1, label: 'Todos' },
             ...response,
             { value: -2, label: 'Finalizado' },
+            { value: -3, label: 'Pre Proceo' },
         ]
 
         filtro_proceso.setOptions(status_option)
@@ -241,22 +242,23 @@ let filtros = new Filters({
     ],
 })
 
-$(document).on('click', '#verProceso', function (e) {
+$(document).on('click', '#verPagos', function (e) {
     $("#venta").addClass('hide');
-    $("#proceso").removeClass('hide');
+    $("#pagos").removeClass('hide');
 
     $("#tab-venta").removeClass('active');
-    $("#tab-proceso").addClass('active');
+    $("#tab-pagos").addClass('active');
 
 });
 
 $(document).on('click', '#verVenta', function (e) {
-    $("#proceso").addClass('hide');
+    $("#pagos").addClass('hide');
     $("#venta").removeClass('hide');
 
     $("#tab-venta").addClass('active');
-    $("#tab-proceso").removeClass('active');
+    $("#tab-pagos").removeClass('active');
 });
+
 
 modalHistorial = function (dt) {
 
@@ -307,11 +309,17 @@ function lineCredito(timeLine) {
     $("#historialActual").append(`${timeLine}`);
 }
 
+function linePagos(timeLine) {
+    $("#historialPago").append(`${timeLine}`);
+}
+
+
 modalHistorialBanco =  function (dt) {
     let esquemaCredito = 1;
     $("#spiner-loader").removeClass('hide');
     $("#timeLineModal").modal();
-    $("#historialActual").html();
+    $("#historialActual").html("");
+    $("#historialPago").html("");
 
     $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}/${dt.idLote}`).done(function (data) {
       if (JSON.parse(data).length > 0)   {
@@ -347,5 +355,41 @@ modalHistorialBanco =  function (dt) {
         emptyLog();
         $("#spiner-loader").addClass('hide');
       }
+    });
+
+    $.post(`${general_base_url}/Pagoscasas/getHistorial/${dt.idProcesoPagos}`).done(function (data) {
+       if (JSON.parse(data).length > 0) {
+            $.each(JSON.parse(data), function(i, v) {
+                $("#spiner-loader").addClass('hide');
+                let backProcess = '';
+                let previousText = '';
+                let newText = '';
+                let nextProcess = v.procesoNuevo;
+
+                if (v.cambioStatus == '0') {
+                    backProcess = v.procesoAnterior;
+                    previousText = 'Proceso anterior: ';
+                    newText = 'Proceso nuevo: ';
+                }
+                else {
+                    backProcess = '';
+                    newText = 'Proceso actual: ';
+                }
+
+                let timeLinePagos = new TimeLine({
+                    title: v.nombreUsuario,
+                    back: backProcess,
+                    next: nextProcess,
+                    description: v.descripcionFinal,
+                    date: v.fechaMovimiento,
+                    previousText: previousText,
+                    newText: newText
+                });
+                linePagos(timeLinePagos);
+            });
+        } else {
+            emptyLog();
+            $("#spiner-loader").addClass('hide');
+        }
     });
 }
