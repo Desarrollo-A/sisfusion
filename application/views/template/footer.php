@@ -119,6 +119,8 @@
     $.i18n().load('<?= base_url() ?>dist/js/jquery.i18n/langs.json')
     .done(function() {
         $('body').i18n()
+
+        triggerFunctions()
     })
 
     $.i18n( { 
@@ -155,5 +157,19 @@
     }
 
     _ = $.i18n
+
+    let triggers_functions = []
+
+    function onLoadTranslations(callback){
+        if (typeof callback === 'function') {
+            triggers_functions.push(callback)
+        }
+    }
+
+    function triggerFunctions() {
+        for (let callback of triggers_functions) {
+            callback()
+        }
+    }
 
 </script>
