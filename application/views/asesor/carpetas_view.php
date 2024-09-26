@@ -17,7 +17,7 @@
 								</a>
 							</div>
 							<div class="card-content">
-								<h4 class="card-title">Carpetas</h4><br><br>
+								<h4 class="card-title" data-i18n="files">Carpetas</h4><br><br>
 								<div class="row">
 									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 										<div id="msg"></div>

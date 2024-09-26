@@ -1,10 +1,16 @@
 {
     "en": {
         "build-his-profile": "Build his profile",
-        "about-him": "About him"
+        "about-him": "About him",
+        "files": "Files",
+        "inquiry": "Inquiry",
+        "nomeclature": "Nomeclature"
     },
     "es": {
         "build-his-profile": "Construye su perfil",
-        "about-him": "Acerca de"
+        "about-him": "Acerca de",
+        "files": "Carpetas",
+        "inquiry": "Consulta",
+        "nomeclature": "Nomeclatura"
     }
 }

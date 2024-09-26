@@ -20,7 +20,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>NOMENCLATURA</th>
+                                                    <th data-i18n="nomeclature">NOMENCLATURA</th>
                                                     <th>NOMBRE</th>
                                                     <th>EMPRESA</th>
                                                 </tr>
