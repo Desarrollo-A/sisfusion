@@ -1,12 +1,10 @@
 function set_adeudo(data) {
-    // console.log(data)
     let form = new Form({
         title: 'Ingresar adeudo',
         //text: 'Descripcion del formulario',
     })
 
     form.onSubmit = function(data){
-        //console.log(data)
         form.loading(true)
 
         $.ajax({
@@ -30,8 +28,6 @@ function set_adeudo(data) {
             }
         })
     }
-
-    // console.log(data)
 
     let adeudo
     let value
@@ -330,9 +326,9 @@ let columns = [
     }},
     {data: function (data) {
         //ESTATUS ESCRITURACIÓN
-        if(data.escrituraFinalizada == 1 || data.id_estatus == 49) {
+        if((data.escrituraFinalizada == 1 || data.id_estatus == 49)) {
             //FINISHED
-            return `<span class="label lbl-green">CONCLUIDO</span>`;
+            return `<span class="label lbl-green">ESCRITURADO</span>`;
         }
         if(data.escrituraFinalizada == 0 || data.escrituraFinalizada == 2) {
             if(data.id_estatus != null)  {
@@ -375,7 +371,7 @@ let columns = [
                 pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
             } else if((idRol == 11 || idRol == 33) && data.adeudoADM != null) {
                 //FINISHED 100 %
-                if(data.escrituraFinalizada == 1 || data.id_estatus == 49){
+                if((data.escrituraFinalizada == 1 || data.id_estatus == 49) && data.revisionEscrituracion == 1){
                     pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
                 }
                 if(data.cuentaDocumentos != 0 && data.revisionEscrituracion == 1) {
