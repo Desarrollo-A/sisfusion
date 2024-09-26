@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Documentación</h3>
+                                    <h3 class="card-title center-align">Paso 3 - Documentación</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -30,7 +30,7 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>COSTO DE CONSTRUCCION</th>
+                                            <th>COSTO DE CONSTRUCCIÓN</th>
                                             <th>MONTO DEPOSITADO</th>
                                             <th>TIEMPO</th>
                                             <th>ACCIONES</th>

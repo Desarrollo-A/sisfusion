@@ -18,9 +18,10 @@
                                 <li role="presentation" class="active" id="tab-venta">
                                     <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verVenta">Historial actual</a>
                                 </li>
+                                <!--
                                 <li role="presentation" id="tab-proceso">
                                     <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verProceso" class="btn-historial" data-idLote="" data-flagFusion="">Hitorial general</a>
-                                </li>
+                                </li> -->
                             </ul>
                             <div class="tab-content" id="venta">
                                 <div role="tabpanel" class="tab-pane active" id="tabHistorial">
@@ -74,7 +75,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#reporteCasas" role="tab" data-toggle="tab" onclick="dataFunction(1)">Reporte de ventas (Banco)</a>
+                                <a href="#reporteCasas" role="tab" data-toggle="tab" onclick="dataFunction(1)">Reporte de ventas (crédito del banco)</a>
                             </li>
                             <li>
                                 <a href="#reporteCredito" role="tab" data-toggle="tab" onclick="dataFunction(2)">Reporte de ventas (Crédito directo)</a>
@@ -86,10 +87,6 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="reporteCasas">
                                             <div class="card-content">
-                                                <div class="toolbar">
-                                                    <h3 class="card-title center-align">Reporte de ventas (CASAS)</h3>                                                    
-                                                </div>
-
                                                 <table id="tableDoct" class="table-striped table-hover">
                                                     <thead>
                                                         <tr>
@@ -114,10 +111,6 @@
 
                                         <div class="tab-pane" id="reporteCredito">
                                             <div class="card-content">
-                                                <div class="toolbar">
-                                                    <h3 class="card-title center-align">Proceso banco</h3>                                                    
-                                                </div>
-
                                                 <table id="tableCredito" class="table-striped table-hover">
                                                     <thead>
                                                         <tr>

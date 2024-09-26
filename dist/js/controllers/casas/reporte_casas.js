@@ -141,14 +141,7 @@ let columns = [
     },
     {
         data: function (data) {
-            // let docu_button = new RowButton({ icon: 'toc', label: 'Ver historial', onClick: go_to_historial, data })
-           
             let button = new RowButton({ icon: 'info', label: 'HISTORIAL DE MOVIMIENTOS', onClick: modalHistorialBanco, data })
-
-            // let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a solicitud de contratos', onClick: pass_to_solicitud_contratos, data})
-
-            // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentración de adeudos', onClick: back_to_adeudos, data})
-
             return `<div class="d-flex justify-center">${button}</div>`
         }
     },
@@ -231,6 +224,7 @@ $.ajax({
             { value: -1, label: 'Todos' },
             ...response,
             { value: -2, label: 'Finalizado' },
+            { value: -3, label: 'Pre Proceo' },
         ]
 
         filtro_proceso.setOptions(status_option)
@@ -248,22 +242,23 @@ let filtros = new Filters({
     ],
 })
 
-$(document).on('click', '#verProceso', function (e) {
+$(document).on('click', '#verPagos', function (e) {
     $("#venta").addClass('hide');
-    $("#proceso").removeClass('hide');
+    $("#pagos").removeClass('hide');
 
     $("#tab-venta").removeClass('active');
-    $("#tab-proceso").addClass('active');
+    $("#tab-pagos").addClass('active');
 
 });
 
 $(document).on('click', '#verVenta', function (e) {
-    $("#proceso").addClass('hide');
+    $("#pagos").addClass('hide');
     $("#venta").removeClass('hide');
 
     $("#tab-venta").addClass('active');
-    $("#tab-proceso").removeClass('active');
+    $("#tab-pagos").removeClass('active');
 });
+
 
 modalHistorial = function (dt) {
 
@@ -277,12 +272,28 @@ modalHistorial = function (dt) {
         if (JSON.parse(data).length > 0) {
             $.each(JSON.parse(data), function (i, v) {
                 $("#spiner-loader").addClass('hide');
+                let backProcess = '';
+                let previousText = '';
+                let newText = '';
+                let nextProcess = v.procesoNuevo;
+                
+                if (v.cambioStatus == '0') {
+                    backProcess = v.procesoAnterior;
+                    previousText = 'Proceso anterior: ';
+                    newText = 'Proceso nuevo: ';
+                }
+                else {
+                    backProcess = '';
+                    newText = 'Proceso actual: ';
+                }
                 let timeLine = new TimeLine({
                     title: v.nombreUsuario,
-                    back: v.procesoAnterior,
-                    next: v.procesoNuevo,
+                    back: backProcess,
+                    next: nextProcess,
                     description: v.descripcion,
-                    date: v.fechaMovimiento
+                    date: v.fechaMovimiento,
+                    previousText: previousText,
+                    newText: newText
                 });
                 lineCredito(timeLine);
             });
@@ -298,28 +309,85 @@ function lineCredito(timeLine) {
     $("#historialActual").append(`${timeLine}`);
 }
 
-modalHistorialBanco = function (dt) {
-    
+function linePagos(timeLine) {
+    $("#historialPago").append(`${timeLine}`);
+}
+
+
+modalHistorialBanco =  function (dt) {
     let esquemaCredito = 1;
     $("#spiner-loader").removeClass('hide');
     $("#timeLineModal").modal();
     $("#historialActual").html("");
+    $("#historialPago").html("");
 
     $.post(`getHistorial/${dt.idProcesoCasas}/${esquemaCredito}/${dt.idLote}`).done(function (data) {
-        if (JSON.parse(data).length > 0) {
-            $.each(JSON.parse(data), function (i, v) {
-                $("#spiner-loader").addClass('hide');
-                let timeLine = new TimeLine({
-                    title: v.nombreUsuario,
-                    back: v.procesoAnterior,
-                    next: v.procesoNuevo,
-                    description: v.descripcionFinal,
-                    date: v.fechaMovimiento
-                });
-                lineCredito(timeLine);
+      if (JSON.parse(data).length > 0)   {
+        $.each(JSON.parse(data), function(i, v) {
+            $("#spiner-loader").addClass('hide');
+            let backProcess = '';
+            let previousText = '';
+            let newText = '';
+            let nextProcess = v.procesoNuevo;
+
+            if (v.cambioStatus == '0') {
+                backProcess = v.procesoAnterior;
+                previousText = 'Proceso anterior: ';
+                newText = 'Proceso nuevo: ';
+            }
+            else {
+                backProcess = '';
+                newText = 'Proceso actual: ';
+            }
+
+            let timeLine = new TimeLine({
+                title : v.nombreUsuario,
+                back : backProcess, 
+                next : nextProcess,
+                description : v.descripcionFinal,
+                date : v.fechaMovimiento,
+                previousText : previousText,
+                newText : newText
             });
-        }
-        else {
+            lineCredito(timeLine);
+        });
+      } else {
+        emptyLog();
+        $("#spiner-loader").addClass('hide');
+      }
+    });
+
+    $.post(`${general_base_url}/Pagoscasas/getHistorial/${dt.idProcesoPagos}`).done(function (data) {
+       if (JSON.parse(data).length > 0) {
+            $.each(JSON.parse(data), function(i, v) {
+                $("#spiner-loader").addClass('hide');
+                let backProcess = '';
+                let previousText = '';
+                let newText = '';
+                let nextProcess = v.procesoNuevo;
+
+                if (v.cambioStatus == '0') {
+                    backProcess = v.procesoAnterior;
+                    previousText = 'Proceso anterior: ';
+                    newText = 'Proceso nuevo: ';
+                }
+                else {
+                    backProcess = '';
+                    newText = 'Proceso actual: ';
+                }
+
+                let timeLinePagos = new TimeLine({
+                    title: v.nombreUsuario,
+                    back: backProcess,
+                    next: nextProcess,
+                    description: v.descripcionFinal,
+                    date: v.fechaMovimiento,
+                    previousText: previousText,
+                    newText: newText
+                });
+                linePagos(timeLinePagos);
+            });
+        } else {
             emptyLog();
             $("#spiner-loader").addClass('hide');
         }

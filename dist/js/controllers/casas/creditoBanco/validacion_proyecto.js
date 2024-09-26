@@ -79,7 +79,7 @@ function avanceProcesoBanco(data){
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/avancePaso7`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -101,13 +101,6 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 8 }),
-            new HiddenField({ id: 'tipoSaldo', value: tipoSaldo }),
-            new HiddenField({ id: 'saldoAdmon', value: data.saldoAdmon }),
-            new HiddenField({ id: 'saldoOOAM', value: data.saldoOOAM }),
-            new HiddenField({ id: 'saldoGPH', value: data.saldoGPH }),
-            new HiddenField({ id: 'saldoPV', value: data.saldoPV }),
-            new HiddenField({ id: 'cierreContraloria', value: data.cierreContraloria }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
@@ -179,7 +172,7 @@ rechazo_proceso = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/rechazoPaso7`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -200,7 +193,6 @@ rechazo_proceso = function (data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 4 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],

@@ -8,7 +8,7 @@ $(document).ready(function() {
     }
     
     demo.initMaterialWizard();
-    md.initSliders()
+    //md.initSliders()
     demo.initFormExtendedDatetimepickers();
 });
 

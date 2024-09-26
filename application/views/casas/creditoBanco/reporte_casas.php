@@ -5,27 +5,43 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade" id="timeLineModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+       <div class="modal fade" id="timeLineModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         <h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                 <li role="presentation" class="active" id="tab-venta">
-                                    <a href="#tabHistorial" aria-controls="#tabHistorial" role="tab" data-toggle="tab" id="verVenta">Historial</a>
+                                    <a href="#tabHistorial" aria-controls="tabHistorial" role="tab" data-toggle="tab" id="verVenta">Historial Proceso</a>
+                                </li>
+                                <li role="presentation" id="tab-pagos">
+                                    <a href="#tabPagos" aria-controls="tabPagos" role="tab" data-toggle="tab" id="verPagos">Historial Pagos</a>
                                 </li>
                             </ul>
-                            <div class="tab-content" id="venta">
-                                <div role="#tabpanel" class="tab-pane active" id="#tabHistorial">
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="tabHistorial">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
                                                     <ul class="timeline-3" id="historialActual"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="tabPagos">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="historialPago"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -37,6 +53,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="content boxContent">
             <div class="container-fluid">
