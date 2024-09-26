@@ -1,6 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
-<body>
+
+<body> 
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
         
@@ -47,7 +48,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#extranjeroComercializacion" role="tab" data-toggle="tab">Facturas Extranjero</a></li>
-                        <li><a href="#extranjeroINVOICE" role="tab" data-toggle="tab">INVOICE</a></li>
+                        <li ><a href="#extranjeroINVOICE" onclick="llamar_tabla()" role="tab" data-toggle="tab">INVOICE</a></li>
                     </ul>
             
                     <div class="card no-shadow m-0 border-conntent__tabs">
@@ -145,28 +146,22 @@
                                                             <p class="input-tot pl-1" name="disponibleInvoice" id="disponibleInvoice">$0.00</p>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <div class="form-group d-flex justify-center align-center">
-                                                            <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                                                            <p class="input-tot pl-1" name="autorizarInvoice" id="autorizarInvoice">$0.00</p>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
-                                            <table class="table-striped table-hover" id="tabla_invoice" name="tabla_invoice">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>USUARIO</th>
-                                                        <th>TOTAL</th>
-                                                        <th>FORMA DE PAGO</th>
-                                                        <th>NACIONALIDAD</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
                                         </div>
+                                        <table class="table-striped table-hover" id="tabla_invoice" name="tabla_invoice">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>USUARIO</th>
+                                                    <th>TOTAL</th>
+                                                    <th>FORMA DE PAGO</th>
+                                                    <th>NACIONALIDAD</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -181,4 +176,8 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_extranjero.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_invoice.js"></script>
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <script type="text/javascript">
+        Shadowbox.init();
+    </script>
 </body>

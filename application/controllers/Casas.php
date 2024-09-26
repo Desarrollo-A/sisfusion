@@ -856,7 +856,7 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
             
             //NO TIENE VOBO DE TITULACIÓN
-            if($responseTitulacion->revisionEscrituracion == 0 && $responseTitulacion->escrituraFinalizada != 1) {
+            if(($responseTitulacion->revisionEscrituracion == 0 || $responseTitulacion->revisionEscrituracion == null) && $responseTitulacion->escrituraFinalizada != 1) {
                 $documentos = $this->CasasModel->getDocumentos([11, 13, 14, 15, 27, 36]);
             }
             else {
@@ -1665,7 +1665,6 @@ class Casas extends BaseController
     public function to_vobo_cifras_contraloria()
     {
         $this->form();
-
         $id = $this->form('id');
         $proceso = $this->CasasModel->getProceso($id);
         $comentario = $this->form('comentario');
@@ -2158,7 +2157,7 @@ class Casas extends BaseController
         }
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se actualizo propuesta del proceso: $idProcesoCasas", 1);
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se actualizó propuesta del proceso: $idProcesoCasas", 1);
         } else {
             http_response_code(404);
         }
@@ -2180,7 +2179,7 @@ class Casas extends BaseController
         $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->idPropuesta, $form->fecha, $form->cotizacion);
 
         if ($is_ok) {
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se selecciono cotizacion: $form->cotizacion", 1);
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se seleccionó cotización: $form->cotizacion", 1);
         } else {
             http_response_code(404);
         }
@@ -2224,11 +2223,8 @@ class Casas extends BaseController
     public function lista_reporte_casas()
     {
         $opcion = $this->input->get('opcion');
-        $idLote = $this->input->get('opcion');
-
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
         $finalizado = "0, 1";
-        $extraOptions = "";
 
         if ($opcion == -1 && $opcion != -2 && isset($opcion)) {
             $finalizado = " AND (pc.finalizado IN(0) OR pc.finalizado IS NULL)";

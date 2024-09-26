@@ -9,7 +9,7 @@ public $controller = 'Postventa';
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model', 'caja_model_outside', 'PaquetesCorrida_model', 'CasasModel'));
+        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model', 'caja_model_outside', 'PaquetesCorrida_model'));
         $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'email','permisos_sidebar'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
@@ -461,7 +461,6 @@ public $controller = 'Postventa';
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-       
             $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,$resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
@@ -581,7 +580,6 @@ public $controller = 'Postventa';
 
     }
     // Funcion para agregar a un nuevo notario
-
     public function insertNotaria(){
 
         $nombre_notaria = $this->input->post('notaria_nombre');
@@ -743,7 +741,7 @@ public $controller = 'Postventa';
             break;  
             case 26:
                 $folder = "static/documentos/postventa/escrituracion/ESTADOS_DE_CUENTA/";
-            break; 
+            break;
         }
         return $folder;
 
@@ -856,7 +854,7 @@ public $controller = 'Postventa';
     public function getDocumentsClient()
     {
         $idEscritura = $_POST['idEscritura'];
-        $idEstatus = $_POST['idEstatus']; 
+        $idEstatus = $_POST['idEstatus'];
         $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
         $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus, $notariaExterna);
         if ($data != null)
@@ -966,9 +964,7 @@ public $controller = 'Postventa';
             "estatus_pago" => $data['estatusPago'],
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? NULL : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? NULL : $data['catastral'],
-            
             "tipo_escritura" => $data['tipoE'],
-         
             "valor_escriturar" => $data['valor_escri'],
             "observaciones" => $data['observaciones']
         );
@@ -1021,7 +1017,6 @@ public $controller = 'Postventa';
             $telefono = $_POST['telefono'];
 
             $informacion = $this->Postventa_model->asignarNotariaExterna($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $id_solicitud);
-          
             return $informacion;
         } 
 
@@ -1299,18 +1294,13 @@ public $controller = 'Postventa';
         $this->load->library('Pdf');
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
-
         $pdf->SetTitle('Presupuesto Escrituracion.');
         $pdf->SetSubject('Escrituracion (CRM)');
         $pdf->SetKeywords('CRM, escrituracion, PERSONAL, presupuesto');
-
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
         $pdf->SetAutoPageBreak(TRUE, 0);
-
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         $pdf->setPrintHeader(false);
-
         $pdf->setFontSubsetting(true);
         $pdf->SetFont('Helvetica', '', 9, '', true);
         $pdf->SetMargins(7, 10, 10, true);
@@ -3108,7 +3098,6 @@ public $controller = 'Postventa';
         $idLote = $this->input->post('idLote');
 
         if($banderaCliente == 1){
-
             $updateLote = array("idCliente" => 0, "usuario" => $idusuario);
             $updateResponse = $this->General_model->updateRecord("lotes", $updateLote, "idLote", $idLote);
             $updateCliente = array("idLote" => 0, "status" => 0, "modificado_por" => $idusuario);
@@ -3448,7 +3437,6 @@ public $controller = 'Postventa';
 
             if($tipoTramite == 6){
                 $file = $this->file('fileElm');
-
                 if($file->error == 0 && $file->size > 0){
                     $fileExt = pathinfo($file->name, PATHINFO_EXTENSION);
                     $filename = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
@@ -3472,24 +3460,7 @@ public $controller = 'Postventa';
             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
     }
 
-
     public function setAvance () {
-/*
-        print_r($this->input->post());
-        echo '<br><br><br>';
-        $datosCondominio = $this->caja_model_outside->getDatosCondominio($this->input->post('idCondominio'));
-        if($datosCondominio[0]['tipo_lote'] == 1 ){ //1 - Comercial
-            //si el condominio es comercial solo consultar sin importar la superficie
-            $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =1","",$data->id_proy, "", "");
-            $datos["descuentoComerciales"] = count($getPaquetesDescuentos) == 0 ? NULL :  $getPaquetesDescuentos[0]['id_descuento'] ;
-        }else{ //0 - Habitacional"
-            $paquetesMenores200 = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =0","AND sup < 200",$data->id_proy, "", "");
-            $paquetesMayores200 = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =0","AND sup > 200",$data->id_proy, "", "");
-            $datos["descuentoHabMenores"] = count($paquetesMenores200) == 0 ? NULL : $paquetesMenores200[0]['id_descuento'];
-            $datos["descuentoHabMayores"] = count($paquetesMayores200) == 0 ? NULL : $paquetesMayores200[0]['id_descuento'];
-        }
-        print_r($datos);
-        exit;*/
         $idLote = $this->input->post('idLoteA');
         $idCliente = $this->input->post('idClienteA');
         $tipoTransaccion = $this->input->post('tipoTransaccionA');
@@ -3709,7 +3680,6 @@ public $controller = 'Postventa';
             echo json_encode(array());
     }
 
-
     public function eliminaCopropietario(){
         $id_copropietario = $this->input->post('idCopropietario');
 
@@ -3782,15 +3752,17 @@ public $controller = 'Postventa';
         $marcaEscrituracion = $this->form('marcaEscrituracion');
         $idProceso = $this->form('idProceso') ?? null;
         $banderaSuccess = true;
+        $idLote = $this->form('idLote');
 
         $this->db->trans_begin();
         if($accion == 1) {
             $update = $this->General_model->updateRecord('clientes', array("escrituraFinalizada" => $marcaEscrituracion), 'id_cliente', $idCliente);
+            $updateLotes = $this->General_model->updateRecord("lotes", array('idCliente' => $idCliente), 'idLote', $idLote);
         }
 
         if($accion == 2) {
             $update = $this->General_model->updateRecord('clientes', array("revisionEscrituracion" => 1), 'id_cliente', $idCliente);
-            $checkDocument = $this->CasasModel->checkDocument($idProceso);
+            $checkDocument = $this->Postventa_model->checkDocument($idProceso);
             if($checkDocument == null){
                 //CREAR DOCUMENTO FORMAS DE PAGO
                 $insertArray = array(
@@ -3823,5 +3795,4 @@ public $controller = 'Postventa';
         $this->output->set_content_type('application/json');
         $this->output->set_output($this->json([]));
     }
-
 }
