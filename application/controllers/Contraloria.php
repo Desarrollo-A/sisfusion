@@ -3763,9 +3763,6 @@ class Contraloria extends CI_Controller {
         echo json_encode($data_response);
         exit;
 
-    /*} else {
-        echo json_encode(array("status") => 365, "message" =>)
-    }*/
     }
 
     // Vista Gestor Contraloría
