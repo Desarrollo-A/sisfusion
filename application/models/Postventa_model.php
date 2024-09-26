@@ -1645,21 +1645,30 @@ function checkBudgetInfo($idSolicitud){
 
     public function getEscrituraDisponible($idCondominio) 
     {
-        return $this->db->query("SELECT lo.idLote, cl.escrituraFinalizada, cl.revisionEscrituracion,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, 
-        cond.nombre nombreCondominio, lo.nombreLote, lo.sup , re.nombreResidencial, cl.id_cliente AS idCliente, pc.idProcesoCasas
-        FROM lotes lo
-        LEFT JOIN solicitudes_escrituracion se ON se.id_lote = lo.idLote
-        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        return $this->db->query("SELECT  lo.idLote, lo.nombreLote, lo.sup, cond.nombre nombreCondominio, re.descripcion proyecto,
+        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END nombreCliente, 
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, ISNULL(cl.id_cliente, 0) AS idCliente, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE 1 END AS clienteExistente,
+        re.nombreResidencial, cl.revisionEscrituracion,
+        CASE WHEN cl.id_cliente IS NOT NULL THEN CASE WHEN cl.id_cliente = lo.idCliente THEN 1 ELSE 0 END END AS clienteNuevoEditar,
+        cl.apellido_paterno  AS apePaterno, cl.apellido_materno AS apeMaterno, cl.domicilio_particular,
+        cl.estado_civil, cl.ocupacion,cl.telefono1, cl.correo, cl.escrituraFinalizada
+
+        FROM lotes lo 
+        LEFT JOIN clientes cl ON cl.idLote = lo.idLote
         INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cond.idResidencial
         LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote
-        WHERE lo.status = 1 AND lo.idStatusLote = 2
-        AND cl.status = 1 --AND lo.idLote NOT IN (SELECT se.id_lote  FROM solicitudes_escrituracion se)
-        AND (cl.escrituraFinalizada = 0 OR (cl.revisionEscrituracion = 0 OR cl.revisionEscrituracion IS NULL))
-        AND cond.idCondominio = $idCondominio
-        AND cl.escrituraFinalizada != 1
-        GROUP BY lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cond.nombre, lo.nombreLote, lo.sup,
-        re.nombreResidencial, cl.id_cliente, cl.revisionEscrituracion, pc.idProcesoCasas
+        WHERE lo.status = 1 AND lo.idStatusLote = 2 AND (cl.revisionEscrituracion = 0 OR  cl.revisionEscrituracion IS NULL)
+        AND (cond.idCondominio = $idCondominio)
         ")->result_array();
     }
+  
+    public function checkDocument($idProceso) {
+        if($idProceso == null) {
+            return null;
+        }
+        $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND tipo = 11";
+        return $this->db->query($query)->row();
+    }
+  
 }
