@@ -1645,21 +1645,29 @@ function checkBudgetInfo($idSolicitud){
 
     public function getEscrituraDisponible($idCondominio) 
     {
-        return $this->db->query("SELECT  lo.idLote, lo.nombreLote, lo.sup, cond.nombre nombreCondominio, re.descripcion proyecto,
+        return $this->db->query("SELECT 
+        lo.idLote, 
+        lo.nombreLote, 
+        lo.sup,
+        co.nombre nombreCondominio, 
+        re.descripcion nombreResidencial, 
         CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END nombreCliente, 
-        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote, ISNULL(cl.id_cliente, 0) AS idCliente, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE 1 END AS clienteExistente,
-        re.nombreResidencial, cl.revisionEscrituracion,
-        CASE WHEN cl.id_cliente IS NOT NULL THEN CASE WHEN cl.id_cliente = lo.idCliente THEN 1 ELSE 0 END END AS clienteNuevoEditar,
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
+        CASE WHEN cl.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.telefono1 END telefono1,
+        CASE WHEN cl.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.correo END correo,
+        ISNULL(cl.id_cliente, 0) idCliente, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE 1 END AS clienteExistente, 
+        CASE WHEN cl.id_cliente IS NOT NULL THEN CASE WHEN cl.id_cliente = lo.idCliente THEN '1' ELSE '0' END END AS clienteNuevoEditar, 
         cl.apellido_paterno  AS apePaterno, cl.apellido_materno AS apeMaterno, cl.domicilio_particular,
-        cl.estado_civil, cl.ocupacion,cl.telefono1, cl.correo, cl.escrituraFinalizada
+        cl.estado_civil, cl.ocupacion, cl.escrituraFinalizada
 
         FROM lotes lo 
-        LEFT JOIN clientes cl ON cl.idLote = lo.idLote
-        INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = cond.idResidencial
+        LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente_c 
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote
         WHERE lo.status = 1 AND lo.idStatusLote = 2 AND (cl.revisionEscrituracion = 0 OR  cl.revisionEscrituracion IS NULL)
-        AND (cond.idCondominio = $idCondominio)
+        ORDER BY lo.idLote
         ")->result_array();
     }
   
