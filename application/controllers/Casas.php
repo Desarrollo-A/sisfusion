@@ -3671,7 +3671,11 @@ class Casas extends BaseController
                 "modificadoPor" => $modificadoPor,
             ];
 
-            if ($this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso)) {
+            $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
+
+            $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado,  'Se avanza a paso 9 | Comentario: ' . $comentario, 1);
+
+            if ($actualizarProceso && $agregarHistorial) {
                 $response["result"] = true;
                 $this->db->trans_commit();
             } else {
@@ -3726,18 +3730,57 @@ class Casas extends BaseController
         $this->output->set_output(json_encode($response));
     }
 
+    public function capturaContratos()
+    {
+        $this->form();
+
+        $idProceso = $this->form('id');
+        $proceso = $this->form('proceso');
+        $idCliente = $this->form('idCliente');
+        $obra = $this->form('obra');
+        $tesoreria = $this->form('tesoreria');
+        $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
+        $costoConstruccion = $this->form('costoConstruccion');
+
+        $this->db->trans_begin();
+
+        $updateData = array(
+            "procesoAnterior" => $proceso,
+            "procesoNuevo"    => $proceso,
+            "obra"  => $obra,
+            "tesoreria" => $tesoreria,
+            "serviciosArquitectonicos" => $serviciosArquitectonicos
+        );
+
+        $dataCliente = array(
+            "costo_construccion" => $costoConstruccion
+        );
+
+        $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
+
+        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "id_cliente", $idCliente);
+        
+        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, 'Se ingresaron la captura de contratos', 1);
+
+        // Verificar todas las operaciones
+        if ($actualizarProceso && $updateCliente && $agregarHistorial) {
+            $response["result"] = true;
+            $this->db->trans_commit(); 
+        } else {
+            $this->db->trans_rollback(); 
+            $response["result"] = false;
+        }
+
+        $this->output->set_output(json_encode($response));
+    }
+
     public function avancePaso10()
     {
         $this->form();
 
         $idProceso = $this->form('id');
-        $idCliente = $this->form('idCliente');
         $proceso = $this->form('proceso');
         $comentario = $this->form('comentario');
-        $obra = $this->form('obra');
-        $tesoreria = $this->form('tesoreria');
-        $serviciosArquitectonicos = $this->form('serviciosArquitectonicos');
-        $costoConstruccion = $this->form('costoConstruccion');
 
         $this->db->trans_begin();
 
@@ -3754,23 +3797,25 @@ class Casas extends BaseController
             "fechaModificacion" => date("Y-m-d H:i:s"),
             "tipoMovimiento"    => $tipoMovimiento,
             "modificadoPor"     => $this->session->userdata('id_usuario'),
-            "obra"  => $obra,
-            "tesoreria" => $tesoreria,
-            "serviciosArquitectonicos" => $serviciosArquitectonicos
-        );
-
-        $dataCliente = array(
-            "costo_construccion" => $costoConstruccion
         );
 
         $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $updateData, "idProcesoCasas", $idProceso);
-
-        $updateCliente = $this->General_model->updateRecord("clientes", $dataCliente, "id_cliente", $idCliente);
         
         $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $proceso, $nuevoEstado, 'Se ingresaron la captura de contratos', 1);
 
+        $vobo = $this->CasasModel->getVobos($idProceso, 11);
+
+        if (!$vobo) {
+            $insertVobo = $this->CasasModel->insertVobo($idProceso, 11);
+
+            if (!$insertVobo) {
+                $this->db->trans_rollback(); 
+                $response["result"] = false;
+            }
+        }
+
         // Verificar todas las operaciones
-        if ($actualizarProceso && $updateCliente && $agregarHistorial) {
+        if ($actualizarProceso && $agregarHistorial && $insertVobo) {
             $response["result"] = true;
             $this->db->trans_commit(); 
         } else {
