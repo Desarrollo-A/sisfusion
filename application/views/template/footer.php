@@ -116,10 +116,7 @@
 <script type="text/javascript">
     let locale = localStorage.getItem('locale')
 
-    $.i18n().load({
-        en: '<?= base_url() ?>dist/js/jquery.i18n/langs/en.json',
-        es: '<?= base_url() ?>dist/js/jquery.i18n/langs/es.json',
-    })
+    $.i18n().load('<?= base_url() ?>dist/js/jquery.i18n/langs.json')
     .done(function() {
         $('body').i18n()
     })
