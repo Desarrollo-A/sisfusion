@@ -119,8 +119,9 @@
     $.i18n().load('<?= base_url() ?>dist/js/jquery.i18n/langs.json')
     .done(function() {
         $('body').i18n()
+        //changeLanguaje()
 
-        triggerFunctions()
+        triggerLoadFunctions()
     })
 
     $.i18n( { 
@@ -154,20 +155,35 @@
         changeIcon(new_locale)
 
         $('body').i18n()
+
+        triggerChangeFunctions()
     }
 
     _ = $.i18n
 
-    let triggers_functions = []
+    let load_functions = []
+    let change_functions = []
 
     function onLoadTranslations(callback){
         if (typeof callback === 'function') {
-            triggers_functions.push(callback)
+            load_functions.push(callback)
         }
     }
 
-    function triggerFunctions() {
-        for (let callback of triggers_functions) {
+    function onChangeTranslations(callback){
+        if (typeof callback === 'function') {
+            change_functions.push(callback)
+        }
+    }
+
+    function triggerLoadFunctions() {
+        for (let callback of load_functions) {
+            callback()
+        }
+    }
+
+    function triggerChangeFunctions() {
+        for (let callback of change_functions) {
             callback()
         }
     }
