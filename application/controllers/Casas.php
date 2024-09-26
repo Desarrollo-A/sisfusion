@@ -300,6 +300,12 @@ class Casas extends BaseController
         $this->load->view("casas/creditoBanco/tipo_proveedor");
     }
 
+    public function toda_documentacion($value='')
+    {
+        $this->load->view('template/header');
+        $this->load->view("casas/toda_documentacion");
+    }
+
     public function documentos_proveedor($proceso)
     {
         $lote = $this->CasasModel->getProceso($proceso);
