@@ -3641,7 +3641,7 @@ class Casas extends BaseController
         ];
 
         $actualizarVobo = $this->General_model->updateRecord("vobos_proceso_casas", $dataVobo, "idVobo", $vobo->idVobo);
-        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual,  'Se ada visto bueno | Comentario: ' . $comentario, 1);
+        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $procesoActual,  'Se da visto bueno | Comentario: ' . $comentario, 1);
 
         if ($actualizarVobo && $agregarHistorial) {
             $response["result"] = true;
