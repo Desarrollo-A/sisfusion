@@ -23,7 +23,7 @@
 										<div id="msg"></div>
 										<div class="toolbar">
 											<div role="tablist" id="navbartabs">
-												<select id="test" class="selectpicker select-gral" data-container="body" data-style="btn-new" title="CARPETAS" data-size="9">
+												<select id="test" class="selectpicker select-gral" data-container="body" data-style="btn-new" title="CARPETASs" data-size="9">
 												</select>
 											</div>
 										</div>

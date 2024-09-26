@@ -1,5 +1,14 @@
+
 $(document).ready(function () {
+    onLoadTranslations(function(){
+      
+
+        document.getElementById('test').title = 'your new title';
+        
+    })
+    
     $.post(`${general_base_url}index.php/asesor/getAllFoldersPDF`,  function(data) {
+
         if(data.length > 0){
             $('#navbartabs').find('#test').empty().selectpicker('refresh');
             for(var i=0; i < data.length; i++){
@@ -33,7 +42,7 @@ $(document).ready(function () {
             });
         }
         else{
-            $('#msg').append('<center><h2 style="color: #a0a0a0;font-weight: 100">No hay Carpetas disponibles</h2></center>');
+            $('#msg').append('<center><h2 style="color: #a0a0a0;font-weight: 100" data-i18n="files">No hay Carpetas disponibles</h2></center>');
         }
     }, 'json');    
 });
