@@ -1,10 +1,35 @@
 {
     "en": {
         "build-his-profile": "Build his profile",
-        "about-him": "About him"
+        "about-him": "About him",
+
+
+        "usuarios": "users",
+        "usuario":   "user",
+        "plantilla-activa":   "Users active of team",
+        "estatus": "status"
+        ,"nombre": "NAME"
+        ,"correo": "EMAIL"
+        ,"telefono":"NUMBER PHONE"
+        ,"jefe-directo":"FIRST BOSS"
+        ,"sede":"HEADQUARTERS"
+        
+
     },
     "es": {
         "build-his-profile": "Construye su perfil",
-        "about-him": "Acerca de"
+        "about-him": "Acerca de",
+
+
+        "usuarios": "usuarios",
+        "usuario":   "usuario",
+        "plantilla-activa":   "Plantilla activa",
+        "estatus": "estatus"
+        ,"nombre": "Nombre"
+        ,"correo": "CORREO"
+        ,"telefono":"TELEFÓNO"
+        ,"jefe-directo":"JEFE DIRECTO"
+        ,"sede":"SEDE"
+
     }
 }
