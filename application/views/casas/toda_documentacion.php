@@ -28,7 +28,6 @@
                                             <th>ID LOTE</th>
                                             <th>GERENTE</th>
                                             <th>ASESOR</th>
-                                            <th>NOMBRE CLIENTE</th>
                                             <th>DOCUMENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>

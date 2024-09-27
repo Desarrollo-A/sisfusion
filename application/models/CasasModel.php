@@ -2523,4 +2523,187 @@ AND vb.proyectos != 1";
         WHERE cl.idLote = $idLote AND status = 1";
         return $this->db->query($query)->row();
     }
+
+    public function getLotesOption($idCondominio){
+        $query = "SELECT 
+            lo.idLote as value, 
+            lo.nombreLote as label
+        FROM 
+            lotes lo
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idLote = lo.idLote AND pcb.status = 1
+        WHERE lo.idCondominio = $idCondominio
+        AND pcb.idProcesoCasas IS NOT NULL
+        ORDER BY lo.idLote";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentacionProcesoCasas($idLote)
+    {
+        $query = "SELECT
+            dpc.documento,
+            dpc.archivo,
+            resi.descripcion AS proyecto,
+            con.nombre AS condominio,
+            lo.nombreLote,
+            lo.idLote,
+            CASE
+                WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente,
+            CASE
+                WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+            END AS asesor,
+            CASE WHEN dpc.tipo IN (0) THEN 1 ELSE 0 END AS descargar
+        FROM
+            documentos_proceso_casas dpc
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = dpc.idProcesoCasas
+        LEFT JOIN lotes lo ON lo.idLote = pcb.idLote
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
+        WHERE pcb.idLote = $idLote
+        AND dpc.archivo IS NOT NULL";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentacionCotizaciones($idLote)
+    {
+        $query = "SELECT
+            CONCAT('COTIZACIÓN: ', cpc.nombre) AS documento,
+            cpc.archivo,
+            resi.descripcion AS proyecto,
+            con.nombre AS condominio,
+            lo.nombreLote,
+            lo.idLote,
+            CASE
+                WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente,
+            CASE
+                WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+            END AS asesor,
+            0 AS descargar
+        FROM
+            cotizacion_proceso_casas cpc
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = cpc.idProcesoCasas
+        LEFT JOIN lotes lo ON lo.idLote = pcb.idLote
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
+        WHERE pcb.idLote = $idLote
+        AND cpc.status = 1
+        AND cpc.archivo IS NOT NULL";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentacionProcesoPagos($idLote)
+    {
+        $query = "SELECT
+            dpp.documento,
+            dpp.archivo,
+            resi.descripcion AS proyecto,
+            con.nombre AS condominio,
+            lo.nombreLote,
+            lo.idLote,
+            CASE
+                WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente,
+            CASE
+                WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+            END AS asesor,
+            CASE WHEN dpp.tipo IN (6) THEN 1 ELSE 0 END AS descargar
+        FROM
+            documentos_proceso_pagos dpp
+        LEFT JOIN proceso_pagos pp ON pp.idProcesoPagos = dpp.idProcesoPagos
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN lotes lo ON lo.idLote = pcb.idLote
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
+        WHERE pcb.idLote = $idLote
+        AND dpp.archivo IS NOT NULL";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentacionAvancesComplementoPDF($idLote)
+    {
+        $query = "SELECT
+            CONCAT( 'COMPLEMENTO PDF AVANCE ', app.avance, '%' ) AS documento,
+            app.complementoPDF AS archivo,
+            resi.descripcion AS proyecto,
+            con.nombre AS condominio,
+            lo.nombreLote,
+            lo.idLote,
+            CASE
+                WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente,
+            CASE
+                WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+            END AS asesor,
+            0 AS descargar
+        FROM
+            avances_proceso_pagos app
+        LEFT JOIN proceso_pagos pp ON pp.idProcesoPagos = app.idProcesoPagos
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN lotes lo ON lo.idLote = pcb.idLote
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
+        WHERE pcb.idLote = $idLote
+        AND app.complementoPDF IS NOT NULL";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentacionAvancesComplementoXML($idLote)
+    {
+        $query = "SELECT
+            CONCAT( 'COMPLEMENTO XML AVANCE ', app.avance, '%' ) AS documento,
+            app.complementoXML AS archivo,
+            resi.descripcion AS proyecto,
+            con.nombre AS condominio,
+            lo.nombreLote,
+            lo.idLote,
+            CASE
+                WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente,
+            CASE
+                WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR'
+                ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+            END AS asesor,
+            1 AS descargar
+        FROM
+            avances_proceso_pagos app
+        LEFT JOIN proceso_pagos pp ON pp.idProcesoPagos = app.idProcesoPagos
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN lotes lo ON lo.idLote = pcb.idLote
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
+        WHERE pcb.idLote = $idLote
+        AND app.complementoPDF IS NOT NULL";
+
+        return $this->db->query($query)->result();
+    }
 }

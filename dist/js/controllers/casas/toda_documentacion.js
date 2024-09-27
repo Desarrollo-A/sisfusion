@@ -1,3 +1,77 @@
+function show_preview(data) {
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
+
+    Shadowbox.init();
+
+    Shadowbox.open({
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
+        player: "html",
+        title: `Visualizando archivo: ${data.documento}`,
+        width: 985,
+        height: 660
+    });
+}
+
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+}
+
+let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  placeholder: 'Selecciona una opción' })
+let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona una opción' })
+let filtro_lotes = new SelectFilter({ id: 'lote', label: 'Lotes',  placeholder: 'Selecciona una opción' })
+
+let filtros = new Filters({
+    id: 'table-filters',
+    filters: [
+        filtro_proyectos,
+        filtro_condominios,
+        filtro_lotes,
+    ],
+})
+
+$.ajax({
+    type: 'GET',
+    url: 'residenciales',
+    success: function (response) {
+        filtro_proyectos.setOptions(response)
+    },
+    error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+})
+
+filtro_proyectos.onChange(function(option){
+    $.ajax({
+        type: 'GET',
+        url: `condominios?proyecto=${option.value}`,
+        success: function (response) {
+            filtro_condominios.setOptions(response)
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+filtro_condominios.onChange(function(option){
+    $.ajax({
+        type: 'GET',
+        url: `lotes_option?condominio=${option.value}`,
+        success: function (response) {
+            filtro_lotes.setOptions(response)
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+filtro_lotes.onChange(function(option){
+    table.setParams({lote: option.value})
+    table.reload()
+})
+
 let buttons = [
     {
         extend: 'excelHtml5',
@@ -29,10 +103,17 @@ let columns = [
     { data: 'idLote' },
     { data: 'gerente' },
     { data: 'asesor' },
-    { data: 'cliente' },
     { data: 'documento' },
     {data: function(data) {
-        return '';
+        let view_button = ''
+
+        if(data.descargar){
+            view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+        }else{
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
+        }
+        
+        return `<div class="d-flex justify-center">${view_button}</div>`
     }}
 ]
 

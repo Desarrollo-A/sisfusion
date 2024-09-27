@@ -403,6 +403,19 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
+    public function lotes_option()
+    {
+        $idCondominio = $this->input->get('condominio');
+
+        if (!isset($idCondominio)) {
+            $this->json([]);
+        }
+
+        $lotes = $this->CasasModel->getLotesOption($idCondominio);
+
+        $this->json($lotes);
+    }
+
     public function lotesCreditoDirecto()
     {
         $data = $this->input->get();
@@ -5415,5 +5428,27 @@ class Casas extends BaseController
 
     public function ingresar_adeudo_directo()
     {
+    }
+
+    public function lista_toda_documentacion(){
+        $lote = $this->get('lote');
+
+        if(!isset($lote)){
+            return $this->json([]);
+        }
+
+        $documentos_proceso_casas = $this->CasasModel->getListaDocumentacionProcesoCasas($lote);
+        $documentos_cotizaciones = $this->CasasModel->getListaDocumentacionCotizaciones($lote);
+        $documentos_proceso_pagos = $this->CasasModel->getListaDocumentacionProcesoPagos($lote);
+        $documentos_avances_pdf = $this->CasasModel->getListaDocumentacionAvancesComplementoPDF($lote);
+        $documentos_avances_xml = $this->CasasModel->getListaDocumentacionAvancesComplementoXML($lote);
+
+        return $this->json(array_merge(
+            $documentos_proceso_casas,
+            $documentos_cotizaciones,
+            $documentos_proceso_pagos,
+            $documentos_avances_pdf,
+             $documentos_avances_xml
+        ));
     }
 }
