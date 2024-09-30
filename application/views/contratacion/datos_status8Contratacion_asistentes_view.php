@@ -146,8 +146,8 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Registro de estatus 8</h3>
-                                    <p class="card-title pl-1">(Contrato entregado al asesor para firma del cliente)</p>
+                                    <h3 class="card-title center-align" data-i18n="estatus-8">Registro de estatus 8</h3>
+                                    <p class="card-title pl-1">(Contract delivered to advisor for client's signature)</p>
                                 </div>
                                 <div class="material-datatables"> 
                                     <div class="form-group">
