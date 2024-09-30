@@ -39,8 +39,8 @@ $("#calendarioDay").change( function (){
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
-                    titleAttr: 'Registro diario',
-                    title: "Registro diario",
+                    titleAttr: `${_("registro-diario")}`,
+                    title: `${_("registro-diario")}`,
                     exportOptions: {
                         columns: [0,1, 2, 3, 4, 5, 6, 7],
                         format: {
@@ -263,8 +263,8 @@ $("#tabla_ingresar_6").ready( function(){
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Registro diario',
-                title:"Registro diario",
+                titleAttr: `${_("registro-diario")}`,
+                title:`${_("registro-diario")}`,
                 exportOptions: {
                     columns: [0,1, 2, 3, 4, 5, 6, 7],
                     format: {

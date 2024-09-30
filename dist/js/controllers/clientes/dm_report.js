@@ -45,6 +45,8 @@ $(document).on("click", "#searchByDateRange", function () {
     fillTable(3, finalBeginDate, finalEndDate, 0);
 });
 
+let consultaInformacion = _("consulta-informacion");
+
 var mktdProspectsTable;
 function fillTable(typeTransaction, beginDate, endDate, where) {
     mktdProspectsTable = $('#mktdProspectsTable').DataTable({
@@ -55,8 +57,8 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Reporte de estatus por prospecto',
-            title:'Reporte de estatus por prospecto',
+            titleAttr: `${_("descargar-excel")}`,
+            title: `${_("reporte-estatus-prospecto")}`,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
@@ -79,7 +81,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             }
         },
         columnDefs: [{
-            defaultContent: "SIN ESPECIFICAR",
+            defaultContent: `${_("sin-especificar")}`,
             targets: "_all",
             searchable: true,
             orderable: false
@@ -89,24 +91,24 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         columns:[{
             data: function(d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">VIGENTE</span><center>';
+                    return '<center><span class="label lbl-green" data-i18n="vigente">VIGENTE</span><center>';
                 } else {
-                    return '<center><span class="label lbl-warning">SIN VIGENCIA</span><center>';
+                    return '<center><span class="label lbl-warning" data-i18n="sin-vigencia">SIN VIGENCIA</span><center>';
                 }
             }
         },
         {
             data: function(d) {
                 if (d.estatus_particular == 1) { // DESCARTADO
-                    b = '<center><span class="label lbl-warning">DESCARTADO</span><center>';
+                    b = '<center><span class="label lbl-warning" data-i18n="descartado">DESCARTADO</span><center>';
                 } else if (d.estatus_particular == 2) { // INTERESADO SIN CITA
-                    b = '<center><span class="label lbl-yellow">INTERESADO EN CITA</span><center>';
+                    b = '<center><span class="label lbl-yellow" data-i18n="interesado-cita">INTERESADO EN CITA</span><center>';
                 } else if (d.estatus_particular == 3) { // CON CITA
-                    b = '<center><span class="label lbl-green">CON CITA</span><center>';
+                    b = '<center><span class="label lbl-green" data-i18n="con-cita">CON CITA</span><center>';
                 } else if (d.estatus_particular == 5) { // PAUSADO
-                    b = '<center><span class="label lbl-sky">PAUSADO</span><center>';
+                    b = '<center><span class="label lbl-sky" data-i18n="pausado">PAUSADO</span><center>';
                 } else if (d.estatus_particular == 6) { // PREVENTA
-                    b = '<center><span class="label lbl-violetChin">PREVENTA</span><center>';
+                    b = '<center><span class="label lbl-violetChin" data-i18n="preventa">PREVENTA</span><center>';
                 }
                 return b;
             }
@@ -148,7 +150,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         },
         {
             data: function(d) {
-                return '<center><button class="btn-data btn-details-grey see-comments" data-toggle="tooltip" data-placement="top" title="CONSULTA INFORMACIÓN" data-id-prospecto="' + d.id_prospecto + '"><i class="fas fa-ellipsis-h"></i></button></center>';
+                return '<center><button class="btn-data btn-details-grey see-comments" data-toggle="tooltip" data-placement="top" title="' + consultaInformacion + '" data-id-prospecto="' + d.id_prospecto + '"><i class="fas fa-ellipsis-h"></i></button></center>';
             }
         }],
         "ajax": {
