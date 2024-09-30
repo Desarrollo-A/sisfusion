@@ -49,11 +49,9 @@
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
@@ -119,6 +117,9 @@
     $.i18n().load('<?= base_url() ?>dist/js/jquery.i18n/langs.json')
     .done(function() {
         $('body').i18n()
+        //changeLanguaje()
+
+        triggerLoadFunctions()
     })
 
     $.i18n( { 
@@ -152,8 +153,39 @@
         changeIcon(new_locale)
 
         $('body').i18n()
+
+        triggerChangeFunctions()
     }
 
     _ = $.i18n
+
+
+
+    let load_functions = []
+    let change_functions = []
+
+    function onLoadTranslations(callback){
+        if (typeof callback === 'function') {
+            load_functions.push(callback)
+        }
+    }
+
+    function onChangeTranslations(callback){
+        if (typeof callback === 'function') {
+            change_functions.push(callback)
+        }
+    }
+
+    function triggerLoadFunctions() {
+        for (let callback of load_functions) {
+            callback()
+        }
+    }
+
+    function triggerChangeFunctions() {
+        for (let callback of change_functions) {
+            callback()
+        }
+    }
 
 </script>
