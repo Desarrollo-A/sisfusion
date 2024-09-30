@@ -237,7 +237,7 @@
     }
 
     function changeSelects() {
-        $('select').each(function (i) {
+        $('select.selectpicker').each(function (i) {
             let id = $(this).data('i18n')
 
             if(id){
@@ -248,6 +248,8 @@
                 let div = parent.children('button').children('span.filter-option')
 
                 div.html(title)
+
+                $(this).attr('title', title)
             }
         })
     }
