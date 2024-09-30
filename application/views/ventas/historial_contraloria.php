@@ -185,7 +185,7 @@
                                             <div class="encabezadoBox">
                                                 <div class="row">
                                                     <h3 class="card-title center-align" data-i18n="historial-canceladas">Historial canceladas</h3>
-                                                    <p class="card-title pl-1"><span data-i18n="listado-pago-aplicados-lotes-cancelados">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con recisión)</span>
+                                                    <p class="card-title pl-1"><span data-i18n="listado-pago-aplicados-lotes-cancelados">(Listado de todos los pagos aplicados, en proceso de lotes cancelados con rescisión)</span>
                                                         <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
                                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                                         </a>
@@ -268,16 +268,16 @@
                                                         <table class="table-striped table-hover hide" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
                                                             <thead>
                                                                 <tr>
-                                                                <th><span data-i18n="id-pago">ID PAGO</span></th>
-                                                                <th><span data-i18n="reference">REFERENCIA</span></th>
-                                                                <th><span data-i18n="nombre">NOMBRE</span></th>
-                                                                <th><span data-i18n="sede">SEDE</span></th>
-                                                                <th><span data-i18n="forma-pago">FORMA DE PAGO</span></th>
-                                                                <th><span data-i18n="total-comision">TOTAL DE LA COMISIÓN</span></th>
-                                                                <th><span data-i18n="impuesto">IMPUESTO</span></th>
-                                                                <th><span data-i18n="%-comision">% COMISIÓN</span></th>
-                                                                <th><span data-i18n="estatus">ESTATUS</span></th>
-                                                                <th><span data-i18n="acciones">ACCIONES</span></th>
+                                                                    <th><span data-i18n="id-pago">ID PAGO</span></th>
+                                                                    <th><span data-i18n="reference">REFERENCIA</span></th>
+                                                                    <th><span data-i18n="nombre">NOMBRE</span></th>
+                                                                    <th><span data-i18n="sede">SEDE</span></th>
+                                                                    <th><span data-i18n="forma-pago">FORMA DE PAGO</span></th>
+                                                                    <th><span data-i18n="total-comision">TOTAL DE LA COMISIÓN</span></th>
+                                                                    <th><span data-i18n="impuesto">IMPUESTO</span></th>
+                                                                    <th><span data-i18n="%-comision">% COMISIÓN</span></th>
+                                                                    <th><span data-i18n="estatus">ESTATUS</span></th>
+                                                                    <th><span data-i18n="acciones">ACCIONES</span></th>
                                                                 </tr>
                                                             </thead>
                                                         </table>

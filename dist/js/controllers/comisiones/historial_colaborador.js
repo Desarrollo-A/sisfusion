@@ -140,22 +140,25 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
 
 
     asignarValorColumnasDT("tabla_historialGral");
-    $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        if (!excluir_column.includes(title)) {
-            columnas_datatable.tabla_historialGral.titulos_encabezados.push(title);
-            columnas_datatable.tabla_historialGral.num_encabezados.push(columnas_datatable.tabla_historialGral.titulos_encabezados.length-1);
-        }
-        let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
-        if (title !== '') {
-            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
-            $( 'input', this ).on('keyup change', function () {
-                if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_historialGral').DataTable().column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
+    // $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
+    //     var title = $(this).text();
+    //     if (!excluir_column.includes(title)) {
+    //         columnas_datatable.tabla_historialGral.titulos_encabezados.push(title);
+    //         columnas_datatable.tabla_historialGral.num_encabezados.push(columnas_datatable.tabla_historialGral.titulos_encabezados.length-1);
+    //     }
+    //     let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+    //     if (title !== '') {
+    //         $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+    //         $( 'input', this ).on('keyup change', function () {
+    //             if ($('#tabla_historialGral').DataTable().column(i).search() !== this.value ) {
+    //                 $('#tabla_historialGral').DataTable().column(i).search(this.value).draw();
+    //             }
+    //         });
+    //     }
+    // });
+
+
+    construirHead("tabla_historialGral")
 
     $('#tabla_historialGral').removeClass('hidden');
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
@@ -355,22 +358,24 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
 
 function getAssimilatedCancelacion(proyecto, condominio){
     asignarValorColumnasDT("tabla_comisiones_canceladas");
-    $('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        if (!excluir_column.includes(title)) {
-            columnas_datatable.tabla_comisiones_canceladas.titulos_encabezados.push(title);
-            columnas_datatable.tabla_comisiones_canceladas.num_encabezados.push(columnas_datatable.tabla_comisiones_canceladas.titulos_encabezados.length-1);
-        }
-        let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
-        if (title !== '') {
-            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
-            $( 'input', this ).on('keyup change', function () {
-                if ($('#tabla_comisiones_canceladas').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_comisiones_canceladas').DataTable().column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
+    // $('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
+    //     var title = $(this).text();
+    //     if (!excluir_column.includes(title)) {
+    //         columnas_datatable.tabla_comisiones_canceladas.titulos_encabezados.push(title);
+    //         columnas_datatable.tabla_comisiones_canceladas.num_encabezados.push(columnas_datatable.tabla_comisiones_canceladas.titulos_encabezados.length-1);
+    //     }
+    //     let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+    //     if (title !== '') {
+    //         $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+    //         $( 'input', this ).on('keyup change', function () {
+    //             if ($('#tabla_comisiones_canceladas').DataTable().column(i).search() !== this.value ) {
+    //                 $('#tabla_comisiones_canceladas').DataTable().column(i).search(this.value).draw();
+    //             }
+    //         });
+    //     }
+    // });
+
+    construirHead("tabla_comisiones_canceladas");
 
     $("#tabla_comisiones_canceladas").prop("hidden", false);
     tabla_historialGral3 = $("#tabla_comisiones_canceladas").DataTable({
@@ -692,22 +697,24 @@ $(document).on('click', '.ver-info-asesor', function(){
 
 function tableComisionesSuma(anio){
     asignarValorColumnasDT("tabla_comisiones_suma");
-    $('#tabla_comisiones_suma thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        if (!excluir_column.includes(title)) {
-            columnas_datatable.tabla_comisiones_suma.titulos_encabezados.push(title);
-            columnas_datatable.tabla_comisiones_suma.num_encabezados.push(columnas_datatable.tabla_comisiones_suma.titulos_encabezados.length-1);
-        }
-        let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
-        if (title !== '') {
-            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
-            $( 'input', this ).on('keyup change', function () {
-                if ($('#tabla_comisiones_suma').DataTable().column(i).search() !== this.value ) {
-                    $('#tabla_comisiones_suma').DataTable().column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
+    // $('#tabla_comisiones_suma thead tr:eq(0) th').each( function (i) {
+    //     var title = $(this).text();
+    //     if (!excluir_column.includes(title)) {
+    //         columnas_datatable.tabla_comisiones_suma.titulos_encabezados.push(title);
+    //         columnas_datatable.tabla_comisiones_suma.num_encabezados.push(columnas_datatable.tabla_comisiones_suma.titulos_encabezados.length-1);
+    //     }
+    //     let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+    //     if (title !== '') {
+    //         $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+    //         $( 'input', this ).on('keyup change', function () {
+    //             if ($('#tabla_comisiones_suma').DataTable().column(i).search() !== this.value ) {
+    //                 $('#tabla_comisiones_suma').DataTable().column(i).search(this.value).draw();
+    //             }
+    //         });
+    //     }
+    // });
+
+    construirHead("tabla_comisiones_suma");
 
     $('#tabla_comisiones_suma').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
@@ -856,17 +863,19 @@ function asignarValorColumnasDT(nombre_datatable) {
 }
 
 let titulosHistorialDescuentos = [];
-$('#tablaHistorialDescuentos thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulosHistorialDescuentos.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    $('input', this).on('keyup change', function () {
-        if ($('#tablaHistorialDescuentos').DataTable().column(i).search() !== this.value) {
-            $('#tablaHistorialDescuentos').DataTable().column(i).search(this.value).draw();
-        }
-    });
-	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-});
+// $('#tablaHistorialDescuentos thead tr:eq(0) th').each(function (i) {
+//     var title = $(this).text();
+//     titulosHistorialDescuentos.push(title);
+//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+//     $('input', this).on('keyup change', function () {
+//         if ($('#tablaHistorialDescuentos').DataTable().column(i).search() !== this.value) {
+//             $('#tablaHistorialDescuentos').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+// 	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+// });
+
+construirHead("tablaHistorialDescuentos");
 
 $("#tipo_historial_casas").on("change", function(){
     seleccion = $(this).val();
@@ -1061,7 +1070,7 @@ $(document).ready(function () {
 
     if(usuario_id !=3){
     var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
-    $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+    $("#tablaHistorialDescuentos").removeClass('hide');
     consultarHistorialDescuentos(enlace)
     }
 
