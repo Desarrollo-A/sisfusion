@@ -236,6 +236,24 @@
         })
     }
 
+    function changeSelects() {
+        $('select').each(function (i) {
+            let id = $(this).data('i18n')
+
+            if(id){
+                let title = _(id)
+
+                let parent = $(this).parent()
+
+                let div = parent.children('button').children('span.filter-option')
+
+                div.html(title)
+            }
+        })
+    }
+
+    onLoadTranslations(changeSelects)
+    onChangeTranslations(changeSelects)
     onLoadTranslations(changeButtonTooltips)
     onChangeTranslations(changeButtonTooltips)
 
