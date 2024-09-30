@@ -222,4 +222,21 @@
         onChangeTranslations(translatePlaceholder)
     }
 
+    function changeButtonTooltips() {
+        $('button').each(function (i) {
+            let id = $(this).data('i18n-tooltip')
+
+            console.log(id)
+
+            if(id){
+                let title = _(id)
+
+                $(this).attr('data-original-title', title)
+            }
+        })
+    }
+
+    onLoadTranslations(changeButtonTooltips)
+    onChangeTranslations(changeButtonTooltips)
+
 </script>
