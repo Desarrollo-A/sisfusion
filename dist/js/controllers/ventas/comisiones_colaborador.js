@@ -207,12 +207,16 @@ var tr;
 $("#tabla_nuevas_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_nuevas_comisiones");
     $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
+        console.log(i)
+        console.log($(this).attr("data-prueba"))
+       // console.log($(this).attr("data-i18n"))
+       console.log($(this).text());
         var title = $(this).text();
         columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
         columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         if (title !== '') {
-            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_nuevas" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+            $(this).html(`<input data-toggle="tooltip_nuevas" data-i18n="${_($(this).attr("data-prueba"))}" data-placement="top" title="${_($(this).attr("data-prueba"))}" placeholder="${_($(this).attr("data-prueba"))}" ${readOnly}/>`);
             $('input', this).on('keyup change', function () {
                 if (tabla_nuevas.column(i).search() !== this.value) {
                     tabla_nuevas.column(i).search(this.value).draw();
@@ -249,8 +253,8 @@ $("#tabla_nuevas_comisiones").ready(function () {
             extend: 'excelHtml5',
             text: `<i class="fa fa-file-excel-o" aria-hidden="true"></i>`,
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'REPORTE COMISIONES NUEVAS',
+            titleAttr: _("descargar-excel"),
+            title: _("descargar-excel"),
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11],
                 format: {
@@ -261,7 +265,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             },
         },
         {
-            text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
+            text: '<i class="fa fa-paper-plane"></i> <span data-i18n="solicitar-pago">SOLICITAR PAGO</span>',
             className: boton_sol_pago,
             action: function () {
                 let actual=13;
@@ -283,7 +287,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         var data = tabla_nuevas.row().data();
 
                         if(data.forma_pago != forma_pago){
-                            alerts.showNotification("top", "right", "Se detectó un cambio de forma de pago, es necesario cerrar sesión y volver a iniciar.", "warning");
+                            alerts.showNotification("top", "right", _("Se detectó un cambio de forma de pago, es necesario cerrar sesión y volver a iniciar."), "warning");
                             return false;
                         }
 
@@ -307,40 +311,40 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     $('#spiner-loader').addClass('hide');
                                     $("#totpagarPen").html(formatMoney(0));
                                     $("#all").prop('checked', false);
-                                    alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
+                                    alerts.showNotification("top", "right", _("comisiones-enviadas"), "success");
                                     tabla_nuevas.ajax.reload();
                                     tabla_revision.ajax.reload();
                                 } else if (data == 2) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
-                                    alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
+                                    alerts.showNotification("top", "right", _("fuera-de-tiempo"), "warning");
                                 } else if (data == 3) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
-                                    alerts.showNotification("top", "right", "NO HAS INGRESADO TU CÓDIGO POSTAL", "warning");
+                                    alerts.showNotification("top", "right", _("sin-cp"), "warning");
                                 } else if (data == 4) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
-                                    alerts.showNotification("top", "right", "NO HAS ACTUALIZADO CORRECTAMENTE TU CÓDIGO POSTAL", "warning");
+                                    alerts.showNotification("top", "right", _("co-no-actualizado"), "warning");
                                 } else if (data == 5) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
-                                    alerts.showNotification("top", "right", "NO CUENTAS CON UNA FORMA DE PAGO VÁLIDA", "warning");
+                                    alerts.showNotification("top", "right", _("forma-pago-invalida"), "warning");
                                 } else {
                                     $('#spiner-loader').addClass('hide');
-                                    alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
+                                    alerts.showNotification("top", "right", _("error-envio-comisiones"), "danger");
                                 }
                             },
                             error: function (data) {
                                 $('#spiner-loader').addClass('hide');
-                                alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
+                                alerts.showNotification("top", "right", _("error-envio-comisiones"), "danger");
                             }
                         });
                     }
                 }
                 else {
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al siguiente corte", "warning");
+                    alerts.showNotification("top", "right", _("proximo-corte"), "warning");
                 }
             },
             attr: {
@@ -351,7 +355,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         {
             text: '<i class="fas fa-play"></i>',
             className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+            titleAttr: _("boton-youtube-comisiones-nuevas"),
             action: function (e, dt, button, config) {
                 window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
@@ -451,65 +455,65 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     case '1': //SIN DEFINIR
                     case 1: //SIN DEFINIr
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">
+                                    <span class="label lbl-dark-blue" data-i18n="sin-definir-forma-pago">
                                         SIN DEFINIR FORMA DE PAGO
                                     </span>
                                 </p>
                                 <p>
-                                    <span class="label lbl-green">
+                                    <span class="label lbl-green" data-i18n="revisar-rh">
                                         REVISAR CON RH
                                     </span>
                                 </p>`.split("\n").join("").split("  ").join("");
                     case '2': //FACTURA
                     case 2: //FACTURA
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">
+                                    <span class="label lbl-dark-blue" data-i18n="factura">
                                         FACTURA
                                     </span>
                                 </p>
                                 <p style="font-size: .5em">
-                                    <span class="label lbl-green">
+                                    <span class="label lbl-green" data-i18n="subir-xml">
                                         SUBIR XML
                                     </span>
                                 </p>`.split("\n").join("").split("  ").join("");
                     case '3': //ASIMILADOS
                     case 3: //ASIMILADOS
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue" >
+                                    <span class="label lbl-dark-blue" data-i18n="asimilado">
                                         ASIMILADOS 
                                     </span>
                                 </p>
-                                <p style="font-size: .5em">
-                                    <span class="label lbl-green">
+                                <p style="font-size: .5em" >
+                                    <span class="label lbl-green" data-i18n="listo-aprobar">
                                         LISTA PARA APROBAR
                                     </span>
                                 </p>`.split("\n").join("").split("  ").join("");
                     case '4': //RD
                     case 4: //RD
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">
+                                    <span class="label lbl-dark-blue" data-i18n="remanente">
                                         REMANENTE DIST.
                                     </span>
                                 </p>
                                 <p style="font-size: .5em">
-                                    <span class="label lbl-green">
+                                    <span class="label lbl-green" data-i18n="listo-aprobar">
                                         LISTA PARA APROBAR
                                     </span>
                                 </p>`.split("\n").join("").split("  ").join("");
                     case '5':
                     case 5:
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
+                                    <span class="label lbl-dark-blue" data-i18n="fact-extrajero">FACTURA EXTRANJERO</span>
                                 </p>
                         `;
                     default:
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">
+                                    <span class="label lbl-dark-blue" data-i18n="doc-faltante">
                                         DOCUMENTACIÓN FALTANTE
                                     </span>
                                 </p>
                                 <p>
-                                    <span class="label lbl-green">
+                                    <span class="label lbl-green" data-i18n="revisar-rh">
                                         REVISAR CON RH
                                     </span>
                                 </p>`.split("\n").join("").split("  ").join("");
@@ -539,7 +543,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-idLote="${data.idLote}"
                     data-proceso="1"
                     class="btn-data btn-violetBoots excedente1" 
-                    title="Excedente"
+                    title="${_(boton-excedente)}"
                     data-toggle="tooltip_nuevas" 
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
@@ -550,7 +554,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-idLote="${data.idLote}"
                     data-proceso="2"
                     class="btn-data btn-violetBoots excedente1" 
-                    title="Excedente"
+                    title="${_(boton-excedente)}"
                     data-toggle="tooltip_nuevas" 
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
@@ -564,7 +568,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     data-value="${data.lote}"
                                     data-code="${data.cbbtton}"
                                     class="btn-data btn-blueMaderas consultar_logs_nuevas" 
-                                    title="DETALLES"
+                                    title="${_("detalles")}"
                                     data-toggle="tooltip_nuevas" 
                                     data-placement="top">
                                 <i class="fas fa-info"></i>
@@ -801,7 +805,7 @@ $("#tabla_revision_comisiones").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: _("descargar-excel"),
             title: 'REPORTE COMISIONES EN REVISION',
             exportOptions: {
                 columns: columnas_datatable.tabla_revision_comisiones.num_encabezados,
@@ -1005,7 +1009,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: _("descargar-excel"),
             title: 'REPORTE COMISIONES POR PAGAR',
             exportOptions: {
                 columns: columnas_datatable.tabla_pagadas_comisiones.num_encabezados,
@@ -1200,7 +1204,7 @@ $("#tabla_otras_comisiones").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: _("descargar-excel"),
             title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA',
             exportOptions: {
                 columns: columnas_datatable.tabla_otras_comisiones.num_encabezados,
@@ -1377,7 +1381,7 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             extend: 'excelHtml5',
             text: `<i class="fa fa-file-excel-o" aria-hidden="true"></i>`,
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: _("descargar-excel"),
             title: 'REPORTE DE COMISIONES PAUSADAS POR CONTRALORÍA',
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8],
