@@ -241,6 +241,19 @@
         "historial": "History",
         "rechazo-contraloria-estatus": "Rejection Comptroller status",
         "pausado": "PAUSED"
+        ,"descuento-resguardo": "Discounts of guard money."
+        ,"descuento-resguardo-descripcion" : "List of deductions applied to the Personal Custody balance."
+        ,"total-resguardo": "Total personal custody balance :"
+        ,"ingresos-extra": "Extra income :"
+        ,"saldo-disponible" : "Available balance"        
+        ,"descuentos-aplicados" : "Discounts applied:"
+        ,"creado-por": "CREATED BY"
+        ,"id-descuento": "ID DISCOUNT"
+        ,"historial-retiro" : "history of Personal Custody balance."
+        ,"nombre_usuario": "User name"
+
+
+
     },
     "es": {
 		"precio-del.lote": "Precio del lote",
@@ -313,8 +326,8 @@
         "borrar": "Borrar",
         "reporte-rechazos": "Reporte rechazos",
         "registro-diario": "Registro diario",
-        "usuario": "usuario",
-        "usuarios": "usuarios",
+        "usuario": "USUARIOS",
+        "usuarios": "USUARIOS",
         "plantilla-activa": "Plantilla activa",
         "no-files-available": "No hay carpetas disponibles",
         "estatus": "ESTATUS",
@@ -485,5 +498,22 @@
         "historial": "Historial",
         "rechazo-contraloria-estatus": "Rechazo Contraloría estatus",
         "pausado": "PAUSADO"
+        ,"descuento-resguardo": "Descuentos a resguardo,"
+        ,"descuento-resguardo-descripcion": "Listado de los descuentos aplicados al saldo de Resguardo personal."
+        ,"total-resguardo": "Total resguardo :"
+        ,"ingresos-extra": "Ingreso extra :"
+        ,"saldo-disponible": "Saldo disponible"
+        ,"descuentos-aplicados" : "Descuentos aplicados:"
+        ,"creado-por": "CREADO POR"
+        ,"id-descuento": "ID DESCUENTO"
+        ,"historial-retiro":"Historial Retiro"
+        ,"nombre_usuario":"Nombre usuario"
+
+
+
+
+
+
+
 	}
 } 

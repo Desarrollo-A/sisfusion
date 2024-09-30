@@ -43,33 +43,33 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Descuentos a resguardo.</h3>
-                                    <p class="card-title pl-1"> Listado de los descuentos aplicados al saldo de Resguardo personal.</p>
+                                    <h3 class="card-title center-align " data-i18n="descuento-resguardo">Descuentos a resguardo.</h3>
+                                    <p class="card-title pl-1" data-i18n="descuento-resguardo-descripcion"> Listado de los descuentos aplicados al saldo de Resguardo personal.</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Total resguardo:</h4>
+                                                    <h4 class="title-tot center-align m-0" data-i18n="total-resguardo">Total resguardo:</h4>
                                                     <p class="input-tot pl-1" name="totalResguardo" id="totalResguardo">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Ingresos extras:</h4>
+                                                    <h4 class="title-tot center-align m-0" data-i18n="ingresos-extra" >Ingresos extras:</h4>
                                                     <p class="input-tot pl-1" name="totalExtras" id="totalExtras">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Saldo disponible:</h4>
+                                                    <h4 class="title-tot center-align m-0" data-i18n="saldo-disponible" >Saldo disponible:</h4>
                                                     <p class="input-tot pl-1" name="totalDisponible" id="totalDisponible">$0.00</p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Descuentos aplicados:</h4>
+                                                    <h4 class="title-tot center-align m-0" data-i18n="descuentos-aplicados">Descuentos aplicados:</h4>
                                                     <p class="input-tot pl-1" name="totalAplicados" id="totalAplicados">$0.00</p>
                                                 </div>
                                             </div>
@@ -81,14 +81,14 @@
                                         <table class="table-striped table-hover" id="tabla_retiros_resguardo" name="tabla_retiros_resguardo">
                                         <thead>
                                             <tr>
-                                                <th>ID DESCUENTO</th>
-                                                <th>USUARIO</th>
-                                                <th>DESCUENTO</th>
-                                                <th>MOTIVO</th>
-                                                <th>ESTATUS</th>
-                                                <th>CREADO POR</th>
-                                                <th>FECHA DE CAPTURA</th>
-                                                <th>ACCIONES</th>
+                                                <th>id-descuento</th>
+                                                <th>usuario</th>
+                                                <th>descuento</th>
+                                                <th>motivo</th>
+                                                <th>estatus</th>
+                                                <th>creado-por</th>
+                                                <th>fecha-aplicado</th>
+                                                <th>acciones</th>
                                             </tr>
                                         </thead>
                                     </table>
