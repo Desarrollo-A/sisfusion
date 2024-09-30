@@ -30,6 +30,8 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 const STATUS_CONTRATACION = 1;
 
 $(document).ready(function() {
+    construirHead("tabla_deposito_seriedad")
+
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
         $('#tabla_deposito_seriedad').addClass('hide');
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
@@ -73,17 +75,6 @@ $('#proyecto').change( function(){
 $('#condominio').change( function(){
     $('#tabla_deposito_seriedad').removeClass('hide');
     fillDataTable($(this).val());
-});
-
-$('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    titulos_intxt.push(title);
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value) {
-            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
-        }
-    });
 });
 
 $("#tabla_deposito_seriedad").ready( function(){

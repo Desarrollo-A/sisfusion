@@ -59,7 +59,13 @@
         "ubicacion": "LOCATION",
         "estatus-actual": "CURRENT STATUS",
         "acciones": "ACTIONS",
-        "tipo": "TYPE"
+        "tipo": "TYPE",
+        "tus-ventas": "YOUR SALES",
+        "coordinador": "COORDINATOR",
+        "subdirector": "SUBDIRECTOR",
+        "director-regional": "REGIONAL DIRECTOR",
+        "director-regional-2": "REGIONAL DIRECTOR 2",
+        "fecha-apartado": "DATE OF WITHDRAWAL"
     },
     "es": {
         "build-his-profile": "Construye su perfil",
@@ -121,6 +127,12 @@
         "ubicacion": "UBICACIÓN",
         "acciones": "ACCIONES",
         "estatus-actual": "ESTATUS ACTUAL",
-        "tipo": "TIPO"
+        "tipo": "TIPO",
+        "tus-ventas": "TUS VENTAS",
+        "coordinador": "COORDINADOR",
+        "subdirector": "SUBDIRECTOR",
+        "director-regional": "DIRECTOR REGIONAL",
+        "director-regional-2": "DIRECTOR REGIONAL 2",
+        "fecha-apartado": "FECHA DE APARTADO"
     }
 }

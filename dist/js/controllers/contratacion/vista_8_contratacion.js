@@ -46,7 +46,7 @@ $(document).ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label lbl-green" data-i18n="${d.tipo_venta}">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-green" data-i18n="venta-normal">${d.tipo_venta}</span>`;
             }
         },
         {
@@ -185,6 +185,7 @@ $(document).ready(function () {
             trigger: "hover"
         });
 
+        $('body').i18n()
         // changeButtonTooltips()
     });
 

@@ -345,17 +345,17 @@
                                 <table id="tabla_deposito_seriedad" name="tabla_deposito_seriedad" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>TIPO DE PROCESO</th>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>CLIENTE</th>
-                                            <th>COORDINADOR</th>
-                                            <th>GERENTE</th>
-                                            <th>SUBDIRECTOR</th>
-                                            <th>DIRECTOR REGIONAL</th>
-                                            <th>DIRECTOR REGIONAL 2</th>
-                                            <th>FECHA DE APARTADO</th>
+                                            <th>tipo-proceso</th>
+                                            <th>proyecto</th>
+                                            <th>condominio</th>
+                                            <th>lote</th>
+                                            <th>cliente</th>
+                                            <th>coordinador</th>
+                                            <th>gerente</th>
+                                            <th>subdirector</th>
+                                            <th>director-regional</th>
+                                            <th>director-regional-2</th>
+                                            <th>fecha-apartado</th>
                                             <th>FECHA DE VENCIMIENTO</th>
                                             <th>COMENTARIO</th>
                                             <th>PROSPECTO</th>
