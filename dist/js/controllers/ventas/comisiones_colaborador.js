@@ -287,7 +287,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         var data = tabla_nuevas.row().data();
 
                         if(data.forma_pago != forma_pago){
-                            alerts.showNotification("top", "right", _("Se detectó un cambio de forma de pago, es necesario cerrar sesión y volver a iniciar."), "warning");
+                            alerts.showNotification("top", "right", _("detecto-cambio-forma-pago"), "warning");
                             return false;
                         }
 
@@ -543,7 +543,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-idLote="${data.idLote}"
                     data-proceso="1"
                     class="btn-data btn-violetBoots excedente1" 
-                    title="${_(boton-excedente)}"
+                    title="${_("boton-excedente")}"
                     data-toggle="tooltip_nuevas" 
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
@@ -554,7 +554,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-idLote="${data.idLote}"
                     data-proceso="2"
                     class="btn-data btn-violetBoots excedente1" 
-                    title="${_(boton-excedente)}"
+                    title="${_("boton-excedente")}"
                     data-toggle="tooltip_nuevas" 
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
