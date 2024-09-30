@@ -114,7 +114,7 @@ $(document).ready(function () {
                         if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="'+ registrarEstatus +'">' +
+                                'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="test">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -133,7 +133,7 @@ $(document).ready(function () {
                             || (data.idStatusContratacion == 11 && data.idMovimiento == 41)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="'+ registrarEstatus +'">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="test">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -151,7 +151,7 @@ $(document).ready(function () {
                         else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) { //RECHAZO
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="'+ registrarEstatus +'">' +
+                                'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" data-i18n-tooltip="estatus-8" title="test">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -194,6 +194,8 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
+
+        changeButtonTooltips()
     });
 
     const idStatusContratacion = [7,11];
