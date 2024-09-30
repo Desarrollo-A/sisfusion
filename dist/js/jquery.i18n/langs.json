@@ -27,13 +27,11 @@
         "ultimo-valor":"Last value",
         "campo": "Field",
         "editar-informacion": "Edit user info",
-        "nombre": "Name",
         "ap-paterno": "First surname",
         "ap-materno": "Second surname",
         "forma-pago": "Payment method",
         "correo": "E-mail",
         "telefono": "Phone number",
-        "sede": "Headquarter",
         "tipo-miembro": "Role",
         "lider": "Leader",
         "nueva-estructura": "New structure",
@@ -45,16 +43,22 @@
         "asesor-factor-humano": "Human factor advisor?",
         "estatus-8": "Status 8 register",
         "usuarios": "users",
-        "usuario":   "user",
-        "plantilla-activa":   "Users active of team",
-        "estatus": "status"
+        "plantilla-activa":   "Users active of team"
         ,"nombre": "NAME"
-        ,"correo": "EMAIL"
-        ,"telefono":"NUMBER PHONE"
         ,"jefe-directo":"FIRST BOSS"
         ,"sede":"HEADQUARTERS"
-        
-
+        ,"estatus-8-sub": "Contract delivered to advisor for client's signature"
+        ,"tipo-venta": "SALE TYPE",
+        "tipo-proceso": "PROCESS TYPE",
+        "venta-normal": "common sale",
+        "proyecto": "PROJECT",
+        "condominio": "CONDOMINIUM",
+        "lote": "LOT",
+        "gerente": "MANAGER",
+        "cliente": "CUSTOMER",
+        "ubicacion": "LOCATION",
+        "estatus-actual": "CURRENT STATUS",
+        "acciones": "ACTIONS"
     },
     "es": {
         "build-his-profile": "Construye su perfil",
@@ -89,7 +93,6 @@
         "ap-materno": "Apellido materno",
         "forma-pago": "Forma de pago",
         "correo": "Correo electrónico",
-        "telefono": "Teléfono celular",
         "sede": "Sede",
         "tipo-miembro": "Tipo de miembro",
         "lider": "Líder",
@@ -102,13 +105,20 @@
         "asesor-factor-humano": "¿Asesor factor humano?",
         "estatus-8": "Registro estatus 8",
         "usuarios": "usuarios",
-        "usuario":   "usuario",
-        "plantilla-activa":   "Plantilla activa",
-        "estatus": "estatus"
-        ,"nombre": "Nombre"
-        ,"correo": "CORREO"
+        "plantilla-activa":   "Plantilla activa"
         ,"telefono":"TELEFÓNO"
         ,"jefe-directo":"JEFE DIRECTO"
-        ,"sede":"SEDE"
+        ,"estatus-8-sub": "Contrato entregado al asesor para firma de cliente",
+        "tipo-venta": "TIPO DE VENTA",
+        "tipo-proceso": "TIPO DE PROCESO",
+        "venta-normal": "venta normal",
+        "proyecto": "PROYECTO",
+        "condominio": "CONDOMINIO",
+        "lote": "LOTE",
+        "gerente": "GERENTE",
+        "cliente": "CLIENTE",
+        "ubicacion": "UBICACIÓN",
+        "acciones": "ACCIONES",
+        "estatus-actual": "ESTATUS ACTUAL"
     }
 }

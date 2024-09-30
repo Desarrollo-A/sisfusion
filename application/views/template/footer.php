@@ -186,4 +186,38 @@
         }
     }
 
+    function construirHead(tabla){
+        let titulos = []
+
+        $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
+            var id = $(this).text();
+            
+            titulos.push(id);
+            // console.log(id)
+
+            if(id){
+                title = _(id)
+                // console.log(title)
+
+                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
+                $('input', this).on('keyup change', function () {
+                    if (tabla_6.column(i).search() !== this.value) {
+                        tabla_6.column(i).search(this.value).draw();
+                    }
+                });
+            }
+        });
+
+        function translatePlaceholder(){
+                for(titulo of titulos){
+                    if(titulo !== ''){
+                        $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                    }
+                }
+            }
+
+        onLoadTranslations(translatePlaceholder)
+        onChangeTranslations(translatePlaceholder)
+    }
+
 </script>

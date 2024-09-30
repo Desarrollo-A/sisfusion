@@ -5,19 +5,17 @@ var getInfo4 = new Array(7);
 var getInfo5 = new Array(7);
 var getInfo6 = new Array(7);
 
-let titulos = [];
+var registrarEstatus = '';
+
 $(document).ready(function () {
-    $('#Jtabla thead tr:eq(0) th').each(function (i) {
-        if (i != 0) {
-            var title = $(this).text();
-            titulos.push(title);
-            $(this).html('<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if (tabla_6.column(i).search() !== this.value) {
-                    tabla_6.column(i).search(this.value).draw();
-                }
-            });
-        }
+    construirHead("Jtabla")
+    
+    onLoadTranslations(function(){
+        registrarEstatus = _("estatus-8");
+    });
+
+    onChangeTranslations(function(){
+        registrarEstatus = _("estatus-8");
     });
 
     tabla_6 = $("#Jtabla").DataTable({
@@ -58,7 +56,7 @@ $(document).ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-green" data-i18n="${d.tipo_venta}">${d.tipo_venta}</span>`;
             }
         },
         {
@@ -116,7 +114,7 @@ $(document).ready(function () {
                         if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="'+ registrarEstatus +'">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -135,7 +133,7 @@ $(document).ready(function () {
                             || (data.idStatusContratacion == 11 && data.idMovimiento == 41)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="'+ registrarEstatus +'">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -153,7 +151,7 @@ $(document).ready(function () {
                         else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) { //RECHAZO
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="'+ registrarEstatus +'">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
