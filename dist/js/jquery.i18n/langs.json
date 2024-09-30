@@ -88,7 +88,7 @@
         "vigente": "CURRENT",
         "build-his-profile": "Build his profile",
         "about-him": "About",
-        "estadok": "State",
+        "estado": "State",
         "sin-vigencia": "NOT IN FORCE",
         "descartado": "DISCARDED",
         "interesado-cita": "INTERESTED IN APPOINTMENT",
@@ -271,7 +271,12 @@
         "comentario-requerido":"Commentary is required.",
         "subdirector-requerido":"Commentary is required.",
         "tipo-proceso": "PROCESS TYPE",
-        "fecha-vencimiento":"EXPIRATION DATE"
+        "fecha-vencimiento":"EXPIRATION DATE",
+        "etapa":"STAGE",
+        "creacion":"CREATION",
+        "vencimiento":"VENCIMIENTO",
+        "ultima-modificacion":"LAST MODIFICATION",
+        "estatus-contratacion":"CONTRACTING STATUS"
     },
     "es": {
         "precio-del.lote": "Precio del lote",
@@ -362,7 +367,7 @@
         "vigente": "VIGENTE",
         "build-his-profile": "Construye su perfil",
         "about-him": "Acerca de",
-        "estadok": "Estado",
+        "estado": "Estado",
         "sin-vigencia": "SIN VIGENCIA",
         "descartado": "DESCARTADO",
         "interesado-cita": "INTERESADO EN CITA",
@@ -546,6 +551,11 @@
         "comentario-requerido":"El comentario es requerido.",
         "subdirector-requerido":"El subdirector es requerido.",
         "tipo-proceso": "TIPO DE PROCESO",
-        "fecha-vencimiento":"FECHA DE VENCIMIENTO"
+        "fecha-vencimiento":"FECHA DE VENCIMIENTO",
+        "etapa":"ETAPA",
+        "creacion":"CREACIÓN",
+        "vencimiento":"EXPIRY",
+        "ultima-modificacion":"ÚLTIMA MODIFICACIÓN",
+        "estatus-contratacion":"ESTATUS CONTRATACIÓN"
     }
 }
