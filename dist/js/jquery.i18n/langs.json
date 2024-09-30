@@ -43,7 +43,18 @@
         "nombre-usuario": "Username",
         "asesor-simbolico": "Symbolic advisor?",
         "asesor-factor-humano": "Human factor advisor?",
-        "estatus-8": "Status 8 register"
+        "estatus-8": "Status 8 register",
+        "usuarios": "users",
+        "usuario":   "user",
+        "plantilla-activa":   "Users active of team",
+        "estatus": "status"
+        ,"nombre": "NAME"
+        ,"correo": "EMAIL"
+        ,"telefono":"NUMBER PHONE"
+        ,"jefe-directo":"FIRST BOSS"
+        ,"sede":"HEADQUARTERS"
+        
+
     },
     "es": {
         "build-his-profile": "Construye su perfil",
@@ -89,6 +100,15 @@
         "nombre-usuario": "Nombre de usuario",
         "asesor-simbolico": "¿Asesor simbólico?",
         "asesor-factor-humano": "¿Asesor factor humano?",
-        "estatus-8": "Registro estatus 8"
+        "estatus-8": "Registro estatus 8",
+        "usuarios": "usuarios",
+        "usuario":   "usuario",
+        "plantilla-activa":   "Plantilla activa",
+        "estatus": "estatus"
+        ,"nombre": "Nombre"
+        ,"correo": "CORREO"
+        ,"telefono":"TELEFÓNO"
+        ,"jefe-directo":"JEFE DIRECTO"
+        ,"sede":"SEDE"
     }
 }
