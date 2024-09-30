@@ -158,22 +158,22 @@
                                                     <table class="table-striped table-hover hidden" id="tabla_historialGral" name="tabla_historialGral">
                                                         <thead>
                                                             <tr>
-                                                               <th><span data-i18n="id">ID</span></th>
-                                                                <th><span data-i18n="proyectos">PROYECTO</span></th>
-                                                                <th><span data-i18n="condominio">CONDOMINIO</span></th>
-                                                                <th><span data-i18n="lote">LOTE</span></th>
-                                                                <th><span data-i18n="referencia">REFERENCIA</span></th>
+                                                               <th>id</th>
+                                                                <th>proyectos</th>
+                                                                <th>condominio</th>
+                                                                <th>lote</th>
+                                                                <th>referencia</th>
                                                                 <th id="titulo_precio"></th>
-                                                                <th><span data-i18n="total-comision">TOTAL DE LA COMISIÓN</span></th>
-                                                                <th><span data-i18n="pago-cliente">PAGO DEL CLIENTE</span></th>
-                                                                <th><span data-i18n="dispersado">DISPERSADO</span></th>
-                                                                <th><span data-i18n="pagado">PAGADO</span></th>
-                                                                <th><span data-i18n="pendiente">PENDIENTE</span></th>
-                                                                <th><span data-i18n="usuario">USUARIO</span></th>
-                                                                <th><span data-i18n="position">PUESTO</span></th>
-                                                                <th><span data-i18n="detalles">DETALLE</span></th>
-                                                                <th><span data-i18n="estatus">ESTATUS</span></th>
-                                                                <th><span data-i18n="acciones">ACCIONES</span></th>
+                                                                <th>total-comision</th>
+                                                                <th>pago-cliente</th>
+                                                                <th>dispersado</th>
+                                                                <th>pagado</th>
+                                                                <th>pendiente</th>
+                                                                <th>usuario</th>
+                                                                <th>position</th>
+                                                                <th>detalles</th>
+                                                                <th>estatus</th>
+                                                                <th>acciones</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -221,22 +221,22 @@
                                                     <table class="table-striped table-hover hide" id="tabla_comisiones_canceladas" name="tabla_comisiones_canceladas">
                                                         <thead>
                                                             <tr>
-                                                                <th><span data-i18n="id">ID</span></th>
-                                                                <th><span data-i18n="proyectos">PROYECTO</span></th>
-                                                                <th><span data-i18n="condominio">CONDOMINIO</span></th>
-                                                                <th><span data-i18n="lote">LOTE</span></th>
-                                                                <th><span data-i18n="referencia">REFERENCIA</span></th>
-                                                                <th><span data-i18n="precio-del-lote">PRECIO DEL LOTE</span></th>
-                                                                <th><span data-i18n="total-comision">TOTAL DE LA COMISIÓN</span></th>
-                                                                <th><span data-i18n="pago-cliente">PAGO DEL CLIENTE</span></th>
-                                                                <th><span data-i18n="dispersado">DISPERSADO</span></th>
-                                                                <th><span data-i18n="pagado">PAGADO</span></th>
-                                                                <th><span data-i18n="pendiente">PENDIENTE</span></th>
-                                                                <th><span data-i18n="usuario">USUARIO</span></th>
-                                                                <th><span data-i18n="position">PUESTO</span></th>
-                                                                <th><span data-i18n="detalles">DETALLE</span></th>
-                                                                <th><span data-i18n="estatus">ESTATUS</span></th>
-                                                                <th><span data-i18n="acciones">ACCIONES</span></th>
+                                                                <th>id</th>
+                                                                <th>proyectos</th>
+                                                                <th>condominio</th>
+                                                                <th>lote</th>
+                                                                <th>referencia</th>
+                                                                <th>precio-del-lote</th>
+                                                                <th>total-comision</th>
+                                                                <th>pago-cliente</th>
+                                                                <th>dispersado</th>
+                                                                <th>pagado</th>
+                                                                <th>pendiente</th>
+                                                                <th>usuario</th>
+                                                                <th>position</th>
+                                                                <th>detalles</th>
+                                                                <th>estatus</th>
+                                                                <th>acciones</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -268,16 +268,16 @@
                                                         <table class="table-striped table-hover hide" id="tabla_comisiones_suma" name="tabla_comisiones_suma">
                                                             <thead>
                                                                 <tr>
-                                                                    <th><span data-i18n="id-pago">ID PAGO</span></th>
-                                                                    <th><span data-i18n="reference">REFERENCIA</span></th>
-                                                                    <th><span data-i18n="nombre">NOMBRE</span></th>
-                                                                    <th><span data-i18n="sede">SEDE</span></th>
-                                                                    <th><span data-i18n="forma-pago">FORMA DE PAGO</span></th>
-                                                                    <th><span data-i18n="total-comision">TOTAL DE LA COMISIÓN</span></th>
-                                                                    <th><span data-i18n="impuesto">IMPUESTO</span></th>
-                                                                    <th><span data-i18n="%-comision">% COMISIÓN</span></th>
-                                                                    <th><span data-i18n="estatus">ESTATUS</span></th>
-                                                                    <th><span data-i18n="acciones">ACCIONES</span></th>
+                                                                    <th>id-pago</th>
+                                                                    <th>reference</th>
+                                                                    <th>nombre</th>
+                                                                    <th>sede</th>
+                                                                    <th>forma-pago</th>
+                                                                    <th>total-comision</th>
+                                                                    <th>impuesto</th>
+                                                                    <th>%-comision</th>
+                                                                    <th>estatus</th>
+                                                                    <th>acciones</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>
@@ -308,16 +308,16 @@
                                                         <table class="table-striped table-hover hide" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
                                                             <thead>
                                                                 <tr>
-                                                                    <th><span data-i18n="id-pago">ID PAGO</span></th>
-                                                                    <th><span data-i18n="proyecto">PROYECTO</span></th>
-                                                                    <th><span data-i18n="condominio">CONDOMINIO</span></th>
-                                                                    <th><span data-i18n="lote">LOTE</span></th>
-                                                                    <th><span data-i18n="referencia">REFERENCIA</span></th>
-                                                                    <th><span data-i18n="precio-del-lote">PRECIO DEL LOTE</span></th>
-                                                                    <th><span data-i18n="total-comision">TOTAL DE LA COMISIÓN</span></th>
-                                                                    <th><span data-i18n="monto-descuento">MONTO DESCUENTO</span></th>
-                                                                    <th><span data-i18n="tipo">TIPO</span></th>
-                                                                    <th><span data-i18n="acciones">ACCIONES</span></th>
+                                                                    <th>id-pago</th>
+                                                                    <th>proyecto</th>
+                                                                    <th>condominio</th>
+                                                                    <th>lote</th>
+                                                                    <th>referencia</th>
+                                                                    <th>precio-del-lote</th>
+                                                                    <th>total-comision</th>
+                                                                    <th>monto-descuento</th>
+                                                                    <th>tipo</th>
+                                                                    <th>acciones</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>
