@@ -166,26 +166,85 @@
 
     function onLoadTranslations(callback){
         if (typeof callback === 'function') {
+            console.log('Agregando on load...');
             load_functions.push(callback)
+        }else {
+            console.log("Error con onLoadTranslations");
         }
     }
 
     function onChangeTranslations(callback){
         if (typeof callback === 'function') {
+            console.log('Se agregó onchange...');
             change_functions.push(callback)
+        }else {
+            console.log("Error con onChangeTranslations");
         }
     }
 
     function triggerLoadFunctions() {
+        console.log('Cargando idioma...')
         for (let callback of load_functions) {
             callback()
         }
     }
 
     function triggerChangeFunctions() {
+        console.log('Cambiando idioma...')
         for (let callback of change_functions) {
             callback()
         }
+    }
+
+    function stringToI18(str) {
+      // Convertir todo el string a minúsculas
+      let resultado = str.toLowerCase();
+        
+      // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
+      resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        
+      // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
+      resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
+        
+      console.log(resultado);
+      return resultado;
+    }
+
+    // const texto = "¡Hola, Mundo! ¿Esto es un ejemplo?";
+    // console.log(convertirString(texto)); // Resultado: "hola-mundo-esto-es-un-ejemplo"
+
+    function construirHead(tabla){
+        let titulos = []
+
+        $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
+            var id = $(this).text();
+            
+            titulos.push(id);
+            // console.log(id)
+
+            if(id){
+                title = _(id)
+                // console.log(title)
+
+                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
+                $('input', this).on('keyup change', function () {
+                    if (tabla_6.column(i).search() !== this.value) {
+                        tabla_6.column(i).search(this.value).draw();
+                    }
+                });
+            }
+        });
+
+        function translatePlaceholder(){
+                for(titulo of titulos){
+                    if(titulo !== ''){
+                        $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                    }
+                }
+            }
+
+        onLoadTranslations(translatePlaceholder)
+        onChangeTranslations(translatePlaceholder)
     }
 
 </script>

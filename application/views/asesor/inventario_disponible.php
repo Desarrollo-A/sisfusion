@@ -41,7 +41,7 @@
 							</div>
 							<div class="card-content">
 								<div class="encabezadoBox">
-									<h3 class="card-title center-align">Inventario disponible</h3>
+									<h3 class="card-title center-align" data-i18n="inventario-disponible">Inventario disponible</h3>
 									<p class="card-title pl-1"></p>
 								</div>
 								<div class="toolbar">
@@ -49,19 +49,19 @@
 										<form id="formFilters">
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
 												<div class="form-group">
-													<label class="control-label">Proyecto</label>
+													<label class="control-label" data-i18n="proyecto">Proyecto</label>
 													<select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required><option value="0"> SELECCIONA TODO</option></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group  ">
-													<label class="control-label">Condominio</label>
+													<label class="control-label" data-i18n="condominio">Condominio</label>
 													<select id="filtro4" name="filtro4[]" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" multiple title="Selecciona una opción" data-size="7" data-container="body" required></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group">
-													<label class="control-label">Grupo</label>
+													<label class="control-label" data-i18n="grupo">Grupo</label>
 													<select name="filtro5" id="filtro5" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required>
 														<option value="1"> < 200m2 </option>
 														<option value="2"> >= 200 y < 300 </option>
@@ -71,26 +71,26 @@
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
-													<label class="control-label">Superficie</label>
+													<label class="control-label" data-i18n="superficie">Superficie</label>
 													<select class="selectpicker select-gral m-0" id="filtro6" name="filtro6[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple>
 													</select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
-													<label class="control-label">Precio por m<sup>2</sup></label>
+													<label class="control-label" data-i18n="precio-m2">Precio por m<sup>2</sup></label>
 													<select	class="selectpicker select-gral m-0"  id="filtro7" name="filtro7[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
-													<label class="control-label">Precio total</label>
+													<label class="control-label" data-i18n="precio-total">Precio total</label>
 													<select	class="selectpicker select-gral m-0"  id="filtro8" name="filtro8[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
-													<label class="control-label">Meses S/N</label>
+													<label class="control-label" data-i18n="meses-sin-intereses">Meses S/N</label>
 													<select	class="selectpicker select-gral m-0" id="filtro9" name="filtro9[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required multiple></select>
 												</div>
 											</div>
@@ -100,15 +100,24 @@
 								<table id="addExp" class="table-striped table-hover hide">
 									<thead>
 										<tr>
-											<th>PROYECTO</th>
-											<th>CONDOMINIO</th>
-											<th>LOTE</th>
-											<th>SUPERFICIE</th>
-											<th>PRECIO M<sup>2</sup></th>
-											<th>PRECIO TOTAL</th>
-											<th>MESES SIN INTERESES</th>
-											<th>TIPO VENTA</th>
-											<th>ACCIONES</th>
+											<th>proyecto</th>
+											<th>condominio</th>
+											<th>lote</th>
+											<th>superficie</th>
+											<th>precio-m2</sup></th>
+											<th>precio-total</th>
+											<th>meses-sin-intereses</th>
+											<th>tipo-venta</th>
+											<th>acciones</th>
+											<!-- <th data-i18n="proyecto">PROYECTO</th>
+											<th data-i18n="condominio">CONDOMINIO</th>
+											<th data-i18n="lote">LOTE</th>
+											<th data-i18n="superficie">SUPERFICIE</th>
+											<th data-i18n="precio-m2">PRECIO M<sup>2</sup></th>
+											<th data-i18n="precio-total">PRECIO TOTAL</th>
+											<th data-i18n="meses-sin-intereses">MESES SIN INTERESES</th>
+											<th data-i18n="tipo-venta">TIPO VENTA</th>
+											<th data-i18n="acciones">ACCIONES</th> -->
 										</tr>
 									</thead>
 								</table>

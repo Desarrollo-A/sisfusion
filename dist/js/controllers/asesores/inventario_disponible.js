@@ -12,6 +12,7 @@ var mesesSelect;
 var mesesSelect2;
 
 $(document).ready(function() {
+    construirHead("addExp")
     $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -230,22 +231,6 @@ $('#formFilters').on('submit', function(event){
 
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
-$('#addExp thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#addExp').DataTable().column(i).search() !== this.value) {
-            $('#addExp').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    if (title !== 'ACCIONES') {
-        titulos_encabezado.push(title);
-        num_colum_encabezado.push(i);
-    }    
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});
 
 function dataTable(ruta) {
     var table = $('#addExp').DataTable({
