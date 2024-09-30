@@ -60,7 +60,15 @@
         "fact-extranjero":"FOREIGN INVOICE",
         "doc-faltante":"MISSING DOCUMENT",
         "boton-excedente":"Excess",
-        "detalles":"DETAILS"
+        "detalles":"DETAILS",
+        "usuarios": "users",
+        "usuario":   "user",
+        "plantilla-activa":   "Users active of team"
+        ,"nombre": "NAME"
+        ,"correo": "EMAIL"
+        ,"telefono":"NUMBER PHONE"
+        ,"jefe-directo":"FIRST BOSS"
+        ,"sede":"HEADQUARTERS"
 
 
     },
@@ -125,7 +133,15 @@
         "fact-extranjero":"FACTURA EXTRANJERO",
         "doc-faltante":"DUCUMENTO FALTANTE",
         "boton-excedente":"Excedente",
-        "detalles":"DETALLES"
+        "detalles":"DETALLES",
+        "usuarios": "usuarios",
+        "usuario":   "usuario",
+        "plantilla-activa":   "Plantilla activa"
+        ,"nombre": "Nombre"
+        ,"correo": "CORREO"
+        ,"telefono":"TELEFÓNO"
+        ,"jefe-directo":"JEFE DIRECTO"
+        ,"sede":"SEDE"
         
 
 
