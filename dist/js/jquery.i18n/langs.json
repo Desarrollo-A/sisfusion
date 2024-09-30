@@ -13,8 +13,18 @@
         "superficie":"surface",
         "precio-lista":"Price list",
         "total-con-descuentos": "Total with discounts",
-        "m2": "m2"
+        "m2": "m2",
+        "usuarios": "users",
+        "usuario":   "user",
+        "plantilla-activa":   "Users active of team",
+        "estatus": "status"
+        ,"nombre": "NAME"
+        ,"correo": "EMAIL"
+        ,"telefono":"NUMBER PHONE"
+        ,"jefe-directo":"FIRST BOSS"
+        ,"sede":"HEADQUARTERS"
         
+
     },
     "es": {
         "build-his-profile": "Construye su perfil",
@@ -30,6 +40,15 @@
         "superficie":"superficie",
         "precio-lista":"Precio de lista",
         "total-con-descuentos": "Total con descuentos",
-        "m2": "m2"
+        "m2": "m2",
+        "usuarios": "usuarios",
+        "usuario":   "usuario",
+        "plantilla-activa":   "Plantilla activa",
+        "estatus": "estatus"
+        ,"nombre": "Nombre"
+        ,"correo": "CORREO"
+        ,"telefono":"TELEFÓNO"
+        ,"jefe-directo":"JEFE DIRECTO"
+        ,"sede":"SEDE"
     }
 }
