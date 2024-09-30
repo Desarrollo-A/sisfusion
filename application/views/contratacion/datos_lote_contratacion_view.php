@@ -57,12 +57,12 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaHistorialContratacion">
                                                     <thead>
                                                     <tr>
-                                                        <th <span data-i18n="lote">LOTE </span>  </span></th>
-                                                        <th <span data-i18n="estatus">ESTATUS </span></th>
-                                                        <th <span data-i18n="estatus">DETALLES </span></th>
-                                                        <th <span data-i18n="estatus">COMENTARIO </span></th>
-                                                        <th <span data-i18n="estatus">FECHA DE ESTATUS </span></th>
-                                                        <th <span data-i18n="estatus">USUARIO </span></th>
+                                                        <th>LOTE</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>DETALLES</th>
+                                                        <th>COMENTARIO</th>
+                                                        <th>FECHA DE ESTATUS</th>
+                                                        <th>USUARIO</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -79,11 +79,11 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaHistoriaLiberacion">
                                                     <thead>
                                                     <tr>
-                                                        <th <span data-i18n="lote">LOTE </span></th>
-                                                        <th <span data-i18n="estatus">PRECIO </span></th>
-                                                        <th <span data-i18n="estatus">FECHA DE LIBERACIÓN </span></th>
-                                                        <th <span data-i18n="estatus">COMENTARIO </span></th>
-                                                        <th <span data-i18n="estatus">USUARIO </span></th>
+                                                        <th>LOTE</th>
+                                                        <th>PRECIO</th>
+                                                        <th>FECHA DE LIBERACIÓN</th>
+                                                        <th>COMENTARIO</th>
+                                                        <th>USUARIO</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -100,14 +100,14 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaVentasCompartidas">
                                                     <thead>
                                                     <tr>
-                                                        <th <span data-i18n="estatus">ASESOR </span></th>
-                                                        <th <span data-i18n="estatus">COORDINADOR </span></th>
-                                                        <th <span data-i18n="estatus">GERENTE </span></th>
-                                                        <th <span data-i18n="estatus">SUBDIRECTOR </span></th>
-                                                        <th <span data-i18n="estatus">DIRECTOR REGIONAL </span></th>
-                                                        <th <span data-i18n="estatus">DIRECTOR REGIONAL 2 </span></th>
-                                                        <th <span data-i18n="estatus">FECHA DE ALTA </span></th>
-                                                        <th <span data-i18n="estatus">USUARIO </span></th>
+                                                        <th>ASESOR</th>
+                                                        <th>COORDINADOR</th>
+                                                        <th>GERENTE</th>
+                                                        <th>SUBDIRECTOR</th>
+                                                        <th>DIRECTOR REGIONAL</th>
+                                                        <th>DIRECTOR REGIONAL 2</th>
+                                                        <th>FECHA DE ALTA</th>
+                                                        <th>USUARIO</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -218,75 +218,75 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                         <table class="table-striped table-hover hide" id="tablaInventario" name="tablaInventario">
                                             <thead>
                                             <tr>
-                                                <th <span data-i18n="estatus">PROYECTO </span></th>
-                                                <th <span data-i18n="estatus">REFERENCIA </span></th>
-                                                <th <span data-i18n="estatus">MSI </span></th>
-                                                <th <span data-i18n="estatus">ASESOR </span></th>
-                                                <th <span data-i18n="estatus">COORDINADOR </span></th>
-                                                <th <span data-i18n="estatus">GERENTE </span></th>
-                                                <th <span data-i18n="estatus">SUBDIRECTOR </span></th>
-                                                <th <span data-i18n="estatus">DIRECTOR REGIONAL </span></th>
-                                                <th <span data-i18n="estatus">DIRECTOR REGIONAL 2 </span></th>
-                                                <th <span data-i18n="estatus">ESTATUS </span></th>
-                                                <th <span data-i18n="estatus">ESTATUS DE CONTRATACIÓN </span></th>
-                                                <th <span data-i18n="estatus">APARTADO </span></th>
-                                                <th <span data-i18n="estatus">COMENTARIO </span></th>
-                                                <th <span data-i18n="estatus">LUGAR DE PROSPECCIÓN </span></th><!--20-->
-                                                <th <span data-i18n="estatus">FECHA DE VALIDACIÓN ENGANCHE </span></th>
-                                                <th <span data-i18n="estatus">CANTIDAD DE ENGANCHE PAGADO </span></th>
-                                                <th <span data-i18n="estatus">ESTATUS DE LA CONTRATACIÓN </span></th>
-                                                <th <span data-i18n="estatus">CLIENTE </span></th>
-                                                <th <span data-i18n="estatus">COPROPIETARIO (S) </span></th>
-                                                <th <span data-i18n="estatus">COMENTARIO DE NEODATA </span></th>
-                                                <th <span data-i18n="estatus">FECHA DE APERTURA </span></th>
-                                                <th <span data-i18n="estatus">APARTADO DE REUBICACIÓN </span></th>
-                                                <th <span data-i18n="estatus">FECHA DE ALTA </span></th>
-                                                <th <span data-i18n="estatus">VENTA COMPARTIDA </span></th><!--30-->
-                                                <th <span data-i18n="estatus">UBICACIÓN DE LA VENTA </span></th>
-                                                <th <span data-i18n="estatus">TIPO DE PROCESO </span></th>
-                                                <th <span data-i18n="estatus">SEDE </span></th>
+                                                <th>PROYECTO</th>
+                                                <th>REFERENCIA</th>
+                                                <th>MSI</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
+                                                <th>ESTATUS</th>
+                                                <th>ESTATUS DE CONTRATACIÓN</th>
+                                                <th>APARTADO</th>
+                                                <th>COMENTARIO</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th><!--20-->
+                                                <th>FECHA DE VALIDACIÓN ENGANCHE</th>
+                                                <th>CANTIDAD DE ENGANCHE PAGADO</th>
+                                                <th>ESTATUS DE LA CONTRATACIÓN</th>
+                                                <th>CLIENTE</th>
+                                                <th>COPROPIETARIO (S)</th>
+                                                <th>COMENTARIO DE NEODATA</th>
+                                                <th>FECHA DE APERTURA</th>
+                                                <th>APARTADO DE REUBICACIÓN</th>
+                                                <th>FECHA DE ALTA</th>
+                                                <th>VENTA COMPARTIDA</th><!--30-->
+                                                <th>UBICACIÓN DE LA VENTA</th>
+                                                <th>TIPO DE PROCESO</th>
+                                                <th>SEDE</th>
 
                                                 <!--SOLO PARA POPEA Y EL OTRO SUJETO-->
-                                                <th <span data-i18n="estatus">FOLIO </span></th>
-                                                <th <span data-i18n="estatus">DOCUMENTACION ENTREGADA </span></th>
-                                                <th <span data-i18n="estatus">NOMBRE CLIENTE </span></th>
-                                                <th <span data-i18n="estatus">TEL. CASA </span></th>
-                                                <th <span data-i18n="estatus">CELULAR </span></th>
-                                                <th <span data-i18n="estatus">CORREO </span></th>
-                                                <th <span data-i18n="estatus">FECHA DE NACIMIENTO </span></th>
-                                                <th <span data-i18n="estatus">NACIONALIDAD </span></th><!--40-->
-                                                <th <span data-i18n="estatus">ORIGINARIO DE </span></th>
-                                                <th <span data-i18n="estatus">ESTADO CIVIL </span></th>
-                                                <th <span data-i18n="estatus">NOMBRE CONYUGUE </span></th>
-                                                <th <span data-i18n="estatus">REGIMEN </span></th>
-                                                <th <span data-i18n="estatus">DOM. PARTICULAR </span></th>
-                                                <th <span data-i18n="estatus">OCUPACIÓN </span></th>
-                                                <th <span data-i18n="estatus">EMPRESA EN LA QUE TRABAJA </span></th>
-                                                <th <span data-i18n="estatus">PUESTO </span></th>
-                                                <th <span data-i18n="estatus">ANTIGÜEDAD </span></th>
-                                                <th <span data-i18n="estatus">EDAD </span></th><!--50-->
-                                                <th <span data-i18n="estatus">DOM. EMPRESA </span></th>
-                                                <th <span data-i18n="estatus">TEL. EMPRESA </span></th>
-                                                <th <span data-i18n="estatus">VIVE EN CASA </span></th>
-                                                <th <span data-i18n="estatus">COPROPIETARIO </span></th>
-                                                <th <span data-i18n="estatus">NO. REFERENCIA PAGO </span></th>
-                                                <th <span data-i18n="estatus">COSTO M2 LISTA </span></th>
-                                                <th <span data-i18n="estatus">COSTO M2 FINAL </span></th>
+                                                <th>FOLIO</th>
+                                                <th>DOCUMENTACION ENTREGADA</th>
+                                                <th>NOMBRE CLIENTE</th>
+                                                <th>TEL. CASA</th>
+                                                <th>CELULAR</th>
+                                                <th>CORREO</th>
+                                                <th>FECHA DE NACIMIENTO</th>
+                                                <th>NACIONALIDAD</th><!--40-->
+                                                <th>ORIGINARIO DE</th>
+                                                <th>ESTADO CIVIL</th>
+                                                <th>NOMBRE CONYUGUE</th>
+                                                <th>REGIMEN</th>
+                                                <th>DOM. PARTICULAR</th>
+                                                <th>OCUPACIÓN</th>
+                                                <th>EMPRESA EN LA QUE TRABAJA</th>
+                                                <th>PUESTO</th>
+                                                <th>ANTIGÜEDAD</th>
+                                                <th>EDAD</th><!--50-->
+                                                <th>DOM. EMPRESA</th>
+                                                <th>TEL. EMPRESA</th>
+                                                <th>VIVE EN CASA</th>
+                                                <th>COPROPIETARIO</th>
+                                                <th>NO. REFERENCIA PAGO</th>
+                                                <th>COSTO M2 LISTA</th>
+                                                <th>COSTO M2 FINAL</th>
 
-                                                <th <span data-i18n="estatus">EN EL MUNICIPIO DE </span></th>
-                                                <th <span data-i18n="estatus">IMPORTE DE LA OFERTA </span></th>
-                                                <th <span data-i18n="estatus">IMPORTE EN LETRA </span></th><!--60-->
-                                                <th <span data-i18n="estatus">SALDO DEL DEPÓSITO </span></th>
-                                                <th <span data-i18n="estatus">APORTACIÓN MENSUAL </span></th>
-                                                <th <span data-i18n="estatus">FECHA 1RA APORTACIÓN </span></th>
-                                                <th <span data-i18n="estatus">FECHA LIQUIDACIÓN </span></th>
-                                                <th <span data-i18n="estatus">FECHA 2DA LIQUIDACIÓN </span></th>
-                                                <th <span data-i18n="estatus">REFERENCIAS PERSONALES </span></th>
-                                                <th <span data-i18n="estatus">OBSERVACIONES </span></th>
+                                                <th>EN EL MUNICIPIO DE</th>
+                                                <th>IMPORTE DE LA OFERTA</th>
+                                                <th>IMPORTE EN LETRA</th><!--60-->
+                                                <th>SALDO DEL DEPÓSITO</th>
+                                                <th>APORTACIÓN MENSUAL</th>
+                                                <th>FECHA 1RA APORTACIÓN</th>
+                                                <th>FECHA LIQUIDACIÓN</th>
+                                                <th>FECHA 2DA LIQUIDACIÓN</th>
+                                                <th>REFERENCIAS PERSONALES</th>
+                                                <th>OBSERVACIONES</th>
 
                                                 <!--SOLO PARA POPEA Y EL OTRO SUJETO END-->
-                                                <th <span data-i18n="estatus">PORCENTAJE ENGANCHE </span></th>
-                                                <th <span data-i18n="estatus">ACCIONES </span></th><!--69-->
+                                                <th>PORCENTAJE ENGANCHE</th>
+                                                <th>ACCIONES</th><!--69-->
                                             </tr>
                                             </thead>
                                         </table>
@@ -320,41 +320,41 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                         <table id="tabla_inventario_contraloria" name="tabla_inventario_contraloria" class="table-striped table-hover hide">
                                             <thead>
                                             <tr>
-                                                <th <span data-i18n="estatus">PROYECTO </span></th>
-                                                <th <span data-i18n="estatus">CONDOMINIO </span></th>
-                                                <th <span data-i18n="estatus">LOTE </span></th>
-                                                <th <span data-i18n="estatus">ID LOTE </span></th>
-                                                <th <span data-i18n="estatus">SUPERFICIE </span></th>
-                                                <th <span data-i18n="estatus">PRECIO DE LISTA </span></th>
-                                                <th <span data-i18n="estatus">TOTAL CON DESCUENTOS </span></th>
-                                                <th <span data-i18n="estatus">M2 </span></th>
-                                                <th <span data-i18n="estatus">REFERENCIA </span></th>
-                                                <th <span data-i18n="estatus">MESES SIN INTERESES </span></th>
-                                                <th <span data-i18n="estatus">ASESOR </span></th>
-                                                <th <span data-i18n="estatus">COORDINADOR </span></th>
-                                                <th <span data-i18n="estatus">GERENTE </span></th>
-                                                <th <span data-i18n="estatus">SUBDIRECTOR </span></th>
-                                                <th <span data-i18n="estatus">DIRECTOR REGIONAL </span></th>
-                                                <th <span data-i18n="estatus">DIRECTOR REGIONAL 2 </span></th>
-                                                <th <span data-i18n="estatus">ESTATUS </span></th>
-                                                <th <span data-i18n="estatus">ESTATUS DE CONTRATACION </span></th>
-                                                <th <span data-i18n="estatus">FECHA DE APARTADO </span></th>
-                                                <th <span data-i18n="estatus">COMENTARIO </span></th>
-                                                <th <span data-i18n="estatus">LUGAR DE PROSPECCIÓN </span></th>
-                                                <th <span data-i18n="estatus">FECHA DE VALIDACIÓN DEL ENGANCHE </span></th>
-                                                <th <span data-i18n="estatus">FECHA DE APERTURA </span></th>
-                                                <th <span data-i18n="estatus">CANTIDAD DEL ENGANCHE PAGADO </span></th>
-                                                <th <span data-i18n="estatus">CLIENTE </span></th>
-                                                <th <span data-i18n="estatus">COMENTARIO DE NEODATA </span></th>
-                                                <th <span data-i18n="estatus">FECHA APERTURA </span></th>
-                                                <th <span data-i18n="estatus">APARTADO DE REUBICACIÓN </span></th>
-                                                <th <span data-i18n="estatus">FECHA ALTA </span></th>
-                                                <th <span data-i18n="estatus">VENTA COMPARTIDA </span></th>
-                                                <th <span data-i18n="estatus">UBICACIÓN DE LA VENTA </span></th>
-                                                <th <span data-i18n="estatus">TIPO PROCESO </span></th>
-                                                <th <span data-i18n="estatus">REUBICACIÓN </span></th>
-                                                <th <span data-i18n="estatus">FECHA DE REUBICACIÓN </span></th>
-                                                <th <span data-i18n="estatus">SEDE </span></th>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE</th>
+                                                <th>SUPERFICIE</th>
+                                                <th>PRECIO DE LISTA</th>
+                                                <th>TOTAL CON DESCUENTOS</th>
+                                                <th>M2</th>
+                                                <th>REFERENCIA</th>
+                                                <th>MESES SIN INTERESES</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
+                                                <th>ESTATUS</th>
+                                                <th>ESTATUS DE CONTRATACION</th>
+                                                <th>FECHA DE APARTADO</th>
+                                                <th>COMENTARIO</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th>
+                                                <th>FECHA DE VALIDACIÓN DEL ENGANCHE</th>
+                                                <th>FECHA DE APERTURA</th>
+                                                <th>CANTIDAD DEL ENGANCHE PAGADO</th>
+                                                <th>CLIENTE</th>
+                                                <th>COMENTARIO DE NEODATA</th>
+                                                <th>FECHA APERTURA</th>
+                                                <th>APARTADO DE REUBICACIÓN</th>
+                                                <th>FECHA ALTA</th>
+                                                <th>VENTA COMPARTIDA</th>
+                                                <th>UBICACIÓN DE LA VENTA</th>
+                                                <th>TIPO PROCESO</th>
+                                                <th>REUBICACIÓN</th>
+                                                <th>FECHA DE REUBICACIÓN</th>
+                                                <th>SEDE</th>
                                             </tr>
                                             </thead>
                                         </table>
