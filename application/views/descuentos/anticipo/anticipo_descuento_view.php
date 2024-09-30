@@ -60,8 +60,9 @@
                         <div class="card">
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="h3 card-title center-align">Adelantos</h3>
-                                    <p class="card-title pl-1">
+                                <h3 class="h3 card-title center-align">
+                                    <span data-i18n="Adelantos">Adelantos</span></h3>
+                                    <p class="card-title pl-1" data-i18n="opcion-proceso-solicitud">
                                         (Seleccionar una opción para iniciar tu proceso de solicitud o mostrar tus procesos)
                                     </p>
                                     <div class="col-lg-2">

@@ -100,8 +100,10 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Anticipos </h3>
-                                <p class="card-title pl-1">(Anticipos Proceso subdirector)</p>
+                                <h3 class="card-title center-align" data-i18n="Adelantos">Anticipos </h3>
+                                <p class="card-title pl-1" data-i18n="anticipos-subdirector">
+                                (Anticipos Proceso subdirector)
+                             </p>
                             </div>
                             <div  class="toolbar">
                                 <div class="row">
@@ -109,23 +111,19 @@
                             </div>
                             <div class="material-datatables">
                                 <table id="tabla_anticipo_revision" name="tabla_anticipo_revision" class="table-striped table-hover">
-                                    <thead>
+                                    <thead>               
                                         <tr>
-                                            
-                                            <th>ID ANTICIPO</th>
-                                            <th>USUARIO</th>
-
-                                            <th>PUESTO</th>
-                                            <th>SEDE</th>
-                                            <th>MONTO</th>
-
-                                            <th>COMENTARIO</th>
-                                            <th>COMENTARIO</th>
-                                            <!-- <th>ESTATUS</th> -->
-                                            <th>PROCESO</th>
-                                            <th>PRIORIDAD</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
+                                            <th data-i18n="id-anticipo">ID ANTICIPO</th>
+                                            <th data-i18n="usuario">USUARIO</th>
+                                            <th data-i18n="puesto">PUESTO</th>
+                                            <th data-i18n="sede">SEDE</th>
+                                            <th data-i18n="monto">MONTO</th>
+                                            <th data-i18n="comentario">COMENTARIO</th>
+                                            <th data-i18n="comentario">COMENTARIO</th>
+                                            <th data-i18n="proceso">PROCESO</th>
+                                            <th data-i18n="prioridad">PRIORIDAD</th>
+                                            <th data-i18n="acciones">ACCIONES</th>
+                                        </tr>                         
                                     </thead>
                                 </table>
                             </div>
@@ -138,12 +136,12 @@
     <?php $this->load->view('template/footer_legend');?>
 </div>
 
+
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/solicitudes.js"></script>
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 
 <script type="text/javascript">
-		Shadowbox.init();
 	</script>
 </body>
