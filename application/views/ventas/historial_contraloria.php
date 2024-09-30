@@ -59,7 +59,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <i class="material-icons">clear</i>
                         </button>
-                        <h3 class="text-center" data-i18n="detalles">Detalle</h3>
+                        <h3 class="text-center">Detalle</h3>
                     </div>
                     <div class="modal-body">
                         <div class="material-datatables">
@@ -67,12 +67,12 @@
                                 <table class="table-striped table-hover" id="tabla_modal" name="tabla_modal">
                                     <thead>
                                         <tr>
-                                            <th><span data-i18n="id-pago">ID PAGO</span></th>
-                                            <th><span data-i18n="lote">LOTE</span></th>
-                                            <th><span data-i18n="monto">MONTO</span></th>
-                                            <th><span data-i18n="fecha-aplicado">FECHA DE APLICADO</span></th>
-                                            <th><span data-i18n="monto-anterior">MONTO ANTERIOR</span></th>
-                                            <th><span data-i18n="estatus">ESTATUS</span></th>
+                                            <th><span>ID PAGO</span></th>
+                                            <th><span>LOTE</span></th>
+                                            <th><span>MONTO</span></th>
+                                            <th><span>FECHA DE APLICADO</span></th>
+                                            <th><span>MONTO ANTERIOR</span></th>
+                                            <th><span>ESTATUS</span></th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -141,7 +141,7 @@
                                                     </div>
                                                     <div class="col-12 col-sm-3 col-md-3 col-lg-3 m-0 overflow-hidden">
                                                         <div class="form-group select-is-empty">
-                                                            <label for="proyecto" class="control-label" data-i18n="proyectos">Proyectos:</label>
+                                                            <label for="proyecto" class="control-label" data-i18n="proyectos">Proyectos</label>
                                                             <select name="catalogo_historial" id="catalogo_historial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
                                                     </div>

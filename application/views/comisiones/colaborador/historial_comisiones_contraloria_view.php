@@ -43,7 +43,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <i class="material-icons">clear</i>
                         </button>
-                        <h3 class="text-center">Detalle</h3>
+                        <h3 class="text-center" data-i18n="detalles">Detalle</h3>
                     </div>
                     <div class="modal-body">
                         <div class="material-datatables">
@@ -51,12 +51,12 @@
                                 <table class="table-striped table-hover" id="tabla_modal" name="tabla_modal">
                                     <thead>
                                         <tr>
-                                            <th>ID PAGO</th>
-                                            <th>LOTE</th>
-                                            <th>MONTO</th>
-                                            <th>FECHA DE APLICADO</th>
-                                            <th>MONTO ANTERIOR</th>
-                                            <th>ESTATUS</th>
+                                            <th><span data-i18n="id-pago">ID PAGO</span></th>
+                                            <th><span data-i18n="lote">LOTE</span></th>
+                                            <th><span data-i18n="monto">MONTO</span></th>
+                                            <th><span data-i18n="fecha-aplicado">FECHA DE APLICADO</span></th>
+                                            <th><span data-i18n="monto-anterior">MONTO ANTERIOR</span></th>
+                                            <th><span data-i18n="estatus">ESTATUS</span></th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -74,18 +74,18 @@
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <?php if ($this->session->userdata('id_rol') != 66) { ?>
                             <li class="active">
-                                <a href="#solicitudesCRM" role="tab" data-toggle="tab">Historial CRM</a>
+                                <a href="#solicitudesCRM" role="tab" data-toggle="tab" data-i18n="historial-CRM">Historial CRM</a>
                             </li>
                             <li>
-                                <a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial canceladas</a>
+                                <a href="#solicitudesCanceladas" role="tab" data-toggle="tab" data-i18n="historial-canceladas">Historial canceladas</a>
                             </li>
                             <?php }?>
                             <?php if(in_array($this->session->userdata('id_rol'), array(1, 2, 3, 7, 9, 66))) { ?>
                                 <li>
-                                    <a href="#solicitudesSUMA" role="tab" data-toggle="tab">Historial SUMA</a>
+                                    <a href="#solicitudesSUMA" role="tab" data-toggle="tab" data-i18n="historial-suma">Historial SUMA</a>
                                 </li>
                                 <li>
-                                    <a href="#historialDescuentos" role="tab" data-toggle="tab">Historial descuentos</a>
+                                    <a href="#historialDescuentos" role="tab" data-toggle="tab" data-i18n="historial-descuentos">Historial descuentos</a>
                                 </li>
 
                             <?php } ?>
@@ -97,8 +97,8 @@
                                         <div class="tab-pane <?php if($this->session->userdata('id_rol') != 66){ ?> active <?php } ?>" id="solicitudesCRM">
                                             <div class="encabezadoBox">
                                                 <div class="row">
-                                                    <h3 class="card-title center-align">Historial activos</h3>
-                                                    <p class="card-title pl-1">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)
+                                                    <h3 class="card-title center-align" data-i18n="historial-activos">Historial activos</h3>
+                                                    <p class="card-title pl-1"><span data-i18n="listado-de-pagos-aplicados-contratados-activos">(Listado de todos los pagos aplicados, en proceso de lotes contratados y activos)</span>
                                                         <a href="https://youtu.be/S7HO2QTLaL0" style="color:red" target="_blank">
                                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                                         </a>
@@ -109,7 +109,7 @@
                                                 <div class="row">
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group select-is-empty overflow-hidden">
-                                                            <label class="control-label">Año</label>
+                                                            <label class="control-label" data-i18n="año">Año:</label>
                                                             <select name="ano_historial" id="ano_historial" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
@@ -124,7 +124,7 @@
                                                     </div>
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
                                                         <div class="form-group select-is-empty">
-                                                            <label for="proyecto" class="control-label">Proyecto</label>
+                                                            <label for="proyecto" class="control-label" data-i18n="proyectos">Proyectos</label>
                                                             <select name="catalogo_historial" id="catalogo_historial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
                                                     </div>
@@ -135,22 +135,23 @@
                                                     <table class="table-striped table-hover hide" id="tabla_historialGral" name="tabla_historialGral">
                                                         <thead>
                                                             <tr>
-                                                                <th>ID</th>
-                                                                <th>PROYECTO</th>
-                                                                <th>CONDOMINIO</th>
-                                                                <th>LOTE</th>
-                                                                <th>REFERENCIA</th>
-                                                                <th>PRECIO DEL LOTE</th>
-                                                                <th>TOTAL DE LA COMISIÓN</th>
-                                                                <th>PAGO DEL CLIENTE</th>
-                                                                <th>DISPERSADO</th>
-                                                                <th>PAGADO</th>
-                                                                <th>PENDIENTE</th>
-                                                                <th>USUARIO</th>
-                                                                <th>PUESTO</th>
-                                                                <th>DETALLE</th>
-                                                                <th>ESTATUS</th>
-                                                                <th>ACCIONES</th>
+                                                                <!-- <th><span data-i18n="id">ID</span></th>
+                                                                <th><span data-i18n="condominio">CONDOMINIO</span></th>
+                                                                <th><span data-i18n="lote">LOTE</span></th>
+                                                                <th><span data-i18n="referencia">REFERENCIA</span></th>
+                                                                <th><span data-i18n="precio-del-lote">PRECIO DEL LOTE</span></th>
+                                                                <th><span data-i18n="total-comision">TOTAL DE LA COMISIÓN</span></th>
+                                                                <th><span data-i18n="pago-cliente">PAGO DEL CLIENTE</span></th>
+                                                                <th><span data-i18n="dispersado">DISPERSADO</span></th>
+                                                                <th><span data-i18n="pagado">PAGADO</span></th>
+                                                                <th><span data-i18n="pendiente">PENDIENTE</span></th>
+                                                                <th><span data-i18n="usuario">USUARIO</span></th>
+                                                                <th><span data-i18n="position">PUESTO</span></th>
+                                                                <th><span data-i18n="detalles">DETALLE</span></th>
+                                                                <th><span data-i18n="estatus">ESTATUS</span></th>
+                                                                <th><span data-i18n="acciones">ACCIONES</span></th> -->
+
+
                                                             </tr>
                                                         </thead>
                                                     </table>
