@@ -51,20 +51,20 @@
 	}
 
 	var displayClock = function() {
-		const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+		const months = [_('enero'), _('febrero'), _('marzo'), _('abril'), _('mayo'), _('junio'), _('julio'), _('agosto'), _('septiembre'), _('octubre'), _('noviembre'), _('diciembre')]
 		const date = new Date()
 		const time = getFormattedTime(date)
 		let saludo='';
 
 		if(time>'18:00' && time < '3:00'){
-			saludo = 'Buenas noches';
+			saludo = _('buenas-noches');
 		}else if(time > '12:00' && time < '18:00'){
-			saludo = 'Buenas tardes';
+			saludo = _('buenas-tardes');
 		}else if(time > '03:00' && '0'+time < '12:00'){
-			saludo = 'Buenos días';
+			saludo = _('buenos-dias');
 		}
 
-		const shortDate = `${date.getDate()} ${months[date.getMonth()]}`
+		const shortDate = `${date.getDate()} ${_(months[date.getMonth()])}`
 		
 		document.getElementById("time").textContent = time
 		document.getElementById("date").textContent = shortDate

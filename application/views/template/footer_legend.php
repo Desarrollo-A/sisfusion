@@ -22,7 +22,7 @@
 			<script>
 				document.write(new Date().getFullYear())
 			</script>
-			<a href="https://www.ciudadmaderas.com/" >Ciudad Maderas</a>, Departamento de TI
+			<a href="https://www.ciudadmaderas.com/" >Ciudad Maderas</a>, <span data-i18n="departamento-de-ti">Departamento de TI</span>
 		</p>
 	</div>
 
