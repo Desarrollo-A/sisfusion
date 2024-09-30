@@ -1,22 +1,3 @@
-var fechaInicioCorteGlobpivoteMultiplicadoral, fechaFinCorteGlobal, horaFinCorteGlobal,datosFechaCorte = [];
-$.ajax({
-    url: general_base_url + 'Comisiones/getFechaCorteActual',
-    cache: false,
-    contentType: false,
-    processData: false,
-    type: 'GET',
-    success: function (response) {
-        const data = JSON.parse(response);
-        datosFechaCorte = data.fechasCorte;
-        fechaInicioCorteGlobal = data.fechasCorte[0].fechaInicio.split(' ')[0].split('-');
-        fechaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[0].split('-');
-        //[0] hora [1] minutos [2] segundos
-        horaFinCorteGlobal = data.fechasCorte[0].fechaFin.split(' ')[1].split(':');
-    },
-    async:false
-});
-
-
 sp = {
     initFormExtendedDatetimepickers: function () {
 var today = new Date();
@@ -56,4 +37,3 @@ function setInitialValues() {
     $('#endDate').val(finalEndDate2);
     $('[data-toggle="tooltip"]').tooltip();
 }
-

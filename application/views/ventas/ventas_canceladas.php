@@ -39,10 +39,6 @@
                                             <th>CLIENTE</th>
                                             <th>PLAN VENTA</th>
                                             <th>TOTAL</th>
-                                            <th>PRECIO FINAL LOTE</th>
-                                            <th>% COMISION TOTAL</th>
-                                            <th>IMPORTE COMISION PAGADA</th>
-                                            <th>IMPORTE COMISION PENDIENTE</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

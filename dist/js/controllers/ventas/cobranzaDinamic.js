@@ -56,7 +56,7 @@ $('#mes').change( function(){
     anio = $('#anio').val();
     if(anio == ''){
     }else{
-        asimiladosComisiones(mes, anio, 0, 0);
+        getAssimilatedCommissions(mes, anio, 0, 0);
     }
 });
 
@@ -69,7 +69,8 @@ $('#anio').change( function(){
     $("#plaza").html("");
     $("#gerente").html("");
     mes = $('#mes').val();
-    if(mes == ''){
+    if(mes == '')
+    {
         mes =0;
     }
     anio = $('#anio').val();
@@ -107,13 +108,15 @@ $('#plaza').change( function(){
     mes = $('#mes').val();
     anio = $('#anio').val();
     plaza = $('#plaza').val();
-    if(mes == ''){
+    if(mes == '')
+    {
         mes =0;
     }
     $(document).ready(function(){
-        $.post(general_base_url + "Comisiones/listGerentes/" + plaza, function(data) {
+        $.post(general_base_url + "Comisiones/listGerentes/"+plaza, function(data) {
             var len = data.length;
-            for( var i = 0; i<len; i++){
+            for( var i = 0; i<len; i++)
+            {
                 var id = data[i]['id_usuario'];
                 var name = data[i]['nombreUser'];
                 $("#gerente").append($('<option>').val(id).text(name.toUpperCase()));
@@ -121,7 +124,7 @@ $('#plaza').change( function(){
             $("#gerente").selectpicker('refresh');
         }, 'json');
     });
-    asimiladosComisiones(mes, anio, plaza, 0);
+    getAssimilatedCommissions(mes, anio, plaza, 0);
 });
 
 $('#gerente').change( function(){
@@ -129,10 +132,10 @@ $('#gerente').change( function(){
     anio = $('#anio').val();
     plaza = $('#plaza').val();
     gerente = $('#gerente').val();
-    if(mes == ''){
+    if(mes == '') {
         mes =0;
     }
-    asimiladosComisiones(mes, anio, plaza, gerente);
+    getAssimilatedCommissions(mes, anio, plaza, gerente);
 });
 
 var tr;
@@ -144,30 +147,37 @@ $('#tableDinamicMKTD thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
-
         if ($('#tableDinamicMKTD').DataTable().column(i).search() !== this.value) {
             $('#tableDinamicMKTD').DataTable().column(i).search(this.value).draw();
+
             var total = 0;
-            var index = tableDinamicMKTD2.rows({ selected: true, search: 'applied'}).indexes();
+            var index = tableDinamicMKTD2.rows({
+                selected: true,
+                search: 'applied'
+            }).indexes();
+
             var data = tableDinamicMKTD2.rows(index).data();
             $.each(data, function(i, v) {
                 total += parseFloat(v.monto_vendido);
             });
-            document.getElementById("myText_vendido").textContent = formatMoney(total);
+            document.getElementById("myText_vendido").textContent = '$'+formatMoney(total);
         }        
     });
+    
     titulos.push(title);    
-    $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
 });
 
-function asimiladosComisiones(mes, anio, plaza, gerente){
+function getAssimilatedCommissions(mes, anio, plaza, gerente){
     $('#tableDinamicMKTD').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.monto_vendido);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_vendido").textContent = to;
+        document.getElementById("myText_vendido").textContent = '$' + to;
     });
 
     $("#tableDinamicMKTD").prop("hidden", false);
@@ -201,9 +211,9 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         destroy: true,
         ordering: false,
-        columns: [{
+        columns: [
+        {
             data: function( d ){
-
                 if(d.status == 0)
                     return '<p class="m-0">'+d.lotes_vendidos+'</p>';
                 else
@@ -212,16 +222,14 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         {
             data: function( d ){
-
                 if(d.status == 0)
-                    return '<p class="m-0" style="color:crimson;">'+formatMoney(d.monto_vendido)+'</p>';
+                    return '<p class="m-0" style="color:crimson;"> $ '+formatMoney(d.monto_vendido)+'</p>';
                 else
-                    return '<p class="m-0">'+formatMoney(d.monto_vendido)+'</p>';
+                    return '<p class="m-0"> $ '+formatMoney(d.monto_vendido)+'</p>';
             }
         },
         {
             data: function( d ){
-
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+d.asesor+'</p>';
                 else
@@ -230,7 +238,6 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         {
             data: function( d ){
-
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+d.coordinador+'</p>';
                 else
@@ -239,7 +246,6 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         {
             data: function( d ){
-
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+d.gerente+'</p>';
                 else
@@ -248,7 +254,6 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         {
             data: function( d ){
-
                     if(d.status == 0){
                         return '<p class="m-0" style="color:crimson;">'+d.subdirector+'</p>';
                     }
@@ -258,7 +263,6 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         {
             data: function( d ){
-
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+d.director+'</p>';
                 else
@@ -267,7 +271,6 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         {
             data: function( d ){
-
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+($('select[name="mes"] option:selected').text()).toUpperCase()+'</p>';
                 else
@@ -276,7 +279,6 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         {
             data: function( d ){
-
                 if(d.status == 0)
                     return '<p class="m-0" style="color:crimson;">'+(d.nombre).toUpperCase()+' </p>';
                 else 
@@ -285,7 +287,6 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
         },
         {
             data: function( d ){
-
                 if(d.status == 0)
                     return '<p class="m-0"><span class="label lbl-warning">CANCELADO</span></p>';
                 else
@@ -320,6 +321,6 @@ function asimiladosComisiones(mes, anio, plaza, gerente){
             totaPen -= parseFloat(row.pa);
             row.pa = 0;
         }
-        $("#totpagarPen").html(formatMoney(totaPen));
+        $("#totpagarPen").html('$' + formatMoney(totaPen));
     });
 }

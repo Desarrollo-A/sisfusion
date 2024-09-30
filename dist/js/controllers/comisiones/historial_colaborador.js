@@ -24,6 +24,7 @@ $('#ano_historial').change(function(){
 $('#ano_historial').change(function(){
     $("#tipo_historial").empty().selectpicker('refresh');
     $("#tipo_historial").append($('<option>').val(1).text('NORMAL'));
+    $("#tipo_historial").append($('<option>').val(2).text('MADERAS UPGRADE'));
     $("#tipo_historial").append($('<option>').val(3).text('CASAS'));
     $("#tipo_historial").selectpicker('refresh');
 });

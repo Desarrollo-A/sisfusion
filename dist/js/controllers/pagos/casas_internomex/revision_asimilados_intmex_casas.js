@@ -129,15 +129,15 @@ function getAssimilatedCommissions_asimilados_casas(proyecto, condominio){
                                 var fecha = new Date();
                                 tabla_asimilados2_intmex_casas.ajax.reload();
                                 var mensaje = "Comisiones de esquema<b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
-                                modalInformation(data, mensaje);
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             } else {
                                 $('#spiner-loader').addClass('hide');
-                                modalInformation(2);
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                                 }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            modalInformation(2);
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }else{
@@ -638,9 +638,10 @@ $("#form_multiples_casas").submit( function(e) {
                     CloseModalDelete2Intmex_casas();
                     $("#all_asimilados_intmex").prop("checked", false);
                     $("#totpagarPen_intmex_casas").html(formatMoney(numberTwoDecimal(0)));
-
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
-                    tabla_asimilados2_intmex_casas.ajax.reload();
+                    if(tabla_asimilados2_intmex_casas != undefined){
+                        tabla_asimilados2_intmex_casas.ajax.reload();
+                    }
                 }else{
                     CloseModalDelete2Intmex_casas();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
