@@ -2,6 +2,8 @@ var dar_baja = _("dar-baja");
 var puestos = [{id : 59, nombre : 'Director regional'}], sedes = []; 
 
 $(document).ready( function() { 
+    construirHead("all_users_datatable")
+
     $('[data-toggle="tooltip"]').tooltip(); 
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
@@ -185,18 +187,6 @@ function borrarMulti(index,id = ''){
         document.getElementById(`mult_${index}`).innerHTML = '';
     }
 }
-
-let titulos = [];
-$('#all_users_datatable thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#all_users_datatable').DataTable().column(i).search() !== this.value) {
-            $('#all_users_datatable').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
 
 function fillUsersTable() {
     $allUsersTable = $('#all_users_datatable').DataTable({

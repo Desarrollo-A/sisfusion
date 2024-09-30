@@ -366,16 +366,16 @@
                                     <table id="all_users_datatable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ESTATUS</th>
+                                                <th>estatus</th>
                                                 <th>ID</th>
-                                                <th>NOMBRE</th>
-                                                <th>CORREO</th>
-                                                <th>TELÉFONO</th>
-                                                <th>ROL</th>
-                                                <th>TIPO</th>
-                                                <th>SEDE</th>
-                                                <th>JEFE DIRECTO</th>
-                                                <th>ACCIONES</th>
+                                                <th>nombre</th>
+                                                <th>correo</th>
+                                                <th>telefono</th>
+                                                <th>rol</th>
+                                                <th>tipo</th>
+                                                <th>sede</th>
+                                                <th>jefe-directo</th>
+                                                <th>acciones</th>
                                             </tr>
                                         </thead>
                                     </table>

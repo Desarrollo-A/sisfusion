@@ -17,7 +17,7 @@
         "cancelar": "cancel",
         "activar-usuario-mensaje": "User activation successful",
         "desactivar-usuario-mensaje": "User deactivation successful",
-        "estatus": "status",        
+        "estatus": "STATUS",        
         "campos-llenos-requerido": "Please fill all the requiered fields",
         "algo-salio-mal": "Oops, something went wrong",
         "consulta-informacion": "Info preview",
@@ -58,7 +58,8 @@
         "cliente": "CUSTOMER",
         "ubicacion": "LOCATION",
         "estatus-actual": "CURRENT STATUS",
-        "acciones": "ACTIONS"
+        "acciones": "ACTIONS",
+        "tipo": "TYPE"
     },
     "es": {
         "build-his-profile": "Construye su perfil",
@@ -78,7 +79,7 @@
         "cancelar": "cancelar",
         "activar-usuario-mensaje": "Se ha activado con éxito",
         "desactivar-usuario-mensaje": "Se ha desactivado con éxito",
-        "estatus": "estatus",
+        "estatus": "ESTATUS",
         "campos-llenos-requerido": "Asegúrate de haber llenado todos los campos mínimos requeridos.",
         "algo-salio-mal": "Oops, algo salió mal",
         "consulta-informacion": "Consultar información",
@@ -119,6 +120,7 @@
         "cliente": "CLIENTE",
         "ubicacion": "UBICACIÓN",
         "acciones": "ACCIONES",
-        "estatus-actual": "ESTATUS ACTUAL"
+        "estatus-actual": "ESTATUS ACTUAL",
+        "tipo": "TIPO"
     }
 }
