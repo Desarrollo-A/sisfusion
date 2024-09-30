@@ -226,7 +226,7 @@
         $('button').each(function (i) {
             let id = $(this).data('i18n-tooltip')
 
-            console.log(id)
+            // console.log(id)
 
             if(id){
                 let title = _(id)
