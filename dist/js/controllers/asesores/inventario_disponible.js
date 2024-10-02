@@ -223,7 +223,7 @@ $('#formFilters').on('submit', function(event){
         },
         success:function(response){
             dataTable(response);
-            onLoadTranslations(() => dataTable(response));
+            // onLoadTranslations(() => dataTable(response));
 			$('#spiner-loader').addClass('hide');
             $('#addExp').removeClass('hide');
         }
@@ -341,30 +341,30 @@ $(document).on("click", ".ver_historial", function(){
     $("#seeInformationModal").modal();
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const selectores = () => {
-        // Asegúrate de que 'selectOption' tenga el valor que esperas.
-        let selectOption = _("select-predeterminado");
-        // console.log("Valor de selectOption:", selectOption); // Verificar valor en la consola
+// document.addEventListener("DOMContentLoaded", function() {
+//     const selectores = () => {
+//         // Asegúrate de que 'selectOption' tenga el valor que esperas.
+//         let selectOption = _("select-predeterminado");
+//         // console.log("Valor de selectOption:", selectOption); // Verificar valor en la consola
 
-        // Asigna el valor del title a cada elemento.
-        const ids = ["filtro3", "filtro4", "filtro5", "filtro6", "filtro7", "filtro8", "filtro9"];
-        ids.forEach(id => {
-            const elemento = document.getElementById(id);
+//         // Asigna el valor del title a cada elemento.
+//         const ids = ["filtro3", "filtro4", "filtro5", "filtro6", "filtro7", "filtro8", "filtro9"];
+//         ids.forEach(id => {
+//             const elemento = document.getElementById(id);
 
-            if (elemento) {
-                // Asigna el título al elemento
-                elemento.removeAttribute('title');
-                elemento.title = selectOption;
+//             if (elemento) {
+//                 // Asigna el título al elemento
+//                 elemento.removeAttribute('title');
+//                 elemento.title = selectOption;
     
-                $(`#${id}`).selectpicker('refresh'); // Usar jQuery para seleccionar por ID y aplicar métodos
-            } else {
-                console.warn(`Elemento con id ${id} no encontrado.`);
-            }
-        });
-    }
+//                 $(`#${id}`).selectpicker('refresh'); // Usar jQuery para seleccionar por ID y aplicar métodos
+//             } else {
+//                 console.warn(`Elemento con id ${id} no encontrado.`);
+//             }
+//         });
+//     }
 
-    // Asegúrate de que estas funciones llamen a selectores correctamente.
-    onLoadTranslations(() => selectores());
-    onChangeTranslations(() => selectores());
-});
+//     // Asegúrate de que estas funciones llamen a selectores correctamente.
+//     onLoadTranslations(() => selectores());
+//     onChangeTranslations(() => selectores());
+// });
