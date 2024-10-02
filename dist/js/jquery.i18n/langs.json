@@ -392,7 +392,8 @@
                 "asignando": "Assigning",
                 "regresion-lote": "Lot regression",
                 "lada": "area code",
-                "estatus-14": "Status 14 register - "
+                "estatus-14": "Status 14 register - ",
+                "firma-acuse": "Customer acknowledgment signature"
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -789,6 +790,7 @@
                 "asignando": "Asignando",
                 "regresion-lote": "Regresión del lote",
                 "lada": "Lada",
-                "estatus-14": "Registro estatus 14 -"
+                "estatus-14": "Registro estatus 14 -",
+                "firma-acuse": "Firma acuse cliente"
         }
 }
