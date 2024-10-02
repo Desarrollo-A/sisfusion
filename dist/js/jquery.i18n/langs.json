@@ -341,7 +341,8 @@
         ,"nombre_usuario": "User name"
         ,"en-revision": "Payments under review"
         ,"resguardo": "Withheld commissions "
-        ,"por-pagar": "Por pagar"
+        ,"por-pagar": "Por pagar",
+        "consultar-detalles-youtube":"For more details on the use and functionality of the Final Payment Query section, you can view it in the following tutorial"
         
         
 
@@ -697,7 +698,8 @@
         ,"nombre_usuario":"Nombre usuario"
         ,"en-revision": "En revisión"
         ,"resguardo": "Resguardo"
-        ,"por-pagar": "Por pagar"
+        ,"por-pagar": "Por pagar",
+        "consultar-detalles-youtube":"Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial"
 
 
     }
