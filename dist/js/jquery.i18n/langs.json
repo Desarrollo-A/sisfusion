@@ -89,7 +89,13 @@
         "estatus-14": "Status 14 register - ",
         "contrato"  : "Contract",
         "nombre-contrato" : "NOMBRE DEL CONTRATO",
-        "visualizar": "view"
+        "visualizar": "view",
+        "registro-cliente" : "Customer registration",
+        "id-cliente" : "ID CLIENT",
+        "num-recibo": "RECEIPT NUMBER",
+        "referencia" : "REFERENCE",
+        "tipo-pago" : "PAYMENT TYPE",
+        "fecha-enganche" : "HITCH DATE"
 
     },
     "es": {
@@ -182,6 +188,12 @@
         "estatus-14": "Registro estatus 14 - ",
         "contrato"  : "Contrato",
         "nombre-contrato" : "NOMBRE DEL CONTRATO",
-        "visualizar": "Visualizar"
+        "visualizar": "Visualizar",
+        "registro-cliente" : "Registro de clientes",
+        "id-cliente" : "ID CLIENTE",
+        "num-recibo": "NÚMERO DE RECIBO",
+        "referencia" : "REFERENCIA",
+        "tipo-pago" : "TIPO DE PAGO",
+        "fecha-enganche" : "FECHA DE ENGANCHE"
     }
 }
