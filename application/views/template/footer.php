@@ -165,18 +165,21 @@
     let change_functions = []
 
     function onLoadTranslations(callback){
+        
         if (typeof callback === 'function') {
             load_functions.push(callback)
         }
     }
 
     function onChangeTranslations(callback){
+        console.log("llego onChange");
         if (typeof callback === 'function') {
             change_functions.push(callback)
         }
     }
 
     function triggerLoadFunctions() {
+        console.log("llego onChange");
         for (let callback of load_functions) {
             callback()
         }
@@ -186,7 +189,8 @@
         for (let callback of change_functions) {
             callback()
         }
-    }
+        
+    }   
 
     function construirHead(tabla){
         let titulos = []
