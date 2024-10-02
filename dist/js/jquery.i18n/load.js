@@ -72,6 +72,17 @@ function triggerChangeFunctions() {
     }
 }
 
+function applySearch(table) {
+    let id = table.tables().nodes().to$().attr('id')
+
+    $(`#${id} thead tr:eq(0) th`).each(function (i) {
+        $('input', this).on('keyup change', function () {
+            if (table.column(i).search() !== this.value) {
+                table.column(i).search(this.value).draw();
+            }
+        })
+    })
+}
 
 
 function construirHead(tabla){
@@ -98,6 +109,38 @@ function construirHead(tabla){
             });
             $('[data-toggle="tooltip"]').tooltip(); 
 
+        }else if(id == 'checkComisionesNuevas'){
+            title = _(id)
+            $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
+            $('[data-toggle="tooltip"]').tooltip(); 
+
+        }
+    });
+
+    function translatePlaceholder(){
+            for(titulo of titulos){
+                if(titulo !== ''){
+                    $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                }
+            }
+        }
+
+    onLoadTranslations(translatePlaceholder)
+    onChangeTranslations(translatePlaceholder)
+}
+function construirHead(table){
+    let titulos = []
+    const idNoPermitidos = ['checkComisionesNuevas']
+
+    $(`#${table} thead tr:eq(0) th`).each(function (i) {
+        var id = $(this).text();
+        
+        titulos.push(id);
+        if(id && idNoPermitidos.indexOf(id)){
+        if(id){
+            title = _(id)
+            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
+        }
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
