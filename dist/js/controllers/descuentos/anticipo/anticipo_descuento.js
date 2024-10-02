@@ -46,6 +46,8 @@ function cambiarColor() {
 function cargaLinea(){
     let linea = document.getElementById('linea_proceso');
     linea.innerHTML =  '';
+    // onChangeTranslations(cargaLinea());
+    
     $.ajax({
         url: 'todos_los_pasos',
         type: 'post',
@@ -61,98 +63,79 @@ function cargaLinea(){
             linea_armada = ``;
             valor =1;
             linea_armada += `<br>`;
-
             data['ANTICIPOS'].forEach(elementANTICIPOS => {
                 
                 linea_armada += `
                 <div class="encabezadoBox">
                 
-                        <p class=" card-title text-muted pl-1">ID anticipo ${elementANTICIPOS.id_anticipo}.</p>
-                        <p class=" card-title text-muted pl-1">Motivo ${elementANTICIPOS.comentario}.</p>
-                    
+                       <p class="card-title text-muted pl-1">
+                          <span data-i18n="id-anticipo">${_('id-anticipo')}</span> ${elementANTICIPOS.id_anticipo}.
+                       </p>
+                       <p class="card-title text-muted pl-1">
+                          <span data-i18n="motivo">${_('motivo')}</span> ${elementANTICIPOS.comentario}.
+                        </p>
                     <br>
                 </div>
-
-
-                
-                
 
                 <div class="row ">
                 <div class="col " >
                 <div class="timeline-steps aos-init aos-animate "  data-aos="fade-up">`;
                 data['TODOS'].forEach(elementTODOS => {
-                    bandera = 0;
-                    
-                    data['USUARIO'].forEach((elementoUSUARIO , contador) => {
-                        
-                        if(elementoUSUARIO.id_anticipo == elementANTICIPOS.id_anticipo && elementoUSUARIO.id_opcion == elementTODOS.id_opcion  ){
-                            color = (elementANTICIPOS.estatus == 0 ) ? ('inner-circle_negativp')  : ((elementANTICIPOS.estatus == 11 ) ? 'inner-circle_succes':'inner-circle') ;
-                            // color = (elementANTICIPOS.estatus == 0 ) ? 'inner-circle_negativp': 'inner-circle' ;
-                            if(elementoUSUARIO.id_opcion == elementTODOS.id_opcion ){
-                                especial =   (elementoUSUARIO.id_opcion == 5 && elementANTICIPOS.estatus ==1) ? `<botton class="epecial boton_confirmar_contraloria" 
-                                id="boton_confirmar_contraloria" 
-                                onclick="fucntion_paso_5(${elementANTICIPOS.id_anticipo},${elementANTICIPOS.monto},${elementANTICIPOS.id_usuario},${elementANTICIPOS.prioridad},${elementANTICIPOS.forma_pago},${elementANTICIPOS.id_parcialidad},${elementANTICIPOS.monto_parcialidad},${elementANTICIPOS.mensualidades} )"
-                                name="boton_confirmar_contraloria"  data-anticipo="${elementANTICIPOS.id_anticipo}"
-                                data-id_usuario="${elementANTICIPOS.id_usuario}" data-name="${elementANTICIPOS.nombre_usuario}" >` : ` `;
+                    let bandera = 0;
 
+                    data['USUARIO'].forEach(elementoUSUARIO => {
+                        if (elementoUSUARIO.id_anticipo === elementANTICIPOS.id_anticipo && elementoUSUARIO.id_opcion === elementTODOS.id_opcion) {
+                            color = (elementANTICIPOS.estatus === 0) ? 'inner-circle_negativp' : ((elementANTICIPOS.estatus === 11) ? 'inner-circle_succes' : 'inner-circle');
 
-                                especialfin =   (elementoUSUARIO.id_opcion == 5 &&  elementANTICIPOS.estatus ==1) ? `</botton>` : ` `;
+                            let especial = (elementoUSUARIO.id_opcion === 5 && elementANTICIPOS.estatus === 1) ? 
+                                `<button class="especial boton_confirmar_contraloria" 
+                                    id="boton_confirmar_contraloria" 
+                                    onclick="function_paso_5(${elementANTICIPOS.id_anticipo}, ${elementANTICIPOS.monto}, ${elementANTICIPOS.id_usuario}, ${elementANTICIPOS.prioridad}, ${elementANTICIPOS.forma_pago}, ${elementANTICIPOS.id_parcialidad}, ${elementANTICIPOS.monto_parcialidad}, ${elementANTICIPOS.mensualidades})" 
+                                    name="boton_confirmar_contraloria" 
+                                    data-anticipo="${elementANTICIPOS.id_anticipo}" 
+                                    data-id_usuario="${elementANTICIPOS.id_usuario}" 
+                                    data-name="${elementANTICIPOS.nombre_usuario}">` 
+                                : ` `;
 
-
-
-                                linea_armada += `
-                                ${especial} 
-                                    <div class="timeline-step">
-                                        <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title=""  >
-                                            <div class="${color}"></div> 
-                                                <p class="h6 mt-3 mb-1">${elementoUSUARIO.id_opcion}</p>
-                                                <div class="info-wrapper">
-                                                <p data-tooltip="${elementoUSUARIO.comentario_ha}" class="  mb-0 mb-lg-0">${elementTODOS.nombre}</p>
-                                                </div>
-                                            </div>
-                                    </div>
-                                    ${especialfin}
-                                    `;
-                                bandera = 1;
-                            }
-                        }else{
-                            
-                        }
-                        
-                    });
-
-                    if(bandera != 1){
-                        if(elementTODOS.id_opcion != 0 ){
-
+                            let especialfin = (elementoUSUARIO.id_opcion === 5 && elementANTICIPOS.estatus === 1) ? `</button>` : ` `;
+                            let nombre_i18n_key = elementTODOS.nombre.toLowerCase().replace(/ /g, '-');
                             linea_armada += `
-                            <div class="timeline-step mb-0">
-                                <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="">
-                                    <div class="inner-circle_n">
-                                    </div>
-                                        <p class="h6 mt-3 mb-1">${elementTODOS.id_opcion}</p>
-                                    <div class="info-wrapper">
-                                        <p data-tooltip="En espera del proceso ." class="  mb-0 mb-lg-0">${elementTODOS.nombre}</p>
+                            ${especial}
+                                <div class="timeline-step">
+                                    <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="">
+                                        <div class="${color}"></div> 
+                                        <p class="h6 mt-3 mb-1">${elementoUSUARIO.id_opcion}</p>
+                                        <div class="info-wrapper">
+                                            <p data-i18n="${nombre_i18n_key}" data-tooltip="${elementoUSUARIO.comentdario_ha}" class="mb-0 mb-lg-0">${elementTODOS.nombre}</p>
+                                        </div>
                                     </div>
                                 </div>
-
-
-
-                            </div>
-                            `;
+                            ${especialfin}`;
+                            bandera = 1;
                         }
-                        
+                    });
+
+                    if (bandera !== 1 && elementTODOS.id_opcion !== 0) {
+                        let nombre_i18n_key = elementTODOS.nombre.toLowerCase().replace(/ /g, '-');
+                        linea_armada += `
+                        <div class="timeline-step mb-0">
+                            <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="">
+                                <div class="inner-circle_n"></div>
+                                <p class="h6 mt-3 mb-1">${elementTODOS.id_opcion}</p>
+                                <div class="info-wrapper">
+                                    <p data-i18n="${nombre_i18n_key}" class="mb-0 mb-lg-0">${elementTODOS.nombre} 
+                                     <span data-i18n="en-espera" data-tooltip="${_('en-espera')}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>`;
                     }
-                    
                 });
-                linea_armada += `</div>
-                </div>
-                </div>`;
-                linea_armada += `<br>`;
+
+                linea_armada += `</div></div></div><br>`;
             });
-            linea.innerHTML =  linea_armada;
-            // contenedorContenido.innerHTML = contenidoHTML;
-            // linea.innerHTML = '';
-            // linea.innerHTML = ``;
+            
+            linea.innerHTML = linea_armada;
         }
     });
 }
@@ -198,7 +181,7 @@ $("#form_subir").on('submit', function (e) {
                 $('#form_subir').trigger('reset');
             },
             error: function () {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right",_("algo-salio-mal"), "danger");
                 // document.getElementById("form_aceptar").reset();
                 $('#myModalAceptar_subir').modal('hide')
                 $('#form_aceptar').trigger('reset');
@@ -269,7 +252,7 @@ $("#anticipo_nomina").submit(function (e) {
                 clickbotonProceso();
             },
             error: (a, b, c) => {
-                alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
+                alerts.showNotification("top", "right", _("descuento-no-actualizado"), "error");
             }
         
         })
@@ -450,28 +433,28 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
             </div>`);
         showModal();
-
-        $("#nombreLote").append('<p><h5">HISTORIAL DEL ANTICIPO DE: <b>'+nombreUsuario+'</b></h5></p>');
+        
+        $("#nombreLote").append(`<p><h5><span data-i18n="historial-anticipo">${_("historial-anticipo")}  </span> <b>${nombreUsuario}</b></h5></p>`);
         $.getJSON(general_base_url+"Descuentos/getComments/"+idAnticipo).done( function( data ){
             console.log(data)
-            $.each( data, function(i, v){
+            $.each(data, function(i, v) {
                 console.log(i);
                 console.log(v.comentario);
-                $("#comentariosAsimilados").append('<li>\n' +
-                '  <div class="container-fluid">\n' +
-                '    <div class="row">\n' +
-                '      <div class="col-md-6">\n' +
-                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
-                '      </div>\n' +
-                '      <div class="float-end text-right">\n' +
-                '        <a> Comentario : ' +v.comentario + '</a>\n' +
-                '      </div>\n' +
-
-                '    <h6>\n' +
-                '    </h6>\n' +
-                '    </div>\n' +
-                '  </div>\n' +
-                '</li>');
+                $("#comentariosAsimilados").append(`
+                    <li>
+                      <div class="container-fluid">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <a><span data-i18n="procesos"></span> : <b>${v.nombre}</b></a><br>
+                          </div>
+                          <div class="float-end text-right">
+                            <a><span data-i18n="comentario"></span> : ${v.comentario}</a>
+                          </div>
+                        </div>
+                        <h6></h6>
+                      </div>
+                    </li>
+                `);
             });
             $('#spiner-loader').addClass('hide');
         });
@@ -563,8 +546,9 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
             },
             error: function (data) {
                 input.val('');
-                alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
-            }
+                alert(_("error-comunicarse-proveedor"));
+            }              
+
         });
     }
     function saveX() {
@@ -592,28 +576,28 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
             success: function (data) {
                 // document.getElementById('btng').disabled = false;
                 if (data.resultado) {
-                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                    alert(_("factura-subio-correctamente"));
                     $("#modal_multiples").modal('toggle');
                     tabla_nuevas.ajax.reload();
                     tabla_revision.ajax.reload();
                     $("#modal_multiples .modal-body").html("");
                     $("#modal_multiples .header").html("");
                 } else if (data == 3) {
-                    alert("ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES");
+                    alert(_("fuera-de-tiempo"));
                     $('#loader').addClass('hidden');
                     $("#modal_multiples").modal('toggle');
                     tabla_nuevas.ajax.reload();
                     $("#modal_multiples .modal-body").html("");
                     $("#modal_multiples .header").html("");
                 } else if (data == 4) {
-                    alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
+                    alert(_("total-factura-no-coincide"));
                     $('#loader').addClass('hidden');
                     $("#modal_multiples").modal('toggle');
                     tabla_nuevas.ajax.reload();
                     $("#modal_multiples .modal-body").html("");
                     $("#modal_multiples .header").html("");
                 } else {
-                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                    alert(_("solicitud-no-completada"));
                     $('#loader').addClass('hidden');
                     $("#modal_multiples").modal('toggle');
                     tabla_nuevas.ajax.reload();
@@ -623,7 +607,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
             },
             error: function () {
                 // document.getElementById('btng').disabled = false;
-                alert("ERROR EN EL SISTEMA");
+                alert(_("error-sistema"));
             }
         });
     }
@@ -659,7 +643,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
             ||  (cantidadXml.toFixed(2) == (monto).toFixed(2))
             ) 
             {
-            alerts.showNotification("top", "right", "Cantidad correcta.", "success abc");
+            alerts.showNotification("top", "right",_("cantidad-correcta"), "success abc");
             document.getElementById('Activo_aceptar_confirmar').disabled = false;
             // disabled();
         }
@@ -670,7 +654,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
             var myCommentsList = document.getElementById('cantidadSeleccionadaMal');
             // myCommentsList.setAttribute('style', 'color:red;');
             // myCommentsList.innerHTML = 'Cantidad incorrecta';
-            alerts.showNotification("top", "right", "Cantidad incorrecta.", "warning");
+            alerts.showNotification("top", "right",_("cantidad-incorrecta"), "warning");
         }
 
 
@@ -687,6 +671,8 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
         $("#clave").val((informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '')).attr('readonly', true);
         $("#obse").val((informacion_factura.descripcion ? informacion_factura.descripcion[0] : '')).attr('readonly', true);
     }
+     
+     
 
 
     $('#numeroPagosParcialidad').change(function() {
@@ -699,9 +685,29 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
         
     });
 
+    function actualizarSelectpicker() {
+        function traducirSelect(selectorId) {
+            $('#' + selectorId + ' option').each(function() {
+                var i18nKey = $(this).data('i18n'); 
+                if (i18nKey) {
+                    $(this).text(_(i18nKey));  
+                }
+            });
+            $('#' + selectorId).selectpicker('refresh');
+        }
+    traducirSelect('procesoTipo');  
+    traducirSelect('tiempo_de_pago');
+    traducirSelect('numeroPagosParcialidad'); 
+ 
+}
 
+$(document).ready(function() {
+    onLoadTranslations(function() {
+        actualizarSelectpicker(); 
+    });
 
-    
+    onChangeTranslations(actualizarSelectpicker);
+});
     $('#procesoTipo').change(function() {
         
         console.log(this.value);
@@ -733,10 +739,10 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
                     
                 }
         }else{
-            alerts.showNotification("top", "right", "Cantidad del monto no puede ser 0.", "warning");
+            alerts.showNotification("top", "right", _("cantidad-no-cero"), "warning");
         }
-
-
+        
+     
             // pagos_parcialidades = document.getElementById("numeroPagosParcialidad").value;
         // $("#preceso_aticipo").addClass("hide");
     

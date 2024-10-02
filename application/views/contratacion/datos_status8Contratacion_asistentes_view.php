@@ -146,8 +146,8 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Registro de estatus 8</h3>
-                                    <p class="card-title pl-1">(Contrato entregado al asesor para firma del cliente)</p>
+                                    <h3 class="card-title center-align" data-i18n="estatus-8">Registro de estatus 8</h3>
+                                    <p class="card-title pl-1" data-i18n="estatus-8-sub">(Contrato entregado al asesor para firma del clientes)</p>
                                 </div>
                                 <div class="material-datatables"> 
                                     <div class="form-group">
@@ -155,16 +155,16 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>TIPO DE VENTA</th>
-                                                    <th>TIPO DE PROCESO</th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>GERENTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>ESTATUS ACTUAL</th>
-                                                    <th>UBICACIÓN</th>
-                                                    <th>ACCIONES</th>
+                                                    <th>tipo-venta</th>
+                                                    <th>tipo-proceso</th>
+                                                    <th>proyecto</th>
+                                                    <th>condominio</th>
+                                                    <th>lote</th>
+                                                    <th>gerente</th>
+                                                    <th>cliente</th>
+                                                    <th>estatus-actual</th>
+                                                    <th>ubicacion</th>
+                                                    <th>acciones</th>
                                                 </tr>
                                             </thead>
                                         </table>

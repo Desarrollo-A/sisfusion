@@ -114,7 +114,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <a href="https://youtu.be/S7HO2QTLaL0" class="align-center justify-center u2be" target="_blank">
+                                <a href="https://youtu.be/6tDiInpg2Ao" class="align-center justify-center u2be" target="_blank">
                                     <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                 </a>
                             </div>
@@ -182,33 +182,34 @@
                                 <div class="material-datatables hide ml-2" id="box-reporteLotesPorComisionista">
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
-                                            <thead>
-                                                <tr>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>ID DEL LOTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>FECHA DE APARTADO</th>
-                                                    <th>SEDE</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>SUBDIRECTOR</th>
-                                                    <th>DIRECTOR REGIONAL</th>
-                                                    <th>ESTATUS DE LA CONTRATACIÓN</th>
-                                                    <th>ESTATUS DE LA VENTA</th>
-                                                    <th>ESTATUS DE LA COMISIÓN</th>
-                                                    <th>PRECIO FINAL</th>
-                                                    <th>PORCENTAJE DE LA COMISIÓN</th>
-                                                    <th>PAGO DEL CLIENTE</th>
-                                                    <th>TOTAL DE LA COMISIÓN</th>
-                                                    <th>TOTAL ABONADO</th>
-                                                    <th>TOTAL PAGADO</th>
-                                                    <th>LUGAR DE PROSPECCIÓN</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>PROYECTO</th>
+                                                        <th>CONDOMINIO</th>
+                                                        <th>LOTE</th>
+                                                        <th>ID DEL LOTE</th>
+                                                        <th>CLIENTE</th>
+                                                        <th>FECHA DE APARTADO</th>
+                                                        <th>SEDE</th>
+                                                        <th>ASESOR</th>
+                                                        <th>COORDINADOR</th>
+                                                        <th>GERENTE</th>
+                                                        <th>SUBDIRECTOR</th>
+                                                        <th>DIRECTOR REGIONAL</th>
+                                                        <th>ESTATUS DE LA CONTRATACIÓN</th>
+                                                        <th>ESTATUS DE LA VENTA</th>
+                                                        <th>ESTATUS DE LA COMISIÓN</th>
+                                                        <th>PRECIO FINAL</th>
+                                                        <th>PORCENTAJE DE LA COMISIÓN</th>
+                                                        <th>PAGO DEL CLIENTE</th>
+                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                        <th>TOTAL ABONADO</th>
+                                                        <th>TOTAL PAGADO</th>
+                                                        <th>LUGAR DE PROSPECCIÓN</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -216,12 +217,15 @@
                     </div>
                 </div>
             </div>
-        </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
+
     <?php $this->load->view('template/footer');?>
-    <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
+    <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+    <script src="<?= base_url() ?>dist/js/nouislider.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
 </body>
