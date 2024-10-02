@@ -159,8 +159,6 @@
 
     _ = $.i18n
 
-
-
     let load_functions = []
     let change_functions = []
 
@@ -199,9 +197,7 @@
 
             if(id){
                 title = _(id)
-                // console.log(title)
-
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
+                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
                 $('input', this).on('keyup change', function () {
                     if (tabla_6.column(i).search() !== this.value) {
                         tabla_6.column(i).search(this.value).draw();
@@ -221,5 +217,4 @@
         onLoadTranslations(translatePlaceholder)
         onChangeTranslations(translatePlaceholder)
     }
-
 </script>
