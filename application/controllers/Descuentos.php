@@ -79,6 +79,9 @@ class Descuentos extends CI_Controller
     public function anticipo()
     {
         $this->load->view('template/header');
+
+
+        
         switch($this->session->userdata('id_rol')){
             case '7':
             case '9':
@@ -89,7 +92,15 @@ class Descuentos extends CI_Controller
             case '2':
             case '5':
                 // $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
-                $this->load->view("descuentos/anticipo/solicitudes_view");
+                $respuesta = $this->Descuentos_model->validar_permiso_a($this->session->userdata('id_usuario'));
+                
+                if( $respuesta == 1 ){
+                    $this->load->view("descuentos/anticipo/anticipo_descuento_view");
+                }else{
+                    $this->load->view("descuentos/anticipo/solicitudes_view");
+                }
+                
+                
             break;
             case '4':
             case '1':    
