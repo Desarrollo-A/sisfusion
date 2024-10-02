@@ -88,7 +88,7 @@
         "lada": "area code",
         "estatus-14": "Status 14 register - ",
         "contrato"  : "Contract",
-        "nombre-contrato" : "NOMBRE DEL CONTRATO",
+        "nombre-contrato" : "CONTRACT NAME",
         "visualizar": "view",
         "registro-cliente" : "Customer registration",
         "id-cliente" : "ID CLIENT",
@@ -96,7 +96,7 @@
         "referencia" : "REFERENCE",
         "tipo-pago" : "PAYMENT TYPE",
         "fecha-enganche" : "HITCH DATE",
-        "Selecciona-una-opcion"  :"Selecciona una opción"
+        "selecciona-una-opcion"  :"Selecciona una opción"
 
     },
     "es": {
