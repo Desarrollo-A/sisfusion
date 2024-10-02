@@ -1,21 +1,15 @@
-$(document).ready(function() {
+$(document).ready(function () {
+    crearTabla();
+}) 
+onChangeTranslations(crearTabla);
+
+
+
+function crearTabla() {
     let titulos_encabezado = [];
     let num_colum_encabezado = [];
-    $('#clients-datatable thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos_encabezado.push(title);
-        num_colum_encabezado.push(i);
-        $(this).html(`<input  data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
-                $('#clients-datatable').DataTable().column(i).search(this.value).draw();
-            }
-        });
-        $('[data-toggle="tooltip"]').tooltip();
-        });
-    
 
-    num_colum_encabezado.pop();
+    construirHead("clients-datatable");
     $usersTable = $('#clients-datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -127,8 +121,8 @@ $(document).ready(function() {
         });        
         }
     });
+}
 
-});
 
 function printProspectInfo() {
     id_prospecto = $("#prospecto_lbl").val();
