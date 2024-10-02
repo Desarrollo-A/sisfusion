@@ -3,18 +3,9 @@ var getInfo3 = new Array(6);
 let titulos = [];
 
 $("#tabla_reporte_11").ready( function(){
-    $('#tabla_reporte_11 thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if (tabla_9.column(i).search() !== this.value ) {
-                tabla_9.column(i).search(this.value).draw();
-            }
-        } );
-    });
+    construirHead("tabla_reporte_11");
 
-    tabla_9 = $("#tabla_reporte_11").DataTable({
+    tabla_6 = $("#tabla_reporte_11").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,

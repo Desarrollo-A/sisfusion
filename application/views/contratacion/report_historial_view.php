@@ -13,7 +13,7 @@
 								<i class="fas fa-bookmark fa-2x"></i>
                             </div>
 							<div class="card-content">
-								<h3 class="card-title center-align" id="showDate">Contratos recibidos</h3>
+								<h3 class="card-title center-align" data-i18n="contratos-recibidos" id="showDate">Contratos recibidos</h3>
 								<div class="toolbar">
 									<div class="row">
 										<div class="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -37,15 +37,15 @@
 									<table id="Jtabla" class="table-striped table-hover">
 										<thead>
 											<tr>
-												<th>LOTE</th>
-												<th>GERENTE(S)</th>
-												<th>ASESOR(ES)</th>
-												<th>ESTATUS</th>
-												<th>DETALLES</th>
-												<th>COMENTARIO</th>
-												<th>TOTAL NETO</th>
-												<th>TOTAL VALIDADO</th>
-												<th>FECHA</th>
+												<th>lote</th>
+												<th>gerente</th>
+												<th>asesor</th>
+												<th>estatus</th>
+												<th>detalles</th>
+												<th>comentario</th>
+												<th>total-neto</th>
+												<th>total-validado</th>
+												<th>fecha</th>
 											</tr>
 										</thead>
 									</table>
