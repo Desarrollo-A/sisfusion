@@ -175,10 +175,10 @@
             change_functions.push(callback)
         }
     }
-
-    function triggerLoadFunctions() {
+   
+    async function triggerLoadFunctions() {
         for (let callback of load_functions) {
-            callback()
+            await callback();
         }
     }
 
@@ -186,6 +186,40 @@
         for (let callback of change_functions) {
             callback()
         }
+    }
+
+    function construirHead(tabla){
+        let titulos = []
+
+        $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
+            var id = $(this).text();
+            
+            titulos.push(id);
+            // console.log(id)
+
+            if(id){
+                title = _(id)
+                // console.log(title)
+
+                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
+                $('input', this).on('keyup change', function () {
+                    if ($(`#${tabla}`).column(i).search() !== this.value) {
+                        $(`#${tabla}`).column(i).search(this.value).draw();
+                    }
+                });
+            }
+        });
+
+        function translatePlaceholder(){
+                for(titulo of titulos){
+                    if(titulo !== ''){
+                        $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                    }
+                }
+            }
+
+        onLoadTranslations(translatePlaceholder)
+        onChangeTranslations(translatePlaceholder)
     }
 
 </script>

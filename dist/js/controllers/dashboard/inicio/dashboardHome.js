@@ -1,5 +1,21 @@
+$(document).ready(function(data) {
+    let languageOption = localStorage.getItem("locale")
+    if(languageOption == "en") {
+        console.log("I should be called");
+        //changeLanguaje();
+    }
+});
+
 var totalVentasChart, prospectosChart, chartProspClients, chartWeekly, chartFunnel;
 var mediaqueryList = window.matchMedia("(min-width: 200px)");
+
+onLoadTranslations(test);
+
+
+function test() {
+    console.log("lol");
+}
+
 
 var optionsTotalVentas = {
     series: [],
@@ -780,7 +796,7 @@ function getRolDR(idUser){
 
 /* Función para cambiar icono y cerrar o abrir tabla*/
 
-function changeIcon(anchor) {
+function changeIcon2(anchor) {
     anchor.closest('.wrapper .boxTabla').classList.toggle('active');
     $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
         $(this).parent().next().slideToggle(200);
@@ -796,7 +812,7 @@ function createAccordionsPR(option, render, rol) {
                 <div class="card p-2 h-auto boxTabla">
                     <div class="d-flex justify-between align-center">
                         <div class="cursor-point accordionToggle">
-                            <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
+                            <a class="purple-head hover-black" onclick="changeIcon2(this)" id="myBtn">
                             <i class="less fas fa-angle-down"></i>
                             <i class="more fas fa-angle-up "></i>
                             </a>
