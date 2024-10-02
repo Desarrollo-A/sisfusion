@@ -95,7 +95,8 @@
         "num-recibo": "RECEIPT NUMBER",
         "referencia" : "REFERENCE",
         "tipo-pago" : "PAYMENT TYPE",
-        "fecha-enganche" : "HITCH DATE"
+        "fecha-enganche" : "HITCH DATE",
+        "Selecciona-una-opcion"  :"Selecciona una opción"
 
     },
     "es": {
@@ -194,6 +195,8 @@
         "num-recibo": "NÚMERO DE RECIBO",
         "referencia" : "REFERENCIA",
         "tipo-pago" : "TIPO DE PAGO",
-        "fecha-enganche" : "FECHA DE ENGANCHE"
+        "fecha-enganche" : "FECHA DE ENGANCHE",
+        "selecciona-una-opcion"  :"Select an option"
+
     }
 }

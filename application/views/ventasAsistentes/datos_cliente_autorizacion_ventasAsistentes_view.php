@@ -41,25 +41,25 @@
 							<i class="fas fa-user-friends fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Ingresar autorización</h3>
+                            <h3 class="card-title center-align"  >Ingresar autorización</h3>
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Proyecto</label>
-                                            <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <label class="control-label" data-i18n = "proyecto">Proyecto</label>
+                                            <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Condominio</label>
-                                            <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <label class="control-label" data-i18n = "condominio">Condominio</label>
+                                            <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Lote</label>
-                                            <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <label class="control-label" data-i18n = "lote">Lote</label>
+                                            <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                 </div>
