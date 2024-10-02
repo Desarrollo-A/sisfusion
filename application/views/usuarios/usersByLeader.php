@@ -13,20 +13,20 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Plantilla activa.</h3>
+                                <h3 class="card-title center-align" data-i18n="plantilla-activa">Plantilla activa.</h3>
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="users_datatable" name="users_datatable">
                                             <thead>
                                                 <tr>
-                                                    <th>ESTATUS</th>
+                                                <th> <span  data-i18n="estatus"> ESTATUS </span > </th>
                                                     <th>ID</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>CORREO</th>
-                                                    <th>TELÉFONO</th>
-                                                    <th>TIPO</th>
-                                                    <th>JEFE DIRECTO</th>
-                                                    <th>SEDE</th>
+                                                    <th> <span data-i18n="nombre"  >NOMBRE  </span></th>
+                                                    <th> <span data-i18n="correo"  >CORREO  </span></th>
+                                                    <th> <span data-i18n="telefono">TELÉFONO</span></th>
+                                                    <th> <span data-i18n="tipo"  > TIPO</th>
+                                                    <th> <span data-i18n="jefe-directo">JEFE DIRECTO</span> </th>
+                                                    <th> <span data-i18n="sede"  > SEDE</th>
                                                 </tr>
                                             </thead>
                                         </table>

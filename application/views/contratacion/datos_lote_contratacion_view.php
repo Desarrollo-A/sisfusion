@@ -177,10 +177,10 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                             <div class="radio_container w-100">
                                                 <input class="d-none generate" type="radio" name="tipoVista"
                                                        id="condominioM" checked value="1">
-                                                <label for="condominioM" class="w-50">Inventario Lotes</label>
+                                                <label for="condominioM" class="w-50" data-i18n="inventario-lotes">Inventario Lotes</label>
                                                 <input class="d-none find-results" type="radio" name="tipoVista"
                                                        id="loteM" value="0">
-                                                <label for="loteM" class="w-50">Descargar inventario sede</label>
+                                                <label for="loteM" class="w-50" data-i18n="descargar-inventario-sede">Descargar inventario sede</label>
                                             </div>
                                         </div>
                                     </div>
@@ -188,25 +188,28 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                             </div>
                             <div class="row" id="card1">
                                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <h3 class="card-title center-align">Inventario lotes</h3>
+                                    <h3 class="card-title center-align" data-i18n="inventario-lotes">Inventario lotes</h3>
                                     <div class="toolbar">
                                         <div class="row">
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group overflow-hidden">
                                                     <label class="control-label" for="idResidencial">Proyecto</label>
-                                                    <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
+                                                    <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción"
+                                                     data-i18n="select-prederteminado" data-size="7" size="5" data-container="body" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="idCondominioInventario">Condominio</label>
-                                                    <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                    <label class="control-label" for="idCondominioInventario" data-i18n="condominio">Condominio</label>
+                                                    <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción"
+                                                     data-i18n="select-prederteminado" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="idEstatus">Estatus</label>
-                                                    <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                    <label class="control-label" for="idEstatus" data-i18n="estatus">Estatus</label>
+                                                    <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción"
+                                                     data-i18n="select-prederteminado" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -216,13 +219,6 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                             <thead>
                                             <tr>
                                                 <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>SUPERFICIE</th>
-                                                <th>PRECIO DE LISTA</th>
-                                                <th>TOTAL CON DESCUENTOS</th>
-                                                <th>M2</th>
                                                 <th>REFERENCIA</th>
                                                 <th>MSI</th>
                                                 <th>ASESOR</th>
@@ -312,6 +308,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                         <label class="control-label">Sedes por proyecto</label>
                                                         <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
                                                                 data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN"
+                                                                
                                                                 data-size="7" data-live-search="true" required>
                                                         </select>
                                                     </div>
@@ -375,5 +372,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
 <?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/controllers/contratacion/datos_lote_contratacion.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
+<script src="https://unpkg.com/i18next@21.6.10/dist/umd/i18next.min.js"></script>
+
 
 </body>
