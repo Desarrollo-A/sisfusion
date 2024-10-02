@@ -86,7 +86,11 @@
         "metodos-envio": "SHIPPING METHODS",
         "mensaje-sms": "SMS TEXT MESSAGE",
         "lada": "area code",
-        "estatus-14": "Status 14 register - "
+        "estatus-14": "Status 14 register - ",
+        "contrato"  : "Contract",
+        "nombre-contrato" : "NOMBRE DEL CONTRATO",
+        "visualizar": "view"
+
     },
     "es": {
         "build-his-profile": "Construye su perfil",
@@ -175,6 +179,9 @@
         "metodos-envio": "MÉTODOS DE ENVÍO",
         "mensaje-sms": "MENSAJE DE TEXTO SMS",
         "lada": "lada",
-        "estatus-14": "Registro estatus 14 - "
+        "estatus-14": "Registro estatus 14 - ",
+        "contrato"  : "Contrato",
+        "nombre-contrato" : "NOMBRE DEL CONTRATO",
+        "visualizar": "Visualizar"
     }
 }

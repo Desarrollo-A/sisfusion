@@ -27,7 +27,7 @@
 							<i class="fas fa-user-friends fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Contrato</h3>
+                            <h3 class="card-title center-align" data-i18n = "contrato">Contrato</h3>
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col-md-4 form-group">
@@ -55,12 +55,12 @@
 									<table class="table-striped table-hover hide" id="tabla_contrato_ventas" name="tabla_contrato_ventas">
 										<thead>
 											<tr>
-												<th>PROYECTO</th>
-												<th>CONDOMINIO</th>
-												<th>LOTE</th>
-												<th>CLIENTE</th>
-												<th>NOMBRE DEL CONTRATO</th>
-												<th>CONTRATO</th>
+												<th>proyecto</th>
+												<th>condominio</th>
+												<th>lote</th>
+												<th>cliente</th>
+												<th>nombre-contrato</th>
+												<th>contrato</th>
 											</tr>
 										</thead>
 									</table>

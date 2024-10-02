@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    construirHead("tabla_contrato_ventas");
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Asistente_gerente/lista_proyecto", function (data) {
         var len = data.length;
@@ -53,25 +54,25 @@ $('#condominio').change(function () {
 });
 
 var titulos_encabezado = [];
-$('#tabla_contrato_ventas thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_encabezado.push(title);
-    let readOnly = (title == 'CONTRATO' || title == '') ? 'readOnly': '';
-    let width = title=='CONTRATO' ? 'style="width: 65px;"': '';
-    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
-    $('input', this).on('keyup change', function () {
-        if (tabla_contrato.column(i).search() !== this.value) {
-            tabla_contrato.column(i).search(this.value).draw();
-        }
-    });
-});
+// $('#tabla_contrato_ventas thead tr:eq(0) th').each(function (i) {
+//     var title = $(this).text();
+//     titulos_encabezado.push(title);
+//     let readOnly = (title == 'CONTRATO' || title == '') ? 'readOnly': '';
+//     let width = title=='CONTRATO' ? 'style="width: 65px;"': '';
+//     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+//     $('input', this).on('keyup change', function () {
+//         if (tabla_contrato.column(i).search() !== this.value) {
+//             tabla_contrato.column(i).search(this.value).draw();
+//         }
+//     });
+// });
 
 var tabla_contrato;
 $('#lote').change(function () {
     index_lote = $(this).val();
     $('#spiner-loader').removeClass('hide');
     $('#tabla_contrato_ventas').removeClass('hide');
-    tabla_contrato = $("#tabla_contrato_ventas").DataTable({
+    tabla_6 = $("#tabla_contrato_ventas").DataTable({
         width: '100%',
         scrollX: true,
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -148,7 +149,7 @@ $('#lote').change(function () {
                                     </h3>
                                     <embed  src="${general_base_url}static/documentos/cliente/contrato/${data.contratoArchivo}" frameborder="0" width="100%" height="500" style="height: 60vh;"></embed >`);
                                         var myLinkConst = ` <center>
-                                                <a type="button" data-toggle="tooltip" data-placement="top" title="VISUALIZAR" class="btn-data btn-blueMaderas contratacion_modal">
+                                                <a type="button" data-toggle="tooltip" data-placement="top" title="${_("visualizar")}" class="btn-data btn-blueMaderas contratacion_modal">
                                                     <center>
                                                         <i class="fas fa-eye" style="cursor: pointer"></i>
                                                     </center>
