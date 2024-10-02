@@ -72,16 +72,20 @@ function triggerChangeFunctions() {
     }
 }
 
+
+
 function construirHead(tabla){
     let titulos = []
     const idNoPermitidos = ['checkComisionesNuevas']
 
+    let tabla_object = $(`#${tabla}`).DataTable({})
+
     $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
+        
         var id = $(this).text();
         
+        
         titulos.push(id);
-        // console.log(id)
-
         if(id && idNoPermitidos.indexOf(id)){
             title = _(id)
             // console.log(title)
@@ -100,15 +104,12 @@ function construirHead(tabla){
             $('[data-toggle="tooltip"]').tooltip(); 
 
         }
-        
-
     });
 
     function translatePlaceholder(){
             for(titulo of titulos){
                 if(titulo !== ''){
-                    $(`#head-${titulo}`).attr('placeholder', _(titulo));
-                    $(`#head-${titulo}`).attr('title', _(titulo));
+                    $(`#head-${titulo}`).attr('placeholder', _(titulo))
                 }
             }
         }
