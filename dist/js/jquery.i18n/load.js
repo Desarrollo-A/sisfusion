@@ -138,6 +138,20 @@ function changeSelects() {
     })
 }
 
+function stringToI18(str) {
+    // Convertir todo el string a minúsculas
+    let resultado = str.toLowerCase();
+      
+    // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
+    resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      
+    // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
+    resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
+      
+    console.log(resultado);
+    return resultado;
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
