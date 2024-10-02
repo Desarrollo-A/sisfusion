@@ -52,18 +52,19 @@ function formatDate(date) {
 }
 
 let titulos = [];
-$('#tableLotificacion thead tr:eq(0) th').each(function (i) {
-    title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $( 'input', this).on('keyup change', function () {
-        if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
-            $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-});
+// $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
+//     title = $(this).text();
+//     titulos.push(title);
+//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//     $( 'input', this).on('keyup change', function () {
+//         if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
+//             $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+// });
 
+construirHead("tableLotificacion");
 function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
     generalDataTable = $('#tableLotificacion').dataTable({
@@ -162,11 +163,11 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             "visible": false,
             data: function (d) {
                 if (id_rol_global == 31) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
-                    '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="'+_('editar')+'" onclick=><i class="fas fa-pencil-alt"></i></button>'+
+                    '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="'+_('bitacora')+'"><i class="fas fa-eye"></i></button></div>';
                 }
                 else{
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="'+_('bitacora')+'"><i class="fas fa-eye"></i></button></div>';
                 }
             }
         }],
@@ -211,7 +212,7 @@ function fillChangelogUsers(v) {
     var nombreMovimiento;
     var dataMovimiento;
     nombreMovimiento = v.col_afect;
-    dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+    dataMovimiento = '<b>'+_('valor-anterior')+':</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
             $("#changelogUsers").append('<li class="timeline-inverted">\n' +
@@ -240,16 +241,16 @@ $(document).on('click', '#aceptarMonto', function(e){
         success: function (data) {
             if (data.status == 200) {
                 $("#editMontoInternomex").modal("hide");
-                alerts.showNotification("top", "right", "El registro ha sido actualizado de manera éxitosa.", "success");
+                alerts.showNotification("top", "right", _('registro-actualizado-exitoso'), "success");
                 let fechaInicio = formatDate( $(".beginDate").val());
                 let fechaFin = formatDate( $(".endDate").val());
                 fillTableLotificacion(fechaInicio, fechaFin);
             } else {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+                alerts.showNotification("top", "right", _('algo-salio-mal'), "warning");
             }
         },
         error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -260,7 +261,7 @@ $(document).on('click', '.searchByDateRange', function(){
     if(fechaInicio <= fechaFin ){
         fillTableLotificacion(fechaInicio, fechaFin);
     }else{
-        alerts.showNotification("top", "right", "Fecha inicial no puede ser mas mayor a la fecha final", "warning");
+        alerts.showNotification("top", "right", _('fecha-inicial-no-mayor-final'), "warning");
     }
 });
 
@@ -322,7 +323,7 @@ $(document).on('click', '#downloadFile', function () {
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -361,7 +362,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
     fileElm = document.getElementById("fileElm");
     file = fileElm.value;
     if (file == '')
-        alerts.showNotification("top", "right", "Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información.", "warning");
+        alerts.showNotification("top", "right", _('asegurate-cargar-archivo-para-informacion'), "warning");
     else {
         let extension = file.substring(file.lastIndexOf("."));
         let statusValidateExtension = validateExtension(extension, ".xlsx");
@@ -377,16 +378,16 @@ $(document).on('click', '#cargaCoincidencias', function () {
                         $('#uploadModal').modal('toggle');
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown){
-                        alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalo de nuevo.', "danger");
+                        alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? _('error-datos-ingresados'): _('algo-salio-mal'), "danger");
                         if (XMLHttpRequest.status == 301){
-                            alerts.showNotification("top", "right", 'intentas subir uno o varios regitros.' , "warning");
+                            alerts.showNotification("top", "right", _('intentas-subir-uno-varios-archivos') , "warning");
                         }
                         $('#uploadModal').modal('toggle');
                     }
                 });
             });
         } else
-            alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo <b>.xlsx</b>.", "warning");
+            alerts.showNotification("top", "right", _('archivo-extension')+ " <b>" + extension + "</b> "+_('no-valido')+ _('recuerda-archivo')+" <b>.xlsx</b>.", "warning");
     }
 });
 

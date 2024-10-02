@@ -256,10 +256,27 @@
         "historial": "History",
         "rechazo-contraloria-estatus": "Rejection Comptroller status",
         "pausado": "PAUSED",
-        "este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you"
-
+        "este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you",
+        "selecciona-archivo":"Select a file",
+        "selecconar":"Select",
+        "cargar":"Upload",
+        "monto-internomex":"Amount Internomex",
+        "texto-consulta-pago-final":"Through this panel you will be able to consult the final amount paid in each commission cut. Only one record per month will be saved, the module will preload the information found in the current year. In case you want to consult a particular date, you can do it through the filters located at the top right (from December 2022 cut-off this information will be available).",
+        "consulta-pago-final":"Final payment inquiry",
+        "consultar":"Consult",
+        "id-registro":"Registration ID",
+        "rol":"Role",
+        "monto-sin-descuento":"Amount without discount",
+        "fecha-captura-registro":"Date of record capture",
+        "editar":"Edit",
+        "bitacora":"Logbook",
+        "valor-anterior":"Previous value",
+        "registro-actualizado-exitoso":"The registry has been successfully updated",
+        "fecha-inicial-no-mayor-final":"Start date cannot be greater than end date",
+        "asegurate-cargar-archivo-para-informacion":"Be sure to select a file to perform the upload of the information",
+        "intentas-subir-uno-varios-archivos":"You try to upload one or more records.",
+        "error-datos-ingresados":"Error in the data entered"
         
-
 
 
     },
@@ -520,6 +537,25 @@
         "historial": "Historial",
         "rechazo-contraloria-estatus": "Rechazo Contraloría estatus",
         "pausado": "PAUSADO",
-        "este-listado-todos-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado"
+        "este-listado-todos-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado",
+        "selecciona-archivo":"Selecciona un archivo",
+        "seleccionar":"Seleccionar",
+        "cargar":"Cargar",
+        "monto-internomex":"Monto Internomex",
+        "texto-consulta-pago-final":"A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información).",
+        "consulta-pago-final":"Consulta pago final",
+        "consultar":"Consultar",
+        "id-registro":"ID del registro",
+        "rol":"Rol",
+        "monto-sin-descuento":"Monto sin descuento",
+        "fecha-captura-registro":"Fecha de captura de registro",
+        "editar":"Editar",
+        "bitacora":"Bitácora",
+        "valor-anterior":"Valor anterior",
+        "registro-actualizado-exitoso":"El registro ha sido actualizado de manera éxitosa",
+        "fecha-inicial-no-mayor-final":"Fecha inicial no puede ser mas mayor a la fecha final",
+        "asegurate-cargar-archivo-para-informacion":"Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información",
+        "intentas-subir-uno-varios-archivos":"Intentas subir uno o varios registros.",
+        "error-datos-ingresados":"Error en los datos ingresados"
     }
 }

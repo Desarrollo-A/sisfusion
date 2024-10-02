@@ -158,7 +158,7 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
     // });
 
 
-    construirHead("tabla_historialGral")
+    construirHead("tabla_historialGral");
 
     $('#tabla_historialGral').removeClass('hidden');
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
