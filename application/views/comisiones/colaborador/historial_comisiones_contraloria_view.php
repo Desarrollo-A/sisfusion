@@ -125,7 +125,7 @@
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
                                                         <div class="form-group select-is-empty">
                                                             <label for="proyecto" class="control-label" data-i18n="proyectos">Proyectos</label>
-                                                            <select name="catalogo_historial" id="catalogo_historial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                            <select name="catalogo_historial" id="catalogo_historial" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
                                                     </div>
                                                 </div>

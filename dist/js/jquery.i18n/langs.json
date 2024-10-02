@@ -342,7 +342,26 @@
         ,"en-revision": "Payments under review"
         ,"resguardo": "Withheld commissions "
         ,"por-pagar": "Por pagar",
-        "consultar-detalles-youtube":"For more details on the use and functionality of the Final Payment Query section, you can view it in the following tutorial"
+        "consultar-detalles-youtube":"For more details on the use and functionality of the Final Payment Query section, you can view it in the following tutorial",
+        "detalle-total-comisiones":"Total detail of commissions",
+        "reporte-lotes-comisionista":"Batch report by commission agent",
+        "comisionista":"Commission Merchant",
+        "tipo-usuario":"User type",
+        "total-abonado":"Paid so far",
+        "total-pagado":"Total paid",
+        "estatus-contratacion":"CONTRACTING STATUS",
+        "estatus-ventas":"status of sales",
+        "estatus-comision":"Commission status",
+        "precio-final":"Final price",
+        "lugar-prospeccion":"prospecting location",
+        "rescision-contrato":"Termination of contract",
+        "sin-dispersar":"Without to disperse",
+        "liquidada":"Liquidated",
+        "proceso-dispersion":"Dispersion process",
+        "sin-definir-estatus":"Status not defined",
+        "campo-no-seleccionado":"Some or no fields have not been selected",
+        "comisiones-como":"commissions as",
+        "activos":"assets"
         
         
 
@@ -699,7 +718,26 @@
         ,"en-revision": "En revisión"
         ,"resguardo": "Resguardo"
         ,"por-pagar": "Por pagar",
-        "consultar-detalles-youtube":"Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial"
+        "consultar-detalles-youtube":"Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial",
+        "detalle-total-comisiones":"Detalle total de comisiones",
+        "reporte-lotes-comisionista":"Reporte de lotes por comisionista",
+        "comisionista":"Comisionista",
+        "tipo-usuario":"Tipo de usuario",
+        "total-abonado":"Total abonado",
+        "total-pagado":"Total pagado",
+        "estatus-contratacion":"ESTATUS CONTRATACIÓN",
+        "estatus-ventas":"Estatus de las ventas",
+        "estatus-comision":"Estatus de la comisión",
+        "precio-final":"Precio final",
+        "lugar-prospeccion":"Lugar de prospeccion",
+        "rescision-contrato":"Rescisión de contrato",
+        "sin-dispersar":"Sin dispersar",
+        "liquidada":"Liquidada",
+        "proceso-dispersion":"En proceso de dispersión",
+        "sin-definir-estatus":"Sin definir estatus",
+        "campo-no-seleccionado":"No se han seleccionado algunos o ningún campo",
+        "comisiones-como":"Comisiones como",
+        "activos":"activos"
 
 
     }
