@@ -240,7 +240,19 @@
 		"nuevo-apartado": "New section",
 		"historial": "History",
 		"rechazo-contraloria-estatus": "Rejection Comptroller status",
-		"pausado": "PAUSED"
+		"pausado": "PAUSED",
+		"precio-m2": "Price per m²",
+		"precio-total": "Total price",
+		"meses-sin-intereses": "Months without interest",
+		"tipo-de-venta": "Type of Sale",
+		"condominio-2": "Condominium",
+		"superficie-2": "Surface",
+		"grupo": "Group",
+		"inventario-disponible": "Available inventory",
+		"selecciona-todo": "SELECT ALL",
+		"venta-de-particulares": "Private sale",
+		"venta-normal": "Regular sale",
+		"clausulas": "Clauses"
 	},
 	"es": {
 		"precio-del.lote": "Precio del lote",
@@ -484,6 +496,18 @@
 		"nuevo-apartado": "Nuevo apartado",
 		"historial": "Historial",
 		"rechazo-contraloria-estatus": "Rechazo Contraloría estatus",
-		"pausado": "PAUSADO"
+		"pausado": "PAUSADO",
+		"precio-m2": "Precio por m²",
+		"precio-total": "Precio total",
+		"meses-sin-intereses": "Meses sin intereses",
+		"tipo-de-venta": "Tipo venta",
+		"grupo": "Grupo",
+		"condominio-2": "Condominio",
+		"superficie-2": "Superficie",
+		"inventario-disponible": "Inventario disponible",
+		"selecciona-todo": "SELECCIONA TODO",
+		"venta-de-particulares": "Venta de particulares",
+		"venta-normal": "Venta normal",
+		"clausulas": "Cláusulas"
 	}
 }

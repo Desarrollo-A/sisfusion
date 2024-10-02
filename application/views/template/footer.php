@@ -236,12 +236,13 @@
         });
 
         function translatePlaceholder(){
-                for(titulo of titulos){
-                    if(titulo !== ''){
-                        $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                    }
+            for(titulo of titulos){
+                if(titulo !== ''){
+                    $(`#head-${titulo}`).attr('placeholder', _(titulo));
+                    $(`#head-${titulo}`).attr('title', _(titulo));
                 }
             }
+        }
 
         onLoadTranslations(translatePlaceholder)
         onChangeTranslations(translatePlaceholder)
