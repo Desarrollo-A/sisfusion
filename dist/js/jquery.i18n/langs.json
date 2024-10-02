@@ -296,7 +296,24 @@
         "comisiones-proceso-pago":"Commissions in the process of being paid by INTERNOMEX. If you need to see more details, such as what has been paid and what is pending, you can check it in the history",
         "por-pagar-sin-impuesto":"Pending payment without taxes:",
         "total-pausado":"Total paused:",
-        "sin-pago-neodata":"Commissions not reflected in NEODATA, which is why certain lots with your commissions have not been disbursed."
+        "sin-pago-neodata":"Commissions not reflected in NEODATA, which is why certain lots with your commissions have not been disbursed.",
+        "ver-doc-fiscal" : "Viewing tax document:",
+        "de":"OF",
+        "general":"% GENERAL",
+        "penalizacion-90":"PENALTY PLUS 90 DAYS",
+        "descuento-resguardo": "Discounts of guard money."
+        ,"descuento-resguardo-descripcion" : "List of deductions applied to the Personal Custody balance."
+        ,"total-resguardo": "Total personal custody balance :"
+        ,"ingresos-extra": "Extra income :"
+        ,"saldo-disponible" : "Available balance"        
+        ,"descuentos-aplicados" : "Discounts applied:"
+        ,"creado-por": "CREATED BY"
+        ,"id-descuento": "ID DISCOUNT"
+        ,"historial-retiro" : "history of Personal Custody balance."
+        ,"nombre_usuario": "User name"
+        ,"en-revision": "Payments under review"
+        ,"resguardo": "Withheld commissions "
+        ,"por-pagar": "Por pagar"
     },
     "es": {
 		"clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -597,7 +614,24 @@
         "por-pagar-sin-impuesto":"Pagar sin impuestoesto:",
         "comisiones-pausadas":"Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial ",
         "total-pausado":"Total pausado:",
-        "sin-pago-neodata":"Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones."
+        "sin-pago-neodata":"Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.",
+        "ver-doc-fiscal" : "Visualizando documento fiscal:",
+        "de":"DE",
+        "general":"% GENERAL",
+        "penalizacion-90":"PENALIZACIÓN + 90 DÍAS"
+        ,"descuento-resguardo": "Descuentos a resguardo,"
+        ,"descuento-resguardo-descripcion": "Listado de los descuentos aplicados al saldo de Resguardo personal."
+        ,"total-resguardo": "Total resguardo :"
+        ,"ingresos-extra": "Ingreso extra :"
+        ,"saldo-disponible": "Saldo disponible"
+        ,"descuentos-aplicados" : "Descuentos aplicados:"
+        ,"creado-por": "CREADO POR"
+        ,"id-descuento": "ID DESCUENTO"
+        ,"historial-retiro":"Historial Retiro"
+        ,"nombre_usuario":"Nombre usuario"
+        ,"en-revision": "En revisión"
+        ,"resguardo": "Resguardo"
+        ,"por-pagar": "Por pagar"
 
 
         

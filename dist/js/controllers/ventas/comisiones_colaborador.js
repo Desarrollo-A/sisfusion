@@ -55,7 +55,7 @@ $("#EditarPerfilExtranjeroForm").one('submit', function (e) {
         },
         error: function () {
             $("#addFileExtranjero").modal('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -65,7 +65,7 @@ $(document).on('click', '.verPDFExtranjero', function () {
     Shadowbox.open({
         content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="' + general_base_url + 'static/documentos/extranjero/' + $itself.attr('data-usuario') + '"></iframe></div>',
         player: "html",
-        title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
+        title: _("ver-doc-fiscal") + $itself.attr('data-usuario'),
         width: 985,
         height: 660
     });
@@ -92,7 +92,7 @@ function requestCodigoPostal(){
             }
         },
         error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 }
@@ -127,7 +127,7 @@ $(document).on("submit", "#cpForm", function (e) {
             $("#cpModal").modal("hide");
         }, error: function () {
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -422,7 +422,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de ' + d.porcentaje_abono + '% GENERAL </p>';
+                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> <span data-i18n="de"> de </span> ' + d.porcentaje_abono + ' <span data-i18n="general">% GENERAL </span> </p>';
             }
         },
         {
@@ -430,7 +430,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
+                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"><span data-i18n="penalizacion-90"> + 90 DÍAS</span></span></p>';
                 }
 
                 if(d.bonificacion >= 1){
@@ -441,7 +441,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
+                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning"><span data-i18n="rescision">RECISIÓN</span></span></p>';
                 }
                 else{
                     p2 = '';
@@ -1555,7 +1555,7 @@ function EnviarDesarrollos() {
         },
         error: function () {
             document.getElementById('btn_EnviarM').disabled = false;
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 }
