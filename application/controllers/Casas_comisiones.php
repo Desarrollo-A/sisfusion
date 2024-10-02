@@ -109,28 +109,148 @@ class Casas_comisiones extends CI_Controller
     echo json_encode($this->Contratacion_model->get_condominio_lista($proyecto)->result_array());
   }
 
+  public function getDesarrolloSelect($a = ''){
+    $diaActual = date('d'); 
+    $validar_sede = $this->session->userdata('id_sede');
+    $tipoUsuario = $this->session->userdata('tipo');
+    $id_user = $this->session->userdata('id_usuario');
+
+    $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user")->result_array();
+    $tipo = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 3 : 1) : $this->session->userdata('tipo');
+   // $tipoValidado = $tipo == 2 ? 1 : ($tipo == 4 ? $tipo : 3);
+
+    $consultaTipoUsuario = $this->db->query("SELECT tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user.")")->result_array();
+
+
+    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
+    $filtro =  $tipo == 3 ?  ($diaActual < 15 ? "AND Day(fechaInicio) < 15" : "AND Day(fechaInicio) >= 15") : "";
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = ".$tipo." AND mes = $mesActual  $filtro AND estatus=1")->result_array();
+    $obtenerFechaSql = $this->db->query("SELECT FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
+    
+    $fecha_actual = strtotime($obtenerFechaSql);
+    
+    $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+    
+    $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
+    if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin)){
+      if($a == ''){
+        echo json_encode($this->Casas_comisiones_model->getDesarrolloSelect()->result_array());
+      } else{
+        echo json_encode($this->Casas_comisiones_model->getDesarrolloSelect($a)->result_array());
+      }
+    } else{
+      echo json_encode(3);
+    }
+  }
+  public function guardar_solicitud2($usuario = ''){
+    $diaActual = date('d'); 
+    if($usuario != ''){
+      $usuarioid = $usuario;
+    }else{
+      $usuarioid = $this->session->userdata('id_usuario');
+    }
+    $validar_sede =  $this->session->userdata('id_sede');
+
+    $diaActual = date('d'); 
+
+    $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = ".$this->session->userdata('id_usuario')." ")->result_array();
+    $tipo = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 3 : 1) : $this->session->userdata('tipo');
+    //$tipoValidado = $tipo == 2 ? 1 : ( $tipo == 4 ? $tipo : 3);
+
+    $consultaTipoUsuario = $this->db->query("SELECT tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$usuarioid.")")->result_array();
+
+
+    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+    $filtro =  $tipo == 3 ?  ($diaActual < 15 ? "AND Day(fechaInicio) < 15" : "AND Day(fechaInicio) >= 15") : "";
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = ".$tipo." AND mes = $mesActual  $filtro AND estatus=1")->result_array();
+
+
+    $obtenerFechaSql = $this->db->query("SELECT FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
+    $fecha_actual = strtotime($obtenerFechaSql);
+    $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+    $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
+    
+    if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) ) {
+      
+      $datos = explode(",",$this->input->post('pagos'));
+      $resultado = array("resultado" => TRUE);
+      if((isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
+        $this->db->trans_begin();
+        $resultado = TRUE;
+        
+        if( isset( $_FILES ) && !empty($_FILES) ){
+          $config['upload_path'] = './UPLOADS/XMLS_CASAS/';
+          $config['allowed_types'] = 'xml';
+          $this->load->library('upload', $config);
+          $resultado = $this->upload->do_upload("xmlfile");
+          
+          if( $resultado ){
+            $xml_subido = $this->upload->data();
+            $datos_xml = $this->Casas_comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
+            $total = (float)$this->input->post('total');
+            $totalXml = (float)$datos_xml['total'];
+            
+            if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
+              $nuevo_nombre = date("my")."_";
+              $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+              $nuevo_nombre .= date("Hms")."_";
+              $nuevo_nombre .= rand(4, 100)."_";
+              $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
+              rename( $xml_subido['full_path'], "./UPLOADS/XMLS_CASAS/".$nuevo_nombre );
+              $datos_xml['nombre_xml'] = $nuevo_nombre;
+              ini_set('max_execution_time', 0);
+              for ($i=0; $i <count($datos) ; $i++) { 
+                if(!empty($datos[$i])){
+                  $id_com =  $datos[$i];
+                  $this->Casas_comisiones_model->insertar_factura($id_com, $datos_xml,$usuarioid);
+                  $this->Casas_comisiones_model->update_acepta_solicitante($id_com);
+                  $this->db->query("INSERT INTO historial_comision_casas VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
+                }
+              }
+            } else {
+              $this->db->trans_rollback();
+              echo json_encode(4);
+              return;
+            }
+          } else{
+            $resultado["mensaje"] = $this->upload->display_errors();
+          }
+        }
+        
+        if($resultado === FALSE || $this->db->trans_status() === FALSE){
+          $this->db->trans_rollback();
+          $resultado = array("resultado" => FALSE);
+        }else{
+          $this->db->trans_commit();
+          $resultado = array("resultado" => TRUE);
+        }
+      }
+      $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
+      echo json_encode( $resultado );
+    }else{
+      echo json_encode(3);
+    }
+  }
   public function acepto_comisiones_user(){
     $formaPagoInvalida = [2,3,4,5];
     $diaActual = date('d'); 
     $id_user_Vl = $this->session->userdata('id_usuario');
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
-
     $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i FROM pago_casas_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
 
-    // Validacion de un usuario multitipo
     $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user_Vl")->result_array();
-    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
-    $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
-    $consultaTipoUsuario = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+    $tipo = $multitipo != null ?  ((($multitipo[0]["tipo"] == 1 && $this->session->userdata('tipo') == 3) || ($multitipo[0]["tipo"] == 3 && $this->session->userdata('tipo') == 1)) ? 3 : 1) : $this->session->userdata('tipo');
+    // Validacion de un usuario multitipo
+    $consultaTipoUsuario = $this->db->query("SELECT tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 
-    if(in_array($tipoValidado,$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
+    if(in_array($formaPagoUsuario,$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Casas_comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl); 
       $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
-      $filtro = ($tipoValidado == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($consultaTipoUsuario[0]['forma_pago'] == 2 && $tipoValidado == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
+      $filtro =  $tipo == 3 ?  ($diaActual < 15 ? "AND Day(fechaInicio) < 15" : "AND Day(fechaInicio) >= 15") : "";
       
-      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = $tipoValidado AND mes = $mesActual  $filtro")->result_array(); 
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = $tipo AND mes = $mesActual  $filtro")->result_array(); 
       $obtenerFechaSql = $this->db->query("SELECT FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
       
       if( $consulta_comisiones->num_rows() > 0 && $consultaFechasCorte ){ 
@@ -361,94 +481,7 @@ class Casas_comisiones extends CI_Controller
     echo json_encode( $respuesta );
   }
 
-  public function guardar_solicitud2($usuario = ''){
-    if($usuario != ''){
-      $usuarioid = $usuario;
-    }else{
-      $usuarioid = $this->session->userdata('id_usuario');
-    }
-    $validar_sede =  $this->session->userdata('id_sede');
 
-    $diaActual = date('d'); 
-
-    $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = ".$this->session->userdata('id_usuario')." ")->result_array();
-    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
-    $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
-
-    $forma_Pago = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario IN (".$this->session->userdata('id_usuario').")")->result_array();
-
-
-    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-    $filtro = ($tipoValidado == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($forma_Pago== 2 && $tipoValidado == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = ".$tipoValidado." AND mes = $mesActual  $filtro")->result_array();
-
-
-    $obtenerFechaSql = $this->db->query("SELECT FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
-    $fecha_actual = strtotime($obtenerFechaSql);
-    $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
-    $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
-    
-    if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) ) {
-      
-      $datos = explode(",",$this->input->post('pagos'));
-      $resultado = array("resultado" => TRUE);
-      if((isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
-        $this->db->trans_begin();
-        $resultado = TRUE;
-        
-        if( isset( $_FILES ) && !empty($_FILES) ){
-          $config['upload_path'] = './UPLOADS/XMLS_CASAS/';
-          $config['allowed_types'] = 'xml';
-          $this->load->library('upload', $config);
-          $resultado = $this->upload->do_upload("xmlfile");
-          
-          if( $resultado ){
-            $xml_subido = $this->upload->data();
-            $datos_xml = $this->Casas_comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
-            $total = (float)$this->input->post('total');
-            $totalXml = (float)$datos_xml['total'];
-            
-            if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
-              $nuevo_nombre = date("my")."_";
-              $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
-              $nuevo_nombre .= date("Hms")."_";
-              $nuevo_nombre .= rand(4, 100)."_";
-              $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-              rename( $xml_subido['full_path'], "./UPLOADS/XMLS_CASAS/".$nuevo_nombre );
-              $datos_xml['nombre_xml'] = $nuevo_nombre;
-              ini_set('max_execution_time', 0);
-              for ($i=0; $i <count($datos) ; $i++) { 
-                if(!empty($datos[$i])){
-                  $id_com =  $datos[$i];
-                  $this->Casas_comisiones_model->insertar_factura($id_com, $datos_xml,$usuarioid);
-                  $this->Casas_comisiones_model->update_acepta_solicitante($id_com);
-                  $this->db->query("INSERT INTO historial_comision_casas VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
-                }
-              }
-            } else {
-              $this->db->trans_rollback();
-              echo json_encode(4);
-              return;
-            }
-          } else{
-            $resultado["mensaje"] = $this->upload->display_errors();
-          }
-        }
-        
-        if($resultado === FALSE || $this->db->trans_status() === FALSE){
-          $this->db->trans_rollback();
-          $resultado = array("resultado" => FALSE);
-        }else{
-          $this->db->trans_commit();
-          $resultado = array("resultado" => TRUE);
-        }
-      }
-      $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
-      echo json_encode( $resultado );
-    }else{
-      echo json_encode(3);
-    }
-  }
 
   public function resumenIndividual($idLote,$proceso){
     if($proceso == 1){
@@ -464,40 +497,7 @@ class Casas_comisiones extends CI_Controller
     echo json_encode($this->Casas_comisiones_model->getComments($pago)->result_array());
   }
 
-  public function getDesarrolloSelect($a = ''){
-    $diaActual = date('d'); 
-    $validar_sede = $this->session->userdata('id_sede');
-    $tipoUsuario = $this->session->userdata('tipo');
-    $id_user = $this->session->userdata('id_usuario');
 
-    $multitipo = $this->db->query("SELECT tipo FROM multitipo WHERE id_usuario = $id_user")->result_array();
-    $tipo = $multitipo != null ?  $multitipo[0]["tipo"] : $this->session->userdata('tipo');
-    $tipoValidado = $tipo == 2 ? 1 : ($tipo == 3 || $tipo == 4 ? $tipo : 0);
-
-    $consultaTipoUsuario = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario IN (".$id_user.")")->result_array();
-
-
-    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
-    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-    $filtro = ($tipoValidado == 1) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($consultaTipoUsuario == 2 && $tipoValidado == 1 ) ? " AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = ".$tipoValidado." AND mes = $mesActual  $filtro")->result_array();
-    $obtenerFechaSql = $this->db->query("SELECT FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
-    
-    $fecha_actual = strtotime($obtenerFechaSql);
-    
-    $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
-    
-    $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
-    if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin)){
-      if($a == ''){
-        echo json_encode($this->Casas_comisiones_model->getDesarrolloSelect()->result_array());
-      } else{
-        echo json_encode($this->Casas_comisiones_model->getDesarrolloSelect($a)->result_array());
-      }
-    } else{
-      echo json_encode(3);
-    }
-  }
 
   // ----------------------------- controlador de historial_casas --------------------------------
 

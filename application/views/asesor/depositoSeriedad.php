@@ -9,10 +9,10 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title" data-i18n="asignar-prospecto">¿Realmente desea asignar este prospecto al cliente?</h4>
+                    <h4 class="modal-title" data-i18n="pregunta-asignar-cliente">¿Realmente desea asignar este prospecto al cliente?</h4>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal" data-i18n="aceptar">ASIGNAR<div class="ripple-container"></div></button>
+                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal" data-i18n="asignar">ASIGNAR<div class="ripple-container"></div></button>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"><b data-i18n="solicitar">Solicitar</b><span data-i18n="autorizacion"> autorización. </span></h4>
+                    <h4 class="modal-title"><b data-i18n="solicitar-asignacion">Solicitar autorización.</b></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <form id="my-edit-form" name="my-edit-form" method="post">
@@ -39,7 +39,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"><b data-i18n="asginar">Asignar</b><span data-i18n="prospecto-cliente"> prospecto al cliente </span>
+                    <h4 class="modal-title"><b data-i18n="asignar-pros-cliente">Asignar prospecto al cliente</b>
                     <b><span id="nom_cliente" style="text-transform: uppercase"></span></b>.</h4>
                     <a type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute;top: 2%;right: 5%;"><span class="material-icons">close</span></a>
                     <h5 class=""></h5>
@@ -70,7 +70,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" data-i18n="asignando">Asignando prospecto al cliente</h4>
+                    <h4 class="modal-title" data-i18n="asignar-pros-cliente">Asignando prospecto al cliente</h4>
                     <div class="modal-body" style="text-align: center">
                         <img src="<?=base_url()?>static/images/asignando.gif" width="100%">
                     </div>
@@ -135,7 +135,7 @@
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-aut-div">
                                         <label class="m-0 checkstyleAut">
                                             <input type="checkbox" name="chkCorreoAut" id="chkCorreoAut" onchange="chkCorreoAutOnChange()" checked>
-                                            <span data-i18n="correo">CORREO ELECTRÓNICO</span>
+                                            <span data-i18n="correo-electronico">CORREO ELECTRÓNICO</span>
                                         </label>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-aut-div">
@@ -151,8 +151,8 @@
                         <div class="row mt-1" id="correo-aut-div">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group m-0">
-                                    <label class="label-on-left m-0">
-                                       <span data-i18n="correo"> CORREO ELECTRÓNICO </span> (<small style="color: red;">*</small>)
+                                    <label class="label-on-left m-0" data-i18n="correo-electronico">
+                                        CORREO ELECTRÓNICO (<small style="color: red;">*</small>)
                                     </label>
                                     <input class="form-control input-gral" name="correoAut" id="correoAut" type="email" placeholder="ejemplo@gmail.com" required/>
                                 </div>
@@ -169,20 +169,20 @@
                             </div>
                             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                                 <div class="form-group m-0">
-                                    <label class="label-on-left m-0">
+                                    <label class="label-on-left m-0" data-i18n="celular">
                                         CELULAR (<small style="color: red;">*</small>)
                                     </label>
                                     <input class="form-control input-gral" name="smsAut" id="smsAut" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" placeholder="Ej. 4422010101" required/>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-sm-12 col-md-12 col-lg-12 mt-1">
-                                <p data-i>Nota: El mensaje SMS tarda de 2 a 3 minutos en llegar al teléfono del cliente.</p>
+                                <p data-i18n="mensaje-tiempo">Nota: El mensaje SMS tarda de 2 a 3 minutos en llegar al teléfono del cliente.</p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary">Enviar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" id="guardar-autorizacion" class="btn btn-primary" data-i18n="enviar">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -193,7 +193,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">
+                    <h4 class="modal-title" data-i18n="reenvio-verificacion">
                         Reenvío de verificaciones al cliente
                     </h4>
                 </div>
@@ -201,31 +201,31 @@
                     <div class="modal-body">
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
+                                <h4 class="label-on-left m-0" data-i18n="metodos-envio">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-reenvio-div">
                                         <label class="m-0 checkstyleAut">
                                             <input type="checkbox" name="chkCorreoReenvio" id="chkCorreoReenvio" checked>
-                                            <span>CORREO ELECTRÓNICO</span>
+                                            <span data-i18n="correo-electronico">CORREO ELECTRÓNICO</span>
                                         </label>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-reenvio-div">
                                         <label class="m-0 checkstyleAut">
                                             <input type="checkbox" name="chkSmsReenvio" id="chkSmsReenvio" checked>
-                                            <span>MENSAJE DE TEXTO SMS</span>
+                                            <span data-i18n="mensaje-sms">MENSAJE DE TEXTO SMS</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-xs-12 col-sm-12 col-sm-12 col-md-12 col-lg-12 mt-2">
-                                <p>Nota: El mensaje SMS tarda de 2 a 3 minutos en llegar al teléfono del cliente.</p>
+                                <p data-i18n="mensaje-tiempo">Nota: El mensaje SMS tarda de 2 a 3 minutos en llegar al teléfono del cliente.</p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Reenviar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" data-dismiss="reenviar">Reenviar</button>
                     </div>
                 </form>
             </div>
@@ -236,7 +236,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">
+                    <h4 class="modal-title" data-i18n="solicitar-edicion-verificacion">
                         Solicitar edición de verificación
                     </h4>
                 </div>
@@ -244,25 +244,25 @@
                     <div class="modal-body">
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
+                                <h4 class="label-on-left m-0" data-i18n="metodos-envio">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-sol-div">
                                         <label class="m-0 checkstyleAut">
                                             <input type="checkbox" name="chkCorreoSol" id="chkCorreoSol" checked>
-                                            <span>CORREO ELECTRÓNICO</span>
+                                            <span data-i18n="correo-electronico">CORREO ELECTRÓNICO</span>
                                         </label>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-sol-div">
                                         <label class="m-0 checkstyleAut">
                                             <input type="checkbox" name="chkSmsSol" id="chkSmsSol" checked>
-                                            <span>MENSAJE DE TEXTO SMS</span>
+                                            <span data-i18n="mensaje-sms">MENSAJE DE TEXTO SMS</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label">Subdirector (<small style="color: red;">*</small>)</label>
+                                    <label class="control-label" data-i18n="subdirector">Subdirector (<small style="color: red;">*</small>)</label>
                                     <select id="subdirector" name="subdirector" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un subdirector" data-size="7" data-container="body" required></select>
                                 </div>
                             </div>
@@ -273,8 +273,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="enviar">Enviar</button>
                     </div>
                 </form>
             </div>
@@ -285,16 +285,16 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <center><h4 class="modal-title"><label>Enviar nuevamente a postventa (despúes de un rechazo de postventa) - <b><span class="lote"></span></b></label></h4></center>
+                    <center><h4 class="modal-title"><label data-dismiss="mensaje-posventa">Enviar nuevamente a postventa (despúes de un rechazo de postventa) - </label><b><span class="lote"></span></b></h4></center>
                 </div>
                 <div class="modal-body">
-                    <label>Comentario:</label>
+                    <label data-dismiss="comentario">Comentario:</label>
                     <textarea class="form-control" id="comentarioST3PV2" rows="3"></textarea>
                     <br>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="guardar_re3pv" class="btn btn-primary"> Registrar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                    <button type="button" id="guardar_re3pv" class="btn btn-primary" data-i18n="registrar"> Registrar</button>
 
                 </div>
             </div>
@@ -314,7 +314,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Tus ventas</h3>
+                                <h3 class="card-title center-align" data-i18n="tus-ventas">Tus ventas</h3>
                                 <p class="card-title pl-1"></p>
                             </div>
                             <?php
@@ -325,13 +325,13 @@
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
-                                                    <label class="control-label">Proyecto</label>
+                                                    <label class="control-label" data-i18n="proyecto">Proyecto</label>
                                                     <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
-                                                    <label class="control-label">Condominio</label>
+                                                    <label class="control-label" data-i18n="condominio">Condominio</label>
                                                     <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
@@ -354,11 +354,11 @@
                                             <th>gerente</th>
                                             <th>subdirector</th>
                                             <th>director-regional</th>
-                                            <th>director-regional-2</th>
+                                            <th>director-regional2</th>
                                             <th>fecha-apartado</th>
                                             <th>fecha-vencimiento</th>
                                             <th>comentario</th>
-                                            <th>prospecto</th>
+                                            <th>prospectos</th>
                                             <!--<th>VERIFICACIÓN DE CORREO</th>
                                             <th>VERIFICACIÓN DE SMS</th>-->
                                             <th>acciones</th>

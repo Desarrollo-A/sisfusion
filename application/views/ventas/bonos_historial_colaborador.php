@@ -44,26 +44,27 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>USUARIO</th>
-                                                    <th>PUESTO</th>
-                                                    <th>MONTO DEL BONO</th>
-                                                    <th>ABONADO</th>
-                                                    <th>PENDIENTE</th>
-                                                    <th>TOTAL DE PAGOS</th>
-                                                    <th>PAGO INDIVIDUAL</th>
-                                                    <th>IMPUESTO</th>
-                                                    <th>TOTAL A PAGAR</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>COMENTARIO</th>
-                                                    <th>FECHA DE REGISTRO</th>
-                                                    <th>OPCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
+                                            <table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>USUARIO</th>
+                                                        <th>PUESTO</th>
+                                                        <th>MONTO DEL BONO</th>
+                                                        <th>ABONADO</th>
+                                                        <th>PENDIENTE</th>
+                                                        <th>TOTAL DE PAGOS</th>
+                                                        <th>PAGO INDIVIDUAL</th>
+                                                        <th>IMPUESTO</th>
+                                                        <th>TOTAL A PAGAR</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>COMENTARIO</th>
+                                                        <th>FECHA DE REGISTRO</th>
+                                                        <th>OPCIONES</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -71,9 +72,9 @@
                     </div>
                 </div>
             </div>
-        </div>
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
+    <!--main-panel close-->
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/controllers/ventas/bonosHistorialColaborador.js"></script>
 </body>
