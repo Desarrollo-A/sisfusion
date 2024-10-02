@@ -1,5 +1,5 @@
 {
-    "en": {
+	"en": {
 		"consultar-informacion": "Info preview",
 		"clientes-prospectos-por-mes": "Clients and prospects per month",
 		"total-de-ventas": "Total sales",
@@ -50,7 +50,7 @@
 		"reporte-ventas-direccion-general": "Sales report by regional office",
 		"reporte-ventas-gerencia": "Sales report by management",
 		"reporte-ventas-coordinacion": "Sales report by coordination",
-		"reporte-ventas-subdireccion": "Sales report by subdirectorate",
+		"reporte-ventas-subdireccion": "Sales report by subdirector",
 		"reporte-ventas-asesor": "Sales report by advisor",
 		"mas": "More",
 		"regional": "Regional",
@@ -628,8 +628,6 @@
         ,"en-revision": "En revisión"
         ,"resguardo": "Resguardo"
         ,"por-pagar": "Por pagar"
-        ,"otras": "Otras"
-        ,"sn-pago-neo": "Sin pago en NEODATA"
 
 
 

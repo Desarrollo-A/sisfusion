@@ -200,7 +200,7 @@
                         <div class="collapse" id="componentsExamples_T">
                             <ul class="nav">
                                 <li class="">
-                                <a href="javascript: AddTicket()" >Agregar</a>
+                                <a href="javascript: AddTicket()"> <span data-i18n="agregar">Agregar</span></a>
                                 </li>
                             </ul>
                         </div>
@@ -217,7 +217,7 @@
     <div class="backgroundLS">
         <div class="contentLS">
             <div class="center-align">
-                Este proceso puede demorar algunos segundos
+            <span data-i18n="proceso-puede-demorar">Este proceso puede demorar algunos segundos</span>
             </div>
             <div class="inner">
                 <div class="load-container load1">

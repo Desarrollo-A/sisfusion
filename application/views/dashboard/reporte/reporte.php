@@ -24,31 +24,31 @@
         </div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-2 pb-1">
             <div class='c-filter'>
-                <button class='c-filter__toggle'>Más filtros</button>
+                <button class='c-filter__toggle'><span data-i18n="mas-filtros">Más filtros</span></button>
                 <ul class='c-filter__ul'>
                     <li class='c-filter__item'>
                         <input type="checkbox" class="d-none" value="1" name="conSinEnganche" id="typeSale1" checked>
-                        <label tabindex='-1' for='typeSale1'>Con enganche</label>
+                        <label tabindex='-1' for='typeSale1' data-i18n="con-enganche">Con enganche</label>
                     </li>
                     <li class='c-filter__item'>
                         <input type="checkbox" class="d-none" value="2" name="conSinEnganche" id="typeSale2" checked>
-                        <label tabindex='-1' for='typeSale2'>Sin enganche</label>
+                        <label tabindex='-1' for='typeSale2' data-i18n="sin-enganche">Sin enganche</label>
                     </li>
                     <li class='c-filter__item'>
                         <input type="checkbox" class="d-none" value="0" name="typeLote" id="typeLote1" checked>
-                        <label tabindex='-1' for='typeLote1'>Habitacionales</label>
+                        <label tabindex='-1' for='typeLote1' data-i18n="habitacionales">Habitacionales</label>
                     </li>
                     <li class='c-filter__item'>
                         <input type="checkbox" class="d-none" value="1" name="typeLote" id="typeLote2" checked>
-                        <label tabindex='-1' for='typeLote2'>Comerciales</label>
+                        <label tabindex='-1' for='typeLote2' data-i18n="comerciales">Comerciales</label>
                     </li>
                     <li class='c-filter__item'>
                         <input type="checkbox" class="d-none" value="1" name="typeConstruccion" id="typeBuild2" checked>
-                        <label tabindex='-1' for='typeBuild2'>Con casa</label>
+                        <label tabindex='-1' for='typeBuild2' data-i18n="con-casa">Con casa</label>
                     </li>
                     <li class='c-filter__item'>
                         <input type="checkbox" class="d-none" value="0" name="typeConstruccion" id="typeBuild1" checked>
-                        <label tabindex='-1' for='typeBuild1'>Sin casa</label>
+                        <label tabindex='-1' for='typeBuild1' data-i18n="sin-casa">Sin casa</label>
                     </li>
                 </ul>
             </div>
@@ -56,7 +56,7 @@
         </div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-2">
             <button class="btn-filter" type="button" id="filterAction">
-                Aplicar filtros
+                <span data-i18n="aplicar-filtros">Aplicar filtros</span>
             </button>
         </div>
     </div>
@@ -66,10 +66,10 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Ventas<br> <span class="str">totales</span></p>
+                            <p class="m-0"><span data-i18n="ventas">Ventas</span><br> <span data-i18n="totales" class="str">totales</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end appliedFilter">
-                            <label class="selectMini m-0 overflow-text">Año en curso <span class="material-icons">show_chart</span></label>
+                            <label class="selectMini m-0 overflow-text"><span data-i18n="año-en-curso">Año en curso</span><span class="material-icons">show_chart</span></label>
                         </div>
                     </div>
                     <div class="row pl-2 pr-2">
@@ -96,10 +96,10 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Ventas<br> <span class="str">contratadas</span></p>
+                            <p class="m-0"><span data-i18n="ventas">Ventas</span><br> <span data-i18n="contratadas" class="str">contratadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end appliedFilter" >
-                            <label class="selectMini m-0 overflow-text">Año en curso <span class="material-icons">show_chart</span></label>
+                            <label class="selectMini m-0 overflow-text"><span data-i18n="año-en-curso">Año en curso</span> <span class="material-icons">show_chart</span></label>
                         </div>
                     </div>
                     <div class="row pl-2 pr-2">
@@ -127,10 +127,10 @@
                 <div class="container-fluid">
                     <div class="row pl-2 pt-2 pr-2">
                         <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7 p-0 info">
-                            <p class="m-0">Ventas<br> <span class="str">apartadas</span></p>
+                            <p class="m-0"><span data-i18n="ventas">Ventas</span><br> <span data-i18n="apartadas" class="str">apartadas</span></p>
                         </div>
                         <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 p-0 d-flex align-center justify-end appliedFilter">
-                            <label class="selectMini m-0 overflow-text">Año en curso <span class="material-icons">show_chart</span></label>
+                            <label class="selectMini m-0 overflow-text"><span data-i18n="año-en-curso">Año en curso</span> <span class="material-icons">show_chart</span></label>
                         </div>
                     </div>
                     <div class="row pl-2 pr-2">

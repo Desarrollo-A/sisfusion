@@ -12,6 +12,7 @@ var mesesSelect;
 var mesesSelect2;
 
 $(document).ready(function() {
+    construirHead("addExp");
     $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -222,6 +223,7 @@ $('#formFilters').on('submit', function(event){
         },
         success:function(response){
             dataTable(response);
+            onLoadTranslations(() => dataTable(response));
 			$('#spiner-loader').addClass('hide');
             $('#addExp').removeClass('hide');
         }
@@ -230,22 +232,6 @@ $('#formFilters').on('submit', function(event){
 
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
-$('#addExp thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#addExp').DataTable().column(i).search() !== this.value) {
-            $('#addExp').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    if (title !== 'ACCIONES') {
-        titulos_encabezado.push(title);
-        num_colum_encabezado.push(i);
-    }    
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});
 
 function dataTable(ruta) {
     var table = $('#addExp').DataTable({
@@ -349,4 +335,32 @@ $(document).on("click", ".ver_historial", function(){
         $('#clauses_content').html(data[0]['nombre']);
     });	
     $("#seeInformationModal").modal();
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const selectores = () => {
+        // Asegúrate de que 'selectOption' tenga el valor que esperas.
+        let selectOption = _("select-predeterminado");
+        // console.log("Valor de selectOption:", selectOption); // Verificar valor en la consola
+
+        // Asigna el valor del title a cada elemento.
+        const ids = ["filtro3", "filtro4", "filtro5", "filtro6", "filtro7", "filtro8", "filtro9"];
+        ids.forEach(id => {
+            const elemento = document.getElementById(id);
+
+            if (elemento) {
+                // Asigna el título al elemento
+                elemento.removeAttribute('title');
+                elemento.title = selectOption;
+    
+                $(`#${id}`).selectpicker('refresh'); // Usar jQuery para seleccionar por ID y aplicar métodos
+            } else {
+                console.warn(`Elemento con id ${id} no encontrado.`);
+            }
+        });
+    }
+
+    // Asegúrate de que estas funciones llamen a selectores correctamente.
+    onLoadTranslations(() => selectores());
+    onChangeTranslations(() => selectores());
 });
