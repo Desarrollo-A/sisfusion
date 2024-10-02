@@ -136,7 +136,7 @@
 
     $(document).ready(function() {
         changeIcon(locale)
-    })
+    })  
 
     function changeIcon(lang) {
         $('#lang_icon').attr("src", `<?= base_url() ?>static/images/langs/${lang}.png`)
