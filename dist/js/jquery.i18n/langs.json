@@ -233,7 +233,6 @@
         "sat": "of the",
         "proyectos": "Proyect",
         "lote": "Lot",
-        "precio-del.lote":"Price lot",
         "total-comision": "Total commission",
         "pago-cliente": "paid by the client",
         "dispersado": "disbursed",
@@ -290,10 +289,16 @@
         ,"correo": "EMAIL"
         ,"telefono":"NUMBER PHONE"
         ,"jefe-directo":"FIRST BOSS"
-        ,"sede":"HEADQUARTERS"
+        ,"sede":"HEADQUARTERS",
+        "checkComisionesNuevas":"Select",
+        "comisiones-enviadas-contraloria":"Commissions sent to the comptroller for review before applying your payment. If you need to see more details, such as what has been paid and what is pending, you can consult it in the history.",
+        "soliciado-sin-impuesto":"Requested without taxes:",
+        "comisiones-proceso-pago":"Commissions in the process of being paid by INTERNOMEX. If you need to see more details, such as what has been paid and what is pending, you can check it in the history",
+        "por-pagar-sin-impuesto":"Pending payment without taxes:",
+        "total-pausado":"Total paused:",
+        "sin-pago-neodata":"Commissions not reflected in NEODATA, which is why certain lots with your commissions have not been disbursed."
     },
     "es": {
-		"precio-del.lote": "Precio del lote",
 		"clientes-prospectos-por-mes": "Clientes y prospectos por mes",
 		"total-de-ventas": "Total de ventas",
 		"vigentes": "vigentes",
@@ -583,7 +588,16 @@
         "listo-aprobar":"LISTO PARA APROBAR",
         "fact-extranjero":"FACTURA EXTRANJERO",
         "doc-faltante":"DUCUMENTO FALTANTE",
-        "boton-excedente":"Excedente"
+        "boton-excedente":"Excedente",
+        "checkComisionesNuevas":"Seleccionar",
+        "pausadas":"Pausadas",
+        "comisiones-enviadas-contraloria":"Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial",
+        "soliciado-sin-impuesto":"Soliciado sin impuesto:",
+        "comisiones-proceso-pago":"Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial",
+        "por-pagar-sin-impuesto":"Pagar sin impuestoesto:",
+        "comisiones-pausadas":"Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial ",
+        "total-pausado":"Total pausado:",
+        "sin-pago-neodata":"Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones."
 
 
         

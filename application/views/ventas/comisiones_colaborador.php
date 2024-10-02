@@ -123,21 +123,21 @@
                                                     <table class="table-striped table-hover" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
                                                         <thead>
                                                             <tr>
-                                                                <th></th>
-                                                                <th data-prueba="id-pago"><span data-i18n="id-pago">ID PAGO</span></th>
-                                                                <th data-prueba="proyectos">PROYECTOS</th>
-                                                                <th data-prueba="lote">LOTE</th>
-                                                                <th data-prueba="precio-del.lote">PRECIO DEL LOTE</th>
-                                                                <th data-prueba="total-comision">TOTAL DE LA COMISIÓN</th>
-                                                                <th data-prueba="pago-cliente">PAGADO DEL CLIENTE</th>
-                                                                <th data-prueba="dispersado">DISPERSADO</th>
-                                                                <th data-prueba="saldo-cobrar">SALDO A COBRAR</th>
-                                                                <th data-prueba="porc-comision">% COMISIÓN</th>
-                                                                <th data-prueba="detalles">DETALLE</th>
-                                                                <th data-prueba="estatus">ESTATUS</th>
-                                                                <th data-prueba="id-arcus">ID ARCUS</th>
-                                                                <th data-prueba="nom-cliente">NOMBRE CLIENTE</th>
-                                                                <th data-prueba="acciones">ACCIONES</th>
+                                                                <th>checkComisionesNuevas</th>
+                                                                <th>id-pago</th>
+                                                                <th>proyectos</th>
+                                                                <th>lote</th>
+                                                                <th>precio-del-lote</th>
+                                                                <th>total-comision</th>
+                                                                <th>pago-cliente</th>
+                                                                <th>dispersado</th>
+                                                                <th>saldo-cobrar</th>
+                                                                <th>porc-comision</th>
+                                                                <th>detalles</th>
+                                                                <th>estatus</th>
+                                                                <th>id-arcus</th>
+                                                                <th>nom-cliente</th>
+                                                                <th>acciones</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -146,14 +146,14 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
+                                                <p class="card-title pl-1"><span data-i18n="comisiones-enviadas-contraloria">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial</span> <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b><span data-i18n="texto-clic-historial">Da clic aquí para ir al historial</span></b></a></p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Solicitado sin impuestos:</h4>
+                                                                <h4 class="title-tot center-align m-0"><span data-i18n="soliciado-sin-impuesto">Solicitado sin impuestos:</span></h4>
                                                                 <p class="input-tot pl-1" name="myText_revision" id="myText_revision">$0.00</p>
                                                             </div>
                                                         </div>
@@ -163,32 +163,32 @@
                                             <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO DEL LOTE</th>
-                                                        <th>TOTAL DE LA COMISIÓN</th>
-                                                        <th>PAGADO DEL CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>id-pago</th>
+                                                        <th>proyectos</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
+                                                <p class="card-title pl-1"><span data-i18n="comisiones-proceso-pago">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial </span><a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b><span data-i18n="texto-clic-historial">Da clic aquí para ir al historial</span></b></a></p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Por pagar sin impuestos:</h4>
+                                                                <h4 class="title-tot center-align m-0"><span data-i18n="por-pagar-sin-impuesto">Por pagar sin impuestos:</span></h4>
                                                                 <p class="input-tot pl-1" name="myText_pagadas" id="myText_pagadas">$0.00</p>
                                                             </div>
                                                         </div>
@@ -198,32 +198,32 @@
                                             <table class="table-striped table-hover" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO DEL LOTE</th>
-                                                        <th>TOTAL DE LA COMISIÓN</th>
-                                                        <th>PAGADO DEL CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>id-pago</th>
+                                                        <th>proyectos</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>Da clic aquí para ir al historial</b></a></p>
+                                                <p class="card-title pl-1"><span data-i18n="comisiones-pausadas">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial </span><a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b><span data-i18n="texto-clic-historial">Da clic aquí para ir al historial</span></b></a></p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Total pausado:</h4>
+                                                                <h4 class="title-tot center-align m-0"><span data-i18n="total-pausado">Total pausado:</span></h4>
                                                                 <p class="input-tot pl-1" name="myText_pausadas" id="myText_pausadas">$0.00</p>
                                                             </div>
                                                         </div>
@@ -233,39 +233,39 @@
                                             <table class="table-striped table-hover" id="tabla_otras_comisiones" name="tabla_otras_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO DEL LOTE</th>
-                                                        <th>TOTAL DE LA COMISIÓN</th>
-                                                        <th>PAGADO DEL CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCCIONES</th>
+                                                        <th>id-pago</th>
+                                                        <th>proyectos</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="sin_pago_neodata">
                                             <div class="encabezadoBox">
-                                                <p class="card-title pl-1">Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.</p>
+                                                <p class="card-title pl-1"><span data-i18n="sin-pago-neodata">Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.</span></p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label class="m-0" for="proyecto">Proyecto</label>
-                                                                <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                <label class="m-0" for="proyecto"><span data-i18n="proyecto">Proyecto</span></label>
+                                                                <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label class="m-0" for="proyecto">Condominio</label>
-                                                                <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required><option disabled selected>Selecciona una opción</option></select>
+                                                                <label class="m-0" for="proyecto"><span data-i18n="condominio">Condominio</span></label>
+                                                                <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -303,11 +303,16 @@
     <?php $this->load->view('template/footer'); ?>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
+      
+               /* var b = document.getElementsByClassName("select-gral");
+b.removeAttribute("title");
+b.setAttribute("title", _("select-predeterminado"));*/
         Shadowbox.init();
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
         var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
         var userSede = <?= $this->session->userdata('id_sede') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
+
     </script>
     <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
 </body>

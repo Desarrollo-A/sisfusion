@@ -25,6 +25,9 @@ $(document).on("click", ".subir-archivo", function (e) {
         }
     });
 });
+$(".select-gral").removeAttr('title');
+$(".select-gral").attr('title',_("select-predeterminado"));
+
 
 $("#EditarPerfilExtranjeroForm").one('submit', function (e) {
     document.getElementById('sendFileExtranjero').disabled = true;
@@ -130,6 +133,7 @@ $(document).on("submit", "#cpForm", function (e) {
 });
 
 $(document).ready(function () {
+
     $.ajax({
         url: general_base_url + 'Comisiones/getFechaCorteActual',
         cache: false,
@@ -204,9 +208,12 @@ $('#condominio_wp').change(function () {
 
 var totaPen = 0;
 var tr;
+
+
 $("#tabla_nuevas_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_nuevas_comisiones");
-    $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
+    construirHead("tabla_nuevas_comisiones");
+   /* $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
         console.log(i)
         console.log($(this).attr("data-prueba"))
        // console.log($(this).attr("data-i18n"))
@@ -235,7 +242,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         } else {
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip_nuevas"  data-placement="top" title="SELECCIONAR"/>`);
         }
-    });
+    });*/
     $('#tabla_nuevas_comisiones').on('xhr.dt', function (e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function (i, v) {
@@ -1077,7 +1084,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de ' + d.porcentaje_abono + '% GENERAL </p>';
+                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> <span data-i18n="">de</span> ' + d.porcentaje_abono + '% GENERAL </p>';
             }
         },
         {
