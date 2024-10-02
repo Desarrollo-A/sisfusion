@@ -1,16 +1,5 @@
-let titulos_intxt = [];
-$('#mktdProspectsTable thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_intxt.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#mktdProspectsTable').DataTable().column(i).search() !== this.value ) {
-            $('#mktdProspectsTable').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
-
 $(document).ready(function(){
+    construirHead("mktdProspectsTable");
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -47,9 +36,8 @@ $(document).on("click", "#searchByDateRange", function () {
 
 let consultaInformacion = _("consulta-informacion");
 
-var mktdProspectsTable;
 function fillTable(typeTransaction, beginDate, endDate, where) {
-    mktdProspectsTable = $('#mktdProspectsTable').DataTable({
+    tabla_6 = $('#mktdProspectsTable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width:'100%',
         scrollX: true,
@@ -63,7 +51,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
             }
@@ -91,24 +79,24 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         columns:[{
             data: function(d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green" data-i18n="vigente">VIGENTE</span><center>';
+                    return `<center><span class="label lbl-green" data-i18n="vigente">${_("vigente")}</span><center>`;
                 } else {
-                    return '<center><span class="label lbl-warning" data-i18n="sin-vigencia">SIN VIGENCIA</span><center>';
+                    return `<center><span class="label lbl-warning" data-i18n="sin-vigencia">${_("sin-vigencia")}</span><center>`;
                 }
             }
         },
         {
             data: function(d) {
                 if (d.estatus_particular == 1) { // DESCARTADO
-                    b = '<center><span class="label lbl-warning" data-i18n="descartado">DESCARTADO</span><center>';
+                    b = `<center><span class="label lbl-warning" data-i18n="descartado">${_("descartado")}</span><center>`;
                 } else if (d.estatus_particular == 2) { // INTERESADO SIN CITA
-                    b = '<center><span class="label lbl-yellow" data-i18n="interesado-cita">INTERESADO EN CITA</span><center>';
+                    b = `<center><span class="label lbl-yellow" data-i18n="interesado-cita">${_("interesado-cita")}</span><center>`;
                 } else if (d.estatus_particular == 3) { // CON CITA
-                    b = '<center><span class="label lbl-green" data-i18n="con-cita">CON CITA</span><center>';
+                    b = `<center><span class="label lbl-green" data-i18n="con-cita">${_("con-cita")}</span><center>`;
                 } else if (d.estatus_particular == 5) { // PAUSADO
-                    b = '<center><span class="label lbl-sky" data-i18n="pausado">PAUSADO</span><center>';
+                    b = `<center><span class="label lbl-sky" data-i18n="pausado">${_("pausado")}</span><center>`;
                 } else if (d.estatus_particular == 6) { // PREVENTA
-                    b = '<center><span class="label lbl-violetChin" data-i18n="preventa">PREVENTA</span><center>';
+                    b = `<center><span class="label lbl-violetChin" data-i18n="preventa">${_("preventa")}</span><center>`;
                 }
                 return b;
             }
