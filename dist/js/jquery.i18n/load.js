@@ -163,7 +163,23 @@ function stringToI18(str) {
     return resultado;
 }
 
+function changeParagraphTooltips() {
+    $('p').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('title', title)
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
 onChangeTranslations(changeButtonTooltips)
+onLoadTranslations(changeParagraphTooltips)
+onChangeTranslations(changeParagraphTooltips)
