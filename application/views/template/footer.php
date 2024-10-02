@@ -197,8 +197,6 @@
 
             if(id){
                 title = _(id)
-                // console.log(title)
-
                 $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
                 $('input', this).on('keyup change', function () {
                     if (tabla_6.column(i).search() !== this.value) {
@@ -219,5 +217,4 @@
         onLoadTranslations(translatePlaceholder)
         onChangeTranslations(translatePlaceholder)
     }
-
 </script>
