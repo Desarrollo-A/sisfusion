@@ -9,10 +9,10 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title">¿Realmente desea asignar este prospecto al cliente?</h4>
+                    <h4 class="modal-title" data-i18n="asignar-prospecto">¿Realmente desea asignar este prospecto al cliente?</h4>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal">ASIGNAR<div class="ripple-container"></div></button>
+                        <button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal" data-i18n="aceptar">ASIGNAR<div class="ripple-container"></div></button>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"><b>Solicitar</b> autorización.</h4>
+                    <h4 class="modal-title"><b data-i18n="solicitar">Solicitar</b><span data-i18n="autorizacion"> autorización. </span></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <form id="my-edit-form" name="my-edit-form" method="post">
@@ -39,7 +39,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"><b>Asignar</b> prospecto al cliente
+                    <h4 class="modal-title"><b data-i18n="asginar">Asignar</b><span data-i18n="prospecto-cliente"> prospecto al cliente </span>
                     <b><span id="nom_cliente" style="text-transform: uppercase"></span></b>.</h4>
                     <a type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute;top: 2%;right: 5%;"><span class="material-icons">close</span></a>
                     <h5 class=""></h5>
@@ -49,14 +49,14 @@
                         <div class="material-datatables">
                             <table class="table-striped table-hover" id="table_prospectos">
                                 <thead>
-                                    <th>NOMBRE</th>
-                                    <th>CORREO</th>
-                                    <th>TELÉFONO</th>
-                                    <th>OBSERVACIÓN</th>
-                                    <th>LUGAR DE PROSPECCIÓN </th>
-                                    <th>PLAZA DE VENTA</th>
-                                    <th>NACIONALIDAD</th>
-                                    <th>ASIGNAR</th>
+                                    <th data-i18n="nombre">NOMBRE</th>
+                                    <th data-i18n="correo">CORREO</th>
+                                    <th data-i18n="telefono">TELÉFONO</th>
+                                    <th data-i18n="observacion">OBSERVACIÓN</th>
+                                    <th data-i18n="lugar-prospeccion">LUGAR DE PROSPECCIÓN </th>
+                                    <th data-i18n="plaza-venta">PLAZA DE VENTA</th>
+                                    <th data-i18n="nacionalidad">NACIONALIDAD</th>
+                                    <th data-i18n="asignar-capital">ASIGNAR</th>
                                 </thead>
                             </table>
                         </div>
@@ -70,12 +70,12 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Asignando prospecto al cliente</h4>
+                    <h4 class="modal-title" data-i18n="asignando">Asignando prospecto al cliente</h4>
                     <div class="modal-body" style="text-align: center">
                         <img src="<?=base_url()?>static/images/asignando.gif" width="100%">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar
                             <div class="ripple-container"></div>
                         </button>
                     </div>
@@ -88,15 +88,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" id="integracionEx">
-                    <h4 class="modal-title"><label><span class="titulo_modal">Integración de Expediente - </span><b><span class="lote"></span></b></label></h4>
+                    <h4 class="modal-title"><label><span class="titulo_modal" data-i18n="integracion-expediente">Integración de Expediente - </span><b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <textarea class="text-modal scroll-styles" id="comentario" rows="3" placeholder="Comentario"></textarea>
                     <br>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="save1" class="btn btn-primary">ACEPTAR</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                    <button type="button" id="save1" class="btn btn-primary" data-i18n="aceptar">ACEPTAR</button>
                 </div>
             </div>
         </div>
@@ -106,15 +106,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" id="regresoLo">
-                    <h4 class="modal-title"><label><span class="titulo_modal">Regresión del lote - </span><b><span class="lote"></span></b></label></h4>
+                    <h4 class="modal-title"><label><span class="titulo_modal" data-i18n="regresar-lote">Regresión del lote - </span><b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <textarea class="text-modal scroll-styles" id="comentarioRe" rows="3" placeholder="Comentario"></textarea>
                     <br>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="saveRegreso" class="btn btn-primary">ACEPTAR</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                    <button type="button" id="saveRegreso" class="btn btn-primary" data-i18n="aceptar">ACEPTAR</button>
                 </div>
             </div>
         </div>
@@ -124,24 +124,24 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title">Envío de verificaciones al cliente</h4>
+                    <h4 class="modal-title" data-i18n="envio-verificacion">Envío de verificaciones al cliente</h4>
                 </div>
                 <form id="autorizacion-form">
                     <div class="modal-body">
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                <h4 class="label-on-left m-0">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
+                                <h4 class="label-on-left m-0" data-i18n="metodos-envio">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-aut-div">
                                         <label class="m-0 checkstyleAut">
                                             <input type="checkbox" name="chkCorreoAut" id="chkCorreoAut" onchange="chkCorreoAutOnChange()" checked>
-                                            <span>CORREO ELECTRÓNICO</span>
+                                            <span data-i18n="correo">CORREO ELECTRÓNICO</span>
                                         </label>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-sms-aut-div">
                                         <label class="m-0 checkstyleAut">
                                             <input type="checkbox" name="chkSmsAut" id="chkSmsAut" onchange="chkSmsAutOnChange()"checked>
-                                            <span>MENSAJE DE TEXTO SMS</span>
+                                            <span data-i18n="mensaje-sms">MENSAJE DE TEXTO SMS</span>
                                         </label>
                                     </div>
                                 </div>
@@ -152,9 +152,9 @@
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group m-0">
                                     <label class="label-on-left m-0">
-                                        CORREO ELECTRÓNICO (<small style="color: red;">*</small>)
+                                       <span data-i18n="correo"> CORREO ELECTRÓNICO </span> (<small style="color: red;">*</small>)
                                     </label>
-                                    <input class="form-control input-gral" name="correoAut" id="correoAut" type="email" placeholder="Ej. ejemplo@gmail.com" required/>
+                                    <input class="form-control input-gral" name="correoAut" id="correoAut" type="email" placeholder="ejemplo@gmail.com" required/>
                                 </div>
                             </div>
                         </div>
@@ -162,7 +162,7 @@
                         <div class="row mt-1" id="sms-aut-div">
                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group m-0">
-                                    <h4 class="label-on-left m-0">LADA (<small style="color: red;">*</small>)</h4>
+                                    <h4 class="label-on-left m-0"><span data-i18n="lada"> LADA </span> (<small style="color: red;">*</small>)</h4>
                                     <select name="ladaAut" title="SELECCIONA UNA OPCIÓN" id="ladaAut" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" required>
                                     </select>
                                 </div>
@@ -176,7 +176,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-sm-12 col-md-12 col-lg-12 mt-1">
-                                <p>Nota: El mensaje SMS tarda de 2 a 3 minutos en llegar al teléfono del cliente.</p>
+                                <p data-i>Nota: El mensaje SMS tarda de 2 a 3 minutos en llegar al teléfono del cliente.</p>
                             </div>
                         </div>
                     </div>
@@ -356,12 +356,12 @@
                                             <th>director-regional</th>
                                             <th>director-regional-2</th>
                                             <th>fecha-apartado</th>
-                                            <th>FECHA DE VENCIMIENTO</th>
-                                            <th>COMENTARIO</th>
-                                            <th>PROSPECTO</th>
+                                            <th>fecha-vencimiento</th>
+                                            <th>comentario</th>
+                                            <th>prospecto</th>
                                             <!--<th>VERIFICACIÓN DE CORREO</th>
                                             <th>VERIFICACIÓN DE SMS</th>-->
-                                            <th>ACCIONES</th>
+                                            <th>acciones</th>
                                         </tr>
                                     </thead>
                                 </table>

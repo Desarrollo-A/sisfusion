@@ -32,6 +32,16 @@ const STATUS_CONTRATACION = 1;
 $(document).ready(function() {
     construirHead("tabla_deposito_seriedad")
 
+    onLoadTranslations(function(){
+        $("#comentario").attr("placeholder", _("comentario"))
+        $("#comentarioRe").attr("placeholder", _("comentario"))
+    })
+
+    onChangeTranslations(function(){
+        $("#comentario").attr("placeholder", _("comentario"))
+        $("#comentarioRe").attr("placeholder", _("comentario"))
+    })
+
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
         $('#tabla_deposito_seriedad').addClass('hide');
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {

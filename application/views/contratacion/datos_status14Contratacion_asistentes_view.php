@@ -9,7 +9,7 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 14 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center" data-i18n="estatus-14"><label>Registro estatus 14 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <label>Comentario:</label>
