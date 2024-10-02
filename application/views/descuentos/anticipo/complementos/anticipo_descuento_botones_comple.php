@@ -44,30 +44,28 @@
       <a href="#" class="ag-courses-item_link">
         <div class="ag-courses-item_bg"></div>
 
-        <div class="ag-courses-item_title">
-        Solicitud Anticipo-Apoyo
-        </div>
-
+        <div class="ag-courses-item_title" data-i18n="solicitud-anticipo-apoyo">
+          Solicitud Anticipo-Apoyo
+       </div>
         <div class="ag-courses-item_date-box">
-          <span class="ag-courses-item_date">
-          Podrás solicitar anticipos de nómina
+          <span class="ag-courses-item_date" data-i18n="solicitar-anticipos-nomina">
+           Podrás solicitar anticipos de nómina
           </span>
-        </div>
+      </div>
       </a>
     </div>
     <div class="ag-courses_item col-xl-6 col-md-6 mb-6 preceso_btn" id="preceso_btn" name="preceso_btn">
       <a href="#" class="ag-courses-item_link">
         <div class="ag-courses-item_bg"></div>
 
-        <div class="ag-courses-item_title">
-        Procesos Anticipos
+        <div class="ag-courses-item_title" data-i18n="procesos-anticipos">
+          Procesos Anticipos
         </div>
-
         <div class="ag-courses-item_date-box">
-        
-          <span class="ag-courses-item_date">
-          Podrás revisar el proceso de tu anticipo de nómina
-          </span>
+          <span class="ag-courses-item_date" data-i18n="revisar-proceso-anticipo">
+             Podrás revisar el proceso de tu anticipo de nómina
+            </span>
+          </div>
         </div>
       </a>
     </div>
