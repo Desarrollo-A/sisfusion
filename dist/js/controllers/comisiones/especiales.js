@@ -434,23 +434,23 @@ $(document).ready(function () {
     
                                             var counts=0;
     
-                                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>'+row.data().nombreLote+'</i>: <b>$'+formatMoney(total0-(data1[0].abonado))+'</b></h3></div></div><br>');
+                                            $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>'+row.data().nombreLote+'</i>: <b>$'+formatMoney(total0-(data1.length == 0 ? 0 : data1[0].abonado))+'</b></h3></div></div><br>');
     
                                             $("#modal_NEODATA .modal-body").append('<div class="row">'+
-                                            '<div class="col-md-4">Total pago: <b style="color:blue">'+formatMoney(data1[0].total_comision)+'</b></div>'+
-                                            '<div class="col-md-4">Total abonado: <b style="color:green">'+formatMoney(data1[0].abonado)+'</b></div>'+
-                                            '<div class="col-md-4">Total pendiente: <b style="color:orange">'+formatMoney((data1[0].total_comision)-(data1[0].abonado))+'</b></div></div>');
+                                            '<div class="col-md-4">Total pago: <b style="color:blue">'+formatMoney(data1.length == 0 ? 0 : data1[0].total_comision)+'</b></div>'+
+                                            '<div class="col-md-4">Total abonado: <b style="color:green">'+formatMoney(data1.length == 0 ? 0 : data1[0].abonado)+'</b></div>'+
+                                            '<div class="col-md-4">Total pendiente: <b style="color:orange">'+formatMoney((data1.length == 0 ? 0 : data1[0].total_comision)-(data1.length == 0 ? 0 : data1[0].abonado))+'</b></div></div>');
     
                                             if(parseFloat(data[0].Bonificado) > 0){
                                                 cadena = '<h4>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4>';
                                             }else{
                                                 cadena = '<h4>Bonificación: <b >$'+formatMoney(0)+'</b></h4>';
                                             }
-                                            $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: $${formatMoney(data1[0].totalNeto2)}</b></h4></div>
+                                            $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: $${formatMoney(data1.length == 0 ? 0 : data1[0].totalNeto2)}</b></h4></div>
                                             <div class="col-md-4"><h4>Aplicado neodata: <b>$${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                             </div><br>`);
                                             
-                                            $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/0"+"/"+data1[0].estructura).done( function( data ){
+                                            $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/0"+"/"+ (data1.length == 0 ? 0 : data1[0].estructura)).done( function( data ){
                                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-3"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
                                                  console.log('gree:'+data.length);
  

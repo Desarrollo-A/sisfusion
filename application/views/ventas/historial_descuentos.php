@@ -15,7 +15,7 @@
                     <div class="modal-body">
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
-                                <div id="nombreLote"></div>
+                                <div id="nameLote"></div>
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogTab">
@@ -69,14 +69,16 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="catalogo_descuento">Proyecto</label>
-                                                    <select name="catalogo_descuento" id="catalogo_descuento" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="m-0" for="filtro33">Proyecto</label>
+                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
+                                                        <option value="0">Seleccione todo</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="condominio_descuento">Condominio</label>
-                                                    <select class="selectpicker select-gral" id="condominio_descuento" name="condominio_descuento[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="m-0" for="filtro44">Condominio</label>
+                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,21 +86,23 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>                                
-                                                    <th>USUARIO</th>
-                                                    <th>$ DESCUENTO</th>
-                                                    <th>LOTE</th>
-                                                    <th>MOTIVO</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>CREADO POR</th>
-                                                    <th>FECHA CAPTURA</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
+                                        <div class="table-responsive">
+                                            <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>                                
+                                                        <th>USUARIO</th>
+                                                        <th>$ DESCUENTO</th>
+                                                        <th>LOTE</th>
+                                                        <th>MOTIVO</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>CREADO POR</th>
+                                                        <th>FECHA CAPTURA</th>
+                                                        <th>OPCIONES</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +114,7 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     </div>
-    </div>
+    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_descuentos.js"></script>
 </body>

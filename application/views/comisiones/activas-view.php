@@ -109,17 +109,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        
-                        <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                            <li class="active"><a href="#asimiladosComercializacion" role="tab" data-toggle="tab">Activas comer</a></li>
-                            <li ><a href="#asimiladosSeguros" role="tab" data-toggle="tab">Activas casas</a>
-                            </li>
-                                
-                        </ul>
-
-
-                        <div class="card no-shadow m-0 border-conntent__tabs">
-                                                    
+                        <div class="card">
+                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                                <i class="fas fa-chart-pie fa-2x"></i>
+                            </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Comisiones activas</h3>

@@ -2,11 +2,10 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
 	<div class="wrapper">
-	<?php $this->load->view('template/sidebar'); ?>
-
+		<?php $this->load->view('template/sidebar'); ?>
 
 		<!-- Modals -->
-		<!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+		<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 
@@ -16,7 +15,7 @@
 					</form>
 				</div>
 			</div>
-		</div>-->
+		</div>
 
 		<div class="modal fade modal-alertas" id="miModal" role="dialog">
 			<div class="modal-dialog">
@@ -29,8 +28,8 @@
 						<div class="modal-body">
 							<div class="form-group">
 								<label class="label">Puesto del usuario</label>
-								<select class="selectpicker select-gral" name="roles" id="roles"
-								 title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
+								<select class="selectpicker" name="roles" id="roles" required>
+									<option value="">----Seleccionar-----</option>
 									<option value="7">Asesor</option>
 									<option value="9">Coordinador</option>
 									<option value="3">Gerente</option>
@@ -69,13 +68,13 @@
 			</div>
 		</div>
 
-		<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+		<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div class="modal-body"></div>
 				</div>
 			</div>
-		</div>-->
+		</div>
 
 		<div class="content boxContent">
 			<div class="container-fluid">
@@ -132,7 +131,7 @@
 		<?php $this->load->view('template/footer_legend');?>
 	</div>
 	</div>
-	</div>
+	</div><!--main-panel close-->
 	<?php $this->load->view('template/footer');?>
 	<script>
 		var url = "<?=base_url()?>";
@@ -308,14 +307,14 @@
 			});
 		});
 
-		/*function mandar_espera(idLote, nombre) {
+		function mandar_espera(idLote, nombre) {
 			idLoteespera = idLote;
 			link_espera1 = "Comisiones/generar comisiones/";
 			$("#myModalEspera .modal-footer").html("");
 			$("#myModalEspera .modal-body").html("");
 			$("#myModalEspera ").modal();
 			$("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-		}*/
+		}
 
 		$(window).resize(function(){
 			tabla_nuevas.columns.adjust();
