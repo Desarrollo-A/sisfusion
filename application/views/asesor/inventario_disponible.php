@@ -14,7 +14,7 @@
 						<h4 id="clauses_content" class="modal-title">  <b id="nomLoteHistorial"></b></h4>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR</button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">CERRAR</button>
 					</div>
 				</div>
 			</div>
@@ -64,7 +64,7 @@
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group">
 													<label class="control-label" data-i18n="grupo">Grupo</label>
-													<select name="filtro5" id="filtro5" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" required>	
+													<select name="filtro5" id="filtro5" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" ="true" data-size="7" data-container="body" required>	
 														<option value="1"> < 200m2 </option>
 														<option value="2"> >= 200 y < 300 </option>
 														<option value="3"> >= 300m2 </option>
