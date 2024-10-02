@@ -3,18 +3,6 @@ var getInfo2 = new Array(6);
 var getInfo3 = new Array(6);
 var getInfo6 = new Array(1);
 
-let titulos_intxt = [];
-$('#tabla_ingresar_6 thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    titulos_intxt.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_ingresar_6').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_ingresar_6').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
-
 $("#calendarioDay").change( function (){
     let fecha_inicio = $("#calendarioDay").val();
     if(fecha_inicio ==""){
@@ -108,7 +96,7 @@ $("#calendarioDay").change( function (){
                 },
                 {
                     "data": function( d ){
-                        var lastUc = (d.lastUc == null) ? 'Sin registro' : d.lastUc;
+                        var lastUc = (d.lastUc == null) ? `${_("sin-registro")}` : d.lastUc;
 
                         return '<p class="m-0">'+lastUc+'</p>';
                     }
@@ -151,10 +139,10 @@ $("#calendarioDay").change( function (){
                 informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
                 informacion_adicional += '          <label><b>Información adicional</b></label>';
                 informacion_adicional += '      </div>';
-                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>'+ status +'</label></div>';
-                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO: </b> ' + row.data().comentario + '</label></div>';
-                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR: </b> ' + row.data().coordinador + '</label></div>';
-                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR: </b> ' + row.data().asesor + '</label></div>';
+                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>'+_("estatus")+': </b>'+ status +'</label></div>';
+                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>'+_("comentario")+': </b> ' + row.data().comentario + '</label></div>';
+                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>'+_("coordinador")+': </b> ' + row.data().coordinador + '</label></div>';
+                informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>'+_("asesor")+': </b> ' + row.data().asesor + '</label></div>';
                 informacion_adicional += '  </div>';
                 informacion_adicional += '</div>';
 
@@ -235,6 +223,7 @@ $("#calendarioDay").change( function (){
 });
 
 $(document).ready(function(){
+    construirHead("tabla_ingresar_6");
     $.post(general_base_url + "Contraloria/get_sede", function(data) {
         var len = data.length;
         for(var i = 0; i<len; i++) {
@@ -392,10 +381,10 @@ $("#tabla_ingresar_6").ready( function(){
             informacion_adicional += '      <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">';
             informacion_adicional += '          <label><b>Información adicional</b></label>';
             informacion_adicional += '      </div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ESTATUS: </b>'+ status +'</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COMENTARIO: </b> ' + row.data().comentario + '</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>COORDINADOR: </b> ' + row.data().coordinador + '</label></div>';
-            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>ASESOR: </b> ' + row.data().asesor + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>'+_("estatus")+': </b>'+ status +'</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>'+_("comentario")+': </b> ' + row.data().comentario + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>'+_("coordinador")+': </b> ' + row.data().coordinador + '</label></div>';
+            informacion_adicional += '      <div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>'+_("asesor")+': </b> ' + row.data().asesor + '</label></div>';
             informacion_adicional += '  </div>';
             informacion_adicional += '</div>';
 
@@ -504,7 +493,7 @@ function preguntaRegCorr() {
 
 
     if (comentario.length <= 0 ) {
-        alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger');
+        alerts.showNotification('top', 'right', `${_("ingresa-comentario")}`, 'danger');
     } 
     else if (comentario.length > 0) {
         $('#enviarAContraloriaGuardar').prop('disabled', true);
@@ -518,24 +507,24 @@ function preguntaRegCorr() {
                     $('#enviarAContraloriaGuardar').prop('disabled', false);
                     $('#regCorrElab').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification("top", "right", `${_("estatus-enviado")}`, "success");
                 } else if(response.message == 'FALSE'){
                     $('#enviarAContraloriaGuardar').prop('disabled', false);
                     $('#regCorrElab').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    alerts.showNotification("top", "right", `${_("estatus-registrado")}`, "danger");
                 } else if(response.message == 'ERROR'){
                     $('#enviarAContraloriaGuardar').prop('disabled', false);
                     $('#regCorrElab').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
                 }
                 },
                 error: function( data ){
                     $('#enviarAContraloriaGuardar').prop('disabled', false);
                     $('#rechazregCorrElabarStatus').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
                 }
         });
     }
@@ -580,24 +569,24 @@ $("#guardar").click(function () {
                 $('#guardar').prop('disabled', false);
                 $('#rechazarStatus').modal('hide');
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                alerts.showNotification("top", "right", `${_("estatus-enviado")}`, "success");
             } else if(response.message == 'FALSE'){
                 $('#guardar').prop('disabled', false);
                 $('#rechazarStatus').modal('hide');
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                alerts.showNotification("top", "right", `${_("estatus-registrado")}`, "danger");
             } else if(response.message == 'ERROR'){
                 $('#guardar').prop('disabled', false);
                 $('#rechazarStatus').modal('hide');
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
             }
         },
         error: function( data ){
             $('#guardar').prop('disabled', false);
             $('#rechazarStatus').modal('hide');
             $('#tabla_ingresar_6').DataTable().ajax.reload();
-            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
         }
     });
     }
@@ -626,7 +615,7 @@ $(document).on('click', '#save1', function(e) {
     dataExp1.append("fechaVenc", getInfo1[6]);
 
     if (validaComent == 0) {
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        alerts.showNotification("top", "right", `${_("ingresa-comentario")}`, "danger");
     }
   
     if (validaComent == 1) {
@@ -646,24 +635,24 @@ $(document).on('click', '#save1', function(e) {
                     $('#save1').prop('disabled', false);
                     $('#regRevCorrElab').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification("top", "right", `${_("estatus-enviado")}`, "success");
                 } else if(response.message == 'FALSE'){
                     $('#save1').prop('disabled', false);
                     $('#regRevCorrElab').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    alerts.showNotification("top", "right", `${_("estatus-registrado")}`, "danger");
                 } else if(response.message == 'ERROR'){
                     $('#save1').prop('disabled', false);
                     $('#regRevCorrElab').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
                 }
             },
             error: function( data ){
                 $('#save1').prop('disabled', false);
                 $('#regRevCorrElab').modal('hide');
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
             }
         });
     }
@@ -685,7 +674,7 @@ $(document).on('click', '#save2', function(e) {
     dataExp2.append("fechaVenc", getInfo2[6]);
 
     if (validaComent == 0) {
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        alerts.showNotification("top", "right", `${_("ingresa-comentario")}`, "danger");
     }
   
     if (validaComent == 1) {
@@ -704,24 +693,24 @@ $(document).on('click', '#save2', function(e) {
                     $('#save2').prop('disabled', false);
                     $('#regRevA7').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification("top", "right", `${_("estatus-enviado")}`, "success");
                 } else if(response.message == 'FALSE'){
                     $('#save2').prop('disabled', false);
                     $('#regRevA7').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    alerts.showNotification("top", "right", `${_("estatus-registrado")}`, "danger");
                 } else if(response.message == 'ERROR'){
                     $('#save2').prop('disabled', false);
                     $('#regRevA7').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
                 }
             },
             error: function( data ){
                 $('#save2').prop('disabled', false);
                 $('#regRevA7').modal('hide');
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
             }
         });
     }
@@ -743,7 +732,7 @@ $(document).on('click', '#b_return1', function(e) {
     dataExp3.append("fechaVenc", getInfo3[6]);
 
     if (validaComent == 0) {
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        alerts.showNotification("top", "right", `${_("ingresa-comentario")}`, "danger");
     }
     if (validaComent == 1) {
 
@@ -762,24 +751,24 @@ $(document).on('click', '#b_return1', function(e) {
                     $('#b_return1').prop('disabled', false);
                     $('#modal_return1').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification("top", "right", `${_("estatus-enviado")}`, "success");
                 } else if(response.message == 'FALSE'){
                     $('#b_return1').prop('disabled', false);
                     $('#modal_return1').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    alerts.showNotification("top", "right", `${_("estatus-registrado")}`, "danger");
                 } else if(response.message == 'ERROR'){
                     $('#b_return1').prop('disabled', false);
                     $('#modal_return1').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
                 }
             },
             error: function( data ){
                 $('#b_return1').prop('disabled', false);
                 $('#modal_return1').modal('hide');
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
             }
         });
     }
@@ -795,7 +784,7 @@ $(document).on('click', '#savecs', function(e) {
     dataChange.append("ubicacion", ubicacion);
 
     if (validaUbicacion == 0) {
-        alerts.showNotification("top", "right", "Selecciona una sede.", "danger");
+        alerts.showNotification("top", "right", `${_("selecciona-sede")}`, "danger");
     }
 
     if (validaUbicacion == 1) {
@@ -814,19 +803,19 @@ $(document).on('click', '#savecs', function(e) {
                     $('#savecs').prop('disabled', false);
                     $('#change_s').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Sede modificada.", "success");
+                    alerts.showNotification("top", "right", `${_("sede-modificada")}`, "success");
                 } else if(response.message == 'ERROR'){
                     $('#savecs').prop('disabled', false);
                     $('#change_s').modal('hide');
                     $('#tabla_ingresar_6').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
                 }
             },
             error: function( data ){
                 $('#savecs').prop('disabled', false);
                 $('#change_s').modal('hide');
                 $('#tabla_ingresar_6').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", `${_("error-solicitud")}`, "danger");
             }
         });
     }

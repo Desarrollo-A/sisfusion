@@ -34,8 +34,6 @@ $(document).on("click", "#searchByDateRange", function () {
     fillTable(3, finalBeginDate, finalEndDate, 0);
 });
 
-let consultaInformacion = _("consulta-informacion");
-
 function fillTable(typeTransaction, beginDate, endDate, where) {
     tabla_6 = $('#mktdProspectsTable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -138,7 +136,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         },
         {
             data: function(d) {
-                return '<center><button class="btn-data btn-details-grey see-comments" data-toggle="tooltip" data-placement="top" title="' + consultaInformacion + '" data-id-prospecto="' + d.id_prospecto + '"><i class="fas fa-ellipsis-h"></i></button></center>';
+                return '<center><button class="btn-data btn-details-grey see-comments" data-toggle="tooltip" data-placement="top" title="' + _("consulta-informacion") + '" data-id-prospecto="' + d.id_prospecto + '"><i class="fas fa-ellipsis-h"></i></button></center>';
             }
         }],
         "ajax": {
