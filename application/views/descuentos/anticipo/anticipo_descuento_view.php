@@ -23,9 +23,6 @@
         background-color: #c89b3f;
         content: "";
         }
-
-
-
         .card_text p {
         margin: 0 0 24px;
         font-size: 14px;
@@ -61,7 +58,7 @@
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                 <h3 class="h3 card-title center-align">
-                                    <span data-i18n="Adelantos">Adelantos</span></h3>
+                                    <span data-i18n="adelantos">Adelantos</span></h3>
                                     <p class="card-title pl-1" data-i18n="opcion-proceso-solicitud">
                                         (Seleccionar una opción para iniciar tu proceso de solicitud o mostrar tus procesos)
                                     </p>

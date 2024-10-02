@@ -2,7 +2,7 @@
     "en": {
         "build-his-profile": "Build his profile",
         "about-him": "About him",
-        "Adelantos":"Advances",
+        "adelantos":"Advances",
         "algo-salio-mal":"Oops something went wrong",
         "opcion-proceso-solicitud" :"(Select an option to start your application process or display your processes)",
         "solicitud-anticipo-apoyo":"Request for advance and support",
@@ -41,8 +41,9 @@
         "anticipos-subdirector": "(Subdirector Advance Process)",
         "usuario":"User",
         "puesto": "Position",
+        "nombre":"Name",
         "sede":"Headquarters",
-        "comentario":"COMMENT",
+        "comentario":"Comment",
         "proceso":"Process",
         "prioridad":"Priority",
         "acciones":"Actions",
@@ -57,9 +58,22 @@
         "total-factura-no-coincide":"The invoice total does not match the total of the selected commissions.",
         "solicitud-no-completada":"The request could not be completed.",
         "error-sistema":"System error",
-        "borrar-anticipo":"Are you sure you want to delete the advance payment for "
-
-
+        "borrar-anticipo":"Are you sure you want to delete the advance payment for ",
+        "motivo-rechazo":"Reason for rejection",
+        "aceptar-anticipo":"Are you sure you want to accept the advance payment for",
+        "detalles":"Details",
+        "monto-solicitado": "Amount requested",
+        "mediante-modalidad":"Through the modality",
+        "normal":"Normal",
+        "urgente":"Urgent",
+        "comentario-aceptar":"Accept comment",
+        "aceptar": "Confirm",
+        "cerrar":"Close",
+        "confirmar-monto":"Confirm amount",
+        "evidencia-dc":"Evidence of D.C",
+        "seleccionar":"Choose file",
+        "asesor":"advisor",
+        "coordinador-ventas":"Sales Coordinator"
 
 
         
@@ -106,6 +120,7 @@
         "anticipos-subdirector": "(Anticipos Proceso subdirector)",
         "usuario":"USUARIO",
         "puesto": "PUESTO",
+        "nombre":"Nombre",
         "sede":"SEDE",
         "comentario":"Comentario",
         "proceso":"Proceso",
@@ -121,8 +136,29 @@
          "fuera-de-tiempo": "Estas fuera de tiempo para enviar tus solicitudes",
          "total-factura-no-coincide":"El total de la factura no coincide con el total de comisiones seleccionadas",
          "solicitud-no-completada":"No se ha podido completar la solicitud",
-          "error-sistema":"Error del sistema",
-          "borrar-anticipo":"¿Estás seguro que desea borrar el Anticipo de"
+         "error-sistema":"Error del sistema",
+         "borrar-anticipo":"¿Estás seguro que desea borrar el Anticipo de",
+         "motivo-rechazo":"Mótivo del rechazo",
+         "aceptar-anticipo":" ¿Estás seguro que desea aceptar el Anticipo de ",
+         "detalles":"Detalles",
+         "monto-solicitado": "Monto solicitado",
+         "mediante-modalidad":"Mediante la modalidad",
+        "normal":"Normal",
+        "urgente":"Urgente",
+        "comentario-aceptar":"Aceptar comentario",
+        "aceptar": "Aceptar",
+        "cerrar":"Cerrar",
+        "confirmar-monto":"Confirmar monto",
+        "evidencia-dc":"Evidencia de D.C",
+        "seleccionar":"Seleccionar",
+        "asesor":"Asesor",
+        "coordinador-ventas":"Coordinador de ventas"
+ 
+
+
+
+
+
 
 
 

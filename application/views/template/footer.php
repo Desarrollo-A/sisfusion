@@ -171,6 +171,7 @@
     }
 
     function onChangeTranslations(callback){
+        console.log("llego onChange");
         if (typeof callback === 'function') {
             change_functions.push(callback)
         }
@@ -186,6 +187,7 @@
         for (let callback of change_functions) {
             callback()
         }
+        
     }
 
 </script>

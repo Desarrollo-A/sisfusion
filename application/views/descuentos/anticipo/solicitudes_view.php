@@ -100,7 +100,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align" data-i18n="Adelantos">Anticipos </h3>
+                                <h3 class="card-title center-align" data-i18n="adelantos">Anticipos </h3>
                                 <p class="card-title pl-1" data-i18n="anticipos-subdirector">
                                 (Anticipos Proceso subdirector)
                              </p>
@@ -113,16 +113,16 @@
                                 <table id="tabla_anticipo_revision" name="tabla_anticipo_revision" class="table-striped table-hover">
                                     <thead>               
                                         <tr>
-                                            <th data-i18n="id-anticipo">ID ANTICIPO</th>
-                                            <th data-i18n="usuario">USUARIO</th>
-                                            <th data-i18n="puesto">PUESTO</th>
-                                            <th data-i18n="sede">SEDE</th>
-                                            <th data-i18n="monto">MONTO</th>
-                                            <th data-i18n="comentario">COMENTARIO</th>
-                                            <th data-i18n="comentario">COMENTARIO</th>
-                                            <th data-i18n="proceso">PROCESO</th>
-                                            <th data-i18n="prioridad">PRIORIDAD</th>
-                                            <th data-i18n="acciones">ACCIONES</th>
+                                        <th data-i18n="id-anticipo">id-anticipo</th>
+                                        <th data-i18n="usuario">usuario</th>
+                                        <th data-i18n="puesto">puesto</th>
+                                        <th data-i18n="sede">sede</th>
+                                        <th data-i18n="monto">monto</th>
+                                        <th data-i18n="comentario">comentario</th>
+                                        <th data-i18n="comentario">comentario</th>
+                                        <th data-i18n="proceso">proceso</th>
+                                        <th data-i18n="prioridad">prioridad</th>
+                                        <th data-i18n="acciones">acciones</th>
                                         </tr>                         
                                     </thead>
                                 </table>
