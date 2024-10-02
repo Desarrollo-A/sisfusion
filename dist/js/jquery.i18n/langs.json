@@ -363,7 +363,7 @@
                 "descuento-resguardo-descripcion" : "List of deductions applied to the Personal Custody balance.",
                 "total-resguardo": "Total personal custody balance :",
                 "ingresos-extra": "Extra income :",
-                "saldo-disponible" : "Available balance"        ,
+                "saldo-disponible" : "Available balance",
                 "descuentos-aplicados" : "Discounts applied:",
                 "creado-por": "CREATED BY",
                 "id-descuento": "ID DISCOUNT",
@@ -372,7 +372,8 @@
                 "en-revision": "Payments under review",
                 "resguardo": "Withheld commissions ",
                 "por-pagar": "Por pagar",
-                "consultar-detalles-youtube":"For more details on the use and functionality of the Final Payment Query section, you can view it in the following tutorial"
+                "consultar-detalles-youtube":"For more details on the use and functionality of the Final Payment Query section, you can view it in the following tutorial",
+                "lote-con-cancelacion":"LOT WITH CONTRACT CANCELLATION"
 
         },
         "es": {
@@ -750,6 +751,7 @@
                 "en-revision": "En revisión",
                 "resguardo": "Resguardo",
                 "por-pagar": "Por pagar",
-                "consultar-detalles-youtube":"Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial"
+                "consultar-detalles-youtube":"Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial",
+                "lote-con-cancelacion":"LOTE CON CANCELACIÓN DE CONTRATO"
         }
 }

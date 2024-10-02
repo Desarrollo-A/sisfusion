@@ -441,7 +441,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning"><span data-i18n="rescision">RECISIÓN</span></span></p>';
+                    p2 = `<p class="m-0"  title="${_('lote-con-cancelacion')}" data-i18n-tooltip="lote-con-cancelacion"><span class="label lbl-warning"><span data-i18n="rescision">RECISIÓN</span></span></p>`;
                 }
                 else{
                     p2 = '';
