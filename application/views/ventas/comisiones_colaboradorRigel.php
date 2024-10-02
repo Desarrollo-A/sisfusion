@@ -26,7 +26,7 @@
             .abc {
                 z-index: 9999999;
             }
-        </style>
+        </style>3
 
         <div class="modal fade bd-example-modal-sm" id="ModalEnviar" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -146,22 +146,33 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas</a>
+                                <a href="#nuevas-1" role="tab"  data-toggle="tab">
+                                    <span data-i18n="nuevas">  Nuevas <span> 
+                                </a>
                             </li>
                             <li>
-                                <a href="#resguardo-1" role="tab" data-toggle="tab">RESGUARDO</a>
+                                <a href="#resguardo-1" role="tab" data-toggle="tab">
+                                    <span data-i18n="resguardo">Resguardo<span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#proceso-1" role="tab"  data-toggle="tab">EN REVISIÓN</a>
+                                <a href="#proceso-1" role="tab"  data-toggle="tab">
+                                    <span data-i18n="en-revision">En revision<span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#proceso-2" role="tab"  data-toggle="tab">Por pagar</a>
+                                <a href="#proceso-2" role="tab"  data-toggle="tab">
+                                    <span data-i18n="por-pagar">Por pagar<span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#otras-1" role="tab"  data-toggle="tab">Otras</a>
+                                <a href="#otras-1" role="tab"  data-toggle="tab">
+                                    <span data-i18n="otras">Otras<span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#sin_pago_neodata" role="tab" data-toggle="tab">Sin pago en NEODATA</a>
+                                <a href="#sin_pago_neodata" role="tab" data-toggle="tab">
+                                    <span data-i18n="sn-pago-neo">Sin pago NEODATA<span></a>
                             </li>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -170,7 +181,7 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-2"><span data-i18n="texto-colaborador">texto-colaborador<span></a> <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                                 <?php if($this->session->userdata('forma_pago') == 3){ ?>
                                                 <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Recuerda que el <b>impuesto estatal</b> sobre tu pago de comisiones es de 
                                                 <?php

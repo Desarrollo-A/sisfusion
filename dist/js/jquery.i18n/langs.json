@@ -297,6 +297,23 @@
         "por-pagar-sin-impuesto":"Pending payment without taxes:",
         "total-pausado":"Total paused:",
         "sin-pago-neodata":"Commissions not reflected in NEODATA, which is why certain lots with your commissions have not been disbursed."
+        ,"descuento-resguardo": "Discounts of guard money."
+        ,"descuento-resguardo-descripcion" : "List of deductions applied to the Personal Custody balance."
+        ,"total-resguardo": "Total personal custody balance :"
+        ,"ingresos-extra": "Extra income :"
+        ,"saldo-disponible" : "Available balance"        
+        ,"descuentos-aplicados" : "Discounts applied:"
+        ,"creado-por": "CREATED BY"
+        ,"id-descuento": "ID DISCOUNT"
+        ,"historial-retiro" : "history of Personal Custody balance."
+        ,"nombre_usuario": "User name"
+        ,"en-revision": "Payments under review"
+        ,"resguardo": "Withheld commissions "
+        ,"por-pagar": "To pay"
+        ,"otras" : "Others"
+        ,"sn-pago-neo": "Without payment in NEODATA"
+        
+
     },
     "es": {
 		"clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -598,9 +615,24 @@
         "comisiones-pausadas":"Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial ",
         "total-pausado":"Total pausado:",
         "sin-pago-neodata":"Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones."
+        ,"descuento-resguardo": "Descuentos a resguardo,"
+        ,"descuento-resguardo-descripcion": "Listado de los descuentos aplicados al saldo de Resguardo personal."
+        ,"total-resguardo": "Total resguardo :"
+        ,"ingresos-extra": "Ingreso extra :"
+        ,"saldo-disponible": "Saldo disponible"
+        ,"descuentos-aplicados" : "Descuentos aplicados:"
+        ,"creado-por": "CREADO POR"
+        ,"id-descuento": "ID DESCUENTO"
+        ,"historial-retiro":"Historial Retiro"
+        ,"nombre_usuario":"Nombre usuario"
+        ,"en-revision": "En revisión"
+        ,"resguardo": "Resguardo"
+        ,"por-pagar": "Por pagar"
+        ,"otras": "Otras"
+        ,"sn-pago-neo": "Sin pago en NEODATA"
 
 
-        
+
         
 	}
 } 
