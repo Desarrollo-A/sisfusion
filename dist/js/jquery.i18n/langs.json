@@ -251,7 +251,21 @@
         "modalidad": "Mode",
         "fecha-liberacion": "Date of release",
         "lugar-prospeccion": "Prospecting location", 
-        "fecha_creacion" : "Creation date"
+        "fecha-creacion" : "Creation date",
+        "lista-nuevos-clientes": "List of new clients",
+        "comentarios": "Comments",
+        "personalidad-juridica": "Legal personality",
+        "nacionalidad": "Nationality",
+        "curp": "Id number",
+        "rfc": "Social security number",
+        "nombre-razon-social": "Name / Company name",
+        "como-nos-contactaste": "How did you get in touch with us?",
+        "plaza-venta": "Sales location",
+        "sin-datos-por-mostrar": "No data to show",
+        "descargar-pdf": "Download PDF",
+        "valor-anterior": "Previous value",
+        "valor-nuevo": "New value",
+        "campo": "Field"
 	},
 	"es": {
 		"precio-del.lote": "Precio del lote",
@@ -506,7 +520,20 @@
         "modalidad": "Modalidad",
         "fecha-liberacion": "Fecha de liberación",
         "lugar-prospeccion": "Lugar de prospección",
-        "fecha_creacion" : "Fecha creación"
-        
+        "fecha-creacion" : "Fecha creación",
+        "lista-nuevos-clientes": "Lista nuevos clientes",
+        "comentarios": "Comentarios",
+        "personalidad-juridica": "Personalidad jurídica",
+        "nacionalidad": "Nacionalidad",
+        "curp": "CURP",
+        "rfc": "RFC",
+        "nombre-razon-social": "Nombre / Razón social",
+        "como-nos-contactaste" : "¿Cómo nos contactaste?",
+        "plaza-venta": "Plaza de venta",
+        "sin-datos-por-mostrar": "Sin datos por mostrar",
+        "descargar-pdf": "Descargar PDF",
+        "valor-anterior": "Valor anterior",
+        "valor-nuevo": "Valor nuevo",
+        "campo": "Campo"
 	}
 }
