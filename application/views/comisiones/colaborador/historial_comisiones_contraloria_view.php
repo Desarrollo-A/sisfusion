@@ -110,7 +110,7 @@
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group select-is-empty overflow-hidden">
                                                             <label class="control-label" data-i18n="año">Año:</label>
-                                                            <select name="ano_historial" id="ano_historial" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                            <select name="ano_historial" id="ano_historial" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2024; $i++) {
@@ -174,7 +174,7 @@
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group overflow-hidden">
                                                             <label class="control-label" for="proyecto" data-i18n="año">Año:</label>
-                                                            <select name="ano_canceladas" id="ano_canceladas" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                            <select name="ano_canceladas" id="ano_canceladas" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2025; $i++) {
@@ -188,7 +188,7 @@
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                         <div class="form-group">
                                                             <label class="control-label" for="proyecto" data-i18n="proyectos">Proyecto:</label>
-                                                            <select name="catalogo_canceladas" id="catalogo_canceladas" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required><option value="0">Seleccione todo</option></select>
+                                                            <select name="catalogo_canceladas" id="catalogo_canceladas" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required><option value="0">Seleccione todo</option></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -235,7 +235,7 @@
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6 overflow-hidden">
                                                             <div class="form-group select-is-empty">
                                                                 <label for="anio_suma" class="control-label" data-i18n="año">AÑO</label>
-                                                                <select name="anio_suma" id="anio_suma" class="selectpicker select-gral" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                                <select name="anio_suma" id="anio_suma" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
