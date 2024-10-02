@@ -87,8 +87,6 @@ function applySearch(table) {
 function construirHead(table){
     let titulos = []
 
-    // let table_object = $(`#${table}`).DataTable()
-
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
         
@@ -106,8 +104,8 @@ function construirHead(table){
     function translatePlaceholder(){
             for(titulo of titulos){
                 if(titulo !== ''){
-                    $(`#head-${titulo}`).attr('placeholder', _(titulo));
-                    $(`#head-${titulo}`).attr('title', _(titulo));
+                    $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                    $(`#head-${titulo}`).attr('data-original-title', _(titulo))
                 }
             }
         }
