@@ -81,24 +81,24 @@
                                     <table id="tablaLista" name="tablaListaProspectos" class="table-striped table-hover">
                                         <thead>
                                         <tr>
-                                            <th><span data-i18n="proyecto">PROYECTO</span></th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>ID LOTE</th>
-                                            <th>CLIENTE</th>
-                                            <th>FECHA DE APARTADO</th>
-                                            <th>ASESOR</th>
-                                            <th>COORDINADOR</th>
-                                            <th>GERENTE</th>
-                                            <th>SUBDIRECTOR</th>
-                                            <th>DIRECTOR REGIONAL</th>
-                                            <th>DIRECTOR REGIONAL 2</th>
-                                            <th>ESTATUS CONTRATACIÓN</th>
-                                            <th>DETALLE MOVIMIENTO</th>
-                                            <th>ESTATUS LOTE</th>
-                                            <th>ESTÁ CON ASESOR</th>
-                                            <th>DETALLE ESTATUS</th>
-                                            <th>COMENTARIO</th>
+                                            <th><span data-i18n="proyecto">proyecto</span></th>
+                                            <th>condominio</th>
+                                            <th>lote</th>
+                                            <th>id-lote</th>
+                                            <th>cliente</th>
+                                            <th>fecha-apartado</th>
+                                            <th>asesor</th>
+                                            <th>coordinador</th>
+                                            <th>gerente</th>
+                                            <th>subdirector</th>
+                                            <th>director-regional</th>
+                                            <th>director-regional2</th>
+                                            <th>estatus-contratacion</th>
+                                            <th>detalle-movimiento</th>
+                                            <th>estatus-lote</th>
+                                            <th>esta-asesor</th>
+                                            <th>detalle-estatus</th>
+                                            <th>comentario</th>
                                         </tr>
                                         </thead>
                                     </table>
