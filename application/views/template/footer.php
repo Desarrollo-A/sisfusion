@@ -111,6 +111,7 @@
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/he.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/fi.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/ml.js"></script>
+
 <script type="text/javascript">
     let locale = localStorage.getItem('locale')
 
@@ -249,3 +250,4 @@
     }
 
 </script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script>
