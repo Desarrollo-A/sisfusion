@@ -92,7 +92,7 @@
 
 
 
-	<!--<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+	<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 
@@ -102,10 +102,10 @@
 				</form>
 			</div>
 		</div>
-	</div>-->
+	</div>
 
 
-    <!--<div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
+    <div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content" >
           
@@ -116,15 +116,15 @@
                 
 			</div>
 		</div>
-	</div>-->
+	</div>
 
 
 
- <!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+ <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
         	<div class="modal-header bg-red">
-                <center><img src="<?php //echo base_url()?>static/images/preview.gif" width="250" height="200"></center>
+                <center><img src="<?=base_url()?>static/images/preview.gif" width="250" height="200"></center>
             </div>
 
             <form method="post" id="form_aplicar">
@@ -132,7 +132,7 @@
             </form>
         </div>
     </div>
-</div>-->
+</div>
 
 
 
@@ -225,7 +225,7 @@
 
 
 
-    <!--<div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
+    <div class="modal fade modal-alertas" id="modal_descuentos" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-red">
@@ -238,7 +238,7 @@
             </form>
         </div>
     </div>
-</div>-->
+</div>
 
    
 <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
@@ -262,13 +262,13 @@
     </div>
 </div>
 
-	<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-body"></div>
 			</div>
 		</div>
-	</div>-->
+	</div>
 
 
 
@@ -667,7 +667,7 @@ $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
 
 
 
-        /*$("#tabla_descuentos tbody").on("click", ".btn-delete", function(){
+        $("#tabla_descuentos tbody").on("click", ".btn-delete", function(){    
             id = $(this).val();
             $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete">
             <h5>¿Estas seguro que deseas eliminar este bono?</h5>
@@ -678,10 +678,10 @@ $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
             </form></div>`);
 
             $('#modal-delete').modal('show');
-        });*/
+        });
 
 
-         /*$("#tabla_descuentos tbody").on("click", ".btn-update", function(){
+         $("#tabla_descuentos tbody").on("click", ".btn-update", function(){
     var tr = $(this).closest('tr');
     var row = tabla_nuevas.row( tr );
 
@@ -690,7 +690,7 @@ $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
     $("#modal_nuevas .modal-body").html("");
     $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p><h5>¿Seguro que desea descontar a <b>'+row.data().usuario+'</b> la cantidad de <b style="color:red;">$'+formatMoney(row.data().monto)+'</b> correspondiente al lote <b>'+row.data().nombreLote+'</b> ?</h5><input type="hidden" name="id_descuento" id="id_descuento" value="'+row.data().id_pago_i+'"><br><input type="submit" class="btn btn-success" value="Aceptar"><button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button></p></div></div>');
     $("#modal_nuevas").modal();
-});*/
+});
 
 
 
@@ -734,7 +734,7 @@ $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
     
 }
 
-/*function CloseModalDelete(){
+function CloseModalDelete(){
        // document.getElementById("inputhidden").innerHTML = "";
         a = document.getElementById('borrarBono');
         padre = a.parentNode;
@@ -742,8 +742,8 @@ $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
      
     $("#modal-delete").modal('toggle');
     
-}*/
-/*function CloseModalDelete2(){
+}
+function CloseModalDelete2(){
        // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form-delete").reset();
         a = document.getElementById('borrarBono');
@@ -752,9 +752,9 @@ $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
      
     $("#modal-delete").modal('toggle');
     
-}*/
+}
 
-/*function CloseModalUpdate2(){
+function CloseModalUpdate2(){
        // document.getElementById("inputhidden").innerHTML = "";
         document.getElementById("form-update").reset();
         a = document.getElementById('borrarUpdare');
@@ -763,8 +763,8 @@ $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
      
     $("#modal-abono").modal('toggle');
     
-}*/
-/*$(document).on('submit','#form-delete', function(e){
+}
+$(document).on('submit','#form-delete', function(e){ 
   e.preventDefault();
 var formData = new FormData(document.getElementById("form-delete"));
 formData.append("dato", "valor");
@@ -796,13 +796,13 @@ contentType: false,
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-});*/
+});
 
 
 
 
 
-/*$("#form_aplicar").submit( function(e) {
+$("#form_aplicar").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -837,7 +837,7 @@ contentType: false,
                 }
             });
     }
-});*/
+});
 
 
 
@@ -882,7 +882,7 @@ contentType: false,
 
 
 
-	/*function mandar_espera(idLote, nombre) {
+	function mandar_espera(idLote, nombre) {
 		idLoteespera = idLote;
 		// link_post2 = "Cuentasxp/datos_para_rechazo1/";
 		link_espera1 = "Comisiones/generar comisiones/";
@@ -891,7 +891,7 @@ contentType: false,
 		$("#myModalEspera ").modal();
 		// $("#myModalEspera .modal-body").append("<div class='btn-group'>LOTE: "+nombre+"</div>");
 		$("#myModalEspera .modal-footer").append("<div class='btn-group'><button type='submit' class='btn btn-success'>GENERAR COMISIÓN</button></div>");
-	}*/
+	}
 
 
 
@@ -1090,7 +1090,7 @@ let sumaselected = 0;
       }      
 });
 /**--------------------------------------------------------------------------------------------------------- */
-    /*$("#numeroP").change(function(){
+    $("#numeroP").change(function(){  
         let monto = parseFloat($('#monto').val());
         let cantidad = parseFloat($('#numeroP').val());
         let resultado=0;
@@ -1111,7 +1111,7 @@ let sumaselected = 0;
             $('#pago').val(formatMoney(0));
             }
         }
-    });*/
+    });
    
 function verificar(){
    // let d = $('#valor_comision').val();

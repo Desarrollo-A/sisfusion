@@ -14,7 +14,7 @@
 							</div>
 							<div class="card-content">
 								<div class="encabezadoBox">
-									<h3 class="card-title center-align">Reporte rechazos </h3>
+									<h3 class="card-title center-align" data-i18n="reporte-rechazos">Reporte rechazos </h3>
 								</div>
 								<div class="material-datatables"> 
 									<div class="form-group">

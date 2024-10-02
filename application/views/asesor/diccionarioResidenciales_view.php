@@ -20,9 +20,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>NOMENCLATURA</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>EMPRESA</th>
+                                                    <th id="nomeclatura" style="font-weight: normal; font-size: 10px">NOMENCLATURA</th>
+                                                    <th style="font-weight: normal; font-size: 10px">NOMBRE</th>
+                                                    <th style="font-weight: normal; font-size: 10px">EMPRESA</th>
                                                 </tr>
                                             </thead>
                                         </table>

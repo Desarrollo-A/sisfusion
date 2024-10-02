@@ -158,18 +158,18 @@
                                         <table id="clients-datatable" class="table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>CLIENTE</th>
-                                                    <th>CORREO</th>
-                                                    <th>TELÉFONO</th>
-                                                    <th>LUGAR DE PROSPECCIÓN</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>SUBDIRECTOR</th>
-                                                    <th>DIRECTOR REGIONAL</th>
-                                                    <th>FECHA DE CREACIÓN</th>
-                                                    <th>FECHA CLIENTE</th>
-                                                    <th>ACCIONES</th>
+                                                    <th>cliente</th>
+                                                    <th>correo</th>
+                                                    <th>telefono</th>
+                                                    <th>lugar-prospeccion</th>
+                                                    <th>asesor</th>
+                                                    <th>coordinador</th>
+                                                    <th>gerente</th>
+                                                    <th>subdirector</th>
+                                                    <th>director-regional</th>
+                                                    <th>fecha_creacion</th>
+                                                    <th>fecha_cliente</th>
+                                                    <th>acciones</th>
                                                 </tr>
                                             </thead>
                                         </table>

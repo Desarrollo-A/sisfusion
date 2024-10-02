@@ -14,7 +14,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Registro diario </h3>
+                                    <h3 class="card-title center-align" data-i18n="registro-diario">Registro diario </h3>
                                 </div>
                                 <div  class="toolbar">
                                     <div class="row">
