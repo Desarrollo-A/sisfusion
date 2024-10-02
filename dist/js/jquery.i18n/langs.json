@@ -276,7 +276,13 @@
         "creacion":"CREATION",
         "vencimiento":"VENCIMIENTO",
         "ultima-modificacion":"LAST MODIFICATION",
-        "estatus-contratacion":"CONTRACTING STATUS"
+        "estatus-contratacion":"CONTRACTING STATUS",
+        "ingresar-autorizacion":"Enter authorization",
+        "subir-archivo" : "UPLOAD FILE",
+        "archivo-no-selecionado" : "You haven't selected anything yet",
+        "guardar" : "Save",
+        "subir-archivo-autorizacion" : "Upload authorization file."
+
     },
     "es": {
         "precio-del.lote": "Precio del lote",
@@ -556,6 +562,11 @@
         "creacion":"CREACIÓN",
         "vencimiento":"EXPIRY",
         "ultima-modificacion":"ÚLTIMA MODIFICACIÓN",
-        "estatus-contratacion":"ESTATUS CONTRATACIÓN"
+        "estatus-contratacion":"ESTATUS CONTRATACIÓN",
+        "ingresar-autorizacion": "Ingresar autorización",
+        "subir-archivo" : "SUBIR ARCHIVO",
+        "archivo-no-selecionado" : "No has seleccionado nada aún.",
+        "guardar" : "Guardar",
+        "subir-archivo-autorizacion" : "Subir archivo de autorización."
     }
 }

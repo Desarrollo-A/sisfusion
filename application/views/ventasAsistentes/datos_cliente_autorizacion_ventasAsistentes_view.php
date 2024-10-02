@@ -10,7 +10,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Subir archivo de autorización.</h4>
+					<h4 class="modal-title" data-i18n = "subir-archivo-autorizacion">Subir archivo de autorización.</h4>
 				</div>
 				<form method="post" id="envioAutorizacion" name="envioAutorizacion" enctype="multipart/form-data">
 					<input type="hidden" name="idCliente" id="idCliente">
@@ -24,8 +24,8 @@
 					<div class="modal-body">
 					</div>
 					<div class="modal-footer"><br><br>
-       					<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-       					<button class="btn btn-primary" type="submit">Guardar</button>
+       					<button type="button" class="btn btn-danger btn-simple" data-i18n = "cancelar" data-dismiss="modal">Cancelar</button>
+       					<button class="btn btn-primary" data-i18n = "guardar" type="submit">Guardar</button>
 					</div>
 				</form>
 			</div>
@@ -41,25 +41,25 @@
 							<i class="fas fa-user-friends fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Ingresar autorización</h3>
+                            <h3 class="card-title center-align"  data-i18n="ingresar-autorizacion">Ingresar autorización</h3>
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Proyecto</label>
-                                            <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <select name="proyecto" id="proyecto" data-i18n  ="proyecto" class="selectpicker select-gral m-0" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Condominio</label>
-                                            <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <select name="condominio" id="condominio" data-i18n = "condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
                                             <label class="control-label">Lote</label>
-                                            <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <select name="lote" id="lote" data-i18n  ="lote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                 </div>
@@ -69,11 +69,11 @@
 									<table class="table-striped table-hover hide" id="tabla_autorizaciones_ventas" name="tabla_autorizaciones_ventas">
 										<thead>
 											<tr>
-												<th>LOTE</th>
-												<th>CONDOMINIO</th>
-												<th>PROYECTO</th>
-												<th>CLIENTE</th>
-												<th>AUTORIZACIÓN</th>
+												<th>lote</th>
+												<th>condominio</th>
+												<th>proyecto</th>
+												<th>cliente</th>
+												<th>autorizacion</th>
 											</tr>
 										</thead>
 									</table>
