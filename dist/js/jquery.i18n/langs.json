@@ -393,7 +393,15 @@
                 "regresion-lote": "Lot regression",
                 "lada": "area code",
                 "estatus-14": "Status 14 register - ",
-                "firma-acuse": "Customer acknowledgment signature"
+                "firma-acuse": "Customer acknowledgment signature",
+                "rechazar": "Reject",
+                "ventas-compartidas": "Shared sales",
+                "registro-cliente": "Customer registration",
+                "id-cliente": "ID CLIENT",
+                "num-recibo": "RECEIPT NUMBER",
+                "tipo-pago": "PAYMENT TYPE",
+                "enganche": "DOWN PAYMENT",
+                "fecha-enganche": "HITCH DATE"
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -791,6 +799,14 @@
                 "regresion-lote": "Regresión del lote",
                 "lada": "Lada",
                 "estatus-14": "Registro estatus 14 -",
-                "firma-acuse": "Firma acuse cliente"
+                "firma-acuse": "Firma acuse cliente",
+                "rechazar": "Rechazar",
+                "ventas-compartidas": "Ventas compartidas",
+                "registro-cliente": "Registro de clientes",
+                "id-cliente": "ID CLIENTE",
+                "num-recibo": "NÚMERO DE RECIBO",
+                "tipo-pago": "TIPO DE PAGO",
+                "enganche": "Enganche",
+                "fecha-enganche": "FECHA DE ENGANCHE"
         }
 }
