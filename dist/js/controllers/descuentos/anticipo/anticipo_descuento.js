@@ -671,6 +671,8 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
         $("#clave").val((informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '')).attr('readonly', true);
         $("#obse").val((informacion_factura.descripcion ? informacion_factura.descripcion[0] : '')).attr('readonly', true);
     }
+     
+     
 
 
     $('#numeroPagosParcialidad').change(function() {
@@ -683,9 +685,29 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
         
     });
 
+    function actualizarSelectpicker() {
+        function traducirSelect(selectorId) {
+            $('#' + selectorId + ' option').each(function() {
+                var i18nKey = $(this).data('i18n'); 
+                if (i18nKey) {
+                    $(this).text(_(i18nKey));  
+                }
+            });
+            $('#' + selectorId).selectpicker('refresh');
+        }
+    traducirSelect('procesoTipo');  
+    traducirSelect('tiempo_de_pago');
+    traducirSelect('numeroPagosParcialidad'); 
+ 
+}
 
+$(document).ready(function() {
+    onLoadTranslations(function() {
+        actualizarSelectpicker(); 
+    });
 
-    
+    onChangeTranslations(actualizarSelectpicker);
+});
     $('#procesoTipo').change(function() {
         
         console.log(this.value);
@@ -719,8 +741,8 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
         }else{
             alerts.showNotification("top", "right", _("cantidad-no-cero"), "warning");
         }
-
-
+        
+     
             // pagos_parcialidades = document.getElementById("numeroPagosParcialidad").value;
         // $("#preceso_aticipo").addClass("hide");
     

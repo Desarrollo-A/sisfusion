@@ -17,7 +17,6 @@ function translationsAnticipos() {
         $('#tabla_anticipo_revision').DataTable().rows().invalidate().draw(false);
     });
 }
-
 $("#tabla_anticipo_revision").ready(function () {
     tabla_9 = $("#tabla_anticipo_revision").DataTable({
         

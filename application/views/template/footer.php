@@ -165,6 +165,7 @@
     let change_functions = []
 
     function onLoadTranslations(callback){
+        
         if (typeof callback === 'function') {
             load_functions.push(callback)
         }
@@ -178,6 +179,7 @@
     }
 
     function triggerLoadFunctions() {
+        console.log("llego onChange");
         for (let callback of load_functions) {
             callback()
         }
@@ -188,6 +190,6 @@
             callback()
         }
         
-    }
+    }   
 
 </script>
