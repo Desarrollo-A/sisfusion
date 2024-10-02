@@ -49,9 +49,11 @@
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
-
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
@@ -193,12 +195,14 @@
             var id = $(this).text();
             
             titulos.push(id);
-            // console.log(id)
 
             if(id){
                 title = _(id)
+
                 $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
                 $('input', this).on('keyup change', function () {
+                    console.log(tabla_6.column(i).search());
+                    
                     if (tabla_6.column(i).search() !== this.value) {
                         tabla_6.column(i).search(this.value).draw();
                     }
@@ -217,4 +221,5 @@
         onLoadTranslations(translatePlaceholder)
         onChangeTranslations(translatePlaceholder)
     }
+
 </script>

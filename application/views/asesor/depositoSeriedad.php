@@ -49,14 +49,14 @@
                         <div class="material-datatables">
                             <table class="table-striped table-hover" id="table_prospectos">
                                 <thead>
-                                    <th>NOMBRE</th>
-                                    <th>CORREO</th>
-                                    <th>TELÉFONO</th>
-                                    <th>OBSERVACIÓN</th>
-                                    <th>LUGAR DE PROSPECCIÓN </th>
-                                    <th>PLAZA DE VENTA</th>
-                                    <th>NACIONALIDAD</th>
-                                    <th>ASIGNAR</th>
+                                    <th data-i18n="nombre">NOMBRE</th>
+                                    <th data-i18n="correo">CORREO</th>
+                                    <th data-i18n="telefono">TELÉFONO</th>
+                                    <th data-i18n="observacion">OBSERVACIÓN</th>
+                                    <th data-i18n="lugar-prospeccion">LUGAR DE PROSPECCIÓN </th>
+                                    <th data-i18n="plaza-venta">PLAZA DE VENTA</th>
+                                    <th data-i18n="nacionalidad">NACIONALIDAD</th>
+                                    <th data-i18n="asignar-capital">ASIGNAR</th>
                                 </thead>
                             </table>
                         </div>
@@ -75,7 +75,7 @@
                         <img src="<?=base_url()?>static/images/asignando.gif" width="100%">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar
                             <div class="ripple-container"></div>
                         </button>
                     </div>
@@ -154,7 +154,7 @@
                                     <label class="label-on-left m-0" data-i18n="correo-electronico">
                                         CORREO ELECTRÓNICO (<small style="color: red;">*</small>)
                                     </label>
-                                    <input class="form-control input-gral" name="correoAut" id="correoAut" type="email" placeholder="Ej. ejemplo@gmail.com" required/>
+                                    <input class="form-control input-gral" name="correoAut" id="correoAut" type="email" placeholder="ejemplo@gmail.com" required/>
                                 </div>
                             </div>
                         </div>
@@ -162,7 +162,7 @@
                         <div class="row mt-1" id="sms-aut-div">
                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group m-0">
-                                    <h4 class="label-on-left m-0">LADA (<small style="color: red;">*</small>)</h4>
+                                    <h4 class="label-on-left m-0"><span data-i18n="lada"> LADA </span> (<small style="color: red;">*</small>)</h4>
                                     <select name="ladaAut" title="SELECCIONA UNA OPCIÓN" id="ladaAut" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" required>
                                     </select>
                                 </div>

@@ -192,28 +192,28 @@
             <table id="lotesInformationTable" class="table-striped table-hover w-100">
                 <thead>
                     <tr>
-                      <th>PROYECTO</th>
-                      <th>CONDOMINIO</th>
-                      <th>LOTE</th>
-                      <th>SUPERFICIE</th>
-                      <th>PRECIO DE LISTA</th>
-                      <th>PRECIO CON DESCUENTO</th>
-                      <th>CASA</th>
-                      <th>CLIENTE</th>
-                      <th>ASESOR</th>
-                      <th>COORDINADOR</th>
-                      <th>GERENTE</th>
-                      <th>SUBDIRECTOR</th>
-                      <th>DIRECTOR REGIONAL</th>
-                      <th>FECHA DE APARTADO</th>
-                      <th>FECHA DE ÚLTIMO ESTATUS</th>
-                      <th>DÍAS DE ÚLTIMO ESTATUS</th>
-                      <th>ESTATUS DE CONTRATACÍON</th>
-                      <th>FECHA REGISTRO ESTATUS 9</th>
-                      <th># DÍAS DESDE APARTADO HASTA REGISTRO ESTATUS 9</th>
-                      <th>ESTATUS DEL LOTE</th>
-                      <th>APARTADO</th>
-                      <th>MODALIDAD</th>
+                      <th>proyecto</th>
+                      <th>condominio</th>
+                      <th>lote</th>
+                      <th>superficie</th>
+                      <th>precio-lista</th>
+                      <th>precio-descuento</th>
+                      <th>casa</th>
+                      <th>cliente</th>
+                      <th>asesor</th>
+                      <th>coordinador</th>
+                      <th>gerente</th>
+                      <th>subdirector</th>
+                      <th>director-regional</th>
+                      <th>fecha-apartado</th>
+                      <th>fecha-ultimo-estatus</th>
+                      <th>dias-ultimo-estatus</th>
+                      <th>estatus-contratacion</th>
+                      <th>fecha-status-9</th>
+                      <th>dias-apartado-a-estatus-9</th>
+                      <th>estatus-lote</th>
+                      <th>apartado</th>
+                      <th>modalidad</th>
                     </tr>
                 </thead>
             </table>
@@ -242,30 +242,30 @@
             <table id="lotesInformationTableCancelados" class="table-striped table-hover w-100">
                 <thead>
                     <tr>
-                        <th>PROYECTO</th>
-                        <th>CONDOMINIO</th>
-                        <th>LOTE</th>
-                        <th>SUPERFICIE</th>
-                        <th>PRECIO DE LISTA</th>
-                        <th>PRECIO CON DESCUENTO</th>
-                        <th>CASA</th>
-                        <th>CLIENTE</th>
-                        <th>ASESOR</th>
-                        <th>COORDINADOR</th>
-                        <th>GERENTE</th>
-                        <th>SUBDIRECTOR</th>
-                        <th>DIRECTOR REGIONAL</th>
-                        <th>FECHA DE APARTADO</th>
-                        <th>FECHA DE ÚLTIMO ESTATUS</th>
-                        <th>DÍAS DE ÚLTIMO ESTATUS</th>
-                        <th>ESTATUS DE CONTRATACÍON</th>
-                        <th>FECHA REGISTRO ESTATUS 9</th>
-                      <th># DÍAS DESDE APARTADO HASTA REGISTRO ESTATUS 9</th>
-                        <th>ESTATUS DEL LOTE</th>
-                        <th>FECHA DE LIBERACIÓN</th>
-                        <th>MOTIVO</th>
-                        <th>APARTADO</th>
-                        <th>MODALIDAD</th>
+                        <th>proyecto</th>
+                        <th> condominio</th>
+                        <th>lote</th>
+                        <th>superficie</th>
+                        <th>precio-lista</th>
+                        <th>precio-descuento</th>
+                        <th>casa</th>
+                        <th>cliente</th>
+                        <th>asesor</th>
+                        <th>coordinador</th>
+                        <th>gerente</th>
+                        <th>subdirector</th>
+                        <th>director-regional</th>
+                        <th>fecha-apartado</th>
+                        <th>fecha-ulitmo-estatus</th>
+                        <th>dias-ultimo-estatus</th>
+                        <th>estatus-contratacion</th>
+                        <th>fecha-status-9</th>
+                      <th>dias-apartado-a-estatus-9</th>
+                        <th>estatus-lote</th>
+                        <th>fecha-liberacion</th>
+                        <th>motivo</th>
+                        <th>apartado</th>
+                        <th>modalidad</th>
                     </tr>
                 </thead>
             </table>

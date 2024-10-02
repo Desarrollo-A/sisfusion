@@ -48,18 +48,18 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                 <i class="material-icons">clear</i>
                             </button>
-                            <h4 class="modal-title">Usuario y Contraseña :</h4>
+                            <h4 class="modal-title" data-i18n="usuario-contrasena">Usuario y Contraseña :</h4>
                         </div>
                             <div class="modal-body">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label class="control-label">usuario</label>
+                                        <label class="control-label" data-i18n="usuario">Usuario</label>
                                     </div>
                                     <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="usuarioPC" name="usuarioPC" value="">
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label class="control-label">Contraseña</label>
+                                        <label class="control-label" data-i18n="contrasena">Contraseña</label>
                                     </div>
                                     <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="passPC" name="passPC" value="" >
                                 </div>
@@ -76,13 +76,13 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                 <i class="material-icons">clear</i>
                             </button>
-                            <h4 class="modal-title">Baja del usuario: <b id="nameUs"></b></h4>
+                            <h4 class="modal-title" data-i18n="dar-baja">Baja del usuario: <b id="nameUs"></b></h4>
                         </div>
                         <form id="BajaUserForm" name="BajaUsersForm" method="post">
                             <div class="modal-body">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label class="control-label">Motivo de baja <small>(requerido)</small></label>
+                                        <label class="control-label"><span data-i18n="motivo">Motivo de baja </span> <small data-i18n="requerido">(requerido)</small></label>
                                         <textarea id="motivo" name="motivo" class="form-control" required></textarea>
                                         <input type="hidden" name="id_user" id="id_user">
                                         <input type="hidden" name="idrol" id="idrol">
@@ -90,8 +90,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger btn-simple"onclick="CloseModalBaja()">Cancelar</button>
-                                <button type="submit" class="btn btn-primary" id="btnS">Aceptar</button>
+                                <button type="button" class="btn btn-danger btn-simple"onclick="CloseModalBaja()" data-i18n="cancelar">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" id="btnS" data-i18n="aceptar">Aceptar</button>
                             </div>
                         </form>
                     </div>
@@ -112,8 +112,8 @@
                                 <input type="hidden" name="status" id="status">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger btn-simple" onclick="BajaConfirmM()">Cancelar</button>
-                                <button type="submit" class="btn btn-primary" id="btnSub">Aceptar</button>
+                                <button type="button" class="btn btn-danger btn-simple" onclick="BajaConfirmM()" data-i18n="cancelar">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" id="btnSub" data-i18n="aceptar">Aceptar</button>
                             </div>
                         </form>
                     </div>
@@ -127,13 +127,13 @@
                             <button type="button" class="close" data-dismiss="modal"aria-hidden="true">
                                 <i class="material-icons" onclick="cleanComments()">clear</i>
                             </button>
-                            <h4 class="modal-title">Consulta información</h4>
+                            <h4 class="modal-title" data-i18n="consulta-informacion">Consulta información</h4>
                         </div>
                         <div class="modal-body">
                             <div role="tabpanel">
                                 <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                     <li role="presentation" class="active">
-                                        <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
+                                        <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab" data-i18n="bitacora-cambios">Bitácora de cambios</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -152,7 +152,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar</button>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                 <i class="material-icons">clear</i>
                             </button>
-                            <h4 class="modal-title">Edita tu información</h4>
+                            <h4 class="modal-title" data-i18n="editar-informacion">Edita tu información</h4>
                         </div>
                         <form id="editUserForm" name="editUsersForm" method="post">
                             <div class="modal-body">
@@ -173,19 +173,19 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label class="control-label">Nombre (<span class="isRequired">*</span>)</label>
+                                                <label class="control-label" data-i18n="nombre">Nombre (<span class="isRequired">*</span>)</label>
                                                 <input id="name" name="name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label class="control-label">Apellido paterno (<span class="isRequired">*</span>)</label>
+                                                <label class="control-label" data-i18n="ap-paterno">Apellido paterno (<span class="isRequired">*</span>)</label>
                                                 <input id="last_name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" name="last_name" type="text" class="form-control input-gral" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label class="control-label">Apellido materno</label>
+                                                <label class="control-label" data-i18n="ap-materno">Apellido materno</label>
                                                 <input id="mothers_last_name" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" name="mothers_last_name" type="text" class="form-control input-gral">
                                             </div>
                                         </div>
@@ -199,19 +199,19 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group overflow-hidden">
-                                                <label class="control-label">Forma de pago (<small class="isRequired">*</small>)</label>
+                                                <label class="control-label" data-i18n="forma-pago">Forma de pago (<small class="isRequired">*</small>)</label>
                                                 <select class="selectpicker select-gral payment_method m-0" id="payment_method" name="payment_method" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required disabled></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group ">
-                                                <label class="control-label">Correo electrónico (<small class="isRequired">*</small>)</label>
+                                                <label class="control-label" data-i18n="correo">Correo electrónico (<small class="isRequired">*</small>)</label>
                                                 <input id="email" name="email" type="email" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" class="form-control input-gral pl-1 pr-1" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group ">
-                                                <label class="control-label">Teléfono celular (<small class="isRequired">*</small>) </label>
+                                                <label class="control-label" data-i18n="telefono">Teléfono celular (<small class="isRequired">*</small>) </label>
                                                 <input id="phone_number" name="phone_number" type="number" class="form-control input-gral" required maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                             </div>
                                         </div>
@@ -219,7 +219,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
-                                                <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
+                                                <label class="control-label" data-i18n="sede">Sede (<small class="isRequired">*</small>)</label>
                                                 <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()"></select>
                                             </div>
                                         </div>
@@ -230,7 +230,7 @@
                                     <div class="row">
                                         <div class="col-sm-3" id="tipoMiembro_column">
                                             <div class="form-group overflow-hidden">
-                                                <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
+                                                <label class="control-label" data-i18n="tipo-miembro">Tipo de miembro (<small class="isRequired">*</small>)</label>
                                                 <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
                                             </div>
                                         </div>
@@ -241,7 +241,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
                                                 <input type="hidden" name="rol_actual" id="rol_actual">
-                                                <label class="control-label">Líder (<small class="isRequired">*</small>)</label>
+                                                <label class="control-label" data-i18n="lider">Líder (<small class="isRequired">*</small>)</label>
                                                 <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
@@ -266,7 +266,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
-                                                <label class="control-label ml-2">Sede capital humano</label>
+                                                <label class="control-label ml-2" data-i18n="sede-capital-humano">Sede capital humano</label>
                                                 <div class="boxInfoEsp">
                                                     <i class="fas fa-info" data-toggle="tooltip" data-placement="bottom" title="Sede de asignación del asesor"></i>
                                                 </div>
@@ -275,7 +275,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
-                                                <label class="control-label ml-2">Sucursal capital humano</label>
+                                                <label class="control-label ml-2" data-i18n="sucursal-capital-humano">Sucursal de capital humano</label>
                                                 <div class="boxInfoEsp" data-toggle="tooltip" data-placement="bottom" title="Oficina en la que se encuentra ubicado el asesor">
                                                     <i class="fas fa-info"></i>
                                                 </div>
@@ -288,13 +288,13 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group m-0">
-                                                <label class="control-label">Nombre de usuario (<small class="isRequired">*</small>)</label>
+                                                <label class="control-label" data-i18n="nombre-usuario">Nombre de usuario (<small class="isRequired">*</small>)</label>
                                                 <input id="username" name="username" type="text" class="form-control input-gral" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group m-0">
-                                                <label class="control-label">Contraseña</label>
+                                                <label class="control-label" data-i18n="contrasena">Contraseña</label>
                                                 <input type="password" id="contrasena" name="contrasena" class="form-control input-gral" required="" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                 <span id="showPass" onclick="showPassword()">
                                                     <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -306,14 +306,14 @@
                                     </div>
                                     <div id="containerMenu" class="mb-1 hide">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
-                                            <label class="control-label">Menú del usuario (<span class="isRequired">*</span>)</label>
+                                            <label class="control-label" data-i18n="menu-usuario">Menú del usuario (<span class="isRequired">*</span>)</label>
                                             <div id="listadoHTML"></div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12 d-flex justify-end">
-                                            <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar</button>
-                                            <button type="submit" id="btn_acept" class="btn btn-primary mt-1">Aceptar</button>
+                                            <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                                            <button type="submit" id="btn_acept" class="btn btn-primary mt-1" data-i18n="aceptar">Aceptar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -361,21 +361,21 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Lista de usuarios</h3>
+                                <h3 class="card-title center-align" data-i18n="lista-usuarios">Lista de usuarios</h3>
                                 <div class="material-datatables">
                                     <table id="all_users_datatable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ESTATUS</th>
+                                                <th>estatus</th>
                                                 <th>ID</th>
-                                                <th>NOMBRE</th>
-                                                <th>CORREO</th>
-                                                <th>TELÉFONO</th>
-                                                <th>ROL</th>
-                                                <th>TIPO</th>
-                                                <th>SEDE</th>
-                                                <th>JEFE DIRECTO</th>
-                                                <th>ACCIONES</th>
+                                                <th>nombre</th>
+                                                <th>correo</th>
+                                                <th>telefono</th>
+                                                <th>rol</th>
+                                                <th>tipo</th>
+                                                <th>sede</th>
+                                                <th>jefe-directo</th>
+                                                <th>acciones</th>
                                             </tr>
                                         </thead>
                                     </table>

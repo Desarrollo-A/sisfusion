@@ -76,7 +76,7 @@ $('#condominio').change( function(){
     fillDataTable($(this).val());
 });
 
-/* $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
+$('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulos_intxt.push(title);
     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
@@ -85,7 +85,7 @@ $('#condominio').change( function(){
             $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
         }
     });
-}); */
+});
 
 $("#tabla_deposito_seriedad").ready( function(){
     $(document).on('click', '.abrir_prospectos', function () {
