@@ -85,49 +85,6 @@ function applySearch(table) {
 }
 
 
-function construirHead(tabla){
-    let titulos = []
-    const idNoPermitidos = ['checkComisionesNuevas']
-
-    let tabla_object = $(`#${tabla}`).DataTable({})
-
-    $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
-        
-        var id = $(this).text();
-        
-        
-        titulos.push(id);
-        if(id && idNoPermitidos.indexOf(id)){
-            title = _(id)
-            // console.log(title)
-
-            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
-            $('input', this).on('keyup change', function () {
-                if (tabla_6.column(i).search() !== this.value) {
-                    tabla_6.column(i).search(this.value).draw();
-                }
-            });
-            $('[data-toggle="tooltip"]').tooltip(); 
-
-        }else if(id == 'checkComisionesNuevas'){
-            title = _(id)
-            $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
-            $('[data-toggle="tooltip"]').tooltip(); 
-
-        }
-    });
-
-    function translatePlaceholder(){
-            for(titulo of titulos){
-                if(titulo !== ''){
-                    $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                }
-            }
-        }
-
-    onLoadTranslations(translatePlaceholder)
-    onChangeTranslations(translatePlaceholder)
-}
 function construirHead(table){
     let titulos = []
     const idNoPermitidos = ['checkComisionesNuevas']
@@ -136,10 +93,15 @@ function construirHead(table){
         var id = $(this).text();
         
         titulos.push(id);
+        // console.log(id)
         if(id && idNoPermitidos.indexOf(id)){
+
+
         if(id){
             title = _(id)
-            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
+            // console.log(title)
+
+            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
         }
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
@@ -153,6 +115,7 @@ function construirHead(table){
             for(titulo of titulos){
                 if(titulo !== ''){
                     $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                    $(`#head-${titulo}`).attr('data-original-title', _(titulo))
                 }
             }
         }
