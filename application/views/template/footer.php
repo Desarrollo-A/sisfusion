@@ -180,11 +180,10 @@
             console.log("Error con onChangeTranslations");
         }
     }
-
-    function triggerLoadFunctions() {
-        console.log('Cargando idioma...')
+  
+    async function triggerLoadFunctions() {
         for (let callback of load_functions) {
-            callback()
+            await callback();
         }
     }
 
@@ -194,6 +193,7 @@
             callback()
         }
     }
+
 
     function stringToI18(str) {
       // Convertir todo el string a minúsculas
@@ -209,45 +209,5 @@
       return resultado;
     }
 
-    // const texto = "¡Hola, Mundo! ¿Esto es un ejemplo?";
-    // console.log(convertirString(texto)); // Resultado: "hola-mundo-esto-es-un-ejemplo"
-
-
-    function construirHead(tabla){
-        let titulos = []
-
-        $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
-            var id = $(this).text();
-            
-            titulos.push(id);
-            // console.log(id)
-
-            if(id){
-                title = _(id)
-                // console.log(title)
-
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
-
-                $('input', this).on('keyup change', function () {
-                    if (tabla_6.column(i).search() !== this.value) {
-                        tabla_6.column(i).search(this.value).draw();
-                    }
-                });
-            }
-        });
-
-        function translatePlaceholder(){
-            for(titulo of titulos){
-                if(titulo !== ''){
-                    $(`#head-${titulo}`).attr('placeholder', _(titulo));
-                    $(`#head-${titulo}`).attr('title', _(titulo));
-                }
-            }
-        }
-
-
-        onLoadTranslations(translatePlaceholder)
-        onChangeTranslations(translatePlaceholder)
-    }
 </script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script>
