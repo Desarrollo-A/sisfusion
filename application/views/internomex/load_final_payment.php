@@ -10,16 +10,16 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <h5 class="text-center">Selección de archivo a cargar</h5>
+                        <h5 class="text-center" data-i18n="selecciona-archivo">Selección de archivo a cargar</h5>
                         <div class="file-gph">
                             <input class="d-none" type="file" id="fileElm">
                             <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                            <label class="upload-btn m-0" for="fileElm"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+                            <label class="upload-btn m-0" for="fileElm"><span data-i18n="seleccionar">Seleccionar</span><i class="fas fa-folder-open"></i></label>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button class="btn btn-primary" id="cargaCoincidencias" data-toggle="modal">Cargar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><span data-i18n="cerrar">Cerrar</span></button>
+                        <button class="btn btn-primary" id="cargaCoincidencias" data-toggle="modal"><span data-i18n="cargar">Cargar</span></button>
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
-                        <h4 class="modal-title">Monto internomex</h4>
+                        <h4 class="modal-title" data-i18n="monto-internomex">Monto internomex</h4>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
@@ -46,8 +46,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12 d-flex justify-end">
-                                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar</button>
-                                    <button id="aceptarMonto" name="aceptarMonto" class="btn btn-primary mt-1">Aceptar</button>
+                                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal"><span data-i18n="cancelar">Cancelar</span></button>
+                                    <button id="aceptarMonto" name="aceptarMonto" class="btn btn-primary mt-1"><span data-i18n="aceptar">Aceptar</span></button>
                                 </div>
                             </div>
                         </div>
@@ -61,13 +61,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanComments()">clear</i></button>
-                        <h4 class="modal-title">Consulta información</h4>
+                        <h4 class="modal-title" data-i18n="consulta-informacion">Consulta información</h4>
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                 <li role="presentation" class="active">
-                                    <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
+                                    <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab" data-i18n="bitacora-cambios">Bitácora de cambios</a>
                                 </li>
                             </ul>
                             <div class="tab-content">
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><span data-i18n="aceptar">Aceptar</span></button>
                     </div>
                 </div>
             </div>
@@ -107,9 +107,9 @@
                                         <h3 class="card-title center-align">Asignación de monto final pagado</h3>
                                         <p class="center-align">A través de este panel podrás descargar una plantilla que agrupara por comisionista los n pagos enviados para cobro. De los cuales, se tendrá que ingresar el monto final pagado.</p>
                                     <?php } else { ?>
-                                        <h3 class="card-title center-align">Consulta pago final</h3>
+                                        <h3 class="card-title center-align" data-i18n="consulta-pago-final">Consulta pago final</h3>
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <h7>A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información).</h7>
+                                            <h7 data-i18n="texto-consulta-pago-final">A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información).</h7>
                                         </div>
                                         <?php } ?>
                                     <?php if($this->session->userdata('id_rol') == 31){?>
@@ -134,9 +134,9 @@
                                                     <label for="two" class="w-50">Consultar</label>
                                                 <?php } else { ?>
                                                     <input class="d-none" type="radio" name="radio" id="one" >
-                                                    <label for="one" class="w-50" >Cargar</label>
+                                                    <label for="one" class="w-50"><span data-i18n="cargar">Cargar</span></label>
                                                     <input class="d-none find-results" type="radio" name="radio" id="two">
-                                                    <label for="two" class="w-50" checked>Consultar</label>
+                                                    <label for="two" class="w-50" checked><span data-i18n="consultar">Consultar</span></label>
                                                 <?php } ?>
                                             </div>
                                         </div>
@@ -163,17 +163,17 @@
                                     <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ID DEL REGISTRO</th>
-                                                <th>NOMBRE</th>
-                                                <th>ROL</th>
-                                                <th>FORMA DE PAGO</th>
-                                                <th>SEDE</th>
-                                                <th>MONTO SIN DESCUENTO</th>
-                                                <th>MONTO CON DESCUENTO</th>
-                                                <th>MONTO DE INTERNOMEX</th>
-                                                <th>FECHA DE CAPTURA DEL REGISTRO</th>
-                                                <th>COMENTARIO</th>
-                                                <th>ACCIONES</th>
+                                                <th>id-registro</th>
+                                                <th>nombre</th>
+                                                <th>rol</th>
+                                                <th>forma-pago</th>
+                                                <th>sede</th>
+                                                <th>monto-sin-descuento</th>
+                                                <th>monto-descuento</th>
+                                                <th>monto-internomex</th>
+                                                <th>fecha-captura-registro</th>
+                                                <th>comentario</th>
+                                                <th>acciones</th>
                                             </tr>
                                         </thead>
                                     </table>
