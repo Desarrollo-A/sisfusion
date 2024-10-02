@@ -12,7 +12,7 @@ var mesesSelect;
 var mesesSelect2;
 
 $(document).ready(function() {
-    construirHead("addExp");
+    // construirHead("addExp");
     $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -234,6 +234,8 @@ let titulos_encabezado = [];
 let num_colum_encabezado = [];
 
 function dataTable(ruta) {
+    construirHead('addExp')
+
     var table = $('#addExp').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -327,6 +329,8 @@ function dataTable(ruta) {
         ],
         "data": ruta
     });
+
+    applySearch(table)
 }
 
 $(document).on("click", ".ver_historial", function(){
