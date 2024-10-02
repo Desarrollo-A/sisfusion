@@ -201,13 +201,14 @@
                 title = _(id)
                 // console.log(title)
 
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
+                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
                 $('input', this).on('keyup change', function () {
                     if ($(`#${tabla}`).column(i).search() !== this.value) {
                         $(`#${tabla}`).column(i).search(this.value).draw();
                     }
                 });
             }
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
         function translatePlaceholder(){

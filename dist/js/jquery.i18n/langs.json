@@ -248,7 +248,10 @@
         "estatus-contratacion": "Hiring status",
         "fecha-status-9": "Date registered status 9",
         "dias-apartado-a-estatus-9": "# of days from reserved to status 9",
-        "modalidad": "Mode"
+        "modalidad": "Mode",
+        "fecha-liberacion": "Date of release",
+        "lugar-prospeccion": "Prospecting location", 
+        "fecha_creacion" : "Creation date"
 	},
 	"es": {
 		"precio-del.lote": "Precio del lote",
@@ -501,7 +504,9 @@
         "fecha-status-9": "Fecha registro estatus 9",
         "dias-apartado-a-estatus-9": "# días desde apartado hasta registro estatus 9",
         "modalidad": "Modalidad",
-        "fecha-liberacion": "Date of release"
+        "fecha-liberacion": "Fecha de liberación",
+        "lugar-prospeccion": "Lugar de prospección",
+        "fecha_creacion" : "Fecha creación"
         
 	}
 }

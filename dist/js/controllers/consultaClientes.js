@@ -1,7 +1,10 @@
+//onChangeTranslations(createTable);
+
 $(document).ready(function() {
+
     let titulos_encabezado = [];
     let num_colum_encabezado = [];
-    $('#clients-datatable thead tr:eq(0) th').each( function (i) {
+    /*$('#clients-datatable thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos_encabezado.push(title);
         num_colum_encabezado.push(i);
@@ -12,10 +15,11 @@ $(document).ready(function() {
             }
         });
         $('[data-toggle="tooltip"]').tooltip();
-        });
+    });*/
     
-
-    num_colum_encabezado.pop();
+    
+    construirHead("clients-datatable");
+    //num_colum_encabezado.pop();
     $usersTable = $('#clients-datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
