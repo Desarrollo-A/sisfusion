@@ -171,6 +171,7 @@
         }
     }
 
+
     function onChangeTranslations(callback){
         if (typeof callback === 'function') {
             change_functions.push(callback)
