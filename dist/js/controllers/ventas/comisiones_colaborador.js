@@ -430,18 +430,18 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"><span data-i18n="penalizacion-90"> + 90 DÍAS</span></span></p>';
+                    lblPenalizacion ='<p class="m-0" title="penalizacion-90" data-i18n-tooltip="penalizacion-90"><span class="label lbl-vividOrange"><span data-i18n="penalizacion-90"> + 90 DÍAS</span></span></p>';
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="lotes-con-bonificacion" data-i18n-tooltip="lotes-con-bonificacion"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning"><span data-i18n="rescision">RECISIÓN</span></span></p>';
+                    p2 = `<p class="m-0"  title="${_('lote-con-cancelacion')}" data-i18n-tooltip="lote-con-cancelacion"><span class="label lbl-warning"><span data-i18n="rescision">RECISIÓN</span></span></p>`;
                 }
                 else{
                     p2 = '';
@@ -551,6 +551,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-proceso="1"
                     class="btn-data btn-violetBoots excedente1" 
                     title="${_("boton-excedente")}"
+                    data-i18n-tooltip="boton-excedente"
                     data-toggle="tooltip_nuevas" 
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
@@ -561,7 +562,8 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     data-idLote="${data.idLote}"
                     data-proceso="2"
                     class="btn-data btn-violetBoots excedente1" 
-                    title="${_("boton-excedente")}"
+                     title="${_("boton-excedente")}"
+                    data-i18n-tooltip="boton-excedente"
                     data-toggle="tooltip_nuevas" 
                     data-placement="top">
                     <i class="fas fa-sitemap"></i>
@@ -576,6 +578,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     data-code="${data.cbbtton}"
                                     class="btn-data btn-blueMaderas consultar_logs_nuevas" 
                                     title="${_("detalles")}"
+                                    data-i18n-tooltip="detalles"
                                     data-toggle="tooltip_nuevas" 
                                     data-placement="top">
                                 <i class="fas fa-info"></i>
@@ -754,7 +757,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
+        $("#nameLote").append(`<p><h5 style="color: white;"><span data-i18n="historial-de-pago">${_('historial-de-pago')} </span><b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;"> ${lote}</b></h5></p>`);
         $.getJSON("getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
@@ -767,7 +770,9 @@ $("#tabla_nuevas_comisiones").ready(function () {
 // INICIO TABLA EN PROCESO
 $("#tabla_revision_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_revision_comisiones");
-    $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
+    construirHead("tabla_revision_comisiones");
+
+   /* $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         if (!excluir_column.includes(title)) {
             columnas_datatable.tabla_revision_comisiones.titulos_encabezados.push(title);
@@ -793,7 +798,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
             }
         });
-    });
+    });*/
 
     $('#tabla_revision_comisiones').on('xhr.dt', function (e, settings, json, xhr) {
         var total = 0;

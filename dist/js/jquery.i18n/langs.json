@@ -372,7 +372,10 @@
                 "en-revision": "Payments under review",
                 "resguardo": "Withheld commissions ",
                 "por-pagar": "Por pagar",
-                "consultar-detalles-youtube":"For more details on the use and functionality of the Final Payment Query section, you can view it in the following tutorial"
+                "consultar-detalles-youtube":"For more details on the use and functionality of the Final Payment Query section, you can view it in the following tutorial",
+                "lote-con-cancelacion":"LOT WITH CONTRACT CANCELLATION",
+                "lotes-con-bonificacion": "LOT WITH BONUS IN NEODATA",
+                "historial-de-pago": "LOT PAYMENT HISTORY"
 
         },
         "es": {
@@ -750,6 +753,9 @@
                 "en-revision": "En revisión",
                 "resguardo": "Resguardo",
                 "por-pagar": "Por pagar",
-                "consultar-detalles-youtube":"Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial"
+                "consultar-detalles-youtube":"Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial",
+                "lote-con-cancelacion": "LOTE CON CANCELACIÓN DE CONTRATO",
+                "lotes-con-bonificacion": "LOTE CON BONIFICACIÓN EN NEODATA",
+                "historial-de-pago": "HISTORIAL DE PAGO DEL LOTE"
         }
 }
