@@ -49,11 +49,9 @@
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
@@ -113,6 +111,7 @@
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/he.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/fi.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/ml.js"></script>
+
 <script type="text/javascript">
     let locale = localStorage.getItem('locale')
 
@@ -166,16 +165,22 @@
 
     function onLoadTranslations(callback){
         if (typeof callback === 'function') {
+            console.log('Agregando on load...');
             load_functions.push(callback)
+        }else {
+            console.log("Error con onLoadTranslations");
         }
     }
 
     function onChangeTranslations(callback){
         if (typeof callback === 'function') {
+            console.log('Se agregó onchange...');
             change_functions.push(callback)
+        }else {
+            console.log("Error con onChangeTranslations");
         }
     }
-   
+  
     async function triggerLoadFunctions() {
         for (let callback of load_functions) {
             await callback();
@@ -183,44 +188,26 @@
     }
 
     function triggerChangeFunctions() {
+        console.log('Cambiando idioma...')
         for (let callback of change_functions) {
             callback()
         }
     }
 
-    function construirHead(tabla){
-        let titulos = []
 
-        $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
-            var id = $(this).text();
-            
-            titulos.push(id);
-            // console.log(id)
-
-            if(id){
-                title = _(id)
-                // console.log(title)
-
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
-                $('input', this).on('keyup change', function () {
-                    if ($(`#${tabla}`).column(i).search() !== this.value) {
-                        $(`#${tabla}`).column(i).search(this.value).draw();
-                    }
-                });
-            }
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-
-        function translatePlaceholder(){
-                for(titulo of titulos){
-                    if(titulo !== ''){
-                        $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                    }
-                }
-            }
-
-        onLoadTranslations(translatePlaceholder)
-        onChangeTranslations(translatePlaceholder)
+    function stringToI18(str) {
+      // Convertir todo el string a minúsculas
+      let resultado = str.toLowerCase();
+        
+      // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
+      resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        
+      // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
+      resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
+        
+      console.log(resultado);
+      return resultado;
     }
 
 </script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script>

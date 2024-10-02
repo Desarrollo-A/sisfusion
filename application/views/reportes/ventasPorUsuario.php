@@ -12,34 +12,34 @@
                 </div>
                 <div class="modal-body">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="control-label" id="tvLbl">* Asesor</label>
+                        <label class="control-label" id="tvLbl" data-i18n="asesor">* Asesor</label>
                         <select required="required" name="asesores" id="asesores" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body"></select>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="control-label" id="tvLbl">Coordinador</label>
+                        <label class="control-label" id="tvLbl" data-i18n="coordinador">Coordinador</label>
                         <select name="coordinadores" id="coordinadores" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body"></select>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="control-label" id="tvLbl">* Gerente</label>
+                        <label class="control-label" id="tvLbl" data-i18n="gerente">* Gerente</label>
                         <select required="required" name="gerentes" id="gerentes" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body"></select>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="control-label" id="tvLbl">* Subdirector</label>
+                        <label class="control-label" id="tvLbl" data-i18n="subdirector">* Subdirector</label>
                         <select required="required" name="subdirectores" id="subdirectores" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body"></select>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="control-label" id="tvLbl">Director regional</label>
+                        <label class="control-label" id="tvLbl" data-i18n="director-regional">Director regional</label>
                         <select name="directoresRegionales" id="directoresRegionales" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body"></select>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <label class="control-label" id="tvLbl">Director regional 2</label>
+                        <label class="control-label" id="tvLbl" data-i18n="director-regional2">Director regional 2</label>
                         <select name="directoresRegionales2" id="directoresRegionales2" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body"></select>
                     </div>
                     <input type="hidden" name="idProspecto" id="idProspecto">
                     <input type="hidden" name="tipoTransaccion" id="tipoTransaccion">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
                     <button type="button" id="sendRequestButton" class="btn btn-primary">Registrar</button>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                             <i class="fas fa-list fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Listado general de ventas por estatus</h3>
+                            <h3 class="card-title center-align" data-i18n="listado-ventas-estatus">Listado general de ventas por estatus</h3>
                             <div class="toolbar">
                                 <div class="container-fluid">
                                     <div class="row">
@@ -81,24 +81,24 @@
                                     <table id="tablaLista" name="tablaListaProspectos" class="table-striped table-hover">
                                         <thead>
                                         <tr>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>ID LOTE</th>
-                                            <th>CLIENTE</th>
-                                            <th>FECHA DE APARTADO</th>
-                                            <th>ASESOR</th>
-                                            <th>COORDINADOR</th>
-                                            <th>GERENTE</th>
-                                            <th>SUBDIRECTOR</th>
-                                            <th>DIRECTOR REGIONAL</th>
-                                            <th>DIRECTOR REGIONAL 2</th>
-                                            <th>ESTATUS CONTRATACIÓN</th>
-                                            <th>DETALLE MOVIMIENTO</th>
-                                            <th>ESTATUS LOTE</th>
-                                            <th>ESTÁ CON ASESOR</th>
-                                            <th>DETALLE ESTATUS</th>
-                                            <th>COMENTARIO</th>
+                                            <th><span data-i18n="proyecto">proyecto</span></th>
+                                            <th>condominio</th>
+                                            <th>lote</th>
+                                            <th>id-lote</th>
+                                            <th>cliente</th>
+                                            <th>fecha-apartado</th>
+                                            <th>asesor</th>
+                                            <th>coordinador</th>
+                                            <th>gerente</th>
+                                            <th>subdirector</th>
+                                            <th>director-regional</th>
+                                            <th>director-regional2</th>
+                                            <th>estatus-contratacion</th>
+                                            <th>detalle-movimiento</th>
+                                            <th>estatus-lote</th>
+                                            <th>esta-asesor</th>
+                                            <th>detalle-estatus</th>
+                                            <th>comentario</th>
                                         </tr>
                                         </thead>
                                     </table>
