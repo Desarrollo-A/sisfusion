@@ -388,7 +388,10 @@
                 "no-tiene-vivienda": "NO HOUSING, BUT THERE IS A REFERENCE",
                 "no-tiene-pagos-aplicados": "NO PAYMENTS APPLIED TO THIS REFERENCE.",
                 "ref-duplicada":"DUPLICATE REFERENCE",
-                "sin-localizar": "DUPLICATE REFERENCE"
+                "sin-localizar": "DUPLICATE REFERENCE",
+                "vsualizando-archivo":"Viewing archive: evidence",
+                "lote-bonificacion-neodata":"Bonus Lot in NEODATA",
+                "bonos":"Bonds"
 
         },
         "es": {
@@ -782,6 +785,9 @@
                 "no-tiene-vivienda": "NO TIENE VIVIENDA, SI HAY REFERENCIA",
                 "no-tiene-pagos-aplicados": "NO HAY PAGOS APLICADOS A ESTA REFERENCIA",
                 "ref-duplicada":"REFERENCIA DUPLICADA",
-                "sin-localizar": "SIN LOCALIZAR"
+                "sin-localizar": "SIN LOCALIZAR",
+                "vsualizando-archivo":"Visualizando archivo: evidencia",
+                "lote-bonificacion-neodata":"Lote con bonificación en NEODATA",
+                "bonos":"Bonos"
         }
 }
