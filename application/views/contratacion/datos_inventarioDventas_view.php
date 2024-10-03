@@ -14,13 +14,13 @@
                             <i class="fas fa-bookmark fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Registros de Terrenos</h3>
+                            <h3 data-i18n="registros-terrenos" class="card-title center-align">Registros de Terrenos</h3>
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Proyecto</label>
-                                            <select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona proyecto" data-size="7" data-container="body" required>
+                                            <select data-i18n="selecciona-proyecto"  name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona proyecto" data-size="7" data-container="body" required>
                                                 <?php
                                                 if($residencial != NULL) :
                                                     foreach($residencial as $fila) : ?>
@@ -34,7 +34,7 @@
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <div class="form-group label-floating select-is-empty overflow-hidden">
                                             <label class="control-label">Condominio</label>
-                                            <select id="filtro4" name="filtro4"class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona Condominio" data-size="7" data-container="body" required>
+                                            <select data-i18n="selecciona-condominio" id="filtro4" data-i18n="selecciona-proyecto" name="filtro4"class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="Selecciona Condominio" data-size="7" data-container="body" required>
                                             </select>
                                         </div>
                                     </div>
@@ -44,14 +44,14 @@
                                         <table id="tableTerrenos" class="table-striped table-hover">
                                             <thead>
                                             <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>SUPERFICIE</th>
+                                                <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>superficie</th>
                                                 <th>TOTAL</th>
-                                                <th>ENGANCHE</th>
-                                                <th>A FINANCIAR</th>
-                                                <th>MESES SIN INTERESES</th>
+                                                <th>enganche</th>
+                                                <th>a-financiar</th>
+                                                <th>meses-intereses</th>
                                             </tr>
                                             </thead>
                                             <tbody>

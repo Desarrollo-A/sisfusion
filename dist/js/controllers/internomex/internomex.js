@@ -75,8 +75,8 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title:'Consulta pago final' ,
+            titleAttr: _('descargar-excel'),
+            title: _('consulta pago final') ,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
@@ -89,7 +89,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         {
             text: '<i class="fas fa-play"></i>',
             className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
+            titleAttr: _('consultar-detalles-youtube'),
             action: function (e, dt, button, config) {
                 window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
