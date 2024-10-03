@@ -22,7 +22,8 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`)
+    console.log(lang);
+    $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
 function changeLanguaje() {
@@ -73,57 +74,68 @@ function triggerChangeFunctions() {
         callback()
     }
 }
+const datosTablasComisiones = [
+    {
+        idTabla : 'tabla_nuevas_comisiones',
+        idText: 'myText_nuevas'
+    },
+    {
+        idTabla : 'tabla_revision_comisiones',
+        idText: 'myText_revision'
+    },
+    {
+        idTabla : 'tabla_pagadas_comisiones',
+        idText : 'myText_pagadas'
+    }
+];
 
 function applySearch(table) {
     let id = table.tables().nodes().to$().attr('id')
-
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
         $('input', this).on('keyup change', function () {
             if (table.column(i).search() !== this.value) {
                 table.column(i).search(this.value).draw();
+                const searchTabla = datosTablasComisiones.find((idTables) => idTables.idTabla == id);
+
+                if( searchTabla !== undefined){
+                    var total = 0;
+                    var index = table.rows({
+                        selected: true,
+                        search: 'applied'
+                    }).indexes();
+                    var data = table.rows(index).data();
+                    $.each(data, function (i, v) {
+                        console.log(v)
+                        total += parseFloat(v.pago_cliente);
+                    });
+                    document.getElementById(`${searchTabla.idText}`).textContent = '$' + formatMoney(total);
+                }
             }
         })
     })
 }
 
+
 function construirHead(table){
-    //let titulos = []
+    let titulos = []
+    const idNoPermitidos = ['checkComisionesNuevas']
 
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
-        
-        //titulos.push(id);
-        console.log(id)
 
-        if(id){
-            title = _(id)
-            // console.log(title)
-
-            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-
-            function translatePlaceholder(){
-                $('title', this).attr('placeholder', _(id))
-                $('title', this).attr('data-original-title', _(id))
+        titulos.push(id);
+        // console.log(id)
+        if(id && idNoPermitidos.indexOf(id)){
+            if(id){
+                title = _(id)
+                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
             }
+        }else if(id == 'checkComisionesNuevas'){
+            title = _(id)
+            $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
 
-            onLoadTranslations(translatePlaceholder)
-            onChangeTranslations(translatePlaceholder)
         }
     });
-
-    /*
-    function translatePlaceholder(){
-            for(titulo of titulos){
-                if(titulo !== ''){
-                    $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                    $(`#head-${titulo}`).attr('data-original-title', _(titulo))
-                }
-            }
-        }
-
-    onLoadTranslations(translatePlaceholder)
-    onChangeTranslations(translatePlaceholder)
-    */
 }
 
 function changeButtonTooltips() {
