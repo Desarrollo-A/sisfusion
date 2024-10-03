@@ -396,7 +396,9 @@
                 "error-comunicarse-proveedor" : "ERROR: PLEASE TRY TO CONTACT THE SUPPLIER",
                 "cantidad-incorrecta": "Incorrect amount",
                 "cantidad-correcta":"Correct amount",
-                "suma-seleccionada" : "Selected amount: $"
+                "suma-seleccionada" : "Selected amount: $",
+                "factura-subida-correctamente" : "THE INVOICE WAS UPLOADED SUCCESSFULLY",
+                "factura-no-coincide": "THE INVOICE TOTAL DOES NOT MATCH THE TOTAL OF SELECTED COMMISSIONS"
 
         },
         "es": {
