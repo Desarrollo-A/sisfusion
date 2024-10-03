@@ -401,7 +401,11 @@
                 "num-recibo": "RECEIPT NUMBER",
                 "tipo-pago": "PAYMENT TYPE",
                 "enganche": "DOWN PAYMENT",
-                "fecha-enganche": "HITCH DATE"
+                "fecha-enganche": "HITCH DATE",
+                "tipo-lote": "LOT TYPE",
+                "concepto": "CONCEPT",
+                "proyecto-origne": "ORIGIN PROYECT",
+                "condominio-origen": "ORIGIN CONDO"
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -807,6 +811,10 @@
                 "num-recibo": "NÚMERO DE RECIBO",
                 "tipo-pago": "TIPO DE PAGO",
                 "enganche": "Enganche",
-                "fecha-enganche": "FECHA DE ENGANCHE"
+                "fecha-enganche": "FECHA DE ENGANCHE",
+                "tipo-lote": "TIPO LOTE",
+                "concepto": "CONCEPTO",
+                "proyecto-origen": "PROYECTO ORIGEN",
+                "condominio-origen": "CONDOMINIO ORIGEN"
         }
 }
