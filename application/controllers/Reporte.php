@@ -7,7 +7,7 @@ class Reporte extends CI_Controller {
         $this->load->library(array('session','form_validation', 'get_menu', 'Email', 'Jwt_actions', 'Formatter','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
-        //$this->programacion = $this->load->database('programacion', TRUE);
+        $this->programacion = $this->load->database('programacion', TRUE);
 
         date_default_timezone_set('America/Mexico_City');
         $this->jwt_actions->authorize('9717', $_SERVER['HTTP_HOST']);
