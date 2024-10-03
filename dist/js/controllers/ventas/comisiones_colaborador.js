@@ -768,6 +768,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
 
 });
+
+$('#tabla_nuevas_comisiones').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
 //FIN TABLA NUEVA
 
 // INICIO TABLA EN PROCESO
@@ -1183,6 +1189,11 @@ $("#tabla_pagadas_comisiones").ready(function () {
         });
     });
 });
+$('#tabla_pagadas_comisiones').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
 // FIN TABLA internomex
 
 // INICIO TABLA OTRAS
@@ -1386,6 +1397,11 @@ $("#tabla_otras_comisiones").ready(function () {
         });
     });
 });
+$('#tabla_pagadas_comisiones').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
 // FIN TABLA PAGADAS
 
 let titulos = [];
@@ -1400,7 +1416,10 @@ $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
     });
 });
 
+
 function fillCommissionTableWithoutPayment(proyecto, condominio) {
+    construirHead('tabla_comisiones_sin_pago');
+
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -1523,8 +1542,15 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
             $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
         }
     });
+    applySearch(tabla_comisiones_sin_pago)
+
 };
 
+$('#tabla_comisiones_sin_pago').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+});
 $(window).resize(function () {
     tabla_nuevas.columns.adjust();
     tabla_revision.columns.adjust();
