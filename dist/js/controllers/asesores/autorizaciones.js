@@ -86,7 +86,7 @@ let num_colum_autorizaciones = [];
 num_colum_autorizaciones.pop();
 
 $(document).ready (function() {
-    construirHead('sol_aut');
+    construirHead('addExp');
     var table;
     table = $('#addExp').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -181,6 +181,7 @@ $(document).ready (function() {
             cache: false
         },
     });
+    applySearch(table);
 });
 
 $('#addExp').on('draw.dt', function() {
@@ -206,8 +207,9 @@ let num_colum_solicitud = [];
 num_colum_solicitud.pop();
 
 $(document).ready (function() {
+    construirHead('sol_aut');
     var table2;
-    tabla_6 = $('#sol_aut').DataTable( {
+    table2 = $('#sol_aut').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -324,6 +326,7 @@ $(document).ready (function() {
             cache: false
         },
     });
+    applySearch(table2);
 });
 
 $('#sol_aut').on('draw.dt', function() {
@@ -462,3 +465,5 @@ $(document).ready(function () {
         }
     });
 });
+
+

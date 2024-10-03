@@ -126,9 +126,9 @@
 														<th>coordinador</th>
 														<th>gerente</th>
 														<th>subdirector</th>
-														<th>director regional</th>
-														<th>director reginal 2</th>
-														<th>fecha de apartado</th>
+														<th>director-regional</th>
+														<th>director-regional-2</th>
+														<th>fecha-de-apartado</th>
 														<th>acciones</th>
 													</tr>
 												</thead>
@@ -145,12 +145,12 @@
 														<th>condominio</th>
 														<th>lote</th>
 														<th>cliente</th>
-														<th>solicitante/asesor</th>
+														<th>solicitante-asesor</th>
 														<th>coordinador</th>
 														<th>gerente</th>
 														<th>subdirector</th>
-														<th>director regional</th>
-														<th>director regional 2</th>
+														<th>director-regional</th>
+														<th>director-regional-2</th>
 														<th>autoriza</th>
 														<th>acciones</th>
 													</tr>

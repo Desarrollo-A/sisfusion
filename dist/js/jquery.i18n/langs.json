@@ -133,7 +133,7 @@
 		"gerente": "Manager",
 		"subdirector": "Subdirector",
 		"director-regional": "Regional Director",
-		"director-regional2": "Regional Director 2",
+		"director-regional-2": "Regional Director 2",
 		"cancelar": "cancel",
 		"registrar": "Register",
 		"tus-ventas": "Your sales",
@@ -503,7 +503,8 @@
         "comentario2":"Comment:",
         "solicitud-autorizacion":"Authorization request",
 		"en-proceso2":"IN PROCESS",
-		"denegada2":"DENIED"
+		"denegada2":"DENIED",
+		"solicitante-asesor":"APPLICANT/ADVISOR"
 	},
 	"es": {
 		"clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -638,7 +639,7 @@
 		"gerente": "Gerente",
 		"subdirector": "Subdirector",
 		"director-regional": "Director regional",
-		"director-regional2": "Director regional 2",
+		"director-regional-2": "Director regional 2",
 		"cancelar": "cancelar",
 		"registrar": "Registrar",
 		"tus-ventas": "Tus ventas",
@@ -1010,6 +1011,7 @@
         "comentario2":"Comentario:",
         "solicitud-autorizacion":"Solicitud de autorización",
 		"en-proceso2":"EN PROCESO",
-		"denegada2":"DENEGADA"
+		"denegada2":"DENEGADA",
+		"solicitante-asesor":"SOLICITANTE/ASESOR"
 	}
 }
