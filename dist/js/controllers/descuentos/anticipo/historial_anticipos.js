@@ -143,9 +143,9 @@ $("#historial_general").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input class="center-align" type="hidden"  value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-            <h4 class=" center-align">¿Está seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
+            <h4 class=" center-align">${_("borrar-anticipo")} ${nombreUsuario}?</h4>
             <div class="form-group">
-                <label class="label control-label">Mótivo del rechazo</label>
+                <label class="label control-label" data-i18n="motivo-rechazo">${_("motivo-rechazo")}</label>
                 <textarea id="motivoDescuento" name="motivoDescuento" class="text-modal" rows="3" required></textarea>
             </div>
             <div class="form-group col-md-12 ">
