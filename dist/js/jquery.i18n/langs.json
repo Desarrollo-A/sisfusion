@@ -96,7 +96,8 @@
         "referencia" : "REFERENCE",
         "tipo-pago" : "PAYMENT TYPE",
         "fecha-enganche" : "HITCH DATE",
-        "selecciona-una-opcion"  :"Selecciona una opción"
+        "selecciona-una-opcion"  :"Selecciona una opción",
+        "contratos-recibidos" : "Contracts received"
 
     },
     "es": {
@@ -196,7 +197,7 @@
         "referencia" : "REFERENCIA",
         "tipo-pago" : "TIPO DE PAGO",
         "fecha-enganche" : "FECHA DE ENGANCHE",
-        "selecciona-una-opcion"  :"Select an option"
-
+        "selecciona-una-opcion"  :"Select an option",
+        "contratos-recibidos" : "Contratos recibidos"
     }
 }
