@@ -503,7 +503,10 @@
     "dias-para-pagar-enganche": "Days to make the downpayment",
     "enganche-cantidad": "Downpayment amount",
     "mensualidades-enganche-diferido": "Include monthly payments for the differed downpayment",
-    "meses-a-diferir": "Months to differ"
+    "meses-a-diferir": "Months to differ",
+    "pago-de-cliente": "CLIENT PAYMENT",
+    "seguimiento": "tracking",
+    "comisiones-por-gerencia": "management fees"
   },
   "es": {
     "files": "Carpetas",
@@ -1011,6 +1014,9 @@
     "dias-para-pagar-enganche": "Días para pagar Enganche",
     "enganche-cantidad": "Enganche cantidad",
     "mensualidades-enganche-diferido": "Incluir mensualidades en el enganche diferido",
-    "meses-a-diferir": "Meses a diferir"
+    "meses-a-diferir": "Meses a diferir",
+    "pago-de-cliente": "PAGO DEL CLIENTE",
+    "seguimiento": "Seguimiento",
+    "comisiones-por-gerencia": "comisiones por gerencia"
   }
 }
