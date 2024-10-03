@@ -473,7 +473,14 @@
                 "sede-modificada":"Modified headquarters.",
                 "asegurate-campos":"Be sure to fill in the minimum required fields",
                 "selecciona-proyecto":"Select project",
-                "selecciona-condominio":"Select condominium"
+                "selecciona-condominio":"Select condominium",
+                "edad": "Age",
+                "porcentaje": "Percentage",
+                "descuentos-disponibles" : "AVAILABLE DISCOUNTS",
+                "dias-para-pagar-enganche": "Days to make the downpayment",
+                "enganche-cantidad": "Downpayment amount",
+                "mensualidades-enganche-diferido": "Include monthly payments for the differed downpayment",
+                "meses-a-diferir": "Months to differ"
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -951,6 +958,13 @@
                 "sede-modificada":"Sede modificada.",
                 "asegurate-campos":"Asegúrate de llenar los campos mínimos requeridos",
                 "selecciona-proyecto":"Selecciona proyecto",
-                "selecciona-condominio":"Selecciona condominio"
+                "selecciona-condominio":"Selecciona condominio",
+                "edad": "Edad",
+                "porcentaje": "Porcentaje",
+                "descuentos-disponibles" : "DESCUENTOS DISPONIBLES",
+                "dias-para-pagar-enganche": "Días para pagar Enganche",
+                "enganche-cantidad": "Enganche cantidad",
+                "mensualidades-enganche-diferido": "Incluir mensualidades en el enganche diferido",
+                "meses-a-diferir": "Meses a diferir"
         }
 }
