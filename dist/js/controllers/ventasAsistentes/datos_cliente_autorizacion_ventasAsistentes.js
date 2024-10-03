@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    construirHead("tabla_autorizaciones_ventas");
     $.post(general_base_url + "Asistente_gerente/lista_proyecto", function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -56,8 +57,8 @@ $('#proyecto').change( function() {
 $('#lote').change( function() { 
    index_lote = $(this).val();
    $("#spiner-loader").removeClass("hide");
-   $("#tabla_autorizaciones_ventas").removeClass('hide');
-            tabla_autorizaciones = $("#tabla_autorizaciones_ventas").DataTable({
+$("#tabla_autorizaciones_ventas").removeClass('hide');
+tabla_6 = $("#tabla_autorizaciones_ventas").DataTable({
             width: '100%',
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             destroy: true,
@@ -127,7 +128,7 @@ $('#lote').change( function() {
                                 return opciones + '</div>';
                     }else{
                         opciones = '<div class="btn-group" role="group">';
-                                opciones += '<div class="col-md-1 col-sm-1"><button class="btn-data btn-blueMaderas agregar_autorizacion" title="SUBIR ARCHIVO" data-toggle="tooltip" data-placement="top" data-id_condominio="'+data.idCondominio+'" data-id_cliente="'+data.id_cliente+'" data-idClienteHistorial="'+data.id_cliente+'" data-idLoteHistorial="'+data.idLote+'" data-id_user="'+id_usuario_general+'" data-nomResidencial="'+data.nombreResidencial+'" data-nomLote="'+data.nombreLote+'" data-nomCondominio="'+data.condominio+'"><i class="fas fa-plus"></i></button></div>';
+                                opciones += '<div class="col-md-1 col-sm-1"><button class="btn-data btn-blueMaderas agregar_autorizacion"  title="'+_("subir-archivo")+'" data-i18n-tooltip = "'+_("subir-archivo")+'"  data-toggle="tooltip" data-placement="top" data-id_condominio="'+data.idCondominio+'" data-id_cliente="'+data.id_cliente+'" data-idClienteHistorial="'+data.id_cliente+'" data-idLoteHistorial="'+data.idLote+'" data-id_user="'+id_usuario_general+'" data-nomResidencial="'+data.nombreResidencial+'" data-nomLote="'+data.nombreLote+'" data-nomCondominio="'+data.condominio+'"><i class="fas fa-plus"></i></button></div>';
                                 return opciones + '</div>';
                         }
                         
@@ -147,7 +148,7 @@ $('#lote').change( function() {
 $("#tabla_autorizaciones_ventas tbody").on("click", ".agregar_autorizacion", function(){
 
     var tr = $(this).closest('tr');
-    var row = tabla_autorizaciones.row( tr );
+    var row = tabla_6.row( tr );
     idautopago = $(this).val();
 
     $('#idCliente').val($(this).attr("data-id_cliente"));//data-id_cliente
@@ -160,7 +161,7 @@ $("#tabla_autorizaciones_ventas tbody").on("click", ".agregar_autorizacion", fun
     $('#nombreCondominio').val($(this).attr("data-nomCondominio"));
 
     $("#modal_autorizacion .modal-body").html("");
-    $("#modal_autorizacion .modal-body").append(`<div class="file-gph"><input class="d-none" type="file" id="expediente" name="expediente" onchange="changeName(this)"><input class="file-name" type="text" placeholder="No has seleccionado nada aún" readonly required><label class="upload-btn m-0" for="expediente" readonly><span>Buscar</span><i class="fas fa-search text-right"></i></label></div>`);
+    $("#modal_autorizacion .modal-body").append(`<div class="file-gph"><input class="d-none" type="file" id="expediente" name="expediente" onchange="changeName(this)"><input class="file-name" type="text" placeholder="${_("archivo-no-selecionado")}" readonly required><label class="upload-btn m-0" for="expediente" readonly><span>${_("buscar")}</span><i class="fas fa-search text-right"></i></label></div>`);
     $("#modal_autorizacion").modal();
     
 });
@@ -209,17 +210,19 @@ $(document).on("submit", "#envioAutorizacion", function (e) {
 });
 
 
-let titulos = [];
-$('#tabla_autorizaciones_ventas thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos.push(title);
-    $(this).html('<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if (tabla_autorizaciones.column(i).search() !== this.value) {
-            tabla_autorizaciones.column(i).search(this.value).draw();
-        }
-    });
-});
+// let titulos = [];
+// $('#tabla_autorizaciones_ventas thead tr:eq(0) th').each(function (i) {
+//     var title = $(this).text();
+//     titulos.push(title);
+//     $(this).html('<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+//     $('input', this).on('keyup change', function () {
+//         if (tabla_autorizaciones.column(i).search() !== this.value) {
+//             tabla_autorizaciones.column(i).search(this.value).draw();
+//         }
+//     });
+// });
+
+
 
 $(window).resize(function(){
     tabla_autorizaciones.columns.adjust();

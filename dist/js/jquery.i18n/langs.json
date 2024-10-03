@@ -97,7 +97,19 @@
         "tipo-pago" : "PAYMENT TYPE",
         "fecha-enganche" : "HITCH DATE",
         "selecciona-una-opcion"  :"Selecciona una opción",
-        "contratos-recibidos" : "Contracts received"
+        "contratos-recibidos" : "Contracts received",
+
+        "fecha-vencimiento":"EXPIRATION DATE",
+        "etapa":"STAGE",
+        "creacion":"CREATION",
+        "vencimiento":"VENCIMIENTO",
+        "ultima-modificacion":"LAST MODIFICATION",
+        "estatus-contratacion":"CONTRACTING STATUS",
+        "ingresar-autorizacion":"Enter authorization",
+        "subir-archivo" : "UPLOAD FILE",
+        "archivo-no-selecionado" : "You haven't selected anything yet",
+        "guardar" : "Save",
+        "subir-archivo-autorizacion" : "Upload authorization file."
 
     },
     "es": {
@@ -198,6 +210,17 @@
         "tipo-pago" : "TIPO DE PAGO",
         "fecha-enganche" : "FECHA DE ENGANCHE",
         "selecciona-una-opcion"  :"Select an option",
-        "contratos-recibidos" : "Contratos recibidos"
+        "contratos-recibidos" : "Contratos recibidos",
+        "fecha-vencimiento":"FECHA DE VENCIMIENTO",
+        "etapa":"ETAPA",
+        "creacion":"CREACIÓN",
+        "vencimiento":"EXPIRY",
+        "ultima-modificacion":"ÚLTIMA MODIFICACIÓN",
+        "estatus-contratacion":"ESTATUS CONTRATACIÓN",
+        "ingresar-autorizacion": "Ingresar autorización",
+        "subir-archivo" : "SUBIR ARCHIVO",
+        "archivo-no-selecionado" : "No has seleccionado nada aún.",
+        "guardar" : "Guardar",
+        "subir-archivo-autorizacion" : "Subir archivo de autorización."
     }
 }
