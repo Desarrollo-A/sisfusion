@@ -22,7 +22,8 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`)
+    console.log(lang);
+    $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
 function changeLanguaje() {
