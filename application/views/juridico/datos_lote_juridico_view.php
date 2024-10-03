@@ -8,7 +8,7 @@
 			<div class="row">
 				<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<center>
-						<h3>Registros de Terrenos</h3>
+						<h3 data-i18n="registros-terrenos">Registros de Terrenos</h3>
 					</center>
 					<hr>
 					<br>
