@@ -40,7 +40,9 @@ function changeLanguaje() {
 
     $('body').i18n()
 
-    triggerChangeFunctions()
+    // triggerChangeFunctions()
+
+    location.reload();
 }
 
 _ = $.i18n
