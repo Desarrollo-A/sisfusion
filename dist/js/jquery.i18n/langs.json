@@ -398,7 +398,12 @@
                 "cantidad-correcta":"Correct amount",
                 "suma-seleccionada" : "Selected amount: $",
                 "factura-subida-correctamente" : "THE INVOICE WAS UPLOADED SUCCESSFULLY",
-                "factura-no-coincide": "THE INVOICE TOTAL DOES NOT MATCH THE TOTAL OF SELECTED COMMISSIONS"
+                "factura-no-coincide": "THE INVOICE TOTAL DOES NOT MATCH THE TOTAL OF SELECTED COMMISSIONS",
+                "vsualizando-archivo":"Viewing archive: evidence",
+                "lote-bonificacion-neodata":"Bonus Lot in NEODATA",
+                "bonos":"Bonds",
+                "departamento-ti":"IT Department",
+                "idioma":"Language"
 
         },
         "es": {
@@ -802,6 +807,11 @@
                 "cantidad-correcta": "Cantidad correcta",
                 "suma-seleccionda": "Suma seleccionada: $",
                 "factura-subida-correctamente" : "LA FACTURA SE SUBIO CORRECTAMENTE",
-                "factura-no-coincide": "EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS"
+                "factura-no-coincide": "EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS",
+                "vsualizando-archivo":"Visualizando archivo: evidencia",
+                "lote-bonificacion-neodata":"Lote con bonificación en NEODATA",
+                "bonos":"Bonos",
+                "departamento-ti":"Departamento de TI",
+                "idioma":"Idioma"
         }
 }
