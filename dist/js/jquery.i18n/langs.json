@@ -391,7 +391,9 @@
                 "sin-localizar": "DUPLICATE REFERENCE",
                 "vsualizando-archivo":"Viewing archive: evidence",
                 "lote-bonificacion-neodata":"Bonus Lot in NEODATA",
-                "bonos":"Bonds"
+                "bonos":"Bonds",
+                "departamento-ti":"IT Department",
+                "idioma":"Language"
 
         },
         "es": {
@@ -788,6 +790,8 @@
                 "sin-localizar": "SIN LOCALIZAR",
                 "vsualizando-archivo":"Visualizando archivo: evidencia",
                 "lote-bonificacion-neodata":"Lote con bonificación en NEODATA",
-                "bonos":"Bonos"
+                "bonos":"Bonos",
+                "departamento-ti":"Departamento de TI",
+                "idioma":"Idioma"
         }
 }
