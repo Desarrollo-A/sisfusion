@@ -793,7 +793,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3 form-group" >
-                                                <label>MSI:</label>
+                                                <label><span data-i18n="msi">MSI</span>:</label>
                                                 <div class="input-group">
                                                     <input is-number ng-model="mesesSinInteres" type="number"
                                                            ng-change="revisarInput()"
@@ -812,12 +812,12 @@
                                         <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                                             <div class="col-md-2 form-group col-md-offset-5" id="offsetCnt">
-                                                <label>Fecha:</label>
+                                                <label><span data-i18n="fecha">Fecha</span>:</label>
                                                 <input type="date" ng-model="CurrentDate" class="form-control" value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
                                             </div>
                                             <div class=" col-md-2 form-group" >
                                                 <div id="labelFA">
-                                                    <label>Fecha Apartado:</label>
+                                                    <label><span data-i18n="fecha-apartado">Fecha Apartado</span>:</label>
                                                     <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true" id="fechaApartado">
                                                 </div>
                                             </div>
@@ -842,7 +842,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="col-md-offset-9 col-md-3 form-group">
-                                                <button class="btn btn-simular" ng-click="ejecutaCorrida()">Simular</button>
+                                                <button class="btn btn-simular" ng-click="ejecutaCorrida()" value="_()">Simular</button>
                                             </div>
                                         </div>
                                     </div>

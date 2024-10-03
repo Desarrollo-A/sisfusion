@@ -480,7 +480,9 @@
                 "dias-para-pagar-enganche": "Days to make the downpayment",
                 "enganche-cantidad": "Downpayment amount",
                 "mensualidades-enganche-diferido": "Include monthly payments for the differed downpayment",
-                "meses-a-diferir": "Months to differ"
+                "meses-a-diferir": "Months to differ",
+                "msi": "M.W.I",
+                "fecha-inicio-mensualidad": "Date of first monthly payment"
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -965,6 +967,8 @@
                 "dias-para-pagar-enganche": "Días para pagar Enganche",
                 "enganche-cantidad": "Enganche cantidad",
                 "mensualidades-enganche-diferido": "Incluir mensualidades en el enganche diferido",
-                "meses-a-diferir": "Meses a diferir"
+                "meses-a-diferir": "Meses a diferir",
+                "msi": "MSI",
+                "fecha-inicio-mensualidad": "Fecha inicio de mensualidad"
         }
 }
