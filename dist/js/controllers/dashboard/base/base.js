@@ -88,3 +88,21 @@ function changePill(element){
         });
     }
 }
+
+function updateButtonTitles() {
+    $('[data-i18n]').each(function() {
+        let i18nAttr = $(this).data('i18n');
+
+        // Verificar si el formato es del tipo [attr]key
+        if (i18nAttr.includes('[')) {
+            let match = i18nAttr.match(/\[(.*?)\](.*)/);
+            if (match) {
+                let attr = match[1]; // Atributo a actualizar, ej: title
+                let key = match[2];  // Clave de traducción, ej: button_more_detail
+
+                // Aplicar traducción al atributo especificado
+                $(this).attr(attr, $.i18n(key));
+            }
+        }
+    });
+}

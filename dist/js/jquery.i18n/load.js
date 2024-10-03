@@ -72,10 +72,22 @@ function triggerChangeFunctions() {
     }
 }
 
-function construirHead(tabla){
+function applySearch(table) {
+    let id = table.tables().nodes().to$().attr('id')
+
+    $(`#${id} thead tr:eq(0) th`).each(function (i) {
+        $('input', this).on('keyup change', function () {
+            if (table.column(i).search() !== this.value) {
+                table.column(i).search(this.value).draw();
+            }
+        })
+    })
+}
+
+function construirHead(table){
     let titulos = []
 
-    $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
+    $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
         
         titulos.push(id);
@@ -85,12 +97,7 @@ function construirHead(tabla){
             title = _(id)
             // console.log(title)
 
-            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
-            $('input', this).on('keyup change', function () {
-                if (tabla_6.column(i).search() !== this.value) {
-                    tabla_6.column(i).search(this.value).draw();
-                }
-            });
+            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
         }
     });
 
@@ -98,6 +105,7 @@ function construirHead(tabla){
             for(titulo of titulos){
                 if(titulo !== ''){
                     $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                    $(`#head-${titulo}`).attr('data-original-title', _(titulo))
                 }
             }
         }
@@ -138,7 +146,37 @@ function changeSelects() {
     })
 }
 
+function stringToI18(str) {
+    // Convertir todo el string a minúsculas
+    let resultado = str.toLowerCase();
+      
+    // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
+    resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      
+    // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
+    resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
+      
+    console.log(resultado);
+    return resultado;
+}
+
+function changeParagraphTooltips() {
+    $('p').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('title', title)
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
 onChangeTranslations(changeButtonTooltips)
+onLoadTranslations(changeParagraphTooltips)
+onChangeTranslations(changeParagraphTooltips)

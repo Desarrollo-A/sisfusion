@@ -5,8 +5,7 @@
 <meta http-equiv='pragma' content='no-cache'>
 <body>
     <div class="wrapper">
-    <?php $this->load->view('template/sidebar'); ?>
-
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
@@ -97,7 +96,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div>
+    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <script>
         function tableComisionesSuma(anio){

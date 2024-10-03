@@ -192,6 +192,7 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        ordering: false,
         destroy: true,
         deferRender: true,
         columns: [{

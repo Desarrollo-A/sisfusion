@@ -1,3 +1,16 @@
+$(document).ready(function(){
+    onLoadTranslations(function(){
+        
+        $("#nomeclatura").text(_("nomenclature"));
+        
+    });
+
+    onChangeTranslations(function(){
+        $("#nomeclatura").text(_("nomenclature"));
+    });
+    
+})
+
 $('#tablaResidenciales thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);

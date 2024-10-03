@@ -219,14 +219,15 @@ class Anticipos extends CI_Controller {
     public function regresoInternomex() {
         $id_usuario = $this->input->post('id_usuario');
         $id_anticipo = $this->input->post('id_anticipo');
+        $comentario_A = $this->input->post('comentario_A');
         $procesoParcialidad = intval($this->input->post('procesoParcialidad'));
     
         if ($procesoParcialidad == 1) {
-            $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad);
+            $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad ,$comentario_A );
         } else {
-            $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad);
+            $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad,$comentario_A );
         }
-        $result = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, 'proceso :', $procesoParcialidad);
+        $result = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario_A, $procesoParcialidad);
 
     
         echo json_encode(['result' => $result]);

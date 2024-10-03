@@ -62,16 +62,16 @@
                                         <table id="mktdProspectsTable" class="table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>ESTADO</th>
-                                                    <th>ETAPA</th>
-                                                    <th>PROSPECTO</th>
+                                                    <th>estado</th>
+                                                    <th>etapa</th>
+                                                    <th>prospectos</th>
                                                     <th>MEDIO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>CREACIÓN</th>
-                                                    <th>VENCIMIENTO</th>
-                                                    <th>ÚLTIMA MODIFICACIÓN</th>
-                                                    <th>ACCIONES</th>
+                                                    <th>asesor</th>
+                                                    <th>gerente</th>
+                                                    <th>creacion</th>
+                                                    <th>vencimiento</th>
+                                                    <th>ultima-modificacion</th>
+                                                    <th>acciones</th>
                                                 </tr>
                                             </thead>
                                         </table>
