@@ -506,7 +506,16 @@
     "meses-a-diferir": "Months to differ",
     "pago-de-cliente": "CLIENT PAYMENT",
     "seguimiento": "tracking",
-    "comisiones-por-gerencia": "management fees"
+    "comisiones-por-gerencia": "management fees",
+    "consulta-historial" : "History query",
+    "fecha-validacion-enganche" : "Validation date down payment",
+     "cantidad-enganche-pagado": "Down payment amount paid",
+     "estatus-dfe-la-contratacion" : "Recruitment status",
+    "comentario-neodata" : "Neodata comment",
+    "fecha-apertura" : "Opening date",
+    "apartado-de-reubicacion" : "Relocation section",
+    "venta-compartida" : "Shared sale",
+    "ubicacion-de-la-venta" : "Location of sale"
   },
   "es": {
     "files": "Carpetas",
@@ -1017,6 +1026,16 @@
     "meses-a-diferir": "Meses a diferir",
     "pago-de-cliente": "PAGO DEL CLIENTE",
     "seguimiento": "Seguimiento",
-    "comisiones-por-gerencia": "comisiones por gerencia"
+    "comisiones-por-gerencia": "Comisiones por gerencia",
+    "consulta-historial" : "Consulta de historial",
+    "fecha-validacion-enganche" : "Fecha de validación enganche",
+    "cantidad-enganche-pagado": "Cantidad de enganche pagado",
+    "estatus-de-la-contratacion" : "Estatus de la contratación",
+    "comentario-neodata" : "Comentario de neodata",
+    "fecha-apertura" : "Fecha de apertura",
+    "apartado-de-reubicacion"  :"Apartado de reubicación",
+       "venta-compartida" : "Venta compartida",
+       "ubicacion-de-la-venta" : "Ubicación de la venta",
+       "documentación entregada" : "Documentación entregada"
   }
 }
