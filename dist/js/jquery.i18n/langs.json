@@ -537,7 +537,15 @@
         "siguiente":"next",
         "enviar-final":"Send final",
         "anterior":"previous",
-        "seguro-continuar":"Are you sure you want to continue?"
+        "seguro-continuar":"Are you sure you want to continue?",
+        "integracion-expediente-estatus5":"Integration of file (Rejection status 5 Comptroller's Office)",
+        "integracion-expediente-estatus6":"File Integration (Rejection status 6 Comptroller's Office)",
+        "integracion-expediente-estatus8":"File Integration (Rejection Status 8 Sales)",
+        "integracion-expediente-estatus7":"File Integration (Rejection status 7 Legal)",
+        "reenvio-postventa":"Send back to after-sales (after a rejection from after-sales)",
+        "nuevo-prospecto":"NEW PROSPECTUS",
+        "verificacion-exito":"Verification successfully sent",
+        "solicitud-enviada":"Request successfully submitted"
     },
     "es": {
         "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -1078,6 +1086,14 @@
         "siguiente":"siguiente",
         "enviar-final":"Enviar final",
         "anterior":"anterior",
-        "seguro-continuar":"¿Estás seguro que deseas continuar?"
+        "seguro-continuar":"¿Estás seguro que deseas continuar?",
+        "integracion-expediente-estatus5":"Integración de expediente (Rechazo estatus 5 Contraloría)",
+        "integracion-expediente-estatus6":"Integración de Expediente (Rechazo estatus 6 Contraloría)",
+        "integracion-expediente-estatus8":"Integración de Expediente (Rechazo estatus 8 Ventas)",
+        "integracion-expediente-estatus7":"Integración de Expediente (Rechazo estatus 7 Jurídico)",
+        "reenvio-postventa":"Enviar nuevamente a postventa (despúes de un rechazo de postventa)",
+        "nuevo-prospecto":"NUEVO PROSPECTO",
+        "verificacion-exito":"Verificación enviada con éxito",
+        "solicitud-enviada":"Solicitud enviada con éxito"
     }
 }
