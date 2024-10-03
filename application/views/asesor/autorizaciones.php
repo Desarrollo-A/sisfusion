@@ -9,19 +9,19 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<div class="modal-header">
-						<h4 class="modal-title" data-i18n="revision-status">Revisión Status (6. Corrida elaborada)</h4>
+						<h4 class="modal-title" data-i18n="revision-estatus">Revisión Status (6. Corrida elaborada)</h4>
 					</div>
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<label data-i18n="lot">Lote:</label>
+								<label data-i18n="lote2">Lote:</label>
 								<input type="text" class="form-control" id="nomLoteFakeenvARevCE" disabled>
 								<br><br>
-								<label data-i18n="status-contrat">Status Contratación</label>
-								<select required="required" name="idStatusContratacion" id="idStatusContratacionenvARevCE" class="selectpicker" data-style="btn" title="Estatus contratación" data-size="7"><option value="6" data-i18n="corrida-elab">  6. Corrida elaborada (Contraloría) </option></select>
+								<label data-i18n="estatus-contrato">Status Contratación</label>
+								<select required="required" name="idStatusContratacion" id="idStatusContratacionenvARevCE" class="selectpicker" data-style="btn" title="Estatus contratación" data-size="7"><option value="6" data-i18n="corrida-elaborada">  6. Corrida elaborada (Contraloría) </option></select>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<label data-i18n="coment">Comentario:</label>
+								<label data-i18n="comentario2">Comentario:</label>
 								<input type="text" class="form-control" name="comentario" id="comentarioenvARevCE">
 								<br><br>
 							</div>
@@ -89,7 +89,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<div class="modal-header">
-						<h4 class="modal-title" data-i18n="auth-process">Ver autorizaciones en proceso</h4>
+						<h4 class="modal-title" data-i18n="autorizacion-proceso">Ver autorizaciones en proceso</h4>
 					</div>
 					<div class="modal-body pl-0 pr-0">
 						<div class="scroll-styles" id="auts-loads" style="max-height: 450px; overflow:auto; padding: 0 20px"></div>
@@ -107,7 +107,7 @@
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<ul class="nav nav-tabs nav-tabs-cm">
 							<li class="active"><a href="#soli" data-toggle="tab" onclick="javascript:$('#sol_aut').DataTable().ajax.reload();" data-i18n="solicitud">Solicitud</a></li>
-							<li><a href="#aut" data-toggle="tab" onclick="javascript:$('#addExp').DataTable().ajax.reload();" data-i18n="autorization">Autorizaciones</a></li>
+							<li><a href="#aut" data-toggle="tab" onclick="javascript:$('#addExp').DataTable().ajax.reload();" data-i18n="autorizaciones">Autorizaciones</a></li>
 						</ul>
 						<div class="card no-shadow m-0">
                             <div class="card-content p-0">
@@ -115,7 +115,7 @@
                                     <div class="tab-content p-2">
 										<div class="active tab-pane" id="soli">
 											<h3 class="card-title center-align" data-i18n="solicitud">Solicitud</h3>
-											<p class="center-align" data-i18n="text-header">A través de este panel(Solicitud) podrás realizar lo siguiente; consulta de las solicitudes previas a su autorización, envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos (seleccionar usuario según sea el caso) con una solicitud de autorización (dependiendo del estatus de la misma), descarga de información en formatos: PDF y XLSX.</p>
+											<p class="center-align" data-i18n="texto-cabecera">A través de este panel(Solicitud) podrás realizar lo siguiente; consulta de las solicitudes previas a su autorización, envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos (seleccionar usuario según sea el caso) con una solicitud de autorización (dependiendo del estatus de la misma), descarga de información en formatos: PDF y XLSX.</p>
 											<table id="sol_aut" class="table-striped table-hover">
 												<thead>
 													<tr>
@@ -136,8 +136,8 @@
 											</table>
 										</div>
 										<div class="tab-pane" id="aut">
-											<h3 class="card-title center-align" data-i18n="autorization">Autorizaciones</h3>
-											<p class="center-align" data-i18n="text-authorization">A través de este panel(Autorizaciones) podrás realizar lo siguiente; consulta de las solicitudes autorizadas, visualización de los estatus correspondientes por cada una de las autorizaciones en proceso, descarga de información en formatos: PDF y XLSX.<br></p>
+											<h3 class="card-title center-align" data-i18n="autorizaciones">Autorizaciones</h3>
+											<p class="center-align" data-i18n="texto-autorizacion">A través de este panel(Autorizaciones) podrás realizar lo siguiente; consulta de las solicitudes autorizadas, visualización de los estatus correspondientes por cada una de las autorizaciones en proceso, descarga de información en formatos: PDF y XLSX.<br></p>
 											<table id="addExp" class="table-striped table-hover">												
 												<thead>
 													<tr>

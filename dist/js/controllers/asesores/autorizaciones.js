@@ -365,14 +365,14 @@ $(document).on('click', '.seeAuts', function (e) {
         $('#auts-loads').empty();
         var statusProceso;
         $.each(JSON.parse(data), function(i, item) {
-            if(item['estatus'] == 0){
-                statusProceso="<span class='label lbl-green'>ACEPTADA</span>";
+            if(item['estatus'] == 0){               
+                statusProceso = `<span class='label lbl-green'>${_('aceptada')}</span>`;
             }
             else if(item['estatus'] == 1){
-                statusProceso="<span class='label lbl-orangeYellow'>EN PROCESO</span>";
+                statusProceso=`<span class='label lbl-orangeYellow'>${_('en-proceso2')}</span>`;
             }
             else if(item['estatus'] == 2){
-                statusProceso="<span class='label lbl-warning'>DENEGADA</span>";
+                statusProceso=`<span class='label lbl-warning'>${_('denegada2')}</span>`;
             }
             else if(item['estatus'] == 3){
                 statusProceso="<span class='label lbl-sky'>EN DC</span>";
@@ -384,7 +384,7 @@ $(document).on('click', '.seeAuts', function (e) {
                 <div class="container-fluid" style="background-color: #f7f7f7; border-radius: 15px; padding: 15px; margin-bottom: 15px">
                     <div class="row">
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7">
-                            <label style="font-weight:100; font-size: 12px"><label >Solicitud de autorización</label>: <b>${statusProceso}</b></label>
+                            <label style="font-weight:100; font-size: 12px"><label>${_('solicitud-autorizacion')}</label>: <b>${statusProceso}</b></label>
                         </div>
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-5" style="text-align: right">
                             <label style="font-weight:100; font-size: 12px">${item['fecha_creacion']}</label>
