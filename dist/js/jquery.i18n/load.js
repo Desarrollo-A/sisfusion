@@ -40,7 +40,7 @@ function changeLanguaje() {
 
     $('body').i18n()
 
-    // triggerChangeFunctions()
+    triggerChangeFunctions()
 
     // location.reload();
 }
@@ -187,6 +187,8 @@ function changeParagraphTooltips() {
 }
 
 function changeListTooltips() {
+    console.log('li')
+
     $('li').each(function (i) {
         let id = $(this).data('i18n-tooltip')
 
@@ -196,6 +198,7 @@ function changeListTooltips() {
             let title = _(id)
 
             $(this).attr('title', title)
+            $(this).attr('data-original-title', title)
         }
     })
 }
