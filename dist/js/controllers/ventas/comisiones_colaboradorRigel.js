@@ -12,6 +12,10 @@ var fin = 13;
 
 $(document).ready(function() {
 
+
+    
+
+
     $("#tabla_comisiones_sin_pago").addClass('hide');
 
     $('#spiner-loader').removeClass('hide');
@@ -242,29 +246,31 @@ $('#condominio_otras').change( function(){
     comisionesTableOtras(index_proyecto, index_condominio);
 });
 
-$('#tabla_nuevas_comisiones thead tr:eq(0) th').each( function (i) {
-    if(i != 0){
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-        $('input', this).on('keyup change', function() {
-            if ($('#tabla_nuevas_comisiones').DataTable().column(i).search() !== this.value) {
-                $('#tabla_nuevas_comisiones').DataTable().column(i).search(this.value).draw();
-                var total = 0;
-                var index = tabla_nuevas.rows({ selected: true, search: 'applied'}).indexes();
-                var data = tabla_nuevas.rows(index).data();
-                $.each(data, function(i, v) {
-                    total += parseFloat(v.impuesto);
-                });
-                var to1 = formatMoney(total);
-                document.getElementById("total_disponible").textContent = to1;
-            }
-        });
-    }
-    else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
-    }
-});
+construirHead("tabla_nuevas_comisiones");
+
+// $('#tabla_nuevas_comisiones thead tr:eq(0) th').each( function (i) {
+//     if(i != 0){
+//         var title = $(this).text();
+//         titulos.push(title);
+//         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//         $('input', this).on('keyup change', function() {
+//             if ($('#tabla_nuevas_comisiones').DataTable().column(i).search() !== this.value) {
+//                 $('#tabla_nuevas_comisiones').DataTable().column(i).search(this.value).draw();
+//                 var total = 0;
+//                 var index = tabla_nuevas.rows({ selected: true, search: 'applied'}).indexes();
+//                 var data = tabla_nuevas.rows(index).data();
+//                 $.each(data, function(i, v) {
+//                     total += parseFloat(v.impuesto);
+//                 });
+//                 var to1 = formatMoney(total);
+//                 document.getElementById("total_disponible").textContent = to1;
+//             }
+//         });
+//     }
+//     else {
+//         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+//     }
+// });
 
 function comisionesTablaNueva(proyecto,condominio){
     $('#tabla_nuevas_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
@@ -282,7 +288,7 @@ function comisionesTablaNueva(proyecto,condominio){
         width: "100",
         scrollX: true,
         buttons: [{
-                text: '<i class="fas fa-paper-plane"></i>SOLICITAR PAGO',
+                text: '  <i class="fas fa-paper-plane"></i>    '+ _("solicitar-pago") +' ',
                 action: function() {
                     var hoy = new Date();
                     var dia = hoy.getDate();
@@ -355,7 +361,7 @@ function comisionesTablaNueva(proyecto,condominio){
                 }
             }, 
             {
-            text: '<i class="fa fa-share" aria-hidden="true"></i> ENVIAR A RESGUARDO',
+            text: '<i class="fa fa-share" aria-hidden="true"></i> '+ _("enviar-resguardos") +'  ',
             action: function() {
                 var hoy = new Date();
                 var dia = hoy.getDate();
@@ -423,7 +429,7 @@ function comisionesTablaNueva(proyecto,condominio){
                 }
                 else {
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte", "warning"); 
+                    alerts.showNotification("top", "right",''+ _("alert-enviar-comisiones") + '','warning'); 
                 }
             },
             attr: {
@@ -434,7 +440,7 @@ function comisionesTablaNueva(proyecto,condominio){
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: ''+_("descargar-excel")+'',
             title: 'REPORTE COMISIONES NUEVAS',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11],
@@ -1596,7 +1602,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
 
             $("#modal_multiples .modal-body").html("");
             $("#modal_multiples .modal-header").html("");
-            $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12 text-right"><button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size:40px;">&times;</span></button></div><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
+            $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12 text-right"><button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size:40px;">&times;</span></button></div><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect"  data-i18n="selecciona-una-opcion"  class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
 
             $.post('getDesarrolloSelect', function(data) {
                 c = 0;
