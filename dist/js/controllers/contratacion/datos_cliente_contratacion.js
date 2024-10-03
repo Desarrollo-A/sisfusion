@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    construirHead("tabla_clientes")
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
@@ -276,26 +277,26 @@ $(document).on('click', '.cop', function (e) {
     var $itself = $(this);
     var id_lote = $itself.attr('data-idLote');
     id_lote_global = id_lote;
-    tableHistorial.ajax.reload();
+    tabla_6.ajax.reload();
     $('#verDetalles').modal('show');
 });
 
 let titulos_encabezado_detalle= [];
 let num_colum_encabezado_detalle = [];
-$('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_encabezado_detalle.push(title);
-    num_colum_encabezado_detalle.push(i);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_clientes_detalles').DataTable().column(i).search() !== this.value)
-            $('#tabla_clientes_detalles').DataTable().column(i).search(this.value).draw();
-    });
-    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-});
+// $('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
+//     var title = $(this).text();
+//     titulos_encabezado_detalle.push(title);
+//     num_colum_encabezado_detalle.push(i);
+//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//     $('input', this).on('keyup change', function () {
+//         if ($('#tabla_clientes_detalles').DataTable().column(i).search() !== this.value)
+//             $('#tabla_clientes_detalles').DataTable().column(i).search(this.value).draw();
+//     });
+//     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+// });
 
 $(document).ready(function () {
-    tableHistorial = $('#tabla_clientes_detalles').DataTable({
+    tabla_6 = $('#tabla_clientes_detalles').DataTable({
         responsive: true,
         searchable: false,
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",

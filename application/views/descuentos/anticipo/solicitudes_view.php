@@ -112,18 +112,18 @@
                             <div class="material-datatables">
                                 <table id="tabla_anticipo_revision" name="tabla_anticipo_revision" class="table-striped table-hover">
                                     <thead>               
-                                        <tr>
-                                        <th data-i18n="id-anticipo">id-anticipo</th>
-                                        <th data-i18n="usuario">usuario</th>
-                                        <th data-i18n="puesto">puesto</th>
-                                        <th data-i18n="sede">sede</th>
-                                        <th data-i18n="monto">monto</th>
-                                        <th data-i18n="comentario">comentario</th>
-                                        <th data-i18n="comentario">comentario</th>
-                                        <th data-i18n="proceso">proceso</th>
-                                        <th data-i18n="prioridad">prioridad</th>
-                                        <th data-i18n="acciones">acciones</th>
-                                        </tr>                         
+                                    <tr>
+                                        <th>id-anticipo</th>
+                                        <th>usuario</th>
+                                        <th>puesto</th>
+                                        <th>sede</th>
+                                        <th>monto</th>
+                                        <th>comentario</th>
+                                        <th>comentario</th>
+                                        <th>proceso</th>
+                                        <th>prioridad</th>
+                                        <th>acciones</th>
+                                    </tr>                         
                                     </thead>
                                 </table>
                             </div>
