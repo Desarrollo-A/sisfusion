@@ -485,7 +485,12 @@
                 "sede-modificada":"Modified headquarters.",
                 "asegurate-campos":"Be sure to fill in the minimum required fields",
                 "selecciona-proyecto":"Select project",
-                "selecciona-condominio":"Select condominium"
+                "selecciona-condominio":"Select condominium",
+                "medio": "METHOD",
+                "apartado-fecha": "LAYAWAY DATE",
+                "fecha-estatus-15": "STATUS 15 DATE",
+                "listado-marketing": "Digital marketing clients list",
+                "plan-enganche": "LAYAWAY PLAN"
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -975,6 +980,11 @@
                 "sede-modificada":"Sede modificada.",
                 "asegurate-campos":"Asegúrate de llenar los campos mínimos requeridos",
                 "selecciona-proyecto":"Selecciona proyecto",
-                "selecciona-condominio":"Selecciona condominio"
+                "selecciona-condominio":"Selecciona condominio",
+                "medio": "MEDIO",
+                "apartado-fecha": "FECHA DE APARTADO",
+                "fecha-estatus-15": "FECHA ESTATUS 15",
+                "listado-marketing": "Listado general de clientes marketing",
+                "plan-enganche": "PLAN ENGANCHE"
         }
 }

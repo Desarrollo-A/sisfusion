@@ -179,7 +179,6 @@
     }
 
     function triggerLoadFunctions() {
-        console.log("llego onChange");
         for (let callback of load_functions) {
             callback()
         }
@@ -205,7 +204,6 @@
 
                 $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
                 $('input', this).on('keyup change', function () {
-                    console.log(tabla_6.column(i).search());
                     
                     if (tabla_6.column(i).search() !== this.value) {
                         tabla_6.column(i).search(this.value).draw();
