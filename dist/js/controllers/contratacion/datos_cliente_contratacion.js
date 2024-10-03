@@ -123,7 +123,7 @@ function fillTable(index_proyecto, index_condominio) {
             { data: 'tipo' },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + (d.fechaApartado == null || d.fechaApartado == '' ? 'SIN ESPECIFICAR' : d.fechaApartado) + '</p>';
+                    return '<p class="m-0">' + (d.fechaApartado == null || d.fechaApartado == '' ? `${_("sin-especificar")}` : d.fechaApartado) + '</p>';
                 }
             },
             {
@@ -133,13 +133,13 @@ function fillTable(index_proyecto, index_condominio) {
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + (d.fechaEnganche == null || d.fechaEnganche == '' ? 'SIN ESPECIFICAR' : d.fechaEnganche) + '</p>';
+                    return '<p class="m-0">' + (d.fechaEnganche == null || d.fechaEnganche == '' ? `${_("sin-especificar")}` : d.fechaEnganche) + '</p>';
                 }
             },
             {
                 data: function (d) {
                     return `<center>
-                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "VENTAS COMPARTIDAS" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
+                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "${ventas-compartidas}" data-i18n-tooltip="ventas-compartidas" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
                             </center>`;
                 }
             }
