@@ -188,8 +188,7 @@ function stringToI18(str) {
       
     // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
     resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
-      
-    console.log(resultado);
+    
     return resultado;
 }
 

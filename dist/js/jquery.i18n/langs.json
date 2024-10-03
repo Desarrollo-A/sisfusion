@@ -518,7 +518,8 @@
                 "apartado-fecha": "LAYAWAY DATE",
                 "fecha-estatus-15": "STATUS 15 DATE",
                 "listado-marketing": "Digital marketing clients list",
-                "plan-enganche": "LAYAWAY PLAN"
+                "plan-enganche": "LAYAWAY PLAN",
+                "consulta-contrasena": "Check password"
 
         },
         "es": {
@@ -1041,6 +1042,7 @@
                 "apartado-fecha": "FECHA DE APARTADO",
                 "fecha-estatus-15": "FECHA ESTATUS 15",
                 "listado-marketing": "Listado general de clientes marketing",
-                "plan-enganche": "PLAN ENGANCHE"
+                "plan-enganche": "PLAN ENGANCHE",
+                "consulta-contrasena": "Consultar contraseña"
         }
 }
