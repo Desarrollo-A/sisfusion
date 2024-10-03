@@ -27,7 +27,7 @@ sp = { // MJ: DATE PICKER
 }
 
 function filltablaLista(beginDate, endDate) {
-    tabla_6= $("#tablaLista").dataTable({
+    tabla_6= $("#tablaLista").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -137,7 +137,7 @@ $(document).on("click", "#searchByDateRange", function () {
 $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
     if ($("#asesores").val() == '' || $("#gerentes").val() == '' || $("#subdirectores").val() == '')
-        alerts.showNotification("top", "right", "Asegúrate de llenar los campos mínimos requeridos <b>(*)</b>", "warning");
+        alerts.showNotification("top", "right", `${_("asegurate-campos")} <b>(*)</b>`, "warning");
     else {
         const TIPO_TRANSACCION = parseInt($("#tipoTransaccion").val());
         let idProspecto = 0;
@@ -173,7 +173,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
             }, error: function () {
                 $("#sendRequestButton").prop("disabled", false);
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
             }
         });
         $('#spiner-loader').addClass('hide');

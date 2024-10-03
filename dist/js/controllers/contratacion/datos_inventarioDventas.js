@@ -34,7 +34,7 @@ $('#filtro3').change(function(){
 
     if(entra == 1)
     {
-        var table = $('#tableTerrenos').DataTable({
+        table_6 = $('#tableTerrenos').DataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             buttons: [{
                 extend: 'excelHtml5',
@@ -136,23 +136,14 @@ $('#filtro3').change(function(){
 let titulos_encabezado = [];
 
 $(document).ready(function() {
-    $('#tableTerrenos thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos_encabezado.push(title);
-        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>` );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tableTerrenos').DataTable().column(i).search() !== this.value ) {
-                $('#tableTerrenos').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    });
+    construirHead("tableTerrenos");
 });
 
 $('#filtro4').change(function()
 {
     var residencial = $('#filtro3').val();
     var valorSeleccionado = $('#filtro4').val();
-    var table = $('#tableTerrenos').DataTable({
+    table_6 = $('#tableTerrenos').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         ordering: false,
         buttons: [{
