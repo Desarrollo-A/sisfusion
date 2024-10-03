@@ -252,7 +252,22 @@
 		"selecciona-todo": "SELECT ALL",
 		"venta-de-particulares": "Private sale",
 		"venta-normal": "Regular sale",
-		"clausulas": "Clauses"
+		"clausulas": "Clauses",
+		"solicitud":"Request",
+		"revision-status":"Review Status (6. Completed Run)",
+		"enviar-revision":"Send for Review",
+		"observaciones":"Observations:",
+		"lot":"Lot:",
+		"status-contrat":"Hiring Status",
+		"corrida-elab":"6. Completed Run (Comptroller's Office)",
+		"auth-process":"View authorizations in process",
+		"cierra":"CLOSE",
+		"text-header":"Through this panel (Request), you will be able to do the following: consult previous requests before their authorization, send emails to users with the role of 'Deputy Director' who are active (select users as applicable) with a request for authorization (depending on the status of the request), and download information in formats: PDF and XLSX.",
+		"autorization":"Authorizations",
+		"text-authorization":"Through this panel (Authorizations), you will be able to do the following: consult the authorized requests, view the corresponding statuses for each of the authorizations in process, and download information in formats: PDF and XLSX.",
+		"autoriza":"Authorize",
+		"coment":"Comment:",
+		"soli-autorizacion":"Authorization request"
 	},
 	"es": {
 		"precio-del.lote": "Precio del lote",
@@ -508,6 +523,21 @@
 		"selecciona-todo": "SELECCIONA TODO",
 		"venta-de-particulares": "Venta de particulares",
 		"venta-normal": "Venta normal",
-		"clausulas": "Cláusulas"
+		"clausulas": "Cláusulas",
+		"solicitud":"Solicitud",
+		"revision-status":"Revisión Status (6. Corrida elaborada)",
+		"enviar-revision":"Enviar a Revisión",
+		"observaciones":"Observaciones:",
+		"lot":"Lote:",
+		"status-contrat":"Status Contratación",
+		"corrida-elab":"6. Corrida elaborada (Contraloría)",
+		"auth-process":"Ver autorizaciones en proceso",
+		"cierra":"CERRAR",
+		"text-header":"A través de este panel(Solicitud) podrás realizar lo siguiente; consulta de las solicitudes previas a su autorización, envió de correo electrónico a usuarios con rol \"Subdirector\" que se encuentren activos (seleccionar usuario según sea el caso) con una solicitud de autorización (dependiendo del estatus de la misma), descarga de información en formatos: PDF y XLSX.",
+		"autorization":"Autorizaciones",
+		"text-authorization":"A través de este panel(Autorizaciones) podrás realizar lo siguiente; consulta de las solicitudes autorizadas, visualización de los estatus correspondientes por cada una de las autorizaciones en proceso, descarga de información en formatos: PDF y XLSX.",
+		"autoriza":"Autoriza",
+		"coment":"Comentario:",
+		"soli-autorizacion":"Solicitud de autorización"
 	}
 }

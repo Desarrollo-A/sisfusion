@@ -250,4 +250,4 @@
     }
 
 </script>
-<script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script>
+<!-- <script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script> -->
