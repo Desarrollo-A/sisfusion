@@ -3967,7 +3967,7 @@ function getStatusMktdPreventa(){
                     LEFT JOIN usuarios u4 ON u4.id_usuario = p.id_regional
                     LEFT JOIN usuarios u5 ON u5.id_usuario = p.id_regional_2
                     LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion AND oxc.id_catalogo = 9
-                    WHERE p.estatus_vigencia = 1 AND p.id_sede IN (SELECT idSede FROM roles_x_usuario WHERE idUsuario = $idSubdir AND idRol = 2) AND p.tipo = 0 AND year(p.fecha_creacion) = '2024' AND month(p.fecha_creacion) = '10' --$filter 
+                    WHERE p.estatus_vigencia = 1 AND p.id_sede IN (SELECT idSede FROM roles_x_usuario WHERE idUsuario = $idSubdir AND idRol = 2) AND p.tipo = 0 $filter 
                     ORDER BY p.fecha_creacion DESC");
             break;
         }
