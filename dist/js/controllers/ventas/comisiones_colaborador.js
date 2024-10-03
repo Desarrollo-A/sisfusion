@@ -1566,12 +1566,12 @@ function EnviarDesarrollos() {
         type: 'POST', // For jQuery < 1.9
         success: function (data) {
             if (data == 1) {
-                alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente.", "success");
+                alerts.showNotification("top", "right", _("comisiones-enviadas"), "success");
                 document.getElementById('btn_EnviarM').disabled = false;
                 location.reload();
                 $("#ModalEnviar").modal("hide");
             } else {
-                alerts.showNotification("top", "right", "No se ha podido completar la solicitud.", "warning");
+                alerts.showNotification("top", "right", _("no-se-ha-podido-completar-solicitud"), "warning");
             }
         },
         error: function () {
@@ -1586,20 +1586,20 @@ $(document).on("click", ".quitar_factura", function () {
     id_comision = $(this).val();
     $("#modalQuitarFactura .modal-body").html('');
     $("#modalQuitarFactura .modal-body").append('<input type="hidden" name="delete_fact" value="' + id_comision + '">');
-    $("#modalQuitarFactura .modal-body").append('<div class="row"><div class="col-md-12"><p>¿Estás seguro de eliminar esta factura?</p></div></div>');
-    $("#modalQuitarFactura .modal-body").append('<div class="row"><div class="col-md-12"><button type="submit" class="btn btn-success btn-block">ELIMINAR</button> <button type="button" data-dismiss="modal" class="btn btn-danger btn-block close_modal_fact">SALIR</button></div></div>');
+    $("#modalQuitarFactura .modal-body").append('<div class="row"><div class="col-md-12"><p><span data-i18n="eliminar-factura">¿Estás seguro de eliminar esta factura?</span></p></div></div>');
+    $("#modalQuitarFactura .modal-body").append('<div class="row"><div class="col-md-12"><button type="submit" class="btn btn-success btn-block">ELIMINAR</button> <button type="button" data-dismiss="modal" class="btn btn-danger btn-block close_modal_fact"><span data-i18n="salir">SALIR</span></button></div></div>');
     $("#modalQuitarFactura").modal({
         backdrop: 'static',
         keyboard: false
     });
 });
 
-$(document).on("click", ".EnviarMultiple", function () {
+/*$(document).on("click", ".EnviarMultiple", function () {
     $("#ModalEnviar .modal-body").html("");
     $("#ModalEnviar .modal-header").html("");
     $("#ModalEnviar .modal-header").append(`<div class="row"><div class="col-md-12">
     <form id="selectDesa">
-    <b class="">Seleccione un desarrollo</b>
+    <b class=""><span data-i18n="seleccione-desarrollo">Seleccione un desarrollo</span></b>
     <select id="desarrolloSelect2" name="desarrolloSelect2" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true">
     </select>
     </div></div>`);
@@ -1628,7 +1628,7 @@ $(document).on("click", ".EnviarMultiple", function () {
     </form>
     </div></div>`);
     $("#ModalEnviar").modal();
-});
+});*/
 
 function todos() {
     if ($(".checkdata1:checked").length == 0) {
@@ -1787,7 +1787,7 @@ function subir_xml(input) {
         },
         error: function (data) {
             input.val('');
-            alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
+            alert(_("error-comunicarse-proveedor"));
         }
     });
 }
@@ -1821,7 +1821,7 @@ function subir_xml2(input) {
         },
         error: function (data) {
             input.val('');
-            alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
+            alert(_("error-comunicarse-proveedor"));
         }
     });
 }
@@ -1879,11 +1879,11 @@ function cargar_info_xml(informacion_factura) {
         disabled();
     }
     else {
-        document.getElementById("totalxml").innerHTML = 'Cantidad incorrecta:' + cantidadXml;
+        document.getElementById("totalxml").innerHTML = '<span data-i18n="cantidad-incorrecta">Cantidad incorrecta:</span>' + cantidadXml;
         let elemento = document.querySelector('#total');
         elemento.setAttribute('color', 'red');
         document.getElementById('btnIndi').disabled = true;
-        alerts.showNotification("top", "right", "Cantidad incorrecta.", "warning");
+        alerts.showNotification("top", "right", _('cantidad-incorrecta'), "warning");
     }
     $("#emisor").val((informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '')).attr('readonly', true);
     $("#rfcemisor").val((informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '')).attr('readonly', true);
@@ -1919,7 +1919,7 @@ function cargar_info_xml2(informacion_factura) {
     myCommentsList.setAttribute('style', 'color:green;');
     myCommentsList.innerHTML = 'Cantidad correcta';
     if (((suma + .50).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= (suma - .50).toFixed(2)) || (cantidadXml.toFixed(2) == (suma).toFixed(2))) {
-        alerts.showNotification("top", "right", "Cantidad correcta.", "success abc");
+        alerts.showNotification("top", "right", _('cantidad-correcta'), "success abc");
         document.getElementById('btng').disabled = false;
         disabled();
     }
@@ -1929,8 +1929,8 @@ function cargar_info_xml2(informacion_factura) {
         document.getElementById('btng').disabled = true;
         var myCommentsList = document.getElementById('cantidadSeleccionadaMal');
         myCommentsList.setAttribute('style', 'color:red;');
-        myCommentsList.innerHTML = 'Cantidad incorrecta';
-        alerts.showNotification("top", "right", "Cantidad incorrecta.", "warning");
+        myCommentsList.innerHTML = '<span data-i18n="cantidad-correcta">Cantidad incorrecta</span>';
+        alerts.showNotification("top", "right", _('cantidad-correcta'), "warning");
     }
     $("#emisor").val((informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '')).attr('readonly', true);
     $("#rfcemisor").val((informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '')).attr('readonly', true);
@@ -1958,7 +1958,7 @@ function sumCheck() {
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
-    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
+    myCommentsList.innerHTML = ' <span data-i18n="suma-seleccionada"> Suma seleccionada: $ </span> ' + formatMoney(suma.toFixed(3));
 } 
 
 function disabled() {
@@ -1990,28 +1990,28 @@ function save2() {
         success: function (data) {
             document.getElementById('btng').disabled = false;
             if (data.resultado) {
-                alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                alert(_("factura-subida-correctamente"));
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
                 tabla_revision.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 3) {
-                alert("ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES");
+                alert(_("fuera-de-tiempo"));
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 4) {
-                alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
+                alert(_("factura-no-coincide"));
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else {
-                alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                alert(_("no-se-ha-podido-completar-solicitud"));
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 tabla_nuevas.ajax.reload();
@@ -2021,7 +2021,7 @@ function save2() {
         },
         error: function () {
             document.getElementById('btng').disabled = false;
-            alert("ERROR EN EL SISTEMA");
+            alert(_("error-en-sistema"));
         }
     });
 }
@@ -2043,15 +2043,15 @@ $("#frmnewsol").submit(function (e) {
             type: 'POST', // For jQuery < 1.9
             success: function (data) {
                 if (data.resultado) {
-                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                    alert(_("factura-subida-correctamente"));
                     $("#modal_formulario_solicitud").modal('toggle');
                     tabla_nuevas.ajax.reload();
                 } else {
-                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                    alert(_("no-se-ha-podido-completar-solicitud"));
                 }
             },
             error: function () {
-                alert("ERROR EN EL SISTEMA");
+                alert(_("error-en-sistema"));
             }
         });
     }
@@ -2075,16 +2075,16 @@ $("#frmnewsol2").submit(function (e) {
             type: 'POST', // For jQuery < 1.9
             success: function (data) {
                 if (data.resultado) {
-                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                    alert(_("factura-subida-correctamente"));
                     $("#modal_formulario_solicitud").modal('toggle');
                     tabla_nuevas.ajax.reload();
                 }
                 else {
-                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                    alert(_("no-se-ha-podido-completar-solicitud"));
                 }
             },
             error: function () {
-                alert("ERROR EN EL SISTEMA");
+                alert(_("error-en-sistema"));
             }
         });
     }
