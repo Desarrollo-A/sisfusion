@@ -41,6 +41,8 @@ function changeLanguaje() {
     $('body').i18n()
 
     triggerChangeFunctions()
+
+    // location.reload();
 }
 
 _ = $.i18n
@@ -85,22 +87,31 @@ function applySearch(table) {
 }
 
 function construirHead(table){
-    let titulos = []
+    //let titulos = []
 
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
         
-        titulos.push(id);
-        // console.log(id)
+        //titulos.push(id);
+        console.log(id)
 
         if(id){
             title = _(id)
             // console.log(title)
 
-            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
+            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+
+            function translatePlaceholder(){
+                $('title', this).attr('placeholder', _(id))
+                $('title', this).attr('data-original-title', _(id))
+            }
+
+            onLoadTranslations(translatePlaceholder)
+            onChangeTranslations(translatePlaceholder)
         }
     });
 
+    /*
     function translatePlaceholder(){
             for(titulo of titulos){
                 if(titulo !== ''){
@@ -112,6 +123,7 @@ function construirHead(table){
 
     onLoadTranslations(translatePlaceholder)
     onChangeTranslations(translatePlaceholder)
+    */
 }
 
 function changeButtonTooltips() {
@@ -130,7 +142,7 @@ function changeButtonTooltips() {
 
 function changeSelects() {
     $('select.selectpicker').each(function (i) {
-        let id = $(this).data('i18n')
+        let id = $(this).data('i18n-label')
 
         if(id){
             let title = _(id)
@@ -174,9 +186,28 @@ function changeParagraphTooltips() {
     })
 }
 
+function changeListTooltips() {
+    console.log('li')
+
+    $('li').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('title', title)
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
 onChangeTranslations(changeButtonTooltips)
 onLoadTranslations(changeParagraphTooltips)
 onChangeTranslations(changeParagraphTooltips)
+onLoadTranslations(changeListTooltips)
+onChangeTranslations(changeListTooltips)
