@@ -130,7 +130,7 @@ function changeButtonTooltips() {
 
 function changeSelects() {
     $('select.selectpicker').each(function (i) {
-        let id = $(this).data('i18n')
+        let id = $(this).data('i18n-label')
 
         if(id){
             let title = _(id)

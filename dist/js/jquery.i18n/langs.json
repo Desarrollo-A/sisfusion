@@ -209,7 +209,7 @@
         "metodos-envio": "SHIPPING METHODS",
         "correo-electronico": "E-MAIL",
         "historial-general-canceladas": "General history canceled",
-        "penalizacion-noventa-dias": "penalty + 90 days",
+        "penalizacion-noventa-dias": "Penalty + 90 days",
         "mensaje-sms": "SMS TEXT MESSAGE",
         "celular": "CELL",
         "mensaje-tiempo": "Note: The SMS message takes 2 to 3 minutes to reach the customer's phone.",
@@ -361,7 +361,12 @@
         "sin-definir-estatus":"Status not defined",
         "campo-no-seleccionado":"Some or no fields have not been selected",
         "comisiones-como":"commissions as",
-        "activos":"assets"
+        "activos":"assets",
+        "lote-bonificacion-neodata":"Bonus Lot in NEODATA",
+        "lote-con-cancelacion":"Lot with contract cancellation",
+        "bonos":"Bonds",
+        "prestamo-sin-evidencia":"Loans without evidence before February 2024",
+        "visualizando-archivo":"Viewing archive: evidence"
         
         
 
@@ -737,7 +742,12 @@
         "sin-definir-estatus":"Sin definir estatus",
         "campo-no-seleccionado":"No se han seleccionado algunos o ningún campo",
         "comisiones-como":"Comisiones como",
-        "activos":"activos"
+        "activos":"activos",
+        "lote-bonificacion-neodata":"Lote con bonificación en NEODATA",
+        "lote-con-cancelacion":"Lote con cancelacion de contrato",
+        "bonos":"Bonos",
+        "prestamo-sin-evidencia":"Préstamos sin evidencia antes de Febrero del 2024",
+        "visualizando-archivo":"Visualizando archivo: evidencia"
 
 
     }
