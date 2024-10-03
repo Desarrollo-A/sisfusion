@@ -372,7 +372,16 @@
                 "en-revision": "Payments under review",
                 "resguardo": "Withheld commissions ",
                 "por-pagar": "Por pagar"
-        },
+                ,"sn-pago-neo" : "No NEODATA payment"
+                ,"saldo-total" : "Total balance:"
+                ,"disponible" : "Available money"
+                ,"alert-enviar-comisiones": "Commissions cannot be sent; wait until Monday and Tuesday of the cutoff week"
+                ,"enviar-resguardos": "Send to safekeeping"
+                
+
+            },
+
+        
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
                 "total-de-ventas": "Total de ventas",
@@ -383,7 +392,7 @@
                 "cita": "Cita",
                 "apartados": "Apartados",
                 "cita-seguimiento": "Cita seguimiento",
-                "prospectos-totales": "Prospectos totales",
+                "prospectos-totale      s": "Prospectos totales",
                 "nuevos-prospectos": "Nuevos prospectos",
                 "prospectos-con-cita": "Prospectos con cita",
                 "cierres-totales": "Cierres totales",
@@ -423,7 +432,7 @@
                 "reporte-ventas-direccion-general": "Reporte de ventas por dirección regional",
                 "reporte-ventas-gerencia": "Reporte de ventas por gerencia",
                 "reporte-ventas-coordinacion": "Reporte de ventas por coordinación",
-                "reporte-ventas-subdireccion": "Reporte de ventas por subdirección",
+                "reporte-ventas-subdpireccion": "Reporte de ventas por subdirección",
                 "reporte-ventas-asesor": "Reporte de ventas por asesor",
                 "mas": "Más",
                 "regional": "Regional",
@@ -748,5 +757,15 @@
                 "en-revision": "En revisión",
                 "resguardo": "Resguardo",
                 "por-pagar": "Por pagar"
+                ,"sn-pago-neo" : "Sin pago NEODATA"
+                ,"saldo-total" : "saldo total"
+                ,"disponible":" Disponible"
+                ,"alert-enviar-comisiones": "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte"
+                ,"eviar-resguardos":" Enviar a resguardos"
+
+
+
+
+
         }
 }
