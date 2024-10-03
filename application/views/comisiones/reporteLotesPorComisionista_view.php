@@ -95,7 +95,7 @@
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-between">
-                        <h5 class="modal-title" id="exampleModalLabel">Detalle total de comisiones</h5>
+                        <h5 class="modal-title" id="exampleModalLabel" data-i18n="detalle-total-comisiones">Detalle total de comisiones</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -119,14 +119,14 @@
                                 </a>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Reporte de lotes por comisionista</h3>
+                                <h3 class="card-title center-align" data-i18n="reporte-lotes-comisionista">Reporte de lotes por comisionista</h3>
                                 <div class="toolbar">
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                 <div class="d-flex justify-between">
                                                     <label class="label-gral">
-                                                        Comisionista 
+                                                        <span data-i18n="comisionista">Comisionista</span> 
                                                         <span class="lblEstatus"></span> 
                                                         <span class="lblRolActual"></span>
                                                         <span class="isRequired">*</span>
@@ -139,7 +139,7 @@
                                             </div>
                                             <div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
                                                 <label class="label-gral m-0">
-                                                    Tipo de usuario (<span class="isRequired">*</span>)
+                                                    <span data-i18n="tipo-usuario">Tipo de usuario </span>(<span class="isRequired">*</span>)
                                                 </label>
                                                 <select class="selectpicker select-gral m-0" id="tipoUsuario" name="tipoUsuario" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                             </div>
@@ -162,17 +162,17 @@
                                         <div class="row mt-1 d-none" id="rowTotales">
                                             <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
                                                 <div class="box_cash">
-                                                    <h6>TOTAL COMISIÓN<br><span id="txt_totalComision" class="cash">$0.00</span></h6>
+                                                    <h6 data-i18n="total-comision">TOTAL COMISIÓN</h6><span id="txt_totalComision" class="cash">$0.00</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
                                                 <div class="box_cash">
-                                                    <h6>TOTAL ABONADO<br><span id="txt_totalAbonado" class="cash">$0.00</span></h6>
+                                                    <h6 data-i18n="total-abonado">TOTAL ABONADO</h6><span id="txt_totalAbonado" class="cash">$0.00</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-4 col-md-4 col-lg-4 text-center">
                                                 <div class="box_cash">
-                                                    <h6>TOTAL PAGADO<br><span id="txt_totalPagado" class="cash">$0.00</span></h6>
+                                                    <h6 data-i18n="total-pagado">TOTAL PAGADO</h6><span id="txt_totalPagado" class="cash">$0.00</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -184,28 +184,28 @@
                                         <table class="table-striped table-hover" id="reporteLotesPorComisionista" name="reporteLotesPorComisionista">
                                                 <thead>
                                                     <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID DEL LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>FECHA DE APARTADO</th>
-                                                        <th>SEDE</th>
-                                                        <th>ASESOR</th>
-                                                        <th>COORDINADOR</th>
-                                                        <th>GERENTE</th>
-                                                        <th>SUBDIRECTOR</th>
-                                                        <th>DIRECTOR REGIONAL</th>
-                                                        <th>ESTATUS DE LA CONTRATACIÓN</th>
-                                                        <th>ESTATUS DE LA VENTA</th>
-                                                        <th>ESTATUS DE LA COMISIÓN</th>
-                                                        <th>PRECIO FINAL</th>
-                                                        <th>PORCENTAJE DE LA COMISIÓN</th>
-                                                        <th>PAGO DEL CLIENTE</th>
-                                                        <th>TOTAL DE LA COMISIÓN</th>
-                                                        <th>TOTAL ABONADO</th>
-                                                        <th>TOTAL PAGADO</th>
-                                                        <th>LUGAR DE PROSPECCIÓN</th>
+                                                        <th>proyecto</th>
+                                                        <th>condominio</th>
+                                                        <th>lot</th>
+                                                        <th>id-lote</th>
+                                                        <th>cliente</th>
+                                                        <th>fecha-apartado</th>
+                                                        <th>sede</th>
+                                                        <th>asesor</th>
+                                                        <th>coordinador</th>
+                                                        <th>gerente</th>
+                                                        <th>subdirector</th>
+                                                        <th>director-regional</th>
+                                                        <th>estatus-contratacion</th>
+                                                        <th>estatus-ventas</th>
+                                                        <th>estatus-comision</th>
+                                                        <th>precio-final</th>
+                                                        <th>porc-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>total-comision</th>
+                                                        <th>total-abonado</th>
+                                                        <th>total-pagado</th>
+                                                        <th>lugar-prospeccion</th>
                                                     </tr>
                                                 </thead>
                                             </table>

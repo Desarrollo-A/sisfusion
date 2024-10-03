@@ -83,7 +83,6 @@
     
 	$(document).ready(function() {
 		//demo.initDashboardPageCharts();
-        
 	});
 
     function validaCheckSession(){
