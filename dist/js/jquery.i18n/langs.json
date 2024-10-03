@@ -331,7 +331,7 @@
                 "solicitar-pago": "REQUEST PAYMENT",
                 "detecto-cambio-forma-pago": "A change in the payment method was detected, it is necessary to log out and log back in.",
                 "retporte-comisiones-nuevas": "NEW COMMISSIONS REPORT",
-                "comisiones-enviadas":"The commissions have been successfully sent to the Comptroller's Office.",
+                "comisiones-enviadas":"The commissions have been successfully sent",
                 "fuera-de-tiempo": "YOU ARE OUT OF TIME TO SUBMIT YOUR REQUESTS.",
                 "sin-cp":"YOU HAVE NOT ENTERED YOUR POSTAL CODE",
                 "cp-no-actualizado":"YOU HAVE NOT UPDATED YOUR POSTAL CODE CORRECTLY",
@@ -388,7 +388,15 @@
                 "no-tiene-vivienda": "NO HOUSING, BUT THERE IS A REFERENCE",
                 "no-tiene-pagos-aplicados": "NO PAYMENTS APPLIED TO THIS REFERENCE.",
                 "ref-duplicada":"DUPLICATE REFERENCE",
-                "sin-localizar": "DUPLICATE REFERENCE"
+                "sin-localizar": "NOT LOCATED",
+                "no-se-ha-podido-completar-solicitud":"The request could not be completed.",
+                "eliminar-factura" : "Are you sure you want to delete this invoice?",
+                "salir": "exit",
+                "seleccione-desarrollo":"Select a development",
+                "error-comunicarse-proveedor" : "ERROR: PLEASE TRY TO CONTACT THE SUPPLIER",
+                "cantidad-incorrecta": "Incorrect amount",
+                "cantidad-correcta":"Correct amount",
+                "suma-seleccionada" : "Selected amount: $"
 
         },
         "es": {
@@ -723,7 +731,7 @@
                 "solicitar-pago": "SOLICITAR PAGO",
                 "detecto-cambio-forma-pago": "Se detectó un cambio de forma de pago, es necesario cerrar sesión y volver a iniciar.",
                 "retporte-comisiones-nuevas": "REPORTE COMISIONES NUEVAS",
-                "comisiones-enviadas":"Las comisiones se han enviado exitosamente a Contraloría.",
+                "comisiones-enviadas":"Las comisiones se han enviado exitosamente",
                 "fuera-de-tiempo": "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.",
                 "sin-cp":"NO HAS INGRESADO TU CÓDIGO POSTAL",
                 "co-no-actualizado":"NO HAS ACTUALIZADO CORRECTAMENTE TU CÓDIGO POSTAL",
@@ -782,6 +790,16 @@
                 "no-tiene-vivienda": "NO TIENE VIVIENDA, SI HAY REFERENCIA",
                 "no-tiene-pagos-aplicados": "NO HAY PAGOS APLICADOS A ESTA REFERENCIA",
                 "ref-duplicada":"REFERENCIA DUPLICADA",
-                "sin-localizar": "SIN LOCALIZAR"
+                "sin-localizar": "NO ENCONTRADO",
+                "no-se-ha-podido-completar-solicitud" : "No se ha podido completar la solicitud",
+                "eliminar-factura": "¿Estás seguro de eliminar esta factura?",
+                "salir" : "Salir",
+                "seleccione-desarrollo": "Seleccione un desarrollo",
+                "error-comunicarse-proveedor": "ERROR INTENTE COMUNICARSE CON EL PROVEEDOR",
+                "cantidad-incorrecta": "Cantidad incorrecta",
+                "cantidad-correcta": "Cantidad correcta",
+                "suma-seleccionda": "Suma seleccionada: $",
+                "factura-subida-correctamente" : "LA FACTURA SE SUBIO CORRECTAMENTE",
+                "factura-no-coincide": "EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS"
         }
 }
