@@ -11,6 +11,9 @@ $(document).ready(function() {
     //md.initSliders()
     demo.initFormExtendedDatetimepickers();
 });
+/* console.log(`${_("sin-registro")}`)
+const btnSiguiente = document.querySelector('#btn-siguiente');
+btnSiguiente.value = _("fecha-nacimiento"); */
 
 /*update validaciones*/
 $('#finish').on('click', function() {
@@ -34,16 +37,14 @@ $("#my-form").on('submit', function(e) {
         processData: false,
         beforeSend: function() {
             document.getElementById("finish").disabled = true;
-            var myDataHTML = '<center>Guardando ...</center> <div class="progress progress-line-info"><div class="progress-bar indeterminate" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div></div>;';
+            var myDataHTML = `<center>${_("guardando")}</center> <div class="progress progress-line-info"><div class="progress-bar indeterminate" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 30%;"></div></div>;`;
             $('#savingProspect').html(myDataHTML);
-
-
         },
         success: function(data) {
             if (data == 1) {
                 //reloadPage();
-                alerts.showNotification("top", "right", "El registro se ha ingresado exitosamente.", "success");
-                var myDataHTML = '<center><b style="color:green">Guardado correctamente</b></center> ';
+                alerts.showNotification("top", "right", `${_("registro-exitosamente")}`, "success");
+                var myDataHTML = `<center><b style="color:green">${_("guardado-correctamente")}</b></center>`;
                 $('#savingProspect').html(myDataHTML);
                 setTimeout(function() {
                     document.location.reload()
@@ -52,12 +53,12 @@ $("#my-form").on('submit', function(e) {
                 document.getElementById("finish").disabled = false;
                 var myDataHTML = '';
                 $('#savingProspect').html(myDataHTML);
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", `${_("campos-minimos")}`, "warning");
             }
         },
         error: function() {
             document.getElementById("finish").disabled = false;
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
         }
     });
 });
@@ -84,7 +85,7 @@ function validateFile() {
     }
     
     if (!exito_confirmar) {
-        alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
+        alerts.showNotification('top', 'right', `${_("campos-minimos")}`, 'danger');
     } else {
        $('#confirmar').modal('toggle');
     }
@@ -303,7 +304,7 @@ function validateProspectingPlace() {
 
 function getPersonsWhoRecommends() {
     $.getJSON("getCAPListByAdvisor").done(function(data) {
-        $("#specify_recommends").append($('<option disabled selected="true">').val("0").text("Seleccione una opción"));
+        $("#specify_recommends").append($('<option disabled selected="true">').val("0").text(`${_("select-predeterminado")}`));
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
