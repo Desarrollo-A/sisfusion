@@ -114,6 +114,10 @@ function applySearch(table) {
             }
         })
     })
+
+    $(`#${id}`).on('draw.dt', function() {
+        $('body').i18n()
+    });
 }
 
 function construirHead(table){
