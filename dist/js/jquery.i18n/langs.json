@@ -651,7 +651,7 @@
                 "ingresa-tus-comentarios": "Enter your comments",
                 "quien-asignar-prospecto": "Who will you assign to this prospect",
                 "que-estatus-prospecto": "What status will you assign to this prospect?",
-                "acerca-de": "About"
+                "acerca-de": "About",
                 "ubicacion-de-la-venta": "Location of sale",
                 "agregar-carpeta":"Add new folder",
                 "descripcion":"Description",
@@ -1174,6 +1174,7 @@
                 ,"saldo-total" : "saldo total"
                 ,"disponible":" Disponible"
                 ,"alert-enviar-comisiones": "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte"
-                ,"eviar-resguardos":" Enviar a resguardos"
+                ,"eviar-resguardos":" Enviar a resguardos",
+                "nacionalidad": "Nacionalidad"
         }
 }
