@@ -88,8 +88,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Anticipos </h3>
-                                <p class="card-title pl-1">(Procesos apoyos/préstamos)</p>
+                                <h3 class="card-title center-align"> <span data-i18n="adelantos">Adelantos</span></h3>
                             </div>
                             <div  class="toolbar">
                                 <div class="row">
@@ -99,19 +98,15 @@
                                 <table id="tabla_anticipo_revision_dc" name="tabla_anticipo_revision_dc" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            
-                                            <th>ID ANTICIPO</th>
-                                            <th>USUARIO</th>
-
-                                            <th>PUESTO</th>
-                                            <th>SEDE</th>
-                                            <th>MONTO</th>
-
-                                            <th>COMENTARIO</th>
-                                            <!-- <th>ESTATUS</th> -->
-                                            <th>PROCESO</th>
-                                            <th>PRIORIDAD</th>
-                                            <th>ACCIONES</th>
+                                        <th>id-anticipo</th>
+                                        <th>usuario</th>
+                                        <th>puesto</th>
+                                        <th>sede</th>
+                                        <th>monto</th>
+                                        <th>comentario</th>
+                                        <th>proceso</th>
+                                        <th>prioridad</th>
+                                        <th>acciones</th>
                                         </tr>
                                     </thead>
                                 </table>

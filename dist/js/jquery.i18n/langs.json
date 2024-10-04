@@ -407,7 +407,7 @@
                 "concepto": "CONCEPT",
                 "proyecto-origne": "ORIGIN PROYECT",
                 "condominio-origen": "ORIGIN CONDO",
-                "adelantos":"Advances",
+                "adelantos":"Advance Payment",
                 "opcion-proceso-solicitud" :"(Select an option to start your application process or display your processes)",
                 "solicitud-anticipo-apoyo":"Request for advance and support",
                 "solicitar-anticipos-nomina":"Payroll advance request",
@@ -632,7 +632,11 @@
                 "modificar":"CHANGE",
                 "nombre-2":"Name",
                 "estatus-2":"Status",
-                "conyuge" : "Spouse"
+                "conyuge" : "Spouse",
+                "proceso-apoyo-prestamo":"(Financial aid and loan processes.)",
+                "monto-por-mes":"Monthly payment",
+                "numero-mesualidades":"Number of monthly payments"
+
         },
         "es": {
                 "clientes-prospectos-por-mes" : "Clientes y prospectos por mes",
@@ -1043,7 +1047,7 @@
                 "concepto" : "CONCEPTO",
                 "proyecto-origen" : "PROYECTO ORIGEN",
                 "condominio-origen" : "CONDOMINIO ORIGEN",
-                "adelantos" : "Adelantos",
+                "adelantos" : "Anticipos",
                 "opcion-proceso-solicitud" : "(Seleccionar una opción para iniciar tu proceso de solicitud o mostrar tus procesos)",
                 "solicitud-anticipo-apoyo" : "Solicitud Anticipo-Apoyo",
                 "solicitar-anticipos-nomina" : "Podrás solicitar anticipos de nómina",
@@ -1268,6 +1272,12 @@
                 "modificar":"MODIFICAR",
                 "nombre-2":"Nombre",
                 "estatus-2":"Estatus",
-                "conyuge" : "Cónyuge"
+                "conyuge" : "Cónyuge",
+                "proceso-apoyo-prestamo":"(Procesos apoyos/préstamos)",
+                "monto-por-mes":"Monto por mes",
+                "numero-mesualidades":"Número de mensualidades"
+
+
+
         }
 }
