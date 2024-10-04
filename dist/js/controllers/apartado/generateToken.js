@@ -26,8 +26,8 @@ function fillevidenceTable() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: `${_('descargar-excel')}`,
-            title: `${_('consulta-bbva')}`,
+            titleAttr: _('descargar-excel'),
+            title: _('consulta-bbva'),
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
@@ -205,7 +205,7 @@ function generateToken() {
                 dataType: 'json',
                 success: function (response) {
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", response["message"], response["status"] != 200 ? "danger" : "success");
+                    alerts.showNotification("top", "right", _(stringToI18(response["message"])), response["status"] != 200 ? "danger" : "success");
                     if (response["status"] == 200) { // MJ: TOKEN GENERADO CON EXITO
                         $(".generated-token").val("http://pagosciudadmaderas.com/apartado/token.html?token=" + response["id_token"]);
                         $("#generateTokenModal").modal("hide");
@@ -213,7 +213,7 @@ function generateToken() {
                     }
                 }, error: function () {
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
                 }
             });
         }
@@ -228,14 +228,14 @@ function copyToClipBoard() {
     /* Get the text field */
     let copyText = document.getElementById("generatedToken");
     if (copyText.value == "")
-        alerts.showNotification("top", "right", "No hay ningún token que copiar.", "warning");
+        alerts.showNotification("top", "right", _("no-hay-ningun-token-que-copiar"), "warning");
     else {
         /* Select the text field */
         copyText.select();
         copyText.setSelectionRange(0, 99999); /* For mobile devices */
         /* Copy the text inside the text field */
         navigator.clipboard.writeText(copyText.value);
-        alerts.showNotification("top", "right", "Token copiado al portapapeles.", "success");
+        alerts.showNotification("top", "right", _("token-copiado-al-portapapeles"), "success");
     }
 }
 
@@ -272,9 +272,9 @@ $(document).on('click', '.validateEvidence', function () {
         dataType: 'json',
         success: function (data) {
             $("#evidenceTable").DataTable().ajax.reload(null, false);
-            alerts.showNotification("top", "right", action == 2 ? "La evidencia ha sido marcada como rechazada."  : "La evidencia ha sido marcada como aceptada.", action == 2 ? "danger" : "success");
+            alerts.showNotification("top", "right", action == 2 ? _("la-evidencia-ha-sido-marcada-como-rechazada") : _("la-evidencia-ha-sido-marcada-como-aceptada"), action == 2 ? "danger" : "success");
         }, error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -298,7 +298,7 @@ function verEvidencia(fileName, lote){
             $('#spiner-loader').addClass('hide');
         }, error: function () {
             $("#sendRequestButton").prop("disabled", false);
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             $('#spiner-loader').addClass('hide');
         }
     });

@@ -155,6 +155,7 @@ function construirHead(table){
 
     onLoadTranslations(translatePlaceholder)
     onChangeTranslations(translatePlaceholder)
+    
     $(`#${table}`).on('draw.dt', function() {
         $('.dt-button').each(function (i) {
             let is_excel = $(this).hasClass('buttons-excel')

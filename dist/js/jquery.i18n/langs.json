@@ -29,7 +29,7 @@
 		"cancelado": "Cancelled",
 		"clientes": "Clients",
 		"cantidad": "Quantity",
-		"hora-fecha":"TIME-DATE",
+		"hora-fecha": "TIME-DATE",
 		"no-información-para-mostrar": "No information to display",
 		"inicio": "Home",
 		"reporte": "Report",
@@ -622,8 +622,8 @@
 		"apartado-de-reubicacion": "Relocation section",
 		"venta-compartida": "Shared sale",
 		"ubicacion-de-la-venta": "Location of sale",
-		"responsable":"RESPONSIBLE",
-		"corrida-financiera":"FINANCIAL RUN",
+		"responsable": "RESPONSIBLE",
+		"corrida-financiera": "FINANCIAL RUN",
 		"solicitud": "Request",
 		"revision-estatus": "Review Status (6. Completed Run)",
 		"enviar-revision": "Send for Review",
@@ -692,7 +692,11 @@
 		"el-token-se-ha-generado-de-manera-exitosa": "The token has been generated successfully.",
 		"no-se-ha-podido-insertar-el-token-en-la-base-de-datos": "The token could not be inserted into the database.",
 		"no-se-ha-podido-subir-el-archivo": "The file could not be uploaded.",
-		"no-se-ha-podido-generar-el-token": "The token could not be generated."
+		"no-se-ha-podido-generar-el-token": "The token could not be generated.",
+		"no-hay-ningun-token-que-copiar": "There is no token to copy.",
+		"token-copiado-al-portapapeles": "Token copied to clipboard.",
+		"la-evidencia-ha-sido-marcada-como-rechazada": "The evidence has been marked as rejected.",
+		"la-evidencia-ha-sido-marcada-como-aceptada": "The evidence has been marked as accepted."
 	},
 	"es": {
 		"clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -1316,9 +1320,9 @@
 		"apartado-de-reubicacion": "Apartado de reubicación",
 		"venta-compartida": "Venta compartida",
 		"ubicacion-de-la-venta": "Ubicación de la venta",
-		"hora-fecha":"HORA-FECHA",
-		"responsable":"RESPONSABLE",
-		"corrida-financiera":"CORRIDA FINANCIERA",
+		"hora-fecha": "HORA-FECHA",
+		"responsable": "RESPONSABLE",
+		"corrida-financiera": "CORRIDA FINANCIERA",
 		"solicitud": "Solicitud",
 		"revision-estatus": "Revisión Status (6. Corrida elaborada)",
 		"enviar-revision": "Enviar a Revisión",
@@ -1373,6 +1377,7 @@
 		"disponible": " Disponible",
 		"alert-enviar-comisiones": "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte",
 		"enviar-resguardos": " Enviar a resguardos",
+
 		"generar-token": "Generar token",
 		"sin-token-generado": "No token has been generated yet",
 		"copiar-token": "Copiar token",
@@ -1386,6 +1391,10 @@
 		"el-token-se-ha-generado-de-manera-exitosa": "El token se ha generado de manera exitosa.",
 		"no-se-ha-podido-insertar-el-token-en-la-base-de-datos": "No se ha podido insertar el token en la base de datos.",
 		"no-se-ha-podido-subir-el-archivo": "No se ha podido subir el archivo.",
-		"no-se-ha-podido-generar-el-token": "No se ha podido generar el token."
+		"no-se-ha-podido-generar-el-token": "No se ha podido generar el token.",
+		"no-hay-ningun-token-que-copiar": "No hay ningún token que copiar.",
+		"token-copiado-al-portapapeles": "Token copiado al portapapeles.",
+		"la-evidencia-ha-sido-marcada-como-rechazada": "La evidencia ha sido marcada como rechazada.",
+		"la-evidencia-ha-sido-marcada-como-aceptada": "La evidencia ha sido marcada como aceptada."
 	}
 }
