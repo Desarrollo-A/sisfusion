@@ -179,7 +179,6 @@ function changeSelects() {
     console.log("executed");
     $('select.selectpicker').each(function (i) {
         let id = $(this).data('i18n-label')
-
         if(id){
             let title = _(id)
 

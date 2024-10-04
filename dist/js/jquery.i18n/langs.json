@@ -706,8 +706,28 @@
                 ,"saldo-total" : "Total balance:"
                 ,"disponible" : "Available money"
                 ,"alert-enviar-comisiones": "Commissions cannot be sent; wait until Monday and Tuesday of the cutoff week"
-                ,"enviar-resguardos": "Send to safekeeping"
-
+                ,"enviar-resguardos": "Send to safekeeping",
+                "iniciar-sesion-google": "Sign in with Google",
+                "sincronizar-calendario-google": "In order for the calendar to syncronize with Google Calendar, you must sign in with your google account",
+                "iniciar-sesion": "Log in",
+                "detalles-cita-calendar": "Details about the appointment",
+                "eliminar-evento": "Delete event",
+                "finalizar-evento": "End event",
+                "titulo": "Title",
+                "organizador": "Organizer",
+                "tipo-cita": "Type of appointment",
+                "fecha-cita": "Appointment date",
+                "evalua-evento": "Rate this event",
+                "como-valoras-evento": "How would you rate this event",
+                "agrega-comentarios" : "Agrega tus comentarios u observaciones adicionales a este evento.",
+                "regresar": "Return",
+                "cita-abierta":	"Open appointment",
+                "cita-cancelada": "Cancelled appointment",
+                "cita-satisfactoria":"Satisfactory appointment",
+                "cita-poco-satisfactoria": "Poorly satisfactory appointment",
+                "evento-asesor-ventas": "Sales advisor event",
+                "evento-coordinador": "Coordinator's event",
+                "eventos-exito-carga": "The events from the Google calendar have been successfully loaded."
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -1221,6 +1241,27 @@
                 "edad": "Edad",
                 "telefono-casa": "Teléfono casa",
                 "como-nos-contactaste": "¿Cómo nos contactaste?",
-                "plaza-venta": "Plaza de venta"
+                "plaza-venta": "Plaza de venta",
+                "iniciar-sesion-google": "Iniciar sesión con Google",
+                "sincronizar-calendario-google": "Para que el calendario se sincronice con Google Calendar, es necesario iniciar sesión con su cuenta de Google",
+                "iniciar-sesion": "Iniciar sesión",
+                "detalles-cita-calendar": "Detalles de la cita",
+                "eliminar-evento": "Eliminar evento",
+                "finalizar-evento": "Finalizar evento",
+                "titulo": "Titulo",
+                "organizador": "Organizador",
+                "tipo-cita": "Tipo de cita",
+                "fecha-cita": "Fecha de cita",
+                "evalua-evento": "Evalúa este evento",
+                "como-valoras-evento": "¿Cómo valorarías este evento?",
+                "agrega-comentarios" : "Agrega tus comentarios u observaciones adicionales a este evento.",
+                "regresar": "Regresar",
+                "cita-cancelada": "Cita cancelada",
+                "cita-abierta":	"Cita abierta",
+                "cita-satisfactoria":"Cita satisfactoria",
+                "cita-poco-satisfactoria": "Cita poco satisfactoria",
+                "evento-asesor-ventas": "Evento de asesor de ventas",
+                "evento-coordinador": "Evento de coordinador",
+                "eventos-exito-carga": "Se han cargado los eventos de Google Calendar de manera exitosa."
         }
 }

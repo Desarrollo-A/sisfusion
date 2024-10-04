@@ -12,6 +12,7 @@ function readyAgenda(){
   createGoogleCalendar();
 
   getUsersAndEvents(id_rol_general, id_usuario_general, true);
+  $('body').i18n();
 }
 
 const getTimeZone = () => {
@@ -133,7 +134,7 @@ async function listUpcomingEvents(tokenGoogleCalendar) {
 
       calendar.refetchEvents();
 
-      alerts.showNotification("top", "right", "Se han cargado los eventos de Google Calendar de manera exitosa.", "success");
+      alerts.showNotification("top", "right", _("eventos-exito-carga"), "success");
     },
     complete: function () {
       $('#spiner-loader').addClass('hide');
@@ -349,7 +350,7 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
     complete: function () {
       $('#spiner-loader').addClass('hide');
     }
-  });}
+  });
   // Hasta aqui
 
 
