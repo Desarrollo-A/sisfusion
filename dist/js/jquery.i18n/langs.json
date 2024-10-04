@@ -620,6 +620,18 @@
                 "apartado-de-reubicacion": "Relocation section",
                 "venta-compartida": "Shared sale",
                 "ubicacion-de-la-venta": "Location of sale",
+                "agregar-carpeta":"Add new folder",
+                "descripcion":"Description",
+                "carpeta-2":"Folders",
+                "carpetas-2":"Folder",
+                "fecha-creacion":"Date created",
+                "activo":"Asset",
+                "inactivo":"Inactive",
+                "editar-carpeta":"Edit folder",
+                "registro-agregado":"The registration has been successfully entered.",
+                "modificar":"CHANGE",
+                "nombre-2":"Name",
+                "estatus-2":"Status",
                 "conyuge" : "Spouse"
         },
         "es": {
@@ -1244,6 +1256,18 @@
                 "apartado-de-reubicacion" : "Apartado de reubicación",
                 "venta-compartida" : "Venta compartida",
                 "ubicacion-de-la-venta" : "Ubicación de la venta",
+                "agregar-carpeta":"Agregar nueva carpeta",
+                "descripcion":"Descripción",
+                "carpeta-2":"Carpetas",
+                "carpetas-2":"Carpeta",
+                "fecha-creacion":"Fecha de creación",
+                "activo":"Activo",
+                "inactivo":"Inactivo",
+                "editar-carpeta":"Editar carpeta",
+                "registro-agregado":"El registro se ha ingresado exitosamente.",
+                "modificar":"MODIFICAR",
+                "nombre-2":"Nombre",
+                "estatus-2":"Estatus",
                 "conyuge" : "Cónyuge"
         }
 }
