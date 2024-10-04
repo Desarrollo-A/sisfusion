@@ -75,7 +75,7 @@
                                                     class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
-                                                    title="Selecciona un proyecto" data-i18n="select-proyecto" data-size="7" required>
+                                                    title="Selecciona un proyecto" data-i18n-label="select-proyecto" data-size="7" required>
                                                 <?php
                                                 if ($residencial != NULL) :
                                                     foreach ($residencial as $fila) : ?>
@@ -93,7 +93,7 @@
                                                     class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
-                                                    title="Selecciona un condominio"  data-size="7" required>
+                                                    title="Selecciona un condominio" data-i18n-label="select-condominio" data-size="7" required>
                                             </select>
                                         </div>
                                     </div>
@@ -104,7 +104,7 @@
                                                     class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
-                                                    title="Selecciona un lote" data-i18n="select-lote" data-size="7" required>
+                                                    title="Selecciona un lote" data-i18n-label="select-lote" data-size="7" required>
                                             </select>
                                         </div>
                                     </div>
