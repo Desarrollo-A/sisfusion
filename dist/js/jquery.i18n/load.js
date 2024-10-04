@@ -22,7 +22,8 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`)
+    console.log(lang);
+    $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
 function changeLanguaje() {
@@ -41,6 +42,8 @@ function changeLanguaje() {
     $('body').i18n()
 
     triggerChangeFunctions()
+
+    // location.reload();
 }
 
 _ = $.i18n
@@ -71,39 +74,68 @@ function triggerChangeFunctions() {
         callback()
     }
 }
+const datosTablasComisiones = [
+    {
+        idTabla : 'tabla_nuevas_comisiones',
+        idText: 'myText_nuevas'
+    },
+    {
+        idTabla : 'tabla_revision_comisiones',
+        idText: 'myText_revision'
+    },
+    {
+        idTabla : 'tabla_pagadas_comisiones',
+        idText : 'myText_pagadas'
+    }
+];
 
-function construirHead(tabla){
-    let titulos = []
+function applySearch(table) {
+    let id = table.tables().nodes().to$().attr('id')
+    $(`#${id} thead tr:eq(0) th`).each(function (i) {
+        $('input', this).on('keyup change', function () {
+            if (table.column(i).search() !== this.value) {
+                table.column(i).search(this.value).draw();
+                const searchTabla = datosTablasComisiones.find((idTables) => idTables.idTabla == id);
 
-    $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
-        var id = $(this).text();
-        
-        titulos.push(id);
-        // console.log(id)
-
-        if(id){
-            title = _(id)
-            // console.log(title)
-
-            $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
-            $('input', this).on('keyup change', function () {
-                if (tabla_6.column(i).search() !== this.value) {
-                    tabla_6.column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
-
-    function translatePlaceholder(){
-            for(titulo of titulos){
-                if(titulo !== ''){
-                    $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                if( searchTabla !== undefined){
+                    var total = 0;
+                    var index = table.rows({
+                        selected: true,
+                        search: 'applied'
+                    }).indexes();
+                    var data = table.rows(index).data();
+                    $.each(data, function (i, v) {
+                        console.log(v)
+                        total += parseFloat(v.pago_cliente);
+                    });
+                    document.getElementById(`${searchTabla.idText}`).textContent = '$' + formatMoney(total);
                 }
             }
-        }
+        })
+    })
+}
 
-    onLoadTranslations(translatePlaceholder)
-    onChangeTranslations(translatePlaceholder)
+
+function construirHead(table){
+    let titulos = []
+    const idNoPermitidos = ['checkComisionesNuevas']
+
+    $(`#${table} thead tr:eq(0) th`).each(function (i) {
+        var id = $(this).text();
+
+        titulos.push(id);
+        // console.log(id)
+        if(id && idNoPermitidos.indexOf(id)){
+            if(id){
+                title = _(id)
+                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
+            }
+        }else if(id == 'checkComisionesNuevas'){
+            title = _(id)
+            $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
+
+        }
+    });
 }
 
 function changeButtonTooltips() {
@@ -122,7 +154,7 @@ function changeButtonTooltips() {
 
 function changeSelects() {
     $('select.selectpicker').each(function (i) {
-        let id = $(this).data('i18n')
+        let id = $(this).data('i18n-label')
 
         if(id){
             let title = _(id)
@@ -152,7 +184,42 @@ function stringToI18(str) {
     return resultado;
 }
 
+function changeParagraphTooltips() {
+    $('p').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('title', title)
+        }
+    })
+}
+
+function changeListTooltips() {
+    console.log('li')
+
+    $('li').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('title', title)
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
 onChangeTranslations(changeButtonTooltips)
+onLoadTranslations(changeParagraphTooltips)
+onChangeTranslations(changeParagraphTooltips)
+onLoadTranslations(changeListTooltips)
+onChangeTranslations(changeListTooltips)

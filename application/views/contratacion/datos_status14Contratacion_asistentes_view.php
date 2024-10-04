@@ -12,13 +12,13 @@
                         <h4 class="modal-title text-center" data-i18n="estatus-14"><label>Registro estatus 14 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <label>Comentario:</label>
+                        <label data-i18n="comentario">Comentario:</label>
                         <textarea class="text-modal" id="comentario" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save1" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" id="save1" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -29,16 +29,16 @@
             <div class="modal-dialog">
                 <div class="modal-content" > 
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 14 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label data-i18n="estatus-14">Registro estatus 14 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                    <label>Comentario:</label>
+                    <label data-i18n="comentario">Comentario:</label>
                         <textarea class="text-modal" id="comentario1" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save2" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" id="save2" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -55,8 +55,8 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Registro estatus 14</h3>
-                                    <p class="card-title pl-1">(Firma Acuse cliente)</p>
+                                    <h3 class="card-title center-align" data-i18n="estatus-14">Registro estatus 14</h3>
+                                    <p class="card-title pl-1" data-i18n="firma-acuse">(Firma Acuse cliente)</p>
                                 </div>
                                 <div class="material-datatables"> 
                                     <div class="form-group">
@@ -64,15 +64,15 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>TIPO DE VENTA</th>
-                                                    <th>TIPO DE PROCESO</th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>GERENTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>SEDE</th>
-                                                    <th>ACCIONES</th>
+                                                    <th>tipo-venta</th>
+                                                    <th>tipo-proceso</th>
+                                                    <th>proyecto</th>
+                                                    <th>condominio</th>
+                                                    <th>lote</th>
+                                                    <th>gerente</th>
+                                                    <th>cliente</th>
+                                                    <th>sede</th>
+                                                    <th>acciones</th>
                                                 </tr>
                                             </thead>
                                         </table>
