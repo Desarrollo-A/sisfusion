@@ -620,8 +620,7 @@
                 "apartado-de-reubicacion": "Relocation section",
                 "venta-compartida": "Shared sale",
                 "ubicacion-de-la-venta": "Location of sale",
-                "fecha-creacion": "Creation date"
-                "fecha-inicio-mensualidad": "Date of first monthly payment",
+                "fecha-creacion": "Creation date",
                 "listado-oficinas-comercializacion": "List of Ciudad Maderas marketing offices",
                 "direccion": "ADDRESS",
                 "horario": "OFFICE HOURS",
@@ -639,7 +638,9 @@
                 "formato-12": "12 hour format",
                 "sede-pertenece": "Headquarters to which it belongs",
                 "hora-inicio": "Start time (am)",
-                "hora-fin": "End time (pm)"
+                "hora-fin": "End time (pm)",
+                "ingresa-direccion-editar": "Enter the new address to edit",
+                "agregar-oficina": "ADD OFFICE"
         },
         "es": {
                 "clientes-prospectos-por-mes" : "Clientes y prospectos por mes",
@@ -1263,13 +1264,7 @@
                 "apartado-de-reubicacion" : "Apartado de reubicación",
                 "venta-compartida" : "Venta compartida",
                 "ubicacion-de-la-venta" : "Ubicación de la venta",
-                "fecha-creacion": "Fecha creación"
-                "dias-para-pagar-enganche": "Días para pagar Enganche",
-                "enganche-cantidad": "Enganche cantidad",
-                "mensualidades-enganche-diferido": "Incluir mensualidades en el enganche diferido",
-                "meses-a-diferir": "Meses a diferir",
-                "msi": "MSI",
-                "fecha-inicio-mensualidad": "Fecha inicio de mensualidad",
+                "fecha-creacion": "Fecha creación",
                 "listado-oficinas-comercializacion": "Listado de oficinas de comercialización Ciudad Maderas",
                 "direccion": "DIRECCIÓN",
                 "horario": "HORARIO",
@@ -1287,6 +1282,8 @@
                 "formato-12": "Formato de 12 horas",
                 "sede-pertenece": "Sede a la que pertenece",
                 "hora-inicio": "Hora inicio (am)",
-                "hora-fin": "Hora fin (pm)"
+                "hora-fin": "Hora fin (pm)",
+                "ingresa-direccion-editar": "Ingresa la nueva dirección a editar",
+                "agregar-oficina": "AGREGAR OFICINA"
         }
 }

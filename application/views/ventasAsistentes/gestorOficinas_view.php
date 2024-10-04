@@ -14,13 +14,13 @@
             <form id="formEditOffice">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <label>Ingresa la nueva dirección a editar</label>
+                        <label data-i18n="ingresa-direccion-editar">Ingresa la nueva dirección a editar</label>
                         <input class="form-control input-gral" name="direccionOffice" id="direccionOffice" type="text" placeholder="Tu dirección" required/>
                         <input class="form-control input-gral d-none" name="idDireccion" id="idDireccion" type="text"/>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                     </div>
                 </div>
             </form>
@@ -35,8 +35,8 @@
                     <input class="input-gral d-none" name="idDireccionS" id="idDireccionS" type="text"/>
                     <input class="input-gral d-none" name="status" id="status" type="text"/>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                     </div>
                 </div>
             </form>
@@ -53,7 +53,7 @@
                     <div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden p-0 mb-1">
                             <label class="control-label" data-i18n="sede-pertenece">Sede a la que pertenece</label>
-                            <select name="idSede" id="idSede" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body">
+                            <select name="idSede" id="idSede" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-i18n-label="select-predeterminado" data-size="7" data-live-search="true" data-container="body">
                             </select>
                         </div>
                         <label class="control-label" data-i18n="direccion">Dirección</label>

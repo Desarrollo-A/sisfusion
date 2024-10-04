@@ -11,6 +11,11 @@
 //     $('[data-toggle="tooltip"]').tooltip();
 // });
 
+$(document).ready(function () {
+    $('#btnAgregarOffice').attr('data-original-title', _('agregar-oficina'));
+    $('#btnAgregarOffice').attr('title', _('agregar-oficina'));
+})
+
 construirHead('tablaOficinas');
 
 let tablaOficinas = $('#tablaOficinas').DataTable({
