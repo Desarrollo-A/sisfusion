@@ -678,7 +678,9 @@
 		"saldo-total" : "Total balance:",
 		"disponible" : "Available money",
 		"alert-enviar-comisiones": "Commissions cannot be sent; wait until Monday and Tuesday of the cutoff week",
-		"enviar-resguardos": "Send to safekeeping"
+		"enviar-resguardos": "Send to safekeeping",
+		"reporte-clientes":"Client Report",
+		"fecha-de-nacimiento":"DATE OF BIRTH"
 	},
 	"es": {
 		"clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -1358,6 +1360,9 @@
 		"saldo-total" : "saldo total",
 		"disponible":" Disponible",
 		"alert-enviar-comisiones": "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte",
-		"eviar-resguardos":" Enviar a resguardos"
+		"eviar-resguardos":" Enviar a resguardos",
+		"reporte-clientes":"Reporte de clientes",
+		"fecha-de-apartado": "FECHA DE APARTADO",
+		"fecha-de-nacimiento":"FECHA DE NACIMIENTO"
 	}
 }
