@@ -89,6 +89,7 @@
                         <div class="card-content">
                             <div class="encabezadoBox">
                                 <h3 class="card-title center-align"> <span data-i18n="adelantos">Adelantos</span></h3>
+                                <p class="card-title pl-1"data-i18n="proceso-apoyo-prestamo">(Procesos apoyos/préstamos)</p>
                             </div>
                             <div  class="toolbar">
                                 <div class="row">
