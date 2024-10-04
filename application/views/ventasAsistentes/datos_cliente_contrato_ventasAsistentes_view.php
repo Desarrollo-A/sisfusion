@@ -27,25 +27,25 @@
 							<i class="fas fa-user-friends fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Contrato</h3>
+                            <h3 class="card-title center-align" data-i18n = "contrato">Contrato</h3>
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col-md-4 form-group">
                                         <div class="form-group  select-is-empty">
-                                            <label class="control-label">Proyecto</label>
-                                            <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                            <label class="control-label" data-i18n  = "proyecto" >Proyecto</label>
+                                            <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group  select-is-empty">
-                                            <label class="control-label">Condominio</label>
-                                            <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                            <label class="control-label" data-i18n  ="condominio">Condominio</label>
+                                            <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group  select-is-empty">
-                                            <label class="control-label">Lote</label>
-                                            <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                            <label class="control-label" data-i18n  ="lote">Lote</label>
+                                            <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                 </div>
@@ -55,12 +55,12 @@
 									<table class="table-striped table-hover hide" id="tabla_contrato_ventas" name="tabla_contrato_ventas">
 										<thead>
 											<tr>
-												<th>PROYECTO</th>
-												<th>CONDOMINIO</th>
-												<th>LOTE</th>
-												<th>CLIENTE</th>
-												<th>NOMBRE DEL CONTRATO</th>
-												<th>CONTRATO</th>
+												<th>proyecto</th>
+												<th>condominio</th>
+												<th>lote</th>
+												<th>cliente</th>
+												<th>nombre-contrato</th>
+												<th>contrato</th>
 											</tr>
 										</thead>
 									</table>

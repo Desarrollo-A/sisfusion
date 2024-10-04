@@ -12,7 +12,6 @@ var mesesSelect;
 var mesesSelect2;
 
 $(document).ready(function() {
-    $('body').i18n();
     $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {

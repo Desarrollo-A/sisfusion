@@ -30,7 +30,8 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 const STATUS_CONTRATACION = 1;
 
 $(document).ready(function() {
-    construirHead("tabla_deposito_seriedad"); 
+    construirHead("tabla_deposito_seriedad");  
+    // construirHead("table_prospectos");
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
         $('#tabla_deposito_seriedad').addClass('hide');
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
@@ -74,17 +75,6 @@ $('#proyecto').change( function(){
 $('#condominio').change( function(){
     $('#tabla_deposito_seriedad').removeClass('hide');
     fillDataTable($(this).val());
-});
-
-$('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    titulos_intxt.push(title);
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value) {
-            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
-        }
-    });
 });
 
 $("#tabla_deposito_seriedad").ready( function(){
@@ -191,7 +181,7 @@ $("#tabla_deposito_seriedad").ready( function(){
                 },
                 {
                     "data": function(d){
-                        return `<center><button class="btn-data btn-green became_prospect_to_cliente" data-id_prospecto="${d.id_prospecto}" data-id_cliente="${id_cliente}" data-idLote="${idLoteValue}" data-toggle="tooltip" data-placement="top" title="NUEVO PROSPECTO"> <i class="fas fa-user-check"></i> </button></center>`;
+                        return `<center><button class="btn-data btn-green became_prospect_to_cliente" data-id_prospecto="${d.id_prospecto}" data-id_cliente="${id_cliente}" data-idLote="${idLoteValue}" data-i18n-tooltip="nuevo-prospecto" data-toggle="tooltip" data-placement="top" title="${_("nuevo-prospecto")}"> <i class="fas fa-user-check"></i> </button></center>`;
                     }
                 },
             ],
@@ -246,16 +236,16 @@ $("#tabla_deposito_seriedad").ready( function(){
                         $('#asignar_prospecto_a_cliente').modal('hide');
                         $('#table_prospectos').DataTable().ajax.reload();
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                        alerts.showNotification('top', 'right', 'Se ha asignado correctamente', 'success');
+                        alerts.showNotification('top', 'right', `${_("asignado-correctamente")}`, 'success');
                     } else
-                        alerts.showNotification('top', 'right', 'Ha ocurrido un error inesperado verificalo ['+data+']', 'danger');
+                        alerts.showNotification('top', 'right', `${_("algo-salio-mal")} [`+data+`]`, 'danger');
                 },
                 error: function(){
                     $('#modal_loader_assign').modal("hide");
                     $('#asignar_prospecto_a_cliente').modal('hide');
                     $('#table_prospectos').DataTable().ajax.reload();
                     $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                    alerts.showNotification('top', 'right', 'OCURRIO UN ERROR, INTENTALO DE NUEVO', 'danger');
+                    alerts.showNotification('top', 'right', `${_("algo-salio-mal")}`, 'danger');
                 }
             });
         });
@@ -299,16 +289,16 @@ $(document).on("click", ".getInfo2", function (e) {
     getInfoData[6] = $(this).attr("data-fechavenc");
     getInfoData[7] = $(this).attr("data-idMov");
 
-      (getInfoData[7] == MOVIMIENTOS.NUEVO_APARTADO) ? titulo_modal = "Integración de Expediente - "
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) ? titulo_modal = "Integración de Expediente (Rechazo estatus 6 Contraloría) -"
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_VENTAS_ESTATUS_8) ? titulo_modal = "Integración de Expediente (Rechazo estatus 8 Ventas) -"
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7) ? titulo_modal = "Integración de Expediente (Rechazo estatus 7 Jurídico) -"
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) ? titulo_modal = "Integración de Expediente (Rechazo estatus 7 Jurídico) -"
-    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3) ? titulo_modal = 'Enviar nuevamente a postventa (despúes de un rechazo de postventa) -'
-    :  titulo_modal = "Integración de Expediente - ";
+      (getInfoData[7] == MOVIMIENTOS.NUEVO_APARTADO) ? titulo_modal = `${_("integracion-expediente")} -`
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) ? titulo_modal = `${_("integracion-expediente-estatus5")} -`
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5) ? titulo_modal = `${_("integracion-expediente-estatus5")} -`
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) ? titulo_modal = `${_("integracion-expediente-estatus6")} -`
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_VENTAS_ESTATUS_8) ? titulo_modal = `${_("integracion-expediente-estatus8")} -`
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7) ? titulo_modal = `${_("integracion-expediente-estatus7")} -`
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) ? titulo_modal = `${_("integracion-expediente-estatus5")} -`
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) ? titulo_modal = `${_("integracion-expediente-estatus7")} -`
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3) ? titulo_modal = `${_("reenvio-postventa")} -`
+    :  titulo_modal = `${_("integracion-expediente")} -`;
 
     $(".lote").html(getInfoData[4]);
     $(".titulo_modal").html(titulo_modal);
@@ -1482,7 +1472,7 @@ $(document).on('submit', '#autorizacion-form', function (e) {
         success: function (data) {
             const response = JSON.parse(data);
             if (response.code === 200) {
-                alerts.showNotification("top", "right", 'Verificación enviada con éxito', "success");
+                alerts.showNotification("top", "right", `${_("verificacion-exito")}`, "success");
                 $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#autorizaciones-modal').modal('hide');
             }
@@ -1598,7 +1588,7 @@ $(document).on('submit', '#solicitar-form', function (e) {
         success: function (data) {
             const response = JSON.parse(data);
             if (response.code === 200) {
-                alerts.showNotification("top", "right", 'Solicitud enviada con éxito', "success");
+                alerts.showNotification("top", "right", `${_("solicitud-enviada")}`, "success");
                 $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                 $('#solicitar-modal').modal('hide');
             }
