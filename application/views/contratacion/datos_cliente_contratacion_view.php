@@ -64,7 +64,7 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align" data-i18n="registro-cliente">Registro de clientes</h3>
+                                <h3 class="card-title center-align" data-i18n = "registro-cliente">Registro de clientes</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
