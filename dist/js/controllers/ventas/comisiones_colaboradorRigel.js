@@ -849,25 +849,28 @@ function comisionesTableResguardo(proyecto,condominio){
     });
 }
 
-$('#tabla_revision_comisiones thead tr:eq(0) th').each( function (i) {
-    if(i != 12 ){
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-        $('input', this).on('keyup change', function() {
-            if ($('#tabla_revision_comisiones').DataTable().column(i).search() !== this.value) {
-                $('#tabla_revision_comisiones').DataTable().column(i).search(this.value).draw();
-                var total = 0;
-                var index = tabla_revision.rows({selected: true, search: 'applied'}).indexes();
-                var data = tabla_revision.rows(index).data();
-                $.each(data, function(i, v) {
-                    total += parseFloat(v.impuesto);
-                });
-                document.getElementById("total_solicitado").textContent = formatMoney(total);
-            }
-        });
-    }
-});
+construirHead("tabla_revision_comisiones");
+
+
+// $('#  thead tr:eq(0) th').each( function (i) {
+//     if(i != 12 ){
+//         var title = $(this).text();
+//         titulos.push(title);
+//         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//         $('input', this).on('keyup change', function() {
+//             if ($('#tabla_revision_comisiones').DataTable().column(i).search() !== this.value) {
+//                 $('#tabla_revision_comisiones').DataTable().column(i).search(this.value).draw();
+//                 var total = 0;
+//                 var index = tabla_revision.rows({selected: true, search: 'applied'}).indexes();
+//                 var data = tabla_revision.rows(index).data();
+//                 $.each(data, function(i, v) {
+//                     total += parseFloat(v.impuesto);
+//                 });
+//                 document.getElementById("total_solicitado").textContent = formatMoney(total);
+//             }
+//         });
+//     }
+// });
 
 function comisionTableRevision(proyecto,condominio){
     $('#tabla_revision_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
@@ -1031,24 +1034,27 @@ function comisionTableRevision(proyecto,condominio){
     });
 }
 
-$('#tabla_pagadas_comisiones thead tr:eq(0) th').each( function (i) {
-    if(i != 12 ){
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-        $('input', this).on('keyup change', function() {
-            if($('#tabla_pagadas_comisiones').DataTable().column(i).search() !== this.value) {
-                $('#tabla_pagadas_comisiones').DataTable().column(i).search(this.value).draw();
-                var total = 0;
-                var index = tabla_pagadas.rows({selected: true, search: 'applied'}).indexes();
-                var data = tabla_pagadas.rows(index).data();
-                $.each(data, function(i, v) {total += parseFloat(v.impuesto);});
-                var to1 = formatMoney(total);
-                document.getElementById("total_pagar").textContent = to1;
-            }
-        });
-    }
-});
+construirHead("tabla_pagadas_comisiones");
+
+
+// $('#tabla_pagadas_comisiones thead tr:eq(0) th').each( function (i) {
+//     if(i != 12 ){
+//         var title = $(this).text();
+//         titulos.push(title);
+//         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//         $('input', this).on('keyup change', function() {
+//             if($('#tabla_pagadas_comisiones').DataTable().column(i).search() !== this.value) {
+//                 $('#tabla_pagadas_comisiones').DataTable().column(i).search(this.value).draw();
+//                 var total = 0;
+//                 var index = tabla_pagadas.rows({selected: true, search: 'applied'}).indexes();
+//                 var data = tabla_pagadas.rows(index).data();
+//                 $.each(data, function(i, v) {total += parseFloat(v.impuesto);});
+//                 var to1 = formatMoney(total);
+//                 document.getElementById("total_pagar").textContent = to1;
+//             }
+//         });
+//     }
+// });
 
 function comisionesTablePagadas(proyecto,condominio){
     $('#tabla_pagadas_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
@@ -1212,27 +1218,33 @@ function comisionesTablePagadas(proyecto,condominio){
     });
 }
 
-$('#tabla_otras_comisiones thead tr:eq(0) th').each( function (i) {
-    if(i != 12 ){
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-        $('input', this).on('keyup change', function() {
 
-            if ($('#tabla_otras_comisiones').DataTable().column(i).search() !== this.value) {
-                $('#tabla_otras_comisiones').DataTable().column(i).search(this.value).draw();
-                var total = 0;
-                var index = tabla_otras.rows({selected: true, search: 'applied'}).indexes();
-                var data = tabla_otras.rows(index).data();
-                $.each(data, function(i, v) {
-                    total += parseFloat(v.impuesto);
-                });
-                var to1 = formatMoney(total);
-                document.getElementById("total_otras").textContent = to1;
-            }
-        });
-    }
-});
+
+construirHead("tabla_otras_comisiones");
+
+
+
+// $('#tabla_otras_comisiones thead tr:eq(0) th').each( function (i) {
+//     if(i != 12 ){
+//         var title = $(this).text();
+//         titulos.push(title);
+//         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//         $('input', this).on('keyup change', function() {
+
+//             if ($('#tabla_otras_comisiones').DataTable().column(i).search() !== this.value) {
+//                 $('#tabla_otras_comisiones').DataTable().column(i).search(this.value).draw();
+//                 var total = 0;
+//                 var index = tabla_otras.rows({selected: true, search: 'applied'}).indexes();
+//                 var data = tabla_otras.rows(index).data();
+//                 $.each(data, function(i, v) {
+//                     total += parseFloat(v.impuesto);
+//                 });
+//                 var to1 = formatMoney(total);
+//                 document.getElementById("total_otras").textContent = to1;
+//             }
+//         });
+//     }
+// });
 
 function comisionesTableOtras(proyecto,condominio){
     $('#tabla_otras_comisiones').on('xhr.dt', function(e, settings, json, xhr) {
@@ -1396,15 +1408,18 @@ function comisionesTableOtras(proyecto,condominio){
     });
 }
 
-$('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value) {
-            $('#tabla_comisiones_sin_pago').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
+
+
+construirHead("tabla_comisiones_sin_pago");
+// $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each(function (i) {
+//     var title = $(this).text();
+//     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+//     $('input', this).on('keyup change', function () {
+//         if ($('#tabla_comisiones_sin_pago').DataTable().column(i).search() !== this.value) {
+//             $('#tabla_comisiones_sin_pago').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+// });
 
 function comisionesTableSinPago (proyecto, condominio) {
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
@@ -1466,25 +1481,25 @@ function comisionesTableSinPago (proyecto, condominio) {
             data: function(d) {
                 switch (d.reason) {
                     case '0':
-                        return '<p class="m-0"><b>EN ESPERA DE PRÓXIMO ABONO EN NEODATA </b></p>';
+                        return '<p class="m-0"><b> '+ _("en-espera-abono-neo")  +' </b></p>';
                     break;
                     case '1':
-                        return '<p class="m-0"><b>NO HAY SALDO A FAVOR. ESPERAR PRÓXIMA APLICACIÓN DE PAGO. </b></p>';
+                        return '<p class="m-0"><b> '+ _("saldo-pago-dinero") +' </b></p>';
                     break;
                     case '2':
-                        return '<p class="m-0"><b>NO SE ENCONTRÓ ESTA REFERENCIA </b></p>';
+                        return '<p class="m-0"><b> '+ _("no-se-encuentra-ref")+' </b></p>';
                     break;
                     case '3':
-                        return '<p class="m-0"><b>NO TIENE VIVIENDA, SI HAY REFERENCIA </b></p>';
+                        return '<p class="m-0"><b> '+ _("no-tiene-vivienda") +' </b></p>';
                     break;
                     case '4':
-                        return '<p class="m-0"><b>NO HAY PAGOS APLICADOS A ESTA REFERENCIA </b></p>';
+                        return '<p class="m-0"><b> '+ _("no-tiene-pagos-aplicados") +' </b></p>';
                     break;
                     case '5':
-                        return '<p class="m-0"><b>REFERENCIA DUPLICADA </b></p>';
+                        return '<p class="m-0"><b> '+_("ref-duplicada")+' </b></p>';
                     break;
                     default:
-                        return '<p class="m-0"><b>SIN LOCALIZAR </b></p>';
+                        return '<p class="m-0"><b>  '+_("sin-localizar")+' </b></p>';
                     break;
                 }
             }
