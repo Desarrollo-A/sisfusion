@@ -511,8 +511,7 @@
 		"deshabilitar-corrida-financiera":"You can disable the current financial run to enable the desired financial run",
 
 
-		"id-corrida":"RUN ID",
-		"ESTATUS":"ESTATUS"
+		"id-corrida":"RUN ID"		
 	},
 	"es": {
 		"clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -1027,8 +1026,7 @@
 		"deshabilitar-corrida-financiera":"Puedes deshabilitar la corrida financiera actual, para habilitar la corrida financiera deseada",
 		
 		
-		"id-corrida":"ID CORRIDA",
-		"ESTATUS":"ESTATUS"
+		"id-corrida":"ID CORRIDA"		
 
 	}
 }

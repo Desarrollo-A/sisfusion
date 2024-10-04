@@ -119,10 +119,10 @@
                                            style="text-align:center;">
                                         <thead>
                                         <tr>
-                                            <th class="text-center">ID CORRIDA</th>
-                                            <th class="text-center">ESTATUS</th>
+                                            <th class="text-center">id-corrida</th>
+                                            <th class="text-center">estatus</th>
                                             <th class="text-center">proyecto</th>
-                                            <th class="text-center">CONDOMINIO</th>
+                                            <th class="text-center">condominio</th>
                                             <th class="text-center">ID LOTE</th>
                                             <th class="text-center">LOTE</th>
                                             <th class="text-center">CLIENTE</th>
