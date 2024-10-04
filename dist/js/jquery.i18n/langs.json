@@ -629,6 +629,10 @@
                 "inactivo":"Inactive",
                 "editar-carpeta":"Edit folder",
                 "registro-agregado":"The registration has been successfully entered.",
+                "modificar":"CHANGE",
+                "nombre-2":"Name",
+                "estatus-2":"Status"
+
         },
         "es": {
                 "clientes-prospectos-por-mes" : "Clientes y prospectos por mes",

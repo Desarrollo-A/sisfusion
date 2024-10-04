@@ -150,7 +150,7 @@ $(document).ready(function () {
             });
         });
     });
-    applySearch(tableCarpetas)
+    applySearch($tableCarpetas);
 
 
     function fillFields (v) {
@@ -161,6 +161,7 @@ $(document).ready(function () {
         $("#filename").val(v.archivo);
         $("#estatus").val(v.estatus);
     }
+
 });
 
 function update() {
