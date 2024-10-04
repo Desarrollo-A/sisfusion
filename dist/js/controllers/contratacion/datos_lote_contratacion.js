@@ -1,13 +1,13 @@
-$(document).ready(function () {
-    // Initial load of content
-    loadSelectOptions();
-});
+// $(document).ready(function () {
+//     // Initial load of content
+//     loadSelectOptions();
+// });
 
 function loadSelectOptions() {
     // Load residential projects
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
-        $("#idResidencial").empty(); // Clear existing options
-        $("#idResidencial").before($('<label>').text(_("first_title")).addClass('form-label'));
+        // $("#idResidencial").empty(); // Clear existing options
+        // $("#idResidencial").before($('<label>').text(_("first_title")).addClass('form-label'));
         
         for (var i = 0; i < data.length; i++) {
             $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
@@ -17,8 +17,8 @@ function loadSelectOptions() {
 
     // Load status
     $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
-        $("#idEstatus").empty(); // Clear existing options
-        $("#idEstatus").before($('<label>').text(_("second_title")).addClass('form-label'));
+        // $("#idEstatus").empty(); // Clear existing options
+        // $("#idEstatus").before($('<label>').text(_("second_title")).addClass('form-label'));
         
         for (var i = 0; i < data.length; i++) {
             $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
@@ -27,15 +27,15 @@ function loadSelectOptions() {
     }, 'json');
 
     // Load development locations
-    $.post(`${general_base_url}Contratacion/sedesPorDesarrollos`, function (data) {
-        $("#sedes").empty(); // Clear existing options
-        $("#sedes").before($('<label>').text(_("third_title")).addClass('form-label'));
+    // $.post(`${general_base_url}Contratacion/sedesPorDesarrollos`, function (data) {
+    //     $("#sedes").empty(); // Clear existing options
+    //     $("#sedes").before($('<label>').text(_("third_title")).addClass('form-label'));
         
-        for (var i = 0; i < data.length; i++) {
-            $("#sedes").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre'].toUpperCase()));
-        }
-        $("#sedes").selectpicker('refresh');
-    }, 'json');
+    //     for (var i = 0; i < data.length; i++) {
+    //         $("#sedes").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre'].toUpperCase()));
+    //     }
+    //     $("#sedes").selectpicker('refresh');
+    // }, 'json');
 }
 
 function changeLanguaje() {
@@ -72,7 +72,7 @@ let titulosInventario = [];
 $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulosInventario.push(title);
-    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${_(title)}" placeholder="${title}"/>`);
+    // $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${_(title)}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
             $('#tablaInventario').DataTable().column(i).search(this.value).draw();

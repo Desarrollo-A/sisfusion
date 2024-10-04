@@ -15,59 +15,63 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Listado general de prospectos</h3>
+                                <h3 class="card-title center-align" data-i18n="listado-prospectos">Listado general de prospectos</h3>
                                 <p class="card-title pl-1"></p>
                             </div>
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Subdirector</label>
+                                            <label class="control-label" data-i18n="subdirector">Subdirector</label>
                                             <select name="subDir" id="subDir"
                                                     class="selectpicker select-gral m-0"
                                                     data-show-subtext="true"
                                                     data-live-search="true"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
+                                                    data-i18n-label="selecciona-subdirector"
                                                     title="Selecciona subdirector" data-size="7" required>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Gerente</label>
+                                            <label class="control-label" data-i18n="gerente">Gerente</label>
                                             <select name="gerente" id="gerente"
                                                     class="selectpicker select-gral m-0"
                                                     data-show-subtext="true"
                                                     data-live-search="true"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
+                                                    data-i18n-label="selecciona-gerente"
                                                     title="Selecciona gerente" data-size="7" required>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Coordinador</label>
+                                            <label class="control-label" data-i18n="coordinador">Coordinador</label>
                                             <select name="coordinador" id="coordinador"
                                                     class="selectpicker select-gral m-0"
                                                     data-show-subtext="true"
                                                     data-live-search="true"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
+                                                    data-i18n-label="selecciona-coordinador"
                                                     title="Selecciona coordiniador" data-size="7" required>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Asesor</label>
+                                            <label class="control-label" data-i18n="asesor">Asesor</label>
                                             <select name="asesores" id="asesores"
                                                     class="selectpicker select-gral m-0"
                                                     data-show-subtext="true"
                                                     data-live-search="true"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
+                                                    data-i18n-label="selecciona-asesor"
                                                     title="Selecciona asesor" data-size="7" required>
                                             </select>
                                         </div>
@@ -96,18 +100,18 @@
                                                class="table-striped table-hover" style="text-align:center;">
                                             <thead>
                                                 <tr>
-                                                    <th>ESTADO</th>
-                                                    <th>ETAPA</th>
-                                                    <th>TIPO</th>
-                                                    <th>PROSPECTO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>LUGAR DE PROSPECCIÓN</th>
-                                                    <th>CREACIÓN</th>
-                                                    <th>VENCIMIENTO</th>
-                                                    <th>CORREO</th>
-                                                    <th>TELÉFONO</th>
+                                                    <th>estado</th>
+                                                    <th>estapa</th>
+                                                    <th>tipo</th>
+                                                    <th>prospecto</th>
+                                                    <th>asesor</th>
+                                                    <th>coordinador</th>
+                                                    <th>gerente</th>
+                                                    <th>lugar-prospeccion</th>
+                                                    <th>creacion</th>
+                                                    <th>fecha-vencimiento</th>
+                                                    <th>correo</th>
+                                                    <th>telefono</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -139,32 +143,16 @@
 <script>
     userType = <?= $this->session->userdata('id_rol') ?> ;
     typeTransaction = 1;
-    let titulos = [];
-
-    $('#prospects-datatable_dir thead tr:eq(0) th').each(function (i) {
-        $(this).css('text-align', 'center');
-        const title = $(this).text();
-        titulos.push(title);
-        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value) {
-                $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    });
-
+    
+    construirHead("prospects-datatable_dir");
 </script>
+
 <!-- MODAL WIZARD -->
 <script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-
-
 
 <script>
     $(document).ready(function () {
         /*primera carga*/
-
-
-
         $("#subDir").empty().selectpicker('refresh');
         $.post('<?=base_url()?>index.php/Clientes/getSubdirs/', function(data) {
             var len = data.length;
@@ -176,7 +164,7 @@
             }
             if(len<=0)
             {
-                $("#subDir").append('<option selected="selected" disabled>NINGUN SUBDIRECTOR</option>');
+                $("#subDir").append(`<option selected="selected" disabled>${_("ningun-subdirector")}</option>`);
             }
             $("#subDir").selectpicker('refresh');
         }, 'json');
@@ -267,7 +255,7 @@
             }
             if(len<=0)
             {
-                $("#gerente").append('<option selected="selected" disabled>NINGUN GERENTE</option>');
+                $("#gerente").append(`<option selected="selected" disabled>${_("ningun-gerente")}</option>`);
             }
             $("#gerente").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');

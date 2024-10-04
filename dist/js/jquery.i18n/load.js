@@ -22,7 +22,6 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    console.log(lang);
     $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
@@ -105,7 +104,6 @@ function applySearch(table) {
                     }).indexes();
                     var data = table.rows(index).data();
                     $.each(data, function (i, v) {
-                        console.log(v)
                         total += parseFloat(v.pago_cliente);
                     });
                     document.getElementById(`${searchTabla.idText}`).textContent = '$' + formatMoney(total);
@@ -124,7 +122,7 @@ function construirHead(table){
         var id = $(this).text();
 
         titulos.push(id);
-        // console.log(id)
+
         if(id && idNoPermitidos.indexOf(id)){
             if(id){
                 title = _(id)
@@ -142,7 +140,6 @@ function changeButtonTooltips() {
     $('button').each(function (i) {
         let id = $(this).data('i18n-tooltip')
 
-        // console.log(id)
 
         if(id){
             let title = _(id)
