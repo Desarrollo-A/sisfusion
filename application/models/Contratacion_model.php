@@ -227,6 +227,7 @@ class Contratacion_model extends CI_Model {
    }
 
    function getCoSallingAdvisers($id_cliente) {
+      ini_set('memory_limit', '512M');
       return $this->db-> query("SELECT id_cliente,
       CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
       CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END coordinador,
