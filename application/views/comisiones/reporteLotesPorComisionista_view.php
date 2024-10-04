@@ -135,13 +135,13 @@
                                                         <span id="detailComisionistaBtn"><i class="fas fa-info"></i></span>
                                                     </label>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="comisionista" name="comisionista" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
+                                                <select class="selectpicker select-gral m-0" id="comisionista" data-i18n-label="selecciona-una-opcion" name="comisionista" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                             </div>
                                             <div class="col-12 col-sm-3 col-md-3 col-lg-3 overflow-hidden">
                                                 <label class="label-gral m-0">
                                                     <span data-i18n="tipo-usuario">Tipo de usuario </span>(<span class="isRequired">*</span>)
                                                 </label>
-                                                <select class="selectpicker select-gral m-0" id="tipoUsuario" name="tipoUsuario" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
+                                                <select class="selectpicker select-gral m-0" id="tipoUsuario" data-i18n-label="selecciona-una-opcion" name="tipoUsuario" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                             </div>
                                             <div class="col-12 col-sm-3 col-md-3 col-lg-3">
                                                 <div class="container-fluid p-0">
