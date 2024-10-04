@@ -288,8 +288,8 @@
                                             <div class="tab-pane" id="historialDescuentos">
                                                 <div class="encabezadoBox">
                                                     <div class="row">
-                                                        <h3 class="card-title center-align">Historial descuentos</h3>
-                                                        <p class="card-title pl-1">Este es un listado de todos los descuentos que te han aplicado.</p>
+                                                        <h3 class="card-title center-align"  data-i18n="historial-descuentos">Historial descuentos</h3>
+                                                        <p class="card-title pl-1" data-i18n="listado-de-pagos-aplicados-contratados-activos">Este es un listado de todos los descuentos que te han aplicado.</p>
                                                     </div>
                                                 </div>
                                                     <div class="row">
@@ -303,9 +303,9 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                <div class="material-datatables">
+                                                <div class="material-datatables" id="ocultar_descuento">
                                                     <div class="form-group">
-                                                        <table class="table-striped table-hover hide" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
+                                                        <table class="table-striped table-hover" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
                                                             <thead>
                                                                 <tr>
                                                                     <th>id-pago</th>
