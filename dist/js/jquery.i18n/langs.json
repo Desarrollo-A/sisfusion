@@ -412,6 +412,14 @@
                 ,"disponible" : "Available money"
                 ,"alert-enviar-comisiones": "Commissions cannot be sent; wait until Monday and Tuesday of the cutoff week"
                 ,"enviar-resguardos": "Send to safekeeping"
+                
+
+                ,"en-espera-abono-neo": "AWAITING NEXT DEPOSIT IN NEODATA"
+                ,"otro" : "Another"
+                ,"comentario-resguardo-rigel" : "Commissions are being withheld. If you need to see more details such as what has been paid and what is pending, you can check it in the history."
+                ,"saldo-pago-dinero" : "THERE IS NO CREDIT BALANCE. WAIT FOR THE NEXT PAYMENT APPLICATION."
+
+
 
         },
         "es": {
@@ -827,5 +835,13 @@
                 ,"disponible":" Disponible"
                 ,"alert-enviar-comisiones": "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte"
                 ,"eviar-resguardos":" Enviar a resguardos"
+                
+                ,"SIN LOCALIZAR" : "SIN LOCALIZAR"
+                ,"saldo-pago-dinero": "NO HAY SALDO A FAVOR. ESPERAR PRÓXIMA APLICACIÓN DE PAGO."
+                ,"en-espera-abono-neo": "EN ESPERA DE PRÓXIMO ABONO EN NEODATA"
+                ,"otro" : "Otro"
+                ,"comentario-resguardo-rigel" : "Comisiones en resguardo, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial" 
+
+
         }
 }
