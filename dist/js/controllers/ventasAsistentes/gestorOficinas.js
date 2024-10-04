@@ -55,7 +55,7 @@ let tablaOficinas = $('#tablaOficinas').DataTable({
     },
     {
         data: function (d) {
-            return `<span class='label ${d.estatus == 0 ? 'lbl-warning' : 'lbl-green'}'>${d.estatus == 0 ? _('inactive') : _('active')}</span>`;
+            return `<span class='label ${d.estatus == 0 ? 'lbl-warning' : 'lbl-green'}'>${d.estatus == 0 ? _('inactivo') : _('activo')}</span>`;
         }
     },
     { 
