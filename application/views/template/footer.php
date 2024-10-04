@@ -1,3 +1,4 @@
+
 <!--   Core JS Files   -->
 <script src="<?=base_url()?>dist/js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/jquery-ui.min.js" type="text/javascript"></script>
@@ -65,14 +66,12 @@
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
-    let id_sede_general = '<?= (empty($this->session->userdata('id_sede')) ? 0 : $this->session->userdata('id_sede')) ?>';
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
+    let id_sede_general = '<?= (empty($this->session->userdata('id_sede')) ? 0 : $this->session->userdata('id_sede')) ?>';
     let tipoUsuarioGeneral =  <?=$this->session->userdata('tipo')?>;
     let sede_usuario_general_div = " <?= $this->session->userdata('id_sede') ?> ";
     let lider_general = "<?=$this->session->userdata('id_lider')?> ";
-
-    
-    let forma_de_pago_general = <?=$this->session->userdata('forma_pago');?>;
+    let forma_de_pago_general = "<?=$this->session->userdata('forma_pago')?> ";
 
 
     let sede_usuario_general_array = sede_usuario_general_div.split(",");
@@ -81,7 +80,7 @@
 
     
 	$(document).ready(function() {
-		//demo.initDashboardPageCharts();
+		demo.initDashboardPageCharts();
 	});
 
     function validaCheckSession(){
@@ -100,7 +99,7 @@
 <script src="<?= base_url() ?>dist/js/components/components.js"></script>
 <script src="<?= base_url() ?>dist/js/components/table.js"></script>
 <script src="<?= base_url() ?>dist/js/components/dialogs.js"></script>
-<script src="<?= base_url() ?>dist/js/components/forms.js?v=3"></script>
+<script src="<?= base_url() ?>dist/js/components/forms.js"></script>
 
 <!-- jquery.i18n -->
 
@@ -113,144 +112,4 @@
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/he.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/fi.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/ml.js"></script>
-<!--
-<script type="text/javascript">
-    let locale = localStorage.getItem('locale')
-
-    $.i18n().load('<?= base_url() ?>dist/js/jquery.i18n/langs.json')
-    .done(function() {
-        $('body').i18n()
-        //changeLanguaje()
-
-        triggerLoadFunctions()
-    })
-
-    $.i18n( { 
-        locale: 'es' // Locale is English 
-    });
-
-    // Load locale from config
-    if(locale){
-        $.i18n().locale = locale;
-    }
-
-    $(document).ready(function() {
-        changeIcon(locale)
-    })
-
-    function changeIcon(lang) {
-        $('#lang_icon').attr("src", `<?= base_url() ?>static/images/langs/${lang}.png`)
-    }
-
-    function changeLanguaje() {
-        let locale = localStorage.getItem('locale')
-
-        if(locale == 'en'){
-            new_locale = 'es'
-        }else{
-            new_locale = 'en'
-        }
-
-        $.i18n().locale = new_locale
-        localStorage.setItem('locale', new_locale)
-        changeIcon(new_locale)
-
-        $('body').i18n()
-
-        triggerChangeFunctions()
-    }
-
-    _ = $.i18n
-
-
-
-    let load_functions = []
-    let change_functions = []
-
-    function onLoadTranslations(callback){
-        if (typeof callback === 'function') {
-            console.log('Agregando on load...');
-            load_functions.push(callback)
-        }else {
-            console.log("Error con onLoadTranslations");
-        }
-    }
-
-    function onChangeTranslations(callback){
-        if (typeof callback === 'function') {
-            console.log('Se agregó onchange...');
-            change_functions.push(callback)
-        }else {
-            console.log("Error con onChangeTranslations");
-        }
-    }
-
-    function triggerLoadFunctions() {
-        console.log('Cargando idioma...')
-        for (let callback of load_functions) {
-            callback()
-        }
-    }
-
-    function triggerChangeFunctions() {
-        console.log('Cambiando idioma...')
-        for (let callback of change_functions) {
-            callback()
-        }
-    }
-
-    function stringToI18(str) {
-      // Convertir todo el string a minúsculas
-      let resultado = str.toLowerCase();
-        
-      // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
-      resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        
-      // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
-      resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
-        
-      console.log(resultado);
-      return resultado;
-    }
-
-    // const texto = "¡Hola, Mundo! ¿Esto es un ejemplo?";
-    // console.log(convertirString(texto)); // Resultado: "hola-mundo-esto-es-un-ejemplo"
-
-    function construirHead(tabla){
-        let titulos = []
-
-        $(`#${tabla} thead tr:eq(0) th`).each(function (i) {
-            var id = $(this).text();
-            
-            titulos.push(id);
-            // console.log(id)
-
-            if(id){
-                title = _(id)
-                // console.log(title)
-
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>'`);
-                $('input', this).on('keyup change', function () {
-                    if (tabla_6.column(i).search() !== this.value) {
-                        tabla_6.column(i).search(this.value).draw();
-                    }
-                });
-            }
-        });
-
-        function translatePlaceholder(){
-            for(titulo of titulos){
-                if(titulo !== ''){
-                    $(`#head-${titulo}`).attr('placeholder', _(titulo));
-                    $(`#head-${titulo}`).attr('title', _(titulo));
-                }
-            }
-        }
-
-        onLoadTranslations(translatePlaceholder)
-        onChangeTranslations(translatePlaceholder)
-    }
-
-</script> */-->
-<!-- <script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script> -->
 <script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script>

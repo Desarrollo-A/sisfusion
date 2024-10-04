@@ -87,6 +87,7 @@ function changePill(element){
             else readyMetrics();
         });
     }
+    $('body').i18n();
 }
 
 function updateButtonTitles() {

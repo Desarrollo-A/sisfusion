@@ -3982,6 +3982,7 @@
 
     public function registroClienteTwo($id_proyecto, $id_condominio)
     {
+		ini_set('memory_limit', '512M');
         if ($id_condominio == 0) { // SE FILTRA POR RESIDENCIAL
             $where = "AND residencial.idResidencial = $id_proyecto";
         } else { // SE FILTRA POR CONDOMINIO
