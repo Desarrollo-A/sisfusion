@@ -29,7 +29,7 @@ class Api extends CI_Controller
             if ($data->id == "")
                 echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 2099, 7070, 9187, 6352)))
+                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 2099, 7070, 9187, 6352, 5892)))
                     echo json_encode(array("status" => -1, "message" => "Sistema no reconocido."), JSON_UNESCAPED_UNICODE);
                 else {
                     if ($data->id == 9860) // DRAGON
@@ -50,6 +50,8 @@ class Api extends CI_Controller
                         $arrayData = array("username" => "xPmR71zA9!", "password" => "E4n@t2LsF#U7jWb");
                     else if ($data->id == 6352) // POSTVENTA
                         $arrayData = array("username" => "PV5VNT4MD2", "password" => "2IODKKLSN42--Q_WR2");
+                    else if ($data->id == 5892) // OJIVA
+                        $arrayData = array("username" => "OJVV4982392", "password" => "23984I30NFIN_32RE2-");
                     $time = time();
                     $JwtSecretKey = $this->jwt_actions->getSecretKey($data->id);
                     $data = array(
@@ -2074,4 +2076,57 @@ class Api extends CI_Controller
         }
     }
 
+    function agregarRegistroProspecto() {
+        // CAPTA LOS PROSPECTOS DE OJIVA
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                if ($token != "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjgwNTI3MDMsImV4cCI6MTcyODEzOTEwMywiZGF0YSI6eyJ1c2VybmFtZSI6Ik9KVlY0OTgyMzkyIiwicGFzc3dvcmQiOiIyMzk4NEkzME5GSU5fMzJSRTItIn19.d22_WWverj6c-XW4N-f3tvd6t3CKPIn_O8XoZCaHSsk")
+                    echo json_encode(array("status" => -1, "message" => "Token inválido, verifica el valor proporcionado."), JSON_UNESCAPED_UNICODE);
+                else {
+                    $data = json_decode(file_get_contents("php://input"));
+                    if (!isset($data->nombre) || !isset($data->correo) || !isset($data->telefono) || !isset($data->lugar_prospeccion) || !isset($data->avisos))
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                    else {
+                        if ($data->nombre == "" || $data->correo == "" || $data->telefono == "" || $data->lugar_prospeccion == "" || $data->avisos == "")
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            $dataArray = array(
+                                "id_asesor" => 0,
+                                "id_coordinador" => 0,
+                                "id_gerente" => 0,
+                                "id_sede" => 1,    
+                                "id_subdirector" => 0,
+                                "id_regional" => 0,
+                                "personalidad_juridica" => 2,
+                                "nombre" => $data->nombre,
+                                "apellido_paterno" => '',
+                                "apellido_materno" => '',
+                                "correo" => $data->correo,
+                                "telefono" => $data->telefono,
+                                "lugar_prospeccion" => 62, 
+                                "otro_lugar" => $data->lugar_prospeccion,
+                                "plaza_venta" => 0,
+                                "fecha_creacion" => date("Y-m-d H:i:s"),
+                                "creado_por" => 1,
+                                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                "modificado_por" => 1,
+                                "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                "observaciones" => $data->avisos
+                            );
+                            $dbTransaction = $this->General_model->addRecord("prospectos", $dataArray); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                            if ($dbTransaction) // SUCCESS TRANSACTION
+                                echo json_encode(array("status" => 1, "message" => 'Registro guardado con éxito.'), JSON_UNESCAPED_UNICODE);
+                            else // ERROR TRANSACTION
+                                echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
