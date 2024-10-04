@@ -14,6 +14,7 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
+
 sp = { 
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -64,7 +65,11 @@ let titulos = [];
 //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 // });
 
+
+// onLoadTranslations(function(){
+
 construirHead("tableLotificacion");
+
 function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
     generalDataTable = $('#tableLotificacion').DataTable({
@@ -81,7 +86,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -192,6 +197,8 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
     applySearch(generalDataTable);
 }
 
+// });
+
 $(document).on('click', '.edit-monto-internomex', function(e){
     id_pago = $(this).attr("data-id-pago");
     monto = $(this).attr("data_monto_internomex");
@@ -209,6 +216,8 @@ $(document).on('click', '.see-bitacora', function(e){
         });
     });
 });
+
+
 
 function fillChangelogUsers(v) {
     var nombreMovimiento;
@@ -330,6 +339,8 @@ $(document).on('click', '#downloadFile', function () {
     });
 });
 
+
+
 async function processFile(selectedFile) {
     try {
         let arrayBuffer = await readFileAsync(selectedFile);
@@ -435,3 +446,4 @@ function validaTipoPago(tipo_pago){
         $(".box-table").addClass("hide");
     }
 }
+

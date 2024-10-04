@@ -252,8 +252,8 @@
                                                                     <th>forma-pago</th>
                                                                     <th>total-comision</th>
                                                                     <th>impuestopan</th>
-                                                                    <th>%-comision</th>
-                                                                    <th>estatusan</th>
+                                                                    <th>porc-comision</th>
+                                                                    <th>estatus</th>
                                                                     <th>accionespan</th>
                                                                 </tr>
                                                             </thead>
