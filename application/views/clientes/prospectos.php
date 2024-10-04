@@ -56,7 +56,7 @@
                             <form id="my-form" name="my-form" method="post">
                                 <div class="wizard-header">
                                     <h3 class="wizard-title" data-i18n="build-his-profile">Construye su perfil</h3>
-                                    <h5><span data-i18n="esta-informacion">Esta información nos permitirá saber más sobre él.</span>
+                                    <h5><span data-i18n="esta-informacion">Esta información nos permitirá saber más sobre el prospecto.</span>
                                         <a href="https://youtu.be/pj80dBMw6y4" class="p-0 ml-3 d-flex align-center justify-center u2be" target="_blank">
                                             <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                         </a>
@@ -188,13 +188,13 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
-                                                        <label class="control-label">Cónyugue</label>
+                                                        <label class="control-label" data-i18n="conyuge">Cónyugue</label>
                                                         <input  id="spouce" name="spouce" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="form-group ">
-                                                        <label class="control-label" data-i18n="originario-de">Originiario de</label>
+                                                        <label class="control-label" data-i18n="originario-de">Originario de</label>
                                                         <input  id="from" name="from" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
