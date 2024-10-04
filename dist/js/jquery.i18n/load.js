@@ -22,7 +22,8 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`)
+    console.log(lang);
+    $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
 function changeLanguaje() {
@@ -142,20 +143,6 @@ function construirHead(table){
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
         }
     });
-
-    /*
-    function translatePlaceholder(){
-            for(titulo of titulos){
-                if(titulo !== ''){
-                    $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                    $(`#head-${titulo}`).attr('data-original-title', _(titulo))
-                }
-            }
-        }
-
-    onLoadTranslations(translatePlaceholder)
-    onChangeTranslations(translatePlaceholder)
-    */
 }
 
 function changeButtonTooltips() {
@@ -199,8 +186,7 @@ function stringToI18(str) {
       
     // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
     resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
-      
-    console.log(resultado);
+    
     return resultado;
 }
 

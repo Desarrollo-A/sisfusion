@@ -49,14 +49,14 @@
                         <div class="material-datatables">
                             <table class="table-striped table-hover" id="table_prospectos">
                                 <thead>
-                                    <th data-i18n="nombre">NOMBRE</th>
-                                    <th data-i18n="correo">CORREO</th>
-                                    <th data-i18n="telefono">TELÉFONO</th>
-                                    <th data-i18n="observacion">OBSERVACIÓN</th>
-                                    <th data-i18n="lugar-prospeccion">LUGAR DE PROSPECCIÓN </th>
-                                    <th data-i18n="plaza-venta">PLAZA DE VENTA</th>
-                                    <th data-i18n="nacionalidad">NACIONALIDAD</th>
-                                    <th data-i18n="asignar-capital">ASIGNAR</th>
+                                    <th>nombre</th>
+                                    <th>correo</th>
+                                    <th>telefono</th>
+                                    <th>observacion</th>
+                                    <th>lugar-prospeccion</th>
+                                    <th>plaza-venta</th>
+                                    <th>nacionalidad</th>
+                                    <th>asignar-capital</th>
                                 </thead>
                             </table>
                         </div>
@@ -225,7 +225,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
-                        <button type="submit" class="btn btn-primary" data-dismiss="reenviar">Reenviar</button>
+                        <button type="submit" class="btn btn-primary" data-dismiss="reenviar" data-i18n="reenviar">Reenviar</button>
                     </div>
                 </form>
             </div>
@@ -285,10 +285,10 @@
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <center><h4 class="modal-title"><label data-dismiss="mensaje-posventa">Enviar nuevamente a postventa (despúes de un rechazo de postventa) - </label><b><span class="lote"></span></b></h4></center>
+                    <center><h4 class="modal-title"><label data-dismiss="mensaje-posventa" data-i18n="mensaje-posventa">Enviar nuevamente a postventa (despúes de un rechazo de postventa) - </label><b><span class="lote"></span></b></h4></center>
                 </div>
                 <div class="modal-body">
-                    <label data-dismiss="comentario">Comentario:</label>
+                    <label data-dismiss="comentario" data-i18n="comentario">Comentario:</label>
                     <textarea class="form-control" id="comentarioST3PV2" rows="3"></textarea>
                     <br>
                 </div>

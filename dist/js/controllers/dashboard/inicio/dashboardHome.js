@@ -1,21 +1,6 @@
-$(document).ready(function(data) {
-    let languageOption = localStorage.getItem("locale")
-    if(languageOption == "en") {
-        console.log("I should be called");
-        //changeLanguaje();
-    }
-});
-
 var totalVentasChart, prospectosChart, chartProspClients, chartWeekly, chartFunnel;
 var mediaqueryList = window.matchMedia("(min-width: 200px)");
-
-onLoadTranslations(test);
-
-
-function test() {
-    console.log("lol");
-}
-
+onChangeTranslations(getClientsAndProspectsByYear);
 
 var optionsTotalVentas = {
     series: [],
@@ -180,7 +165,7 @@ var optionsProspClients = {
         },
     },
     noData: {
-        text: 'No hay informacion para mostrar...'
+        text: 'No hay información para mostrar...'
     }
 };
 
@@ -197,7 +182,7 @@ var optionsWeekly = {
         },
     },
     noData: {
-        text: 'No hay informacion para mostrar...'
+        text: 'No hay información para mostrar...'
       },
     colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     grid:{
@@ -357,6 +342,7 @@ function loadInit(){
 
 function getSalesByYear(com2){
     $('.loadTotalVentasChart').removeClass('d-none');
+    $('body').i18n();
     $.ajax({
         url: `${base_url}Dashboard/totalVentasData`,
         data:com2,
@@ -373,15 +359,14 @@ function getSalesByYear(com2){
                 parseFloat(response.porcentajeTotalC),
             ];
             totalVentasChart.updateSeries(totalVentasArray)
-
             totalVentasChart.updateOptions({
-              labels: [
-                `Gran total: ${formatAsThousands(response.totalVentas)}`,
-                `Contratado: ${formatAsThousands(response.totalConT)}`,
-                `Apartado: ${formatAsThousands(response.totalAT)}`,
-                `Cancelado: ${formatAsThousands(response.totalCT)}`
+                labels: [
+                    `${(_('gran-total'))}: ${formatAsThousands(response.totalVentas)}`,
+                    `${(_('contratado'))}: ${formatAsThousands(response.totalConT)}`,
+                    `${(_('apartado'))}: ${formatAsThousands(response.totalAT)}`,
+                    `${(_('cancelado'))}: ${formatAsThousands(response.totalCT)}`,
                 ]
-             });
+            })
 
             totalVentasChart.toggleDataPointSelection (0);
             $('.loadTotalVentasChart').addClass('d-none');
@@ -391,6 +376,7 @@ function getSalesByYear(com2){
 
 function getProspectsByYear(com2) {
     $('.loadProspectosChart').removeClass('d-none');
+    $('body').i18n();
     $.ajax({
         url: `${base_url}Dashboard/getProspectsByYear`,
         data:com2,
@@ -409,14 +395,14 @@ function getProspectsByYear(com2) {
                 count = count + parseInt(element.counts);
             });
             prospectosChart.updateSeries([{
-                name: 'Prospectos',
+                name: `${_("prospectos")}`,
                 data: data
             }])
             prospectosChart.updateOptions({
                 xaxis: {
                     categories: months
                 },
-                });
+            });
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
             $('.loadProspectosChart').addClass('d-none');
@@ -448,20 +434,20 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             let countC = 0;
             let countP = 0;
             response.Clientes.forEach(element => {
-                monthsP.push(`${element.MONTH} ${element.año}`);
+                monthsP.push(`${_(element.MONTH)} ${element.año}`);
                 dataC.push(element.counts);
                 countC = countC + element.counts;
             });
             response.Prospectos.forEach(element => {
-                monthsC.push(`${element.MONTH} ${element.año}`);
+                monthsC.push(`${_(element.MONTH)} ${element.año}`);
                 dataP.push(element.counts);
                 countP = countP + element.counts;
             });
             chartProspClients.updateSeries([{
-                name: 'Prospectos',
+                name: `${_("prospectos")}`,
                 data: dataP
             },{
-                name: 'Clientes',
+                name: `${_("clientes")}`,
                 data: dataC
             }])
             chartProspClients.updateOptions({
@@ -472,6 +458,7 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             $('.loadChartProspClients').addClass('d-none');
         }
     });
+    $('body').i18n();
 }
 
 function generalMetrics(typeTransaction) {
@@ -734,10 +721,11 @@ function formatDate(date) {
 }
 
 async function prospectsTable(){
+    $('body').i18n();
     $('.table-dinamic').empty();
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
-    if (rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' || rol == '72')
+    if (rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' || rol == '72' || rol == '54')
         rolString = 'director_regional';
     else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
         rolString = 'gerente';
@@ -763,9 +751,9 @@ async function prospectsTable(){
         var title = $(this).text();
         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
             $( 'input', this ).on('keyup change', function () {
-            if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
-                $('#tablePR').DataTable().column(i).search(this.value).draw();
-            }
+                if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
+                    $('#tablePR').DataTable().column(i).search(this.value).draw();
+                }
         });
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
@@ -796,7 +784,7 @@ function getRolDR(idUser){
 
 /* Función para cambiar icono y cerrar o abrir tabla*/
 
-function changeIcon2(anchor) {
+function changeIcon(anchor) {
     anchor.closest('.wrapper .boxTabla').classList.toggle('active');
     $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
         $(this).parent().next().slideToggle(200);
@@ -812,7 +800,7 @@ function createAccordionsPR(option, render, rol) {
                 <div class="card p-2 h-auto boxTabla">
                     <div class="d-flex justify-between align-center">
                         <div class="cursor-point accordionToggle">
-                            <a class="purple-head hover-black" onclick="changeIcon2(this)" id="myBtn">
+                            <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
                             <i class="less fas fa-angle-down"></i>
                             <i class="more fas fa-angle-up "></i>
                             </a>
@@ -893,7 +881,6 @@ function multirol(){
                     items_activos.push('gerente');
                     items_activos.push('coordinadors');
                     items_activos.push('asesors');
-                    loadSbdir();
                     createFilters(59, items_activos);
                     getFirstFilter(59, 2);
                 }else{
@@ -1070,19 +1057,20 @@ function getTitle(option){
     var title;
     switch (option) {
         case 'director_regional':
-            title = 'Reporte de prospectos por dirección regional';
+            //title = 'Reporte de prospectos por dirección regional';
+            title = _("reporte-prospectos-direccion-general");
             break;
         case 'gerente':
-            title = 'Reporte de prospectos por gerencia';
+            title = _("reporte-prospectos-gerencia");
             break;
         case 'coordinador':
-            title = 'Reporte de prospectos por coordinación';
+            title = _("reporte-prospectos-coordinacion");
             break;
         case 'subdirector':
-            title = 'Reporte de prospectos por subdirección';
+            title = _("reporte-prospectos-subdireccion");
             break;
         case 'asesor':
-            title = 'Reporte de prospectos por asesor';
+            title = _("reporte-prospectos-asesor");
             break;
         default:
             title = 'N/A';
@@ -1217,7 +1205,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let monthP = ((newDate.getMonth()+1)<10) ? '0'+(newDate.getMonth()+1) : (newDate.getMonth()+1);
     let dayP = (newDate.getDate()<10) ? '0'+ newDate.getDate() : newDate.getDate();
 
-    beginDate = dayP+'/'+monthP+'/'+yearP;
+    beginDate = dayP+'-'+monthP+'-'+yearP;
 
     let oldDateend = endDate.split('/');
     let newDateEnd = new Date(oldDateend[1]+'-'+oldDateend[0]+'-'+oldDateend[2]).toISOString();
@@ -1225,7 +1213,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let yearPE = newDateEnd.getFullYear();
     let monthPE = ((newDateEnd.getMonth()+1)<10) ? '0'+(newDateEnd.getMonth()+1) : (newDateEnd.getMonth()+1);
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
-    endDate = dayPE+'/'+monthPE+'/'+yearPE;
+    endDate = dayPE+'-'+monthPE+'-'+yearPE;
 
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",

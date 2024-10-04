@@ -128,7 +128,7 @@ tabla_6 = $("#tabla_autorizaciones_ventas").DataTable({
                                 return opciones + '</div>';
                     }else{
                         opciones = '<div class="btn-group" role="group">';
-                                opciones += '<div class="col-md-1 col-sm-1"><button class="btn-data btn-blueMaderas agregar_autorizacion"  title="'+_("subir-archivo")+'" data-i18n-tooltip = "'+_("subir-archivo")+'"  data-toggle="tooltip" data-placement="top" data-id_condominio="'+data.idCondominio+'" data-id_cliente="'+data.id_cliente+'" data-idClienteHistorial="'+data.id_cliente+'" data-idLoteHistorial="'+data.idLote+'" data-id_user="'+id_usuario_general+'" data-nomResidencial="'+data.nombreResidencial+'" data-nomLote="'+data.nombreLote+'" data-nomCondominio="'+data.condominio+'"><i class="fas fa-plus"></i></button></div>';
+                                opciones += '<div class="col-md-1 col-sm-1"><button class="btn-data btn-blueMaderas agregar_autorizacion"  title="'+_("subir-archivo")+'"  data-i18n-tooltip = "'+("subir-archivo")+'"  data-toggle="tooltip" data-placement="top" data-id_condominio="'+data.idCondominio+'" data-id_cliente="'+data.id_cliente+'" data-idClienteHistorial="'+data.id_cliente+'" data-idLoteHistorial="'+data.idLote+'" data-id_user="'+id_usuario_general+'" data-nomResidencial="'+data.nombreResidencial+'" data-nomLote="'+data.nombreLote+'" data-nomCondominio="'+data.condominio+'"><i class="fas fa-plus"></i></button></div>';
                                 return opciones + '</div>';
                         }
                         
