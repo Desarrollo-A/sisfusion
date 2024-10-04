@@ -50,7 +50,7 @@
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 overflow-hidden">
 												<div class="form-group">
 													<label class="control-label" data-i18n="proyecto">Proyecto</label>
-													<select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" data-size="7" data-container="body" required>
+													<select name="filtro3" id="filtro3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" data-size="7" data-container="body" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" required>
 														<option value="0" data-i18n="selecciona-todo">SELECCIONA TODO</option>
 													</select>
 												</div>
@@ -58,13 +58,13 @@
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group  ">
 													<label class="control-label" data-i18n="condominio-2">Condominio</label>
-													<select id="filtro4" name="filtro4" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" multiple data-size="7" data-container="body" required></select>
+													<select id="filtro4" name="filtro4" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" multiple data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group">
 													<label class="control-label" data-i18n="grupo">Grupo</label>
-													<select name="filtro5" id="filtro5" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" ="true" data-size="7" data-container="body" required>	
+													<select name="filtro5" id="filtro5" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-size="7" data-container="body" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" required>	
 														<option value="1"> < 200m2 </option>
 														<option value="2"> >= 200 y < 300 </option>
 														<option value="3"> >= 300m2 </option>
@@ -74,26 +74,26 @@
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label" data-i18n="superficie-2">Superficie</label>
-													<select class="selectpicker select-gral m-0" id="filtro6" name="filtro6[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" required multiple>
+													<select class="selectpicker select-gral m-0" id="filtro6" name="filtro6[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required multiple>
 													</select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label" data-i18n="precio-m2">Precio por m<sup>2</sup></label>
-													<select	class="selectpicker select-gral m-0"  id="filtro7" name="filtro7[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" required multiple></select>
+													<select	class="selectpicker select-gral m-0"  id="filtro7" name="filtro7[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required multiple></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label" data-i18n="precio-total">Precio total</label>
-													<select	class="selectpicker select-gral m-0"  id="filtro8" name="filtro8[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" required multiple></select>
+													<select	class="selectpicker select-gral m-0"  id="filtro8" name="filtro8[]" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required multiple></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 overflow-hidden">
 												<div class="form-group ">
 													<label class="control-label" data-i18n="meses-sin-intereses">Meses S/N</label>
-													<select	class="selectpicker select-gral m-0" id="filtro9" name="filtro9[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" required multiple></select>
+													<select	class="selectpicker select-gral m-0" id="filtro9" name="filtro9[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required multiple></select>
 												</div>
 											</div>
 										</form>
