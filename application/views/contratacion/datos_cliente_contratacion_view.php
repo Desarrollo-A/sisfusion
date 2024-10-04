@@ -8,7 +8,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title"><b>Rechazar</b> estatus.</h4>
+                        <h4 class="modal-title"><b data-i18n="rechazar">Rechazar</b> <span data-i18n="estatus"> estatus. </span></h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h5 class=""></h5>
                     </div>
@@ -25,21 +25,21 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <b>
-                            <h4 class="card-title text-center">Ventas compartidas</h4>
+                            <h4 class="card-title text-center" data-i18n="ventas-compartidas">Ventas compartidas</h4>
                         </b>
                         <div class="material-datatables">
                             <div class="form-group">
                                 <table id="tabla_clientes_detalles" name="tabla_clientes_detalles" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ASESOR</th>
-                                            <th>COORDINADOR</th>
-                                            <th>GERENTE</th>
-                                            <th>SUBDIRECTOR</th>
-                                            <th>DIRECTOR REGIONAL</th>
-                                            <th>DIRECTOR REGIONAL 2</th>
-                                            <th>FECHA DE ALTA</th>
-                                            <th>USUARIO</th>
+                                            <th>asesor</th>
+                                            <th>coordinador</th>
+                                            <th>gerente</th>
+                                            <th>subdirectos</th>
+                                            <th>director-regional</th>
+                                            <th>director-regional-2</th>
+                                            <th>fecha-alta</th>
+                                            <th>usuario</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">CERRAR</button>
                     </div>
                 </div>
             </div>
@@ -64,18 +64,18 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Registro de clientes</h3>
+                                <h3 class="card-title center-align" data-i18n="registro-cliente">Registro de clientes</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
-                                                <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
+                                                <label class="control-label overflow-hidden" for="proyecto" data-i18n="proyecto">Proyecto</label>
                                                 <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group overflow-hidden">
-                                                <label class="control-label" for="proyecto">Condominio</label>
+                                                <label class="control-label" for="proyecto" data-i18n="condominio">Condominio</label>
                                                 <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
@@ -86,21 +86,21 @@
                                         <table class="table-striped table-hover hide" id="tabla_clientes" name="tabla_clientes">
                                                 <thead>
                                                     <tr>
-                                                        <th>MÁS</th>
-                                                        <th>ID CLIENTE</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>CORREO</th>
-                                                        <th>TELÉFONO</th>
-                                                        <th>NÚMERO DE RECIBO</th>
-                                                        <th>REFERENCIA</th>
-                                                        <th>TIPO DE PAGO</th>
-                                                        <th>FECHA DE APARTADO</th>
-                                                        <th>ENGANCHE</th>
-                                                        <th>FECHA DE ENGANCHE</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>mas</th>
+                                                        <th>id-cliente</th>
+                                                        <th>proyecto</th>
+                                                        <th>condominio</th>
+                                                        <th>lote</th>
+                                                        <th>cliente</th>
+                                                        <th>correo</th>
+                                                        <th>telefono</th>
+                                                        <th>num-recibo</th>
+                                                        <th>referencia</th>
+                                                        <th>tipo-pago</th>
+                                                        <th>fecha-apartado</th>
+                                                        <th>enganche</th>
+                                                        <th>fecha-enganche</th>
+                                                        <th>acciones</th>
                                                     </tr>
                                                 </thead>
                                             </table>
