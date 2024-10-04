@@ -259,13 +259,13 @@
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto"><span data-i18n="proyecto">Proyecto</span></label>
-                                                                <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" data-size="7" required></select>
+                                                                <select name="proyecto_wp" id="proyecto_wp" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="m-0" for="proyecto"><span data-i18n="condominio">Condominio</span></label>
-                                                                <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" data-size="7" required></select>
+                                                                <select name="condominio_wp" id="condominio_wp" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -275,15 +275,15 @@
                                                 <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
                                                     <thead>
                                                         <tr>
-                                                            <th>ID</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>CONDOMINIO</th>
-                                                            <th>LOTE</th>
-                                                            <th>CLIENTE</th>
-                                                            <th>ASESOR</th>
-                                                            <th>COORDINADOR</th>
-                                                            <th>GERENTE</th>
-                                                            <th>ESTATUS</th>
+                                                            <th>id-lote</th>
+                                                            <th>proyecto</th>
+                                                            <th>condominio</th>
+                                                            <th>lote</th>
+                                                            <th>cliente</th>
+                                                            <th>asesor</th>
+                                                            <th>coordinador</th>
+                                                            <th>gerente</th>
+                                                            <th>estatus</th>
                                                         </tr>
                                                     </thead>
                                                 </table>

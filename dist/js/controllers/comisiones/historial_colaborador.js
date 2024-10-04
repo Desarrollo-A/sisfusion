@@ -273,29 +273,29 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
             "data": function( d ){
                 var lblPenalizacion = '';
 
-                // if (d.penalizacion == 1){
+                if (d.penalizacion == 1){
                     lblPenalizacion ='<p class="m-0" title="'+_('penalizacion-noventa-dias')+'"><span class="label lbl-vividOrange">'+_('noventa-dias')+'</span></p>';
-                // }
+                }
 
-                // if(d.bonificacion >= 1){
-                //     p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">'+_('bonus')+' '+formatMoney(d.bonificacion)+'</span></p>';
-                // }
-                // else{
+                if(d.bonificacion >= 1){
+                    p1 = '<p class="m-0" title="'+_('lote-bonificacion-neodata')+'"><span class="label lbl-darkPink"">'+_('bonus')+' '+formatMoney(d.bonificacion)+'</span></p>';
+                }
+                else{
                     p1 = '';
-                // }
+                }
 
-                // if(d.lugar_prospeccion == 0){
-                //     p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">'+_('rescision')+'</span></p>';
-                // }
-                // else{
+                if(d.lugar_prospeccion == 0){
+                    p2 = '<p class="m-0" title="'+_('lote-con-cancelacion')+'"><span class="label lbl-warning">'+_('rescision')+'</span></p>';
+                }
+                else{
                     p2 = '';
-                // }
+                }
 
-                // if(d.id_cliente_reubicacion_2 != 0 ) {
-                //     p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
-                // }else{
+                if(d.id_cliente_reubicacion_2 != 0 ) {
+                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
+                }else{
                     p3 = '';
-                // }
+                }
 
                 return p1 + p2 + lblPenalizacion + p3;
             }
@@ -491,17 +491,17 @@ function getAssimilatedCancelacion(proyecto, condominio){
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange">'+_('noventa-dias')+'</span></p>';
+                    lblPenalizacion ='<p class="m-0" title="'+_('penalizacion-noventa-dias')+'"><span class="label lbl-vividOrange">'+_('noventa-dias')+'</span></p>';
                 }
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">'+_('bonus')+' '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="'+_('lote-bonificacion-neodata')+'"><span class="label lbl-darkPink"">'+_('bonus')+' '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">'+_('rescision')+'</span></p>';
+                    p2 = '<p class="m-0" title="'+_('lote-con-cancelacion')+'"><span class="label lbl-warning">'+_('rescision')+'</span></p>';
                 }
                 else{
                     p2 = '';
@@ -802,7 +802,7 @@ function tableComisionesSuma(anio){
         {
             "orderable": false,
             "data": function(data) {
-                return '<<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" data-toggle="tooltip" data-placement="top"title="DETALLES">' +'<i class="fas fa-info"></i></button>';
+                return '<<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" data-toggle="tooltip" data-placement="top"title="'+_('detalles')+'">' +'<i class="fas fa-info"></i></button>';
             }
         }],
         ajax: {
@@ -961,8 +961,7 @@ function consultarHistorialDescuentos(enlace) {
                         TextoMostrar += `
                         <p class="m-0">
                         <span  id="textoInformacion" name="textoInformacion" class="label lbl-gray">
-                            PRÉSTAMO SIN EVIDENCIA
-                            ANTES DE FEBRERO DEL 2024 
+                            ${_('prestamo-sin-evidencia')}
                         </span>
                         </p>
                         `;
@@ -1191,7 +1190,7 @@ $(document).on("click", "#preview", function () {
                     </iframe>
                 </div>`,
         player: "html",
-        title: `Visualizando archivo: evidencia `,
+        title: _('visualizando-archivo'),
         width: 985,
         height: 660
     });
