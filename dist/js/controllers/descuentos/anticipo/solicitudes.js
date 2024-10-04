@@ -163,7 +163,7 @@ $("#tabla_anticipo_revision").ready(function () {
             }
         }
     });
-    applySearch(tabla_9);
+    applySearch(tabla_9)
     $('#tabla_anticipo_revision').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
