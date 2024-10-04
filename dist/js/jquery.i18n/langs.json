@@ -393,7 +393,15 @@
                 "lote-bonificacion-neodata":"Bonus Lot in NEODATA",
                 "bonos":"Bonds",
                 "departamento-ti":"IT Department",
-                "idioma":"Language"
+                "idioma":"Language",
+                "salir":"Exit",
+                "contraer-menu":"Collapse menu",
+                "listado-de-pagos-aplicados-contratados-activos":"List of all applied payments, in process of contracted and active batches.",
+                "comisionista":"Commission Merchant",
+                "tipo-usuario":"User type",
+                "reporte-lotes-comisionista":"Batch report by commission agent",
+                "total-abonado":"Paid so far",
+                "total-pagado":"Total paid"
 
         },
         "es": {
@@ -792,6 +800,16 @@
                 "lote-bonificacion-neodata":"Lote con bonificación en NEODATA",
                 "bonos":"Bonos",
                 "departamento-ti":"Departamento de TI",
-                "idioma":"Idioma"
+                "idioma":"Idioma",
+                "salir":"Salir",
+                "contraer-menu":"Contraer Menú",
+                "listado-de-pagos-aplicados-contratados-activos" : "Listado de todos los pagos aplicados, en proceso de lotes contratados y activos.",
+                "este-listado-de-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado.",
+                "comisionista":"Comisionista",
+                "tipo-usuario":"Tipo de usuario",
+                "reporte-lotes-comisionista":"Reporte de lotes por comisionista",
+                "total-abonado":"Total abonado",
+                "total-pagado":"Total pagado"
+
         }
 }
