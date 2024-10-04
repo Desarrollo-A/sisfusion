@@ -42,7 +42,6 @@
                 color: #EA4335;
                 margin: 0 3px;
             }
-
             .u2be i{
                 color: red;
             }
@@ -101,7 +100,7 @@
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">
                                                             <span data-i18n="personalidad-juridica">Personalidad jurídica</span> (<span class="isRequired">*</span>)</label>
-                                                        <select id="legal_personality" name="legal_personality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-container="body" onchange="validatePersonality(), validateSelect('legal_personality')" required></select>
+                                                            <select id="legal_personality" name="legal_personality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-container="body" onchange="validatePersonality(), validateSelect('legal_personality')" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
