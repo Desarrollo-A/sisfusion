@@ -275,7 +275,7 @@
                                                                     <th>forma-pago</th>
                                                                     <th>total-comision</th>
                                                                     <th>impuesto</th>
-                                                                    <th>%-comision</th>
+                                                                    <th>porc-comision</th>
                                                                     <th>estatus</th>
                                                                     <th>acciones</th>
                                                                 </tr>
