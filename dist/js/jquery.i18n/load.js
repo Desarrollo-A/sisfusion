@@ -143,6 +143,18 @@ function construirHead(table){
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
         }
     });
+
+    function translatePlaceholder(){
+        for(titulo of titulos){
+            if(titulo !== ''){
+                $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                $(`#head-${titulo}`).attr('data-original-title', _(titulo))
+            }
+        }
+    }
+
+    onLoadTranslations(translatePlaceholder)
+    onChangeTranslations(translatePlaceholder)
 }
 
 function changeButtonTooltips() {
@@ -173,6 +185,27 @@ function changeSelects() {
             div.html(title)
 
             $(this).attr('title', title)
+
+            $('option', this).each(function (x) {
+                let clase = $(this).attr('class')
+
+                if(clase === 'bs-title-option'){
+                    $(this).html(title)
+                }
+            })
+        }
+    })
+}
+
+function changeInputPlaceholder() {
+    $('input').each(function (i) {
+        let id = $(this).data('i18n-label')
+
+        if(id){
+            let title = _(id)
+            // console.log(title)
+
+            $(this).attr('placeholder', title)
         }
     })
 }
@@ -229,3 +262,5 @@ onLoadTranslations(changeParagraphTooltips)
 onChangeTranslations(changeParagraphTooltips)
 onLoadTranslations(changeListTooltips)
 onChangeTranslations(changeListTooltips)
+onLoadTranslations(changeInputPlaceholder)
+onChangeTranslations(changeInputPlaceholder)
