@@ -165,7 +165,7 @@ var optionsProspClients = {
         },
     },
     noData: {
-        text: 'No hay informacion para mostrar...'
+        text: 'No hay información para mostrar...'
     }
 };
 
@@ -182,7 +182,7 @@ var optionsWeekly = {
         },
     },
     noData: {
-        text: 'No hay informacion para mostrar...'
+        text: 'No hay información para mostrar...'
       },
     colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     grid:{
@@ -402,7 +402,7 @@ function getProspectsByYear(com2) {
                 xaxis: {
                     categories: months
                 },
-                });
+            });
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
             $('.loadProspectosChart').addClass('d-none');
@@ -725,7 +725,7 @@ async function prospectsTable(){
     $('.table-dinamic').empty();
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
-    if (rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' || rol == '72')
+    if (rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' || rol == '72' || rol == '54')
         rolString = 'director_regional';
     else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
         rolString = 'gerente';
@@ -751,9 +751,9 @@ async function prospectsTable(){
         var title = $(this).text();
         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
             $( 'input', this ).on('keyup change', function () {
-            if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
-                $('#tablePR').DataTable().column(i).search(this.value).draw();
-            }
+                if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
+                    $('#tablePR').DataTable().column(i).search(this.value).draw();
+                }
         });
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
@@ -784,7 +784,7 @@ function getRolDR(idUser){
 
 /* Función para cambiar icono y cerrar o abrir tabla*/
 
-function changeIcon2(anchor) {
+function changeIcon(anchor) {
     anchor.closest('.wrapper .boxTabla').classList.toggle('active');
     $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
         $(this).parent().next().slideToggle(200);
@@ -800,7 +800,7 @@ function createAccordionsPR(option, render, rol) {
                 <div class="card p-2 h-auto boxTabla">
                     <div class="d-flex justify-between align-center">
                         <div class="cursor-point accordionToggle">
-                            <a class="purple-head hover-black" onclick="changeIcon2(this)" id="myBtn">
+                            <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
                             <i class="less fas fa-angle-down"></i>
                             <i class="more fas fa-angle-up "></i>
                             </a>
@@ -881,7 +881,6 @@ function multirol(){
                     items_activos.push('gerente');
                     items_activos.push('coordinadors');
                     items_activos.push('asesors');
-                    loadSbdir();
                     createFilters(59, items_activos);
                     getFirstFilter(59, 2);
                 }else{
@@ -1206,7 +1205,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let monthP = ((newDate.getMonth()+1)<10) ? '0'+(newDate.getMonth()+1) : (newDate.getMonth()+1);
     let dayP = (newDate.getDate()<10) ? '0'+ newDate.getDate() : newDate.getDate();
 
-    beginDate = dayP+'/'+monthP+'/'+yearP;
+    beginDate = dayP+'-'+monthP+'-'+yearP;
 
     let oldDateend = endDate.split('/');
     let newDateEnd = new Date(oldDateend[1]+'-'+oldDateend[0]+'-'+oldDateend[2]).toISOString();
@@ -1214,7 +1213,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let yearPE = newDateEnd.getFullYear();
     let monthPE = ((newDateEnd.getMonth()+1)<10) ? '0'+(newDateEnd.getMonth()+1) : (newDateEnd.getMonth()+1);
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
-    endDate = dayPE+'/'+monthPE+'/'+yearPE;
+    endDate = dayPE+'-'+monthPE+'-'+yearPE;
 
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
