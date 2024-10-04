@@ -1,6 +1,5 @@
 $('[data-toggle="tooltip"]').tooltip();
 $(document).ready(function () {
-    construirHead('tableDoct');
     $(document).on('fileselect', '.btn-file :file', function (event, numFiles, label) {
         var input = $(this).closest('.input-group').find(':text'),
             log = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -11,9 +10,6 @@ $(document).ready(function () {
         }
     });
 
-
-
-
     $(document).on('change', '.btn-file :file', function () {
         var input = $(this),
             numFiles = input.get(0).files ? input.get(0).files.length : 1,
@@ -22,17 +18,8 @@ $(document).ready(function () {
         console.log('triggered');
     });
 
-
-
-
-
-
     $('#filtro3').change(function () {
-
-
         var valorSeleccionado = $(this).val();
-
-
         // console.log(valorSeleccionado);
         //build select condominios
         $("#filtro4").empty().selectpicker('refresh');
@@ -48,12 +35,9 @@ $(document).ready(function () {
                     $("#filtro4").append($('<option>').val(id).text(name));
                 }
                 $("#filtro4").selectpicker('refresh');
-
-
             }
         });
     });
-
 
     $('#filtro4').change(function () {
         var residencial = $('#filtro3').val();
@@ -82,10 +66,6 @@ $(document).ready(function () {
             //async: false
         });
     });
-
-
-
-
    
     let titulos_intxt = [];
     // $('#tableDoct thead tr:eq(0) th').each(function (i) {
@@ -103,22 +83,13 @@ $(document).ready(function () {
     //     });        
     // });
 
-
     $('#filtro5').change(function () {
-
-
         var seleccion = $(this).val();
         let datos = seleccion.split(',');
         let valorSeleccionado = datos[0];
         let ventaC = datos[1];
-        //alert(ventaC);
-
-
-
-        console.log("selección:  ", valorSeleccionado);
-
-
-        $('#tableDoct').DataTable({
+        construirHead('tableDoct');
+        var tabla=$('#tableDoct').DataTable({
             destroy: true,
             lengthMenu: [[15, 25, 50, -1], [10, 25, 50, "All"]],
             "ajax":
@@ -298,8 +269,7 @@ $(document).ready(function () {
                 });
             },
         });
-        // applySearch(table);
-
+        applySearch(tabla);
 
     });
 
@@ -560,8 +530,6 @@ if (id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3) {
 
 
     $(document).ready(function () {
-
-
         $(document).on("click", ".update", function (e) {
 
 
@@ -730,3 +698,5 @@ if (id_rol_general == 7 || id_rol_general == 9 || id_rol_general == 3) {
 
 
 */
+
+

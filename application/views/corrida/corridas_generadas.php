@@ -93,7 +93,7 @@
                                                     class="selectpicker select-gral m-0"
                                                     data-style="btn" data-show-subtext="true"
                                                     data-live-search="true"
-                                                    title="Selecciona un condominio" data-i18n="select-condominio" data-size="7" required>
+                                                    title="Selecciona un condominio"  data-size="7" required>
                                             </select>
                                         </div>
                                     </div>
@@ -123,14 +123,14 @@
                                             <th class="text-center">estatus</th>
                                             <th class="text-center">proyecto</th>
                                             <th class="text-center">condominio</th>
-                                            <th class="text-center">ID LOTE</th>
-                                            <th class="text-center">LOTE</th>
-                                            <th class="text-center">CLIENTE</th>
-                                            <th class="text-center">HORA/FECHA</th>
-                                            <th class="text-center">RESPONSABLE</th>
+                                            <th class="text-center">id-lote</th>
+                                            <th class="text-center">lote</th>
+                                            <th class="text-center">cliente</th>
+                                            <th class="text-center">hora-fecha</th>
+                                            <th class="text-center">responsable</th>
                                             <!--<th class="text-center">UBICACIÓN</th>-->
-                                            <th class="text-center">CORRIDA FINANCIERA</th>
-                                            <th class="text-center">ACCIONES </th>
+                                            <th class="text-center">corrida-financiera</th>
+                                            <th class="text-center">acciones</th>
 
                                         </tr>
                                         </thead>

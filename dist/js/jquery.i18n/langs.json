@@ -52,6 +52,7 @@
 		"cancelado": "Cancelled",
 		"clientes": "Clients",
 		"cantidad": "Quantity",
+		"hora-fecha":"TIME-DATE",
 		"no-información-para-mostrar": "No information to display",
 		"inicio": "Home",
 		"reporte": "Report",
@@ -643,7 +644,9 @@
 		"fecha-apertura": "Opening date",
 		"apartado-de-reubicacion": "Relocation section",
 		"venta-compartida": "Shared sale",
-		"ubicacion-de-la-venta": "Location of sale"
+		"ubicacion-de-la-venta": "Location of sale",
+		"responsable":"RESPONSIBLE",
+		"corrida-financiera":"FINANCIAL RUN"
 	},
 	"es": {
 		"solicitud": "Solicitud",
@@ -1289,6 +1292,9 @@
 		"fecha-apertura": "Fecha de apertura",
 		"apartado-de-reubicacion": "Apartado de reubicación",
 		"venta-compartida": "Venta compartida",
-		"ubicacion-de-la-venta": "Ubicación de la venta"
+		"ubicacion-de-la-venta": "Ubicación de la venta",
+		"hora-fecha":"HORA-FECHA",
+		"responsable":"RESPONSABLE",
+		"corrida-financiera":"CORRIDA FINANCIERA"
 	}
 }
