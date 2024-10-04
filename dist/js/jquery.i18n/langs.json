@@ -633,7 +633,6 @@
                 "nombre-2":"Name",
                 "estatus-2":"Status",
                 "conyuge" : "Spouse",
-                "consulta-contrasena": "Check password",
                 "listado-prospectos": "General list of prospects",
                 "selecciona-subdirector": "SELECT DEPUTY DIRECTOR",
                 "selecciona-gerente": "SELECT MANAGER",
@@ -648,9 +647,6 @@
                 "meses-sin intereses": "MONTHS WITHOUT INTEREST",
                 "cantidad-enganche-pagado": "DOWN PAYMENT AMOUNT PAID",
                 "coopropietario": "coowner",
-                "comentario-neodata": "neodata-comment",
-                "fecha-apertura": "Opening date",
-                "apartado-de-reubicacion": "Relocation section",
                 "fecha-alta": "Star date"
         },
         "es": {
@@ -1301,9 +1297,6 @@
                 "historial-liberacion": "Historial de liberación",
                 "cantidad-enganche-pagado": "CANTIDAD DE ENGANCHE PAGADO",
                 "coopropietario": "COPROPIETARIO (S)",
-                "comentario-neodata": "comentario de neodata",
-                "fecha-apertura": "Fecha de apertura",
-                "apartado-de-reubicacion": "APARTADO DE REUBICACIÓN",
                 "fecha-alta": "Fecha de alta"
         }
 }

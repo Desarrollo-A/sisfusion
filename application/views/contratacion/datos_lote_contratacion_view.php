@@ -241,7 +241,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>fecha-apertura</th>
                                                 <th>apartado-reubicacion</th>
                                                 <th>fecha-alta</th>
-                                                <th>VENTA COMPARTIDA</th><!--30-->
+                                                <th>venta-compartida</th>
                                                 <th>UBICACIÓN DE LA VENTA</th>
                                                 <th>TIPO DE PROCESO</th>
                                                 <th>SEDE</th>
