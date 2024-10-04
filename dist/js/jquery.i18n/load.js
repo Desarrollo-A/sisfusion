@@ -155,6 +155,24 @@ function construirHead(table){
 
     onLoadTranslations(translatePlaceholder)
     onChangeTranslations(translatePlaceholder)
+    $(`#${table}`).on('draw.dt', function() {
+        $('.dt-button').each(function (i) {
+            let is_excel = $(this).hasClass('buttons-excel')
+            let is_pdf = $(this).hasClass('buttons-pdf')
+            
+            if(is_excel){
+                $(this).attr('title', _('descargar-excel'))
+                $(this).children().children().removeAttr('title')
+            }
+
+            if(is_pdf){
+                $(this).attr('title', _('descargar-pdf'))
+                $(this).children().children().removeAttr('title')
+            }
+        })
+        
+        $('body').i18n()
+    });
 }
 
 function changeButtonTooltips() {
@@ -241,7 +259,7 @@ function changeParagraphTooltips() {
 }
 
 function changeListTooltips() {
-    console.log('li')
+    // console.log('li')
 
     $('li').each(function (i) {
         let id = $(this).data('i18n-tooltip')
