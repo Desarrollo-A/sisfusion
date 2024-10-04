@@ -167,7 +167,7 @@
                             </li>
                             <li>
                                 <a href="#otras-1" role="tab"  data-toggle="tab">
-                                    <span data-i18n="otras">Otras<span>
+                                    <span data-i18n="otro">Otras<span>
                                 </a>
                             </li>
                             <li>
@@ -301,7 +301,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th><span data-i18n="id-pago">  <span> </th>
+                                                        <th>id_pago</th>
                                                         <th>proyecto</th>
                                                         <th>lote</th>
                                                         <th>precio-del-lote</th>
@@ -319,7 +319,7 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1 " data-i18n="comisiones-enviadas-contraloria" > <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -361,18 +361,18 @@
                                             <table class="table-striped table-hover hide" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
                                                 <thead>
                                                     <tr>    
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>PAGADO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>id-pago</th>
+                                                        <th>preyecto</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>                 
                                                 </thead>
                                             </table>
@@ -433,20 +433,20 @@
                                                         <th>lote</th>
                                                         <th>precio-del-lote</th>
                                                         <th>total-comision</th>
-                                                        <th>PAGADO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>                
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1" data-id8n="comisiones-proceso-pago"> <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -489,18 +489,18 @@
                                                 <table class="table-striped table-hover hide" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
                                                     <thead>
                                                         <tr>
-                                                            <th>ID PAGO</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COMISIÓN</th>
-                                                            <th>PAGADO CLIENTE</th>
-                                                            <th>DISPERSADO</th>
-                                                            <th>SALDO A COBRAR</th>
-                                                            <th>% COMISIÓN</th>
-                                                            <th>DETALLE</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>ACCIONES</th>
+                                                            <th>id-pago</th>
+                                                            <th>proyecto</th>
+                                                            <th>lote</th>
+                                                            <th>precio-de-lote</th>
+                                                            <th>total-comision</th>
+                                                            <th>pago-cliente</th>
+                                                            <th>dispersado</th>
+                                                            <th>saldo-cobrar</th>
+                                                            <th>porc-comision</th>
+                                                            <th>detalle</th>
+                                                            <th>estatus</th>
+                                                            <th>acciones</th>
                                                         </tr>                            
                                                     </thead>
                                                 </table>
@@ -508,7 +508,7 @@
 
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1" data-i18n="comisiones-pausadas" >. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -550,18 +550,18 @@
                                             <table class="table-striped table-hover hide" id="tabla_otras_comisiones" name="tabla_otras_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>PAGADO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>id-pago</th>
+                                                        <th>proyecto</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -593,15 +593,15 @@
                                             <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID</th>
+                                                        <th>id</th>
                                                         <th>proyecto</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>CLIENTE</th>
-                                                        <th>ASESOR</th>
-                                                        <th>COORDINADOR</th>
-                                                        <th>GERENTE</th>
-                                                        <th>ESTATUS</th>
+                                                        <th>condominio</th>
+                                                        <th>lote</th>
+                                                        <th>clientes</th>
+                                                        <th>asesor</th>
+                                                        <th>coordinador</th>
+                                                        <th>gerente</th>
+                                                        <th>estatus</th>
                                                     </tr>
                                                 </thead>
                                             </table>
