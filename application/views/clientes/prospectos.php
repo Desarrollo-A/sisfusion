@@ -167,7 +167,7 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
-                                                        <label class="control-label" data-dismiss="telefono-casa">Teléfono casa</label>
+                                                        <label class="control-label" data-dismiss="telefono-casa" data-i18n="telefono-casa">Teléfono casa</label>
                                                         <input  id="phone_number2" name="phone_number2" type="number" class="form-control input-gral" maxlength="15" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </div>
                                                 </div>
