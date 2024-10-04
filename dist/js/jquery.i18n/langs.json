@@ -406,6 +406,11 @@
                 "idioma":"Language",
                 "seguimiento":"Follow-up",
                 "comision-x-gerencia":"commissions by management"
+                ,"sn-pago-neo" : "No NEODATA payment"
+                ,"saldo-total" : "Total balance:"
+                ,"disponible" : "Available money"
+                ,"alert-enviar-comisiones": "Commissions cannot be sent; wait until Monday and Tuesday of the cutoff week"
+                ,"enviar-resguardos": "Send to safekeeping"
 
         },
         "es": {
@@ -418,7 +423,7 @@
                 "cita": "Cita",
                 "apartados": "Apartados",
                 "cita-seguimiento": "Cita seguimiento",
-                "prospectos-totales": "Prospectos totales",
+                "prospectos-totale      s": "Prospectos totales",
                 "nuevos-prospectos": "Nuevos prospectos",
                 "prospectos-con-cita": "Prospectos con cita",
                 "cierres-totales": "Cierres totales",
@@ -458,7 +463,7 @@
                 "reporte-ventas-direccion-general": "Reporte de ventas por dirección regional",
                 "reporte-ventas-gerencia": "Reporte de ventas por gerencia",
                 "reporte-ventas-coordinacion": "Reporte de ventas por coordinación",
-                "reporte-ventas-subdireccion": "Reporte de ventas por subdirección",
+                "reporte-ventas-subdpireccion": "Reporte de ventas por subdirección",
                 "reporte-ventas-asesor": "Reporte de ventas por asesor",
                 "mas": "Más",
                 "regional": "Regional",
@@ -817,5 +822,9 @@
                 "idioma":"Idioma",
                 "seguimiento":"Seguimiento",
                 "comision-x-gerencia":"comisiones por gerencia"
+                ,"saldo-total" : "saldo total"
+                ,"disponible":" Disponible"
+                ,"alert-enviar-comisiones": "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte"
+                ,"eviar-resguardos":" Enviar a resguardos"
         }
 }
