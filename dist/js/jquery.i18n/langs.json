@@ -626,8 +626,7 @@
                 "canceladasContratadas": "cancelledClosed",
                 "canceladasApartadas": "cancelledReserved",
                 "ventasTotales": "totalSales",
-                "Ventas" : "Sales"
-                "fecha-creacion": "Creation date",
+                "Ventas" : "Sales",
                 "listado-prospectos": "General list of prospects",
                 "observaciones": "Observation",
                 "descargar-pdf": "Download PDF",
@@ -1289,8 +1288,7 @@
                 "canceladasContratadas": "canceladasContratadas",
                 "canceladasApartadas": "canceladasApartadas",
                 "ventasTotales": "ventasTotales",
-                "Ventas": "Ventas"
-                "fecha-creacion": "Fecha creación",
+                "Ventas": "Ventas",
                 "listado-prospectos": "Listado general de prospectos",
                 "observaciones": "Observaciones",
                 "descargar-pdf": "Descargar PDF",
@@ -1323,6 +1321,6 @@
                 "ingresa-tus-comentarios": "Ingresa tus comentarios",
                 "quien-asignar-prospecto": "¿A quién asignarás a este prospecto?",
                 "que-estatus-prospecto": "¿Qué estatus asignarás a este prospecto?",
-                "acerca-de": "Acerca de",
+                "acerca-de": "Acerca de"
         }
 }
