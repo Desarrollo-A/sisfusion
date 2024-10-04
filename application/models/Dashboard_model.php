@@ -464,18 +464,18 @@ class Dashboard_model extends CI_Model {
 
 			SELECT 
 				(CASE 
-					WHEN MONTH(DateValue) = '1' THEN 'Enero'
-					WHEN MONTH(DateValue) = '2' THEN 'Febrero'
-					WHEN MONTH(DateValue) = '3' THEN 'Marzo'
-					WHEN MONTH(DateValue) = '4' THEN 'Abril'
-					WHEN MONTH(DateValue) = '5' THEN 'Mayo'
-					WHEN MONTH(DateValue) = '6' THEN 'Junio'
-					WHEN MONTH(DateValue) = '7' THEN 'Julio'
-					WHEN MONTH(DateValue) = '8' THEN 'Agosto'
-					WHEN MONTH(DateValue) = '9' THEN 'Septiembre'
-					WHEN MONTH(DateValue) = '10' THEN 'Octubre'
-					WHEN MONTH(DateValue) = '11' THEN 'Noviembre'
-					WHEN MONTH(DateValue) = '12' THEN 'Diciembre'
+					WHEN MONTH(DateValue) = '1' THEN 'enero'
+					WHEN MONTH(DateValue) = '2' THEN 'febrero'
+					WHEN MONTH(DateValue) = '3' THEN 'marzo'
+					WHEN MONTH(DateValue) = '4' THEN 'abril'
+					WHEN MONTH(DateValue) = '5' THEN 'mayo'
+					WHEN MONTH(DateValue) = '6' THEN 'junio'
+					WHEN MONTH(DateValue) = '7' THEN 'julio'
+					WHEN MONTH(DateValue) = '8' THEN 'agosto'
+					WHEN MONTH(DateValue) = '9' THEN 'septiembre'
+					WHEN MONTH(DateValue) = '10' THEN 'octubre'
+					WHEN MONTH(DateValue) = '11' THEN 'noviembre'
+					WHEN MONTH(DateValue) = '12' THEN 'diciembre'
 				END) MONTH, YEAR(DateValue) año, isNULL(qu.cantidad,0) counts FROM cte 
 			LEFT JOIN (SELECT COUNT(*)cantidad, MONTH(fecha_creacion) mes, YEAR(fecha_creacion) año FROM prospectos
 			$filtro
@@ -553,18 +553,18 @@ class Dashboard_model extends CI_Model {
 
 			SELECT 
 				(CASE 
-					WHEN MONTH(DateValue) = '1' THEN 'Enero'
-					WHEN MONTH(DateValue) = '2' THEN 'Febrero'
-					WHEN MONTH(DateValue) = '3' THEN 'Marzo'
-					WHEN MONTH(DateValue) = '4' THEN 'Abril'
-					WHEN MONTH(DateValue) = '5' THEN 'Mayo'
-					WHEN MONTH(DateValue) = '6' THEN 'Junio'
-					WHEN MONTH(DateValue) = '7' THEN 'Julio'
-					WHEN MONTH(DateValue) = '8' THEN 'Agosto'
-					WHEN MONTH(DateValue) = '9' THEN 'Septiembre'
-					WHEN MONTH(DateValue) = '10' THEN 'Octubre'
-					WHEN MONTH(DateValue) = '11' THEN 'Noviembre'
-					WHEN MONTH(DateValue) = '12' THEN 'Diciembre'
+					WHEN MONTH(DateValue) = '1' THEN 'enero'
+					WHEN MONTH(DateValue) = '2' THEN 'febrero'
+					WHEN MONTH(DateValue) = '3' THEN 'marzo'
+					WHEN MONTH(DateValue) = '4' THEN 'abril'
+					WHEN MONTH(DateValue) = '5' THEN 'mayo'
+					WHEN MONTH(DateValue) = '6' THEN 'junio'
+					WHEN MONTH(DateValue) = '7' THEN 'julio'
+					WHEN MONTH(DateValue) = '8' THEN 'agosto'
+					WHEN MONTH(DateValue) = '9' THEN 'septiembre'
+					WHEN MONTH(DateValue) = '10' THEN 'octubre'
+					WHEN MONTH(DateValue) = '11' THEN 'noviembre'
+					WHEN MONTH(DateValue) = '12' THEN 'diciembre'
 				END) MONTH, YEAR(DateValue) año, isNULL(qu.cantidad,0) counts FROM cte 
 			LEFT JOIN (SELECT COUNT(*)cantidad, MONTH(cl.fecha_creacion) mes, YEAR(cl.fecha_creacion) año FROM clientes cl
 			INNER JOIN lotes lo ON lo.idLote = cl.idLote

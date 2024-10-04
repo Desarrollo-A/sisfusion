@@ -1,7 +1,8 @@
-// $(document).ready(function () {
-//     // Initial load of content
-//     loadSelectOptions();
-// });
+$(document).ready(function () {
+    // Initial load of content
+    loadSelectOptions();
+    construirHead("tablaInventario");
+});
 
 function loadSelectOptions() {
     // Load residential projects
@@ -68,17 +69,17 @@ $('#idResidencial').change(function () {
     });
 });
 
-let titulosInventario = [];
-$('#tablaInventario thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulosInventario.push(title);
-    // $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${_(title)}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
-            $('#tablaInventario').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
+// let titulosInventario = [];
+// $('#tablaInventario thead tr:eq(0) th').each(function (i) {
+//     var title = $(this).text();
+//     titulosInventario.push(title);
+//     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${_(title)}" placeholder="${title}"/>`);
+//     $('input', this).on('keyup change', function () {
+//         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
+//             $('#tablaInventario').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+// });
 
 let roles_excluidos = [1, 2, 3, 4, 5, 6, 7, 9];
 $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
@@ -86,7 +87,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
     ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
     ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
     ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
-    tabla_inventario = $("#tablaInventario").DataTable({
+    tabla_6 = $("#tablaInventario").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
