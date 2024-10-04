@@ -686,7 +686,15 @@
 		"cambiar-estatus-lote":"Are you sure you want to change the status of this batch?",
 		"registro-actualizado":"The record has been successfully updated.",
 		"tus-autorizaciones":"Your authorizations",
-		"autorizaciones-pendientes":"Pending authorizations"	
+		"autorizaciones-pendientes":"Pending authorizations",
+		"autorizaciones-mayusculas":"AUTHORIZATIONS",
+		"autorizaciones-verificacion":"VERIFICATION AUTHORIZATIONS",
+		"tus-autorizaciones-verificacion":"Your verification authorizations",
+		"asesor-es":"ADVISOR(S)",
+		"solicitud-asesor":"Advisor request",
+		"nada-seleccionado":"You haven't selected anything yet",
+		"aprobar-todas-solicitudes":"You must APPROVE or REJECT or SEND TO DC all requests.",
+		"debe-solicitudes":"You must APPROVE or REJECT all requests."
 	
 	},
 	"es": {
@@ -1377,6 +1385,14 @@
 		"cambiar-estatus-lote":"¿Está seguro de cambiar el estatus de este lote?",
 		"registro-actualizado":"El registro se ha actualizado con éxito.",
 		"tus-autorizaciones":"Tus autorizaciones",
-		"autorizaciones-pendientes":"autorizaciones pendientes"	
+		"autorizaciones-pendientes":"autorizaciones pendientes",
+		"autorizaciones-mayusculas":"AUTORIZACIONES",
+		"autorizaciones-verificacion":"AUTORIZACIONES DE VERIFICACIÓN",
+		"tus-autorizaciones-verificacion":"Tus autorizaciones de verificación",
+		"asesor-es":"asesor(es)",
+		"solicitud-asesor":"Solicitud asesor",
+		"nada-seleccionado":"No has seleccionada nada aún",
+		"aprobar-todas-solicitudes":"Debe APROBAR o RECHAZAR o ENVIAR A DC todas las solicitudes.",
+		"debe-solicitudes":"Debe APROBAR o RECHAZAR todas las solicitudes."
 	}
 }

@@ -35,8 +35,8 @@
 							<input hidden name="nombreLote" id="nombreLote">						
 						</div>
 						<div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-							<button type="submit"  class="btn btn-primary">Enviar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+							<button type="submit"  class="btn btn-primary" data-i18n="enviar">Enviar</button>
 						</div>
 					</form>
 				</div>
@@ -49,8 +49,8 @@
                 <div class="modal-content">
                     <form name="autClienteForm" id="autClienteForm">
                         <div class="modal-header d-flex justify-between align-center">
-                            <h3 class="modal-title" id="myModalLabel">Autorizaciones</h3>
-                            <label class="m-0">(<span class="items-aut"></span>) autorizaciones pendientes</label>
+                            <h3 class="modal-title" id="myModalLabel" data-i18n="autorizaciones">Autorizaciones</h3>
+                            <label class="m-0">(<span class="items-aut"></span>) <label data-i18n="autorizaciones-pendientes">autorizaciones pendientes</label></label>
                         </div>
                         <div class="modal-body pl-0 pr-0">
                             <div class="scroll-styles" id="loadAutsCliente" style="max-height:450px; padding:0 20px; overflow:auto"></div>
@@ -65,8 +65,8 @@
                             <input hidden name="autorizacionesCliente" id="autorizacionesCliente">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Enviar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" data-i18n="enviar">Enviar</button>
                         </div>
                     </form>
                 </div>
@@ -79,10 +79,10 @@
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#autorizaciones" role="tab"  data-toggle="tab">AUTORIZACIONES</a>
+                                <a href="#autorizaciones" role="tab"  data-toggle="tab" data-i18n="autorizaciones-mayusculas">AUTORIZACIONES</a>
                             </li>
                             <li>
-                                <a href="#autorizaciones-verificacion" role="tab"  data-toggle="tab">AUTORIZACIONES DE VERIFICACIÓN</a>
+                                <a href="#autorizaciones-verificacion" role="tab"  data-toggle="tab" data-i18n="autorizaciones-verificacion">AUTORIZACIONES DE VERIFICACIÓN</a>
                             </li>
                         </ul>
 						<div class="card no-shadow m-0">
@@ -95,29 +95,29 @@
                                                 <table id="addExp" class="table-striped table-hover">
                                                     <thead>
                                                         <tr>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>CLIENTE</th>
-                                                            <th>ASESOR(ES)</th>
-                                                            <th>GERENTE</th>
-                                                            <th>ACCIONES</th>
+                                                            <th>proyecto</th>
+                                                            <th>lote</th>
+                                                            <th>cliente</th>
+                                                            <th>asesor-es</th>
+                                                            <th>gerente</th>
+                                                            <th>acciones</th>
                                                         </tr>
                                                     </thead>
                                                 </table>
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="autorizaciones-verificacion">
-                                            <h3 class="card-title center-align">Tus autorizaciones de verificación</h3>
+                                            <h3 class="card-title center-align" data-i18n="tus-autorizaciones-verificacion">Tus autorizaciones de verificación</h3>
                                             <div class="form-group">
                                                 <table id="aut-verificacion" class="table-striped table-hover">
                                                     <thead>
                                                         <tr>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>CLIENTE</th>
-                                                            <th>ASESOR(ES)</th>
-                                                            <th>GERENTE</th>
-                                                            <th>ACCIONES</th>
+                                                            <th>proyecto</th>
+                                                            <th>lote</th>
+                                                            <th>cliente</th>
+                                                            <th>asesor-es</th>
+                                                            <th>gerente</th>
+                                                            <th>acciones</th>
                                                         </tr>
                                                     </thead>
                                                 </table>
