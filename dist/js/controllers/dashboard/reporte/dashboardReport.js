@@ -119,6 +119,7 @@ function readyReport(){
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValuesReporte();
     initReport();
+    changeSelects();
     chart = new ApexCharts(document.querySelector("#boxModalChart"), initialOptions);
     chart.render();
     $('[data-toggle="tooltip"]').tooltip();
@@ -164,6 +165,7 @@ async function initReport(){
 
 function validateFilters(fechaInicio = null, fechaFin = null){
     filters = [];
+    $('body').i18n();
     //Filtros con enganche / sin enganche
     let selector1 = $('#typeSale1')[0];
     let selector2 = $('#typeSale2')[0];
@@ -476,6 +478,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
         
         initComplete: function() {
             $('[data-toggle="tooltip"]').tooltip();
+            changeButtonTooltips();
         }, 
     });
 }
@@ -819,7 +822,8 @@ async function chartDetail(e, tipoChart){
     $("#modalChart #type").val('');
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
-    $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
+    console.log("nameChart: ", nameChart);
+    $(".boxModalTitle .title").append('<p class="mb-1">' + _(nameChart[0]) + '<span class="enfatize"> '+ _(nameChart[1]) +'</span></p>');
     let fecha_inicio = $('.moreMiniChart ').attr('data-fi');
     let fecha_fin    = $('.moreMiniChart ').attr('data-ft');
     if(fecha_inicio == undefined || fecha_fin==undefined){
@@ -972,6 +976,7 @@ function loaderCharts(){
 };
 
 function orderedDataChart(data){
+    console.log("data: ", data);
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
         let { tipo, rol, total, mes, año } = data[i];
@@ -1011,9 +1016,11 @@ function orderedDataChart(data){
 }
 
 function buildSeries(series, nameSerie, totalMes){
-    nameSerie = titleCase(nameSerie.split(/(?=[A-Z])/).join(" "));
+    $('body').i18n();
+    let translateText = _(nameSerie);
+    translateText = titleCase(translateText.split(/(?=[A-Z])/).join(" "));
     series.push({
-        name: nameSerie,
+        name: translateText,
         data: totalMes
     });
 }
@@ -1898,6 +1905,7 @@ function formatMoney(n) {
 
 function setListEstatus(){
     $('#spiner-loader').removeClass('hide');
+    $('body').i18n();
     $.getJSON( base_url + "Reporte/getEstatusContratacionList").done( function( data ){
         $('#spiner-loader').addClass('hide');
         $.each( data, function( i, v){

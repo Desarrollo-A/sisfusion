@@ -620,7 +620,13 @@
                 "apartado-de-reubicacion": "Relocation section",
                 "venta-compartida": "Shared sale",
                 "ubicacion-de-la-venta": "Location of sale",
-                "fecha-creacion": "Creation date"
+                "fecha-creacion": "Creation date",
+                "ventasContratadas": "closedSales",
+                "ventasApartadas": "reservedSales",
+                "canceladasContratadas": "cancelledClosed",
+                "canceladasApartadas": "cancelledReserved",
+                "ventasTotales": "totalSales",
+                "Ventas" : "Sales"
         },
         "es": {
                 "clientes-prospectos-por-mes" : "Clientes y prospectos por mes",
@@ -1244,6 +1250,12 @@
                 "apartado-de-reubicacion" : "Apartado de reubicación",
                 "venta-compartida" : "Venta compartida",
                 "ubicacion-de-la-venta" : "Ubicación de la venta",
-                "fecha-creacion": "Fecha creación"
+                "fecha-creacion": "Fecha creación",
+                "ventasContratadas": "ventasContratadas",
+                "ventasApartadas": "ventasApartadas",
+                "canceladasContratadas": "canceladasContratadas",
+                "canceladasApartadas": "canceladasApartadas",
+                "ventasTotales": "ventasTotales",
+                "Ventas": "Ventas"
         }
 }
