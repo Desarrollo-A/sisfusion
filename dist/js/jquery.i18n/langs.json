@@ -543,7 +543,12 @@
                 "select-plan": "Select a plan",
                 "select-dias-enganche": "Select days for downpayment",
                 "select-meses": "Select the months",
-                "cuenta": "Account"
+                "cuenta": "Account",
+                "reporte-prospectos-direccion-general": "Prospect report by regional office",
+                "reporte-prospectos-gerencia": "Prospect report by management",
+                "reporte-prospectos-coordinacion": "Prospect report by coordination",
+                "reporte-prospectos-subdireccion": "Prospect report by subdirector",
+                "reporte-prospectos-asesor": "Prospect report by advisor"
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -571,7 +576,7 @@
                 "contratado": "Contratado",
                 "apartado": "Apartado",
                 "cancelado": "Cancelado",
-                "clientes": "clientes",
+                "clientes": "Clientes",
                 "cantidad": "Cantidad",
                 "no-informacion-para-mostrar": "No hay información para mostrar.",
                 "inicio": "Inicio",
@@ -1090,7 +1095,12 @@
                 "select-plan": "Selecciona un plan",
                 "select-dias-enganche": "Selecciona los días de enganche",
                 "select-meses": "Selecciona los meses",
-                "cuenta": "Cuenta"
+                "cuenta": "Cuenta",
+                "reporte-prospectos-direccion-general": "Reporte de prospectos por dirección general",
+                "reporte-prospectos-gerencia": "Reporte de prospectos por gerencia",
+                "reporte-prospectos-coordinacion": "Reporte de prospectos por coordinación",
+                "reporte-prospectos-subdireccion": "Reporte de prospectos por subdirección",
+                "reporte-prospectos-asesor": "Reporte de prospectos por asesor"
                 
         }
 }
