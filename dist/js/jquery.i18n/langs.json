@@ -657,7 +657,14 @@
                 "monto-internomex":"Amount Internomex",
                 "fecha-captura-registro":"Date of record capture",
                 "reporte-comision-suma-pagadas":"Report commissions SUMA paid",
-                "reporte-comisiones":"COMMISSION REPORT"
+                "reporte-comisiones":"COMMISSION REPORT",
+                "marcar-desmarcar":"CHECK / UNCHECK ALL.",
+                "modificado-por":"Modified by",
+                "no-tienes-pago":"YOU HAVE NO PAYMENTS.",
+                "no-se-han-encontrado-reg":"No records found to display.",
+                "sin-datos":"NO DATA TO DISPLAY.",
+                "verficar-y-cargar":"VERIFY AND UPLOAD.",
+                "no-puedes-subir-factura": "YOU CANNOT UPLOAD INVOICES UNTIL THE NEXT CUTOFF."
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -1120,7 +1127,15 @@
                 "monto-internomex":"Monto Internomex",
                 "fecha-captura-registro":"Fecha de captura de registro",
                 "reporte-comision-suma-pagadas":"Reporte comisiones SUMA pagadas",
-                "reporte-comisiones":"REPORTE COMISIONES"
+                "reporte-comisiones":"REPORTE COMISIONES",
+                "marcar-desmarcar":"MARCAR / DESMARCAR TODO",
+                "modificado-por":"Modificado por",
+                "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+                "no-tienes-pago":"NO TIENES PAGOS.",
 
+                "no-se-han-encontrado-reg":"No se han encontrado registros que mostrar",
+                "sin-datos":"SIN DATOS A MOSTRAR",
+                "verficar-y-cargar":"VERIFICAR Y CARGAR",
+                "no-puedes-subir-factura": "NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE."
         }
 }
