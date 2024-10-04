@@ -126,13 +126,13 @@ function construirHead(table){
         titulos.push(id);
         // console.log(id)
         if(id && idNoPermitidos.indexOf(id)){
-        if(id){
-            title = _(id)
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+            if(id){
+                title = _(id)
+                $(this).html(`<input id="th_${i}_${id}" class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+                
                 function translatePlaceholder(){
-                    console.log('tabla')
-                    $('title', this).attr('placeholder', _(id))
-                    $('title', this).attr('data-original-title', _(id))
+                    $(`#th_${i}_${id}`).attr('placeholder', _(id))
+                    $(`#th_${i}_${id}`).attr('data-original-title', _(id))
                 }
 
                 onLoadTranslations(translatePlaceholder)
