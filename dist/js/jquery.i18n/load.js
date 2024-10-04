@@ -155,6 +155,25 @@ function construirHead(table){
 
     onLoadTranslations(translatePlaceholder)
     onChangeTranslations(translatePlaceholder)
+    
+    $(`#${table}`).on('draw.dt', function() {
+        $('.dt-button').each(function (i) {
+            let is_excel = $(this).hasClass('buttons-excel')
+            let is_pdf = $(this).hasClass('buttons-pdf')
+            
+            if(is_excel){
+                $(this).attr('title', _('descargar-excel'))
+                $(this).children().children().removeAttr('title')
+            }
+
+            if(is_pdf){
+                $(this).attr('title', _('descargar-pdf'))
+                $(this).children().children().removeAttr('title')
+            }
+        })
+        
+        $('body').i18n()
+    });
 }
 
 function changeButtonTooltips() {
@@ -185,6 +204,27 @@ function changeSelects() {
             div.html(title)
 
             $(this).attr('title', title)
+
+            $('option', this).each(function (x) {
+                let clase = $(this).attr('class')
+
+                if(clase === 'bs-title-option'){
+                    $(this).html(title)
+                }
+            })
+        }
+    })
+}
+
+function changeInputPlaceholder() {
+    $('input').each(function (i) {
+        let id = $(this).data('i18n-label')
+
+        if(id){
+            let title = _(id)
+            // console.log(title)
+
+            $(this).attr('placeholder', title)
         }
     })
 }
@@ -192,12 +232,15 @@ function changeSelects() {
 function stringToI18(str) {
     // Convertir todo el string a minúsculas
     let resultado = str.toLowerCase();
-      
+       
     // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
     resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       
     // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
     resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
+    
+    // Eliminar guiones al principio y al final del resultado
+    resultado = resultado.replace(/^-+|-+$/g, '');
     
     return resultado;
 }
@@ -217,7 +260,7 @@ function changeParagraphTooltips() {
 }
 
 function changeListTooltips() {
-    console.log('li')
+    // console.log('li')
 
     $('li').each(function (i) {
         let id = $(this).data('i18n-tooltip')
@@ -241,3 +284,5 @@ onLoadTranslations(changeParagraphTooltips)
 onChangeTranslations(changeParagraphTooltips)
 onLoadTranslations(changeListTooltips)
 onChangeTranslations(changeListTooltips)
+onLoadTranslations(changeInputPlaceholder)
+onChangeTranslations(changeInputPlaceholder)
