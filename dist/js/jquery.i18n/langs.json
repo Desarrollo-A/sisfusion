@@ -642,7 +642,9 @@
                 "pagar-anticipos":"Pay - Advances",
                 "pagar":"Pay",
                 "ver-mas":"View more",
-                "ver-menos":"View less"
+                "ver-menos":"View less",
+                "continuar-anticipo":"Continue advance payment",
+                "detener-anticipo":"Stop advance payment"
 
 
 
@@ -1291,7 +1293,10 @@
                 "pagar-anticipos":"Pagar - Anticipos",
                 "pagar":"Pagar",
                 "ver-mas":"Ver más",
-                "ver-menos":"Ver menos"
+                "ver-menos":"Ver menos",
+                "continuar-anticipo":"Continuar Anticipo",
+                "detener-anticipo":"Detener anticipo"
+
 
 
 

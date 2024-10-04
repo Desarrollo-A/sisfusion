@@ -103,7 +103,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 data-id_parcialidad="${d.id_parcialidad}"
                 data-monto_formateado="${d.monto_formateado}"
                 data-monto="${d.monto}"
-                data-name="${d.nombre}" class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
+                data-name="${d.nombre}" class="btn-data btn-green aceptar_anticipo" title="${_('continuar-anticipo')}">
                 <i class="fas fa-forward"></i>
                 </button>`;
                 botonesModal += `
@@ -112,7 +112,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 data-id_usuario="${d.id_usuario}" 
                 data-monto="${d.monto}"
                 data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" 
-                class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
+                class="btn-data btn-warning delete-anticipo" title="${_('detener-anticipo')}">
                 <i class="fas fa-stop"></i>
                 </button>`;
                 
@@ -120,7 +120,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             botonesModal += `
             <button href="#" value="${d.id_anticipo}" data-name="${d.nombre}" 
             data-id_usuario="${d.id_usuario}" 
-            class="btn-data btn-blueMaderas consultar_logs" title="Historial">
+            class="btn-data btn-blueMaderas consultar_logs" title="${_('historial')}">
                 <i class="fas fa-info"></i>
             </button>`;
                     return '<div class="d-flex justify-center">' + botonesModal + '<div>';
@@ -144,7 +144,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         },
         order: [[1, 'asc']]
     });
-
+    applySearch(tabla_9);
     $('#tabla_anticipo_revision_dc').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
