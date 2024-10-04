@@ -91,6 +91,7 @@ const datosTablasComisiones = [
 
 function applySearch(table) {
     let id = table.tables().nodes().to$().attr('id')
+
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
         $('input', this).on('keyup change', function () {
             if (table.column(i).search() !== this.value) {
@@ -115,7 +116,6 @@ function applySearch(table) {
     })
 }
 
-
 function construirHead(table){
     let titulos = []
     const idNoPermitidos = ['checkComisionesNuevas']
@@ -128,7 +128,15 @@ function construirHead(table){
         if(id && idNoPermitidos.indexOf(id)){
             if(id){
                 title = _(id)
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
+                $(this).html(`<input id="th_${i}_${id}" class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+                
+                function translatePlaceholder(){
+                    $(`#th_${i}_${id}`).attr('placeholder', _(id))
+                    $(`#th_${i}_${id}`).attr('data-original-title', _(id))
+                }
+
+                onLoadTranslations(translatePlaceholder)
+                onChangeTranslations(translatePlaceholder)
             }
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
@@ -177,6 +185,14 @@ function changeSelects() {
             div.html(title)
 
             $(this).attr('title', title)
+
+            $('option', this).each(function (x) {
+                let clase = $(this).attr('class')
+
+                if(clase === 'bs-title-option'){
+                    $(this).html(title)
+                }
+            })
         }
     })
 }
