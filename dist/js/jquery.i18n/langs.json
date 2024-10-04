@@ -719,11 +719,27 @@
         "selecciona-motivos": "Select the reasons for rejection to be associated with the document",
         "el-documento-elegido": "The document of your choice will be automatically stored once you click on",
         "el-documento-eliminar": "The document will be permanently deleted once you click on",
-        "los-motivos": "The reasons for rejection you select will be permanently recorded once you click on"
+        "los-motivos": "The reasons for rejection you select will be permanently recorded once you click on",
+        "historial-liberacion" : "Relase log",
+        "historial-contratacion" : "Enroll log",
+        "fecha-alta"  :"Start date ",
+        "reubicacion" : "Relocation",
+        "fecha-de-apartado" : "DATE OF RESERVATION",
+        "carga-de-documento-fiscal" : "Charge of tax document",
+        "mensaje-nuevas-comiciones-suma" : " New commissions available to request your payment, to see more details you can check in the payment history",
+        "click-historial-suma" : "Click here to go to the history",
+        "monto-mostrado-descontrar" : "The amount shown will be reduced by",
+        "impuesto-estatal-mensaje" : "state tax",
+        "mensaje-nuevas-deduciones" : "The amount shown is minus the applicable deductions for the",
+        "mensaje-remanente-dis" :"Distributable surplus.",
+        "comprobante-mensaje-emitidos" : "Tax receipts issued by residents in the country of origin",
+        "sin-establecimiento-permanente-mx" : "without permanent establishment in Mexico.",
+        "click-mas-informacion" : "Click here for more information",
+        "Da clic para ir al historial" : "Click to go to history",
+        "mensaje-comisiones-enviadas" : "Commissions sent to the comptroller's office for review before applying your payment. If you need to see more details such as what has been paid and what is pending, you can consult it in the history.",
+        "solicitado-sin-impuestos" : "Requested without taxes"
     },
     "es": {
-
-      
       "pago-de-cliente": "PAGO DEL CLIENTE",
       "comisiones-por-gerencia": "Comisiones por gerencia",
       "consulta-historial": "Consulta de historial",
@@ -1443,6 +1459,25 @@
         "selecciona-motivos": "Selecciona los motivos de rechazo que asociarás al documento",
         "el-documento-elegido": "El documento que hayas elegido se almacenará de manera automática una vez que des clic en",
         "el-documento-eliminar": "El documento se eliminará de manera permanente una vez que des clic en",
-        "los-motivos": "Los motivos de rechazo que selecciones se registrarán de manera permanente una vez que des clic en"
-    }
+        "los-motivos": "Los motivos de rechazo que selecciones se registrarán de manera permanente una vez que des clic en",
+        "historial-liberacion" : "Historial de liberación",
+        "historial-contratacion" : "Historial de contratación",
+        "fecha-alta" : "Fecha de alta",
+        "reubicacion"  :"Reubicación",
+        "fecha-de-apartado"  :"FECHA DE APARTADO",
+        "carga-de-documento-fiscal" : "Cargar de documento fiscal",
+        "mensaje-nuevas-comiciones-suma": " Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial",
+        "click-historial-suma" : "Da clic aquí para ir al historial",
+        "monto-mostrado-descontrar" : "Al monto mostrado habrá que descontar el",
+        "impuesto-estatal-mensaje" : "impuesto estatal",
+        "mensaje-nuevas-deduciones" : "La cantidad mostrada es menos las deducciones aplicables para el régimen de",
+        "mensaje-remanente-dis": "Remanente Distribuible.",
+        "comprobante-mensaje-emitidos" : "Comprobantes fiscales emitidos por residentes en el",
+        "sin-establecimiento-permanente-mx"  :"sin establecimiento permanente en México.",
+        "click-mas-informacion" : "Da clic aquí para más información",
+        "click-historial" : "Da clic para ir al historial",
+        "mensaje-comisiones-enviadas" : "Comisiones enviadas a la contraloría para su revisión antes de aplicar su pago. Si necesitas ver más detalles como lo que se ha pagado y lo que está pendiente, puedes consultarlo en el historial.",
+        "solicitado-sin-impuestos" : "Solicitado sin impuestos"
+      }
+
 }
