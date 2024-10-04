@@ -1,5 +1,6 @@
 var totalVentasChart, prospectosChart, chartProspClients, chartWeekly, chartFunnel;
 var mediaqueryList = window.matchMedia("(min-width: 200px)");
+onChangeTranslations(getClientsAndProspectsByYear);
 
 var optionsTotalVentas = {
     series: [],
@@ -341,6 +342,7 @@ function loadInit(){
 
 function getSalesByYear(com2){
     $('.loadTotalVentasChart').removeClass('d-none');
+    $('body').i18n();
     $.ajax({
         url: `${base_url}Dashboard/totalVentasData`,
         data:com2,
@@ -357,15 +359,14 @@ function getSalesByYear(com2){
                 parseFloat(response.porcentajeTotalC),
             ];
             totalVentasChart.updateSeries(totalVentasArray)
-
             totalVentasChart.updateOptions({
-              labels: [
-                `Gran total: ${formatAsThousands(response.totalVentas)}`,
-                `Contratado: ${formatAsThousands(response.totalConT)}`,
-                `Apartado: ${formatAsThousands(response.totalAT)}`,
-                `Cancelado: ${formatAsThousands(response.totalCT)}`
+                labels: [
+                    `${(_('gran-total'))}: ${formatAsThousands(response.totalVentas)}`,
+                    `${(_('contratado'))}: ${formatAsThousands(response.totalConT)}`,
+                    `${(_('apartado'))}: ${formatAsThousands(response.totalAT)}`,
+                    `${(_('cancelado'))}: ${formatAsThousands(response.totalCT)}`,
                 ]
-             });
+            })
 
             totalVentasChart.toggleDataPointSelection (0);
             $('.loadTotalVentasChart').addClass('d-none');
@@ -375,6 +376,7 @@ function getSalesByYear(com2){
 
 function getProspectsByYear(com2) {
     $('.loadProspectosChart').removeClass('d-none');
+    $('body').i18n();
     $.ajax({
         url: `${base_url}Dashboard/getProspectsByYear`,
         data:com2,
@@ -393,7 +395,7 @@ function getProspectsByYear(com2) {
                 count = count + parseInt(element.counts);
             });
             prospectosChart.updateSeries([{
-                name: 'Prospectos',
+                name: `${_("prospectos")}`,
                 data: data
             }])
             prospectosChart.updateOptions({
@@ -432,20 +434,20 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             let countC = 0;
             let countP = 0;
             response.Clientes.forEach(element => {
-                monthsP.push(`${element.MONTH} ${element.año}`);
+                monthsP.push(`${_(element.MONTH)} ${element.año}`);
                 dataC.push(element.counts);
                 countC = countC + element.counts;
             });
             response.Prospectos.forEach(element => {
-                monthsC.push(`${element.MONTH} ${element.año}`);
+                monthsC.push(`${_(element.MONTH)} ${element.año}`);
                 dataP.push(element.counts);
                 countP = countP + element.counts;
             });
             chartProspClients.updateSeries([{
-                name: 'Prospectos',
+                name: `${_("prospectos")}`,
                 data: dataP
             },{
-                name: 'Clientes',
+                name: `${_("clientes")}`,
                 data: dataC
             }])
             chartProspClients.updateOptions({
@@ -456,6 +458,7 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             $('.loadChartProspClients').addClass('d-none');
         }
     });
+    $('body').i18n();
 }
 
 function generalMetrics(typeTransaction) {
@@ -718,6 +721,7 @@ function formatDate(date) {
 }
 
 async function prospectsTable(){
+    $('body').i18n();
     $('.table-dinamic').empty();
     let rol = userType == 2 ? await getRolDR(idUser): userType;
     let rolString;
@@ -1053,19 +1057,20 @@ function getTitle(option){
     var title;
     switch (option) {
         case 'director_regional':
-            title = 'Reporte de prospectos por dirección regional';
+            //title = 'Reporte de prospectos por dirección regional';
+            title = _("reporte-prospectos-direccion-general");
             break;
         case 'gerente':
-            title = 'Reporte de prospectos por gerencia';
+            title = _("reporte-prospectos-gerencia");
             break;
         case 'coordinador':
-            title = 'Reporte de prospectos por coordinación';
+            title = _("reporte-prospectos-coordinacion");
             break;
         case 'subdirector':
-            title = 'Reporte de prospectos por subdirección';
+            title = _("reporte-prospectos-subdireccion");
             break;
         case 'asesor':
-            title = 'Reporte de prospectos por asesor';
+            title = _("reporte-prospectos-asesor");
             break;
         default:
             title = 'N/A';

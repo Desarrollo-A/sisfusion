@@ -122,7 +122,7 @@ function construirHead(table){
 
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
-
+        
         titulos.push(id);
         // console.log(id)
         if(id && idNoPermitidos.indexOf(id)){
@@ -133,9 +133,20 @@ function construirHead(table){
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
-
         }
     });
+
+    function translatePlaceholder(){
+            for(titulo of titulos){
+                if(titulo !== ''){
+                    $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                    $(`#head-${titulo}`).attr('data-original-title', _(titulo))
+                }
+            }
+        }
+
+    onLoadTranslations(translatePlaceholder)
+    onChangeTranslations(translatePlaceholder)
 }
 
 function changeButtonTooltips() {
@@ -179,8 +190,7 @@ function stringToI18(str) {
       
     // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
     resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
-      
-    console.log(resultado);
+    
     return resultado;
 }
 

@@ -8,7 +8,6 @@ document.querySelector(".c-filter__toggle").addEventListener("click", function (
 });
 onChangeTranslations(initReport);
 
-
 function asDirector(userType){
     // 18: Fabián
     //  4: Asistente dirección administración
@@ -127,6 +126,7 @@ function readyReport(){
 }
 
 async function initReport(){
+    $('body').i18n();
     asDirector(userType);
     filters = validateFilters();
     getLastSales(filters, rolOnReport);
@@ -252,6 +252,7 @@ function createAccordions(option, render, rol){
 }
 
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canConId = null, canApt = null){
+    $('body').i18n();
     let currentLanguage = localStorage.getItem('locale');
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
@@ -293,7 +294,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
-    tabla_6 = $("#table"+option).DataTable({
+    generalDataTable = $("#table"+option).DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [
@@ -372,7 +373,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE" data-i18n-tooltip="desglose-a-detalle"><i class="fas fa-sitemap" ></i></button>`;
                    
                 }
             },
@@ -440,7 +441,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
-                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
+                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES " data-i18n-tooltip="acciones"><i class="fas fa-sign-in-alt"></i></button></div>`;
                 },
             },
         ],
@@ -561,8 +562,6 @@ $(document).on('click', '.update-dataTable', function (e) {
     closestChild = $(this).closest('.childTable');
     closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
     closestChild.nextAll().remove();
-
-    console.log("closestChild: ", closestChild);
     
     let filters = validateFilters();
 
@@ -761,6 +760,7 @@ $(document).on('click', '#filterAction', async function (e) {
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
     loaderCharts();
+    let currentLanguage = localStorage.getItem('locale');
 
     filters = validateFilters();
 
@@ -790,6 +790,9 @@ $(document).on('click', '#filterAction', async function (e) {
     else {
         rolString = 'asesor';
         optionLanguage = 'asesor';
+    }
+    if(languageFreeze.locale !== currentLanguage) {
+        languageFreeze = Object.freeze({locale: currentLanguage});
     }
     getLastSales(filters, rolOnReport);
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport], filters);
@@ -1024,7 +1027,8 @@ function buildAllDataChart(allData, nameTypeChart, series, meses){
 }
 
 function monthName(mon){
-    var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
+    //var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
+    var monthName = [_('enero'),_('febrero'),_('marzo'),_('abril'),_('mayo'),_('junio'),_('julio'),_('agosto'),_('septiembre'),_('octubre'),_('noviembre'),_('diciembre')][mon - 1];
     return monthName;
 }
 
@@ -1387,7 +1391,6 @@ $(document).on('click', '.btnModalDetails', function () {
 function fillTableReport(dataObject) {
     filters = validateFilters();
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
-        construirHead("lotesInformationTable");
         /*$('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
             $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
@@ -1401,8 +1404,9 @@ function fillTableReport(dataObject) {
             $('[data-toggle="tooltip"]').tooltip();
 
         });*/
+        construirHead("lotesInformationTable");
 
-        tabla_6 = $('#lotesInformationTable').dataTable({
+        generalDataTable = $('#lotesInformationTable').dataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',
             buttons: [
@@ -1598,7 +1602,7 @@ function fillTableReport(dataObject) {
         
         construirHead("lotesInformationTableCancelados");
 
-        tabla_6 = $('#lotesInformationTableCancelados').dataTable({
+        generalDataTable = $('#lotesInformationTableCancelados').dataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',
             buttons: [
