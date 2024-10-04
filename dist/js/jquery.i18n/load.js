@@ -225,6 +225,24 @@ function changeListTooltips() {
     })
 }
 
+function changeSteps() {
+    $('button[data-i18n-stepper]').each(function (i) {
+        let id = $(this).data('i18n-stepper');
+
+        if(id) {
+            let title = _(id);
+            if(id == 'anterior') {
+                $("#stepperAnterior").html(title);
+                $(this).attr('data-title', title);
+            }
+            if(id == 'siguiente') {
+                $("#stepperSiguiente").html(title);
+                $(this).attr('data-title', title);
+            }
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)

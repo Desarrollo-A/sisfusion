@@ -270,6 +270,7 @@ function fillTable(transaction, beginDate, endDate, where) {
             });
         },
     });
+    changeSelects();
 }
 
 $('#prospects-datatable').on('draw.dt', function() {
