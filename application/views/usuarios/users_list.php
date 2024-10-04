@@ -260,7 +260,7 @@
                                 <div class="container-fluid mt-1" id="ch">
                                     <div class="row">
                                         <div class="col-md-12 d-flex justify-end">
-                                            <div class="boxIcon" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Sede capital humano y sucursal capital humano.<br/><br/>Son información que se solicita de manera adicional para mantener actualizado tanto el sistema de Capital Humano como CRM actualizados.">
+                                            <div class="boxIcon" data-html="true" data-toggle="tooltip" data-placement="bottom" data-i18n-label="sede-capital-info" title="Sede capital humano y sucursal capital humano.<br/><br/>Son información que se solicita de manera adicional para mantener actualizado tanto el sistema de Capital Humano como CRM actualizados.">
                                                 <i class="fas fa-info"></i>
                                             </div>
                                         </div>
@@ -270,7 +270,7 @@
                                                 <div class="boxInfoEsp">
                                                     <i class="fas fa-info" data-toggle="tooltip" data-placement="bottom" title="Sede de asignación del asesor"></i>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -279,7 +279,7 @@
                                                 <div class="boxInfoEsp" data-toggle="tooltip" data-placement="bottom" title="Oficina en la que se encuentra ubicado el asesor">
                                                     <i class="fas fa-info"></i>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>

@@ -164,7 +164,6 @@ function construirHead(table){
     onChangeTranslations(translatePlaceholder)
 
     $(`#${table}`).on('draw.dt', function() {
-        console.log('DRAW')
         $('body').i18n()
     });
 }

@@ -243,7 +243,7 @@
         "eliminar-documento": "DELETE DOCUMENT",
         "selecciona-archivo": "You have not selected a file yet",
         "sede-capital-humano": "Human Resources head office",
-        "sede-capital-info": "HUMAN RESOURCES HEAD OFFICE AND HUMAN RESOURCES BRANCH. IT'S INFORMATION THAT IS REQUESTED ADDITIONALLY TO MANTAIN THE SYSTEM OF HUMAN RESOURCES AS WELL AS CRM UPDATED",
+        "sede-capital-info": "THE HUMAN RESOURCES HEAD OFFICE AND BRANCH OFFICE. <br/><br/> THIS INFORMATION IS REQUESTED TO KEEP THE HUMAN RESOURCES AND CRM DATABASE UP TO DATE.",
         "pregunta-asignar-cliente": "Do you really want to assign this prospect to the customer?",
         "bonificacion": "Bonus",
         "rescision": "Recission",
@@ -695,7 +695,9 @@
         "cargando": "Loading...",
         "al": "to",
         "de-un-total-de": "from a total of",
-        "departamento-de-ti": "IT DEPARTAMENT"
+        "departamento-de-ti": "IT DEPARTAMENT",
+        "listado-residenciales-cm": "Ciudad Maderas residential list",
+        "nomeclatura": "nomeclature"
     },
     "es": {
         "solicitud": "Solicitud",
@@ -940,7 +942,7 @@
         "eliminar-documento": "ELIMINAR DOCUMENTO",
         "selecciona-archivo": "No has seleccionado un archivo aún",
         "sede-capital-humano": "Sede de capital humano",
-        "sede-capital-info": "SEDE DE CAPITAL HUMANO Y SUCURSAL DE CAPITAL HUMANO. SON INFORMACIÓN QUE SE SOLICITA DE MANERA ADICIONAL PARA MANTENER ACTUALIZADO TANTO EL SISTEMA DE CAPITAL HUMANO COMO CRM",
+        "sede-capital-info": "SEDE CAPITAL HUMANO Y SUCURSAL CAPITAL HUMANO. <br/><br/> SON INFORMACIÓN QUE SE SOLICITA DE MANERA ADICIONAL PARA MANTENER ACTUALIZADO TANTO EL SISTEMA DE CAPITAL HUMANO COMO CRM",
         "pregunta-asignar-cliente": "¿Realmente desea asignar este prospecto al cliente?",
         "bonificacion": "BONIFICACIÓN",
         "rescision": "Rescisión",
@@ -1392,6 +1394,8 @@
         "al": "al",
         "de-un-total-de": "de un total de",
         "departamento-de-ti": "Departamento de TI",
-        "mostrando-registros-leyenda": "Mostrando registros del 0 al 0 de un total de 0 registros"
+        "mostrando-registros-leyenda": "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "listado-residenciales-cm": "Lista de residenciales de Ciudad Maderas",
+        "nomeclatura": "nomeclatura"
     }
 }
