@@ -1,17 +1,9 @@
 let titulos_intxt = [];
 
 $("#Jtabla").ready( function(){
-    $('#Jtabla thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos_intxt.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-        $( 'input', this ).on('keyup change', function () {
-            if (tabla_6.column(i).search() !== this.value ) {
-                tabla_6.column(i).search(this.value).draw();
-            }
-        });
-    });
-
+    
+    construirHead("Jtabla");
+    
     tabla_6 = $("#Jtabla").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -93,7 +85,13 @@ $("#Jtabla").ready( function(){
             "data": function( d ){
             }
         },
-        "order": [[ 1, 'asc' ]]
+        "order": [[ 1, 'asc' ]],
+        initComplete: function() {
+            onLoadTranslations(function(){
+                $('body').i18n()
+            })
+            
+        },
     });
 
     $('#Jtabla tbody').on('click', 'td.details-control', function () {

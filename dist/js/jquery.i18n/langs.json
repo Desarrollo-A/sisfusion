@@ -674,7 +674,19 @@
                 "fecha-de-validacion-del-enganche": "Date of down payment validation",
                 "fecha-de-reubicacion": "Relocation date",
                 "precio": "Price",
-                "consultar-historial": "Check log"
+                "consultar-historial": "Check log",
+                "rechazos-juridico": "Legal rejections",
+                "sin-data-tabla": "NO DATA AVAILABLE IN TABLE",
+                "primero": "FIRST",
+                "ultimo": "LAST",
+                "mostrando": "Showing", 
+                "del": "from",       
+                "registros": "entries",
+                "mostrando-registros-leyenda": "Showing 0 to 0 of 0 entries",
+                "cargando": "Loading...",
+                "al": "to",
+                "de-un-total-de": "from a total of",
+                "departamento-de-ti": "IT DEPARTAMENT"
         },
         "es": {
                 "clientes-prospectos-por-mes" : "Clientes y prospectos por mes",
@@ -1351,7 +1363,19 @@
                 "fecha-de-validacion-del-enganche": "Fecha de validación del enganche",
                 "fecha-de-reubicacion": "Fecha de reubicación",
                 "precio": "Precio",
-                "consultar-historial": "Consulta historial"
+                "consultar-historial": "Consulta historial",
+                "rechazos-juridico": "Rechazos jurídico",
+                "sin-data-tabla": "Ningún dato disponible en esta tabla",
+                "mostrando-registros-leyenda": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "primero": "",
+                "ultimo": "",
+                "mostrando": "Mostrando",        
+                "registros": "registros",
+                "del": "del",
+                "cargando": "Cargando...",
+                "al": "al",
+                "de-un-total-de": "de un total de",
+                "departamento-de-ti": "Departamento de TI"
         }
 =======
     "en": {

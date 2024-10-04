@@ -1,4 +1,5 @@
 let locale = localStorage.getItem('locale')
+let languajeTable = general_base_url + "static/spanishLoader_v2.json";
 
 $.i18n().load(`${general_base_url}dist/js/jquery.i18n/langs.json`)
 .done(function() {
@@ -54,6 +55,7 @@ function onLoadTranslations(callback){
     if (typeof callback === 'function') {
         load_functions.push(callback)
     }
+    
 }
 
 function onChangeTranslations(callback){
@@ -116,7 +118,7 @@ function applySearch(table) {
 
 function construirHead(table){
     let titulos = []
-    const idNoPermitidos = ['checkComisionesNuevas']
+    const idNoPermitidos = ['checkComisionesNuevas'] 
 
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
@@ -222,7 +224,7 @@ function changeParagraphTooltips() {
 }
 
 function changeListTooltips() {
-    console.log('li')
+    // console.log('li')
 
     $('li').each(function (i) {
         let id = $(this).data('i18n-tooltip')
