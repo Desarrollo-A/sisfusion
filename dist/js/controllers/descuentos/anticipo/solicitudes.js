@@ -1,13 +1,16 @@
-let titulosInventario = [];
+/*let titulosInventario  = [];
 $('#tabla_anticipo_revision thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         titulosInventario.push(title);
+        construirHead("tabla_anticipos_revision");
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tabla_anticipo_revision').DataTable().column(i).search() !== this.value)
                 $('#tabla_anticipo_revision').DataTable().column(i).search(this.value).draw();
         });
-});
+
+    });
+    */
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
 
@@ -15,11 +18,14 @@ var getInfo3 = new Array(6);
 function translationsAnticipos() {
     onChangeTranslations(function() {
         $('#tabla_anticipo_revision').DataTable().rows().invalidate().draw(false);
-    });
-}
-$("#tabla_anticipo_revision").ready(function () {
-    tabla_9 = $("#tabla_anticipo_revision").DataTable({
         
+    });
+   
+}
+
+$("#tabla_anticipo_revision").ready(function () {
+    construirHead("tabla_anticipo_revision");
+    tabla_9 = $("#tabla_anticipo_revision").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [{
@@ -86,6 +92,7 @@ $("#tabla_anticipo_revision").ready(function () {
                        data === 'URGENTE' ? _('urgente') : data;
             }
         },
+      
         { 
             data: function (d) {    
             var botonesModal = '';
@@ -142,7 +149,8 @@ $("#tabla_anticipo_revision").ready(function () {
             ],
         columnDefs: [{
             defaultContent: "Sin especificar",
-            targets: "_all",
+           // targets: "_all",
+            targets: [5], visible: false,
             searchable: true,
             orderable: false
         }],
@@ -155,6 +163,7 @@ $("#tabla_anticipo_revision").ready(function () {
             }
         }
     });
+    applySearch(tabla_9)
     $('#tabla_anticipo_revision').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
@@ -330,9 +339,10 @@ $("#tabla_anticipo_revision").ready(function () {
         const monto_parcialidad = $(this).attr("data-monto_parcialidad");
         const id_parcialidad    = $(this).attr("data-id_parcialidad");
         console.log(id_parcialidad);
-        modalidad =  id_parcialidad == 'null' ? `PRÉSTAMO <br>`  : `APOYO <br>
-                                                    MENSUALIDADES   : ${mensualidades_pra} <br>
-                                                    MONTO           : ${monto_parcialidad} <br>` ;
+        modalidad =  id_parcialidad == 'null' ? `<span data-i18n="prestamo">${_("prestamo")}</span><br>`   :  `<span data-i18n="apoyo">${_("apoyo")}</span><br>
+        <span data-i18n="mensualidad">${_("mensualidad")}</span> : ${mensualidades_pra} <br>
+        <span data-i18n="monto">${_("monto")}</span> :${monto_parcialidad} <br>` ;
+
 
         
 
@@ -380,7 +390,7 @@ $("#tabla_anticipo_revision").ready(function () {
                 <label class="label control-label"><span data-i18n="evidencia-dc">${_("evidencia-dc")}</span></label>
                     <div class="file-gph">
                         <input class="d-none" type="file" id="evidenciaNueva" onchange="changeName(this)" name="evidenciaNueva"  >
-                        <input class="file-name overflow-text" id="evidenciaNueva" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                        <input class="file-name overflow-text" id="evidenciaNueva" type="text" placeholder="${_("selecciona-archivo")}" readonly="">
                         <label class="upload-btn w-auto" for="evidenciaNueva"><span data-i18n="seleccionar">${_("seleccionar")}</span><i class="fas fa-folder-open"></i></label>
                     </div>
                 </div>
@@ -405,7 +415,9 @@ $("#tabla_anticipo_revision").ready(function () {
                 <button type="button"  class="btn btn-danger btn-simple "data-dismiss="modal" ><span data-i18n="cerrar">${_("cerrar")}</span></button>
 				<button  type="submit" name="Activo_aceptar_confirmar"id="Activo_aceptar_confirmar" class="btn btn-primary"><span data-i18n="aceptar">${_("aceptar")}</span></button>`);
         $("#myModalAceptar_subir").modal();
+        
     });
+    
     
 });
 
