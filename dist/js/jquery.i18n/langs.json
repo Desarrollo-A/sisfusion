@@ -403,7 +403,9 @@
                 "lote-bonificacion-neodata":"Bonus Lot in NEODATA",
                 "bonos":"Bonds",
                 "departamento-ti":"IT Department",
-                "idioma":"Language"
+                "idioma":"Language",
+                "seguimiento":"Follow-up",
+                "comision-x-gerencia":"commissions by management"
 
         },
         "es": {
@@ -618,7 +620,7 @@
                 "integracion-expediente": "Integración de Expediente",
                 "descuento": "Descuento",
                 "regresar-lote": "Regresión del lote",
-                "importacion": "Importacion",
+                "importacion": "Importación",
                 "envio-verificacion": "Envío de verificaciones al cliente",
                 "metodos-envio": "MÉTODOS DE ENVÍO",
                 "correo-electronico": "CORREO ELECTRÓNICO",
@@ -812,6 +814,8 @@
                 "lote-bonificacion-neodata":"Lote con bonificación en NEODATA",
                 "bonos":"Bonos",
                 "departamento-ti":"Departamento de TI",
-                "idioma":"Idioma"
+                "idioma":"Idioma",
+                "seguimiento":"Seguimiento",
+                "comision-x-gerencia":"comisiones por gerencia"
         }
 }

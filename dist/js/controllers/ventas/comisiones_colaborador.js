@@ -979,8 +979,9 @@ $("#tabla_revision_comisiones").ready(function () {
             });
         });
     });
+    applySearch(tabla_revision)
+
 });
-applySearch(tabla_revision)
 
 // FIN TABLA PROCESO
 $('#tabla_revision_comisiones').on('draw.dt', function() {

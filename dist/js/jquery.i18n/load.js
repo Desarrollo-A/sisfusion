@@ -127,7 +127,15 @@ function construirHead(table){
         if(id && idNoPermitidos.indexOf(id)){
         if(id){
             title = _(id)
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
+                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+                function translatePlaceholder(){
+                    console.log('tabla')
+                    $('title', this).attr('placeholder', _(id))
+                    $('title', this).attr('data-original-title', _(id))
+                }
+
+                onLoadTranslations(translatePlaceholder)
+                onChangeTranslations(translatePlaceholder)
             }
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
@@ -166,7 +174,7 @@ function changeButtonTooltips() {
 
 function changeSelects() {
     $('select.selectpicker').each(function (i) {
-        let id = $(this).data('i18n')
+        let id = $(this).data('i18n-label')
 
         if(id){
             let title = _(id)
