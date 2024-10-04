@@ -635,7 +635,16 @@
                 "conyuge" : "Spouse",
                 "proceso-apoyo-prestamo":"(Financial aid and loan processes.)",
                 "monto-por-mes":"Monthly payment",
-                "numero-mesualidades":"Number of monthly payments"
+                "numero-mesualidades":"Number of monthly payments",
+                "reporte-anticipos":"Advance report",
+                "fecha-contraloria":"Date comptroller",
+                "esquema":"Scheme",
+                "pagar-anticipos":"Pay - Advances",
+                "pagar":"Pay",
+                "ver-mas":"View more",
+                "ver-menos":"View less"
+
+
 
         },
         "es": {
@@ -1275,7 +1284,14 @@
                 "conyuge" : "Cónyuge",
                 "proceso-apoyo-prestamo":"(Procesos apoyos/préstamos)",
                 "monto-por-mes":"Monto por mes",
-                "numero-mesualidades":"Número de mensualidades"
+                "numero-mesualidades":"Número de mensualidades",
+                "reporte-anticipos":"Reporte de anticipos",
+                "fecha-contraloria":"fecha Contraloría",
+                "esquema":"Esquema",
+                "pagar-anticipos":"Pagar - Anticipos",
+                "pagar":"Pagar",
+                "ver-mas":"Ver más",
+                "ver-menos":"Ver menos"
 
 
 
