@@ -185,6 +185,27 @@ function changeSelects() {
             div.html(title)
 
             $(this).attr('title', title)
+
+            $('option', this).each(function (x) {
+                let clase = $(this).attr('class')
+
+                if(clase === 'bs-title-option'){
+                    $(this).html(title)
+                }
+            })
+        }
+    })
+}
+
+function changeInputPlaceholder() {
+    $('input').each(function (i) {
+        let id = $(this).data('i18n-label')
+
+        if(id){
+            let title = _(id)
+            // console.log(title)
+
+            $(this).attr('placeholder', title)
         }
     })
 }
@@ -241,3 +262,5 @@ onLoadTranslations(changeParagraphTooltips)
 onChangeTranslations(changeParagraphTooltips)
 onLoadTranslations(changeListTooltips)
 onChangeTranslations(changeListTooltips)
+onLoadTranslations(changeInputPlaceholder)
+onChangeTranslations(changeInputPlaceholder)
