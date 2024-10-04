@@ -119,6 +119,8 @@ function modalHistorial(){
     showModal();
 }
 
+// onLoadTranslations(function(){
+
 function getAssimilatedCommissions(proyecto, condominio, tipo){
     var Comisiones;
     if(tipo == 1 || tipo == 2 || tipo == 0){
@@ -354,6 +356,8 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
     $('#tabla_historialGral').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
+    applySearch(tabla_historialGral2);
+
 }
 
 function getAssimilatedCancelacion(proyecto, condominio){
@@ -567,6 +571,8 @@ function getAssimilatedCancelacion(proyecto, condominio){
     $('#tabla_comisiones_canceladas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
+    applySearch(tabla_historialGral3);
+
 }
 
 $('a[data-toggle="tooltip"]').on('shown.bs.tab', function (e) {
@@ -835,6 +841,9 @@ function tableComisionesSuma(anio){
             });
         });
     });
+
+    applySearch(tabla_suma);
+
 }
 
 $("#anio_suma").ready( function(){
@@ -882,10 +891,10 @@ $("#tipo_historial_casas").on("change", function(){
 
     if(seleccion == 1) {
         var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
-        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+        $("#tabla_historialGral, #ocultar_descuento").removeClass('hide');
     } else if(seleccion == 3) {
         var enlace = 'Casas_comisiones/getHistorialDescuentosPorUsuario'
-        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+        $("#tabla_historialGral, #ocultar_descuento").removeClass('hide');
     }
 
     consultarHistorialDescuentos(enlace)
@@ -1039,6 +1048,9 @@ function consultarHistorialDescuentos(enlace) {
             cache: false,
         }
     });
+
+    applySearch(tablaHistorialDescuentos);
+
 }
 
 $(document).on('click', '.consultarDetalleDelPago', function(e) {
@@ -1069,7 +1081,7 @@ $(document).ready(function () {
 
     if(usuario_id !=3){
     var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
-    $("#tablaHistorialDescuentos").removeClass('hide');
+    $("#ocultar_descuento").addClass('hide');
     consultarHistorialDescuentos(enlace)
     }
 

@@ -77,6 +77,8 @@ $("#comisionista").on('change', function () {
     
 });
 
+onLoadTranslations(function(){
+
 let titulos_intxt = [];
 // $('#reporteLotesPorComisionista thead tr:eq(0) th').each(function (i) {
 //     $(this).css('text-align', 'center');
@@ -116,7 +118,7 @@ $('#reporteLotesPorComisionista').on('xhr.dt', function (e, settings, json, xhr)
 });
 
 function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
-    generalDataTable = $('#reporteLotesPorComisionista').dataTable({
+    generalDataTable = $('#reporteLotesPorComisionista').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -150,6 +152,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        orderable: false,
         destroy: true,
         ordering: false,
         columns: [
@@ -269,7 +272,11 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
             }
         }
     });
+
+    applySearch(generalDataTable);
 }
+
+
 
 $(document).on("click", "#searchByDateRange", function () {
     $('#box-reporteLotesPorComisionista').removeClass('hide');
@@ -351,6 +358,8 @@ $(document).on("click", "#detailComisionistaBtn", function () {
         $('#spiner-loader').addClass('hide');
     }, 'json');
 });
+
+})
 
 function colocarValoresTotales(total, totalAbonado, totalPagado) {
     document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
