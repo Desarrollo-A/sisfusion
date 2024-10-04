@@ -86,7 +86,7 @@
                 "buenos-dias": "Good morning",
                 "consulta-informacion": "SEE INFORMATION",
                 "vigente": "CURRENT",
-                "build-his-profile": "Build his profile",
+                "build-his-profile": "Build their profile",
                 "about-him": "About",
                 "estado": "State",
                 "sin-vigencia": "WITHOUT VALIDITY",
@@ -390,7 +390,7 @@
                 "prospecto-cliente": "prospecto al cliente",
                 "observacion": "OBSERVATION",
                 "plaza-venta": "SALES LOCATION",
-                "nacionalidad": "NATIONALITY",
+                "nacionalidad": "Nationality",
                 "asignando": "Assigning",
                 "regresion-lote": "Lot regression",
                 "lada": "area code",
@@ -579,7 +579,7 @@
                 "contrato": "Contract",
                 "nombre-contrato": "CONTRACT NAME",
                 "visualizar": "view",
-                "esta-informacion": "This information will allow us to learn more about him.",
+                "esta-informacion": "This information will allow us to learn more about the prospect.",
                 "empleo": "Employment",
                 "prospeccion": "Prospecting",
                 "info-basica": "Let's start with the basic information",
@@ -631,8 +631,8 @@
                 "registro-agregado":"The registration has been successfully entered.",
                 "modificar":"CHANGE",
                 "nombre-2":"Name",
-                "estatus-2":"Status"
-
+                "estatus-2":"Status",
+                "conyuge" : "Spouse"
         },
         "es": {
                 "clientes-prospectos-por-mes" : "Clientes y prospectos por mes",
@@ -1215,7 +1215,7 @@
                 "contrato" : "Contrato",
                 "nombre-contrato" : "NOMBRE DEL CONTRATO",
                 "visualizar" : "Visualizar",
-                "esta-informacion" : "Esta información nos permitirá saber más sobre él.",
+                "esta-informacion" : "Esta información nos permitirá saber más sobre el prospecto.",
                 "empleo" : "Empleo",
                 "prospeccion" : "Prospección",
                 "info-basica" : "Comencemos con la información básica",
@@ -1267,8 +1267,7 @@
                 "registro-agregado":"El registro se ha ingresado exitosamente.",
                 "modificar":"MODIFICAR",
                 "nombre-2":"Nombre",
-                "estatus-2":"Estatus"
-
-
+                "estatus-2":"Estatus",
+                "conyuge" : "Cónyuge"
         }
 }
