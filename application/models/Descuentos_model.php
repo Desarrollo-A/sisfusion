@@ -857,6 +857,16 @@ class Descuentos_model extends CI_Model {
 
         return $this->db->query($cmd)->result();
     }
+    function  validar_permiso_a($usuario){
+        
+        $cmd = "SELECT count(id_permiso) as 
+            PA FROM 
+            permiso_anticipo where
+            usuario = $usuario 
+            and bandera = 1";
+
+        return $this->db->query($cmd)->row()->PA;
+    }
 
 
 }
