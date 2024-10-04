@@ -455,10 +455,9 @@
                 "rol":"Role",
                 "monto-sin-descuento":"Amount without discount",
                 "monto-internomex":"Amount Internomex",
-                "fecha-captura-registro":"Date of record capture"
-                
-
-
+                "fecha-captura-registro":"Date of record capture",
+                "reporte-comision-suma-pagadas":"Report commissions SUMA paid",
+                "reporte-comisiones":"COMMISSION REPORT"
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -919,6 +918,9 @@
                 "rol":"Rol",
                 "monto-sin-descuento":"Monto sin descuento",
                 "monto-internomex":"Monto Internomex",
-                "fecha-captura-registro":"Fecha de captura de registro"
+                "fecha-captura-registro":"Fecha de captura de registro",
+                "reporte-comision-suma-pagadas":"Reporte comisiones SUMA pagadas",
+                "reporte-comisiones":"REPORTE COMISIONES"
+
         }
 }

@@ -174,10 +174,10 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
             titleAttr: _('descargar-excel'),
             title: _('historial-general-activas'),
             exportOptions: {
-                columns: columnas_datatable.tabla_historialGral.num_encabezados,
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_historialGral.titulos_encabezados[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },

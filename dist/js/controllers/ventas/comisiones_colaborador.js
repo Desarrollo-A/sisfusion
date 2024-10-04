@@ -261,12 +261,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
             text: `<i class="fa fa-file-excel-o" aria-hidden="true"></i>`,
             className: 'btn buttons-excel',
             titleAttr: _("descargar-excel"),
-            title: _("descargar-excel"),
+            title: _("reporte-comisiones"),
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -829,10 +829,10 @@ $("#tabla_revision_comisiones").ready(function () {
             titleAttr: _("descargar-excel"),
             title: _('reporte-comisiones-revision'),
             exportOptions: {
-                columns: columnas_datatable.tabla_revision_comisiones.num_encabezados,
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_revision_comisiones.titulos_encabezados[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -1047,7 +1047,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                 columns: columnas_datatable.tabla_pagadas_comisiones.num_encabezados,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_pagadas_comisiones.titulos_encabezados[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -1250,7 +1250,7 @@ $("#tabla_otras_comisiones").ready(function () {
                 columns: columnas_datatable.tabla_otras_comisiones.num_encabezados,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_otras_comisiones.titulos_encabezados[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -1435,7 +1435,7 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
                 columns: [0,1,2,3,4,5,6,7,8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
