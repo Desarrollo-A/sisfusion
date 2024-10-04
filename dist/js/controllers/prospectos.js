@@ -8,12 +8,9 @@ $(document).ready(function() {
     }
     
     demo.initMaterialWizard();
-    //md.initSliders()
+    md.initSliders()
     demo.initFormExtendedDatetimepickers();
 });
-/* console.log(`${_("sin-registro")}`)
-const btnSiguiente = document.querySelector('#btn-siguiente');
-btnSiguiente.value = _("fecha-nacimiento"); */
 
 /*update validaciones*/
 $('#finish').on('click', function() {
@@ -83,7 +80,7 @@ function validateFile() {
     }else{
         exito_confirmar = false;
     }
-    
+
     if (!exito_confirmar) {
         alerts.showNotification('top', 'right', `${_("campos-minimos")}`, 'danger');
     } else {
