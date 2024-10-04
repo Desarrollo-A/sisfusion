@@ -401,7 +401,16 @@
                 "tipo-usuario":"User type",
                 "reporte-lotes-comisionista":"Batch report by commission agent",
                 "total-abonado":"Paid so far",
-                "total-pagado":"Total paid"
+                "total-pagado":"Total paid",
+                "consulta-pago-final": "Final payment inquiry",
+                "texto-consulta-pago-final":"Through this panel you will be able to consult the final amount paid in each commission cut. Only one record per month will be saved, the module will preload the information found in the current year. In case you want to consult a particular date, you can do it through the filters located at the top right (after the month cut of December 2022 this information will be able available to be consulted).",
+                "cargar":"Upload",
+                "consultar":"Consult",
+                "id-registro":"Registration ID",
+                "rol":"Role",
+                "monto-sin-descuento":"Amount without discount",
+                "monto-internomex":"Amount Internomex",
+                "fecha-captura-registro":"Date of record capture"
 
         },
         "es": {
@@ -809,7 +818,17 @@
                 "tipo-usuario":"Tipo de usuario",
                 "reporte-lotes-comisionista":"Reporte de lotes por comisionista",
                 "total-abonado":"Total abonado",
-                "total-pagado":"Total pagado"
+                "total-pagado":"Total pagado",
+                "consulta-pago-final":"Consulta pago final",
+                "texto-consulta-pago-final":"A través de este panel podrás consultar el monto final pagado en cada corte de comisiones. Por mes se guardará un solo registro, el módulo precargará la información encontrada en el año corriente. En caso de querer consultar una fecha en particular, podrás hacerlo a través de los filtros situados en la parte superior derecha (a partir del corte del mes de diciembre del 2022 se podrá acceder a esta información)",
+                "cargar":"Cargar",
+                "consultar":"Consultar",
+                "id-registro":"ID del registro",
+                "rol":"Rol",
+                "monto-sin-descuento":"Monto sin descuento",
+                "monto-internomex":"Monto Internomex",
+                "fecha-captura-registro":"Fecha de captura de registro"
+                
 
         }
 }

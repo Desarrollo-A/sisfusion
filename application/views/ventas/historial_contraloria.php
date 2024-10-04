@@ -303,9 +303,9 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                <div class="material-datatables">
+                                                <div class="material-datatables" id="ocultar_descuento">
                                                     <div class="form-group">
-                                                        <table class="table-striped table-hover hide" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
+                                                        <table class="table-striped table-hover" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
                                                             <thead>
                                                                 <tr>
                                                                     <th>id-pago</th>
