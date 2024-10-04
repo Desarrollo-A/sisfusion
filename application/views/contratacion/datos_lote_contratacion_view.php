@@ -231,61 +231,61 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>estatus-contratacion</th>
                                                 <th>apartado</th>
                                                 <th>comentario</th>
-                                                <th>lugar-proseccion</th>
-                                                <th>fecha-validacion-enganche</th>
+                                                <th>lugar-prospeccion</th>
+                                                <th>fecha-de-validacion-del-enganche</th>
                                                 <th>cantidad-enganche-pagado</th>
                                                 <th>estatus-contratacion</th>
                                                 <th>cliente</th>
                                                 <th>coopropietarios</th>
                                                 <th>comentario-neodata</th>
                                                 <th>fecha-apertura</th>
-                                                <th>apartado-reubicacion</th>
+                                                <th>apartado-de-reubicacion</th>
                                                 <th>fecha-alta</th>
                                                 <th>venta-compartida</th>
-                                                <th>UBICACIÓN DE LA VENTA</th>
-                                                <th>TIPO DE PROCESO</th>
-                                                <th>SEDE</th>
+                                                <th>ubicacion</th>
+                                                <th>tipo-proceso</th>
+                                                <th>sede</th>
 
                                                 <!--solo para popea y el otro sujeto-->
                                                 <th>folio</th>
-                                                <th>documentación entregada</th>
+                                                <th>documentacion-entregada</th>
                                                 <th>nom-cliente</th>
-                                                <th>telefono-casa</th>
+                                                <th>telefono</th>
                                                 <th>celular</th>
                                                 <th>correo</th>
                                                 <th>fecha-nacimiento</th>
                                                 <th>nacionalidad</th><!--40-->
-                                                <th>originario de</th>
-                                                <th>estado civil</th>
-                                                <th>nombre conyugue</th>
+                                                <th>originario-de</th>
+                                                <th>estado-civil</th>
+                                                <th>nombre-conyugue</th>
                                                 <th>regimen</th>
-                                                <th>dom. particular</th>
-                                                <th>ocupación</th>
-                                                <th>empresa en la que trabaja</th>
+                                                <th>domicilio-particular</th>
+                                                <th>ocupacion</th>
+                                                <th>empresa-en-la-que-trabaja</th>
                                                 <th>puesto</th>
-                                                <th>antigüedad</th>
+                                                <th>antuiguedad</th>
                                                 <th>edad</th><!--50-->
-                                                <th>dom. empresa</th>
-                                                <th>tel. empresa</th>
-                                                <th>vive en casa</th>
+                                                <th>domicilio-empresa</th>
+                                                <th>telefono-empresa</th>
+                                                <th>vive-en-casa</th>
                                                 <th>copropietario</th>
-                                                <th>no. referencia pago</th>
-                                                <th>costo m2 lista</th>
-                                                <th>costo m2 final</th>
+                                                <th>referencia-pago</th>
+                                                <th>costo-m2-lista</th>
+                                                <th>costo-m2-final</th>
 
-                                                <th>en el municipio de</th>
-                                                <th>importe de la oferta</th>
-                                                <th>importe en letra</th><!--60-->
-                                                <th>saldo del depósito</th>
-                                                <th>aportación mensual</th>
-                                                <th>fecha 1ra aportación</th>
-                                                <th>fecha liquidación</th>
-                                                <th>fecha 2da liquidación</th>
-                                                <th>referencias personales</th>
-                                                <th>observaciones</th>
+                                                <th>en-el-municipio-de</th>
+                                                <th>importe-de-la-oferta</th>
+                                                <th>importe-en-letra</th><!--60-->
+                                                <th>saldo-del-posito</th>
+                                                <th>aportacion-mensual</th>
+                                                <th>fecha-1-aportacion</th>
+                                                <th>fecha-liquidacion</th>
+                                                <th>fecha-2da-liquidacion</th>
+                                                <th>referencias-personales</th>
+                                                <th>observaciones-2</th>
 
                                                 <!--solo para popea y el otro sujeto end-->
-                                                <th>porcentaje enganche</th>
+                                                <th>porcentaje-enganche</th>
                                                 <th>acciones</th><!--69-->
 
                                             </tr>
@@ -298,7 +298,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                             <div class="row hide" id="card2">
                                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="encabezadoBox">
-                                        <h3 class="card-title center-align">Descargar inventario de lotes por sede</h3>
+                                        <h3 class="card-title center-align" data-i18n="Descargar-inventario-lote-sede">Descargar inventario de lotes por sede</h3>
                                         <p class="card-title pl-1"></p>
                                     </div>
                                     <div  class="toolbar">
@@ -306,10 +306,9 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div class="col-md-4 form-group">
                                                     <div class="form-group select-is-empty">
-                                                        <label class="control-label">Sedes por proyecto</label>
+                                                        <label class="control-label" data-i18n="sedes-por-proyectos">Sedes por proyecto</label>
                                                         <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
-                                                                data-style="btn" data-show-subtext="true"  data-i18n  ="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"
-                                                                
+                                                                data-style="btn" data-show-subtext="true"  data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"                                                                
                                                                 data-size="7" data-live-search="true" required>
                                                         </select>
                                                     </div>
@@ -321,41 +320,41 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                         <table id="tabla_inventario_contraloria" name="tabla_inventario_contraloria" class="table-striped table-hover hide">
                                             <thead>
                                             <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>SUPERFICIE</th>
-                                                <th>PRECIO DE LISTA</th>
-                                                <th>TOTAL CON DESCUENTOS</th>
+                                                <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>id-lote</th>
+                                                <th>superficie</th>
+                                                <th>precio-lista</th>
+                                                <th>total-con-descuentos</th>
                                                 <th>M2</th>
-                                                <th>REFERENCIA</th>
-                                                <th>MESES SIN INTERESES</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>ESTATUS</th>
-                                                <th>ESTATUS DE CONTRATACION</th>
-                                                <th>FECHA DE APARTADO</th>
-                                                <th>COMENTARIO</th>
-                                                <th>LUGAR DE PROSPECCIÓN</th>
-                                                <th>FECHA DE VALIDACIÓN DEL ENGANCHE</th>
-                                                <th>FECHA DE APERTURA</th>
+                                                <th>referencia</th>
+                                                <th>meses-sin-intereses</th>
+                                                <th>asesor</th>
+                                                <th>coordinador</th>
+                                                <th>gerente</th>
+                                                <th>subdirector</th>
+                                                <th>director-regional</th>
+                                                <th>director-regional2</th>
+                                                <th>estatus</th>
+                                                <th>estatus-contratacion</th>
+                                                <th>fecha-apartado</th>
+                                                <th>comentario</th>
+                                                <th>lugar-prospeccion</th>
+                                                <th>fecha-de-validacion-del-enganche</th>
+                                                <th>fecha-apertura</th>
                                                 <th>CANTIDAD DEL ENGANCHE PAGADO</th>
-                                                <th>CLIENTE</th>
-                                                <th>COMENTARIO DE NEODATA</th>
-                                                <th>FECHA APERTURA</th>
-                                                <th>APARTADO DE REUBICACIÓN</th>
-                                                <th>FECHA ALTA</th>
-                                                <th>VENTA COMPARTIDA</th>
-                                                <th>UBICACIÓN DE LA VENTA</th>
-                                                <th>TIPO PROCESO</th>
-                                                <th>REUBICACIÓN</th>
-                                                <th>FECHA DE REUBICACIÓN</th>
-                                                <th>SEDE</th>
+                                                <th>cliente</th>
+                                                <th>cpmentario-neodata</th>
+                                                <th>fecha-apertura</th>
+                                                <th>apartado-de-reubicacion</th>
+                                                <th>fecha-alta</th>
+                                                <th>venta-compartida</th>
+                                                <th>ubicacion-de-la-venta</th>
+                                                <th>tipo-proceso</th>
+                                                <th>reubicacion</th>
+                                                <th>fecha-de-reubicacion</th>
+                                                <th>sede</th>
                                             </tr>
                                             </thead>
                                         </table>
