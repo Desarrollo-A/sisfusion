@@ -303,16 +303,16 @@
                                                         <th></th>
                                                         <th><span data-i18n="id-pago">  <span> </th>
                                                         <th>proyecto</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>PAGADO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -428,11 +428,11 @@
                                             <table class="table-striped table-hover hide" id="tabla_resguardo_comisiones" name="tabla_resguardo_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>id-pago</th>
+                                                        <th>proyecto</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>
                                                         <th>SALDO A COBRAR</th>
