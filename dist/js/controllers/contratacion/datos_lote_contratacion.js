@@ -582,6 +582,8 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             $('[data-toggle="tooltip"]').tooltip();
         }
     });
+
+    applySearch(tabla_6)
 });
 
 $(document).on("click", ".ver_historial", function () {
@@ -1137,6 +1139,7 @@ function fillTableInventario(sede) {
             $('#spiner-loader').addClass('hide');
         }
     });
+    applySearch(tabla_inventario);
 
     $(window).resize(function () {
         tabla_inventario.columns.adjust();

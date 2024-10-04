@@ -328,8 +328,6 @@ function dataTable(ruta) {
         ],
         "data": ruta
     });
-
-    applySearch(table)
 }
 
 $(document).on("click", ".ver_historial", function(){

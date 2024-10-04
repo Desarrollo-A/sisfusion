@@ -91,6 +91,8 @@ const datosTablasComisiones = [
 ];
 
 function applySearch(table) {
+    console.log('apply')
+
     let id = table.tables().nodes().to$().attr('id')
 
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
@@ -115,9 +117,10 @@ function applySearch(table) {
         })
     })
 
-    $(`#${id}`).on('draw.dt', function() {
-        $('body').i18n()
-    });
+    // $(`#${id}`).on('draw.dt', function() {
+    //     console.log('DRAW')
+    //     $('body').i18n()
+    // });
 }
 
 function construirHead(table){
@@ -159,6 +162,11 @@ function construirHead(table){
 
     onLoadTranslations(translatePlaceholder)
     onChangeTranslations(translatePlaceholder)
+
+    $(`#${table}`).on('draw.dt', function() {
+        console.log('DRAW')
+        $('body').i18n()
+    });
 }
 
 function changeButtonTooltips() {
