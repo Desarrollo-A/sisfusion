@@ -619,7 +619,8 @@
                 "fecha-apertura": "Opening date",
                 "apartado-de-reubicacion": "Relocation section",
                 "venta-compartida": "Shared sale",
-                "ubicacion-de-la-venta": "Location of sale"
+                "ubicacion-de-la-venta": "Location of sale",
+                "fecha-creacion": "Creation date"
         },
         "es": {
                 "clientes-prospectos-por-mes" : "Clientes y prospectos por mes",
@@ -1242,7 +1243,7 @@
                 "fecha-apertura" : "Fecha de apertura",
                 "apartado-de-reubicacion" : "Apartado de reubicación",
                 "venta-compartida" : "Venta compartida",
-                "ubicacion-de-la-venta" : "Ubicación de la venta"
-
+                "ubicacion-de-la-venta" : "Ubicación de la venta",
+                "fecha-creacion": "Fecha creación"
         }
 }
