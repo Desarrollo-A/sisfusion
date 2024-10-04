@@ -195,7 +195,7 @@ function guardarCancelacion(idCliente) {
             hideModal();
             $('#spiner-loader').addClass('hide');
             if (res.code === 200) {
-                alerts.showNotification("top", "right", `El registro se ha actualizado con éxito.`, "success");
+                alerts.showNotification("top", "right", `${_('registro-actualizado')}`, "success");
                 tablaCancelaciones.ajax.reload();
             }
             if (res.code === 400) {

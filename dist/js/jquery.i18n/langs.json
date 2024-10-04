@@ -683,7 +683,8 @@
 		"fecha-de-nacimiento":"DATE OF BIRTH",
 		"lotes-cancelados":"Canceled batches",
 		"cancelacion-lote":"Batch Cancellation",
-		"cambiar-estatus-lote":"Are you sure you want to change the status of this batch?"
+		"cambiar-estatus-lote":"Are you sure you want to change the status of this batch?",
+		"registro-actualizado":"The record has been successfully updated."
 	
 	},
 	"es": {
@@ -1371,6 +1372,7 @@
 		"lotes-cancelados":"Lotes cancelados",
 		"director-regional-2": "DIRECTOR REGIONAL 2",
 		"cancelacion-lote":"Cancelación de lote",
-		"cambiar-estatus-lote":"¿Está seguro de cambiar el estatus de este lote?"
+		"cambiar-estatus-lote":"¿Está seguro de cambiar el estatus de este lote?",
+		"registro-actualizado":"El registro se ha actualizado con éxito."
 	}
 }
