@@ -684,7 +684,9 @@
 		"lotes-cancelados":"Canceled batches",
 		"cancelacion-lote":"Batch Cancellation",
 		"cambiar-estatus-lote":"Are you sure you want to change the status of this batch?",
-		"registro-actualizado":"The record has been successfully updated."
+		"registro-actualizado":"The record has been successfully updated.",
+		"tus-autorizaciones":"Your authorizations",
+		"autorizaciones-pendientes":"Pending authorizations"	
 	
 	},
 	"es": {
@@ -1373,6 +1375,8 @@
 		"director-regional-2": "DIRECTOR REGIONAL 2",
 		"cancelacion-lote":"Cancelación de lote",
 		"cambiar-estatus-lote":"¿Está seguro de cambiar el estatus de este lote?",
-		"registro-actualizado":"El registro se ha actualizado con éxito."
+		"registro-actualizado":"El registro se ha actualizado con éxito.",
+		"tus-autorizaciones":"Tus autorizaciones",
+		"autorizaciones-pendientes":"autorizaciones pendientes"	
 	}
 }

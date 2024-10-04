@@ -20,8 +20,8 @@
 				<div class="modal-content" >
 					<form name="sendAutsFromD" id="sendAutsFromD">
 						<div class="modal-header d-flex justify-between align-center">
-							<h3 class="modal-title" id="myModalLabel">Autorizaciones</h3>
-							<label class="m-0">(<span class="items"></span>) autorizaciones pendientes</label>
+							<h3 class="modal-title" id="myModalLabel" data-i18n="autorizaciones">Autorizaciones</h3>
+							<label class="m-0">(<span class="items"></span>) <label data-i18n="autorizaciones-pendientes">autorizaciones pendientes</label></label>
 						</div>
 						<div class="modal-body pl-0 pr-0">
 							<div class="scroll-styles" id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
@@ -90,7 +90,7 @@
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="autorizaciones">
-                                            <h3 class="card-title center-align">Tus autorizaciones</h3>
+                                            <h3 class="card-title center-align" data-i18n="tus-autorizaciones">Tus autorizaciones</h3>
                                             <div class="form-group">
                                                 <table id="addExp" class="table-striped table-hover">
                                                     <thead>
