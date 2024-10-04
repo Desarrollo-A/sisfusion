@@ -197,6 +197,19 @@ function changeSelects() {
     })
 }
 
+function changeInputPlaceholder() {
+    $('input').each(function (i) {
+        let id = $(this).data('i18n-label')
+
+        if(id){
+            let title = _(id)
+            // console.log(title)
+
+            $(this).attr('placeholder', title)
+        }
+    })
+}
+
 function stringToI18(str) {
     // Convertir todo el string a minúsculas
     let resultado = str.toLowerCase();
@@ -249,3 +262,5 @@ onLoadTranslations(changeParagraphTooltips)
 onChangeTranslations(changeParagraphTooltips)
 onLoadTranslations(changeListTooltips)
 onChangeTranslations(changeListTooltips)
+onLoadTranslations(changeInputPlaceholder)
+onChangeTranslations(changeInputPlaceholder)
