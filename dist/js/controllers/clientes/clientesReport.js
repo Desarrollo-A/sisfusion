@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    construirHead("clients_report_datatable");
+
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth('#beginDate','#endDate');
@@ -30,17 +32,6 @@ $('#clients_report_datatable').on('draw.dt', function() {
     });
 });
 
-let titulosEvidence = [];
-$('#clients_report_datatable thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    titulosEvidence.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#clients_report_datatable').DataTable().column(i).search() !== this.value ) {
-            $('#clients_report_datatable').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
 
 function fillDataTable(typeTransaction, beginDate, endDate, where){
     $('#clients_report_datatable').dataTable({
