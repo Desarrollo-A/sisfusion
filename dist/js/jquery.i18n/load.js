@@ -91,6 +91,7 @@ const datosTablasComisiones = [
 
 function applySearch(table) {
     let id = table.tables().nodes().to$().attr('id')
+
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
         $('input', this).on('keyup change', function () {
             if (table.column(i).search() !== this.value) {
@@ -115,26 +116,51 @@ function applySearch(table) {
     })
 }
 
-
 function construirHead(table){
     let titulos = []
     const idNoPermitidos = ['checkComisionesNuevas']
 
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
-
+        
         titulos.push(id);
         // console.log(id)
         if(id && idNoPermitidos.indexOf(id)){
             if(id){
                 title = _(id)
-                $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
+                $(this).html(`<input id="th_${i}_${id}" class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+                
+                function translatePlaceholder(){
+                    $(`#th_${i}_${id}`).attr('placeholder', _(id))
+                    $(`#th_${i}_${id}`).attr('data-original-title', _(id))
+                }
+
+                onLoadTranslations(translatePlaceholder)
+                onChangeTranslations(translatePlaceholder)
             }
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
-
         }
+    });
+
+    $(`#${table}`).on('draw.dt', function() {
+        $('.dt-button').each(function (i) {
+            let is_excel = $(this).hasClass('buttons-excel')
+            let is_pdf = $(this).hasClass('buttons-pdf')
+            
+            if(is_excel){
+                $(this).attr('title', _('descargar-excel'))
+                $(this).children().children().removeAttr('title')
+            }
+
+            if(is_pdf){
+                $(this).attr('title', _('descargar-pdf'))
+                $(this).children().children().removeAttr('title')
+            }
+        })
+        
+        $('body').i18n()
     });
 }
 
@@ -166,6 +192,27 @@ function changeSelects() {
             div.html(title)
 
             $(this).attr('title', title)
+
+            $('option', this).each(function (x) {
+                let clase = $(this).attr('class')
+
+                if(clase === 'bs-title-option'){
+                    $(this).html(title)
+                }
+            })
+        }
+    })
+}
+
+function changeInputPlaceholder() {
+    $('input').each(function (i) {
+        let id = $(this).data('i18n-label')
+
+        if(id){
+            let title = _(id)
+            // console.log(title)
+
+            $(this).attr('placeholder', title)
         }
     })
 }
@@ -198,7 +245,7 @@ function changeParagraphTooltips() {
 }
 
 function changeListTooltips() {
-    console.log('li')
+    // console.log('li')
 
     $('li').each(function (i) {
         let id = $(this).data('i18n-tooltip')
@@ -222,3 +269,5 @@ onLoadTranslations(changeParagraphTooltips)
 onChangeTranslations(changeParagraphTooltips)
 onLoadTranslations(changeListTooltips)
 onChangeTranslations(changeListTooltips)
+onLoadTranslations(changeInputPlaceholder)
+onChangeTranslations(changeInputPlaceholder)

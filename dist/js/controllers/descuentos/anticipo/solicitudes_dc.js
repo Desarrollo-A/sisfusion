@@ -29,13 +29,13 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Registro estatus 9',
-            title: "Registro estatus 9",
+            titleAttr: _('descargar-excel'), 
+            title: _('adelantos'),
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                columns: [0,1, 2, 3, 4, 5, 7, 8, 9,10,11],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx - 1] + ' ';
+                        header: function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -130,7 +130,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             ],
         columnDefs: [{
             defaultContent: "Sin especificar",
-            targets: "_all",
+            targets: [5], visible: false,
             searchable: true,
             orderable: false
         }],
@@ -145,6 +145,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         order: [[1, 'asc']]
     });
     applySearch(tabla_9);
+
     $('#tabla_anticipo_revision_dc').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"

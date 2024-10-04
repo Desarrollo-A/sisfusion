@@ -28,13 +28,13 @@ $("#historial_general").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Reporte anticipo',
-            title: "Reporte anticipo",
+            titleAttr: "_('descargar-excel')", 
+            title: _('reporte-anticipos'),
             exportOptions: {
                 columns: [0,1, 2, 3, 4, 5, 7, 8, 9,10,11],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx] + ' ';
+                        header: function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
