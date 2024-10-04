@@ -1175,6 +1175,16 @@
                 ,"disponible":" Disponible"
                 ,"alert-enviar-comisiones": "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte"
                 ,"eviar-resguardos":" Enviar a resguardos",
-                "nacionalidad": "Nacionalidad"
+                "nacionalidad": "Nacionalidad",
+                "personalidad-juridica": "Personalidad jurídica",
+                "curp": "CURP",
+                "rfc": "RFC",
+                "nombre-razon-social": "Nombre / Razón social",
+                "ap-paterno": "Primer apellido",
+                "ap-materno": "Segundo apellido",
+                "edad": "Edad",
+                "telefono-casa": "Teléfono casa",
+                "como-nos-contactaste": "¿Cómo nos contactaste?",
+                "plaza-venta": "Plaza de venta"
         }
 }
