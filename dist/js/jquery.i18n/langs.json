@@ -159,7 +159,7 @@
 		"puesto": "Position",
 		"acciones": "Actions",
 		"id-pago": "Payment ID",
-		"fecha-apartado": "DATE OF WITHDRAWAL",
+		"fecha-de-apartado": "DATE OF RESERVATION",
 		"monto": "Amount",
 		"fecha-aplicado": "Date of application",
 		"detalle-movimiento": "DETAIL MOVEMENT",
@@ -504,7 +504,15 @@
         "solicitud-autorizacion":"Authorization request",
 		"en-proceso2":"IN PROCESS",
 		"denegada2":"DENIED",
-		"solicitante-asesor":"APPLICANT/ADVISOR"
+		"solicitante-asesor":"APPLICANT/ADVISOR",
+		"texto-financiera-activa":"A financial run is already active!",
+		"corrida-lotes":"Financial runs by batch",
+		"texto-financiera-lote":"There is currently a financial run for this batch",
+		"deshabilitar-corrida-financiera":"You can disable the current financial run to enable the desired financial run",
+
+
+		"id-corrida":"RUN ID",
+		"ESTATUS":"ESTATUS"
 	},
 	"es": {
 		"clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -665,7 +673,7 @@
 		"puesto": "Puesto",
 		"acciones": "Acciones",
 		"id-pago": "ID pago",
-		"fecha-apartado": "FECHA DE APARTADO",
+		"fecha-de-apartado": "FECHA DE APARTADO",
 		"monto": "Monto",
 		"fecha-aplicado": "Fecha de aplicado",
 		"detalle-movimiento": "DETALLE MOVIMIENTO",
@@ -1012,6 +1020,15 @@
         "solicitud-autorizacion":"Solicitud de autorización",
 		"en-proceso2":"EN PROCESO",
 		"denegada2":"DENEGADA",
-		"solicitante-asesor":"SOLICITANTE/ASESOR"
+		"solicitante-asesor":"SOLICITANTE/ASESOR",
+		"texto-financiera-activa":"¡Ya existe una corrida financiera activa!",
+		"corrida-lotes":"Corridas financieras por lote",
+		"texto-financiera-lote":"Actualmente ya hay una corrida financiera para este lote",
+		"deshabilitar-corrida-financiera":"Puedes deshabilitar la corrida financiera actual, para habilitar la corrida financiera deseada",
+		
+		
+		"id-corrida":"ID CORRIDA",
+		"ESTATUS":"ESTATUS"
+
 	}
 }
