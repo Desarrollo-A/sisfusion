@@ -93,14 +93,14 @@
                                                         <label class="control-label">
                                                             <span data-i18n="nacionalidad">Nacionalidad</span>(<span class="isRequired">*</span>)
                                                         </label>
-                                                        <select id="nationality" name="nationality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-container="body" onchange="validateSelect('nationality')" required></select>
+                                                        <select id="nationality" name="nationality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-container="body" onchange="validateSelect('nationality')" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">
                                                             <span data-i18n="personalidad-juridica">Personalidad jurídica</span> (<span class="isRequired">*</span>)</label>
-                                                            <select id="legal_personality" name="legal_personality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-container="body" onchange="validatePersonality(), validateSelect('legal_personality')" required></select>
+                                                            <select id="legal_personality" name="legal_personality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-container="body" onchange="validatePersonality(), validateSelect('legal_personality')" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
@@ -177,13 +177,13 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label" data-i18n="estado-civil">Estado civil</label>
-                                                        <select id="civil_status" name="civil_status" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
+                                                        <select id="civil_status" name="civil_status" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body"></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label" data-i18n="regimen-matrimonial">Régimen matrimonial</label>
-                                                        <select id="matrimonial_regime" data-i18n="selecciona-una-opcion" name="matrimonial_regime" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-container="body" onchange="validateMatrimonialRegime(1)"></select>
+                                                        <select id="matrimonial_regime" data-i18n="selecciona-una-opcion" name="matrimonial_regime" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body" onchange="validateMatrimonialRegime(1)"></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
@@ -294,7 +294,7 @@
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">3
                                                             <span data-i18n="como-nos-contactaste">¿Cómo nos contactaste?</span> (<span class="isRequired">*</span>)</label>
-                                                        <select id="prospecting_place" name="prospecting_place" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" onchange="validateProspectingPlace(), validateSelect('prospecting_place')" required></select>
+                                                        <select id="prospecting_place" name="prospecting_place" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body" onchange="validateProspectingPlace(), validateSelect('prospecting_place')" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -302,7 +302,7 @@
                                                         <label class="control-label" data-i18n="especifique-cual">Específique cuál</label>
                                                         <input id="specify" name="specify" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                         <div id="specify_mkt_div" name="specify_mkt_div" style="display: none;">
-                                                            <select id="specify_mkt"name="specify_mkt" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" style="display: none;">
+                                                            <select id="specify_mkt"name="specify_mkt" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body" style="display: none;">
                                                                 <option value="01 800">01 800</option>
                                                                 <option value="Chat">Chat</option>
                                                                 <option value="Web">Web</option>
@@ -320,7 +320,7 @@
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">
                                                             <span data-i18n="plaza-venta">Plaza de venta</span> (<span class="isRequired">*</span>)</label>
-                                                        <select id="sales_plaza" name="sales_plaza" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-container="body" title="Selecciona una opción" data-size="7" onchange="validateSelect('sales_plaza')" required>
+                                                        <select id="sales_plaza" name="sales_plaza" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-container="body" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" data-size="7" onchange="validateSelect('sales_plaza')" required>
                                                         </select>
                                                     </div>
                                                 </div>
