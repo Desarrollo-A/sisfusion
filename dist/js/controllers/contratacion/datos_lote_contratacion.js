@@ -2,6 +2,8 @@ $(document).ready(function () {
     // Initial load of content
     loadSelectOptions();
     construirHead("tablaInventario");
+    construirHead("tabHistoriaContratacion");
+
 });
 
 function loadSelectOptions() {
@@ -586,7 +588,8 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             /***********/
             {
                 data: function (d) {
-                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
+                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="${_("ver-mas-informacion")}" data-i18n-tooltip= "${_("ver-mas-informacion")}"><i class="fas fa-history"></i></button></center>`;
+              
                 }
             }],
         initComplete: function() {
