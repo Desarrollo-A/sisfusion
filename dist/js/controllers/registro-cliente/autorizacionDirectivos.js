@@ -34,17 +34,17 @@ $(document).on('change', '.btn-file :file', function() {
     input.trigger('fileselect', [numFiles, label]);
 });
 
-$('#addExp thead tr:eq(0) th').each( function (i) {
-    const title = $(this).text();
-    titulosAu.push(title);
+// $('#addExp thead tr:eq(0) th').each( function (i) {
+//     const title = $(this).text();
+//     titulosAu.push(title);
 
-    $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#addExp').DataTable().column(i).search() !== this.value ) {
-            $('#addExp').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
+//     $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
+//     $( 'input', this ).on('keyup change', function () {
+//         if ($('#addExp').DataTable().column(i).search() !== this.value ) {
+//             $('#addExp').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+// });
 
 $('#aut-verificacion thead tr:eq(0) th').each( function (i) {
     const title = $(this).text();
@@ -61,7 +61,7 @@ $('#aut-verificacion thead tr:eq(0) th').each( function (i) {
 
 $(document).ready (function() {
     const funcionToGetData = (id_rol_general == 1) ? 'autsByDC' : 'tableAut';
-
+    construirHead('addExp');
     tablaAut = $('#addExp').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -146,7 +146,7 @@ $(document).ready (function() {
                 }
             }]
     });
-
+    applySearch(tablaAut);
     $('#addExp').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
@@ -288,7 +288,7 @@ $(document).ready (function() {
                             <div class="w-80">
                                 <small>
                                     <label class="m-0" style="font-size: 11px; font-weight: 100;">
-                                        Solicitud asesor ( ${ item['fecha_creacion'].substr(0,10) })
+                                        ${_('solicitud-asesor')} ( ${ item['fecha_creacion'].substr(0,10) })
                                     </label>
                                 </small>
                             </div>
@@ -314,14 +314,14 @@ $(document).ready (function() {
                         <label>${ item['autorizacion'] }</label>
                         <div class="file-gph">
                             <input class="d-none" type="file" id="expediente${i}" name="docArchivo${i}" onchange="changeName(this)">
-                            <input class="file-name" type="text" placeholder="No has seleccionada nada aún" >
+                            <input class="file-name" type="text" placeholder="${_('nada-seleccionado')}" >
                             <label class="upload-btn m-0" for="expediente${i}">
-                                <span>Buscar</span>
+                                <span>${_('buscar')}</span>
                                 <i class="fas fa-search"></i>
                             </label>
                         </div>
                         <div class="form-group label-floating is-empty">
-                            <label class="control-label">Comentario</label>
+                            <label class="control-label">${_('comentario2')}</label>
                             <input type="text" name="observaciones${i}" class="form-control" style="border-radius:27px; border: 1px solid #cdcdcd; background-image: none; padding: 0 20px;">
                         </div>
                         <input type="hidden" name="idAutorizacion${i}"  value="${item['id_autorizacion']}">
@@ -443,7 +443,7 @@ $("#sendAutsFromD").on('submit', function(e){
     e.preventDefault();
 
     if (parseInt($('#numeroDeRow').val()) !== $('#autClienteForm input:radio:checked').length) {
-        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR o ENVIAR A DC todas las solicitudes.", "warning");
+        alerts.showNotification("top", "right", `${_('aprobar-todas-solicitudes')}`, "warning");
         return;
     }
 
@@ -475,7 +475,7 @@ $('#autClienteForm').on('submit', function (e) {
     e.preventDefault();
 
     if (parseInt($('#numeroDeRowAut').val()) !== $('#autClienteForm input:radio:checked').length) {
-        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR todas las solicitudes.", "warning");
+        alerts.showNotification("top", "right", `${_('debe-solicitudes')}`, "warning");
         return;
     }
 
