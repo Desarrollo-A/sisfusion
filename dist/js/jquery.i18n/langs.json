@@ -664,7 +664,8 @@
                 "no-se-han-encontrado-reg":"No records found to display.",
                 "sin-datos":"NO DATA TO DISPLAY.",
                 "verficar-y-cargar":"VERIFY AND UPLOAD.",
-                "no-puedes-subir-factura": "YOU CANNOT UPLOAD INVOICES UNTIL THE NEXT CUTOFF."
+                "no-puedes-subir-factura": "YOU CANNOT UPLOAD INVOICES UNTIL THE NEXT CUTOFF.",
+                "doc-fiscal-cargado":"Tax document uploaded successfully."
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -1136,6 +1137,7 @@
                 "no-se-han-encontrado-reg":"No se han encontrado registros que mostrar",
                 "sin-datos":"SIN DATOS A MOSTRAR",
                 "verficar-y-cargar":"VERIFICAR Y CARGAR",
-                "no-puedes-subir-factura": "NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE."
+                "no-puedes-subir-factura": "NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE.",
+                "doc-fiscal-cargado":"Documento fiscal cargado con éxito"
         }
 }
