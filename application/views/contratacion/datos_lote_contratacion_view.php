@@ -33,19 +33,19 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                     <div role="tabpanel">
                         <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                             <li role="presentation" class="active">
-                                <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial de contratación</a>
+                                <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab" data-i18n  ="historial-contratacion">Historial de contratación</a>
                             </li>
                             <li role="presentation">
-                                <a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab">Historial de liberación</a>
+                                <a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab" data-i18n  = "historial-liberacion">Historial de liberación</a>
                             </li>
                             <li role="presentation">
-                                <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas compartidas</a>
+                                <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab" data-i18n  ="ventas-compartidas">Ventas compartidas</a>
                             </li>
                             <li role="presentation" id="divTabHistorialEstatus">
-                                <a href="#tabHistorialEstatus" aria-controls="tabHistorialEstatus" role="tab" data-toggle="tab">Historial Estatus</a>
+                                <a href="#tabHistorialEstatus" aria-controls="tabHistorialEstatus" role="tab" data-toggle="tab" data-i18n = "historial-estatus">Historial Estatus</a>
                             </li>
                             <li role="presentation" id="divTabClausulas">
-                                <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab">Cláusulas</a>
+                                <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab" data-i18n  ="clausulas">Cláusulas</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -57,12 +57,12 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaHistorialContratacion">
                                                     <thead>
                                                     <tr>
-                                                        <th>LOTE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>DETALLES</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>FECHA DE ESTATUS</th>
-                                                        <th>USUARIO</th>
+                                                        <th>lote</th>
+                                                        <th>estatus</th>
+                                                        <th>detalles</th>
+                                                        <th>comentario</th>
+                                                        <th>fecha-de-estatus</th>
+                                                        <th>usuario</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -79,11 +79,11 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaHistoriaLiberacion">
                                                     <thead>
                                                     <tr>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO</th>
-                                                        <th>FECHA DE LIBERACIÓN</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>USUARIO</th>
+                                                        <th>lote</th>
+                                                        <th>precio</th>
+                                                        <th>fecha-liberacion</th>
+                                                        <th>comentario</th>
+                                                        <th>usuario</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -100,14 +100,14 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaVentasCompartidas">
                                                     <thead>
                                                     <tr>
-                                                        <th>ASESOR</th>
-                                                        <th>COORDINADOR</th>
-                                                        <th>GERENTE</th>
-                                                        <th>SUBDIRECTOR</th>
-                                                        <th>DIRECTOR REGIONAL</th>
-                                                        <th>DIRECTOR REGIONAL 2</th>
-                                                        <th>FECHA DE ALTA</th>
-                                                        <th>USUARIO</th>
+                                                        <th>asesor</th>
+                                                        <th>coordinador</th>
+                                                        <th>gerente</th>
+                                                        <th>subdirector</th>
+                                                        <th>director-regional</th>
+                                                        <th>director-regional2</th>
+                                                        <th>fecha-alta</th>
+                                                        <th>usuario</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -236,7 +236,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>cantidad-enganche-pagado</th>
                                                 <th>estatus-de-la-contratacion</th>
                                                 <th>cliente</th>
-                                                <th>copropietario (s)</th>
+                                                <th>copropietario</th>
                                                 <th>comentario-neodata</th>
                                                 <th>fecha-apertura</th>
                                                 <th>apartado-de-reubicacion</th>
@@ -245,47 +245,45 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>ubicacion-de-la-venta</th>
                                                 <th>tipo-proceso</th>
                                                 <th>sede</th>
-
                                                 <!--solo para popea y el otro sujeto-->
                                                 <th>folio</th>
-                                                <th>documentación entregada</th>
+                                                <th>documentacion-entregada</th>
                                                 <th>nom-cliente</th>
                                                 <th>telefono-casa</th>
                                                 <th>celular</th>
                                                 <th>correo</th>
                                                 <th>fecha-nacimiento</th>
                                                 <th>nacionalidad</th><!--40-->
-                                                <th>originario de</th>
-                                                <th>estado civil</th>
-                                                <th>nombre conyugue</th>
+                                                <th>originario-de</th>
+                                                <th>estado-civil</th>
+                                                <th>nombre-conyuge</th>
                                                 <th>regimen</th>
-                                                <th>dom. particular</th>
-                                                <th>ocupación</th>
-                                                <th>empresa en la que trabaja</th>
+                                                <th>domicilio-particular</th>
+                                                <th>ocupacion</th>
+                                                <th>empresa-en-la-que-trabaja</th>
                                                 <th>puesto</th>
-                                                <th>antigüedad</th>
+                                                <th>antiguedad</th>
                                                 <th>edad</th><!--50-->
-                                                <th>dom. empresa</th>
-                                                <th>tel. empresa</th>
-                                                <th>vive en casa</th>
+                                                <th>dom-empresa</th>
+                                                <th>tel-empresa</th>
+                                                <th>vive-en-casa</th>
                                                 <th>copropietario</th>
-                                                <th>no. referencia pago</th>
-                                                <th>costo m2 lista</th>
-                                                <th>costo m2 final</th>
-
-                                                <th>en el municipio de</th>
-                                                <th>importe de la oferta</th>
-                                                <th>importe en letra</th><!--60-->
-                                                <th>saldo del depósito</th>
-                                                <th>aportación mensual</th>
-                                                <th>fecha 1ra aportación</th>
-                                                <th>fecha liquidación</th>
-                                                <th>fecha 2da liquidación</th>
-                                                <th>referencias personales</th>
+                                                <th>referencia-pago</th>
+                                                <th>costo-m2-lista</th>
+                                                <th>costo-m2-final</th>
+                                                <th>en-el-municipio-de</th>
+                                                <th>importe-de-la-oferta</th>
+                                                <th>importe-en-letra</th><!--60-->
+                                                <th>saldo-del-deposito</th>
+                                                <th>aportacion-mensual</th>
+                                                <th>fecha-1-aportacion</th>
+                                                <th>fecha-liquidacion</th>
+                                                <th>fecha-2da-liquidación</th>
+                                                <th>referencias-personales</th>
                                                 <th>observaciones</th>
 
                                                 <!--solo para popea y el otro sujeto end-->
-                                                <th>porcentaje enganche</th>
+                                                <th>porcentaje-enganche</th>
                                                 <th>acciones</th><!--69-->
 
                                             </tr>
@@ -321,41 +319,41 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                         <table id="tabla_inventario_contraloria" name="tabla_inventario_contraloria" class="table-striped table-hover hide">
                                             <thead>
                                             <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>SUPERFICIE</th>
-                                                <th>PRECIO DE LISTA</th>
-                                                <th>TOTAL CON DESCUENTOS</th>
-                                                <th>M2</th>
-                                                <th>REFERENCIA</th>
-                                                <th>MESES SIN INTERESES</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>ESTATUS</th>
-                                                <th>ESTATUS DE CONTRATACION</th>
-                                                <th>FECHA DE APARTADO</th>
-                                                <th>COMENTARIO</th>
-                                                <th>LUGAR DE PROSPECCIÓN</th>
-                                                <th>FECHA DE VALIDACIÓN DEL ENGANCHE</th>
-                                                <th>FECHA DE APERTURA</th>
-                                                <th>CANTIDAD DEL ENGANCHE PAGADO</th>
-                                                <th>CLIENTE</th>
-                                                <th>COMENTARIO DE NEODATA</th>
-                                                <th>FECHA APERTURA</th>
-                                                <th>APARTADO DE REUBICACIÓN</th>
-                                                <th>FECHA ALTA</th>
-                                                <th>VENTA COMPARTIDA</th>
-                                                <th>UBICACIÓN DE LA VENTA</th>
-                                                <th>TIPO PROCESO</th>
-                                                <th>REUBICACIÓN</th>
-                                                <th>FECHA DE REUBICACIÓN</th>
-                                                <th>SEDE</th>
+                                                <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>id-lote</th>
+                                                <th>superficie</th>
+                                                <th>precio-lista</th>
+                                                <th>total-con-descuentos</th>
+                                                <th>m2</th>
+                                                <th>referencia</th>
+                                                <th>meses-sin-intereses</th>
+                                                <th>asesor</th>
+                                                <th>coordinador</th>
+                                                <th>gerente</th>
+                                                <th>subdirector</th>
+                                                <th>director-regional</th>
+                                                <th>director-regional-2</th>
+                                                <th>estatus</th>
+                                                <th>estatus-contratacion</th>
+                                                <th>fecha-de-apartado</th>
+                                                <th>comentario</th>
+                                                <th>lugar-de-prospección</th>
+                                                <th>fecha-de-validacion-del-enganche</th>
+                                                <th>fecha-apertura</th>
+                                                <th>cantidad-enganche-pagado</th>
+                                                <th>cliente</th>
+                                                <th>comentario-neodata</th>
+                                                <th>fecha-apertura</th>
+                                                <th>apartado-de-reubicacion</th>
+                                                <th>fecha-alta</th>
+                                                <th>venta-compartida</th>
+                                                <th>ubicación-de-la-venta</th>
+                                                <th>tipo-proceso</th>
+                                                <th>reubicacion</th>
+                                                <th>fecha-de-reubicacion</th>
+                                                <th>sede</th>
                                             </tr>
                                             </thead>
                                         </table>
