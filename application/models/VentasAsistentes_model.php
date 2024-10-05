@@ -398,6 +398,9 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 15716) { // ADRIAN TREJO GUTIERREZ
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 7944) OR cl.id_asesor IN ($id_lider, 7944))";
                     $filtroSede = "";
+				} else if ($id_usuario == 10534) { // BRENDA PAOLA VEGA GUERRERO
+                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 13549, 13549) OR cl.id_asesor IN ($id_lider, 13549, 13549))";
+                    $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider)) AND cl.id_sede = $id_sede";
                     $filtroSede = "";

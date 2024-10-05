@@ -896,7 +896,9 @@ class Reestructura_model extends CI_Model
         ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
-        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND (cl.id_gerente = $id_usuario OR cl.id_asesor = $id_usuario)" : ( $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
+        if ($this->session->userdata('id_usuario') == 10534) // BRENDA PAOLA VEGA GUERRERO
+            $id_usuario = $this->session->userdata('id_lider') .  ", 13549, 13549";
+        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND (cl.id_gerente IN ($id_usuario) OR cl.id_asesor IN ($id_usuario))" : ( $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
 
         return $this->db->query(
             "WITH UltimoValor AS (
