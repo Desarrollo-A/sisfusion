@@ -665,7 +665,11 @@
                 "sin-datos":"NO DATA TO DISPLAY.",
                 "verficar-y-cargar":"VERIFY AND UPLOAD.",
                 "no-puedes-subir-factura": "YOU CANNOT UPLOAD INVOICES UNTIL THE NEXT CUTOFF.",
-                "doc-fiscal-cargado":"Tax document uploaded successfully."
+                "doc-fiscal-cargado":"Tax document uploaded successfully.",
+                "en-espera-abono-neo": "AWAITING NEXT DEPOSIT IN NEODATA"
+                ,"otro" : "Another"
+                ,"comentario-resguardo-rigel" : "Commissions are being withheld. If you need to see more details such as what has been paid and what is pending, you can check it in the history."
+                ,"saldo-pago-dinero" : "THERE IS NO CREDIT BALANCE. WAIT FOR THE NEXT PAYMENT APPLICATION."
         },
         "es": {
                 "clientes-prospectos-por-mes": "Clientes y prospectos por mes",
@@ -1138,6 +1142,13 @@
                 "sin-datos":"SIN DATOS A MOSTRAR",
                 "verficar-y-cargar":"VERIFICAR Y CARGAR",
                 "no-puedes-subir-factura": "NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE.",
-                "doc-fiscal-cargado":"Documento fiscal cargado con éxito"
+                "doc-fiscal-cargado":"Documento fiscal cargado con éxito",
+                "SIN LOCALIZAR" : "SIN LOCALIZAR"
+                ,"saldo-pago-dinero": "NO HAY SALDO A FAVOR. ESPERAR PRÓXIMA APLICACIÓN DE PAGO."
+                ,"en-espera-abono-neo": "EN ESPERA DE PRÓXIMO ABONO EN NEODATA"
+                ,"otro" : "Otro"
+                ,"comentario-resguardo-rigel" : "Comisiones en resguardo, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial" 
+
+
         }
 }
