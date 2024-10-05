@@ -3,6 +3,15 @@ let appointment = '';
 let exists = 1;
 let eventsTable;
 let arrayEvents = [];
+let globalLanguage = localStorage.getItem('locale');
+//triggerChangeFunctions(readyAgenda);
+onChangeTranslations(newCalendar);
+console.log("globalLanguage: ", globalLanguage);
+function newCalendar() {
+  globalLanguage = localStorage.getItem('locale');
+  console.log("globalLanguage inside: ", globalLanguage);
+  readyAgenda();
+}
 
 function readyAgenda(){
   if (!getGoogleTokenStorage()) {
@@ -41,7 +50,7 @@ const createGoogleCalendar = () => {
       },
     },
     timeZone: 'none',
-    locale: 'es',
+    locale: globalLanguage,
     initialView: 'dayGridMonth',
     allDaySlot: false,
     selectable: (id_rol_general == 2 || id_rol_general == 3) ? false : true,
