@@ -460,16 +460,19 @@ class Usuarios_modelo extends CI_Model
                 WHERE (id_rol = 1 AND estatus = 1) OR (id_usuario = $id_lider) OR ((id_sede LIKE '%$headquarter%' $validacionSede) AND id_rol = 2) ORDER BY nombre");
                 break;
             case '3': // GERENTE
-                /*$sede = '';
+                $sede = '';
                 $lider = "";
-                if ($headquarter == 11)
+                $validacionSubdirector = "";
+                 if ($headquarter == 11)
                     $sede = " OR id_sede='3'";
-                else if ($headquarter == 12)
+                else if (in_array($headquarter, array(12, 16)))
                     $sede = " OR id_sede='5'";
                 else if (in_array($headquarter, [15, 18]))
-                    $sede = " OR id_sede='$headquarter'";*/
-                    return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
-                                            id_rol = 2 AND id_sede='$headquarter' AND estatus = 1 ORDER BY nombre");
+                    $sede = " OR id_sede LIKE '%$headquarter%'";
+                if (in_array($this->session->userdata('id_rol'), array(5, 6)) && $this->session->userdata('tipo') == 3) // SON DE CASAS, LES VAMOS A MOSTRAR JORGE DE LA CRUZ
+                    $validacionSubdirector = "OR id_usuario = 11650";
+                return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
+                                        (id_rol = 2 AND (id_sede LIKE '%$headquarter%' $sede) $lider AND estatus = 1) $validacionSubdirector ORDER BY nombre");
                 break;
             case '4': // ASISTENTE DIRECTOR
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
