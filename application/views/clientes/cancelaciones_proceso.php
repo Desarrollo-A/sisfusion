@@ -11,7 +11,7 @@
                         <div class="card">
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Lotes cancelados</h3>
+                                    <h3 class="card-title center-align" data-i18n="lotes-cancelados">Lotes cancelados</h3>
                                     <p class="card-title pl-1"></p>
                                 </div>
                                 <div class="toolbar">
@@ -37,19 +37,19 @@
                                     <table id="cancelacionesTabla" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>FECHA DE APARTADO</th>
-                                                <th>ACCIONES</th>
+                                                <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>id-lote</th>
+                                                <th>cliente</th>
+                                                <th>asesor</th>
+                                                <th>coordinador</th>
+                                                <th>gerente</th>
+                                                <th>subdirector</th>
+                                                <th>director-regional</th>
+                                                <th>director-regional-2</th>
+                                                <th>fecha-de-apartado</th>
+                                                <th>acciones</th>
                                             </tr>
                                         </thead>
                                     </table>
