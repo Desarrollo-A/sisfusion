@@ -252,13 +252,13 @@
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
                                                                 <label  class="control-label" for="catalogo_nuevas" data-i18n="proyecto" >Proyecto</label>
-                                                                <select name="catalogo_nuevas" id="catalogo_nuevas" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                <select name="catalogo_nuevas" id="catalogo_nuevas" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="control-label" for="condominio_nuevas" data-i18n="condominio" >Condominio</label>
-                                                                <select name="condominio_nuevas" id="condominio_nuevas" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                <select name="condominio_nuevas" id="condominio_nuevas" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">                    
@@ -349,11 +349,11 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <label class="control-label" for="catalogo_revision" data-i18n="proyecto">Proyecto</label>
-                                                            <select name="catalogo_revision" id="catalogo_revision" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <select name="catalogo_revision" id="catalogo_revision" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <label class="control-label" for="condominio_revision" data-i18n="condominio">Condominio</label>
-                                                            <select name="condominio_revision" id="condominio_revision" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <select name="condominio_revision" id="condominio_revision" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -413,13 +413,13 @@
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
                                                                 <label class="control-label" for="catalogo_resguardo" data-i18n="proyecto">Proyecto</label>
-                                                                <select name="catalogo_resguardo" id="catalogo_resguardo" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                <select name="catalogo_resguardo" id="catalogo_resguardo" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
                                                                 <label class="control-label" for="condominio_resguardo" data-i18n="condominio">Condominio</label>
-                                                                <select name="condominio_resguardo" id="condominio_resguardo" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                <select name="condominio_resguardo" id="condominio_resguardo" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -477,11 +477,11 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">                      
                                                             <label class="control-label" for="catalogo_pagar" data-i18n="proyecto">Proyecto</label>
-                                                            <select name="catalogo_pagar" id="catalogo_pagar" data-i18n="selecciona-una-opcion"  class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <select name="catalogo_pagar" id="catalogo_pagar" data-i18n-label="selecciona-una-opcion"  class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <label class="control-label" for="condominio_pagar" data-i18n="condominio">Condominio</label>
-                                                            <select name="condominio_pagar" id="condominio_pagar" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <select name="condominio_pagar" id="condominio_pagar" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -538,11 +538,11 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <label class="control-label" for="catalogo_otras" data-i18n="proyecto">Proyecto</label>
-                                                            <select name="catalogo_otras" id="catalogo_otras" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <select name="catalogo_otras" id="catalogo_otras" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <label class="control-label" for="condominio_otras" data-i18n="condominio">Condominio</label>
-                                                            <select name="condominio_otras" id="condominio_otras" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <select name="condominio_otras" id="condominio_otras" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -568,7 +568,7 @@
                                         </div>
                                         <div class="tab-pane" id="sin_pago_neodata">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.</p>
+                                            <p class="card-title pl-1" data-il8n="sin-pago-neodata">.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -577,13 +577,13 @@
                                                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                                 <div class="form-group">
                                                                     <label class="control-label" for="catalogo_pago">Proyecto</label>
-                                                                    <select name="catalogo_pago" id="catalogo_pago" data-i18n="selecciona-una-opcion"  class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                    <select name="catalogo_pago" id="catalogo_pago" data-i18n-label="selecciona-una-opcion"  class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                                 <div class="form-group">
                                                                     <label class="control-label" for="condominio_pago" data-i18n="condominio">Condominio</label>
-                                                                    <select name="condominio_pago" id="condominio_pago" data-i18n="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                    <select name="condominio_pago" id="condominio_pago" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                                 </div>
                                                             </div>
                                                         </div>
