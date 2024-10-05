@@ -91,6 +91,7 @@ const datosTablasComisiones = [
 
 function applySearch(table) {
     let id = table.tables().nodes().to$().attr('id')
+
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
         $('input', this).on('keyup change', function () {
             if (table.column(i).search() !== this.value) {
@@ -115,14 +116,13 @@ function applySearch(table) {
     })
 }
 
-
 function construirHead(table){
     let titulos = []
     const idNoPermitidos = ['checkComisionesNuevas']
 
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
-
+        
         titulos.push(id);
         // console.log(id)
         if(id && idNoPermitidos.indexOf(id)){
@@ -141,9 +141,20 @@ function construirHead(table){
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
-
         }
     });
+
+    function translatePlaceholder(){
+        for(titulo of titulos){
+            if(titulo !== ''){
+                $(`#head-${titulo}`).attr('placeholder', _(titulo))
+                $(`#head-${titulo}`).attr('data-original-title', _(titulo))
+            }
+        }
+    }
+
+    onLoadTranslations(translatePlaceholder)
+    onChangeTranslations(translatePlaceholder)
 }
 
 function changeButtonTooltips() {
@@ -174,6 +185,14 @@ function changeSelects() {
             div.html(title)
 
             $(this).attr('title', title)
+
+            $('option', this).each(function (x) {
+                let clase = $(this).attr('class')
+
+                if(clase === 'bs-title-option'){
+                    $(this).html(title)
+                }
+            })
         }
     })
 }
