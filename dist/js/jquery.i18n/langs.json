@@ -1377,9 +1377,8 @@
 		"disponible": " Disponible",
 		"alert-enviar-comisiones": "No se pueden enviar comisiones, esperar al miércoles y jueves de la semana de corte",
 		"enviar-resguardos": " Enviar a resguardos",
-
 		"generar-token": "Generar token",
-		"sin-token-generado": "No token has been generated yet",
+		"sin-token-generado": "Aún no se ha generado ningún token",
 		"copiar-token": "Copiar token",
 		"no-has-seleccionado": "No has seleccionada nada aún",
 		"generar": "GENERAR",
