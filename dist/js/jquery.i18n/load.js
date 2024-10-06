@@ -1,4 +1,5 @@
 let locale = localStorage.getItem('locale')
+let languajeTable = general_base_url + "static/spanishLoader_v2.json";
 
 $.i18n().load(`${general_base_url}dist/js/jquery.i18n/langs.json`)
 .done(function() {
@@ -22,7 +23,6 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    console.log(lang);
     $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
@@ -55,6 +55,7 @@ function onLoadTranslations(callback){
     if (typeof callback === 'function') {
         load_functions.push(callback)
     }
+    
 }
 
 function onChangeTranslations(callback){
@@ -106,7 +107,6 @@ function applySearch(table) {
                     }).indexes();
                     var data = table.rows(index).data();
                     $.each(data, function (i, v) {
-                        console.log(v)
                         total += parseFloat(v.pago_cliente);
                     });
                     document.getElementById(`${searchTabla.idText}`).textContent = '$' + formatMoney(total);
@@ -114,17 +114,22 @@ function applySearch(table) {
             }
         })
     })
+
+    // $(`#${id}`).on('draw.dt', function() {
+    //     console.log('DRAW')
+    //     $('body').i18n()
+    // });
 }
 
 function construirHead(table){
     let titulos = []
-    const idNoPermitidos = ['checkComisionesNuevas']
+    const idNoPermitidos = ['checkComisionesNuevas'] 
 
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
         
         titulos.push(id);
-        // console.log(id)
+
         if(id && idNoPermitidos.indexOf(id)){
             if(id){
                 title = _(id)
@@ -156,25 +161,6 @@ function construirHead(table){
 
     onLoadTranslations(translatePlaceholder)
     onChangeTranslations(translatePlaceholder)
-    
-    $(`#${table}`).on('draw.dt', function() {
-        $('.dt-button').each(function (i) {
-            let is_excel = $(this).hasClass('buttons-excel')
-            let is_pdf = $(this).hasClass('buttons-pdf')
-            
-            if(is_excel){
-                $(this).attr('title', _('descargar-excel'))
-                $(this).children().children().removeAttr('title')
-            }
-
-            if(is_pdf){
-                $(this).attr('title', _('descargar-pdf'))
-                $(this).children().children().removeAttr('title')
-            }
-        })
-        
-        $('body').i18n()
-    });
 
     $(`#${table}`).on('draw.dt', function() {
         $('.dt-button').each(function (i) {
@@ -191,7 +177,6 @@ function construirHead(table){
                 $(this).children().children().removeAttr('title')
             }
         })
-        
         $('body').i18n()
     });
 }
@@ -200,7 +185,6 @@ function changeButtonTooltips() {
     $('button').each(function (i) {
         let id = $(this).data('i18n-tooltip')
 
-        // console.log(id)
 
         if(id){
             let title = _(id)
