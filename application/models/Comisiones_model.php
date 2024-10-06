@@ -4712,8 +4712,8 @@ public function CancelarDescuento($id_pago,$motivo)
            
         } else{
             $innerMktd = 4394;
-            $innerOtro =  $plan_comision == 104 ? 'cA.especialistaEscuadron' : 'pl.id_o';
-            $innerOtro2 = $plan_comision == 104 ? 'cA.liderEscuadron' : 'pl.id_o2';
+            $innerOtro =  $plan_comision == 104 ? 'cA.liderEscuadron' : 'pl.id_o';
+            $innerOtro2 = $plan_comision == 104 ? 'cA.coordinadorEscuadron' : 'pl.id_o2'; 
             $innerOtro3 = 'pl.id_o3';
             $innerOtro4 = 'pl.id_o4';
             $innerCoord = 'cA.id_coordinador';
