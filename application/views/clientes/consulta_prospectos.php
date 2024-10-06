@@ -15,7 +15,7 @@
                                 </a>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Listado general de prospectos</h3>
+                                <h3 class="card-title center-align" data-i18n="listado-prospectos">Listado general de prospectos</h3>
                                 <div class="toolbar" style="display:none">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6"></div>
@@ -30,7 +30,7 @@
                                                                 value="01/01/2021"/>
                                                             <button class="btn btn-success btn-round btn-fab btn-fab-mini"
                                                                     id="searchByDateRange">
-                                                                <span class="material-icons update-dataTable">search</span>
+                                                                <span class="material-icons update-dataTable" data-i18n="buscar">search</span>
                                                             </button>
                                                         </div>
                                                     </div>
@@ -43,19 +43,19 @@
                                     <table id="prospects-datatable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ETAPA</th>
-                                                <th>PROSPECTO</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>LUGAR DE PROSPECCIÓN</th>
-                                                <th>CREACIÓN</th>
-                                                <th>CORREO</th>
-                                                <th>TELÉFONO</th>
-                                                <th>ACCIONES</th>
+                                                <th>etapa</th>
+                                                <th>prospecto</th>
+                                                <th>asesor</th>
+                                                <th>coordinador</th>
+                                                <th>gerente</th>
+                                                <th>subdirector</th>
+                                                <th>director-regional</th>
+                                                <th>director-regional2</th>
+                                                <th>lugar-prospeccion</th>
+                                                <th>creacion</th>
+                                                <th>correo</th>
+                                                <th>telefono</th>
+                                                <th>acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>

@@ -255,13 +255,13 @@ function dataTable(ruta) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Reporte Inventario Disponible',
+            titleAttr: `${_('descargar-excel')}`,
+            title: _("reporte-inventario-disponible"),
             exportOptions: {
                 columns: num_colum_encabezado,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -270,15 +270,15 @@ function dataTable(ruta) {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
-            title: 'Reporte Inventario Disponible',
+            titleAttr: `${_('descargar-pdf')}`,
+            title: _("reporte-inventario-disponible"),
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
                 columns: num_colum_encabezado,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }

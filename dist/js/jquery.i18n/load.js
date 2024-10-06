@@ -91,8 +91,6 @@ const datosTablasComisiones = [
 ];
 
 function applySearch(table) {
-    console.log('apply')
-
     let id = table.tables().nodes().to$().attr('id')
 
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
@@ -148,6 +146,7 @@ function construirHead(table){
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
+
         }
     });
 
@@ -164,6 +163,20 @@ function construirHead(table){
     onChangeTranslations(translatePlaceholder)
 
     $(`#${table}`).on('draw.dt', function() {
+        $('.dt-button').each(function (i) {
+            let is_excel = $(this).hasClass('buttons-excel')
+            let is_pdf = $(this).hasClass('buttons-pdf')
+            
+            if(is_excel){
+                $(this).attr('title', _('descargar-excel'))
+                $(this).children().children().removeAttr('title')
+            }
+
+            if(is_pdf){
+                $(this).attr('title', _('descargar-pdf'))
+                $(this).children().children().removeAttr('title')
+            }
+        })
         $('body').i18n()
     });
 }
@@ -182,9 +195,9 @@ function changeButtonTooltips() {
 }
 
 function changeSelects() {
+    console.log("executed");
     $('select.selectpicker').each(function (i) {
         let id = $(this).data('i18n-label')
-
         if(id){
             let title = _(id)
 
@@ -223,12 +236,15 @@ function changeInputPlaceholder() {
 function stringToI18(str) {
     // Convertir todo el string a minúsculas
     let resultado = str.toLowerCase();
-      
+       
     // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
     resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       
     // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
     resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
+    
+    // Eliminar guiones al principio y al final del resultado
+    resultado = resultado.replace(/^-+|-+$/g, '');
     
     return resultado;
 }
@@ -260,6 +276,24 @@ function changeListTooltips() {
 
             $(this).attr('title', title)
             $(this).attr('data-original-title', title)
+        }
+    })
+}
+
+function changeSteps() {
+    $('button[data-i18n-stepper]').each(function (i) {
+        let id = $(this).data('i18n-stepper');
+
+        if(id) {
+            let title = _(id);
+            if(id == 'anterior') {
+                $("#stepperAnterior").html(title);
+                $(this).attr('data-title', title);
+            }
+            if(id == 'siguiente') {
+                $("#stepperSiguiente").html(title);
+                $(this).attr('data-title', title);
+            }
         }
     })
 }
