@@ -12,19 +12,19 @@
                                 <i class="fas fa-bookmark fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Rechazos jurídico</h3>
+                                <h3 class="card-title center-align" data-i18n="rechazos-juridico">Rechazos jurídico</h3>
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="Jtabla" name="Jtabla">
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>TIPO</th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>GERENTE</th>
-                                                    <th>CLIENTE</th>
+                                                    <th>tipo</th>
+                                                    <th>proyecto</th>
+                                                    <th>condominio</th>
+                                                    <th>lote</th>
+                                                    <th>gerente</th>
+                                                    <th>cliente</th>
                                                 </tr>
                                             </thead>
                                         </table>

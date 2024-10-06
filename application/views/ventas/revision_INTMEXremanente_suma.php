@@ -2,7 +2,43 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-    <?php $this->load->view('template/sidebar'); ?>
+        <?php $this->load->view('template/sidebar'); ?>
+
+        <!-- Modals -->
+        <div class="modal fade" id="seeInformationModalRemanentes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons" onclick="cleanCommentsRemanentes()">clear</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                                <div id="nameLote"></div>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content">
+                                                    <ul class="timeline timeline-simple" id="comments-list-remanentes"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsRemanentes()"><b>Cerrar</b></button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
@@ -13,6 +49,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
@@ -32,6 +69,14 @@
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
                 </div>
             </div>
         </div>
@@ -68,16 +113,16 @@
                                         <div class="row aligned-row d-flex align-end">
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="catalogo_remanente">Puesto</label>
-                                                    <select name="catalogo_remanente" id="catalogo_remanente" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required> 
+                                                    <label class="m-0" for="filtro33">Puesto</label>
+                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un puesto" data-size="7" required> 
                                                         <option value="0">Seleccione todo</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="usuario_remanente">Usuario</label>
-                                                    <select class="selectpicker select-gral" id="usuario_remanente" name="usuario_remanente[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required/></select>
+                                                    <label class="m-0" for="filtro44">Usuario</label>
+                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un usuario" data-size="7" required/></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
@@ -90,23 +135,25 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_remanentes" name="tabla_remanentes">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>ID PAGO</th>
-                                                    <th>REFERENCIA</th>
-                                                    <th>PUESTO</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>SEDE</th>
-                                                    <th>TOTAL COMISIÓN</th>
-                                                    <th>IMPUESTO</th>
-                                                    <th>PORCENTAJE COMISIÓN</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
+                                        <div class="table-responsive">
+                                            <table class="table-striped table-hover" id="tabla_remanentes" name="tabla_remanentes">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>ID PAGO</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>PUESTO</th>
+                                                        <th>NOMBRE</th>
+                                                        <th>SEDE</th>
+                                                        <th>TOTAL COMISIÓN</th>
+                                                        <th>IMPUESTO</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -117,8 +164,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div>
+    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
-    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/suma/revisionRemanentesIntMex.js"></script>
 </body>
