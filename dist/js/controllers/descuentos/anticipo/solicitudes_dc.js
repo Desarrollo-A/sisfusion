@@ -1,4 +1,4 @@
-let titulosInventario = [];
+/*let titulosInventario = [];
 $('#tabla_anticipo_revision_dc thead tr:eq(0) th').each(function (i) {
 
         var title = $(this).text();
@@ -9,10 +9,19 @@ $('#tabla_anticipo_revision_dc thead tr:eq(0) th').each(function (i) {
                 $('#tabla_anticipo_revision_dc').DataTable().column(i).search(this.value).draw();
         });
 
-});
+});*/
+
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
+function translationsAnticiposdc() {
+    onChangeTranslations(function() {
+        $('#tabla_anticipo_revision_dc').DataTable().rows().invalidate().draw(false);
+        
+    });
+   
+}
 $("#tabla_anticipo_revision_dc").ready(function () {
+    construirHead("tabla_anticipo_revision_dc");
     tabla_9 = $("#tabla_anticipo_revision_dc").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -20,13 +29,13 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Registro estatus 9',
-            title: "Registro estatus 9",
+            titleAttr: _('descargar-excel'), 
+            title: _('adelantos'),
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                columns: [0,1, 2, 3, 4, 5, 7, 8, 9,10,11],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx - 1] + ' ';
+                        header: function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -49,14 +58,36 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         columns: [
         { data: 'id_anticipo' },
         { data: 'nombre' },
-
-        { data: 'puesto' },
+        { 
+            data: 'puesto',
+            render: function (data) {
+                return data === 'Asesor' ? _('asesor') : 
+                       data === 'Coordinador de ventas' ? _('coordinador-ventas') : data;
+            }
+        },
         { data: 'sede' },
         { data: 'monto_formateado' },
 
         { data: 'comentario' },
-        { data: 'proceso' },
-        { data: 'prioridad_nombre' },
+        { 
+            data: 'proceso',
+            render: function (data, type, row) {
+                return data === 'Ventas alta' ? _('ventas-alta') : 
+                       data === 'Subdirección autoriza anticipo' ? _('subdirección-autoriza-anticipo') :
+                       data === 'D.C. autoriza anticipo' ? _('d.c.-autoriza-anticipo-') :
+                       data === 'Subdirección autoriza anticipo con evidencia reafirmar monto' ? _('subdirección-autoriza-anticipo-con-evidencia-reafirmar-monto') :
+                       data === 'Ventas autorizado' ? _('ventas-autorizado') :
+                       data === 'Proceso contraloría esperando confirmación' ? _('proceso-contraloría-esperando-confirmación') :
+                       data === 'INTERNOMEX' ? _('internomex') : data;
+            }
+        },
+        { 
+            data: 'prioridad_nombre',
+            render: function (data, type, row) {
+                return data === 'Normal' ? _('normal') : 
+                       data === 'URGENTE' ? _('urgente') : data;
+            }
+        },
         { 
             data: function (d) {    
             var botonesModal = '';
@@ -72,7 +103,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 data-id_parcialidad="${d.id_parcialidad}"
                 data-monto_formateado="${d.monto_formateado}"
                 data-monto="${d.monto}"
-                data-name="${d.nombre}" class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
+                data-name="${d.nombre}" class="btn-data btn-green aceptar_anticipo" title="${_('continuar-anticipo')}">
                 <i class="fas fa-forward"></i>
                 </button>`;
                 botonesModal += `
@@ -81,7 +112,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 data-id_usuario="${d.id_usuario}" 
                 data-monto="${d.monto}"
                 data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" 
-                class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
+                class="btn-data btn-warning delete-anticipo" title="${_('detener-anticipo')}">
                 <i class="fas fa-stop"></i>
                 </button>`;
                 
@@ -89,7 +120,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             botonesModal += `
             <button href="#" value="${d.id_anticipo}" data-name="${d.nombre}" 
             data-id_usuario="${d.id_usuario}" 
-            class="btn-data btn-blueMaderas consultar_logs" title="Historial">
+            class="btn-data btn-blueMaderas consultar_logs" title="${_('historial')}">
                 <i class="fas fa-info"></i>
             </button>`;
                     return '<div class="d-flex justify-center">' + botonesModal + '<div>';
@@ -99,7 +130,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             ],
         columnDefs: [{
             defaultContent: "Sin especificar",
-            targets: "_all",
+            targets: [5], visible: false,
             searchable: true,
             orderable: false
         }],
@@ -113,6 +144,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         },
         order: [[1, 'asc']]
     });
+    applySearch(tabla_9);
 
     $('#tabla_anticipo_revision_dc').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
@@ -130,9 +162,9 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input class="center-align" type="hidden"  value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-            <h4 class=" center-align">¿Estás seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
+            <h4 class=" center-align"data-i18n="borrar-anticipo">${_("borrar-anticipo")} ${nombreUsuario}?</h4>
             <div class="form-group">
-                <label class="label control-label">Mótivo del rechazo</label>
+                <label class="label control-label"data-i18n="motivo-rechazo">${_("motivo-rechazo")}</label>
                 <textarea id="motivoDescuento" name="motivoDescuento" class="text-modal" rows="3" required></textarea>
             </div>
             <div class="form-group col-md-12 ">
@@ -144,8 +176,8 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             </div>
             `);
         Modalfooter.append(`
-                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name="disper_btn"  id="detener_adelanto" class="btn btn-primary">Aceptar</button>`);
+                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" ><span data-i18n="cerrar">${_("cerrar")}</span></button>
+				<button  type="submit" name="disper_btn"  id="detener_adelanto" class="btn btn-primary"><span data-i18n="aceptar">${_("aceptar")}</span></button>`);
         $("#myModalDelete").modal();
     });
 
@@ -164,9 +196,9 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         const monto_parcialidad = $(this).attr("data-monto_parcialidad");
         const id_parcialidad    = $(this).attr("data-id_parcialidad");
 
-        modalidad =  id_parcialidad == 'null' ? `PRÉSTAMO <br>`  : `APOYO <br>
-                                                    MENSUALIDADES   : ${mensualidades_pra} <br>
-                                                    MONTO           : ${monto_parcialidad} <br>` ;
+        modalidad =  id_parcialidad == 'null' ? `<span data-i18n="prestamo">${_("prestamo")}</span><br>`   :  `<span data-i18n="apoyo">${_("apoyo")}</span><br>
+        <span data-i18n="mensualidad">${_("mensualidad")}</span> : ${mensualidades_pra} <br>
+        <span data-i18n="monto">${_("monto")}</span> :${monto_parcialidad} <br>` ;
 
         
 
@@ -174,7 +206,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         
         const formulario = id_parcialidad != 'null' ? `       
         <div class="form-group col-md-6 ">
-            <label class="label control-label">número de mensualidades</label>
+            <label class="label control-label"><span data-i18n="numero-mesualidades">${_("numero-mesualidades")}</span></label>
             <input class="form-control input-gral" 
                 data-type="number" maxlength="2" 
                 required
@@ -182,7 +214,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         </div>
         
         <div class="form-group col-md-6 ">
-            <label class="label control-label">Confirmar monto</label>
+            <label class="label control-label"><span data-i18n="confirmar-monto">${_("confirmar-monto")}</span></label>
             <input class="form-control input-gral" 
             data-type="currency" maxlength="10" 
             oncopy="return false" 
@@ -196,7 +228,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
 
 
         <div class="form-group col-md-10">
-            <label class="label control-label">Monto por mes</label>
+            <label class="label control-label"><span data-i18n="monto-por-mes">${_("monto-por-mes")}</span></label>
             <input class="form-control input-gral" 
                 data-type="currency" maxlength="10" 
                 required
@@ -216,7 +248,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         </div>` 
         : 
         `<div class="form-group col-md-12 ">
-            <label class="label control-label">Confirmar monto</label>
+            <label class="label control-label"><span data-i18n="confirmar-monto">${_("confirmar-monto")}</span></label>
             <input class="form-control input-gral" 
             data-type="currency" maxlength="10" 
             oncopy="return false" 
@@ -233,12 +265,12 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-            <h4>¿Estás seguro que deseas aceptar el anticipo de ${nombreUsuario}?</h4>
+            <h4><span data-i18n="aceptar-anticipo">${_("aceptar-anticipo")} </span> ${nombreUsuario}?</h4>
                 <div>
-                    <h2 class="card_title">Detalles</h2>
+                    <h2 class="card_title"><span data-i18n="detalles">${_("detalles")}</span></h2>
                     <p class="center-align"> 
-                        Monto solicitado : ${monto_formateado}.<br>
-                        Mediante la modalidad : ${modalidad}
+                        <span data-i18n="monto-solicitado">${_("monto-solicitado")}</span>: ${monto_formateado}.<br>
+                        <span data-i18n="mediante-modalidad">${_("mediante-modalidad")}</span>: ${modalidad}  
                     </p>
                 </div>
 
@@ -247,9 +279,9 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                         <div >
                             <div class="radio_container w-100">
                                 <input class="d-none find-results" type="radio" name="modoSubida" id="prioridad_normal" checked value="0">
-                                <label for="prioridad_normal" class="w-50">Normal</label>
+                                <label for="prioridad_normal" class="w-50"><span data-i18n="normal">${_("normal")}</span></label>
                                 <input class="d-none generate" type="radio" name="modoSubida" id="prioridad_urge"  value="1">
-                                <label for="prioridad_urge" class="w-50">Urgente</label>
+                                <label for="prioridad_urge" class="w-50"><span data-i18n="urgente">${_("urgente")}</span></label>
                                 
                             </div>
                         </div>
@@ -272,14 +304,14 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             </div>
 
             <div class="form-group col-md-12">
-                <label class="label control-label">Aceptar comentario</label>
+                <label class="label control-label"><span data-i18n="comentario-aceptar">${_("comentario-aceptar")}</span></label>
                 <textarea id="motivoDescuento_aceptar" name="motivoDescuento_aceptar" class="text-modal" rows="3" required></textarea>
             </div>
             `);
         Modalfooter.append(`
         <div class="form-group col-md-12 ">
-                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name="Activo_aceptar"  id="Activo_aceptar" class="btn btn-primary">Aceptar</button>
+                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" ><span data-i18n="aceptar">${_("cerrar")}</span></button>
+				<button  type="submit" name="Activo_aceptar"  id="Activo_aceptar" class="btn btn-primary"><span data-i18n="aceptar">${_("aceptar")}</span></button>
         </div>       
             `);
         $("#myModalAceptar").modal();
@@ -299,18 +331,18 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalbody_subir.append(`
             <input type="hidden" value="${idAnticipo1}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
-            <h4>¿Estás seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
+            <h4><span data-i18n="aceptar-anticipo">${_("aceptar-anticipo")}</span> ${nombreUsuario1}?</h4>
             <div class="form-group">
-                <label class="label control-label">Prioridad</label>
+                <label class="label control-label"><span data-i18n="prioridad">${_("prioridad")}</span></label>
 
                 <div class="row aligned-row  col-md-12  " style=" justify-content: center"> 
                     <div id="selectorModo" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                             <div class="radio_container w-100">
                                 <input class="d-none find-results" type="radio" name="modoSubida" id="prioridad_normal" checked value="0">
-                                <label for="prioridad_normal" class="w-50">Normal</label>
+                                <label for="prioridad_normal" class="w-50"><span data-i18n="normal">${_("normal")}</span></label>
                                 <input class="d-none generate" type="radio" name="modoSubida" id="prioridad_urge"  value="1">
-                                <label for="prioridad_urge" class="w-50">Urgente</label>
+                                <label for="prioridad_urge" class="w-50"><span data-i18n="urgente">${_("urgente")}</span></label>
                                 
                             </div>
                     </div>
@@ -318,18 +350,18 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 
             </div>
             <div class="form-group col-md-12 ">
-                <label class="label control-label">Confirmar monto</label>
+                <label class="label control-label"><span data-i18n="confirmar-monto">${_("confirmar-monto")}</span></label>
                 <input class="form-control input-gral" type="number" value="${monto1}" name="monto" id="monto">
             </div>
             <br>
             <div class="form-group">
             
                 <div class="col-md-12 " id="evidenciaNuevadiv" name="evidenciaNuevadiv" style="padding-top:30px;" >
-                <label class="label control-label">Evidencia de D.C</label>
+                <label class="label control-label"><span data-i18n="evidencia-dc">${_("evidencia-dc")}</span></label>
                     <div class="file-gph">
                         <input class="d-none" type="file" id="evidenciaNueva" onchange="changeName(this)" name="evidenciaNueva"  >
-                        <input class="file-name overflow-text" id="evidenciaNueva" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                        <label class="upload-btn w-auto" for="evidenciaNueva"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+                        <input class="file-name overflow-text" id="evidenciaNueva" type="text" placeholder="${_("selecciona-archivo")}" readonly="">
+                        <label class="upload-btn w-auto" for="evidenciaNueva"><span data-i18n="seleccionar">${_("seleccionar")}</span><i class="fas fa-folder-open"></i></label>
                     </div>
                 </div>
             </div>
@@ -341,14 +373,14 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 <input type="hidden" value="${id_usuario1}" name="id_usuario" id="id_usuario">
             </div>
             <div class="form-group col-md-12 ">
-                <label class="label control-label">Aceptar comentario</label>
+                <label class="label control-label"><span data-i18n="comentario-aceptar">${_("comentario-aceptar")}</span></label>
                 
                 <textarea id="motivoDescuento_aceptar" name="motivoDescuento_aceptar" class="text-modal" rows="3" required></textarea>
             </div>
             `);
         Modalfooter_subir.append(`
-                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name="Activo_aceptar_confirmar"  id="Activo_aceptar_confirmar" class="btn btn-primary">Aceptar</button>`);
+                <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" ><span data-i18n="cerrar">${_("cerrar")}</span></button>
+				<button  type="submit" name="Activo_aceptar_confirmar"  id="Activo_aceptar_confirmar" class="btn btn-primary"><span data-i18n="aceptar">${_("aceptar")}</span></button>`);
         $("#myModalAceptar_subir").modal();
     });
     $("#tabla_anticipo_revision_dc tbody").on("click", ".consultar_logs", function(e){
@@ -384,38 +416,37 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b><span data-i18n="cerrar">${_("cerrar")}</span></b></button>
             </div>`);
         showModal();
 
-        $("#nombreLote").append('<p><h5">HISTORIAL DEL ANTICIPO DE: <b>'+nombreUsuario+'</b></h5></p>');
+        $("#nombreLote").append(`<p><h5><span data-i18n="historial-anticipo">${_("historial-anticipo")} </span> <b>${nombreUsuario}</b></h5></p>`);
         $.getJSON(general_base_url+"Descuentos/getComments/"+idAnticipo).done( function( data ){
             console.log(data)
             $.each( data, function(i, v){
                 console.log(i);
                 console.log(v.comentario_general);
                 $("#comentariosAsimilados").append('<li>\n' +
-                '  <div class="container-fluid">\n' +
-                '    <div class="row">\n' +
-                '      <div class="col-md-6">\n' +
-                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
-                '      </div>\n' +
-                '      <div class="float-end text-right">\n' +
-                '        <a> Comentario : ' +v.comentario_general + '</a>\n' +
-                '      </div>\n' +
-
-                '    <h6>\n' +
-                '    </h6>\n' +
-                '    </div>\n' +
-                '  </div>\n' +
-                '</li>');
+                    '  <div class="container-fluid">\n' +
+                    '    <div class="row">\n' +
+                    '      <div class="col-md-6">\n' +
+                    '        <a>' + _('proceso') + ' : <b>' + v.nombre + '</b></a><br>\n' +
+                    '      </div>\n' +
+                    '      <div class="float-end text-right">\n' +
+                    '        <a>' + _('comentario') + ' : ' + v.comentario_general + '</a>\n' +
+                    '      </div>\n' +
+                    '    <h6>\n' +
+                    '    </h6>\n' +
+                    '    </div>\n' +
+                    '  </div>\n' +
+                    '</li>');
             });
             $('#spiner-loader').addClass('hide');
         });
     });
 
 });
-
+translationsAnticiposdc();
 function obtenerModoSeleccionado() {
     var radioButtons = document.getElementsByName("modoSubida");
     var modoSeleccionado = "";
@@ -454,7 +485,7 @@ $("#form_aceptar").on('submit', function (e) {
             $('#form_aceptar').trigger('reset');
         },
         error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right",_("algo-salio-mal"), "danger");
             document.getElementById("form_aceptar").reset();
             $('#myModalAceptar').modal('hide')
             $('#form_aceptar').trigger('reset');
@@ -490,7 +521,7 @@ $("#form_subir").on('submit', function (e) {
             $('#form_aceptar').trigger('reset');
         },
         error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             document.getElementById("form_aceptar").reset();
             $('#myModalAceptar').modal('hide')
             $('#form_aceptar').trigger('reset');
@@ -588,7 +619,7 @@ $("#form_delete").on('submit', function (e) {
             $('#form_delete').trigger('reset');
         },
         error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             // document.getElementById("form_aceptar").reset();
             $('#myModalDelete').modal('hide')
             $('#form_delete').trigger('reset');
