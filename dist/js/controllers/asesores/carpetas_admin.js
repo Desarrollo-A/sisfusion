@@ -50,31 +50,29 @@ function save() {
         success: function(data) {
             if (data == 1) {
                 $("#carpetas").modal('hide');
-                alerts.showNotification("top", "right", "El registro se ha ingresado exitosamente.", "success");
+                alerts.showNotification("top", "right", _("registro-agregado"), "success");
                 $tableCarpetas.ajax.reload();
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _("campos-llenos-requeridos"), "warning");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right",_("algo-salio-mal"), "danger");
         }
     });
 }
-
 typeTransaction = 1;
 $(document).ready(function () {
-    $('#tableCarpetas thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tableCarpetas').DataTable().column(i).search() !== this.value ) {
-                $('#tableCarpetas').DataTable().column(i).search(this.value).draw();
-            }
-        });
+    construirHead("tableCarpetas");
+    /*$('#tableCarpetas thead tr:eq(0) th').each( function (i) {
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tableCarpetas').DataTable().column(i).search() !== this.value ) {
+            $('#tableCarpetas').DataTable().column(i).search(this.value).draw();
+        }
     });
-
+});*/
     $tableCarpetas = $('#tableCarpetas').DataTable({
+       
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -96,16 +94,17 @@ $(document).ready(function () {
             { 
                 data: function (d) {
                     if (d.estatus == 1)
-                        return '<center><span class="label lbl-green">Activo</span><center>';
+                    return `<center><span class="label lbl-green"data-i18n="activo">${_('activo')}</span><center>`;
                     else
-                        return '<center><span class="label lbl-warning">Inactivo</span><center>';
+                    return `<center><span class="label lbl-warning" data-i18n="inactivo">${_('inactivo')}</span><center>`;
                 }
             },
             { data: 'fecha_creacion' },
             { 
                 data: function (d) {
-                    return id_rol_general == 53 ? "N/A" : '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas editarCarpeta" data-toggle="tooltip" data-placement="top" title="MODIFICAR" data-id-carpeta="' + d.id_archivo +'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-deepGray preview" data-toggle="tooltip" data-placement="top" title="VER DOCUMENTO" data-id-carpeta="' + d.id_archivo +'"><i class="far fa-eye"></i></button></div>';
-                }
+                    return id_rol_general == 53 ? "N/A" : 
+                    `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas editarCarpeta" data-toggle="tooltip" data-placement="top" title="${_('modificar')}"data-i18n-tooltip="modificar" data-id-carpeta="${d.id_archivo}"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-data btn-deepGray preview" data-toggle="tooltip" data-placement="top" title="${_('ver-documento')}"data-i18n-tooltip="ver-documento" data-id-carpeta="${d.id_archivo}"><i class="far fa-eye"></i></button></div>`;}
             }
         ],
         columnDefs: [{
@@ -121,13 +120,11 @@ $(document).ready(function () {
             }
         },
     });
-
     $('#tableCarpetas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
-
     $(document).on('click', '.editarCarpeta', function(e){
         $('#spiner-loader').removeClass('hide');
         id_carpeta = $(this).attr("data-id-carpeta");
@@ -139,7 +136,6 @@ $(document).ready(function () {
             });
         });
     });
-
     $(document).on('click', '.preview', function(e){
         id_carpeta = $(this).attr("data-id-carpeta");
         $.getJSON("getInfoCarpeta/"+id_carpeta).done( function( data ){
@@ -154,6 +150,8 @@ $(document).ready(function () {
             });
         });
     });
+    applySearch($tableCarpetas);
+
 
     function fillFields (v) {
         $("#idCarpeta").val(v.id_archivo);
@@ -163,6 +161,7 @@ $(document).ready(function () {
         $("#filename").val(v.archivo);
         $("#estatus").val(v.estatus);
     }
+
 });
 
 function update() {

@@ -1,6 +1,9 @@
-
+var dar_baja = _("dar-baja");
 var puestos = [{id : 59, nombre : 'Director regional'}], sedes = []; 
+
 $(document).ready( function() { 
+    construirHead("all_users_datatable")
+
     $('[data-toggle="tooltip"]').tooltip(); 
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
@@ -185,18 +188,6 @@ function borrarMulti(index,id = ''){
     }
 }
 
-let titulos = [];
-$('#all_users_datatable thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($('#all_users_datatable').DataTable().column(i).search() !== this.value) {
-            $('#all_users_datatable').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
-
 function fillUsersTable() {
     $allUsersTable = $('#all_users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -324,7 +315,7 @@ function fillUsersTable() {
                                 }
                                 else {
                                     if(d.estatus == 1){
-                                        bt += '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock-open"></i></button>';
+                                        bt += '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="'+_("dar-baja")+'"><i class="fas fa-lock-open"></i></button>';
                                     }
                                     else{
                                         bt += '';
@@ -617,9 +608,9 @@ $("#BajaUserForm").on('submit', function(e){
         success: function(data) {
             if( data == 1 ){
                 if (estatus == 1) {
-                    alerts.showNotification("top", "right", "Se ha activado con éxito.", "success");
+                    alerts.showNotification("top", "right", _("activar-usuario-mensaje"), "success");
                 } else {
-                    alerts.showNotification("top", "right", "Se ha desactivado con éxito.", "success");
+                    alerts.showNotification("top", "right", _("desactivar-usuario-mensaje"), "success");
                 }
                 CloseModalBaja();
                 $allUsersTable.ajax.reload();
@@ -667,19 +658,19 @@ $("#BajaConfirmForm").on('submit', function(e){
             BajaConfirmM();
             if( data == 1 ){
                 if (estatus == 1) {
-                    alerts.showNotification("top", "right", "Se ha activado con éxito.", "success");
+                    alerts.showNotification("top", "right", _("activar-usuario-mensaje-1"), "success");
                 } else {
-                    alerts.showNotification("top", "right", "Se ha desactivado con éxito.", "success");
+                    alerts.showNotification("top", "right", _("desactivar-usuario-mensaje-1"), "success");
                 }
                 $allUsersTable.ajax.reload();
             }else{
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _("campos-llenos-requerido"), "warning");
             }
             document.getElementById('btnSub').disabled = false;
         },error: function( ){
             BajaConfirmM();
             document.getElementById('btnSub').disabled = false;
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -694,10 +685,10 @@ $(document).on('click', '.change-user-status', function(e) {
     nameUser = $(this).attr("data-name");
     let roles = [3,7,9,'3','9','7'];
     if(estatus == 0 && roles.includes(idRol)){
-        document.getElementById('nameUs').innerHTML = '';
+        // document.getElementById('nameUs').innerHTML = '';
         $('#id_user').val(0);
         $('#idrol').val(0);
-        document.getElementById('nameUs').innerHTML = nameUser;
+        // document.getElementById('nameUs').innerHTML = nameUser;
         $('#id_user').val(id_user);
         $('#idrol').val(id_rol);
         $("#BajaUser").modal();
@@ -749,7 +740,7 @@ $(document).on('click', '.edit-user-information', function(e){
                 row.append(`
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="control-label">Nueva estructura (<small class="isRequired">*</small>)</label>
+                            <label class="control-label">${_("nueva-estructura")}(<small class="isRequired">*</small>)</label>
                             <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                 <option value="0" ${ (v.nueva_estructura == 0 || v.nueva_estructura != null ) ? 'checked' : ''}>No</option>
                                 <option value="1" ${ (v.nueva_estructura == 1 || v.nueva_estructura != null ) ? 'checked' : ''}>Sí</option>
@@ -761,7 +752,7 @@ $(document).on('click', '.edit-user-information', function(e){
                     row_fac_humano.append(`
                         <div class="col-sm-6 mt-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
-                            <label class="control-label"><small class="isRequired">*</small>¿Asesor factor humano?</label>
+                            <label class="control-label"><small class="isRequired">*</small>${_("asesor-factor-humano")}</label>
                             <select class="selectpicker select-gral m-0" id="fac_humano" name="fac_humano" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                 <option value="1" ${ (v.fac_humano == 1 || v.fac_humano == '1' ) ? 'selected' : ''}>SÍ</option>
                                 <option value="0" ${ (v.fac_humano == 0 || v.fac_humano == '0' || v.fac_humano == null ) ? 'selected' : ''}>NO</option>
@@ -778,7 +769,7 @@ $(document).on('click', '.edit-user-information', function(e){
                     row_add.append(`
                     <div class="col-sm-3 mt-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
-                            <label class="control-label"><small class="isRequired">*</small>¿Asesor simbólico?</label>
+                            <label class="control-label"><small class="isRequired">*</small>${_("asesor-simbolico")}</label>
                             <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
                                 <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
                                 <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
@@ -1044,15 +1035,15 @@ function fillChangelogUsers(v) {
     '    <div class="container-fluid">\n' +
     '       <div class="row">\n' +
     '           <div class="col-md-6">\n' +
-    '               <a><small>Campo: </small><b> ' +v.col_afect.toUpperCase()+ '</b></a><br>\n' +
+    '               <a><span>'+_("campo")+' </span><b> ' +v.col_afect.toUpperCase()+ '</b></a><br>\n' +
     '           </div>\n' +
     '<div class="float-end text-right">\n' +
     '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
-    '                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-    '                <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
-    '                <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+    '                <p class="m-0"><span >'+ _("usuario") +': </span><b> ' + v.creador + '</b></p>\n'+
+    '                <p class="m-0"><span>'+ _("ultimo-valor") +'</span><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+    '                <p class="m-0"><span>'+ _("nuevo-valor") +'</span><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
     '           </div>\n' +
     '        <h6>\n' +
     '        </h6>\n' +

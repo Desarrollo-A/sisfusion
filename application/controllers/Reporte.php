@@ -58,15 +58,13 @@ class Reporte extends CI_Controller {
             $canconArr = trim($this->input->post('cancontid'));
             $canconArr = empty($canconArr) ? ['0'] : explode(',', $canconArr);
             $generalArr = array_merge($aptArr, $contArr, $canaparArr, $canconArr);
-
-
+            
             $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction, $generalArr, $aptArr, $contArr, $canaparArr, $canconArr)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
         }
     }
-
     public function getDataChart() {
         $general = $this->input->post('general');
         $tipoChart = $this->input->post('tipoChart');
@@ -163,15 +161,15 @@ class Reporte extends CI_Controller {
         else echo json_encode(array());
     }
 
-    public function getDetails(){
-        $typeTransaction = $this->input->post("transaction");//si es consulta inicial = 1 o si es consulta con filtro de fechas = 2
-        /*Filtros grales */
+    public function getDetails () {
+        $typeTransaction = $this->input->post("transaction");
+        /*Filtros  grales*/
         $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["begin"])));
         $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
         $typeSale = $this->input->post("filters")[0]["typeSale"];
         $typeLote = $this->input->post("filters")[0]["typeLote"];
         $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
-        $estatus = $this->input->post("filters")[0]["estatus"]; 
+        $estatus = $this->input->post("filters")[0]["estatus"];
         /*Filtros grales */
         $id_usuario = $this->input->post("id_usuario");
         $rol = $this->input->post("rol");
@@ -180,11 +178,10 @@ class Reporte extends CI_Controller {
         $asesor = $this->input->post("asesor");
         $coordinador = $this->input->post("coordinador");
         $gerente = $this->input->post("gerente");
-        $subdirector = $this->input->post("subdirector");
+        $subdirector = $this->input->post("subdirector");   
         $regional = $this->input->post("regional");
-        $sede = $this->input->post("sede");
-        /*$generalArr = trim($this->input->post('idarr'));
-        $generalArr = empty($generalArr) ? ['0'] : explode(',', $generalArr);*/
+
+        $generalArr = empty($generalArr) ? ['0'] : explode(',', $generalArr);
         $aptArr = trim($this->input->post('aptid'));
         $aptArr = empty($aptArr) ? ['0'] : explode(',', $aptArr);
         $contArr = trim($this->input->post('contid'));
@@ -195,15 +192,14 @@ class Reporte extends CI_Controller {
         $canconArr = empty($canconArr) ? ['0'] : explode(',', $canconArr);
         $generalArr = array_merge($aptArr, $contArr, $canaparArr, $canconArr);
         
-
-        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional], $sede, $generalArr, $aptArr, $contArr, $canaparArr, $canconArr,$leader)->result_array();
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional], $generalArr, $aptArr, $contArr, $canaparArr, $canconArr,$leader)->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
-    }
 
+    }
     public function getLotesInformation(){
         if (isset($_POST) && !empty($_POST)) {
             $type = $this->input->post("type");
@@ -225,10 +221,7 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
-            /*$idArr = trim($this->input->post('idarr'), ',');
-            $idArr = empty($idArr) ? ['0'] : explode(',', $idArr);
-            */
-            
+
             $aptArr = trim($this->input->post('aptid'));
             $aptArr = empty($aptArr) ? ['0'] : explode(',', $aptArr);
             $contArr = trim($this->input->post('contid'));
@@ -238,9 +231,6 @@ class Reporte extends CI_Controller {
             $canconArr = trim($this->input->post('cancontid'));
             $canconArr = empty($canconArr) ? ['0'] : explode(',', $canconArr);
             $idArr = array_merge($aptArr, $contArr, $canaparArr, $canconArr);
-            
-
-
             
             ini_set('max_execution_time', 900);
             set_time_limit(900);

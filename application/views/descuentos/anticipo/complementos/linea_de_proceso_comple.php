@@ -3,8 +3,8 @@
         <!-- INICIO -->
         <div class="card-content">
                 <div class="encabezadoBox">
-                    <h3 class="card-title center-align">Proceso actual </h3>
-                    <p class=" card-title text-muted pl-1"> Se muestra el proceso actual.</p>
+                     <h3 class="card-title center-align" data-i18n="proceso-actual">Proceso actual</h3>
+                     <p class="card-title text-muted pl-1" data-i18n="descripcion-proceso">Se muestra el proceso actual.</p>
                 </div>
             <br>
             <div class="linea_proceso" id="linea_proceso" name="linea_proceso">

@@ -1,18 +1,18 @@
 $( document ).ready(function() {   
     let titulos_encabezado = [];
     let num_colum_encabezado = [];
-    $('#tabla_clientes thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos_encabezado.push(title);
-        num_colum_encabezado.push(i);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>` );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_clientes').DataTable().column(i).search() !== this.value)
-                $('#tabla_clientes').DataTable().column(i).search(this.value).draw();
-        });
-    });
-
-    $('#tabla_clientes').DataTable({
+    // $('#tabla_clientes thead tr:eq(0) th').each( function (i) {
+    //     var title = $(this).text();
+    //     titulos_encabezado.push(title);
+    //     num_colum_encabezado.push(i);
+    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>` );
+    //     $( 'input', this ).on('keyup change', function () {
+    //         if ($('#tabla_clientes').DataTable().column(i).search() !== this.value)
+    //             $('#tabla_clientes').DataTable().column(i).search(this.value).draw();
+    //     });
+    // });
+    construirHead('tabla_clientes');
+    var table=$('#tabla_clientes').DataTable({
         destroy: true,
         ajax:{
             url: 'getClientsByProyect/',
@@ -85,4 +85,5 @@ $( document ).ready(function() {
                 }
             ]
     });
+    applySearch(table);
 });

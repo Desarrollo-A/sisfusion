@@ -13,16 +13,16 @@
                                 <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align" >Listado de residenciales Ciudad Maderas</h3>
+                                <h3 class="card-title center-align" data-i18n="listado-residenciales-cm">Listado de residenciales Ciudad Maderas</h3>
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="tablaResidenciales">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>NOMENCLATURA</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>EMPRESA</th>
+                                                    <th id="nomeclatura" style="font-weight: normal; font-size: 10px">nomeclatura</th>
+                                                    <th id="nombre" style="font-weight: normal; font-size: 10px">nombre</th>
+                                                    <th id="empresa" style="font-weight: normal; font-size: 10px">empresa</th>
                                                 </tr>
                                             </thead>
                                         </table>

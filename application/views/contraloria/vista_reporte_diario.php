@@ -14,7 +14,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Registro diario </h3>
+                                    <h3 class="card-title center-align" data-i18n="registro-diario">Registro diario </h3>
                                 </div>
                                 <div  class="toolbar">
                                     <div class="row">
@@ -29,13 +29,13 @@
                                     <table  id="tabla_ingresar_6" name="tabla_ingresar_6" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>GERENTE</th>
-                                                <th>CLIENTE</th>
-                                                <th>FECHA DE MODIFICACIÓN</th>
-                                                <th>FECHA DE VENCIMIENTO</th>
+                                                <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>gerente</th>
+                                                <th>cliente</th>
+                                                <th>fecha-modificacion</th>
+                                                <th>fecha-vencimiento</th>
                                                 <th>UC</th>
                                             </tr>
                                         </thead>

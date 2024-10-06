@@ -5,20 +5,8 @@ var getInfo4 = new Array(7);
 var getInfo5 = new Array(7);
 var getInfo6 = new Array(7);
 
-let titulos = [];
 $(document).ready(function () {
-    $('#Jtabla thead tr:eq(0) th').each(function (i) {
-        if (i != 0) {
-            var title = $(this).text();
-            titulos.push(title);
-            $(this).html('<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if (tabla_6.column(i).search() !== this.value) {
-                    tabla_6.column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
+    construirHead("Jtabla")
 
     tabla_6 = $("#Jtabla").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -58,7 +46,7 @@ $(document).ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-green" data-i18n="venta-normal">${d.tipo_venta}</span>`;
             }
         },
         {
@@ -153,7 +141,7 @@ $(document).ready(function () {
                         else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) { //RECHAZO
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" data-i18n-tooltip="estatus-8" title="REGISTRAR ESTATUS">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
@@ -196,6 +184,9 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
+
+        $('body').i18n()
+        // changeButtonTooltips()
     });
 
     const idStatusContratacion = [7,11];

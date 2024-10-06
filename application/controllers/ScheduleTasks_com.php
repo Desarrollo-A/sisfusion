@@ -18,8 +18,8 @@ class ScheduleTasks_com extends CI_Controller{
     }
 
     public function CleanMonthly(){ //CRON JOB 1 DE CADA MES
-        $this->db->query("UPDATE descuentos_universidad SET estatus = 4, pagos_activos = 0 WHERE estatus NOT IN (4,3) AND id_descuento IN (SELECT id_descuento FROM descuentos_universidad du LEFT JOIN (SELECT SUM(abono_neodata) total_descontado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario WHERE estatus NOT IN (4) AND du.monto-(pci2.total_descontado + du.pagado_caja) <1)");
-        $this->db->query("UPDATE descuentos_universidad SET estatus = 1 WHERE id_descuento IN (SELECT id_descuento FROM descuentos_universidad du LEFT JOIN (SELECT SUM(abono_neodata) total_descontado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario WHERE (du.estatus IN (2,4) OR (du.estatus IN (5) AND MONTH(fecha_creacion) <= MONTH(GETDATE()) AND YEAR(fecha_creacion) = YEAR(GETDATE()))) AND du.monto-(pci2.total_descontado + du.pagado_caja) > 1)");
+        // $this->db->query("UPDATE descuentos_universidad SET estatus = 4, pagos_activos = 0 WHERE estatus NOT IN (4,3) AND id_descuento IN (SELECT id_descuento FROM descuentos_universidad du LEFT JOIN (SELECT SUM(abono_neodata) total_descontado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario WHERE estatus NOT IN (4) AND du.monto-(pci2.total_descontado + du.pagado_caja) <1)");
+        // $this->db->query("UPDATE descuentos_universidad SET estatus = 1 WHERE id_descuento IN (SELECT id_descuento FROM descuentos_universidad du LEFT JOIN (SELECT SUM(abono_neodata) total_descontado, id_usuario FROM pago_comision_ind WHERE estatus in (17) GROUP BY id_usuario) pci2 ON du.id_usuario = pci2.id_usuario WHERE (du.estatus IN (2,4) OR (du.estatus IN (5) AND MONTH(fecha_creacion) <= MONTH(GETDATE()) AND YEAR(fecha_creacion) = YEAR(GETDATE()))) AND du.monto-(pci2.total_descontado + du.pagado_caja) > 1)");
         $this->db->query("UPDATE opinion_cumplimiento SET estatus = 0  WHERE estatus IN (1,2)");
         $this->db->query("UPDATE cp_usuarios SET estatus = 0 WHERE estatus IN (1)");
         $this->db->query("UPDATE pago_comision_ind SET abono_neodata = 0 WHERE id_comision in (SELECT id_comision FROM comisiones WHERE estatus = 0 and rol_generado not in (38))");
@@ -76,7 +76,7 @@ class ScheduleTasks_com extends CI_Controller{
 
         //UPDATE BANDERA QUE DEBEN ESTAR EN 7 Y ESTAN EN OTRO ESTATUS
         $this->db->query("UPDATE lotes SET registro_comision = 7 WHERE registro_comision not in (8,9) AND idLote IN (SELECT id_lote FROM pago_comision WHERE pendiente BETWEEN -1 AND 1 AND bandera NOT IN (7,0))");
-        $this->db->query("UPDATE pago_comision SET bandera = 7 WHERE pendiente BETWEEN -1 AND 1 AND bandera NOT IN (7,0)");
+        $this->db->query("UPDATE pago_comision SET bandera = 7 WHERE pendiente BETWEEN -1 AND 1 AND bandera NOT IN (7,0) and total_comision not in (0)");
 
         //UPDATE BANDERA QUE DEBEN ESTAR EN ACTIVAS Y NO EN LIQUIDADAS
         $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE registro_comision not in (8,9) AND idLote IN (SELECT id_lote FROM pago_comision WHERE pendiente > 2 AND bandera IN (7))");
