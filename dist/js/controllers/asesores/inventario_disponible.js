@@ -12,7 +12,6 @@ var mesesSelect;
 var mesesSelect2;
 
 $(document).ready(function() {
-    // construirHead("addExp");
     $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -234,7 +233,7 @@ let titulos_encabezado = [];
 let num_colum_encabezado = [];
 
 function dataTable(ruta) {
-    construirHead('addExp')
+    construirHead('addExp');
 
     var table = $('#addExp').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -256,13 +255,13 @@ function dataTable(ruta) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Reporte Inventario Disponible',
+            titleAttr: `${_('descargar-excel')}`,
+            title: _("reporte-inventario-disponible"),
             exportOptions: {
                 columns: num_colum_encabezado,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -271,15 +270,15 @@ function dataTable(ruta) {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
-            title: 'Reporte Inventario Disponible',
+            titleAttr: `${_('descargar-pdf')}`,
+            title: _("reporte-inventario-disponible"),
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
                 columns: num_colum_encabezado,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -340,31 +339,3 @@ $(document).on("click", ".ver_historial", function(){
     });	
     $("#seeInformationModal").modal();
 });
-
-// document.addEventListener("DOMContentLoaded", function() {
-//     const selectores = () => {
-//         // Asegúrate de que 'selectOption' tenga el valor que esperas.
-//         let selectOption = _("select-predeterminado");
-//         // console.log("Valor de selectOption:", selectOption); // Verificar valor en la consola
-
-//         // Asigna el valor del title a cada elemento.
-//         const ids = ["filtro3", "filtro4", "filtro5", "filtro6", "filtro7", "filtro8", "filtro9"];
-//         ids.forEach(id => {
-//             const elemento = document.getElementById(id);
-
-//             if (elemento) {
-//                 // Asigna el título al elemento
-//                 elemento.removeAttribute('title');
-//                 elemento.title = selectOption;
-    
-//                 $(`#${id}`).selectpicker('refresh'); // Usar jQuery para seleccionar por ID y aplicar métodos
-//             } else {
-//                 console.warn(`Elemento con id ${id} no encontrado.`);
-//             }
-//         });
-//     }
-
-//     // Asegúrate de que estas funciones llamen a selectores correctamente.
-//     onLoadTranslations(() => selectores());
-//     onChangeTranslations(() => selectores());
-// });
