@@ -191,9 +191,9 @@ function changeButtonTooltips() {
 }
 
 function changeSelects() {
+    console.log("executed");
     $('select.selectpicker').each(function (i) {
         let id = $(this).data('i18n-label')
-
         if(id){
             let title = _(id)
 
@@ -272,6 +272,24 @@ function changeListTooltips() {
 
             $(this).attr('title', title)
             $(this).attr('data-original-title', title)
+        }
+    })
+}
+
+function changeSteps() {
+    $('button[data-i18n-stepper]').each(function (i) {
+        let id = $(this).data('i18n-stepper');
+
+        if(id) {
+            let title = _(id);
+            if(id == 'anterior') {
+                $("#stepperAnterior").html(title);
+                $(this).attr('data-title', title);
+            }
+            if(id == 'siguiente') {
+                $("#stepperSiguiente").html(title);
+                $(this).attr('data-title', title);
+            }
         }
     })
 }
