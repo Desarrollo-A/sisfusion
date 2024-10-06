@@ -1,4 +1,4 @@
-let locale = localStorage.getItem('locale')
+let locale = localStorage.getItem('locale');
 let languajeTable = general_base_url + "static/spanishLoader_v2.json";
 
 $.i18n().load(`${general_base_url}dist/js/jquery.i18n/langs.json`)
@@ -23,6 +23,7 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
+    console.log(lang);
     $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
@@ -55,7 +56,6 @@ function onLoadTranslations(callback){
     if (typeof callback === 'function') {
         load_functions.push(callback)
     }
-    
 }
 
 function onChangeTranslations(callback){
@@ -107,6 +107,7 @@ function applySearch(table) {
                     }).indexes();
                     var data = table.rows(index).data();
                     $.each(data, function (i, v) {
+                        console.log(v)
                         total += parseFloat(v.pago_cliente);
                     });
                     document.getElementById(`${searchTabla.idText}`).textContent = '$' + formatMoney(total);
@@ -114,22 +115,17 @@ function applySearch(table) {
             }
         })
     })
-
-    // $(`#${id}`).on('draw.dt', function() {
-    //     console.log('DRAW')
-    //     $('body').i18n()
-    // });
 }
 
 function construirHead(table){
     let titulos = []
-    const idNoPermitidos = ['checkComisionesNuevas'] 
+    const idNoPermitidos = ['checkComisionesNuevas']
 
     $(`#${table} thead tr:eq(0) th`).each(function (i) {
         var id = $(this).text();
         
         titulos.push(id);
-
+        // console.log(id)
         if(id && idNoPermitidos.indexOf(id)){
             if(id){
                 title = _(id)
@@ -146,21 +142,8 @@ function construirHead(table){
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
-
         }
     });
-
-    function translatePlaceholder(){
-        for(titulo of titulos){
-            if(titulo !== ''){
-                $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                $(`#head-${titulo}`).attr('data-original-title', _(titulo))
-            }
-        }
-    }
-
-    onLoadTranslations(translatePlaceholder)
-    onChangeTranslations(translatePlaceholder)
 
     $(`#${table}`).on('draw.dt', function() {
         $('.dt-button').each(function (i) {
@@ -177,6 +160,7 @@ function construirHead(table){
                 $(this).children().children().removeAttr('title')
             }
         })
+        
         $('body').i18n()
     });
 }
@@ -185,6 +169,7 @@ function changeButtonTooltips() {
     $('button').each(function (i) {
         let id = $(this).data('i18n-tooltip')
 
+        // console.log(id)
 
         if(id){
             let title = _(id)
@@ -195,9 +180,9 @@ function changeButtonTooltips() {
 }
 
 function changeSelects() {
-    console.log("executed");
     $('select.selectpicker').each(function (i) {
         let id = $(this).data('i18n-label')
+
         if(id){
             let title = _(id)
 
@@ -236,15 +221,12 @@ function changeInputPlaceholder() {
 function stringToI18(str) {
     // Convertir todo el string a minúsculas
     let resultado = str.toLowerCase();
-       
+      
     // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
     resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       
     // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
     resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
-    
-    // Eliminar guiones al principio y al final del resultado
-    resultado = resultado.replace(/^-+|-+$/g, '');
     
     return resultado;
 }
