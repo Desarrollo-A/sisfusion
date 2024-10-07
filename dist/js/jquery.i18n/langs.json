@@ -1019,7 +1019,10 @@
                 "opinion-cargada-exito":"Compliance opinion successfully uploaded.",
                 "asegurate-llenado-campos":"Make sure you have filled in all the minimum required fields.",
                 "visualizando-archivo-cumplimiento":"Viewing compliance file:",
-                "archivo-elimino-exitosamente":"The file was successfully deleted."
+                "archivo-elimino-exitosamente":"The file was successfully deleted.",
+                "opinion-subida-con-exito":"This month's SAT Opinion successfully uploaded",
+                "ver-opinion-cumplimiento":"Ver Opinión de cumplimiento"
+
 
 	},
 	"es": {
@@ -2042,7 +2045,9 @@
                 "opinion-cargada-exito":"Opinión de cumplimiento cargada con éxito.",
                 "asegurate-llenado-campos":"Asegúrate de haber llenado todos los campos mínimos requeridos.",
                 "visualizando-archivo-cumplimiento":"Visualizando archivo de cumplimiento:",
-                "archivo-elimino-exitosamente":"El archivo se eliminó exitosamente."
+                "archivo-elimino-exitosamente":"El archivo se eliminó exitosamente.",
+                "opinion-subida-con-exito":"Opinión SAT de este mes cargada con éxito",
+                "ver-opinion-cumplimiento":"Ver Opinión de cumplimiento"
 
 
 	}

@@ -110,10 +110,10 @@
                                                                         if($opn_cumplimiento[0]['estatus'] == 1){
                                                                             $idDoc=$opn_cumplimiento[0]["id_opn"];
                                                                             
-                                                                            echo '<label class="control-label" style="font-size:1em">Opinión SAT de este mes cargada con éxito</label><br>';
+                                                                            echo '<label class="control-label" style="font-size:1em"><span>Opinión SAT de este mes cargada con éxito</span></label><br>';
                                                                             echo '<div class="d-flex ">';
-                                                                            echo '<button  class="btn-data btn-blueMaderas  verPDF " title="Ver Opinión de cumplimiento"  style="margin-right:5px;" data-nombreArchivo="'.$opn_cumplimiento[0]["archivo_name"].'" ><i class="fas fa-eye"></i></button>';
-                                                                            echo '<button type="button" class="btn-data btn-warning DelPDF" data-toggle="modal" data-target="#Aviso2"  title="Borrar"><i class="material-icons">delete</i></button>';
+                                                                            echo '<button  class="btn-data btn-blueMaderas  verPDF " title="Ver Opinión de cumplimiento" data-i18n-tooltip="ver-opinion-cumplimiento" style="margin-right:5px;" data-nombreArchivo="'.$opn_cumplimiento[0]["archivo_name"].'" ><i class="fas fa-eye"></i></button>';
+                                                                            echo '<button type="button" class="btn-data btn-warning DelPDF" data-toggle="modal" data-target="#Aviso2" data-i18n-tooltip="borrar" title="Borrar"><i class="material-icons">delete</i></button>';
                                                                             echo '</div>';
                                                                         }else if($opn_cumplimiento[0]['estatus'] == 0){
                                                                             ?>
