@@ -91,7 +91,7 @@
                     <h4 class="modal-title"><label><span class="titulo_modal" data-i18n="integracion-expediente">Integración de Expediente - </span><b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" id="comentario" rows="3" placeholder="Comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" id="comentario" rows="3" data-i18n="comentario" placeholder="Comentario"></textarea>
                     <br>
                 </div>
                 <div class="modal-footer">
@@ -109,7 +109,7 @@
                     <h4 class="modal-title"><label><span class="titulo_modal" data-i18n="regresar-lote">Regresión del lote - </span><b><span class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
-                    <textarea class="text-modal scroll-styles" id="comentarioRe" rows="3" placeholder="Comentario"></textarea>
+                    <textarea class="text-modal scroll-styles" id="comentarioRe" rows="3" data-i18n="comentario" placeholder="Comentario"></textarea>
                     <br>
                 </div>
                 <div class="modal-footer">
@@ -163,14 +163,17 @@
                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                                 <div class="form-group m-0">
                                     <h4 class="label-on-left m-0"><span data-i18n="lada"> LADA </span> (<small style="color: red;">*</small>)</h4>
-                                    <select name="ladaAut" title="SELECCIONA UNA OPCIÓN" id="ladaAut" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" required>
+                                    <select name="ladaAut" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" id="ladaAut" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" required>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                                 <div class="form-group m-0">
-                                    <label class="label-on-left m-0" data-i18n="celular">
-                                        CELULAR (<small style="color: red;">*</small>)
+                                    <label class="label-on-left m-0">
+                                        <span data-i18n="celular">
+                                            CELULAR 
+                                        </span>
+                                        (<small style="color: red;">*</small>)
                                     </label>
                                     <input class="form-control input-gral" name="smsAut" id="smsAut" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" placeholder="Ej. 4422010101" required/>
                                 </div>
@@ -244,7 +247,10 @@
                     <div class="modal-body">
                         <div class="row pt-1 pb-1 checkAut">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                <h4 class="label-on-left m-0" data-i18n="metodos-envio">MÉTODOS DE ENVÍO (<small style="color: red;">*</small>)</h4>
+                                <h4 class="label-on-left m-0">
+                                    <span data-i18n="metodos-envio">MÉTODOS DE ENVÍO</span>
+                                    (<small style="color: red;">*</small>)
+                                </h4>
                                 <div class="container boxChecks p-0">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 p-0" id="chk-correo-sol-div">
                                         <label class="m-0 checkstyleAut">
@@ -262,13 +268,18 @@
                             </div>
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label" data-i18n="subdirector">Subdirector (<small style="color: red;">*</small>)</label>
+                                    <label class="control-label">
+                                        <span data-i18n="subdirector">Subdirector</span> 
+                                        (<small style="color: red;">*</small>)</label>
                                     <select id="subdirector" name="subdirector" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un subdirector" data-size="7" data-container="body" required></select>
                                 </div>
                             </div>
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2">
-                                <label>Comentario adicional (<small style="color: red;">*</small>)</label>
-                                <textarea class="text-modal scroll-styles" name="comentario" id="comentarioSol" rows="3" placeholder="Comentario" required></textarea>
+                                <label>
+                                    <span data-i18n="comentario-adicional"> Comentario adicional </span>
+                                    (<small style="color: red;">*</small>)
+                                </label>
+                                <textarea class="text-modal scroll-styles" name="comentario" id="comentarioSol" rows="3" data-i18n="comentario" placeholder="Comentario" required></textarea>
                             </div>
                         </div>
                     </div>
@@ -330,13 +341,13 @@
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label" data-i18n="proyecto">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group select-is-empty">
                                                     <label class="control-label" data-i18n="condominio">Condominio</label>
-                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
+                                                    <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required></select>
                                                 </div>
                                             </div>
                                         </div>

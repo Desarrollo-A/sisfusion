@@ -1019,8 +1019,15 @@
                 "opinion-cargada-exito":"Compliance opinion successfully uploaded.",
                 "asegurate-llenado-campos":"Make sure you have filled in all the minimum required fields.",
                 "visualizando-archivo-cumplimiento":"Viewing compliance file:",
-                "archivo-elimino-exitosamente":"The file was successfully deleted."
-
+                "archivo-elimino-exitosamente":"The file was successfully deleted.",
+                "rechazo-estatus-8": "Status 8 decline/return",
+                "rfc-numero": "ITIN",
+                "seguro-eliminar-rol": "Are you sure you want to delete this role ?",
+                "selecciona-subdirector": "SELECT SUBDIRECTOR",
+                "selecciona-gerente": "SELECT MANAGER",
+                "selecciona-coordinador": "SELECCIONA CORDINATOR",
+                "selecciona-asesor": "SELECT ADVISOR",
+                "rechazos-juridico": "Legal rejections"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2042,8 +2049,14 @@
                 "opinion-cargada-exito":"Opinión de cumplimiento cargada con éxito.",
                 "asegurate-llenado-campos":"Asegúrate de haber llenado todos los campos mínimos requeridos.",
                 "visualizando-archivo-cumplimiento":"Visualizando archivo de cumplimiento:",
-                "archivo-elimino-exitosamente":"El archivo se eliminó exitosamente."
-
-
+                "archivo-elimino-exitosamente":"El archivo se eliminó exitosamente.",
+                "rechazo-estatus-8": "Rechazo/regreso estatus 8",
+                "rfc-numero": "RFC",
+                "seguro-eliminar-rol": "¿Esta seguro que que desea eliminar este rol?",
+                "selecciona-subdirector": "SELECCIONA SUBDIRECTOR",
+                "selecciona-gerente": "SELECCIONA GERENTE",
+                "selecciona-coordinador": "SELECCIONA COORDINADOR",
+                "selecciona-asesor": "SELECCIONA ASESOR",
+                "rechazos-juridico": "Rechazos jurídico"
 	}
 }
