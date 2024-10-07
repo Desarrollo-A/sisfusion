@@ -35,8 +35,8 @@
                         </div>
                         <div class="modal-footer">
                             <div class="col-lg-12">
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                                <button type="submit" id="detenerLote" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                             </div>
                         </div>
                     </form>
@@ -54,8 +54,8 @@
                         <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
                             <div class="col-lg-12">
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="updateBandera" class="btn btn-primary">Registrar</button>
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                                <button type="submit" id="updateBandera" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                             </div>
                         </div>
                     </form>
@@ -70,7 +70,7 @@
                     <form method="post" id="form_NEODATA">
                         <div class="modal-body"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar</button>
                         </div>
                     </form>
                 </div>
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" >Cerrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar</button>
                     </div>
                 </div>
             </div>

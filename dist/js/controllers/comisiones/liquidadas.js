@@ -272,7 +272,7 @@ $(document).ready(function () {
                 if(data.length > 0){
                     switch (data[0].Marca) {
                         case 0:
-                            $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h4><b>${_("en-espera-proximo-abono")} `+row.data().nombreLote+`.</b></h4><br><h5>${_("revisar-con-administracion")}</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div></div>`);
+                            $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h4><b>${_("en-espera-proximo-abono")} `+row.data().nombreLote+`.</b></h4><br><h5>${_("revisar-con-administracion")}</h5></div> <div class="col-md-12 d-flex justify-center"><img src="`+general_base_url+`static/images/robot.gif" width="320" height="300"></div></div>`);
                         break;
                         case 1:
                             let total0 = parseFloat(data[0].Aplicado);
@@ -417,7 +417,7 @@ $(document).ready(function () {
                 }  
                 else{
                     //QUERY SIN RESULTADOS
-                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><b>${_("no-se-encontro-esta-referencia-de")} `+row.data().nombreLote+`.</b></h3><br><h5>${_("revisar-con-administracion")}</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>`);
+                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><b>${_("no-se-encontro-esta-referencia-de")} `+row.data().nombreLote+`.</b></h3><br><h5>${_("revisar-con-administracion")}</h5></div> <div class="col-md-12 d-flex justify-center"><img src="`+general_base_url+`static/images/robot.gif" width="320" height="300"></div> </div>`);
                 }
             }); //FIN getStatusNeodata
             
