@@ -1,4 +1,5 @@
-let locale = localStorage.getItem('locale')
+let locale = localStorage.getItem('locale');
+let languajeTable = general_base_url + "static/spanishLoader_v2.json";
 
 $.i18n().load(`${general_base_url}dist/js/jquery.i18n/langs.json`)
 .done(function() {
@@ -144,17 +145,24 @@ function construirHead(table){
         }
     });
 
-    function translatePlaceholder(){
-        for(titulo of titulos){
-            if(titulo !== ''){
-                $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                $(`#head-${titulo}`).attr('data-original-title', _(titulo))
+    $(`#${table}`).on('draw.dt', function() {
+        $('.dt-button').each(function (i) {
+            let is_excel = $(this).hasClass('buttons-excel')
+            let is_pdf = $(this).hasClass('buttons-pdf')
+            
+            if(is_excel){
+                $(this).attr('title', _('descargar-excel'))
+                $(this).children().children().removeAttr('title')
             }
-        }
-    }
 
-    onLoadTranslations(translatePlaceholder)
-    onChangeTranslations(translatePlaceholder)
+            if(is_pdf){
+                $(this).attr('title', _('descargar-pdf'))
+                $(this).children().children().removeAttr('title')
+            }
+        })
+        
+        $('body').i18n()
+    });
 }
 
 function changeButtonTooltips() {
@@ -238,7 +246,7 @@ function changeParagraphTooltips() {
 }
 
 function changeListTooltips() {
-    console.log('li')
+    // console.log('li')
 
     $('li').each(function (i) {
         let id = $(this).data('i18n-tooltip')
@@ -250,6 +258,24 @@ function changeListTooltips() {
 
             $(this).attr('title', title)
             $(this).attr('data-original-title', title)
+        }
+    })
+}
+
+function changeSteps() {
+    $('button[data-i18n-stepper]').each(function (i) {
+        let id = $(this).data('i18n-stepper');
+
+        if(id) {
+            let title = _(id);
+            if(id == 'anterior') {
+                $("#stepperAnterior").html(title);
+                $(this).attr('data-title', title);
+            }
+            if(id == 'siguiente') {
+                $("#stepperSiguiente").html(title);
+                $(this).attr('data-title', title);
+            }
         }
     })
 }
