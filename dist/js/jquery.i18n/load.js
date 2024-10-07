@@ -180,6 +180,9 @@ function changeButtonTooltips() {
         if(id){
             let title = _(id)
 
+            if($(this).attr('title')){
+                $(this).attr('title', title)
+            }
             $(this).attr('data-original-title', title)
         }
     })
