@@ -4,12 +4,10 @@ let exists = 1;
 let eventsTable;
 let arrayEvents = [];
 let globalLanguage = localStorage.getItem('locale');
-//triggerChangeFunctions(readyAgenda);
 onChangeTranslations(newCalendar);
-console.log("globalLanguage: ", globalLanguage);
+
 function newCalendar() {
   globalLanguage = localStorage.getItem('locale');
-  console.log("globalLanguage inside: ", globalLanguage);
   readyAgenda();
 }
 
@@ -211,7 +209,10 @@ function isSignInGoogle(){
     $(".fc-googleBtn-button").html('');
     listUpcomingEvents(googleToken);
   } else {
-    $(".fc-googleBtn-button").append('<a id="signInGoogle"><i class="fab fa-google"></i></a>');
+    if($("#signInGoogle").length === 0) {
+      $(".fc-googleBtn-button").append('<a id="signInGoogle"><i class="fab fa-google"></i></a>');
+    }
+    
   }
 }
 
