@@ -251,9 +251,9 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
         { 
             data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">VIGENTE</span><center>';
+                    return '<center><span class="label lbl-green">'+_("vigente")+'</span><center>';
                 } else {
-                    return '<center><span class="label lbl-warinig">NO VIGENTE</span><center>';
+                    return '<center><span class="label lbl-warinig">'+_("no-vigente")+'</span><center>';
                 }
             }
         },
@@ -463,7 +463,7 @@ function fillTimeline(v) {
         '    <div class="container-fluid">\n' +
         '       <div class="row">\n' +
         '           <div class="col-md-6">\n' +
-        '               <a><small>Usuario: </small><b>' + v.creador + '</b></a><br>\n' +
+        '               <a><small >'+_("usuario")+': </small><b>' + v.creador + '</b></a><br>\n' +
         '           </div>\n' +
         '           <div class="float-end text-right">\n' +
         '               <a>' + v.fecha_creacion + '</a>\n' +
@@ -483,15 +483,15 @@ function fillChangelog(v) {
     '    <div class="container-fluid">\n' +
     '       <div class="row">\n' +
     '           <div class="col-md-6">\n' +
-    '               <a><small data-i18n="campo">Campo: </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
+    '               <a><small >'+_("campo")+': </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
     '           </div>\n' +
     '           <div class="float-end text-right">\n' +
     '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
-    '               <p class="m-0"><small data-i18n="usuario">USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-    '               <p class="m-0"><small data-i18n="valor-anterior">VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
-    '               <p class="m-0"><small data-i18n="valor-nuevo" >VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
+    '               <p class="m-0"><small data-i18n="usuario">'+_("usuario")+': </small><b> ' + v.creador + '</b></p>\n'+
+    '               <p class="m-0"><small data-i18n="valor-anterior">'+_("valor-anterior")+': </small><b> ' + v.anterior + '</b></p>\n' +
+    '               <p class="m-0"><small data-i18n="valor-nuevo" >'+_("valor-nuevo")+': </small><b> ' + v.nuevo + '</b></p>\n' +
     '           </div>\n' +
     '        <h6>\n' +
     '        </h6>\n' +

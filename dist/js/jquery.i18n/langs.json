@@ -983,7 +983,9 @@
           "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
           "busqueda-detallda-de-prospectos" : "Detailed search of prospects",
           "limpiar-campos":"Clear fields",
-          "id-prospecto" : "Prospect id"
+          "id-prospecto" : "Prospect id",
+          "no-vigente"  :"Not active",
+          "no-aplica" : "Not applicable"
   },
   "es":{
           "1-origen":"1% de origen",
@@ -1969,6 +1971,7 @@
           "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
           "busqueda-detallda-de-prospectos":"Búsqueda detallada de prospectos",
           "limpiar-campos":"Limpiar campos",
-          "id-prospecto" : "Id Prospecto"
+          "id-prospecto" : "Id Prospecto",
+          "no-vigente": "No vigente"
   }
 }
