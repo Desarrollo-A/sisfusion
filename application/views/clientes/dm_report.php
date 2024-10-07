@@ -8,9 +8,7 @@
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close"  data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanComments()" data-i18n="borrar">Borrar</i>
-                        </button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" data-i18n="bitacora-cambios">Bitácora de cambios</h4>
                     </div>
                     <div class="modal-body">

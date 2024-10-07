@@ -2,7 +2,6 @@ Shadowbox.init();
 let getInfoData = new Array(8);
 let tipo_comprobante ;
 let aut;
-let titulos_intxt = [];
 let cliente = null;
 let titulo_modal = '';
 
@@ -31,6 +30,7 @@ const STATUS_CONTRATACION = 1;
 
 $(document).ready(function() {
     construirHead("tabla_deposito_seriedad");  
+    construirHead("table_prospectos");  
     if (id_usuario_general == 9651 || id_usuario_general == 11142) { // MJ: ERNESTO DEL PINO SILVA
         $('#tabla_deposito_seriedad').addClass('hide');
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
@@ -103,8 +103,8 @@ $("#tabla_deposito_seriedad").ready( function(){
                 exportOptions: {
                     columns: [0,1,2,3,4,5,6],
                     format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -120,8 +120,8 @@ $("#tabla_deposito_seriedad").ready( function(){
                 exportOptions: {
                     columns: [0,1,2,3,4,5,6],
                     format: {
-                        header: function (d, columnIdx) {
-                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -193,6 +193,7 @@ $("#tabla_deposito_seriedad").ready( function(){
                 }
             }
         });
+        applySearch(tabla_valores_ds);
         $('#asignar_prospecto_a_cliente').modal();
     });
 
@@ -316,7 +317,7 @@ $(document).on("click", ".getInfoRe", function (e) {
 });
 
 function fillDataTable(idCondominio) {
-    tabla_valores_ds = $("#tabla_deposito_seriedad").DataTable({
+   const tb_deposito_seriedad = $("#tabla_deposito_seriedad").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -327,13 +328,13 @@ function fillDataTable(idCondominio) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Tus ventas',
-            title:"Tus ventas",
+            titleAttr: `${_("tus-ventas")}`,
+            title:`${_("tus-ventas")}`,
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -342,15 +343,15 @@ function fillDataTable(idCondominio) {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
-            titleAttr: 'Tus ventas',
-            title:"Tus ventas",
+            titleAttr: `${_("tus-ventas")}`,
+            title:`${_("tus-ventas")}`,
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -659,6 +660,7 @@ function fillDataTable(idCondominio) {
             }
         }
     });
+    applySearch(tb_deposito_seriedad);
 }
 
 function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = `${_("enviar-estatus")}`) {

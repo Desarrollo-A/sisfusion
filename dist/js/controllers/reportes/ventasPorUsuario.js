@@ -42,7 +42,7 @@ function filltablaLista(beginDate, endDate) {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -118,6 +118,7 @@ function filltablaLista(beginDate, endDate) {
             }
         }
     });
+    applySearch(tabla_6);
     $('#box-listaProspectos').removeClass('hide');
     $('#spiner-loader').addClass('hide');
 }
