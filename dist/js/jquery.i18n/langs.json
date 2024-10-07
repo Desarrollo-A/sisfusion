@@ -979,8 +979,11 @@
           "visualizar": "view",
           "vive-en-casa" : "Live in the house",
           "vsualizando-archivo": "Viewing archive: evidence",
-          "x-pagar": "to be paid",
-          "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE"
+          "x-pagar":"to be paid",
+          "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+          "busqueda-detallda-de-prospectos" : "Detailed search of prospects",
+          "limpiar-campos":"Clear fields",
+          "id-prospecto" : "Prospect id"
   },
   "es":{
           "1-origen":"1% de origen",
@@ -1963,6 +1966,9 @@
           "vive-en-casa":"Vive en casa",
           "vsualizando-archivo": "Visualizando archivo: evidencia",
           "x-pagar": "Por pagar",
-          "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE"
+          "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+          "busqueda-detallda-de-prospectos":"Búsqueda detallada de prospectos",
+          "limpiar-campos":"Limpiar campos",
+          "id-prospecto" : "Id Prospecto"
   }
 }
