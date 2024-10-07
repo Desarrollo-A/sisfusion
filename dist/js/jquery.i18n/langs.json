@@ -597,7 +597,7 @@
 		"no-puedes-subir-factura": "YOU CANNOT UPLOAD INVOICES UNTIL THE NEXT CUTOFF.",
 		"normal": "Normal",
 		"no-se-encuentra-ref": "THIS REFERENCE WAS NOT FOUND",
-		"no-se-han-encontrado-reg": "No se han encontrado registros que mostrar",
+		"no-se-han-encontrado-reg": "No records found to display",
 		"no-se-ha-podido-completar-solicitud": "The request could not be completed.",
 		"no-se-ha-podido-generar-el-token": "The token could not be generated.",
 		"no-se-ha-podido-insertar-el-token-en-la-base-de-datos": "The token could not be inserted into the database.",
