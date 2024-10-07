@@ -283,7 +283,6 @@
 
         /**/ //carga tabla
         var url = "<?= base_url() ?>index.php/Clientes/getProspectsListByCoord/" + coordinador;
-        // updateTable(url, typeTransaction);
         let finalBeginDate = $("#beginDate").val();
         let finalEndDate = $("#endDate").val();
         updateTable(url, 1, finalBeginDate, finalEndDate, 0);
