@@ -3609,9 +3609,10 @@ class Casas extends BaseController
 
         // Insert historial
         $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanzó el proceso al paso 8 | Comentario: ' . $comentario, 1);
+        $tituloPropiedad = $this->CasasModel->inserDocumentsToProceso($idProceso, 17, 'Titulo de propiedad');
 
         // Verificar todas las operaciones
-        if ($actualizarProceso && $agregarHistorial) {
+        if ($actualizarProceso && $agregarHistorial && $tituloPropiedad) {
             $response["result"] = true;
             $this->db->trans_commit(); 
         } else {
