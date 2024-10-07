@@ -1711,7 +1711,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                         $("#desarrolloSelect").append($('<option>').val(id).attr('data-value', id).text(name));
                     }
                     if (len <= 0) {
-                        $("#desarrolloSelect").append('<option selected="selected" disabled><span data-i18n="no-se-han-encontrado-reg">No se han encontrado registros que mostrar</span></option>');
+                        $("#desarrolloSelect").append(`<option selected="selected" disabled >${_("no-se-han-encontrado-reg")}</option>`);
                     }
                     $("#desarrolloSelect").val(0);
                     $("#desarrolloSelect").selectpicker('refresh');
