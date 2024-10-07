@@ -980,7 +980,10 @@
             "vive-en-casa" : "Live in the house",
             "vsualizando-archivo": "Viewing archive: evidence",
             "x-pagar": "to be paid",
-            "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE"
+            "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+            "rechazo-estatus-8": "Status 8 decline/return",
+            "rfc-numero": "ITIN",
+            "seguro-eliminar-rol": "Are you sure you want to delete this role ?"
     },
     "es":{
             "1-origen":"1% de origen",
@@ -1963,6 +1966,9 @@
             "vive-en-casa":"Vive en casa",
             "vsualizando-archivo": "Visualizando archivo: evidencia",
             "x-pagar": "Por pagar",
-            "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE"
+            "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+            "rechazo-estatus-8": "Rechazo/regreso estatus 8",
+            "rfc-numero": "RFC",
+            "seguro-eliminar-rol": "¿Esta seguro que que desea eliminar este rol?"
     }
 }
