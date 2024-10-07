@@ -84,7 +84,7 @@
                                                         <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
                                                         <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
                                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                            <span class="material-icons update-dataTable">search</span>
+                                                            <span class="material-icons update-dataTable" data-i18n="buscar">Buscar</span>
                                                         </button>
                                                     </div>
                                                 </div>
