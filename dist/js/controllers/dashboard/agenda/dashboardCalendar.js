@@ -314,12 +314,12 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
   const emptyTitle = $("#evtTitle").val().replace(/\s/g, '').length;
 
   if (!rangeOfDates) {
-    alerts.showNotification("top", "right", "Rango de fechas inválido", "danger");
+    alerts.showNotification("top", "right", _("rango-fechas-invalido"), "danger");
     return;
   }
 
   if (!emptyTitle) {
-    alerts.showNotification("top", "right", "Título inválido", "danger");
+    alerts.showNotification("top", "right", _("titulo_invalido"), "danger");
     return;
   }
 
@@ -355,7 +355,7 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
       $('#agendaInsert').modal('toggle');
     },
     error: function() {
-      alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
     },
     complete: function () {
       $('#spiner-loader').addClass('hide');
@@ -375,7 +375,7 @@ $(document).on('submit', '#edit_appointment_form', function(e) {
   const rangeOfDates = validateDates(dataF);
 
   if(!rangeOfDates) {
-    alerts.showNotification("top", "right", "Rango de fechas inválido", "danger");
+    alerts.showNotification("top", "right", _("rango-fechas-invalido"), "danger");
   } else {
     updateEvent(dataF);
   }
@@ -463,25 +463,34 @@ function getAppointmentData(idAgenda){
     },
     error: function() {
       $('#spiner-loader').addClass('hide');
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
     }
   });    
 }
 
 function validateNCreate(appointment, medio, box){
   box.empty();
+  console.log(_("evento"));
+  console.log(_("recorrido"));
   if(medio == 2 || medio == 5){
-    box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
+    let evento = medio == 5 ? _('evento') : _('recorrido');
+    box.append(`  <label class="m-0">
+    <span data-i18n="direccion-del">Dirección del</span> 
+    <span>${evento}</span>
+  </label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='${((appointment !=  '' && (medio == 2 || medio == 5 )) ? ((appointment.id_direccion == ''|| appointment.id_direccion == null) ? appointment.direccion : '' ) : '' )}' required>`);
   }
   else if(medio == 3){
-    box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
-    +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
+    box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0" data-i18n="telefono-1">Teléfono 1</label><input type="text" class="form-control input-gral" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono != ''|| appointment.telefono != null) ? appointment.telefono : '') : ''+ $("#prospecto option:selected").attr('data-telefono') +''} disabled></div>`
+    +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0" data-i18n="telefono-2">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${(appointment !=  '' &&  medio == 3 ) ? ((appointment.telefono_2 != ''|| appointment.telefono_2 != null) ? appointment.telefono_2 : '') : ($("#prospecto option:selected").attr('data-telefono2') != '' || $("#prospecto option:selected").attr('data-telefono2') != null ) ? $("#prospecto option:selected").attr('data-telefono2') : '' } ></div></div></div>`);
   }
   else if(medio == 4){
-    box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
+    box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0" data-i18n="direccion-oficina">Dirección de oficina</label>
+      <select id="id_direccion" name="id_direccion" class="selectpicker select-gral m-0 w-100"  data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" data-i18n-label="selecciona-una-opcion" required ></select></div>`);
     getOfficeAddresses(appointment);
   }
   box.removeClass('hide');
+  $('body').i18n();
+  changeSelects();
 }
 
 function getOfficeAddresses(appointment){
@@ -644,7 +653,7 @@ async function updateEvent(formValues){
       $('#modalEvent').modal('toggle');
     },
     error: function() {
-      alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+      alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
       $('#spiner-loader').addClass('hide');
     }
   });
@@ -679,7 +688,7 @@ function editGoogleEvent(evento, data){
         resolve(d);
       },
       error: function (err) {
-        alerts.showNotification("top", "right", "Error en actualizar el evento en Google Calendar.", "danger");
+        alerts.showNotification("top", "right", _("error-actualizar-evento-google"), "danger");
         reject(err);
       },
       complete: function () {
@@ -754,9 +763,9 @@ async function deleteEvent(idAgenda, idGoogle){
               getUsersAndEvents(id_rol_general, id_usuario_general, false);
             }
 
-            alerts.showNotification("top", "right", "Se ha eliminado el registro de manera de exitosa.", "success");
+            alerts.showNotification("top", "right", _("eliminado-exito"), "success");
         } else {
-            alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+            alerts.showNotification("top", "right", _("asegurate-campos"), "warning");
         }
     },
     error: function() {
@@ -895,7 +904,7 @@ $(document).on('submit', '#appointmentsForm', function(e) {
   const params = eventsTable.$('input,select,textarea').serialize();
   let array = createArrayEvents(params);
   if (array.length === 0) {
-    alerts.showNotification("top", "right", "No hay ningún registro que modificar.", "warning");
+    alerts.showNotification("top", "right", _("no-hay-registro-modificar"), "warning");
   } else {
     $.ajax({
       type: 'POST',
