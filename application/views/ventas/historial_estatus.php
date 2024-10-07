@@ -124,16 +124,19 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Historial <b >general estatus</b></h3>
-                                    <p class="card-title pl-1">(Listado de todos los pagos por proyecto y estatus)</p>
+                                <h3 class="card-title center-align">
+                                    <span data-i18n="historial">Historial</span>
+                                    <b data-i18n="general-estatus">general estatus</b>
+                                </h3>
+                                    <p class="card-title pl-1" data-i18n="titulo-listado-pagos">(Listado de todos los pagos por proyecto y estatus)</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
+                                                    <label class="m-0" for="filtro33" data-i18n="proyecto">Proyecto</label>
+                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" data-i18n-label="select-proyecto" title="Selecciona un proyecto" data-size="7" required>
                                                         <option value="0">Seleccione todo</option>
                                                     </select>
                                                     <!-- param -->
@@ -153,18 +156,20 @@
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro44">Estatus</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona estatus" data-size="7" required/>
+                                                    <label class="m-0" for="filtro44" data-i18n="estatus-2">Estatus</label>
+                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-estatus" title="Selecciona estatus" data-size="7" required/>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label class="m-0"
-                                                           for="roles">Puesto</label>
+                                                           for="roles" data-i18n="puesto">Puesto</label>
                                                     <select class="selectpicker select-gral"
                                                             name="roles"
                                                             id="roles"
+                                                            data-i18n-label="selecciona-rol"
+                                                            title="SELECCIONA UN ROL"
                                                             required>
                                                     </select>
                                                 </div>
@@ -173,13 +178,14 @@
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label class="m-0"
-                                                           for="users">Usuario</label>
+                                                           for="users" data-i18n="usuario">Usuario</label>
                                                     <select class="selectpicker select-gral"
                                                             id="users"
                                                             name="users"
                                                             data-style="btn"
                                                             data-show-subtext="true"
                                                             data-live-search="true"
+                                                            data-i18n-label="selecciona-usuario"
                                                             title="SELECCIONA UN USUARIO"
                                                             data-size="7"
                                                             required>
@@ -196,22 +202,22 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID</th>
-                                                        <th>PROY.</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>REF.</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COM.</th>
-                                                        <th>PAGO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>PAGADO</th>
-                                                        <th>PENDIENTE</th>
-                                                        <th>USUARIO</th>
-                                                        <th>PUESTO</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>id</th>
+                                                        <th>proy</th>
+                                                        <th>condominio</th>
+                                                        <th>lote</th>
+                                                        <th>ref</th>
+                                                        <th>precio-lote</th>
+                                                        <th>total-com</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>pagado</th>
+                                                        <th>pendiente</th>
+                                                        <th>usuario</th>
+                                                        <th>puesto</th>
+                                                        <th>detalle</th>
+                                                        <th>estatus</th>
+                                                        <th>mas</th>
                                                     </tr>
                                             </thead>
                                         </table>
@@ -355,25 +361,25 @@
             myCommentsLote.innerHTML = '';
         } 
 
-        $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
-            let titulos = [];
-            if(i != 0){
-                var title = $(this).text();
-                titulos.push(title);
-                $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
-                $('input', this).on('keyup change', function() {
-                    if (tabla_historialGral2.column(i).search() !== this.value) {
-                        tabla_historialGral2.column(i).search(this.value).draw();
+        // $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
+        //     let titulos = [];
+        //     if(i != 0){
+        //         var title = $(this).text();
+        //         titulos.push(title);
+        //         $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
+        //         $('input', this).on('keyup change', function() {
+        //             if (tabla_historialGral2.column(i).search() !== this.value) {
+        //                 tabla_historialGral2.column(i).search(this.value).draw();
 
-                        var total = 0;
-                        var index = tabla_historialGral2.rows({
-                            selected: true,
-                            search: 'applied'
-                        }).indexes();
-                    }
-                });
-            }
-        });
+        //                 var total = 0;
+        //                 var index = tabla_historialGral2.rows({
+        //                     selected: true,
+        //                     search: 'applied'
+        //                 }).indexes();
+        //             }
+        //         });
+        //     }
+        // });
 
         var url = "<?=base_url()?>";
         var url2 = "<?=base_url()?>index.php/";
@@ -440,12 +446,394 @@
             </div>`;
 
         let seleccionados = [];
+        // $(document).ready(function(){
+        //     $("#tabla_historialGral").prop("hidden", false);
+        //     construirHead('tabla_historialGral');
+        //     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
+        //         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
+        //         width: 'auto',
+        //         buttons: [{
+        //             text: 'MOVIMIENTO',
+        //             action: function() {
+        //                 seleccionados = [];
 
+        //                 if ($('input[name="idTQ[]"]:checked').length > 0) {
+        //                     const estatus = $('#filtro44').val();
+        //                     const idComisiones = $(tabla_historialGral2.$('input[name="idTQ[]"]:checked'))
+        //                         .map(function () {
+        //                             return this.value;
+        //                         })
+        //                         .get();
+
+        //                     seleccionados = idComisiones;
+
+        //                     let options = '';
+        //                     if (estatus === '1') {
+        //                         options = optRevision + optPausado;
+        //                     } else if (estatus === '2') {
+        //                         options = optNueva + optPausado;
+        //                     } else if (estatus === '4') {
+        //                         options = optNueva;
+        //                     } else if (estatus === '8') {
+        //                         options = optPagado;
+        //                     }
+
+        //                     const titlePagos = (idComisiones.length > 1)
+        //                         ? `<b>${idComisiones.length}</b> pagos seleccionados`
+        //                         : `<b>${idComisiones.length}</b> pago seleccionado`;
+
+        //                     $('#total-pagos').html('').html(titlePagos);
+        //                     $('#div-options').html('').html('<label>Seleccione una opción:</label>'+options);
+        //                     $('#movimiento-modal').modal();
+        //                 }
+        //             },
+        //             attr: {
+        //                 class: 'btn btn-azure',
+        //                 style: 'position: relative; float: right;',
+        //             }
+        //         },
+        //         {
+        //             extend: 'excelHtml5',
+        //             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        //             className: 'btn buttons-excel',
+        //             titleAttr: 'Descargar archivo de Excel',
+        //             title: 'HISTORIAL_GENERAL_SISTEMA_COMISIONES',
+        //             exportOptions: {
+        //                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+        //                 format: {
+        //                     header:  function (d, columnIdx) {
+        //                         if(columnIdx == 0){
+        //                             return ' '+d +' ';
+        //                         }else if(columnIdx == 1){
+        //                             return 'ID PAGO';
+        //                         }else if(columnIdx == 2){
+        //                             return 'PROYECTO';
+        //                         }else if(columnIdx == 3){
+        //                             return 'CONDOMINIO';
+        //                         }else if(columnIdx == 4){
+        //                             return 'NOMBRE LOTE';
+        //                         }else if(columnIdx == 5){
+        //                             return 'REFERENCIA';
+        //                         }else if(columnIdx == 6){
+        //                             return 'PRECIO LOTE';
+        //                         }else if(columnIdx == 7){
+        //                             return 'TOTAL COMISIÓN';
+        //                         }else if(columnIdx == 8){
+        //                             return 'PAGO CLIENTE';
+        //                         }else if(columnIdx == 9){
+        //                             return 'DISPERSADO NEODATA';
+        //                         }else if(columnIdx == 10){
+        //                             return 'PAGADO';
+        //                         }else if(columnIdx == 11){
+        //                             return 'PENDIENTE';
+        //                         }else if(columnIdx == 12){
+        //                             return 'COMISIONISTA';
+        //                         }else if(columnIdx == 13){
+        //                             return 'PUESTO';
+        //                         }else if(columnIdx == 14){
+        //                             return 'DETALLE';
+        //                         }else if(columnIdx == 15){
+        //                             return 'ESTATUS ACTUAL';
+        //                         }else if(columnIdx != 16 && columnIdx !=0){
+        //                             return ' '+titulos[columnIdx-1] +' ';
+        //                         }
+        //                     }
+        //                 }
+        //             },
+        //         }],
+        //         pagingType: "full_numbers",
+        //         fixedHeader: true,
+        //         language: {
+        //             url: "<?=base_url()?>/static/spanishLoader_v2.json",
+        //             paginate: {
+        //                 previous: "<i class='fa fa-angle-left'>",
+        //                 next: "<i class='fa fa-angle-right'>"
+        //             }
+        //         },
+        //         destroy: true,
+        //         ordering: false,
+        //         columns: [{
+        //             "width": "2%",
+        //         },
+        //         {
+        //             "width": "5%",
+        //             "data": function( d ){
+        //                 var lblStats;
+        //                 lblStats ='<p class="m-0"><b>'+d.id_pago_i+'</b></p>';
+        //                 return lblStats;
+        //             }
+        //         },
+        //         {
+        //             "width": "5%",
+        //             "data": function( d ){
+        //                 return '<p class="m-0">'+d.proyecto+'</p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "6%",
+        //             "data": function( d ){
+        //                 return '<p class="m-0">'+d.condominio+'</p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "7%",
+        //             "data": function( d ){
+        //                 return '<p class="m-0">'+d.nombreLote+'</p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "5%",
+        //             "data": function( d ){
+        //                 return '<p class="m-0">'+d.referencia+'</p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "6%",
+        //             "data": function( d ){
+        //                 return '<p class="m-0">$'+formatMoney(d.precio_lote)+'</p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "6%",
+        //             "data": function( d ){
+        //                 return '<p class="m-0">$'+formatMoney(d.comision_total)+' </p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "6%",
+        //             "data": function( d ){
+        //                 return '<p class=""m-0>$'+formatMoney(d.pago_neodata)+'</p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "7%",
+        //             "data": function( d ){
+        //                 return '<p class=""m-0><b>$'+formatMoney(d.pago_cliente)+'</b></p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "6%",
+        //             "data": function( d ){
+        //                 return '<p class=""m-0>$'+formatMoney(d.pagado)+'</p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "6%",
+        //             "data": function( d ){
+        //                 if(d.restante==null||d.restante==''){
+        //                     return '<p class=""m-0>$'+formatMoney(d.comision_total)+'</p>';
+        //                 }else{
+        //                     return '<p class=""m-0>$'+formatMoney(d.restante)+'</p>';
+        //                 }
+        //             }
+        //         }, 
+        //         {
+        //             "width": "6%",
+        //             "data": function( d ){
+        //                 if(d.activo == 0 || d.activo == '0'){
+        //                     return '<p class=""m-0><b>'+d.user_names+'</b></p><p class=""m-0><span class="label" style="background:red;">BAJA</span></p>';
+        //                 }
+        //                 else{
+        //                     return '<p class=""m-0><b>'+d.user_names+'</b></p>';
+        //                 }
+        //             }
+        //         },
+        //         {
+        //             "width": "7%",
+        //             "data": function( d ){
+        //                 return '<p class=""m-0>'+d.puesto+'</p>';
+        //             }
+        //         },
+        //         {
+        //             "width": "5%",
+        //             "data": function( d ){
+        //                 if(d.bonificacion >= 1){
+        //                     p1 = '<p class=""m-0><span class="label" style="background:pink;color: black;">Bonificación $'+formatMoney(d.bonificacion)+'</span></p>';
+        //                 }
+        //                 else{
+        //                     p1 = '';
+        //                 }
+
+        //                 if(d.lugar_prospeccion == 0){
+        //                     p2 = '<p class=""m-0><span class="label" style="background:RED;">Recisión de contrato</span></p>';
+        //                 }
+        //                 else{
+        //                     p2 = '';
+        //                 }
+
+        //                 return p1 + p2;;
+        //             }
+        //         },
+        //         {
+        //             "width": "5%",
+        //             "data": function( d ){
+        //                 var etiqueta;
+                            
+        //                 if((d.id_estatus_actual == 11) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p class=""m-0><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';
+        //                 }else if((d.id_estatus_actual == 12) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p class=""m-0><span class="label" style="background:#EDB172;">DESCUENTO RESGUARDO</span></p>';
+        //                 }else if((d.id_estatus_actual == 0) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p class=""m-0><span class="label" style="background:#ED8172;">DESCUENTO EN PROCESO</span></p>';
+        //                 }else if((d.id_estatus_actual == 16) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p class=""m-0><span class="label" style="background:#ED8172;">DESCUENTO DE PAGO</span></p>';
+        //                 }else if((d.id_estatus_actual == 17) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p class=""m-0><span class="label" style="background:#ED72B9;">DESCUENTO UNIVERSIDAD</span></p>';
+        //                 }else if((d.id_estatus_actual == 18) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p><span class="label" style="background:#89C86C;">DESCUENTO PRÉSTAMO</span></p>';
+        //                 }else if((d.id_estatus_actual == 19) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p><span class="label" style="background:#3BC6AC;">DESCUENTO SCIO</span></p>';
+        //                 }else if((d.id_estatus_actual == 20) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p><span class="label" style="background:#72CBED;">DESCUENTO PLAZA</span></p>';
+        //                 }else if((d.id_estatus_actual == 21) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p><span class="label" style="background:#7282ED;">DESCUENTO LINEA TELEFÓNICA</span></p>';
+        //                 }else if((d.id_estatus_actual == 22) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO MANTENIMIENTO</span></p>';
+        //                 }else if((d.id_estatus_actual == 23) && d.descuento_aplicado == 1 ){
+        //                     etiqueta = '<p><span class="label" style="background:#CA72ED;">DESCUENTO NÓMINAS</span></p>';
+        //                 }else{
+        //                     switch(d.id_estatus_actual){
+        //                         case '1':
+        //                         case 1:
+        //                         case '2':
+        //                         case 2:
+        //                         case '12':
+        //                         case 12:
+        //                         case '14':
+        //                         case 14:
+                                
+        //                         case '14':
+        //                         case 14:
+        //                         case '51':
+        //                         case 51:
+        //                         case '52':
+        //                         case 52:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#29A2CC;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '3':
+        //                         case 3:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#CC6C29;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '13':
+        //                         case 13:
+        //                         case '4':
+        //                         case 4:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#9129CC;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '5':
+        //                         case 5:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#CC2976;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '6':
+        //                         case 6:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#81BFBE;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '7':
+        //                         case 7:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#28A255;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '8':
+        //                         case 8:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#4D7FA1;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '9':
+        //                         case 9:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#E86606;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '10':
+        //                         case 10:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#E89606;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         case '11':
+        //                         case 11:
+
+        //                         if(d.pago_neodata < 1){
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#05A134;">'+d.estatus_actual+'</span></p><p class="m-0"><span class="label" style="background:#5FD482;">IMPORTACIÓN</span></p>';
+        //                         }else{
+
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#05A134;">'+d.estatus_actual+'</span></p>';
+        //                         }
+        //                         break;
+
+        //                         case '88':
+        //                         case 88:
+        //                             etiqueta = '<p class="m-0"><span class="label" style="background:#A1055A;">'+d.estatus_actual+'</span></p>';
+        //                         break;
+
+        //                         default:
+        //                             etiqueta = '';
+        //                         break;
+        //                     }
+        //                 }
+        //                 return etiqueta;
+        //             }
+        //         },
+        //         { 
+        //             "width": "2%",
+        //             "orderable": false,
+        //             "data": function( data ){
+        //                 var BtnStats;
+
+        //                 BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                
+        //                 return BtnStats;
+        //             }
+        //         }],
+        //         columnDefs: [{
+        //             orderable: false,
+        //             className: 'select-checkbox',
+        //             targets:   0,
+        //             'searchable':true,
+        //             'className': 'dt-body-center',
+        //             'render': function (d, type, full) {
+        //                 const estatus = $('#filtro44').val();
+        //                 if (( estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') && rol != 17 || idsNoPermitidos.indexOf(id_usuario_general) >= 0 ) {
+        //                     return ''; 
+        //                 } else if ( full.recision != '1' && estatus === '7' && (full.estatus === '1' || full.estatus === '6') && rol == 17 ) {
+        //                     return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+        //                 } else if ($('#filtro44').val() === '2' && rol == 17 ) {
+        //                     if (full.forma_pago.toLowerCase() !== 'factura' && rol == 17 && full.recision != '1' ) {
+        //                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+        //                     } else {
+        //                         return '';
+        //                     }
+        //                 } else {
+        //                     if(rol == 17 && (full.recision != '1' || id_usuario_general == 2754 )){
+        //                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+        //                     }else{
+        //                         return '';
+        //                     }
+        //                 }
+        //             },
+        //             select: {
+        //                 style:    'os',
+        //                 selector: 'td:first-child'
+        //             },
+        //         }],
+        //         ajax: {
+        //             url: `${url2}Comisiones/getDatosHistorialPagoEstatus/${proyecto}/${condominio}/${usuario}`,
+        //             type: "POST",
+        //             cache: false,
+        //             data: function( d ){}
+        //         },
+        //     });
+        //     applySearch(tabla_historialGral2);
+        // })
         //INICIO TABLA QUERETARO*****************************************
 
         function getAssimilatedCommissions(proyecto, condominio, usuario){
             let titulos = [];
             $("#tabla_historialGral").prop("hidden", false);
+            construirHead('tabla_historialGral');
             tabla_historialGral2 = $("#tabla_historialGral").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                 width: 'auto',
@@ -667,7 +1055,7 @@
                         var etiqueta;
                             
                         if((d.id_estatus_actual == 11) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p class=""m-0><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';
+                            etiqueta = '<p class=""m-0><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';                            
                         }else if((d.id_estatus_actual == 12) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p class=""m-0><span class="label" style="background:#EDB172;">DESCUENTO RESGUARDO</span></p>';
                         }else if((d.id_estatus_actual == 0) && d.descuento_aplicado == 1 ){
@@ -823,6 +1211,7 @@
                     data: function( d ){}
                 },
             });
+            applySearch(tabla_historialGral2);
 
             $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
                 e.preventDefault();
@@ -832,7 +1221,7 @@
                 lote = $(this).attr("data-value");
 
                 $("#seeInformationModalAsimilados").modal();
-                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');               
                 $.getJSON("getComments/"+id_pago).done( function( data ){
                     $.each( data, function(i, v){
                         $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
@@ -855,6 +1244,7 @@
             });
 
             $("#tabla_historialGral tbody").on("click", ".actualizar_pago", function(){
+                
                 var tr = $(this).closest('tr');
                 var row = tabla_historialGral2.row( tr );
 
