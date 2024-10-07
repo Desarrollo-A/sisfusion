@@ -46,6 +46,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                             </li>
                             <li role="presentation" id="divTabClausulas">
                                 <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab" data-i18n="clausulas">Cláusulas</a>
+
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -245,7 +246,6 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>ubicacion</th>
                                                 <th>tipo-proceso</th>
                                                 <th>sede</th>
-
                                                 <!--solo para popea y el otro sujeto-->
                                                 <th>folio</th>
                                                 <th>documentacion-entregada</th>
@@ -272,7 +272,6 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>referencia-pago</th>
                                                 <th>costo-m2-lista</th>
                                                 <th>costo-m2-final</th>
-
                                                 <th>en-el-municipio-de</th>
                                                 <th>importe-de-la-oferta</th>
                                                 <th>importe-en-letra</th><!--60-->
@@ -283,7 +282,6 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>fecha-2da-liquidacion</th>
                                                 <th>referencias-personales</th>
                                                 <th>observaciones-2</th>
-
                                                 <!--solo para popea y el otro sujeto end-->
                                                 <th>porcentaje-enganche</th>
                                                 <th>acciones</th><!--69-->

@@ -112,4 +112,41 @@
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/he.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/fi.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/ml.js"></script>
-<script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/load.js">    
+
+function changeButtonTooltips() {
+    $('button').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
+    function changeSteps() {
+        $('button[data-i18n-stepper]').each(function (i) {
+            let id = $(this).data('i18n-stepper');
+
+            if(id) {
+                let title = _(id);
+                if(id == 'anterior') {
+                    $("#stepperAnterior").html(title);
+                    $(this).attr('data-title', title);
+                }
+                if(id == 'siguiente') {
+                    $("#stepperSiguiente").html(title);
+                    $(this).attr('data-title', title);
+                }
+            }
+        })
+    }
+
+onLoadTranslations(changeButtonTooltips)
+onChangeTranslations(changeButtonTooltips)
+
+</script>

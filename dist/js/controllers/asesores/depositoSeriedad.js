@@ -1,5 +1,5 @@
 Shadowbox.init();
-let getInfoData = new Array(7);
+let getInfoData = new Array(8);
 let tipo_comprobante ;
 let aut;
 let titulos_intxt = [];
@@ -90,7 +90,7 @@ $("#tabla_deposito_seriedad").ready( function(){
         $('#nom_cliente').append(nombre_cliente);
         $('#id_cliente_asignar').val(id_cliente);
         $('#idLoteValue').val(idLoteValue);
-        tabla_6 = $("#table_prospectos").DataTable({
+        tabla_valores_ds = $("#table_prospectos").DataTable({
             width: '100%',
             bAutoWidth: true,
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -204,17 +204,6 @@ $("#tabla_deposito_seriedad").ready( function(){
         });
     });
 
-    /* let titulos_encabezado = [];
-    $('#table_prospectos thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#table_prospectos').DataTable().column(i).search() !== this.value ) {
-                $('#table_prospectos').DataTable().column(i).search(this.value).draw();
-            }
-        });
-        titulos_encabezado.push(title);
-    }); */
 
     $(document).on('click', '.became_prospect_to_cliente', function() {
         const $itself = $(this);
@@ -289,6 +278,7 @@ $(document).on("click", ".getInfo2", function (e) {
     getInfoData[5] = $(this).attr("data-idLote");
     getInfoData[6] = $(this).attr("data-fechavenc");
     getInfoData[7] = $(this).attr("data-idMov");
+    getInfoData[8] = $(this).attr("data-proceso");
 
       (getInfoData[7] == MOVIMIENTOS.NUEVO_APARTADO) ? titulo_modal = `${_("integracion-expediente")} -`
     : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) ? titulo_modal = `${_("integracion-expediente-estatus5")} -`
@@ -328,7 +318,7 @@ $(document).on("click", ".getInfoRe", function (e) {
 });
 
 function fillDataTable(idCondominio) {
-    tabla_6 = $("#tabla_deposito_seriedad").DataTable({
+    tabla_valores_ds = $("#tabla_deposito_seriedad").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -558,7 +548,9 @@ function fillDataTable(idCondominio) {
                         } else {
                             buttons = construirBotonEstatus(d, d.fechaVenc, 'getInfo2');
                         }
-                        buttons += generarBotonesAutorizacion(d);
+                        // if( d.proceso == 1 || d.proceso == 0 ){
+                        //     buttons += generarBotonesAutorizacion(d);
+                        // }
                     } else {
                         buttons = (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2_2')
@@ -569,8 +561,8 @@ function fillDataTable(idCondominio) {
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) ? construirBotonEstatus(d, d.modificado, 'getInfo5_2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) ? construirBotonEstatus(d, d.fechaVenc, 'return1')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3) ? construirBotonEstatus(d, d.fechaVenc, 'enviar_nuevamente_estatus3', '', 'Enviar a estatus 3')
-                            : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_II) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2_II) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
+                            : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_II) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3_II) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_III) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_III) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
@@ -578,7 +570,7 @@ function fillDataTable(idCondominio) {
                             : d.comentario;
                     }
                     let urlToGo  = '';
-                    if (d.idMovimiento == MOVIMIENTOS.NUEVO_APARTADO && d.idStatusContratacion == STATUS_CONTRATACION) {
+                    if (d.idMovimiento == 31 && d.idStatusContratacion == STATUS_CONTRATACION) {
                         if (d.id_prospecto == 0) { // APARTADO DESDE LA PAGINA DE CIUDAD MADERAS
                             if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
                                 atributoButton = '';
@@ -626,7 +618,9 @@ function fillDataTable(idCondominio) {
                                 buttons = construirBotonEstatus(d, d.id_coordinador, 'disabled', 'disabled');
                                 atributoButton = 'disabled';
                             }
-                            buttons += generarBotonesAutorizacion(d);          
+                            // if(d.proceso == 1 || d.proceso == 0 ){
+                            //     buttons += generarBotonesAutorizacion(d);
+                            // }
                         }                         
                                             
                         if (d.dsType == 1){
@@ -641,8 +635,18 @@ function fillDataTable(idCondominio) {
                              buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="${_("asignar-pros")}" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                             }
                         }
-                    
 
+                    // Botón para descargar la carta de reubicación
+                    if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) {
+                            if ([2,4].includes(parseInt(d.proceso))) {
+                                const url = `${general_base_url}Reestructura/imprimirCartaReubicacion/${d.id_cliente}`;
+                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REUBICACIÓN"><i class="fas fa-download"></i></a>`;
+                            }
+                            if (d.proceso == 3) {
+                                const url = `${general_base_url}Reestructura/imprimirCartaReestructura/${d.id_cliente}`;
+                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REESTRUCTURA"><i class="fas fa-download"></i></a>`;
+                            }
+                    }
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
                 }
             }
@@ -655,9 +659,6 @@ function fillDataTable(idCondominio) {
             data: {
                 "idCondominio": idCondominio,
             }
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();
         }
     });
 }
@@ -674,11 +675,11 @@ function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = ''
                 data-idLote='${data.idLote}' 
                 data-fechavenc='${fechaVenc}'
                 data-idMov='${data.idMovimiento}' 
+                data-proceso='${data.proceso}'
                 class="btn-data btn-green ${classButton}" 
                 data-toggle="tooltip" data-placement="top" 
                 title="${titulo}"> <i class="fas fa-check"></i></button>`;
 }
-
 
 function generarBotonesAutorizacion(clienteData) {
     let botones = '';
@@ -693,9 +694,7 @@ function generarBotonesAutorizacion(clienteData) {
         `;
     }
 
-    if ((parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
-         parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO ||
-        (parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
+    if ( parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO ||
          parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO) {
         botones += `<button class="btn-data btn-yellow btn-rounded btn-solicitar" data-toggle="tooltip" data-placement="left" title="${solicitar-edicion}" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-hand-paper-o"></i></button>`;
     }
@@ -724,6 +723,7 @@ $(document).on('click', '#save1', function(e) {
     dataExp1.append("fechaVenc", getInfoData[6]);
     dataExp1.append('tipo_comprobante', tipo_comprobante);
     dataExp1.append('idMovimiento', getInfoData[7]);
+    dataExp1.append('proceso', getInfoData[8]);
 
     if(getInfoData[7] == 99 || getInfoData[7] == 102)
         complementoUrl = 'Postventa/enviarLoteARevisionPostVenta3/';
@@ -1290,9 +1290,11 @@ $(document).on("click", ".enviar_nuevamente_estatus3", function (e) {
 });
 
 $(document).on('click', '.btn-autorizacion', function () {
+    $('#spiner-loader').removeClass('hide');
     const $itself = $(this);
     const idCliente = $itself.attr('data-idCliente');
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
+        $('#spiner-loader').addClass('hide');
         cliente = JSON.parse(data);
         if (cliente.autorizacion_correo != null) {
             $('#chk-correo-aut-div').hide();
@@ -1353,13 +1355,13 @@ $(document).on('click', '.btn-solicitar', function () {
     const idCliente = $itself.attr('data-idCliente');
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
         cliente = JSON.parse(data);
-        if (parseInt(cliente.total_sol_correo_pend) > 0 || parseInt(cliente.total_sol_correo_aut) > 0 || cliente.autorizacion_correo === null || parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.AUTORIZADO) {
+        if (parseInt(cliente.total_sol_correo_pend) > 0 || cliente.autorizacion_correo === null || parseInt(cliente.autorizacion_correo) === ESTATUS_AUTORIZACION.AUTORIZADO) {
             $('#chk-correo-sol-div').hide();
             $('#chk-sms-sol-div').removeAttr('class');
             $('#chk-sms-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');
             $('#chkCorreoSol').prop('checked', false);
         }
-        if (parseInt(cliente.total_sol_sms_pend) > 0 || parseInt(cliente.total_sol_sms_aut) > 0 || cliente.autorizacion_sms === null || parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.AUTORIZADO) {
+        if (parseInt(cliente.total_sol_sms_pend) > 0 || cliente.autorizacion_sms === null || parseInt(cliente.autorizacion_sms) === ESTATUS_AUTORIZACION.AUTORIZADO) {
             $('#chk-sms-sol-div').hide();
             $('#chk-correo-sol-div').removeAttr('class');
             $('#chk-correo-sol-div').attr('class', 'col-12 col-sm-12 col-md-12 col-lg-12 p-0');

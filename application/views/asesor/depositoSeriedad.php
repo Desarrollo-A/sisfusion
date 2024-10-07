@@ -325,11 +325,15 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align" data-i18n="tus-ventas">Tus ventas</h3>
+                                <?php if ($this->session->userdata('id_rol') != 6) { ?>
+                                    <h3 class="card-title center-align" data-i18n="tus-ventas">Tus ventas</h3>
+                                <?php } else { ?>
+                                    <h3 class="card-title center-align" data-i18n="tus-ventas">Ventas</h3>
+                                <?php } ?>
                                 <p class="card-title pl-1"></p>
                             </div>
                             <?php
-                            if($this->session->userdata('id_usuario') == 9651) {
+                            if($this->session->userdata('id_usuario') == 9651 || $this->session->userdata('id_usuario') == 11142) {
                             ?>
                                 <div class="toolbar">
                                     <div class="row">

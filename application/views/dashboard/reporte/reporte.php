@@ -13,8 +13,8 @@
 <div class="container-fluid">
     <div class="row pdt-40" id="tableFilters">
         <div class="col-12 col-sm-6 col-md-6 col-lg-4 pb-1 overflow-hidden">
-            <select class="selectpicker select-gral m-0" name="estatusContratacion" id="estatusContratacion" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
-            </select>
+            <select class="selectpicker select-gral m-0" name="estatusContratacion" id="estatusContratacion" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" 
+            title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select> 
         </div>
         <div class="col-12 col-sm-6 col-md-6 col-lg-4 pb-1">
             <div class="form-group d-flex m-0 datesTable">
