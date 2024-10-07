@@ -280,6 +280,24 @@ function changeSteps() {
     })
 }
 
+function changeFontIconTooltips() {
+    // console.log('li')
+
+    $('i').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+        // let clase = $(this).attr('class')
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('title', title)
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
@@ -290,3 +308,5 @@ onLoadTranslations(changeListTooltips)
 onChangeTranslations(changeListTooltips)
 onLoadTranslations(changeInputPlaceholder)
 onChangeTranslations(changeInputPlaceholder)
+onLoadTranslations(changeFontIconTooltips)
+onChangeTranslations(changeFontIconTooltips)
