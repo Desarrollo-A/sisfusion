@@ -252,8 +252,8 @@
                                                                     <th>forma-pago</th>
                                                                     <th>total-comision</th>
                                                                     <th>impuestopan</th>
-                                                                    <th>%-comision</th>
-                                                                    <th>estatusan</th>
+                                                                    <th>porc-comision</th>
+                                                                    <th>estatus</th>
                                                                     <th>accionespan</th>
                                                                 </tr>
                                                             </thead>
@@ -269,7 +269,7 @@
                                                         <p class="card-title pl-1" data-i18n="este-listado-todos-descuentos-aplicados">Este es un listado de todos los descuentos que te han aplicado.</p>
                                                     </div>
                                                 </div>
-                                                <div class="material-datatables">
+                                                <div class="material-datatables" id="ocultar_descuento">
                                                     <div class="form-group">
                                                         <table class="table-striped table-hover" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
                                                             <thead>

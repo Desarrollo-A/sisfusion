@@ -119,6 +119,8 @@ function modalHistorial(){
     showModal();
 }
 
+// onLoadTranslations(function(){
+
 function getAssimilatedCommissions(proyecto, condominio, tipo){
     var Comisiones;
     if(tipo == 1 || tipo == 2 || tipo == 0){
@@ -172,10 +174,10 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
             titleAttr: _('descargar-excel'),
             title: _('historial-general-activas'),
             exportOptions: {
-                columns: columnas_datatable.tabla_historialGral.num_encabezados,
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_historialGral.titulos_encabezados[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -354,6 +356,8 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
     $('#tabla_historialGral').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
+    applySearch(tabla_historialGral2);
+
 }
 
 function getAssimilatedCancelacion(proyecto, condominio){
@@ -389,10 +393,10 @@ function getAssimilatedCancelacion(proyecto, condominio){
             titleAttr: _('descargar-excel'),
             title: _('historial-general-canceladas'),
             exportOptions: {
-                columns: columnas_datatable.tabla_comisiones_canceladas.num_encabezados,
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14],
                 format: {
-                    header:  function (d, columnIdx) {
-                        return ' '+columnas_datatable.tabla_comisiones_canceladas.titulos_encabezados[columnIdx] +' ';
+                    header: function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -567,6 +571,8 @@ function getAssimilatedCancelacion(proyecto, condominio){
     $('#tabla_comisiones_canceladas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
+    applySearch(tabla_historialGral3);
+
 }
 
 $('a[data-toggle="tooltip"]').on('shown.bs.tab', function (e) {
@@ -734,10 +740,10 @@ function tableComisionesSuma(anio){
             titleAttr: _('descargar-excel'),
             title: _('reporte-comision-suma-pagadas'),
             exportOptions: {
-                columns: columnas_datatable.tabla_comisiones_suma.num_encabezados,
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
-                    header:  function (d, columnIdx) {
-                        return ' '+columnas_datatable.tabla_comisiones_suma.titulos_encabezados[columnIdx] +' ';
+                    header: function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -802,7 +808,7 @@ function tableComisionesSuma(anio){
         {
             "orderable": false,
             "data": function(data) {
-                return '<<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" data-toggle="tooltip" data-placement="top"title="'+_('detalles')+'">' +'<i class="fas fa-info"></i></button>';
+                return '<button href="#" value="'+data.id_pago_suma+'"  data-referencia="'+data.referencia+'" ' +'class="btn-data btn-blueMaderas consultar_history m-auto" data-toggle="tooltip" data-placement="top"title="'+_('detalles')+'">' +'<i class="fas fa-info"></i></button>';
             }
         }],
         ajax: {
@@ -835,6 +841,9 @@ function tableComisionesSuma(anio){
             });
         });
     });
+
+    applySearch(tabla_suma);
+
 }
 
 $("#anio_suma").ready( function(){
@@ -875,6 +884,9 @@ let titulosHistorialDescuentos = [];
 // 	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 // });
 
+onLoadTranslations(function(){
+
+
 construirHead("tablaHistorialDescuentos");
 
 $("#tipo_historial_casas").on("change", function(){
@@ -882,10 +894,10 @@ $("#tipo_historial_casas").on("change", function(){
 
     if(seleccion == 1) {
         var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
-        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+        $("#tabla_historialGral, #ocultar_descuento").removeClass('hide');
     } else if(seleccion == 3) {
         var enlace = 'Casas_comisiones/getHistorialDescuentosPorUsuario'
-        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+        $("#tabla_historialGral, #ocultar_descuento").removeClass('hide');
     }
 
     consultarHistorialDescuentos(enlace)
@@ -911,7 +923,7 @@ function consultarHistorialDescuentos(enlace) {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosHistorialDescuentos[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -1039,7 +1051,12 @@ function consultarHistorialDescuentos(enlace) {
             cache: false,
         }
     });
+
+    applySearch(tablaHistorialDescuentos);
+
 }
+
+});
 
 $(document).on('click', '.consultarDetalleDelPago', function(e) {
     let ruta = $('#tipo_historial').val() == 4 ? 'Seguros' : ($('#tipo_historial').val() == 3 || $('#tipo_historial_casas').val() == 3 ?'Casas_comisiones':'Pagos');
@@ -1069,7 +1086,7 @@ $(document).ready(function () {
 
     if(usuario_id !=3){
     var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
-    $("#tablaHistorialDescuentos").removeClass('hide');
+    $("#ocultar_descuento").addClass('hide');
     consultarHistorialDescuentos(enlace)
     }
 
@@ -1105,6 +1122,7 @@ function consultarHistorialOOAM() {
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosHistorialOOAM[columnIdx] + ' ';
+                        // return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
