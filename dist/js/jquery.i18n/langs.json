@@ -505,7 +505,7 @@
 		"la-evidencia-ha-sido-marcada-como-rechazada": "The evidence has been marked as rejected.",
 		"lider": "Leader",
 		"lista": "LIST",
-		"listado-de-pagos-aplicados-contratados-activos": "Listado de todos los pagos aplicados, en proceso de lotes contratados y activos.",
+		"listado-de-pagos-aplicados-contratados-activos": "List of all applied payments, in process for contracted and active batches.",
 		"listado-marketing": "Digital marketing clients list",
 		"listado-oficinas-comercializacion": "List of Ciudad Maderas marketing offices",
 		"listado-pago-aplicados-lotes-cancelados": "List of all payments applied, in process of cancelled lots with recission.",
@@ -1992,3 +1992,5 @@
 		"selecciona-usuario": "SELECCIONA UN USUARIO"
 	}
 }
+
+
