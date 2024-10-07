@@ -57,7 +57,7 @@
                                 aria-hidden="true">
                             <i class="material-icons">clear</i>
                         </button>
-                        <h4 class="modal-title">Cambio de estatus</h4>
+                        <h4 class="modal-title" data-i18n="cambio-estatus">Cambio de estatus</h4>
                     </div>
 
                     <form method="post"
@@ -90,12 +90,12 @@
 
                         <div class="modal-footer">
                             <button type="submit"
-                                    class="btn btn-primary">
+                                    class="btn btn-primary" data-i18n="aceptar">
                                 Aceptar
                             </button>
                             <button type="button"
                                     class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
+                                    data-dismiss="modal" data-i18n="cancelar">
                                 Cancelar
                             </button>
                         </div>
@@ -124,7 +124,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Historial <b>general estatus</b></h3>
+                                    <h3 class="card-title center-align">Historial <b >general estatus</b></h3>
                                     <p class="card-title pl-1">(Listado de todos los pagos por proyecto y estatus)</p>
                                 </div>
                                 <div class="toolbar">

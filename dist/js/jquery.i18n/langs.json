@@ -980,7 +980,9 @@
 			"vive-en-casa" : "Live in the house",
 			"vsualizando-archivo": "Viewing archive: evidence",
 			"x-pagar": "to be paid",
-			"yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE"
+			"yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+			"cambio-estatus":"Status change",
+			"general-estatus":"General status"
 	},
 	"es":{
 			"1-origen":"1% de origen",
@@ -1963,6 +1965,8 @@
 			"vive-en-casa":"Vive en casa",
 			"vsualizando-archivo": "Visualizando archivo: evidencia",
 			"x-pagar": "Por pagar",
-			"yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE"
+			"yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+			"cambio-estatus":"Cambio de estatus",
+			"general-estatus":"general estatus"
 	}
 }

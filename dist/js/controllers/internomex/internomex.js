@@ -14,6 +14,7 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
+
 sp = { 
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -64,10 +65,14 @@ let titulos = [];
 //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 // });
 
+
+// onLoadTranslations(function(){
+
 construirHead("tableLotificacion");
+
 function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
-    generalDataTable = $('#tableLotificacion').dataTable({
+    generalDataTable = $('#tableLotificacion').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX:true,
@@ -81,7 +86,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -188,7 +193,11 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             $("#spiner-loader").addClass('hide');
         }
     });
+
+    applySearch(generalDataTable);
 }
+
+// });
 
 $(document).on('click', '.edit-monto-internomex', function(e){
     id_pago = $(this).attr("data-id-pago");
@@ -207,6 +216,8 @@ $(document).on('click', '.see-bitacora', function(e){
         });
     });
 });
+
+
 
 function fillChangelogUsers(v) {
     var nombreMovimiento;
@@ -328,6 +339,8 @@ $(document).on('click', '#downloadFile', function () {
     });
 });
 
+
+
 async function processFile(selectedFile) {
     try {
         let arrayBuffer = await readFileAsync(selectedFile);
@@ -433,3 +446,4 @@ function validaTipoPago(tipo_pago){
         $(".box-table").addClass("hide");
     }
 }
+

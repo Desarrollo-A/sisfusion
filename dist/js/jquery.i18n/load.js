@@ -1,4 +1,5 @@
-let locale = localStorage.getItem('locale')
+let locale = localStorage.getItem('locale');
+let languajeTable = general_base_url + "static/spanishLoader_v2.json";
 
 $.i18n().load(`${general_base_url}dist/js/jquery.i18n/langs.json`)
 .done(function() {
@@ -144,18 +145,6 @@ function construirHead(table){
         }
     });
 
-    function translatePlaceholder(){
-        for(titulo of titulos){
-            if(titulo !== ''){
-                $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                $(`#head-${titulo}`).attr('data-original-title', _(titulo))
-            }
-        }
-    }
-
-    onLoadTranslations(translatePlaceholder)
-    onChangeTranslations(translatePlaceholder)
-    
     $(`#${table}`).on('draw.dt', function() {
         $('.dt-button').each(function (i) {
             let is_excel = $(this).hasClass('buttons-excel')
@@ -232,15 +221,12 @@ function changeInputPlaceholder() {
 function stringToI18(str) {
     // Convertir todo el string a minúsculas
     let resultado = str.toLowerCase();
-       
+      
     // Eliminar acentos reemplazando caracteres acentuados por su equivalente sin acento
     resultado = resultado.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       
     // Reemplazar cualquier combinación de espacios, puntos, comas, signos de interrogación, signos de admiración por un guión medio
     resultado = resultado.replace(/[\s,\.?,¿!,¡]+/g, '-');
-    
-    // Eliminar guiones al principio y al final del resultado
-    resultado = resultado.replace(/^-+|-+$/g, '');
     
     return resultado;
 }
@@ -272,6 +258,24 @@ function changeListTooltips() {
 
             $(this).attr('title', title)
             $(this).attr('data-original-title', title)
+        }
+    })
+}
+
+function changeSteps() {
+    $('button[data-i18n-stepper]').each(function (i) {
+        let id = $(this).data('i18n-stepper');
+
+        if(id) {
+            let title = _(id);
+            if(id == 'anterior') {
+                $("#stepperAnterior").html(title);
+                $(this).attr('data-title', title);
+            }
+            if(id == 'siguiente') {
+                $("#stepperSiguiente").html(title);
+                $(this).attr('data-title', title);
+            }
         }
     })
 }

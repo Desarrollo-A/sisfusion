@@ -168,8 +168,8 @@
                                                     <th>gerente</th>
                                                     <th>subdirector</th>
                                                     <th>director-regional</th>
-                                                    <th>fecha_creacion</th>
-                                                    <th>fecha_cliente</th>
+                                                    <th>fecha-creacion</th>
+                                                    <th>fecha-cliente</th>
                                                     <th>acciones</th>
                                                 </tr>
                                             </thead>
