@@ -163,14 +163,14 @@
                                                                 <th>condominio</th>
                                                                 <th>lote</th>
                                                                 <th>referencia</th>
-                                                                <th id="titulo_precio"></th>
+                                                                <th id="titulo_precio">precio-del-lote</th>
                                                                 <th>total-comision</th>
                                                                 <th>pago-cliente</th>
                                                                 <th>dispersado</th>
                                                                 <th>pagado</th>
                                                                 <th>pendiente</th>
                                                                 <th>usuario</th>
-                                                                <th>position</th>
+                                                                <th>posicion</th>
                                                                 <th>detalles</th>
                                                                 <th>estatus</th>
                                                                 <th>acciones</th>

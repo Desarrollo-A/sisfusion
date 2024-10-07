@@ -160,9 +160,10 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
     // });
 
 
-    construirHead("tabla_historialGral");
+    // construirHead("tabla_historialGral");
 
     $('#tabla_historialGral').removeClass('hidden');
+    construirHead("tabla_historialGral");
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%', 
@@ -379,9 +380,10 @@ function getAssimilatedCancelacion(proyecto, condominio){
     //     }
     // });
 
+    $("#tabla_comisiones_canceladas").prop("hidden", false);
+
     construirHead("tabla_comisiones_canceladas");
 
-    $("#tabla_comisiones_canceladas").prop("hidden", false);
     tabla_historialGral3 = $("#tabla_comisiones_canceladas").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',        
@@ -903,7 +905,7 @@ $("#tipo_historial_casas").on("change", function(){
     consultarHistorialDescuentos(enlace)
 });
 
-
+})
 
 function consultarHistorialDescuentos(enlace) {
     
@@ -1055,8 +1057,6 @@ function consultarHistorialDescuentos(enlace) {
     applySearch(tablaHistorialDescuentos);
 
 }
-
-});
 
 $(document).on('click', '.consultarDetalleDelPago', function(e) {
     let ruta = $('#tipo_historial').val() == 4 ? 'Seguros' : ($('#tipo_historial').val() == 3 || $('#tipo_historial_casas').val() == 3 ?'Casas_comisiones':'Pagos');

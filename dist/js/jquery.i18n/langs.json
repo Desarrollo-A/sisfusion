@@ -993,7 +993,8 @@
 		"detalle": "Detail",
 		"selecciona-estatus": "Select status",
 		"selecciona-rol": "Select a role",
-		"selecciona-usuario": "SELECT A USER"
+		"selecciona-usuario": "SELECT A USER",
+		"posicion":"Position"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -1989,7 +1990,8 @@
 		"detalle": "Detalle",
 		"selecciona-estatus": "Selecciona estatus",
 		"selecciona-rol": "Selecciona un rol",
-		"selecciona-usuario": "SELECCIONA UN USUARIO"
+		"selecciona-usuario": "SELECCIONA UN USUARIO",
+		"posicion":"Posición"
 	}
 }
 
