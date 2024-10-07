@@ -120,6 +120,8 @@ function filltablaLista(beginDate, endDate) {
     });
     $('#box-listaProspectos').removeClass('hide');
     $('#spiner-loader').addClass('hide');
+
+    applySearch(tabla_6)
 }
 
 $('#tablaLista').on('draw.dt', function () {
