@@ -33,19 +33,19 @@
                                     <div class="col-md-4 form-group">
                                         <div class="form-group  select-is-empty">
                                             <label class="control-label" data-i18n  = "proyecto" >Proyecto</label>
-                                            <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
+                                            <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group  select-is-empty">
                                             <label class="control-label" data-i18n  ="condominio">Condominio</label>
-                                            <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
+                                            <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group  select-is-empty">
                                             <label class="control-label" data-i18n  ="lote">Lote</label>
-                                            <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" data-i18n="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
+                                            <select name="lote" id="lote" class="selectpicker select-gral m-0" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" required></select>
                                         </div>
                                     </div>
                                 </div>

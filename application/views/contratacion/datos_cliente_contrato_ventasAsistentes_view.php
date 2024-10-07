@@ -25,7 +25,7 @@
 								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 									<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 										<label>Proyecto:</label><br>
-										<select name="filtro3" id="filtro3" class="selectpicker" data-style="btn" data-show-subtext="true" data-live-search="true"  title="Selecciona Proyecto" data-size="7" required>
+										<select name="filtro3" id="filtro3" class="selectpicker" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado"  title="Selecciona Proyecto" data-size="7" required>
 											<?php
 											if($residencial != NULL) :
 												foreach($residencial as $fila) : ?>
@@ -37,11 +37,11 @@
 									</div>
 									<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 										<label>Condominio:</label><br>
-										<select id="filtro4" name="filtro4" class="selectpicker" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Condominio" data-size="7"></select>
+										<select id="filtro4" name="filtro4" class="selectpicker" data-show-subtext="true" data-live-search="true"  data-style="btn" data-i18n-label="select-predeterminado" title="Selecciona Condominio" data-size="7"></select>
 									</div>
 									<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 										<label>Lote:</label><br>
-										<select id="filtro5" name="filtro5" class="selectpicker" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Lote" data-size="7"></select>
+										<select id="filtro5" name="filtro5" class="selectpicker" data-show-subtext="true" data-live-search="true"  data-style="btn" data-i18n-label="select-predeterminado" title="Selecciona Lote" data-size="7"></select>
 									</div>
 								</div>
 
