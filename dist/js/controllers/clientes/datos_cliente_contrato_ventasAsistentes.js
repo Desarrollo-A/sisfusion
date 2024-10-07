@@ -178,6 +178,7 @@ $("#lote").change(function () {
       },
     ],
   });
+  applySearch(tabla_6);
 
   $("#tabla_contrato_ventas").on("draw.dt", function () {
     $('[data-toggle="tooltip"]').tooltip({
