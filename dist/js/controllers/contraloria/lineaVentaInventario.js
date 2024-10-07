@@ -1,4 +1,3 @@
-
 var estatus,usuariosVentas;
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -134,7 +133,7 @@ $('#condominio').change(function(){
 //VARIABLES DECLARADAS PARA LA OPTIMIZACION DE COLUMNAS AL MOMENTO DE GENERAR ARCHIVOS DESCARGABLES (XLSX Y PDF)
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
-$('#tabla_lineaVenta thead tr:eq(0) th').each(function (i) {
+/*$('#tabla_lineaVenta thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_encabezado.push(title);
     num_colum_encabezado.push(i);
@@ -144,7 +143,7 @@ $('#tabla_lineaVenta thead tr:eq(0) th').each(function (i) {
             $('#tabla_lineaVenta').DataTable().column(i).search(this.value).draw();
         }
     });
-});
+});*/
 //Eliminamos la ultima columna que es "Acciones"
 num_colum_encabezado.pop();
 function formatDate(date) {
@@ -159,7 +158,15 @@ function formatDate(date) {
     return [year, month, day].join("-");
 }
 
+function translationLineaVenta() {
+    onChangeTranslations(function() {
+        $('#tabla_lineaVenta').DataTable().rows().invalidate().draw(false);
+        
+    });
+   
+}
 $(document).on('click','#searchByDateRange', function () {
+    construirHead("tabla_lineaVenta");
     fechaInicio = $("#beginDate").val();
     fechaFin =  $("#endDate").val();
     fechaInicio = formatDate(fechaInicio);
@@ -176,13 +183,13 @@ $(document).on('click','#searchByDateRange', function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Inventario Lotes',
-            title: "Inventario Lotes",
+            titleAttr:  _('descargar-excel'),
+            title: _("inventario-lotes"),
             exportOptions: {
                 columns: num_colum_encabezado,
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -230,7 +237,7 @@ $(document).on('click','#searchByDateRange', function () {
         },
         {
             data: function (d) {
-                return d.coordinador;
+                return d.coordinador === 'SIN ESPECIFICAR' ? _('sin-especificar') : d.coordinador;
             }
         },
         {
@@ -245,18 +252,18 @@ $(document).on('click','#searchByDateRange', function () {
         },
         {
             data: function (d) {
-                return d.regional;
+                return d.regional === 'SIN ESPECIFICAR' ? _('sin-especificar') : d.regional;
             }
         },
         {
             data: function (d) {
-                    return  d.regional2;
+                return d.regional2 === 'SIN ESPECIFICAR' ? _('sin-especificar') : d.regional2;
             }
         },
         {
             data: function (d) {
-                    return  d.id_asesor == 12845 || d.id_asesor == 12874 || d.id_asesor == 12205 ? `<center><span class="label lbl-azure">ASESOR COMODÍN</span> <center>` : 'NORMAL';
-            }
+                return d.id_asesor == 12845 || d.id_asesor == 12874 || d.id_asesor == 12205  ? `<center><span class="label lbl-azure">${_('asesor-comodin')}</span></center>` : _('normal');       
+                 }
         },
         {
             data: function (d) {
@@ -290,15 +297,15 @@ $(document).on('click','#searchByDateRange', function () {
                 if(d.ubicacion != null)
                     return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
                 else
-                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
-            }         
-        },
+                    return `<center><span class="label lbl-gray" data-i18n="no-aplica" > ${_("no-aplica")}</span> <center>`;                   
+            }                           
+        },  
         {
             "data": function (d) {
                 $('[data-toggle="tooltip"]').tooltip({
                     trigger: "hover"
                 });
-                return d.comision == null ? `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></button></button><button data-accion="2" class="editButton btn-data btn-sky" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title= "Editar línea de venta"><i class="fas fa-edit"></i></button></center>` : `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="Ver inventario"><i class="fas fa-eye"></i></center>`;
+                return d.comision == null ? `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="${_('ver-inventario')}"><i class="fas fa-eye"></i></button></button><button data-accion="2" class="editButton btn-data btn-sky" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title= "${_('editar-linea-venta')}"><i class="fas fa-edit"></i></button></center>` : `<center><button class="editButton btn-data btn-yellow" data-accion="1" data-banderaVC="${d.banderaVC}" data-idCliente="${d.idCliente}" title="${_('ver-inventario')}"><i class="fas fa-eye"></i></center>`;
             }
         }],
         ajax: {
@@ -311,8 +318,10 @@ $(document).on('click','#searchByDateRange', function () {
     $(window).resize(function () {
         tabla_inventario.columns.adjust();
     });
-});
+    applySearch(tabla_inventario);
 
+});
+translationLineaVenta();
 $('#tabla_lineaVenta').on('draw.dt', function() {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: "hover"
@@ -345,7 +354,7 @@ function validarAsesor(id_asesor,bandera,len,origen,index){
           }else{
             $('#btnInventario').addClass('hide');
             $('#btnInventario').prop('disabled', true); 
-            alerts.showNotification("top", "right", "Los asesores no pueden estan repetidos, favor de verificarlo", "warning");
+            alerts.showNotification("top", "right", _("asesores-no-repetidos"), "warning");
           }
         }, 1000);  
     }
@@ -364,32 +373,32 @@ $(document).on('click', '.editButton', function(){
 
             $('#btnInventario').addClass('hide');
             $('#modalI').append(`
-            <h5>Cliente inventario</h5>
+            <h5><span data-i18n="cliente-inventario">${_("cliente-inventario")}</span></h5>
                 <div class="row">
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Asesor</label>
+                        <label class="control-label" data-i18n="asesor">${_("asesor")}</label>
                         <p>${data.clientes[0].asesor}</p>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Coordinador</label>
+                        <label class="control-label" data-i18n="coordinador">${_("coordinador")}</label>
                         <p>${data.clientes[0].coordinador}</p>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Gerente</label>
+                        <label class="control-label"data-i18n="gerente">${_("gerente")}</label>
                         <p>${data.clientes[0].gerente}</p>
                     </div>
                 </div>
                 <div class="row">
                         <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Subdirector</label>
+                            <label class="control-label"data-i18n="subdirector">${_("subdirector")}</label>
                             <p>${data.clientes[0].subdirector}</p>
                         </div>
                         <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Regional</label>
+                            <label class="control-label" data-i18n="regional">${_("regional")}</label>
                             <p>${data.clientes[0].regional}</p>
                         </div>
                         <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Regional 2</label>
+                            <label class="control-label"data-i18n="regional">${_("regional")} 2</label>
                             <p>${data.clientes[0].regional2}</p>
                         </div>
                 </div>      
@@ -397,33 +406,33 @@ $(document).on('click', '.editButton', function(){
 
             if (len <= 0) { //NO HAY VENTAS COMPARTIDAS
             }else{ //SI HAY VENTAS COMPARTIDAS
-                $('#modalI').append(`<h4>Venta compartida</h4`);
+                $('#modalI').append(`<h4><span data-i18n="venta-compartida">${_("venta-compartida")}</span></h4`);
                 for (let m = 0; m < len; m++) {
                 $('#modalI').append(`
-                <h5>Línea ${m +1}</h5>
+                <h5><span data-i18n="linea">${_("linea")}</span> ${m +1}</h5>
                 <div class="row">
                     <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Asesor</label>
+                            <label class="control-label" data-i18n="asesor">${_("asesor")}</label>
                             <p>${data.compartidas[m].asesor}</p>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Coordinador</label>
+                            <label class="control-label" data-i18n="coordinador">${_("coordinador")}</label>
                             <p>${data.compartidas[m].coordinador}</p>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Gerente</label>
+                            <label class="control-label"data-i18n="gerente">${_("gerente")}</label>
                             <p>${data.compartidas[m].gerente}</p>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Subdirector</label>
+                        <label class="control-label"data-i18n="subdirector">${_("subdirector")}</label>
                         <p>${data.compartidas[m].subdirector}</p>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Regional</label>
+                        <label class="control-label"data-i18n="regional">${_("regional")}</label>
                         <p>${data.compartidas[m].regional}</p>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Regional 2</label>
+                        <label class="control-label"data-i18n="regional">${_("regional")} 2</label>
                         <p>${data.compartidas[m].regional2}</p>
                     </div>
                 </div> 
@@ -434,34 +443,34 @@ $(document).on('click', '.editButton', function(){
         }else{
             $('#btnInventario').removeClass('hide');
         $('#modalI').append(`
-        <h5>Cliente inventario</h5>
+            <h5><span data-i18n="cliente-inventario">${_("cliente-inventario")}</span></h5>
                 <div class="row">
                     <div class="col-lg-4  overflow-hidden">
                     <input type="hidden" value="${idCliente}" name="id_cliente" id="id_cliente">
                     <input type="hidden" value="${banderaVC}" name="banderaVC" id="banderaVC">
                     <input type="hidden" value="${len}" name="indexVC" id="indexVC">
-                        <label class="control-label">Asesor</label>
+                        <label class="control-label"<span data-i18n="asesor">${_("asesor")}</span>
                         <select class="selectpicker select-gral m-0 asesor" onchange="validarAsesor(${data.clientes[0].id_asesor},${banderaVC},${len},1,0)" name="id_asesor" id="id_asesor" data-style="btn"
                         data-show-subtext="true"
-                        title="Selecciona una opción"
+                        data-i18n-label="selecciona-una-opcion"
                         data-size="7"
                         data-live-search="true" data-container="body"
                         required ></select>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Coordinador</label>
+                        <label class="control-label" data-i18n="coordinador">${_("coordinador")}</label>
                         <select class="selectpicker select-gral m-0 coordinador" name="id_coordinador" id="id_coordinador" data-style="btn"
                         data-show-subtext="true"
-                        title="Selecciona una opción"
+                        data-i18n-label="selecciona-una-opcion"
                         data-size="7"
                         data-live-search="true" data-container="body"
                         ></select>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Gerente</label>
+                        <label class="control-label"data-i18n="gerente">${_("gerente")}</label>
                         <select class="selectpicker select-gral m-0 gerente" name="id_gerente" id="id_gerente" data-style="btn"
                         data-show-subtext="true"
-                        title="Selecciona una opción"
+                        data-i18n-label="selecciona-una-opcion"
                         data-size="7"
                         data-live-search="true" data-container="body"
                         required></select>
@@ -469,7 +478,7 @@ $(document).on('click', '.editButton', function(){
                 </div>
                 <div class="row">
                         <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Subdirector</label>
+                            <label class="control-label"data-i18n="subdirector">${_("subdirector")}</label>
                             <select class="selectpicker select-gral m-0 subdirector" name="id_subdirector" id="id_subdirector" data-style="btn"
                             data-show-subtext="true"
                             title="Selecciona una opción"
@@ -478,7 +487,7 @@ $(document).on('click', '.editButton', function(){
                             required></select>
                         </div>
                         <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Regional</label>
+                            <label class="control-label"data-i18n="regional">${_("regional")}</label>
                             <select class="selectpicker select-gral m-0 regional" name="id_regional" id="id_regional" data-style="btn"
                             data-show-subtext="true"
                             title="Selecciona una opción"
@@ -487,7 +496,7 @@ $(document).on('click', '.editButton', function(){
                             ></select>
                         </div>
                         <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Regional 2</label>
+                            <label class="control-label"data-i18n="regional">${_("regional")} 2</label>
                             <select class="selectpicker select-gral m-0 regional" name="id_regional_2" id="id_regional_2" data-style="btn"
                             data-show-subtext="true"
                             title="Selecciona una opción"
@@ -505,13 +514,13 @@ $(document).on('click', '.editButton', function(){
 
         if (len <= 0) { //NO HAY VENTAS COMPARTIDAS
         }else{ //SI HAY VENTAS COMPARTIDAS
-            $('#modalI').append(`<h4>Venta compartida</h4`);
+            $('#modalI').append(`<h4><span data-i18n="venta-compartida">${_("venta-compartida")}</span></h4>`);
             for (let m = 0; m < len; m++) {
             $('#modalI').append(`
-                <h5>Línea ${m +1}</h5>
+                <h5><span data-i18n="linea">${_("linea")}</span> ${m +1}</h5>
                 <div class="row">
                     <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Asesor</label>
+                            <label class="control-label" data-i18n="asesor">${_("asesor")}</label>
                             <select class="selectpicker select-gral m-0 asesor" onchange="validarAsesor(${data.compartidas[0].id_asesor},${banderaVC},${len},2,${m})" name="id_asesor_${m}" id="id_asesor_${m}" data-style="btn"
                             data-show-subtext="true"
                             title="Selecciona una opción"
@@ -521,7 +530,7 @@ $(document).on('click', '.editButton', function(){
                     </div>
                     <input type="hidden" value="${data.compartidas[m].id_vcompartida}" name="id_vcompartida_${m}" id="id_vcompartida_${m}">
                     <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Coordinador</label>
+                            <label class="control-label" data-i18n="coordinador">${_("coordinador")}</label>
                             <select class="selectpicker select-gral m-0 coordinador" name="id_coordinador_${m}" id="id_coordinador_${m}" data-style="btn"
                             data-show-subtext="true"
                             title="Selecciona una opción"
@@ -530,7 +539,7 @@ $(document).on('click', '.editButton', function(){
                             ></select>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                            <label class="control-label">Gerente</label>
+                            <label class="control-label"data-i18n="gerente">${_("gerente")}</label>
                             <select class="selectpicker select-gral m-0 gerente" name="id_gerente_${m}" id="id_gerente_${m}" data-style="btn"
                             data-show-subtext="true"
                             title="Selecciona una opción"
@@ -539,7 +548,7 @@ $(document).on('click', '.editButton', function(){
                             required></select>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Subdirector</label>
+                        <label class="control-label"data-i18n="subdirector">${_("subdirector")}</label>
                         <select class="selectpicker select-gral m-0 subdirector" name="id_subdirector_${m}" id="id_subdirector_${m}" data-style="btn"
                         data-show-subtext="true"
                         title="Selecciona una opción"
@@ -548,7 +557,7 @@ $(document).on('click', '.editButton', function(){
                         required></select>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Regional</label>
+                        <label class="control-label"data-i18n="regional">${_("regional")}</label>
                         <select class="selectpicker select-gral m-0 regional" name="id_regional_${m}" id="id_regional_${m}" data-style="btn"
                         data-show-subtext="true"
                         title="Selecciona una opción"
@@ -557,7 +566,7 @@ $(document).on('click', '.editButton', function(){
                         ></select>
                     </div>
                     <div class="col-lg-4  overflow-hidden">
-                        <label class="control-label">Regional 2</label>
+                        <label class="control-label"data-i18n="regional">${_("regional")} 2 </label>
                         <select class="selectpicker select-gral m-0 regional" name="id_regional_2_${m}" id="id_regional_2_${m}" data-style="btn"
                         data-show-subtext="true"
                         title="Selecciona una opción"
@@ -573,7 +582,7 @@ $(document).on('click', '.editButton', function(){
             var name = asesores[i].nombre;
             $(".asesor").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $(".coordinador").append($('<option>').val(0).text('NO APLICA'));
+        $(".coordinador").append($('<option>').val(0).text(_('no-aplica')));
         for (var i = 0; i < coordinadores.length; i++) {
             var id = coordinadores[i].id_usuario;
             var name = coordinadores[i].nombre;
@@ -584,7 +593,7 @@ $(document).on('click', '.editButton', function(){
             var name = gerentes[i].nombre;
             $(".gerente").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $(".regional").append($('<option>').val(0).text('NO APLICA'));
+        $(".regional").append($('<option>').val(0).text(_('no-aplica')));
         for (var i = 0; i < subdirectores.length; i++) {
             var id = subdirectores[i].id_usuario;
             var name = subdirectores[i].nombre;
@@ -644,13 +653,13 @@ $(document).on("submit", "#formLineaVentas", function (e) {
         success: function(data){
             $('#spiner-loader').addClass('hide');
             if(data == 1){
-                alerts.showNotification("top", "right", "Los datos se actualizaron correctamente.", "success");
+                alerts.showNotification("top", "right", _("datos-actualizados-correctamente"), "success");
                 tabla_inventario.ajax.reload(null,false);    
             }else if(data == 2){
-                alerts.showNotification("top", "right", "No se pudo realizar el cambio, el lote fue dispersado recientemente.", "warning");
+                alerts.showNotification("top", "right", _("no-cambio-lote-dispersado"), "warning");
                 tabla_inventario.ajax.reload(null,false);  
             }else{
-                alerts.showNotification("top", "right", "Ha ocurrido un error intentalo nuevamente.", "danger");
+                alerts.showNotification("top", "right",_("error-intenta-nuevamente"), "danger");
             }
             $('#modalLineaVenta').modal('hide');
         },
@@ -658,7 +667,7 @@ $(document).on("submit", "#formLineaVentas", function (e) {
         error: function() {
             $('#modalLineaVenta').modal('hide');
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right",_("algo-salio-mal"), "danger");
         }
     });
 });
