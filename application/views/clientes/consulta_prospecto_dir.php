@@ -1,123 +1,96 @@
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
 <body>
-<div class="wrapper">
-    <?php $this->load->view('template/sidebar'); ?>
+    <div class="wrapper">
+        <?php $this->load->view('template/sidebar'); ?>
 
 
-    <div class="content boxContent">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="card">
-                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <i class="fas fa-address-book fa-2x"></i>
-                        </div>
-                        <div class="card-content">
-                            <div class="encabezadoBox">
-                                <h3 class="card-title center-align" data-i18n="listado-prospectos">Listado general de prospectos</h3>
-                                <p class="card-title pl-1"></p>
+        <div class="content boxContent">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                                <i class="fas fa-address-book fa-2x"></i>
                             </div>
-                            <div class="toolbar">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-                                        <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label" data-i18n="subdirector">Subdirector</label>
-                                            <select name="subDir" id="subDir"
-                                                    class="selectpicker select-gral m-0"
-                                                    data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-style="btn" data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-i18n-label="selecciona-subdirector"
-                                                    title="Selecciona subdirector" data-size="7" required>
-                                            </select>
+                            <div class="card-content">
+                                <div class="encabezadoBox">
+                                    <h3 class="card-title center-align" data-i18n="listado-prospectos">Listado general de prospectos</h3>
+                                    <p class="card-title pl-1"></p>
+                                </div>
+                                <div class="toolbar">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                            <div class="form-group label-floating select-is-empty">
+                                                <label class="control-label" data-i18n="subdirector">Subdirector</label>
+                                                <select name="subDir" id="subDir" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-subdirector" title="Selecciona subdirector" data-size="7" required>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-                                        <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label" data-i18n="gerente">Gerente</label>
-                                            <select name="gerente" id="gerente"
-                                                    class="selectpicker select-gral m-0"
-                                                    data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-style="btn" data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-i18n-label="selecciona-gerente"
-                                                    title="Selecciona gerente" data-size="7" required>
-                                            </select>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                            <div class="form-group label-floating select-is-empty">
+                                                <label class="control-label" data-i18n="gerente">Gerente</label>
+                                                <select name="gerente" id="gerente" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-gerente" title="Selecciona gerente" data-size="7" required>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-                                        <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label" data-i18n="coordinador">Coordinador</label>
-                                            <select name="coordinador" id="coordinador"
-                                                    class="selectpicker select-gral m-0"
-                                                    data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-style="btn" data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-i18n-label="selecciona-coordinador"
-                                                    title="Selecciona coordiniador" data-size="7" required>
-                                            </select>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                            <div class="form-group label-floating select-is-empty">
+                                                <label class="control-label" data-i18n="coordinador">Coordinador</label>
+                                                <select name="coordinador" id="coordinador" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-coordinador" title="Selecciona coordiniador" data-size="7" required>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-                                        <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label" data-i18n="asesor">Asesor</label>
-                                            <select name="asesores" id="asesores"
-                                                    class="selectpicker select-gral m-0"
-                                                    data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-style="btn" data-show-subtext="true"
-                                                    data-live-search="true"
-                                                    data-i18n-label="selecciona-asesor"
-                                                    title="Selecciona asesor" data-size="7" required>
-                                            </select>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
+                                            <div class="form-group label-floating select-is-empty">
+                                                <label class="control-label" data-i18n="asesor">Asesor</label>
+                                                <select name="asesores" id="asesores" class="selectpicker select-gral m-0" data-show-subtext="true" data-live-search="true" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-asesor" title="Selecciona asesor" data-size="7" required>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-8 hide" id="filter_date">
-                                        <div class="container-fluid p-0">
-                                            <div class="row">
-                                                <div class="col-md-12 p-r">
-                                                    <div class="form-group d-flex">
-                                                        <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
-                                                        <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
-                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                            <span class="material-icons update-dataTable" data-i18n="buscar">Buscar</span>
-                                                        </button>
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-8 hide" id="filter_date">
+                                            <div class="container-fluid p-0">
+                                                <div class="row">
+                                                    <div class="col-md-12 p-r">
+                                                        <div class="form-group d-flex">
+                                                            <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
+                                                            <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
+                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                <span class="material-icons update-dataTable" data-i18n="buscar">Buscar</span>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="material-datatables">
-                                <div class="form-group">
-                                    <div class="table-responsive">
-                                        <table id="prospects-datatable_dir"
-                                               class="table-striped table-hover" style="text-align:center;">
-                                            <thead>
-                                                <tr>
-                                                    <th>estado</th>
-                                                    <th>estapa</th>
-                                                    <th>tipo</th>
-                                                    <th>prospecto</th>
-                                                    <th>asesor</th>
-                                                    <th>coordinador</th>
-                                                    <th>gerente</th>
-                                                    <th>lugar-prospeccion</th>
-                                                    <th>creacion</th>
-                                                    <th>fecha-vencimiento</th>
-                                                    <th>correo</th>
-                                                    <th>telefono</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                        <?php include 'common_modals.php' ?>
+                                <div class="material-datatables">
+                                    <div class="form-group">
+                                        <div class="table-responsive">
+                                            <table id="prospects-datatable_dir" class="table-striped table-hover" style="text-align:center;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>estado</th>
+                                                        <th>etapa</th>
+                                                        <th>tipo</th>
+                                                        <th>prospecto</th>
+                                                        <th>asesor</th>
+                                                        <th>coordinador</th>
+                                                        <th>gerente</th>
+                                                        <th>lugar-prospeccion</th>
+                                                        <th>creacion</th>
+                                                        <th>fecha-vencimiento</th>
+                                                        <th>correo</th>
+                                                        <th>telefono</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                            <?php include 'common_modals.php' ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -126,14 +99,14 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <?php $this->load->view('template/footer_legend');?>
-</div>
-</div><!--main-panel close-->
+        <?php $this->load->view('template/footer_legend'); ?>
+    </div>
+    </div>
+    <!--main-panel close-->
 </body>
 
-<?php $this->load->view('template/footer');?>
+<?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <!-- DateTimePicker Plugin -->
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
@@ -141,29 +114,27 @@
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 
 <script>
-    userType = <?= $this->session->userdata('id_rol') ?> ;
+    userType = <?= $this->session->userdata('id_rol') ?>;
     typeTransaction = 1;
-    
+
     construirHead("prospects-datatable_dir");
 </script>
 
 <!-- MODAL WIZARD -->
-<script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
+<script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         /*primera carga*/
         $("#subDir").empty().selectpicker('refresh');
-        $.post('<?=base_url()?>index.php/Clientes/getSubdirs/', function(data) {
+        $.post('<?= base_url() ?>index.php/Clientes/getSubdirs/', function(data) {
             var len = data.length;
-            for( var i = 0; i<len; i++)
-            {
+            for (var i = 0; i < len; i++) {
                 var id = data[i]['id_usuario'];
                 var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
                 $("#subDir").append($('<option>').val(id).text(name));
             }
-            if(len<=0)
-            {
+            if (len <= 0) {
                 $("#subDir").append(`<option selected="selected" disabled>${_("ningun-subdirector")}</option>`);
             }
             $("#subDir").selectpicker('refresh');
@@ -171,12 +142,14 @@
 
 
         sp.initFormExtendedDatetimepickers();
-        $('.datepicker').datetimepicker({locale: 'es'});
+        $('.datepicker').datetimepicker({
+            locale: 'es'
+        });
         setInitialValues();
 
     });
     sp = { //  SELECT PICKER
-        initFormExtendedDatetimepickers: function () {
+        initFormExtendedDatetimepickers: function() {
             $('.datepicker').datetimepicker({
                 format: 'MM/DD/YYYY',
                 icons: {
@@ -205,39 +178,29 @@
         // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
         const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
         finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-        finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-        // console.log('Fecha inicio: ', finalBeginDate);
-        // console.log('Fecha final: ', finalEndDate);
+        finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');        
         $("#beginDate").val(convertDate(beginDate));
         $("#endDate").val(convertDate(endDate));
         // fillTable(1, finalBeginDate, finalEndDate, 0);
     }
 
-    $(document).on("click", "#searchByDateRange", function () {
+    $(document).on("click", "#searchByDateRange", function() {
         let finalBeginDate = $("#beginDate").val();
         let finalEndDate = $("#endDate").val();
         var url_inter;
-        console.log(gerente);
-        console.log(coordinador);
-        console.log(asesor);
 
-        if(gerente != undefined && coordinador==undefined && asesor==undefined){
-            url_inter = "<?=base_url()?>index.php/Clientes/getProspectsListByGerente/"+gerente;
-            console.log('Sólo tiene gerente');
-        }else if(gerente != undefined && coordinador!=undefined && asesor==undefined){
-            url_inter = "<?=base_url()?>index.php/Clientes/getProspectsListByCoord/"+coordinador;
-            console.log('Tiene Gerente y coordinador');
-        }else if(gerente != undefined && coordinador!=undefined && asesor!=undefined){
-            url_inter = "<?=base_url()?>index.php/Clientes/getProspectsListByAsesor/"+asesor;
-            console.log('Tiene Gerente, coordinador y asesor');
+        if (gerente != undefined && coordinador == undefined && asesor == undefined) {
+            url_inter = "<?= base_url() ?>index.php/Clientes/getProspectsListByGerente/" + gerente;
+        } else if (gerente != undefined && coordinador != undefined && asesor == undefined) {
+            url_inter = "<?= base_url() ?>index.php/Clientes/getProspectsListByCoord/" + coordinador;
+        } else if (gerente != undefined && coordinador != undefined && asesor != undefined) {
+            url_inter = "<?= base_url() ?>index.php/Clientes/getProspectsListByAsesor/" + asesor;
         }
         updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);
     });
 
-    $('#subDir').on('change', function () {
+    $('#subDir').on('change', function() {
         var subdir = $("#subDir").val();
-        console.log('Elegiste: ' + subdir);
-
         //gerente
 
         $("#gerente").empty().selectpicker('refresh');
@@ -245,16 +208,14 @@
         $("#asesores").empty().selectpicker('refresh');
         $('#spiner-loader').removeClass('hide');
         $('#filter_date').addClass('hide');
-        $.post('<?=base_url()?>index.php/Clientes/getGerentesBySubdir/'+subdir, function(data) {
+        $.post('<?= base_url() ?>index.php/Clientes/getGerentesBySubdir/' + subdir, function(data) {
             var len = data.length;
-            for( var i = 0; i<len; i++)
-            {
+            for (var i = 0; i < len; i++) {
                 var id = data[i]['id_usuario'];
                 var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
                 $("#gerente").append($('<option>').val(id).text(name));
             }
-            if(len<=0)
-            {
+            if (len <= 0) {
                 $("#gerente").append(`<option selected="selected" disabled>${_("ningun-gerente")}</option>`);
             }
             $("#gerente").selectpicker('refresh');
@@ -265,24 +226,22 @@
     var gerente;
     var coordinador;
     var asesor;
-    $('#gerente').on('change', function () {
+    $('#gerente').on('change', function() {
         $('#filter_date').removeClass('hide');
-        /**/gerente = $("#gerente").val();
-        console.log('Elegiste: ' + gerente);
+        /**/
+        gerente = $("#gerente").val();
 
         $("#coordinador").empty().selectpicker('refresh');
         $("#asesores").empty().selectpicker('refresh');
         $('#spiner-loader').removeClass('hide');
-        $.post('<?=base_url()?>index.php/Clientes/getCoordsByGrs/'+gerente, function(data) {
+        $.post('<?= base_url() ?>index.php/Clientes/getCoordsByGrs/' + gerente, function(data) {
             var len = data.length;
-            for( var i = 0; i<len; i++)
-            {
+            for (var i = 0; i < len; i++) {
                 var id = data[i]['id_usuario'];
                 var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
                 $("#coordinador").append($('<option>').val(id).text(name));
             }
-            if(len<=0)
-            {
+            if (len <= 0) {
                 $("#coordinador").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
             }
             $("#coordinador").selectpicker('refresh');
@@ -292,32 +251,28 @@
 
 
 
-        /**///carga tabla
-        var url = "<?=base_url()?>index.php/Clientes/getProspectsListByGerente/"+gerente;
-        console.log("TypeTRans: " + typeTransaction);
+        /**/ //carga tabla
+        var url = "<?= base_url() ?>index.php/Clientes/getProspectsListByGerente/" + gerente;
         let finalBeginDate = $("#beginDate").val();
         let finalEndDate = $("#endDate").val();
         updateTable(url, 1, finalBeginDate, finalEndDate, 0);
     });
 
-    $('#coordinador').on('change', function () {
+    $('#coordinador').on('change', function() {
         coordinador = $("#coordinador").val();
-        console.log('Elegiste: ' + coordinador);
         $('#filter_date').removeClass('hide');
 
         //gerente
         $("#asesores").empty().selectpicker('refresh');
         $('#spiner-loader').removeClass('hide');
-        $.post('<?=base_url()?>index.php/Clientes/getAsesorByCoords/'+coordinador, function(data) {
+        $.post('<?= base_url() ?>index.php/Clientes/getAsesorByCoords/' + coordinador, function(data) {
             var len = data.length;
-            for( var i = 0; i<len; i++)
-            {
+            for (var i = 0; i < len; i++) {
                 var id = data[i]['id_usuario'];
                 var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
                 $("#asesores").append($('<option>').val(id).text(name));
             }
-            if(len<=0)
-            {
+            if (len <= 0) {
                 $("#asesores").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
             }
             $("#asesores").selectpicker('refresh');
@@ -326,9 +281,8 @@
         }, 'json');
 
 
-        /**///carga tabla
-        var url = "<?=base_url()?>index.php/Clientes/getProspectsListByCoord/"+coordinador;
-        console.log("TypeTRans: " + typeTransaction);
+        /**/ //carga tabla
+        var url = "<?= base_url() ?>index.php/Clientes/getProspectsListByCoord/" + coordinador;
         // updateTable(url, typeTransaction);
         let finalBeginDate = $("#beginDate").val();
         let finalEndDate = $("#endDate").val();
@@ -336,13 +290,11 @@
     });
 
     //asesor
-    $('#asesores').on('change', function () {
+    $('#asesores').on('change', function() {
         asesor = $("#asesores").val();
-        console.log('Elegiste: ' + asesor);
 
-        /**///carga tabla
-        var url = "<?=base_url()?>index.php/Clientes/getProspectsListByAsesor/"+asesor;
-        console.log("TypeTRans: " + typeTransaction);
+        /**/ //carga tabla
+        var url = "<?= base_url() ?>index.php/Clientes/getProspectsListByAsesor/" + asesor;
         let finalBeginDate = $("#beginDate").val();
         let finalEndDate = $("#endDate").val();
         updateTable(url, 1, finalBeginDate, finalEndDate, 0);
@@ -351,33 +303,26 @@
 
 
     var prospectsTable;
-    function updateTable(url, typeTransaction, beginDate, endDate, where)
-    {
-        console.log('url: ', url);
-        console.log('typeTransaction: ', typeTransaction);
-        console.log('beginDate: ', beginDate);
-        console.log('endDate: ', endDate);
-        console.log('where: ', where);
+
+    function updateTable(url, typeTransaction, beginDate, endDate, where) {
         prospectsTable = $('#prospects-datatable_dir').dataTable({
-            dom: 'Brt'+ "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
+            dom: 'Brt' + "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'i><'col-12 col-sm-12 col-md-6 col-lg-6'p>>",
             "ordering": false,
-            "buttons": [
-                {
-                    extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                    className: 'btn buttons-excel',
-                    titleAttr: 'Listado general de prospectos',
-                    title:"Listado general de prospectos",
-                    exportOptions: {
+            "buttons": [{
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Listado general de prospectos',
+                title: "Listado general de prospectos",
+                exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
+                        header: function(d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 },
-                }
-            ],
+            }],
             "lengthMenu": [
                 [10, 25, 50, -1],
                 [10, 25, 50, "Todos"]
@@ -391,8 +336,8 @@
                 }
             },
             destroy: true,
-            columns: [
-                { data: function (d) {
+            columns: [{
+                    data: function(d) {
                         if (d.estatus == 1) {
                             return '<center><span class="label label-danger" style="background:#27AE60">Vigente</span><center>';
                         } else {
@@ -400,64 +345,75 @@
                         }
                     }
                 },
-                { data: function (d) {
-                        if(d.estatus_particular == 1) { // DESCARTADO
+                {
+                    data: function(d) {
+                        if (d.estatus_particular == 1) { // DESCARTADO
                             b = '<center><span class="label" style="background:#E74C3C">Descartado</span><center>';
-                        } else if(d.estatus_particular == 2) { // INTERESADO SIN CITA
+                        } else if (d.estatus_particular == 2) { // INTERESADO SIN CITA
                             b = '<center><span class="label" style="background:#B7950B">Interesado sin cita</span><center>';
-                        } else if (d.estatus_particular == 3){ // CON CITA
+                        } else if (d.estatus_particular == 3) { // CON CITA
                             b = '<center><span class="label" style="background:#27AE60">Con cita</span><center>';
-                        } else if (d.estatus_particular == 4){ // SIN ESPECIFICAR
+                        } else if (d.estatus_particular == 4) { // SIN ESPECIFICAR
                             b = '<center><span class="label" style="background:#5D6D7E">Sin especificar</span><center>';
-                        } else if (d.estatus_particular == 5){ // PAUSADO
+                        } else if (d.estatus_particular == 5) { // PAUSADO
                             b = '<center><span class="label" style="background:#2E86C1">Pausado</span><center>';
-                        } else if (d.estatus_particular == 6){ // PREVENTA
+                        } else if (d.estatus_particular == 6) { // PREVENTA
                             b = '<center><span class="label" style="background:#8A1350">Preventa</span><center>';
                         }
                         return b;
                     }
                 },
-                {   data: function (d) {
-                        if (d.tipo == 0){
+                {
+                    data: function(d) {
+                        if (d.tipo == 0) {
                             return '<center><span class="label label-danger" style="background: #B7950B">Prospecto</span></center>';
                         } else {
                             return '<center><span class="label label-danger" style="background: #75DF8F">Cliente</span></center>';
                         }
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.nombre;
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.asesor;
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.coordinador;
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.gerente;
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.nombre_lp;
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.fecha_creacion;
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.fecha_vencimiento;
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.correo;
                     }
                 },
-                { data: function (d) {
+                {
+                    data: function(d) {
                         return d.telefono;
                     }
                 }
@@ -468,32 +424,31 @@
                 cache: false,
                 "type": "POST",
                 data: {
-                      "typeTransaction": typeTransaction,
-                      "beginDate": beginDate,
-                      "endDate": endDate,
-                      "where": where
+                    "typeTransaction": typeTransaction,
+                    "beginDate": beginDate,
+                    "endDate": endDate,
+                    "where": where
                 }
             }
-        })/*.yadcf(
-            [
-                {
-                    column_number: 6,
-                    filter_container_id: 'external_filter_container7',
-                    filter_type: 'range_date',
-                    datepicker_type: 'bootstrap-datetimepicker',
-                    filter_default_label: ['Desde', 'Hasta'],
-                    date_format: 'YYYY-MM-DD',
-                    filter_plugin_options: {
-                        format: 'YYYY-MM-DD',
-                        showClear: true,
-                    }
-                },
-            ]
-        )*/
+        })
+        /*.yadcf(
+                    [
+                        {
+                            column_number: 6,
+                            filter_container_id: 'external_filter_container7',
+                            filter_type: 'range_date',
+                            datepicker_type: 'bootstrap-datetimepicker',
+                            filter_default_label: ['Desde', 'Hasta'],
+                            date_format: 'YYYY-MM-DD',
+                            filter_plugin_options: {
+                                format: 'YYYY-MM-DD',
+                                showClear: true,
+                            }
+                        },
+                    ]
+                )*/
     }
-
-
-
 </script>
-<script src="<?=base_url()?>static/yadcf/jquery.dataTables.yadcf.js"></script>
+<script src="<?= base_url() ?>static/yadcf/jquery.dataTables.yadcf.js"></script>
+
 </html>
