@@ -115,6 +115,12 @@ function applySearch(table) {
             }
         })
     })
+
+    $(`#${id}`).on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 }
 
 function construirHead(table){
