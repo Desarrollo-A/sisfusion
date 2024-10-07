@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $.post(`${general_base_url}index.php/asesor/getAllFoldersPDF`, function (data) {
 
-        if (data.length < 0) {
+        if(data.length > 0){
             $('#navbartabs').find('#test').empty().selectpicker('refresh');
             for (var i = 0; i < data.length; i++) {
                 var html_code = '';
