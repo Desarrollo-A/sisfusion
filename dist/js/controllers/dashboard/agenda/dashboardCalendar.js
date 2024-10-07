@@ -40,7 +40,7 @@ const createGoogleCalendar = () => {
     },
     customButtons: {
       appointments: {
-        text: 'Citas',
+        text: _('citas'),
         click: function(){
           $("#allAppointmentsModal").modal();
           createTable();
@@ -876,7 +876,9 @@ function createTable(){
       }
     }],
     fnInitComplete: function(){
-      $('div.toolbar').html('<h3 class="m-0">Citas abiertas</h3>');
+      $('body').i18n();
+      $('div.toolbar').html(`<h3 class="m-0">${_('citas-abiertas')}</h3>`);
+      $('[data-toggle="tooltip"]').tooltip();
     },
     ajax: {
       url: `${general_base_url}Calendar/AllEvents`,

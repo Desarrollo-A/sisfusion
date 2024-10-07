@@ -250,18 +250,33 @@
                             <table id="appointments-datatable" class="table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>ID Evento</th>
-                                        <th>Nombre</th>
-                                        <th class="text-center">Estatus&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Positivo.<br/>Se identifica como estatus positivo a: la cita, llamada o recorrido con un prospecto, el cual sigue interesado y se encuentra más cerca del cierre de la venta.<br/><br/>Negativo.<br/>Se identifica como estatus negativo a: la cita, llamada o recorrido con un prospecto, el cual NO sigue interesado y No desea seguimiento para concretar la compra."></i></th>
-                                        <th class="text-center">Comentarios</th>
-                                        <th class="text-center">Fecha de cita</th>
+                                        <th data-i18n="id-evento">ID Evento</th>
+                                        <th data-i18n="nombre">Nombre</th>
+                                        <th class="text-center" data-i18n="estatus">Estatus
+                                            &nbsp;&nbsp;&nbsp;
+                                            <i class="fas fa-info-circle"
+                                                data-html="true"
+                                                data-toggle="tooltip"
+                                                data-placement="bottom"
+                                                title=""
+                                                data-original-title='<span data-i18n="positivo">Positivo</span>.<br/>
+                                                                    <span data-i18n="leyenda-positivo-calendar-prospecto"></span><br/><br/>
+                                                                    <span data-i18n="negative">Negativo</span>.<br/>
+                                                                    <span data-i18n="leyenda-negativo-calendar-prospecto"></span>'>
+                                            </i>
+                                        </th>
+
+                                        <!--<th class="text-center">Estatus&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Positivo.<br/>Se identifica como estatus positivo a: la cita, llamada o recorrido con un prospecto, el cual sigue interesado y se encuentra más cerca del cierre de la venta.<br/><br/>Negativo.<br/>Se identifica como estatus negativo a: la cita, llamada o recorrido con un prospecto, el cual NO sigue interesado y No desea seguimiento para concretar la compra."></i></th>
+                                        -->
+                                        <th class="text-center" data-i18n="comentarios">Comentarios</th>
+                                        <th class="text-center" data-i18n="fecha-cita">Fecha de cita</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
                             <div class="d-flex justify-end">
-                                <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS">Guardar</button>
+                                <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS" data-i18n="guardar">Guardar</button>
                             </div>
                         </form>
                     </div>

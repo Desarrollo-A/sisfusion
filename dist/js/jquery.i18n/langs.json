@@ -316,7 +316,7 @@
                 "empresa-en-la-que-trabaja": "Company in which it works",
                 "en-dc": "In DC",
                 "en-el-cluster":"IN THE CLUSTER",
-                "en-el-municipio-de"  : "In the town of",
+                "en-el-municipio-de": "In the town of",
                 "enero": "January",
                 "en-espera": "Waiting for the process",
                 "en-espera-abono-neo": "EN ESPERA DE PRÓXIMO ABONO EN NEODATA",
@@ -889,7 +889,7 @@
                 "telefono-empresa":"Company contact",
                 "telefono-longitud": "The telephone field must be 10 characters long.",
                 "telefono-requerido": "The telephone field is required.",
-                "tel-empresa"  :"Company phone number",
+                "tel-empresa":"Company phone number",
                 "texto-autorizacion": "Through this panel (Authorizations), you will be able to do the following: consult the authorized requests, view the corresponding statuses for each of the authorizations in process, and download information in formats: PDF and XLSX.",
                 "texto-cabecera": "Through this panel (Request), you will be able to do the following: consult previous requests before their authorization, send emails to users with the role of 'Deputy Director' who are active (select users as applicable) with a request for authorization (depending on the status of the request), and download information in formats: PDF and XLSX.",
                 "texto-cf-precios-disponibilidad": "Prices, availability y validity are subject to changes without a previous warning. This simulation consists of a numerical execerise that does not imply any commitment from Ciudad Maderas or any of their commercial brands, CIUDAD MADERAS. It only serves as a means of orientation. The discounts are applied in a 'stair form', first one and then the following. For multiple purchase: family members that prove relationship, friends or business partners.",
@@ -980,7 +980,15 @@
                 "vive-en-casa" : "Live in the house",
                 "vsualizando-archivo": "Viewing archive: evidence",
                 "x-pagar": "to be paid",
-                "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE"
+                "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+                "citas": "Appointments",
+                "citas-abiertas": "Open appointments",
+                "no-hay-registro-modificar": "There is no record to modify",
+                "id-evento": "ID event",
+                "positivo": "Positive",
+                "negative": "Negative",
+                "leyenda-positivo-calendar-prospecto":"This is identified as a positive status: to the appointment, call or tour with a prospect, which is still interested and is closer in the process of closing the sale.",
+                "leyenda-negativo-calendar-prospecto": "This identified as a negative status: to the appointment, call or tour with a prospect, which is NO longer interes and wishes no follow up appointments to close the sale."
         },
         "es":{
                 "1-origen":"1% de origen",
@@ -1545,7 +1553,7 @@
                 "monto-por-mes":"Monto por mes",
                 "monto-sin-descuento":"Monto sin descuento",
                 "monto-solicitado": "Monto solicitado",
-                "mostrando": "Mostrando",        
+                "mostrando": "Mostrando",
                 "mostrando-registros-leyenda": "Mostrando registros del 0 al 0 de un total de 0 registros",
                 "motivo": "Motivo",
                 "motivo-rechazo": "Motivo del rechazo",
@@ -1770,7 +1778,7 @@
                 "rol":"Rol",
                 "saldo": "Saldo",
                 "saldo-cobrar": "Saldo a cobrar",
-                "saldo-del-deposito"  : "Saldo del depósito",
+                "saldo-del-deposito": "Saldo del depósito",
                 "saldo-deposito":"SALDO DE DEPÓSITO",
                 "saldo-disponible": "Saldo disponible",
                 "saldo-pago-dinero": "NO HAY SALDO A FAVOR. ESPERAR PRÓXIMA APLICACIÓN DE PAGO.",
@@ -1963,6 +1971,14 @@
                 "vive-en-casa":"Vive en casa",
                 "vsualizando-archivo": "Visualizando archivo: evidencia",
                 "x-pagar": "Por pagar",
-                "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE"
+                "yano-es-posible-eviar-fact":"YA NO ES POSIBLE ENVIAR FACTURAS, ESPERA AL SIGUIENTE CORTE",
+                "citas": "Citas",
+                "citas-abiertas": "Citas abiertas",
+                "no-hay-registro-modificar": "No hay ningún registro que modificar.",
+                "id-evento": "ID Evento",
+                "positivo": "Positivo",
+                "negative": "Negativo",
+                "leyenda-positivo-calendar-prospecto": "Se identifica como estatus positivo a: la cita, llamada o recorrido con un prospecto, el cual sigue interesado y se encuentra más cerca del cierre de la venta.",
+                "leyenda-negativo-calendar-prospecto": "Se identifica como estatus negativo a: la cita, llamada o recorrido con un prospecto, el cual NO sigue interesado y No desea seguimiento para concretar la compra."
         }
 }
