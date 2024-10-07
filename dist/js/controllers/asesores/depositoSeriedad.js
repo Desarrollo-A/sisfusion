@@ -31,7 +31,9 @@ const STATUS_CONTRATACION = 1;
 
 $(document).ready(function() {
     construirHead("tabla_deposito_seriedad");  
-    if (id_usuario_general == 9651 || id_usuario_general == 11142) { // MJ: ERNESTO DEL PINO SILVA
+    construirHead("table_prospectos");
+    
+    if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
         $('#tabla_deposito_seriedad').addClass('hide');
         $.post(`${general_base_url}Contratacion/lista_proyecto`, function(data) {
             for(let i = 0; i < data.length; i++){
