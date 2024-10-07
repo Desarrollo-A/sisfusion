@@ -694,7 +694,7 @@
 		"solicitud-asesor":"Advisor request",
 		"nada-seleccionado":"You haven't selected anything yet",
 		"aprobar-todas-solicitudes":"You must APPROVE or REJECT or SEND TO DC all requests.",
-		"debe-solicitudes":"You must APPROVE or REJECT all requests."
+		"debe-solicitudes":"You must APPROVE or REJECT all requests.",
 		"generar-token": "Generate token",
 		"sin-token-generado": "No token has been generated yet",
 		"copiar-token": "Copy token",
@@ -1410,7 +1410,7 @@
 		"solicitud-asesor":"Solicitud asesor",
 		"nada-seleccionado":"No has seleccionada nada aún",
 		"aprobar-todas-solicitudes":"Debe APROBAR o RECHAZAR o ENVIAR A DC todas las solicitudes.",
-		"debe-solicitudes":"Debe APROBAR o RECHAZAR todas las solicitudes."
+		"debe-solicitudes":"Debe APROBAR o RECHAZAR todas las solicitudes.",
 		"enviar-resguardos": " Enviar a resguardos",
 		"generar-token": "Generar token",
 		"sin-token-generado": "No token has been generated yet",
