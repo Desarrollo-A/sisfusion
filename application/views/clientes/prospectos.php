@@ -65,7 +65,7 @@
                                 <div class="wizard-navigation" id="wiz-nav" name="wiz-nav">
                                     <ul>
                                         <li>
-                                            <a href="#about" data-toggle="tab" data-i18n="about-him">Acerca de</a>
+                                            <a href="#about" data-toggle="tab" data-i18n="about">Acerca de</a>
                                         </li>
                                         <li>
                                             <a href="#job" data-toggle="tab" data-i18n="empleo">Empleo</a>
@@ -185,7 +185,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <div class="form-group  select-is-empty">
+                                                    <div class="form-group select-is-empty">
                                                         <label class="control-label" data-i18n="regimen-matrimonial">Régimen matrimonial</label>
                                                         <select id="matrimonial_regime"  name="matrimonial_regime" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body" onchange="validateMatrimonialRegime(1)"></select>
                                                     </div>
@@ -316,7 +316,7 @@
                                                                 <option value="WhatsApp">WhatsApp</option>
                                                             </select>
                                                         </div>
-                                                        <select id="specify_recommends" name="specify" class="form-control input-gral" required data-live-search="true" style="display: none; width: 100%" onchange="getRecommendationData()">
+                                                        <select id="specify_recommends" data-i18n-label="select-predeterminado" name="specify" class="form-control input-gral" required data-live-search="true" style="display: none; width: 100%" onchange="getRecommendationData()">
                                                         </select>
                                                     </div>
                                                 </div>
