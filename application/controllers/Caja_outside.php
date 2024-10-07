@@ -487,6 +487,7 @@ class Caja_outside extends CI_Controller {
 
         $data['lote'] = $id_lote;
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
+        $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
         $tipo_venta = $this->caja_model_outside->validarTipoVenta($id_lote);
        // $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
  
@@ -586,12 +587,13 @@ class Caja_outside extends CI_Controller {
         //exit;
 
         $dataInsertCliente = array(
+            'idClienteNeoData' => $responseInsertClienteNeoData['idCliente'],
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
             'id_gerente' => $datosView->id_gerente,
-            'id_subdirector' => $datosView->id_subdirector,
-            'id_regional' => $datosView->id_regional,
-            'id_regional_2' => $datosView->id_regional_2,
+            'id_subdirector' => $data['lider'][0]['id_subdirector'],
+            'id_regional' => $data['lider'][0]['id_regional'],
+            'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'id_sede' => $datosView->id_sede,
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -2466,7 +2468,7 @@ class Caja_outside extends CI_Controller {
 
         $dataNeoData = array (
             "accion" => "upd",
-            "Cliente" => "CDMAGS-JAZH-0014",
+            "Cliente" => $infoCliente->idClienteNeoData,
             "IdProyecto" => $infoCliente->idProyectoNeoData,
             "IdVivienda" => $infoCliente->idViviendaNeoData,
             "IdCredito" => 2,

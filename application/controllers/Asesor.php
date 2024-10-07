@@ -2208,7 +2208,7 @@ class Asesor extends CI_Controller {
 
         $dataNeoData = array (
             "accion" => "upd",
-            "Cliente" => 'CDMAGS-JAZH-0014',
+            "Cliente" => $infoCliente->idClienteNeoData,
             "IdProyecto" => $infoCliente->idProyectoNeoData,
             "IdVivienda" => $infoCliente->idViviendaNeoData,
             "IdCredito" => 2,
