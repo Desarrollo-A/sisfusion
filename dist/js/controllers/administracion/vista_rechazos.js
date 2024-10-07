@@ -117,4 +117,6 @@ $("#tabla_reporte_11").ready( function(){
             trigger: "hover"
         });
     });
+
+    applySearch(tabla_6)
 });
