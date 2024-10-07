@@ -93,10 +93,8 @@
                                                         <label class="control-label">
                                                             <span data-i18n="nacionalidad">Nacionalidad</span>(<span class="isRequired">*</span>)
                                                         </label>
-                                                        <!--<select id="nationality" name="nationality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body" onchange="validateSelect('nationality')" required></select>-->
                                                         <select class="selectpicker select-gral m-0" name="nationality" id="nationality" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" 
-                                                        title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" onchange="validateSelect('nationality')" required></select> 
-                                                        
+                                                        title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" onchange="validateSelect('nationality')" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
@@ -180,7 +178,6 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label" data-i18n="estado-civil">Estado civil</label>
-                                                        <!--<select id="civil_status" name="civil_status" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body"></select>-->
                                                         <select class="selectpicker select-gral m-0" name="civil_status" id="civil_status" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"></select> 
                                                     </div>
                                                 </div>

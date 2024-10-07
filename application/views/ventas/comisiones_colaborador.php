@@ -15,7 +15,7 @@
                 } 
                 else{
                     if($opn_cumplimiento[0]['estatus'] == 1){
-                        $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+                        $cadena = '<button type="button" class="btn btn-info subir_factura_multiple" data-i18n="subir-fact">SUBIR FACTURAS</button>';
                     }
                     else if($opn_cumplimiento[0]['estatus'] == 0){
                         $cadena ='<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;" data-i18n="sin-opinion">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
