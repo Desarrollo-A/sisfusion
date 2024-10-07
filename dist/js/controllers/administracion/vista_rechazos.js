@@ -112,9 +112,5 @@ $("#tabla_reporte_11").ready( function(){
         },
     });
 
-    $('#tabla_reporte_11').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
+    applySearch(tabla_6)
 });
