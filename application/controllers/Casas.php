@@ -3603,13 +3603,17 @@ class Casas extends BaseController
                 $response["result"] = false;
             }
         }
-            
+           
         // Update proceso banco
         $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
 
         // Insert historial
         $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanzó el proceso al paso 8 | Comentario: ' . $comentario, 1);
         $tituloPropiedad = $this->CasasModel->inserDocumentsToProceso($idProceso, 17, 'Titulo de propiedad');
+
+        for ($i = 1; $i <= 3; $i++) {
+            $cotizacion = $this->CasasModel->insertCotizacion($idProceso);
+        }
 
         // Verificar todas las operaciones
         if ($actualizarProceso && $agregarHistorial && $tituloPropiedad) {
