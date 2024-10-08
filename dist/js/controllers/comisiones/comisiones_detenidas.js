@@ -1,20 +1,24 @@
 const usuariosContraloria = [2749, 2807, 2767, 11947, 11815];
 
+$(document).ready(function(){
+    construirHead("comisiones-detenidas-table");
+})
+
 $('#comisiones-detenidas-table').ready(function () {
 
-    let titulos = [];
-    $('#comisiones-detenidas-table thead tr:eq(0) th').each(function (i) {
-        if (i !== 0) {
-            const title = $(this).text();
-            titulos.push(title);
-            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if (comisionesDetenidasTabla.column(i).search() !== this.value) {
-                    comisionesDetenidasTabla.column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
+    // let titulos = [];
+    // $('#comisiones-detenidas-table thead tr:eq(0) th').each(function (i) {
+    //     if (i !== 0) {
+    //         const title = $(this).text();
+    //         titulos.push(title);
+    //         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    //         $('input', this).on('keyup change', function () {
+    //             if (comisionesDetenidasTabla.column(i).search() !== this.value) {
+    //                 comisionesDetenidasTabla.column(i).search(this.value).draw();
+    //             }
+    //         });
+    //     }
+    // });
 
     let comisionesDetenidasTabla = $('#comisiones-detenidas-table').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -90,7 +94,7 @@ $('#comisiones-detenidas-table').ready(function () {
             if(d.compartida == null) {
                 labelCompartida ='<span class="label lbl-yellow">Individual</span>';
             } else{
-                labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
+                labelCompartida ='<span class="label lbl-orangeYellow" data-i18n="compartida">Compartida</span>';
             }
             return labelCompartida;
         }},
@@ -99,7 +103,7 @@ $('#comisiones-detenidas-table').ready(function () {
             var labelStatus;
 
             if(d.idStatusContratacion == 15) {
-                labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
+                labelStatus ='<span class="label lbl-violetBoots" data-i18n="contratado">Contratado</span>';
             }else {
                 labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
             }
@@ -110,18 +114,18 @@ $('#comisiones-detenidas-table').ready(function () {
             var labelEstatus;
 
             if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
-                labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                labelEstatus =`<p class="m-0"><b><span data-i18n="penalizacion"> Penalización </span> ${d.dias_atraso} <span data-i18n="dias"> días</span>  </b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
             }
             else{
                 if(d.totalNeto2 == null) {
                     labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                 }else if(d.registro_comision == 2){
-                    labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                    labelEstatus ='<span class="label lbl-cerulean" data-i18n="solicitado-mkt">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
                 }else {
                     if(d.plan_descripcion=="-")
-                        return '<p>SIN PLAN</p>';
+                        return '<p data-i18n="no-plan">SIN PLAN</p>';
                     else
-                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top" data-i18n="VIEW MORE DETAILS" title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                 }
             }
             return labelEstatus;
@@ -144,7 +148,7 @@ $('#comisiones-detenidas-table').ready(function () {
             var fechaActualizacion;
 
             if(d.fecha_sistema == null) {
-                fechaActualizacion ='<span class="label lbl-gray">Sin Definir</span>';
+                fechaActualizacion ='<span class="label lbl-gray" data-i18n="sin definir">Sin Definir</span>';
             }else {
                 fechaActualizacion = '<span class="label lbl-azure">'+d.fecha_sistema+'</span>';
             }
@@ -166,7 +170,7 @@ $('#comisiones-detenidas-table').ready(function () {
                 
                 if (id_rol_general != 63 && id_rol_general != 4) {
                     if (usuariosContraloria.includes(id_usuario_general)) {
-                        botton += `<div class="d-flex justify-center"><button value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-cambiar-estatus" data-toggle="tooltip" data-placement="top" title="REGRESAR A DISPERSIÓN"><i class="material-icons">undo</i></button></div>`;
+                        botton += `<div class="d-flex justify-center"><button value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-cambiar-estatus" data-toggle="tooltip" data-placement="top" data-i18n-label="regresar-dispersion" title="REGRESAR A DISPERSIÓN"><i class="material-icons">undo</i></button></div>`;
                     } else {
                         // botton += `NO APLICA`;
                     }

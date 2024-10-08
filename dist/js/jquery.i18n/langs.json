@@ -1173,7 +1173,23 @@
             "limpiar-campos":"Clear fields",
             "id-prospecto" : "Prospect id",
             "no-vigente"  :"Not active",
-            "no-aplica" : "Not applicable"
+            "no-aplica" : "Not applicable",
+            "info-comisiones": "Las comisiones con factura se encuentran en espera de dispersión de pago.",
+            "total-pagar": "Total a pagar",
+            "beneficiario": "Beneficiary",
+            "comision-revision": "COMMISSIONS UNDER REVIEW",
+            "info-comisiones-2": "assimilated payment comissions are pending due to payment dispersion",
+            "comision-pausada": "PAUSED COMMISSIONS",
+            "comisiones-detenidas": "Recessed commissions",
+            "comisiones-detenidas-info": "Retained lots due to a controversy appeared during the commission process",
+            "plan-venta": "SALE PLAN",
+            "compartida": "Shared",
+            "penalizacion": "Penalization",
+            "dias": "days",
+            "solicitado-mkt": "Requested MKT",
+            "no-plan": "No plan",
+            "sin-definir": "Undefined",
+            "regresar-dispersion": "RETURN TO DISPERSION"
     },
     "es": {
             "1-origen": "1% de origen",
@@ -2349,6 +2365,22 @@
             "limpiar-campos":"Limpiar campos",
             "id-prospecto" : "Id Prospecto",
             "no-vigente": "No vigente",
-            "no-aplica" : "No aplica"
+            "no-aplica" : "No aplica",
+            "info-comisiones": "Las comisiones con factura se encuentran en espera de dispersión de pago.",
+            "total-pagar": "Total a pagar",
+            "beneficiario": "Beneficiary",
+            "comisiones-revision": "COMISIONES EN REVISIÓN",
+            "infor-comisiones-2": "Las comisiones de pago a asimilados se encuentran en espera de dispersión de pago",
+            "comision-pausada": "COMISIONES PAUSADAS",
+            "comisiones-detenidas": "Comisiones detenidas",
+            "comisiones-detenidas-info": "Lotes detenidos por alguna controversia presentada durante el proceso de comisiones",
+            "sale-plan": "PLAN DE VENTA",
+            "compartida": "Compartida",
+            "penalizacion": "Penalización",
+            "dias": "días",
+            "solicitado-mkt": "Solicitado MKT",
+            "no-plan": "Sin plan",
+            "sin-definir": "Sin definir",
+            "regresar-dispersion": "REGRESAR A DISPERSIÓN"
     }
 }

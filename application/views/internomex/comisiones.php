@@ -183,10 +183,10 @@
                                                                                                     <th style="font-size: .9em;">forma-pago</th>
                                                                                                     <th style="font-size: .9em;">COM. %</th>
                                                                                                     <th style="font-size: .9em;">COM. $</th>
-                                                                                                    <th style="font-size: .9em;">BENEFICIARIO</th>
-                                                                                                    <th style="font-size: .9em;">ESTATUS</th>
-                                                                                                    <th style="font-size: .9em;">FEC. CREACIÓN</th>
-                                                                                                    <th style="font-size: .9em;">MÁS</th>
+                                                                                                    <th style="font-size: .9em;">beneficiario</th>
+                                                                                                    <th style="font-size: .9em;">estatus</th>
+                                                                                                    <th style="font-size: .9em;">fecha-creacion</th>
+                                                                                                    <th style="font-size: .9em;">mas</th>
                                                                                                 </tr>
                                                                                             </thead>
                                                                                         </table>
@@ -214,8 +214,8 @@
                                                                     <div class="card-header">
 
                                                                         <div class="col xol-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                                                            <h4 class="card-title">COMISIONES EN REVISIÓN</h4>
-                                                                            <p class="category">Las comisiones de pago a asimilados se encuentran en espera de dispersión de pago.</p>
+                                                                            <h4 class="card-title" data-i18n="comision-revision">COMISIONES EN REVISIÓN</h4>
+                                                                            <p class="category" data-i18n="">Las comisiones de pago a asimilados se encuentran en espera de dispersión de pago.</p>
                                                                         </div>
 
                                                                         <div class="col xol-xs-6 col-sm-6 col-md-6 col-lg-6"><br>
@@ -232,16 +232,16 @@
                                                                                             <thead>
                                                                                                 <tr>
                                                                                                     <th style="font-size: .9em;">ID</th>
-                                                                                                    <th style="font-size: .9em;">LOTE</th>
-                                                                                                    <th style="font-size: .9em;">EMPRESA</th>
-                                                                                                    <th style="font-size: .9em;">PRECIO LOTE</th>
-                                                                                                    <th style="font-size: .9em;">FROMA PAGO</th>
+                                                                                                    <th style="font-size: .9em;">lote</th>
+                                                                                                    <th style="font-size: .9em;">empresa</th>
+                                                                                                    <th style="font-size: .9em;">precio-lote</th>
+                                                                                                    <th style="font-size: .9em;">forma-pago</th>
                                                                                                     <th style="font-size: .9em;">COM. %</th>
                                                                                                     <th style="font-size: .9em;">COM. $</th>
-                                                                                                    <th style="font-size: .9em;">BENEFICIARIO</th>
-                                                                                                    <th style="font-size: .9em;">ESTATUS</th>
-                                                                                                    <th style="font-size: .9em;">FEC. CREACIÓN</th>
-                                                                                                    <th style="font-size: .9em;">MÁS</th>
+                                                                                                    <th style="font-size: .9em;">beneficiario</th>
+                                                                                                    <th style="font-size: .9em;">estatus</th>
+                                                                                                    <th style="font-size: .9em;">fecha-creacion</th>
+                                                                                                    <th style="font-size: .9em;">mas</th>
                                                                                                 </tr>
                                                                                             </thead>
                                                                                         </table>
@@ -272,8 +272,8 @@
                                                                     <div class="card-header">
 
                                                                         <div class="col xol-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                                                            <h4 class="card-title">COMISIONES EN ESPERA</h4>
-                                                                            <p class="category">Comisiones pausadas.</p>
+                                                                            <h4 class="card-title" data-i18n="comision-espera">COMISIONES EN ESPERA</h4>
+                                                                            <p class="category" data-i18n="comision-pausada">Comisiones pausadas.</p>
                                                                         </div>
 
                                                                         <div class="col xol-xs-6 col-sm-6 col-md-6 col-lg-6"><br>
@@ -290,16 +290,16 @@
                                                                                             <thead>
                                                                                                 <tr>
                                                                                                     <th style="font-size: .9em;">ID</th>
-                                                                                                    <th style="font-size: .9em;">LOTE</th>
-                                                                                                    <th style="font-size: .9em;">EMPRESA</th>
-                                                                                                    <th style="font-size: .9em;">PRECIO LOTE</th>
-                                                                                                    <th style="font-size: .9em;">FROMA PAGO</th>
+                                                                                                    <th style="font-size: .9em;">lote</th>
+                                                                                                    <th style="font-size: .9em;">empresa</th>
+                                                                                                    <th style="font-size: .9em;">precio lote</th>
+                                                                                                    <th style="font-size: .9em;">forma-pago</th>
                                                                                                     <th style="font-size: .9em;">COM. %</th>
                                                                                                     <th style="font-size: .9em;">COM. $</th>
-                                                                                                    <th style="font-size: .9em;">BENEFICIARIO</th>
-                                                                                                    <th style="font-size: .9em;">ESTATUS</th>
-                                                                                                    <th style="font-size: .9em;">FEC. CREACIÓN</th>
-                                                                                                    <th style="font-size: .9em;">MÁS</th>
+                                                                                                    <th style="font-size: .9em;">beneficiario</th>
+                                                                                                    <th style="font-size: .9em;">estatus</th>
+                                                                                                    <th style="font-size: .9em;">fecha-creacion</th>
+                                                                                                    <th style="font-size: .9em;">mas</th>
                                                                                                 </tr>
                                                                                             </thead>
                                                                                         </table>
