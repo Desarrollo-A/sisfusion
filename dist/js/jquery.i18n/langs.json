@@ -1172,7 +1172,8 @@
                 "busqueda-detallda-de-prospectos" : "Detailed search of prospects",
                 "limpiar-campos":"Clear fields",
                 "id-prospecto" : "Prospect id",
-                "no-vigente"  :"Not active"
+                "no-vigente"  :"Not active",
+                "no-aplica" : "Not applicable"
         },
         "es": {
                 "1-origen": "1% de origen",
@@ -2347,6 +2348,7 @@
                 "busqueda-detallda-de-prospectos":"Búsqueda detallada de prospectos",
                 "limpiar-campos":"Limpiar campos",
                 "id-prospecto" : "Id Prospecto",
-                "no-vigente": "No vigente"
+                "no-vigente": "No vigente",
+                "no-aplica" : "No aplica"
         }
 }
