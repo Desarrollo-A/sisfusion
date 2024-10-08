@@ -1189,7 +1189,22 @@
             "solicitado-mkt": "Requested MKT",
             "no-plan": "No plan",
             "sin-definir": "Undefined",
-            "regresar-dispersion": "RETURN TO DISPERSION"
+            "regresar-dispersion": "RETURN TO DISPERSION",
+            "sin-precio-lote": "Without lot price",
+            "ver-mas-detalles": "SEE MORE DETAILS",
+            "recision-nueva-venta": "Termination of New Sale",
+            "dispersion-ventas": "SALES DISBURSEMENT",
+            "dispersion-eec": "EEC DISBURSEMENT",
+            "asignar-precio": "Sales Disbursement",
+            "asignar-tipo-venta": "Assign Sale Type",
+            "asignar-prospecto-2": "Assign Prospect",
+            "asignar-subdirector": "Assign Deputy Director",
+            "asignar-sede": "Assign Headquarters",
+            "asignar-plan": "Assign plan",
+            "sede-2": "Headquarters",
+            "verificar-en-neodata-ventas": "Check in NEODATA Sales",
+            "verificar-en-neodata-ooam": "Check in NEODATA OOAM",
+            "verificar-en-neodata": "Check in NEODATA"
     },
     "es": {
             "1-origen": "1% de origen",
@@ -2381,6 +2396,21 @@
             "solicitado-mkt": "Solicitado MKT",
             "no-plan": "Sin plan",
             "sin-definir": "Sin definir",
-            "regresar-dispersion": "REGRESAR A DISPERSIÓN"
+            "regresar-dispersion": "REGRESAR A DISPERSIÓN",
+            "sin-precio-lote": "Sin precio lote",
+            "ver-mas-detalles": "VER MÁS DETALLES",
+            "recision-nueva-venta": "Recisión Nueva Venta",
+            "dispersion-ventas": "DISPERSIÓN VENTAS",
+            "dispersion-eec": "DISPERSIÓN EEC",
+            "asignar-precio": "Asignar precio",
+            "asignar-tipo-venta": "Asignar tipo de venta",
+            "asingar-prospecto": "Asignar prospecto",
+            "asignar-subdirector": "Asignar subdirector",
+            "asignar-sede": "Asignar sede",
+            "asignar-plan": "Asignar plan",
+            "sede-2": "Sede",
+            "verificar-en-neodata-ventas": "VERIFICAR EN NEODATA VENTAS",
+            "verificar-en-neodata-ooam": "VERIFICAR EN NEODATA OOAM",
+            "verificar-en-neodata": "VERIFICAR EN NEODATA"
     }
 }
