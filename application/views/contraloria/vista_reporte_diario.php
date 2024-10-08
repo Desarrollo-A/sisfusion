@@ -56,4 +56,3 @@
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_reporte_diario.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-
