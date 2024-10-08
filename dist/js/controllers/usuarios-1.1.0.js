@@ -1,7 +1,7 @@
 var dar_baja = _("dar-baja");
 var puestos = [{id : 59, nombre : 'Director regional'}], sedes = []; 
 
-$(document).ready( function() { 
+$(document).ready( function() {
     construirHead("all_users_datatable")
 
     $('[data-toggle="tooltip"]').tooltip(); 
@@ -189,7 +189,7 @@ function borrarMulti(index,id = ''){
 }
 
 function fillUsersTable() {
-    $allUsersTable = $('#all_users_datatable').DataTable({
+    const $allUsersTable = $('#all_users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -200,10 +200,10 @@ function fillUsersTable() {
             titleAttr: 'Listado de usuarios',
             title: 'Listado de usuarios',
             exportOptions: {
-                columns:  (id_rol_general==54) ? [0, 1, 2, 3, 4, 5, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -371,6 +371,8 @@ function fillUsersTable() {
         let arrayNOView = [8];
         $allUsersTable.columns(arrayNOView).visible(false);
     }
+
+    applySearch($allUsersTable);
 }
 
 $('#all_users_datatable').on('draw.dt', function() {
@@ -787,6 +789,10 @@ $(document).on('click', '.edit-user-information', function(e){
             $('#nueva_estructura').selectpicker('refresh');
             getLeadersListForEdit(v.id_sede, v.id_rol, leader);
             $("#editUserModal").modal();
+
+            $("#div-info").html(`<div class="boxIcon" data-html="true" data-toggle="tooltip" data-placement="bottom" title="${_("sede-capital-info")}">
+                                    <i class="fas fa-info"></i>
+                                </div>`);
             fillFields(v);
             validateEmptyFields(v);
         });
