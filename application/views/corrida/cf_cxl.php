@@ -69,17 +69,6 @@
 
     <script type="text/javascript" src="<?= base_url("dist/js/moment.js")?>"></script>
 
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.js"></script>
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.messagestore.js"></script>
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.fallbacks.js"></script>
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.parser.js"></script>
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.emitter.js"></script>
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.language.js"></script>
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/he.js"></script>
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/fi.js"></script>
-    <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/ml.js"></script>
-
-
 
 
 
@@ -477,28 +466,28 @@
 
                                     <div class="row">
                                         <div class="col-md-3 form-group">
-                                            <label><span data-i18n="nombre">Nombre</span>:<span class="required-label">*</span> </label>
+                                            <label>Nombre:<span class="required-label">*</span> </label>
                                             <input type="text" ng-model="nombre" id="nombre" required="text" class="form-control" autocomplete="off">
                                             <p id="nombretext" style="color:red;"></p>
                                         </div >
                                         <div class="col-md-3 form-group" >
-                                            <label><span data-i18n="edad">Edad</span>:<span class="required-label">*</span> </label>
+                                            <label>Edad:<span class="required-label">*</span> </label>
                                             <select ng-model="age" id="edad" ng-options="item.age for item in ages"
                                                     class="selectList js-example-basic-single js-states form-control" ng-change="getAge(age.age)">
-                                                <option value = "" data-i18n="select-edad"> - Selecciona la edad - </option>
+                                                <option value = ""> - Selecciona la edad - </option>
                                             </select>
                                             <p id="edadtext" style="color:red;"></p>
                                         </div >
                                         <div class="col-md-3 form-group" >
-                                            <label><span data-i18n="telefono">Teléfono</span>:</label>
+                                            <label>Teléfono:</label>
                                             <!-- <input type="text" ng-model="telefono" class="form-control"> -->
                                             <input type="tel" ng-model="telefono" class="form-control"
                                                    placeholder="442-256-5963" id="telefono_number" maxlength="12" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" autocomplete="off">
-                                            <small><span data-i18n="formato"></span>: 442-485-6978</small><br><br>
+                                            <small>Formato: 442-485-6978</small><br><br>
                                         </div>
 
                                         <div class="col-md-3 form-group" >
-                                            <label><span data-i18n="correo">Email</span>:</label>
+                                            <label>Email:</label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">@</span>
                                                 <input type="text" ng-model="email" class="form-control">
@@ -513,42 +502,42 @@
                                 <!-- datos del proyecto -->
                                 <div class="row">
 
-                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px">
-                                            <div class="col-md-4" >
-                                                <label><span data-i18n="proyecto">Proyecto</span>:<span class="required-label">*</span></label><br>
+                                        <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px">
+                                            <div class="col-md-4 form-group" >
+                                                <label>Proyecto:<span class="required-label">*</span></label><br>
                                                 <select id="proyectoS" ng-model = "proyecto"
                                                         ng-options = "item as (item.nombreResidencial + ' - ' + item.descripcion) for item in residencial"
                                                         ng-change="onSelectChangep(proyecto)"  class="selectList js-example-basic-single js-states form-control"
                                                         width="100%">
-                                                    <option value = "" data-i18n="select-proyecto"> - Selecciona un Proyecto - </option>
+                                                    <option value = ""> - Selecciona un Proyecto - </option>
                                                 </select>
                                                 <p id="proyectotext" style="color: red;"></p>
 
 
                                             </div>
                                             <div class="col-md-4 form-group" id="condominioCont">
-                                                <label><span data-i18n="condominio">Condominio</span>:<span class="required-label">*</span></label>
+                                                <label>Condominio:<span class="required-label">*</span></label>
                                                 <select id="condominioS" ng-model="condominio"
                                                         ng-options="item.nombre for item in condominios"
                                                         ng-change="onSelectChangec(condominio)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">
-                                                    <option value = "" data-i18n="select-condominio"> - Selecciona un Condominio - </option>
+                                                    <option value = ""> - Selecciona un Condominio - </option>
                                                 </select>
                                                 <p id="condominiotext" style="color: red;"></p>
 
                                             </div>
                                             <div class="col-md-4 form-group" id="loteCont">
-                                                <label><span data-i18n= "lote">Lote</span>:<span class="required-label">*</span></label>
+                                                <label>Lote:<span class="required-label">*</span></label>
                                                 <select ng-model="lote" class="selectList js-example-basic-single js-states form-control"
                                                         id="lote" ng-options="item.nombreLote for item in lotes"
                                                         ng-change="onSelectChangel(lote)" >
-                                                    <option value = "" data-i18n="select-lote"> - Selecciona un Lote - </option>
+                                                    <option value = ""> - Selecciona un Lote - </option>
                                                 </select>
                                                 <p id="lotetext" style="color: red;"></p>
                                             </div>
                                             <div class="col-md-6 form-group hide" id="tcasa">
-                                                <label><span data-i18n="tipo-casa">Tipo casa</span>:</label>
+                                                <label>Tipo casa:</label>
                                                 <select ng-model="tipo_casa" id="tipo_casa" ng-options="item.nombre for item in tipo_casas" ng-change="onSelectChangeLC(tipo_casa, lote)" class="form-control">
-                                                    <option value = "" data-i18n="select-lote"> - Selecciona un Lote - </option>
+                                                    <option value = ""> - Selecciona un Lote - </option>
                                                 </select>
                                             </div>
 
@@ -556,17 +545,17 @@
                                                 <div class="col-md-6 form-group" >
                                                     <label>Plan:<span class="required-label">*</span></label><br>
                                                     <select ng-model = "plan" class="form-control" id="planSL" ng-change="payPlan()">
-                                                        <option value = "" data-i18n="select-plan"> - Selecciona un plan - </option>
+                                                        <option value = ""> - Selecciona un plan - </option>
                                                         <option value = "Crédito"> Crédito </option>
                                                         <option value = "Contado"> Contado </option>
                                                     </select>
                                                     <p id="plantext" style="color: red;"></p>
                                                 </div>
                                                 <div class="col-md-6 form-group" id="anioCont">
-                                                    <label><span data-i18n="año">Año</span>s:<span class="required-label">*</span></label><br>
+                                                    <label>Años:<span class="required-label">*</span></label><br>
                                                     <select ng-model="yearplan" id="yearplanID" ng-options="item.yearplan for item in yearsplan"
-                                                            class="selectList js-example-basic-single js-states form-contro" style="width: 100%" ng-change="getAgePlan()" disabled>
-                                                        <option value = "" data-i18n="select-año"> - Selecciona los años - </option>
+                                                            class="selectList js-example-basic-single js-states form-control" style="width: 100%" ng-change="getAgePlan()" readonly>
+                                                        <option value = ""> - Selecciona los años - </option>
                                                     </select>
                                                     <p id="aniotext" style="color: red;"></p>
                                                 </div>
@@ -580,28 +569,28 @@
                                 <input type="hidden" ng-model="id_clienteP">
                                 <div class="row" id="data_acg">
                                     <div class="col-md-4 form-group" >
-                                        <label><span data-i18n="gerente">Gerente</span>:<span class="required-label">*</span></label>
+                                        <label>Gerente:<span class="required-label">*</span></label>
                                         <select ng-model = "gerente" id="gerente" ng-options = "item.nombreGerente for item in gerentes"
                                                 ng-change="onSelectChangegerente(gerente)"
                                                 class="selectList js-example-basic-single js-states form-control">
-                                            <option value = "" data-i18n="select-gerente"> - Selecciona un Gerente - </option>
+                                            <option value = ""> - Selecciona un Gerente - </option>
                                         </select>
                                         <p id="gerentetext" style="color: red;"></p>
                                     </div>
                                     <div class="col-md-4 form-group" >
-                                        <label><span data-i18n="coordinador">Coordinador</span>:<span class="required-label">*</span></label>
+                                        <label>Coordinador:<span class="required-label">*</span></label>
                                         <select id="coordinador" ng-model="coordinador" ng-options="item.nombreCoordinador for item in coordinadores"
                                                 ng-change="onSelectChangecoord(coordinador)" style="text-transform: uppercase;"
                                                 class="selectList js-example-basic-single js-states form-control">
-                                            <option value = "" data-i18n="select-coordinador"> - Selecciona un Coordinador - </option>
+                                            <option value = ""> - Selecciona un Coordinador - </option>
                                         </select>
                                         <p id="cordinadortext" style="color:red;"></p>
                                     </div>
                                     <div class="col-md-4 form-group" >
-                                        <label><span data-i18n="asesor">Asesor</span>:<span class="required-label">*</span></label>
+                                        <label>Asesor:<span class="required-label">*</span></label>
                                         <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores"
                                                 class="selectList js-example-basic-single js-states form-control">
-                                            <option value = "" data-i18n="select-asesor"> - Selecciona un Asesor - </option>
+                                            <option value = ""> - Selecciona un Asesor - </option>
                                         </select>
                                         <p id="asesortext" style="color: red;"></p>
                                     </div>
@@ -611,14 +600,14 @@
                                 <!-- datos del lote-->
                                 <div class="row">
                                     <div class="col-md-3 form-group" >
-                                        <label><span data-i18n="superficie-2">Superficie</span>:</label>
+                                        <label>Superficie:</label>
                                         <div class="input-group">
                                             <input type="text" ng-model="superficie" class="form-control" ng-readonly="true">
                                             <span class="input-group-addon" id="basic-addon1">m2</span>
                                         </div>
                                     </div>
                                     <div class="col-md-3 form-group" >
-                                        <label><span data-i18n="precio-m2">Precio m2</span>:</label>
+                                        <label>Precio m2:</label>
                                         <div class="input-group">
                                             <span class="input-group-addon" id="basic-addon1">$</span>
                                             <!-- <input type="text" ng-model="preciom2" class="form-control" value="{{preciom2 | currency}}" ng-readonly="true"> -->
@@ -635,14 +624,14 @@
                                         </div>
                                     </div>
                                     <div class="col-md-3 form-group hide" >
-                                        <label><span data-i18n="procentaje">Porcentaje</span>:</label>
+                                        <label>Porcentaje:</label>
                                         <div class="input-group">
                                             <input type="text" ng-model="porcentajeInv" class="form-control" value="{{porcentaje | currency}}" ng-readonly="true">
                                             <span class="input-group-addon" id="basic-addon1">%</span>
                                         </div>
                                     </div>
                                     <div class="col-md-3 form-group" >
-                                        <label><span data-i18n="enganche">Enganche</span>:</label>
+                                        <label>Enganche:</label>
                                         <div class="input-group">
                                             <span class="input-group-addon" id="basic-addon1">$</span>
                                             <input type="hidden" ng-model="enganche" class="form-control" value="{{enganche | currency}}" ng-readonly="true">
@@ -659,7 +648,7 @@
                                 <div class="row">
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <div class="col-md-12 form-group" >
-                                            <label><span data-i18n="enganche">Enganche</span>(%): </label>
+                                            <label>Enganche (%): </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">%</span>
                                                 <input type="number" ng-model="porcentaje" max="100" id="porcentajeEnganche"
@@ -670,7 +659,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12 form-group" >
-                                            <label><span data-i18n="enganche-cantidad">Enganche cantidad ($): </label>
+                                            <label>Enganche cantidad ($): </label>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="basic-addon1">$</span>
                                                 <input  id="cantidadEnganche" type="number"
@@ -686,16 +675,16 @@
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="form-group col-md-12" id="dppe">
-                                                <label><span data-i18n="dias-para-pagar-enganche">Días para pagar Enganche</span>:</label>
+                                                <label>Días para pagar Enganche: </label>
                                                 <select ng-model="day" id="day"
                                                         ng-change= "validaDiasPagarEnganche();"
                                                         ng-options="item.day for item in diasEnganche" class="form-control"
                                                 ><!-- ng-change="daysEng(); ChengecheckEngDif"-->
-                                                    <option value="" data-i18n="select-dias-enganche"> - Selecciona los días de enganche -</option>
+                                                    <option value=""> - Selecciona los días de enganche -</option>
                                                 </select>
                                             </div>
                                             <div class="form-group hide" id="select_mce">
-                                                <label><span data-i18n="mensualidades-enganche-diferido">Incluir mensualidades en el enganche diferido</span>:</label><br>
+                                                <label>Incluir mensulidades en el enganche diferido:</label>
                                                 <!--                                                <select name="mensualidad_con_enganche" id="mensualidad_con_enganche" ng-change="changeDaysEng()">-->
                                                 <!--                                                    <option value="1">Si</option>-->
                                                 <!--                                                    <option value="2">No</option>-->
@@ -706,26 +695,26 @@
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <!--<div ng-if="checkEngDif">-->
-                                            <div class="col-md-5 form-group" >
-                                                <label><span data-i18n="apartado">Apartado</span> ($):</label>
+                                            <div class="col-md-5 form-group hide" id="apartadoContainer" >
+                                                <label>Apartado ($):</label>
                                                 <div class="input-group" >
                                                     <span class="input-group-addon" id="basic-addon1">$</span>
                                                     <input is-number ng-model="apartado" class="form-control" id="aptdo"><!-- ng-blur="ChengecheckEngDif()"-->
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4 form-group" >
-                                                <label><span data-i18n="meses-a-diferir">Meses a diferir</span> :</label>
+                                            <div class="col-md-4 form-group hide" id="mesesDiferirContainer">
+                                                <label>Meses a diferir:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon" id="basic-addon1">#</span>
                                                     <select ng-model="mesesdiferir" ng-options="item for item in diasDiferidos" class="form-control"
                                                             id="msdif" ng-change="changeDaysEng()"> <!--ng-change="changeDaysEng()"-->
-                                                        <option value = "" data-i18n="select-meses"> - Selecciona los meses - </option>
+                                                        <option value = ""> - Selecciona los meses - </option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 form-group" >
-                                                <label><span data-i18n="msi">MSI</span>:</label>
+                                                <label>MSI:</label>
                                                 <div class="input-group">
                                                     <input is-number ng-model="mesesSinInteres" type="number"
                                                            ng-change="revisarInput()"
@@ -744,17 +733,17 @@
                                         <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                                             <div class="col-md-2 form-group col-md-offset-5" id="offsetCnt">
-                                                <label><span data-i18n="fecha">Fecha</span>:</label>
+                                                <label>Fecha:</label>
                                                 <input type="date" ng-model="CurrentDate" class="form-control" value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
                                             </div>
                                             <div class=" col-md-2 form-group" >
                                                 <div id="labelFA">
-                                                    <label><span data-i18n="fecha-apartado">Fecha Apartado</span>:</label>
+                                                    <label>Fecha Apartado:</label>
                                                     <input type="date" ng-model="fechaApartado" class="form-control" value="{{fechaApartado | date:'yyyy-MM-dd'}}" ng-readonly="true" id="fechaApartado">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 form-group" id="cnt-selectInicio">
-                                                <label><span data-i18n="fecha-inicio-mensualidad">Fecha inicio de mensualidad </span>:</label>
+                                                <label>Fecha inicio de mensualidad:</label>
                                                 <select  ng-model="inicioMensualidad" id="fechaInicioMensualidad"  class="selectList2 js-example-basic-single js-states form-control" ng-change="selectInicioM()"><!---->
                                                     <option>-SELECCIONA OPCIÓN-</option>
                                                     <option value="1">Día de fecha de apartado</option>
@@ -774,7 +763,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="col-md-offset-9 col-md-3 form-group">
-                                                <button class="btn btn-simular" ng-click="ejecutaCorrida()" value="_()">Simular</button>
+                                                <button class="btn btn-simular" ng-click="ejecutaCorrida()">Simular</button>
                                             </div>
                                         </div>
                                     </div>
@@ -866,24 +855,24 @@
                             <table class="table table-striped table-bordered table-hover table-condensed">
                                 <tr>
                                     <td class="text-center">
-                                        <label type="text"><span data-i18n="lote">Lote</span></label><br>
+                                        <label type="text">Lote</label><br>
                                         <label type="text"><b>{{nombreLote}}</b></label><br>
                                     </td>
                                     <td class="text-center">
-                                        <label type="text"><span data-i18n="plan-años">Plan(años)</span></label><br>
+                                        <label type="text">Plan(años)</label><br>
                                         <label type="text"><b>{{age_plan}}</b></label><br>
                                     </td>
                                     </td>
                                     <td class="text-center">
-                                        <label type="text"><span data-i18n="precio-lista">Precio Lista</span></label><br>
+                                        <label type="text">Precio Lista</label><br>
                                         <label type="text"><b>{{precioTotal | currency }}</b></label><br>
                                     </td>
                                     <td class="text-center">
-                                        <label type="text"><span data-i18n="superficie-2">Superficie</span></label><br>
+                                        <label type="text">Superficie</label><br>
                                         <label type="text"><b>{{superficie}}</b></label><br>
                                     </td>
                                     <td class="text-center" colspan="2">
-                                        <label type="text"><span data-i18n="precio-m2">Precio m2</span></label><br>
+                                        <label type="text">Precio m<sup>2 </sup></label><br>
                                         <label type="text"><b>{{preciom2F | currency }}</b></label><br>
                                     </td>
                                 </tr>
@@ -892,14 +881,14 @@
 
                                 <!---->
                                 <tr align="center">
-                                    <td colspan="6"><label type="text"><span data-i18n="descuentos">Descuentos</span></label></td>
+                                    <td colspan="6"><label type="text">Descuentos</label></td>
                                 </tr>
 
                                 <tr align="center">
-                                    <td><label type="text"><span data-i18n="porcentaje-y-monto">Porcentaje y/o monto</span></label></td>
-                                    <td><label type="text"><span data-i18n="precio-final-m2">Precio final m2</span></label></td>
-                                    <td><label type="text"><span data-i18n="precio-total-final">Precio total final</span></label></td>
-                                    <td><label type="text"><span data-i18n="ahorros">Ahorros</span></label></td>
+                                    <td><label type="text">Porcentaje y/o monto</label></td>
+                                    <td><label type="text">Precio final m2</label></td>
+                                    <td><label type="text">Precio total final</label></td>
+                                    <td><label type="text">Ahorros</label></td>
                                 </tr>
 
                                 <tr ng-repeat="i in decFin">
@@ -908,14 +897,14 @@
                                             <span ng-if="i.id_condicion == 1" style="font-weight: 600">{{i.porcentaje}}% </span>
                                             <span ng-if="i.id_condicion == 2" style="font-weight: 600">{{i.porcentaje}}% al enganche</span>
                                             <span ng-if="i.id_condicion == 3 || i.id_condicion == 4" style="font-weight: 600">{{i.porcentaje | currency }} </span>
-                                            <span ng-if="i.id_condicion == 6" style="font-weight: 600"><span data-i18n="primera-mensualidad">Primera Mensualidad</span><span data-i18n="enero">Enero</span> {{i.porcentaje}} </span>
-                                            <span ng-if="i.id_condicion == 7" style="font-weight: 600"><span data-i18n="enganche-diferido-tres-mees">Enganche diferido 3 meses</span></span>
+                                            <span ng-if="i.id_condicion == 6" style="font-weight: 600"> Primera Mensualidad Enero {{i.porcentaje}} </span>
+                                            <span ng-if="i.id_condicion == 7" style="font-weight: 600"> Enganche diferido 3 meses </span>
 
-                                            <span ng-if="i.id_condicion == 8" style="font-weight: 600"> <span data-i18n="primera-mensualidad">Primera Mensualidad</span> <span data-i18n="octubre"> Octubre</span> </span>
-                                            <span ng-if="i.id_condicion == 9" style="font-weight: 600"> <span data-i18n="primera-mensualidad">Primera Mensualidad</span> <span data-i18n="mayo"> Mayo</span></span>
-                                            <span ng-if="i.id_condicion == 10" style="font-weight: 600"> <span data-i18n="primera-mensualidad">Primera Mensualidad</span> <span data-i18n="septiembre">Septiembre</span></span>
-                                            <span ng-if="i.id_condicion == 12" style="font-weight: 600"> <span data-i18n="bono-de">Bono de </span> {{i.porcentaje | currency}} al m<sup>2</sup></span>
-                                            <span ng-if="i.id_condicion == 13" style="font-weight: 600"> {{i.msi_adicionales}} <span data-i18n="msi-adicionales">MSI adicionales</span> </span>
+                                            <span ng-if="i.id_condicion == 8" style="font-weight: 600"> Primera Mensualidad Octubre </span>
+                                            <span ng-if="i.id_condicion == 9" style="font-weight: 600"> Primera Mensualidad Mayo </span>
+                                            <span ng-if="i.id_condicion == 10" style="font-weight: 600"> Primera Mensualidad Septiembre </span>
+                                            <span ng-if="i.id_condicion == 12" style="font-weight: 600">  Bono de {{i.porcentaje | currency}} al m<sup>2</sup></span>
+                                            <span ng-if="i.id_condicion == 13" style="font-weight: 600"> {{i.msiExtra}} MSI adicionales</span>
 
                                             <!--<span ng-if="descuento.msi_descuento > 0 && descuento.id_condicion == 13" class="animate-if" style="color:#000;">{{descuento.msi_descuento}} MSI adicionales</span>-->
                                         </b>
@@ -959,14 +948,14 @@
 
 
                                 <tr align="center">
-                                    <td colspan="3"><label type="text"><span data-i18n="enganche-diferido">Enganche diferido</span></label></td>
-                                    <td colspan="3"><label type="text"><span data-i18n="apartado">Apartado</span></label></td>
+                                    <td colspan="3"><label type="text">Enganche diferido</label></td>
+                                    <td colspan="3"><label type="text">Apartado</label></td>
                                 </tr>
 
                                 <tr align="center">
-                                    <td><label type="text"><span data-i18n="fecha">Fecha</span></label></td>
-                                    <td><label type="text"><span data-i18n="pago">Pago</span> #</label></td>
-                                    <td><label type="text"><span >Total</span></label></td>
+                                    <td><label type="text">Fecha</label></td>
+                                    <td><label type="text">Pago #</label></td>
+                                    <td><label type="text">Total</label></td>
                                     <td colspan="3"><label><b>{{apartado | currency }}</b></label></td>
                                 </tr>
                                 <tr ng-repeat= "i in rangEd">
@@ -985,62 +974,62 @@
 
                                 <tr align="center">
                                     <td colspan="9" >
-                                        <label type="text"><span data-i18n="saldo">Saldo</span></label><br>
+                                        <label type="text">Saldo</label><br>
                                         <label type="text"><b>{{saldoFinal | currency }}</b></label>
                                         <BR><BR>
-                                        <label type="text" style="font-size:30px"><b><span data-i18n="precio-final">PRECIO FINAL</span></b></label><br>
+                                        <label type="text" style="font-size:30px"><b>PRECIO FINAL</b></label><br>
                                         <label type="text" style="font-size:30px"><b>{{precioFinal | currency }}</b></label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td float="center" colspan ="2" class="text-center"><b><label type="text"><span data-i18n="enganche">Enganche</span></label></b></td>
-                                    <td float="center" colspan ="3" class="text-center"><b><label type="text"><span data-i18n="mensualidades">Mensualidades</span></label></b></td>
+                                    <td float="center" colspan ="2" class="text-center"><b><label type="text">Enganche</label></b></td>
+                                    <td float="center" colspan ="3" class="text-center"><b><label type="text">Mensualidades</label></b></td>
                                 </tr>
                                 <tr>
-                                    <td><label type="text"><span data-i18n="dias-pago-enganche">Días pago enganche</span></label></td>
+                                    <td><label type="text">Días pago enganche</label></td>
                                     <td> <label type="text"><b> {{ daysEnganche }} </b></label></td>
-                                    <td><b><label type="text"></label></b><label type="text"><span data-i18n="mensualidades-sin-interes">Mensualidades SIN interés</span></label></td>
+                                    <td><b><label type="text"></label></b><label type="text">Mensualidades SIN interés</label></td>
                                     <td><b><label type="text"></label>{{ finalMesesp1 }}&nbsp&nbsp&nbsp</b> {{ totalPrimerPlan | currency }}</td>
                                 </tr>
                                 <tr>
-                                    <td><label type="text" for="fecha"><span data-i18n="fecha-limite">Fecha Límite </span></label></td>
+                                    <td><label type="text" for="fecha">Fecha Límite </label></td>
                                     <td> <label type="text" id="fecha"><b> {{fechaEng}} </b></label></td>
-                                    <td><b><label type="text" id="mPlan2" name="mPlan2"></label></b><label type="text6"><span data-i18n="mensualidades-con-interes">Mensualidades con interés</span> (1% S.S.I.) </label></td>
+                                    <td><b><label type="text" id="mPlan2" name="mPlan2"></label></b><label type="text6">Mensualidades con interés (1% S.S.I.) </label></td>
                                     <td><b><label type="text">{{ finalMesesp2 }}&nbsp&nbsp&nbsp</b> {{ totalSegundoPlan | currency }}</label></td>
                                 </tr>
                                 <tr>
-                                    <td><label type="text" for="fecha"><span data-i18n="pago-enganche">Pago Enganche</span></label></td>
+                                    <td><label type="text" for="fecha">Pago Enganche</label></td>
                                     <td>
                                         <label type="text"><b>{{engancheFinal | currency }}</b></label><br>
                                     </td>
-                                    <td><b><label type="text" id="mPlan3" name="mPlan3"></label></b><label type="text6"><span data-i18n="mensualidades-con-interes">Mensualidades con interés</span> (1.25% S.S.I.) </label></td>
+                                    <td><b><label type="text" id="mPlan3" name="mPlan3"></label></b><label type="text6">Mensualidades con interés (1.25% S.S.I.) </label></td>
                                     <td><b><label type="text">{{ finalMesesp3 }}&nbsp&nbsp&nbsp</b> {{ totalTercerPlan | currency }}</label></td>
                                 </tr>
                                 <tr>
-                                    <td><label type="text"><span data-i18n="primer-mensualidad">Primer mensualidad</span></label></td>
+                                    <td><label type="text">Primer mensualidad</label></td>
                                     <td><b><label type="text" id="dias">{{ fechaPM }}</b></label></td>
-                                    <td><b><label type="text" id="mPlan3" name="mPlan3"></label></b><label type="text6"><span data-i18n="mensualidades-con-interes">Mensualidades con interés</span> (1.50% S.S.I.) </label></td>
+                                    <td><b><label type="text" id="mPlan3" name="mPlan3"></label></b><label type="text6">Mensualidades con interés (1.50% S.S.I.) </label></td>
                                     <td><b><label type="text">{{ finalMesesp4 }}&nbsp&nbsp&nbsp</b> {{ totalCuartoPlan | currency }}</label></td>
                                 </tr>
                             </table>
                             <table class="table table-striped table-bordered table-hover table-condensed">
                                 <tr>
-                                    <td colspan="3" ><label type="text2"><span data-i18n="datos-bancarios">DATOS BANCARIOS</span></label></td>
+                                    <td colspan="3" ><label type="text2">DATOS BANCARIOS</label></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" >
                                         <table width="100%" class="table-data-bank">
                                             <tr>
                                                 <td>
-                                                    <b><span data-i18n="banco">Banco</span>:</b><br>
+                                                    <b>Banco:</b><br>
                                                     <label type="text" class="infoBank">{{banco}}</label>
                                                 </td>
                                                 <td>
-                                                    <b><span data-i18n="razon-social">Razón Social</span>:</b><br>
+                                                    <b>Razón Social:</b><br>
                                                     <label type="text" class="infoBank">{{rsocial}}</label>
                                                 </td>
                                                 <td>
-                                                    <b><span data-i18n="cuenta">Cuenta</span>:</b><br>
+                                                    <b>Cuenta:</b><br>
                                                     <label type="text" class="infoBank">{{cuenta}}</label>
                                                 </td>
                                                 <td>
@@ -1048,7 +1037,7 @@
                                                     <label type="text" class="infoBank">{{clabe}}</label>
                                                 </td>
                                                 <td>
-                                                    <b><span data-i18n="referencia">Referencia</span>:</b><br>
+                                                    <b>Referencia:</b><br>
                                                     <label type="text" class="infoBank">{{referencia}}</label>
                                                 </td>
                                             </tr>
@@ -1061,18 +1050,16 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><label type="text"><span data-i18n="asesor">ASESOR</span></label></td>
+                                    <td><label type="text">ASESOR</label></td>
                                     <td  colspan="2"><label type="text">{{asesor.nombreAsesor}}</label></td>
                                 </tr>
                                 <tr>
-                                    <td><label type="text"><span data-i18n="observaciones-2">OBSERVACIONES</span></label></td>
+                                    <td><label type="text">OBSERVACIONES</label></td>
                                     <td colspan="2"><input type="text" ng-model="observaciones" class="form-control" placeholder="Describa algunas observaciones "></td>
                                 </tr>
                                 <tr>
                                     <td colspan="3"><label type="text2"><p>
-                                                <span data-i18n="texto-cf-precios-disponibilidad">
-                                                    Precios, disponibilidad, descuentos y vigencia sujetos a cambio sin previo aviso. Esta simulación constituye un ejercicio numérico que no implica ningún compromiso de Ciudad Maderas o de sus marcas comerciales, CIUDAD MADERAS. Solo sirve para fines de orientación. Los descuentos se aplican "escalonados", primero uno y luego el siguiente. Para Compra Múltiple: familiares que comprueben parentesco, amigos o socios.
-                                                </span>
+                                                Precios, disponibilidad, descuentos y vigencia sujetos a cambio sin previo aviso. Esta simulación constituye un ejercicio numérico que no implica ningún compromiso de Ciudad Maderas o de sus marcas comerciales, CIUDAD MADERAS. Solo sirve para fines de orientación. Los descuentos se aplican "escalonados", primero uno y luego el siguiente. Para Compra Múltiple: familiares que comprueben parentesco, amigos o socios.
                                             </p></label></td>
                                 </tr>
                             </table>
@@ -1213,127 +1200,9 @@
 
 
 
-<script>
-    $(document).ready(function() {
-        let locale = localStorage.getItem('locale')
-
-        let languageFreeze = Object.freeze(locale);
-
-        $.i18n().load(`<?= base_url("dist/js/jquery.i18n/langs.json")?>`).
-        done(function() {
-            $('body').i18n();
-            triggerLoadFunctions()
-        });
-
-            $.i18n( { 
-                locale: 'es' // Locale is English 
-            });
-
-            // Load locale from config
-            if(locale){
-                $.i18n().locale = locale;
-            }
-
-            function changeLanguaje() {
-            let locale = localStorage.getItem('locale')
-
-            if(locale == 'en'){
-                new_locale = 'es'
-            }else{
-                new_locale = 'en'
-            }
-
-            $.i18n().locale = new_locale
-            localStorage.setItem('locale', new_locale)
-            changeIcon(new_locale)
-
-            $('body').i18n()
-
-            triggerChangeFunctions()
-        }
-
-        _ = $.i18n
-
-        let load_functions = []
-        let change_functions = []
-
-        function onLoadTranslations(callback){
-            if (typeof callback === 'function') {
-                load_functions.push(callback)
-            }
-        }
-
-        function onChangeTranslations(callback){
-            if (typeof callback === 'function') {
-                change_functions.push(callback)
-            }
-        }
-
-        function triggerLoadFunctions() {
-            for (let callback of load_functions) {
-                callback()
-            }
-        }
-
-        function triggerChangeFunctions() {
-            for (let callback of change_functions) {
-                callback()
-            }
-        }
-
-        function construirHead(table){
-            let titulos = []
-
-            $(`#${table} thead tr:eq(0) th`).each(function (i) {
-                var id = $(this).text();
-                
-                titulos.push(id);
-                // console.log(id)
-
-                if(id){
-                    title = _(id)
-                    // console.log(title)
-
-                    $(this).html(`<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" id="head-${id}" placeholder="${title}"/>`);
-                }
-            });
-
-            function translatePlaceholder(){
-                    for(titulo of titulos){
-                        if(titulo !== ''){
-                            $(`#head-${titulo}`).attr('placeholder', _(titulo))
-                            $(`#head-${titulo}`).attr('data-original-title', _(titulo))
-                        }
-                    }
-                }
-
-            onLoadTranslations(translatePlaceholder)
-            onChangeTranslations(translatePlaceholder)
-        }
-
-        function changeSelects() {
-            $('select').each(function () {
-                let selectElement = $(this);
-                selectElement.find('option').each(function () {
-                    let optionElement = $(this);
-                    let translationKey = optionElement.data('i18n');
-
-                    if (translationKey) {
-                        let translatedText = _(translationKey); 
-                        optionElement.text(translatedText); 
-                    }
-                });
-                if (selectElement.hasClass('js-example-basic-single')) {
-                    selectElement.select2(); 
-                }
-            });
-        }
 
 
-        onLoadTranslations(changeSelects);
-        onChangeTranslations(changeSelects);
-        });
-</script>
+
 
 
 
@@ -7119,7 +6988,6 @@
                 $('#yearplanID').attr('disabled', false);
                 $scope.yearplan = '';//reiniciar
                 $('#yearplanID').select2();//reiniciar
-                $('body').i18n();
 
                 if(age <= 50){
                     //{yearplan: 30}, {yearplan: 29},{yearplan: 28}, {yearplan: 27}, {yearplan: 26}, {yearplan: 25},{yearplan: 24}, {yearplan: 23}, {yearplan: 22}, {yearplan: 21},
@@ -7419,7 +7287,6 @@
                 let residencial =  parseInt(proyecto.idResidencial);
                 // console.log('residencial: ', residencial);
                 $('#loteCont').empty();
-                $('body').i18n();
                 cleanCondominios();
 
                 // var plan_anios = document.querySelector("#yearplan");
@@ -7792,41 +7659,38 @@
                                             var el = angular.element(document.querySelector('#data_acg'));
                                             el.empty();
                                             dataInnerHTML = '                       <div class="col-md-4 form-group">\n' +
-                                                '                                        <label><span data-i18n="gerente">Gerente</span>:<span class="required-label">*</span></label>\n' +
+                                                '                                        <label>Gerente:<span class="required-label">*</span></label>\n' +
                                                 '                                        <select ng-model="gerente" id="gerente"\n' +
                                                 '                                                ng-change="onSelectChangegerente(gerente)" class="selectList js-example-basic-single js-states form-control">\n' +
-                                                '                                            <option value="" data-i18n="select-lote"> - Selecciona un Gerente -</option>\n' +
+                                                '                                            <option value=""> - Selecciona un Gerente -</option>\n' +
                                                 '                                            <option ng-repeat="gerentes in gerentes"  ng-value="gerentes.id_usuario"\n' +
                                                 '                                                    ng-selected="(gerentes.id_usuario== '+id_gerente+') ? selected :  false ">{{gerentes.nombreGerente}}</option>\n' +
                                                 '                                        </select>\n' +
                                                 '                                        <p id="gerentetext" style="color: red;"></p>\n' +
                                                 '                                    </div>';
-                                            $('body').i18n();
                                             dataInnerHTML += '                     <div class="col-md-4 form-group">\n' +
-                                                '                                        <label><span data-i18n="coordinador">Coordinador</span>:<span class="required-label">*</span></label>\n' +
+                                                '                                        <label>Coordinador:<span class="required-label">*</span></label>\n' +
                                                 '                                        <!--ng-options="item.nombreCoordinador for item in coordinadores"-->\n' +
                                                 '                                        <select ng-model="coordinador" id="coordinador"\n' +
                                                 '                                                ng-change="onSelectChangecoord(coordinador)" class="selectList js-example-basic-single js-states form-control"\n' +
                                                 '                                                style="text-transform: uppercase;" >\n' +
-                                                '                                            <option value="" data-i18n="select-coordinador"> - Selecciona un Coordinador -</option>\n' +
+                                                '                                            <option value=""> - Selecciona un Coordinador -</option>\n' +
                                                 '                                            <option ng-repeat="coordinadores in coordinadores"  ng-value="coordinadores.idCoordinador"\n' +
                                                 '                                                    ng-selected="(coordinadores.idCoordinador== '+id_coordinador+') ? selected : false">{{coordinadores.nombreCoordinador}}</option>\n' +
                                                 '                                        </select>' +
                                                 '<p id="cordinadortext" style="color:red;"></p>\n' +
                                                 '                                    </div>';
-                                            $('body').i18n();
                                             dataInnerHTML += '                      <div class="col-md-4 form-group">\n' +
-                                                '                                        <label><span data-i18n="asesor">Asesor</span>:<span class="required-label">*</span></label>\n' +
+                                                '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
                                                 '                                        <!--ng-options="item.nombreAsesor for item in asesores"-->\n' +
                                                 '                                        <select ng-model="asesor" id="asesor"\n' +
                                                 '                                                class="selectList js-example-basic-single js-states form-control"  ng-change="onSelectChangeAsesor(asesor)">\n' +
-                                                '                                            <option value="" data-i18n="select-asesor"> - Selecciona un Asesor -</option>\n' +
+                                                '                                            <option value="" > - Selecciona un Asesor -</option>\n' +
                                                 '                                            <option ng-repeat="asesores in asesores"  ng-value="asesores.idAsesor"\n' +
                                                 '                                                    ng-selected="(asesores.idAsesor== '+id_asesor+') ? selected : \'\'">{{asesores.nombreAsesor}}</option>\n' +
                                                 '                                        </select>\n' +
                                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
                                                 '                                    </div>';
-                                            $('body').i18n();
                                             console.log("ARREGLO COMBINADO", $scope.coordinadores);
                                             $scope.gerente = id_gerente;
                                             $scope.coordinador = id_coordinador;
@@ -7913,24 +7777,24 @@
                                 document.querySelector('#data_acg'));
                             el.empty();
                             dataInnerHTML = '                   <div class="col-md-4 form-group" >\n' +
-                                '                                        <label><span data-i18n="gerente">Gerente</span>:<span class="required-label">*</span></label>\n' +
+                                '                                        <label>Gerente:<span class="required-label">*</span></label>\n' +
                                 '                                        <select ng-model = "gerente" id="gerente" ng-options = "item.nombreGerente for item in gerentes" ng-change="onSelectChangegerente(gerente)" class="selectList js-example-basic-single js-states form-control">\n' +
                                 '                                            <option value = ""> - Selecciona un Gerente - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="gerentetext" style="color: red;"></p>\n' +
                                 '                                    </div>\n' +
                                 '                                    <div class="col-md-4 form-group" >\n' +
-                                '                                        <label><span data-i18n="coordinador">Coordinador</span>:<span class="required-label">*</span></label>\n' +
+                                '                                        <label>Coordinador:<span class="required-label">*</span></label>\n' +
                                 '                                        <select id="coordinador" ng-model="coordinador" ng-options="item.nombreCoordinador for item in coordinadores"\n' +
                                 '                                                ng-change="onSelectChangecoord(coordinador)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">\n' +
-                                '                                            <option value = "" data-i18n="select-coordinador"> - Selecciona un Coordinador - </option>\n' +
+                                '                                            <option value = ""> - Selecciona un Coordinador - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="cordinadortext" style="color:red;"></p>\n' +
                                 '                                    </div>\n' +
                                 '                                    <div class="col-md-4 form-group" >\n' +
-                                '                                        <label><span data-i18n="asesor">Asesor</span>:<span class="required-label">*</span></label>\n' +
+                                '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
                                 '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="selectList js-example-basic-single js-states form-control"  ng-change="onSelectChangeAsesor(asesorView)">\n' +
-                                '                                            <option value = "" data-i18n="select-asesor"> - Selecciona un Asesor - </option>\n' +
+                                '                                            <option value = ""> - Selecciona un Asesor - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
                                 '                                    </div>';
@@ -7938,7 +7802,6 @@
 
                             angular.element(document.querySelector('#data_acg')).append($compile(dataInnerHTML)($scope)); //angular directive
                             $('.selectList').select2();
-                            $('body').i18n();
                         }
                         // console.log("id_clienteP: ", $scope.id_clienteP);
                         document.getElementById("lotetext").innerHTML ='';
@@ -9206,7 +9069,6 @@
             }
 
             $scope.onSelectChangeLC = function(tipo_casa , lote) {
-                console.log("called");
                 // console.log("tipo_casa: ", tipo_casa);
                 // console.log("lote: ", lote);
                 $http.post('<?=base_url()?>index.php/Asesor/getinfoLoteDisponible',{lote: lote.idLote, tipo_casa: tipo_casa}).then(
@@ -9280,7 +9142,7 @@
                                             '                                        <select ng-model="coordinador"\n' +
                                             '                                                ng-change="onSelectChangecoord(coordinador)" class="form-control"\n' +
                                             '                                                style="text-transform: uppercase;">\n' +
-                                            '                                            <option value="" data-i18n="select-coordinador"> - Selecciona un Coordinador -</option>\n' +
+                                            '                                            <option value=""> - Selecciona un Coordinador -</option>\n' +
                                             '                                            <option ng-repeat="coordinadores in coordinadores"  ng-value="coordinadores.idCoordinador"\n' +
                                             '                                                    ng-selected="(coordinadores.idCoordinador== '+id_coordinador+') ? selected : false">{{coordinadores.nombreCoordinador}}</option>\n' +
                                             '                                        </select>' +
@@ -9291,7 +9153,7 @@
                                             '                                        <!--ng-options="item.nombreAsesor for item in asesores"-->\n' +
                                             '                                        <select ng-model="asesorView" id="asesor"\n' +
                                             '                                                class="form-control" ng-change="onSelectChangeAsesor(asesorView)">\n' +
-                                            '                                            <option value="" data-i18n="select-asesor"> - Selecciona un Asesor -</option>\n' +
+                                            '                                            <option value="" > - Selecciona un Asesor -</option>\n' +
                                             '                                            <option ng-repeat="asesores in asesores"  ng-value="asesores.idAsesor"\n' +
                                             '                                                    ng-selected="(asesores.idAsesor== '+id_asesor+') ? selected : \'\'">{{asesores.nombreAsesor}}</option>\n' +
                                             '                                        </select>\n' +
@@ -9382,14 +9244,14 @@
                                 '                                        <label>Coordinador:<span class="required-label">*</span></label>\n' +
                                 '                                        <select id="coordinador" ng-model="coordinador" ng-options="item.nombreCoordinador for item in coordinadores"\n' +
                                 '                                                ng-change="onSelectChangecoord(coordinador)" class="form-control" style="text-transform: uppercase;">\n' +
-                                '                                            <option value = "" data-i18n="select-coordinador"> - Selecciona un Coordinador - </option>\n' +
+                                '                                            <option value = ""> - Selecciona un Coordinador - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="cordinadortext" style="color:red;"></p>\n' +
                                 '                                    </div>\n' +
                                 '                                    <div class="col-md-4 form-group" >\n' +
                                 '                                        <label>Asesor:<span class="required-label">*</span></label>\n' +
                                 '                                        <select ng-model="asesor" id="asesor" ng-options="item.nombreAsesor for item in asesores" class="form-control"  ng-change="onSelectChangeAsesor(asesorView)">\n' +
-                                '                                            <option value = "" data-i18n="select-asesor"> - Selecciona un Asesor - </option>\n' +
+                                '                                            <option value = ""> - Selecciona un Asesor - </option>\n' +
                                 '                                        </select>\n' +
                                 '                                        <p id="asesortext" style="color: red;"></p>\n' +
                                 '                                    </div>';
@@ -11259,6 +11121,8 @@
                 DTColumnBuilder.newColumn('total').withTitle('Total').renderWith(function(data, type, full) {return (data.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }))}),
                 DTColumnBuilder.newColumn('saldo').withTitle('Saldo').renderWith(function(data, type, full) {return (data.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }))})
             ];
+
+
         });
 
 
@@ -11332,6 +11196,9 @@
         }
 
     </script>
+
+
+
 
 
 
