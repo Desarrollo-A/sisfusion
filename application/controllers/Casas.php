@@ -5007,7 +5007,7 @@ class Casas extends BaseController
 
         $vobo = $this->CasasModel->getVobos($id, 13);
 
-        if (in_array($this->idRol, [33, 11])) {
+        if (in_array($this->idRol, [11]) || in_array($this->idUsuario, [5107])) {
             $updateData = array(
                 "adm"  => 1,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
@@ -5035,7 +5035,7 @@ class Casas extends BaseController
                 http_response_code(400);
             }
         }
-        if (in_array($this->idUsuario, [15896, 16204, 15897, 16205, 15898, 16206, 4512, 15841])) {
+        if (in_array($this->idRol, [101, 33])) {
             $updateData = array(
                 "gph"  => 1,
                 "modificadoPor" => $this->session->userdata('id_usuario'),

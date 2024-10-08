@@ -48,7 +48,6 @@ function set_adeudo(data) {
             value = data.adeudoADM
             label = 'Adeudo administración'
             break
-
     }
 
     form.fields = [
