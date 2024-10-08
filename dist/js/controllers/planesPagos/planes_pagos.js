@@ -6,6 +6,9 @@ let monedaCatalogo;
 let periodicidadCatalogo;
 let planesPagoCatalogo;
 let catalogos;
+var numeroPlanConsecutivo;
+var numeroPlanPagoNormales;
+var numeroPlanPagoOtros;
 $(document).ready(function () {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -238,7 +241,6 @@ $('#idLote').change(function () {
                             data-saldoSig="${d.saldoSig}"
                             data-toggle="tooltip" data-placement="left" title="ENVIAR NUEVAMENTE" ><i class="fas fa-share"></i></button>`;
                             break;
-                            break;
                     }
 
 
@@ -246,7 +248,7 @@ $('#idLote').change(function () {
 
 
 
-                    let buttonValidado = (d.tipoPlanPago == 1) ? BTN_SEND + BTN_DELETE: '';
+                    let buttonValidado =  BTN_SEND + BTN_DELETE;//(d.tipoPlanPago == 1) ? BTN_SEND + BTN_DELETE: ''
                     return `<center>${BTN_VER} ${BTN_EDIT} ${buttonValidado}</center>`;
                 }
             }],
@@ -319,6 +321,12 @@ function loadInputsCatalogos(dto){
                 $("#tipoPP").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
             }else{
                 if(catalogoOpciones.id_opcion == 2){
+                    if(dto.totalPlanesPagoNormales < 4){
+                        $("#tipoPP").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+                    }
+                }
+
+                if(catalogoOpciones.id_opcion == 3){
                     $("#tipoPP").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
                 }
             }
@@ -346,11 +354,17 @@ function loadInputsCatalogos(dto){
     $('#tipoPP').removeAttr('disabled');
     $('#tazaInteresPP').removeAttr('readonly');
     $('#interesesSSI').removeAttr('disabled');
+    $('#ivaPP').removeAttr('disabled');
 
     let planPago = document.getElementById("planPago");
-    planPago.value = (dto.planesTotal + 1);
+    console.log('dto.planesTotal', dto.planesTotal);
+    planPago.value = (dto.planesTotal+1);
     planPago.readOnly = true;
-
+    numeroPlanConsecutivo = dto.planesTotal;
+    numeroPlanPagoNormales = dto.totalPlanesPagoNormales;
+    numeroPlanPagoOtros = dto.totalPlanesPagoOtros;
+    console.log('Consecutivo planes pago normales:', numeroPlanPagoNormales);
+    console.log('Consecutivo planes Otros:', numeroPlanPagoOtros);
 }
 
 function activarIva(checkboxElem) {
@@ -505,10 +519,12 @@ $(document).on('change','#tipoPP', function(){
     let tipoPlanTxtPP = document.getElementById('tipoPlanTxtPP');
     tipoPlanTxtPP.value = $(this).find("option:selected").attr('data-FormaPgo');
 
-    //1:Enganche 2: Plan de pago
+    //1:Enganche 2: Plan de pago  3:Otro
     let tipoPP = parseInt($(this).val());
     let tazaInteresPP = $('#tazaInteresPP');
     let interesesSSI = $('#interesesSSI');
+    let ivaPP = $('#ivaPP');
+    let planPago = $('#planPago');
     let tipoNc_valor1 = document.getElementById("tipoNc_valor1");
     let tipoNc_valor2 = document.getElementById("tipoNc_valor2");
 
@@ -520,9 +536,12 @@ $(document).on('change','#tipoPP', function(){
 
     console.log('tipoPP', tipoPP);
     if(tipoPP==1){
+        //seleccionó enganche
+        planPago.val(0);
         tazaInteresPP.attr('readonly','true');
         tazaInteresPP.val(0);
         interesesSSI.attr('disabled', 'disabled');
+        ivaPP.attr('disabled', 'disabled');
         tipoNc_valor1.disabled = false;
         tipoNc_valor2.disabled = false;
 
@@ -532,22 +551,35 @@ $(document).on('change','#tipoPP', function(){
 
         descripcionPlanPago.attr("readonly", true);
         descripcionPlanPago.val("Plan de pago Enganche");
-    }else{
+    }
+    else{
+        if(tipoPP == 2){
+
+            // planPago.val((tipoPP==3) ? 5 :(numeroPlanConsecutivo == 0) ? numeroPlanConsecutivo + 1 : numeroPlanConsecutivo);
+            planPago.val( numeroPlanPagoNormales + 1 );
+
+        }else if(tipoPP == 3){
+            planPago.val( numeroPlanPagoOtros + 1 );
+
+        }
         tazaInteresPP.removeAttr('readonly');
         tazaInteresPP.val(0);
         descripcionPlanPago.attr("readonly", false);
         descripcionPlanPago.val("");
         if(Number.parseInt(tazaInteresPP.val())  == 0){
             interesesSSI.attr('disabled', 'disabled');
+            ivaPP.attr('disabled', 'disabled');
             tipoNc_valor1.disabled = false;
             tipoNc_valor2.disabled = false;
 
             tipoNc_valor1.checked  = false;
             tipoNc_valor2.checked  = false;
             labelTipoNc_valor1.classList.remove('disabledClassRadio');
-        }else{
+        }
+        else{
             interesesSSI.removeAttr('disabled');
-            tipoNc_valor1.disabled = true;
+            ivaPP.removeAttr('disabled');
+            tipoNc_valor1.setAttribute('readonly', true);
             tipoNc_valor2.disabled = true;
 
             tipoNc_valor1.checked  = true;
@@ -573,11 +605,13 @@ function cerrarModalAddPlan() {
     $("#cantidadIvaPP").val('');
 
     $("#tipoPP").selectpicker('refresh');
+    $("#tipoPP").removeAttr('disabled');
     $("#monedaPP").selectpicker('refresh');
     $("#periocidadPP").selectpicker('refresh');
     $('#addPlanPago').modal('hide');
     cont_eng = 0;
     document.getElementById("interesesSSI").checked = false;
+    document.getElementById("ivaPP").checked = false;
     document.getElementById("ivaPP").checked = false;
     document.getElementById("tipoNc_valor1").checked = false;
     document.getElementById("tipoNc_valor2").checked = false;
@@ -611,7 +645,8 @@ function generarPlanPagoFunction(){
     // let noPeriodosPP = Math.round(montoPP/mensualidadPP); // //$('#noPeriodosPP').val();
     let noPeriodosPP = $('#noPeriodosPP').val();
     let prioridadCalculo = $('input[name="tipoNc_valor"]:checked').val();
-    dumpPlanPago = generarPlanPago(fechaInicio, noPeriodosPP, montoPP, tazaInteresPP, periocidadPP, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva, idPlanPagoModal, saldoSiguienteModal, prioridadCalculo);
+    dumpPlanPago = generarPlanPago(fechaInicio, noPeriodosPP, montoPP, tazaInteresPP, periocidadPP, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva, idPlanPagoModal, saldoSiguienteModal, prioridadCalculo, numeroPlanPagoNormales);
+    console.log('dumpPlanPago gd', dumpPlanPago);
 }
 
 $(document).on('click', '.ver_planPago', async function(){
@@ -897,6 +932,7 @@ const obtenerCatalgosEditar = () =>{
 function fillPlanPagoGral(data){
     console.log('data', data);
     let interesesSSI = $('#interesesSSI');
+    let ivaPP = $('#ivaPP');
     $('#planPago').val(data.ordenPago);
     $('#planPago').attr('readonly', true);
     $('#descripcionPlanPago').val(data.descripcion);
@@ -918,6 +954,8 @@ function fillPlanPagoGral(data){
     $('#idClientePP').val(data.idCliente);
     $('#nombreLotePP').val(data.nombreLote);
 
+    dumpPlanPago = data.dumpPlan;
+    console.log('dumpPlanPago:', dumpPlanPago);
     monedaCatalogo = data['monedaLista'];
     periodicidadCatalogo = data['periodicidadLista'];
     planesPagoCatalogo = data['tipos_planes'];
@@ -964,9 +1002,15 @@ function fillPlanPagoGral(data){
     }else{
         document.getElementById("interesesSSI").checked = false;
         interesesSSI.attr('disabled', 'disabled');
+        document.getElementById("ivaPP").checked = false;
+        ivaPP.attr('disabled', 'disabled');
         if(data.ssi == 1){
             document.getElementById("interesesSSI").checked = true;
             interesesSSI.attr('disabled', false);
+        }
+        if(data.iva == 1){
+            document.getElementById("ivaPP").checked = true;
+            ivaPP.attr('disabled', false);
         }
     }
     if(data.tazaInteres == 1){
@@ -1015,6 +1059,7 @@ $(document).on('click', '.enviarPago', function(){
     $('#aceptarPlanPagoPP').modal();
 });
 
+
 $(document).on('click', '#aceptarEnvioPP2', function(){
    console.log('enviio de plan de pago individual');
     let idPlanPago = $('#idPlanPagoIn').val();
@@ -1031,7 +1076,10 @@ $(document).on('click', '#aceptarEnvioPP2', function(){
             if (response.respuesta == 1) {
                 //enviar el plan generado pero ahora al servicio de NeoData
                 //Descomentar cuando se haga la prueba con el servicio de Rodri
+                console.log('response:', response);
                 servicioNeoData(response);
+                $('#spiner-loader').addClass('hide');//PRUEBA
+
             }
             else if(response.respuesta == -1){
                 alerts.showNotification('top', 'right', 'No hay registro de plan de pagos para enviar o ya se enviaron a Neodata anteriormente.', 'danger');
@@ -1061,8 +1109,10 @@ $(document).on('click', '#aceptarEnvioPP', function(){
         success: function (response) {
             response = JSON.parse(response);
             if (response.respuesta == 1) {
-                console.log("response:", response);
-                servicioNeoData(response);
+
+                console.log('response:', response);
+                //servicioNeoData(response);
+                $('#spiner-loader').addClass('hide');//PRUEBA
 
                 //enviar el plan generado pero ahora al servicio de NeoData
                 //Descomentar cuando se haga la prueba con el servicio de Rodri
@@ -1133,7 +1183,7 @@ function servicioNeoData(response){
 
     $.ajax({
         data:JSON.stringify(response.planServicio),
-        url: 'http://192.168.16.20/neodata_reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
+        url: 'https://bi-maderas.gphsis.com/reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
         type: 'POST',
         success: function (response) {
             console.log('RESPUES NEODATA:'+response);
@@ -1227,12 +1277,14 @@ $(document).on('change','#tazaInteresPP', function(){
         console.log('Ha cambiado a:', tazaInteresPP);
     let tipoPP = parseInt($(this).val());
     let interesesSSI = $('#interesesSSI');
+    let ivaPP = $('#ivaPP');
     let tipoNc_valor1 = document.getElementById("tipoNc_valor1");
     let tipoNc_valor2 = document.getElementById("tipoNc_valor2");
     let labelTipoNc_valor1 = document.getElementById("labelTipoNc_valor1");
 
     if(tazaInteresPP <= 0){
         interesesSSI.attr('disabled', 'disabled');
+        ivaPP.attr('disabled', 'disabled');
         tipoNc_valor1.disabled = false;
         tipoNc_valor2.disabled = false;
 
@@ -1241,7 +1293,8 @@ $(document).on('change','#tazaInteresPP', function(){
         labelTipoNc_valor1.classList.remove('disabledClassRadio');
     }else{
         interesesSSI.removeAttr('disabled');
-        tipoNc_valor1.disabled = true;
+        ivaPP.removeAttr('disabled');
+        tipoNc_valor1.setAttribute('readonly', true);//disabled = true;
         tipoNc_valor2.disabled = true;
 
         tipoNc_valor1.checked  = true;
@@ -1273,7 +1326,7 @@ $(document).on('click', '.cancelarPlanPago', function(){
 
     console.log('numeroPlanPago', numeroPlanPago);
     console.log('nombrePlan', nombrePlan);
-    /*$.ajax({
+    $.ajax({
         data:{data:1},
         url: 'Corrida/cancelaPlanPagoNeo',
         type: 'POST',
@@ -1289,7 +1342,7 @@ $(document).on('click', '.cancelarPlanPago', function(){
             alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
 
         }
-    });*/
+    });
 });
 
 $(document).on('click', '#cancelarPP', ()=>{

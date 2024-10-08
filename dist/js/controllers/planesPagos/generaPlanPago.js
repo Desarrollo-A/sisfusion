@@ -2,20 +2,36 @@
 var day;
 var mes;
 
-function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva, idPlanPagoModal, saldoSiguienteModal, prioridadCalculo){
-
-
+function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva, idPlanPagoModal, saldoSiguienteModal, prioridadCalculo, numeroPlanPagoNormales){
+    console.log('fechaInicio:', fechaInicio);
+    console.log('periodos:', periodos);
+    console.log('monto:', monto);
+    console.log('tIniteres:', tIniteres);
+    console.log('periocidad:', periocidad);
+    console.log('tipoPP:', tipoPP);
+    console.log('planPago:', planPago);
+    console.log('mensualidadPP:', mensualidadPP);
+    console.log('interesesSSI:', interesesSSI);
+    console.log('ivaPP:', ivaPP);
+    console.log('porcentajeIva:', porcentajeIva);
+    console.log('idPlanPagoModal:', idPlanPagoModal);
+    console.log('saldoSiguienteModal:', saldoSiguienteModal);
+    console.log('prioridadCalculo:', prioridadCalculo);
     //prioridadCalculo: Es para ver como se va a cálcular, haciendole caso a la mensualidad o bien al número de periodos
     //1: por mensualidad Eje. totalMonto/mensualidad = numero de periodos
     //2: por periodos    Eje. totalMonto/periodos = valor de la mensualidad
     prioridadCalculo = parseInt(prioridadCalculo);
+    idPlanPagoModal = parseInt(idPlanPagoModal);
+
     if(idPlanPagoModal > 0 || idPlanPagoModal != undefined){
         console.log('prioridadCalculo', prioridadCalculo);
+        console.log('idPlanPagoModal :)', idPlanPagoModal);
         periodos = parseInt(periodos);
         tIniteres = parseFloat(tIniteres);
         periocidad = parseInt(periocidad);
         tipoPP = parseInt(tipoPP);
         planPago = parseInt(planPago);
+        planPago = ( tipoPP==3 ) ? 5 : ((planPago == 5) ? numeroPlanPagoNormales : planPago);
 
         mensualidadPP = parseFloat(mensualidadPP);
 
@@ -33,18 +49,36 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
 
         let totalMonto;
         if(tIniteres == 0 && tipoPP == 1){
+            console.log('ti v1:', tIniteres);
+            console.log('tipoPP v1:', tipoPP);
+            console.log('monto v1:', monto);
             totalMonto = monto;
         }else if(tIniteres == 0 && tipoPP != 1){
+            console.log('ti v2:', tIniteres);
+            console.log('tipoPP v2:', tipoPP);
+            console.log('monto v2:', monto);
+            console.log('saldoSiguienteModal v2:', saldoSiguienteModal);
+            totalMonto = monto - saldoSiguienteModal;
+        }else if(tIniteres != 0 && tipoPP != 1){
             totalMonto = monto - saldoSiguienteModal;
         }
+
         var rangoPlan=[];
 
         if(prioridadCalculo == 1){
-
             periodos = Math.ceil(totalMonto/mensualidadPP);
+            console.log('totalMonto ', totalMonto);
+            console.log('mensualidadPP ', mensualidadPP);
+            console.log('periodos ', periodos);
         }else if(prioridadCalculo == 2 && tIniteres==0){
             mensualidadPP = Math.ceil(totalMonto/periodos);
+            console.log('prioridadCalculo v2: ', prioridadCalculo);
+
         }
+
+
+
+
 
         let  meses= parseInt(periodos);
         let  interes= (tIniteres/12); //se ingresa la taza anual
@@ -59,8 +93,8 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
         let cantidadIva;
         porcentajeIva = (porcentajeIva/100) ;
         // periodos = Math.ceil(monto/mensualidadPP);
+        console.log('periodos: ', periodos);
         for (var i = 0; i < periodos; i++) {
-
             if( (mes == 13) || (mes == 14) || (mes == 15) ){
 
 
@@ -119,7 +153,7 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
             }
 
             let fechaPlan = ((day<=10) ? '0'+day : day) + '-' + (mes) + '-' + yearc;
-
+            console.log('Periodos', fechaPlan);
             let p2;
             let total;
             if(tIniteres == 0){
@@ -188,6 +222,9 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
         periocidad = parseInt(periocidad);
         tipoPP = parseInt(tipoPP);
         planPago = parseInt(planPago);
+        // planPago = ( tipoPP==3 ) ? 5 : ((planPago == 5) ? numeroPlanPagoNormales + 1 : ((tipoPP == 2) ? numeroPlanPagoNormales+1:planPago));
+        planPago = (tipoPP == 5) ? 5 : planPago
+        console.log('Este plan pago es:', planPago);
 
         //prioridadCalculo
         //1: por mensualidad
@@ -222,6 +259,7 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
         let capital;
 
         if(prioridadCalculo == 1){
+            console.log('entré aqui 1: ', prioridadCalculo);
             capital = mensualidadPP;
             if(tazaInteresPP.value == 0){
                 periodos = Math.ceil(totalMonto/mensualidadPP);
@@ -231,6 +269,8 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
             }
         }
         else if(prioridadCalculo == 2){
+            console.log('entré aqui 2: ', prioridadCalculo);
+
             capital = totalMonto/periodos;
 
         }

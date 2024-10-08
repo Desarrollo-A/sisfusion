@@ -1,3 +1,4 @@
+
 <link href="<?= base_url() ?>dist/css/depositoSeriedad.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -227,6 +228,49 @@
                     </div>    
                 </div>
                 <!-- row factura -->
+                <!-- radios 3 -->
+                <!-- row especialista escuadron -->
+                <div class="row pt-1">
+                    <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
+                        <div class="pb-1">
+                            <h4 class="label-on-left m-0">ESCUADRON RESCATE</h4>
+                            <input type="checkbox" name="escuadronRescate" id="escuadronRescate" <?php echo $statsInput; ?>  <?php if ($cliente[0]->especialistaEscuadron != '' && $cliente[0]->especialistaEscuadron != null) {echo "checked value='1'";}?>>
+                            <label class="switch" for="escuadronRescate"></label>
+                        </div>
+                    </div>
+                    <div class="col col-xs-12 col-sm-3 col-md-6 col-lg-6 <?php echo ($cliente[0]->especialistaEscuadron == 1) ?  '':  'd-none'; ?>" id="liderEscuadronDiv">
+                        <h4 class="label-on-left m-0">LIDER ESCUADRON RESCATE</h4>
+                        <select id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
+                                data-size="7" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
+                                data-live-search="true" data-container="body" data-width="100%">
+                            <?php
+                            for($n=0; $n < count($lideresRescateLista) ; $n++){
+                                if($lideresRescateLista[$n]['id_usuario'] == $cliente[0]->liderEscuadron){
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" selected data-coodRescate="'.$lideresRescateLista[$n]['id_lider'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                }
+                                else{
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" data-coodRescate="'.$lideresRescateLista[$n]['id_lider'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                        <input type="hidden" name="idCoordinadorEscuadron" id="idCoordinadorEscuadron">
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                        <h4 class="label-on-left mb-0">IDIOMA</h4>
+                        <div class="radio_container">
+                            <input type="radio" name="idiomaValor"  id="idiomaValor1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 1) { echo "checked=true"; } ?>>
+                            <label for="idiomaValor1">ESPAÑOL</label>
+
+                            <input type="radio" name="idiomaValor"  id="idiomaValor2" value="2" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 2) { echo "checked=true"; } ?>>
+                            <label for="idiomaValor2">INGLÉS</label>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- fin especialista escuadron -->
                 <div class="row pt-1">
                     <div class="col-sm-6 checkbox-radios" id="radioDS">
                         <h4 class="label-on-left m-0" data-i18n="residencia">RESIDENCIA (<small style="color: red;">*</small>)</h4>
@@ -434,14 +478,14 @@
                             <span data-i18n="localidad">LOCALIDAD</span>
                             (<small style="color: red;">*</small>)
                         </label>
-                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="localidad" id="localidad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->localidad?>"/>
+                        <input type="text" class="form-control m-0 input-gral letrasCaracteres"  name="localidad" id="localidad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->localidad?>"/>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">
                             <span data-i18n="calle">CALLE</span>
                             (<small style="color: red;">*</small>)
                         </label>
-                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="calle" id="calle" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->calle?>"/>
+                        <input type="text"  class="form-control m-0 input-gral letrasCaracteres"  name="calle" id="calle" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->calle?>"/>
                     </div>
                 </div>
 
@@ -507,11 +551,11 @@
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">#INTERIOR(<small style="color: red;">*</small>)</label>
-                                <input type="text" required="true" class="form-control m-0 input-gral"  name="interior" id="interior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->interior?>"/>
+                                <input type="text"  class="form-control m-0 input-gral"  name="interior" id="interior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->interior?>"/>
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">#EXTERIOR(<small style="color: red;">*</small>)</label>
-                                <input type="text" required="true" class="form-control m-0 input-gral"  name="exterior" id="exterior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->exterior?>"/>
+                                <input type="text" class="form-control m-0 input-gral"  name="exterior" id="exterior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->exterior?>"/>
                             </div>
                         </div>
                     </div>
