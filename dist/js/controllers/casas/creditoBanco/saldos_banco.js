@@ -10,8 +10,8 @@ switch(idRol){
     case 33:
     case 76: 
     case 81: 
-    case 55: // portventa 
-        if(idUsuario == 5107){ // yolanda 
+    case 11: // portventa 
+        if(idUsuario == 5107 || idRol == 11){ // yolanda 
             tipoSaldo = 1;
             campo = "saldoAdmon";
         }
