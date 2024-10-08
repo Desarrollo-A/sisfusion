@@ -259,10 +259,8 @@
                                 <!------------->
                                 <div class="container-fluid mt-1" id="ch">
                                     <div class="row">
-                                        <div class="col-md-12 d-flex justify-end">
-                                            <div class="boxIcon" data-html="true" data-toggle="tooltip" data-placement="bottom" data-i18n-label="sede-capital-info" title="Sede capital humano y sucursal capital humano.<br/><br/>Son información que se solicita de manera adicional para mantener actualizado tanto el sistema de Capital Humano como CRM actualizados.">
-                                                <i class="fas fa-info"></i>
-                                            </div>
+                                        <div class="col-md-12 d-flex justify-end" id="div-info">
+                                            
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
