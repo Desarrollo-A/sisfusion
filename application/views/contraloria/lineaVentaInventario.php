@@ -11,23 +11,23 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
+                    <h4 class="modal-title"><span data-i18n="consulta-historial">Consulta de historial</span> <b id="nomLoteHistorial"></b></h4>
                 </div>
 
                 <div class="modal-body">
                     <div role="tabpanel">
                         <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                             <li role="presentation" class="active">
-                                <a href="#changeprocesTab" aria-controls="changeprocesTab" role="tab" onclick="javascript:$('#verDet').DataTable().ajax.reload();" data-toggle="tab">Proceso de contratación</a>
+                                <a href="#changeprocesTab" aria-controls="changeprocesTab" role="tab" onclick="javascript:$('#verDet').DataTable().ajax.reload();" data-toggle="tab"><span data-i18n="proceso-contratacion">Proceso de contratación</span></a>
                             </li>
                             <li role="presentation">
-                                <a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab" onclick="javascript:$('#verDetBloqueo').DataTable().ajax.reload();">Liberación</a>
+                                <a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab" onclick="javascript:$('#verDetBloqueo').DataTable().ajax.reload();"><span data-i18n="liberacion">Liberación</span></a>
                             </li>
                             <li role="presentation">
-                                <a href="#coSellingAdvisers" aria-controls="coSellingAdvisers" role="tab" data-toggle="tab" onclick="javascript:$('#seeCoSellingAdvisers').DataTable().ajax.reload();">Asesores venta compartida</a>
+                                <a href="#coSellingAdvisers" aria-controls="coSellingAdvisers" role="tab" data-toggle="tab" onclick="javascript:$('#seeCoSellingAdvisers').DataTable().ajax.reload();"><span data-i18n="asesores-venta-compartida">Asesores venta compartida</span></a>
                             </li>
                             <li role="presentation" class="hide" id="li_individual_sales">
-                                <a href="#salesOfIndividuals" aria-controls="salesOfIndividuals" role="tab" data-toggle="tab">Clausulas</a>
+                                <a href="#salesOfIndividuals" aria-controls="salesOfIndividuals" role="tab" data-toggle="tab"><span data-i18n="clausulas">Clausulas</span></a>
                             </li>
                         </ul>
                         <!-- Tab panes -->
@@ -129,7 +129,8 @@
                     <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">
+                    <span data-i18n="cerrar">CERRAR</span>
                     </button>
                 </div>
             </div>
@@ -147,8 +148,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary" id="btnInventario">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><span data-i18n="cancelar">Cancelar</span></button>
+                        <button type="submit" class="btn btn-primary" id="btnInventario"><span data-i18n="aceptar">Aceptar</span></button>
                     </div>
                 </div>
             </form>
@@ -164,7 +165,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align">Línea de venta</h3>
+                                <h3 class="card-title center-align"><span data-i18n="linea-venta">Línea de venta</span></h3>
                                 <p class="card-title pl-1"></p>
                             </div>
                             <div  class="toolbar">
@@ -173,7 +174,7 @@
                                             <div class="container-fluid p-0">
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
-                                                    <label class="control-label">Fecha apartado</label>
+                                                    <label class="control-label" data-i18n="apartado-fecha">Fecha apartado</label>
                                                         <div class="form-group d-flex">
                                                             <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
                                                             <input type="text" class="form-control datepicker2" id="endDate" value="" autocomplete='off' />
@@ -192,21 +193,21 @@
                                         class="table-striped table-hover text-center">
                                     <thead>
                                     <tr>
-                                        <th>PROYECTO</th>
-                                        <th>CONDOMINIO</th>
-                                        <th>LOTE</th>
-                                        <th>REFERENCIA</th>
-                                        <th>ASESOR</th>
-                                        <th>COORDINADOR</th>
-                                        <th>GERENTE</th>
-                                        <th>SUBDIRECTOR</th>
-                                        <th>DIRECTOR REGIONAL</th>
-                                        <th>DIRECTOR REGIONAL 2</th>
-                                        <th>TIPO ASESOR</th>
-                                        <th>ESTATUS</th>
-                                        <th>FECHA DE APARTADO</th>
-                                        <th>UBICACIÓN</th>
-                                        <th>ACCIONES</th>
+                                        <th>proyecto</th>
+                                        <th>condominio</th>
+                                        <th>lote</th>
+                                        <th>referencia</th>
+                                        <th>asesor</th>
+                                        <th>coordinador</th>
+                                        <th>gerente</th>
+                                        <th>subdirector</th>
+                                        <th>director-regional</th>
+                                        <th>director-regional2</th>
+                                        <th>tipo-asesor</th>
+                                        <th>estatus</th>
+                                        <th>apartado-fecha</th>
+                                        <th>ubicacion</th>
+                                        <th>acciones</th>
                                     </tr>
                                     </thead>
                                 </table>
