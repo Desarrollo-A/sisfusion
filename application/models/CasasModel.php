@@ -208,7 +208,7 @@ class CasasModel extends CI_Model
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
             LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9 
             WHERE lo.status = 1
-            AND lo.idStatusLote = 2            
+            AND lo.idStatusLote = 2
             AND (cl.pre_proceso_casas = 0 OR cl.pre_proceso_casas IS NULL)
             ORDER BY lo.idLote
             ")->result();
@@ -2188,7 +2188,7 @@ AND vb.proyectos != 1";
     }
 
     public function getEsquemaOptions(){
-        $query = $this->db->query("SELECT nombre AS label, id_opcion AS value FROM opcs_x_cats WHERE id_catalogo = ? AND id_opcion != ?", array(151, 0));
+        $query = $this->db->query("SELECT nombre AS label, id_opcion AS value FROM opcs_x_cats WHERE id_catalogo = ? AND id_opcion != ? AND estatus = 1", array(151, 0));
 
         return $query;
     }
