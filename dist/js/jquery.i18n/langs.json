@@ -1173,7 +1173,8 @@
                 "limpiar-campos":"Clear fields",
                 "id-prospecto" : "Prospect id",
                 "no-vigente"  :"Not active",
-                "no-aplica" : "Not applicable"
+                "no-aplica" : "Not applicable",
+                "activo2": "Active"
         },
         "es": {
                 "1-origen": "1% de origen",
@@ -2349,6 +2350,7 @@
                 "limpiar-campos":"Limpiar campos",
                 "id-prospecto" : "Id Prospecto",
                 "no-vigente": "No vigente",
-                "no-aplica" : "No aplica"
+                "no-aplica" : "No aplica",
+                "activo2": "Activo"
         }
 }

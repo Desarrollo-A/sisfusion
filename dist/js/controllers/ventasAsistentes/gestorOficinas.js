@@ -11,12 +11,8 @@
 //     $('[data-toggle="tooltip"]').tooltip();
 // });
 
-$(document).ready(function () {
-    $('#btnAgregarOffice').attr('data-original-title', _('agregar-oficina'));
-    $('#btnAgregarOffice').attr('title', _('agregar-oficina'));
-})
-
 construirHead('tablaOficinas');
+changeButtonTooltips();
 
 let tablaOficinas = $('#tablaOficinas').DataTable({
     dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -55,16 +51,16 @@ let tablaOficinas = $('#tablaOficinas').DataTable({
     },
     {
         data: function (d) {
-            return `<span class='label ${d.estatus == 0 ? 'lbl-warning' : 'lbl-green'}'>${d.estatus == 0 ? _('inactivo') : _('activo')}</span>`;
+            return `<span class='label ${d.estatus == 0 ? 'lbl-warning' : 'lbl-green'}'>${d.estatus == 0 ? _('inactivo') : _('activo2')}</span>`;
         }
     },
     { 
         data: function (d) {
             var btn = `<div class="d-flex justify-center">
-                <button class="btn-data btn-sky updateOffice" data-toggle="tooltip" data-placement="top" title="${_('editar')}">
+                <button class="btn-data btn-sky updateOffice" data-toggle="tooltip" data-placement="top" title="${_('editar')}" data-i18n-tooltip="editar">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="btn-data statusOfficeBtn ${d.estatus == 0 ? 'btn-violetBoots' : 'btn-gray'}" data-toggle="tooltip" data-placement="top" title="${d.estatus == 0 ? _('activar') : _('desactivar')}">
+                <button class="btn-data statusOfficeBtn ${d.estatus == 0 ? 'btn-violetBoots' : 'btn-gray'}" data-toggle="tooltip" data-placement="top" title="${d.estatus == 0 ? _('activar') : _('desactivar')}" data-i18n-tooltip="${d.estatus == 0 ? 'activar' : 'desactivar'}">
                     <i class="fas ${d.estatus == 0 ? 'fa-thumbs-up' : 'fa-thumbs-down'}"></i>
                 </button>
             </div>`;
@@ -82,6 +78,7 @@ let tablaOficinas = $('#tablaOficinas').DataTable({
         dataSrc: ""
     }
 });
+
 
 
 $(document).on("click", ".updateOffice", function () {

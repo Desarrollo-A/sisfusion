@@ -91,7 +91,7 @@
                                         <div class="col-md-10">
                                         </div>
                                         <div class="col-md-2">
-                                            <button type="button" data-toggle="modal" id="btnAgregarOffice" class="btn-azure w-100" rel="tooltip" title="AGREGAR OFICINA" data-placement="top" data-i18n="agregar">Agregar</button>
+                                            <button type="button" data-toggle="modal" id="btnAgregarOffice" class="btn-azure w-100" rel="tooltip" title="AGREGAR OFICINA" data-i18n-tooltip="agregar" data-placement="top" data-i18n="agregar">Agregar</button>
                                         </div>
                                     </div>
                                 </div>
