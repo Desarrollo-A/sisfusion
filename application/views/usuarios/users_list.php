@@ -257,12 +257,30 @@
                                     <div class="row aligned-row" id="multirol"></div>
                                 </div>
                                 <!------------->
+
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                            <label class="control-label">Tipo (<small class="isRequired">*</small>)</label>
+                                            <div class="radio_container">
+                                                <input class="d-none" type="radio" name="tipoUsuario" id="normal" value="1">
+                                                <label for="normal">NORMAL</label>
+                                                <input class="d-none" type="radio" name="tipoUsuario" id="mupgrade" value="2">
+                                                <label for="mupgrade">MADERAS UPGRADE</label>                                            
+                                                <input class="d-none" type="radio" name="tipoUsuario" id="casas" value="3">
+                                                <label for="casas">CASAS</label>
+                                                <input class="d-none" type="radio" name="tipoUsuario" id="seguros" value="4">
+                                                <label for="seguros">SEGUROS</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
                                 <div class="container-fluid mt-1" id="ch">
                                     <div class="row">
-                                        <div class="col-md-12 d-flex justify-end">
-                                            <div class="boxIcon" data-html="true" data-toggle="tooltip" data-placement="bottom" data-i18n-label="sede-capital-info" title="Sede capital humano y sucursal capital humano.<br/><br/>Son información que se solicita de manera adicional para mantener actualizado tanto el sistema de Capital Humano como CRM actualizados.">
-                                                <i class="fas fa-info"></i>
-                                            </div>
+                                        <div class="col-md-12 d-flex justify-end" id="div-info">
+                                            
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">

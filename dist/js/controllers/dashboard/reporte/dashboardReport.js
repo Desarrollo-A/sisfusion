@@ -822,7 +822,6 @@ async function chartDetail(e, tipoChart){
     $("#modalChart #type").val('');
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
-    console.log("nameChart: ", nameChart);
     $(".boxModalTitle .title").append('<p class="mb-1">' + _(nameChart[0]) + '<span class="enfatize"> '+ _(nameChart[1]) +'</span></p>');
     let fecha_inicio = $('.moreMiniChart ').attr('data-fi');
     let fecha_fin    = $('.moreMiniChart ').attr('data-ft');
@@ -976,7 +975,6 @@ function loaderCharts(){
 };
 
 function orderedDataChart(data){
-    console.log("data: ", data);
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
         let { tipo, rol, total, mes, año } = data[i];

@@ -23,7 +23,7 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    console.log(lang);
+    // console.log(lang);
     $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
@@ -290,13 +290,9 @@ function changeSteps() {
 }
 
 function changeFontIconTooltips() {
-    // console.log('li')
 
     $('i').each(function (i) {
         let id = $(this).data('i18n-tooltip')
-
-        // console.log(id)
-        // let clase = $(this).attr('class')
 
         if(id){
             let title = _(id)

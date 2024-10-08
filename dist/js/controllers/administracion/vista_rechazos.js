@@ -112,6 +112,8 @@ $("#tabla_reporte_11").ready( function(){
         },
     });
 
+    applySearch(tabla_6);
+
     $('#tabla_reporte_11').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
