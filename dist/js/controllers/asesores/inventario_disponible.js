@@ -305,11 +305,11 @@ function dataTable(ruta) {
                 data:function(data){
                     if(data.tipo_venta == 1){
                         return `<small  class='label lbl-green'>
-                                    VENTA DE PARTICULARES
+                                    ${_("venta-de-particulares-2")}
                                 </small>`} 
                     else { 
                         return `<small  class='label lbl-sky'>
-                                    VENTA NORMAL
+                                    ${_("venta-normal-2")}
                                 </small>`
                     } 
                 }
@@ -318,7 +318,7 @@ function dataTable(ruta) {
                 function(data){ 
                     if(data.tipo_venta == 1) { 
                         return `<center>
-                                    <button class="btn-data btn-blueMaderas ver_historial" value="${data.idLote}" data-nomLote="${data.nombreLote}" data-tipo-venta="${data.tipo_venta}" data-toggle="tooltip" data-placement="top" title="INFORMACIÓN" ><i class="fas fa-info"></i></button>
+                                    <button class="btn-data btn-blueMaderas ver_historial" value="${data.idLote}" data-nomLote="${data.nombreLote}" data-tipo-venta="${data.tipo_venta}" data-toggle="tooltip" data-placement="top" title="${_("informacion-2")}" ><i class="fas fa-info"></i></button>
                                 </center>`;
                     } else { 
                         return "" 

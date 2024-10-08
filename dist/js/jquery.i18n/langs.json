@@ -1193,7 +1193,16 @@
 		"verificar-en-neodata-ventas": "Check in NEODATA Sales",
 		"verificar-en-neodata-ooam": "Check in NEODATA OOAM",
 		"verificar-en-neodata": "Check in NEODATA",
-		"sin-definir": "N/A"
+		"sin-definir": "N/A",
+		"venta-de-particulares-2": "PRIVATE SALE",
+		"venta-normal-2": "NORMAL SALE",
+		"informacion-2": "INFORMATION",
+		"no-validada": "Not validated",
+		"aceptada-2": "Accepted",
+		"rechazada": "Rejected",
+		"ver-evidencia-2": "SEE EVIDENCE",
+		"rechazar-2": "REJECTED",
+		"aceptar-2": "ACCEPT"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2389,6 +2398,15 @@
 		"verificar-en-neodata-ventas": "VERIFICAR EN NEODATA VENTAS",
 		"verificar-en-neodata-ooam": "VERIFICAR EN NEODATA OOAM",
 		"verificar-en-neodata": "VERIFICAR EN NEODATA",
-		"sin-definir": "Sin definir"
+		"sin-definir": "Sin definir",
+		"venta-de-particulares-2": "VENTA DE PARTICULARES",
+		"venta-normal-2": "VENTA NORMAL",
+		"informacion-2": "INFORMACIÓN",
+		"no-validada": "No validada",
+		"aceptada-2": "Aceptada",
+		"rechazada": "Rechazada",
+		"ver-evidencia-2": "VER EVIDENCIA",
+		"rechazar-2": "RECHAZAR",
+		"aceptar-2": "ACEPTAR"
 	}
 }
