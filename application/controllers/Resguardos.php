@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Resguardos extends CI_Controller
 {
+  private $gph;
   public function __construct()
   {
     parent::__construct();
@@ -15,12 +16,11 @@ class Resguardos extends CI_Controller
     $this->load->database('default');
     $this->jwt_actions->authorize('6512', $_SERVER['HTTP_HOST']);
     $this->validateSession();
-
     $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-    $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-    $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-  }
+    $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+    $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+   }
 
   public function index(){
     redirect(base_url());
@@ -30,33 +30,14 @@ class Resguardos extends CI_Controller
     if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
       redirect(base_url() . "index.php/login");
   }
-  //Inician vistas 
 
   public function retiros() {
-        if ($this->session->userdata('id_rol') == FALSE) {
-            redirect(base_url());
-        }
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
         $this->load->view('template/header');
         $this->load->view("resguardos/retiros-view");
-  }
+      }
 
-
-  public function comision_resguardo() {
-
-    $this->load->view('template/header');
-    $this->load->view("resguardos/resguardos_comisiones_view");
-}
-
-
-  public function retiros_resguardos(){
-    $this->load->view('template/header');
-    $this->load->view("resguardos/descuentos_resguardos_view");
-  }
-
-
-  // Finalizan vistas resguardos.
-
-  
   public function getRetiros($user,$opc)
   {
     $data["data"] = $this->Resguardos_model->getRetiros($user,$opc)->result_array();
@@ -115,15 +96,6 @@ class Resguardos extends CI_Controller
     $pagado = $this->Resguardos_model->getAplicadoResguardo($user)->result_array();
     $disponible = ($datos[0]['suma'] + $extras[0]['extras']) - $pagado[0]['aplicado'];
     echo json_encode($disponible);
-  }
-
-
-  public function getDatosResguardoContraloria($user,$residencial){
-    $dat =  $this->Resguardos_model->getDatosResguardoContraloria($user,$residencial)->result_array();
-    for( $i = 0; $i < count($dat); $i++ ){
-      $dat[$i]['pa'] = 0;
-    }
-    echo json_encode( array( "data" => $dat));
   }
 
 

@@ -3757,8 +3757,6 @@ class Casas extends BaseController
         $this->db->trans_begin();
 
         $updateData = array(
-            "procesoAnterior" => $proceso,
-            "procesoNuevo"    => $proceso,
             "obra"  => $obra,
             "tesoreria" => $tesoreria,
             "serviciosArquitectonicos" => $serviciosArquitectonicos
