@@ -344,7 +344,7 @@ let columns = [
                 return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;
             }
 
-            if(data.revisionEscrituracion == 2) {
+            if(data.revisionEscrituracion == 1 && data.escrituraFinalizada == 2) {
                 return `<span class="label lbl-warning">NO ESCRITURADO</span>`;
             }
         }
