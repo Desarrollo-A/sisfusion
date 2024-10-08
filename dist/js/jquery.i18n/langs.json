@@ -798,7 +798,7 @@
 		"sede": "HEADQUARTERS",
 		"sede-apartados": "Reserved lots headquarters",
 		"sede-capital-humano": "Human Resources head office",
-		"sede-capital-info": "HUMAN RESOURCES HEAD OFFICE AND HUMAN RESOURCES BRANCH. IT'S INFORMATION THAT IS REQUESTED ADDITIONALLY TO MANTAIN THE SYSTEM OF HUMAN RESOURCES AS WELL AS CRM UPDATED",
+		"sede-capital-info": "HUMAN RESOURCES HEAD OFFICE AND HUMAN RESOURCES BRANCH. IT'S INFORMATION THAT IS REQUESTED ADDITIONALLY TO MANTAIN THE SYSTEM OF HUMAN RESOURCES AS WELL AS CRM DATABASE UPDATED",
 		"sede-contratados": "Contracted lots headquarters",
 		"sede-modificada": "Modified headquarters.",
 		"sede-pertenece": "Headquarters to which it belongs",
@@ -1046,7 +1046,9 @@
         "direccion-del": "Address of the",
         "telefono-1": "Phone 1",
         "telefono-2": "Phone 2",
-        "direccion-oficina": "Office address"
+        "direccion-oficina": "Office address",
+        "pagina-no-encontrada": "We couldn't find the requested page",
+        "regresar-404": "Take me back"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2095,6 +2097,8 @@
         "direccion-del": "Dirección del",
         "telefono-1": "Teléfono 1",
         "telefono-2": "Teléfono 2",
-        "direccion-oficina": "Dirección de oficina"
+        "direccion-oficina": "Dirección de oficina",
+        "pagina-no-encontrada": "No encontramos la página a la que quieres acceder",
+        "regresar-404": "Regresar"
 	    }
 }
