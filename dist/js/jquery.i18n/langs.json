@@ -1260,7 +1260,8 @@
                 "intereses-moratorios": "Default interests",
                 "intereses-ordinarios": "Ordinary interests",
                 "total-ventas": "Total sales",
-                "seleccionar-uno-valor":"You must select at least one value for the field"     
+                "seleccionar-uno-valor":"You must select at least one value for the field",
+                "activo2": "Active"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2520,6 +2521,7 @@
                 "intereses-moratorios":"Intereses moratorios",
                 "intereses-ordinarios":"Intereses ordinarios",
                 "total-ventas":"Total de venta",
-                "seleccionar-uno-valor":"Tienes que seleccionar al menos un valor para el campo"
+                "seleccionar-uno-valor":"Tienes que seleccionar al menos un valor para el campo",
+                "activo2": "Activo"
 	}
 }
