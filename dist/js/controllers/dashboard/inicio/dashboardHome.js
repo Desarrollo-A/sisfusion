@@ -849,9 +849,6 @@ function createAccordionsPR(option, render, rol) {
                 </div>
             </div>`;
     $(".table-dinamic").append(html);
-    console.log("html: ", html);
-    
-
 }
 
 function multirol(){
