@@ -1890,6 +1890,7 @@ AND vb.proyectos != 1";
 
     public function getHistorialCreditoActual($idProceso, $tipoEsquema, $idLote)
     {
+        $id_usuario = $this->idUsuario = $this->session->userdata('id_usuario');
         $query = $this->db->query("WITH CombinedData AS (
         SELECT 
         hpc.idHistorial, 
@@ -1910,8 +1911,9 @@ AND vb.proyectos != 1";
 		LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = hpc.procesoNuevo AND oxc3.id_catalogo = 135
         LEFT JOIN opcs_x_cats oxc4 ON oxc4.id_opcion = hpc.procesoAnterior  AND oxc4.id_catalogo = 156
 		LEFT JOIN opcs_x_cats oxc5 ON oxc5.id_opcion = hpc.procesoNuevo AND oxc5.id_catalogo = 156
-        WHERE (idProcesoCasas = $idProceso AND esquemaCreditoProceso = $tipoEsquema)
+        WHERE hpc.idMovimiento = $id_usuario AND (idProcesoCasas = $idProceso AND esquemaCreditoProceso = $tipoEsquema)
         OR (hpc.descripcion LIKE '%Pre proceso %$idLote%'))
+        
         
         SELECT *
         FROM CombinedData
