@@ -2,7 +2,6 @@
 $('#tabla_anticipo_revision thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         titulosInventario.push(title);
-        construirHead("tabla_anticipos_revision");
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if ($('#tabla_anticipo_revision').DataTable().column(i).search() !== this.value)

@@ -201,7 +201,7 @@
 	<nav class="navbar navbar-transparent navbar-absolute">
 		<div class="container-fluid">
 			<div class="navbar-minimize">
-                <button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon" rel="tooltip" data-placement="bottom" title="Contraer menú">
+				<button id="minimizeSidebar" class="btn btn-round btn-white btn-fill btn-just-icon" rel="tooltip" data-placement="bottom" title="Contraer menú" data-i18n-tooltip="contraer-menu">
 					<i class="material-icons visible-on-sidebar-regular">more_vert</i>
 					<i class="material-icons visible-on-sidebar-mini">view_list</i>
 				</button>
@@ -234,7 +234,7 @@
                     <?php
                     if( in_array($this->session->userdata('id_rol'), [1,2,3,4,5,6,7,9])){
                     ?>
-                        <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Idioma">
+                        <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Idioma" data-i18n-tooltip="idioma">
                             <a onClick="changeLanguaje()">
                                 <img id="lang_icon" src="<?= base_url() ?>static/images/langs/es.png" width="20" height="20">
                             </a>
@@ -242,12 +242,12 @@
                     <?php
                     }
                     ?>
-                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes">
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes" data-i18n-tooltip="ajustes">
 						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
                             <span class="material-icons">settings</span>
 						</a>
                     </li>
-                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Salir">
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Salir" data-i18n-tooltip="salir">
 						<a href="<?=base_url()?>index.php/login/logout_ci">
                             <span class="material-icons">exit_to_app</span>
 						</a>

@@ -72,7 +72,7 @@ var getInfo2_7A = new Array(7);
 var aut;
 let titulos_autorizaciones = [];
 let num_colum_autorizaciones = [];
-$('#addExp thead tr:eq(0) th').each( function (i) {
+/*$('#addExp thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     $(this).html(`<input type="text" class="textoshead"data-toggle="tooltip" data-placement="top"title="${title}" placeholder="${title}"/>`);
     titulos_autorizaciones.push(title);
@@ -82,10 +82,11 @@ $('#addExp thead tr:eq(0) th').each( function (i) {
             $('#addExp').DataTable().column(i).search(this.value).draw();
         }
     });
-});
+});*/
 num_colum_autorizaciones.pop();
 
 $(document).ready (function() {
+    construirHead('addExp');
     var table;
     table = $('#addExp').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -180,6 +181,7 @@ $(document).ready (function() {
             cache: false
         },
     });
+    applySearch(table);
 });
 
 $('#addExp').on('draw.dt', function() {
@@ -190,21 +192,22 @@ $('#addExp').on('draw.dt', function() {
 
 let titulos_solicitud = [];
 let num_colum_solicitud = [];
-$('#sol_aut thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-    titulos_solicitud.push(title);
-    num_colum_solicitud.push(i);
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
-            $('#sol_aut').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-});
+// $('#sol_aut thead tr:eq(0) th').each( function (i) {
+//     var title = $(this).text();
+//     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+//     titulos_solicitud.push(title);
+//     num_colum_solicitud.push(i);
+//     $( 'input', this ).on('keyup change', function () {
+//         if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
+//             $('#sol_aut').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip();
+// });
 num_colum_solicitud.pop();
 
 $(document).ready (function() {
+    construirHead('sol_aut');
     var table2;
     table2 = $('#sol_aut').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -323,6 +326,7 @@ $(document).ready (function() {
             cache: false
         },
     });
+    applySearch(table2);
 });
 
 $('#sol_aut').on('draw.dt', function() {
@@ -364,14 +368,14 @@ $(document).on('click', '.seeAuts', function (e) {
         $('#auts-loads').empty();
         var statusProceso;
         $.each(JSON.parse(data), function(i, item) {
-            if(item['estatus'] == 0){
-                statusProceso="<span class='label lbl-green'>ACEPTADA</span>";
+            if(item['estatus'] == 0){               
+                statusProceso = `<span class='label lbl-green'>${_('aceptada')}</span>`;
             }
             else if(item['estatus'] == 1){
-                statusProceso="<span class='label lbl-orangeYellow'>EN PROCESO</span>";
+                statusProceso=`<span class='label lbl-orangeYellow'>${_('en-proceso2')}</span>`;
             }
             else if(item['estatus'] == 2){
-                statusProceso="<span class='label lbl-warning'>DENEGADA</span>";
+                statusProceso=`<span class='label lbl-warning'>${_('denegada2')}</span>`;
             }
             else if(item['estatus'] == 3){
                 statusProceso="<span class='label lbl-sky'>EN DC</span>";
@@ -383,7 +387,7 @@ $(document).on('click', '.seeAuts', function (e) {
                 <div class="container-fluid" style="background-color: #f7f7f7; border-radius: 15px; padding: 15px; margin-bottom: 15px">
                     <div class="row">
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7">
-                            <label style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></label>
+                            <label style="font-weight:100; font-size: 12px"><label>${_('solicitud-autorizacion')}</label>: <b>${statusProceso}</b></label>
                         </div>
                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-5" style="text-align: right">
                             <label style="font-weight:100; font-size: 12px">${item['fecha_creacion']}</label>
@@ -461,3 +465,5 @@ $(document).ready(function () {
         }
     });
 });
+
+

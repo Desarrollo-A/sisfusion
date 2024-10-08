@@ -186,7 +186,7 @@
                                                     <tr>
                                                         <th>proyecto</th>
                                                         <th>condominio</th>
-                                                        <th>lot</th>
+                                                        <th>lote</th>
                                                         <th>id-lote</th>
                                                         <th>cliente</th>
                                                         <th>fecha-apartado</th>

@@ -31,19 +31,20 @@ $(document).ready(function () {
     setIniDatesXYear('#beginDate', '#endDate');
     fillTable(convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val()), convertDateDDMMYYYYToYYYYMMDD($('#endDate').val()));
 });
-$('#cancelacionesTabla thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    titulosTabla.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($('#cancelacionesTabla').DataTable().column(i).search() !== this.value) {
-            $('#cancelacionesTabla').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-});
+// $('#cancelacionesTabla thead tr:eq(0) th').each(function (i) {
+//     const title = $(this).text();
+//     titulosTabla.push(title);
+//     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+//     $('input', this).on('keyup change', function () {
+//         if ($('#cancelacionesTabla').DataTable().column(i).search() !== this.value) {
+//             $('#cancelacionesTabla').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip();
+// });
 
 function fillTable(fechaInicio, fechaFin) {
+    construirHead('cancelacionesTabla');
     tablaCancelaciones = $('#cancelacionesTabla').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -150,6 +151,7 @@ function fillTable(fechaInicio, fechaFin) {
             });
         },
     });
+    applySearch();
 }
 $(document).on('click', '#filtrarPorFecha', function () {
     const fechaInicio = convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val());
@@ -163,16 +165,16 @@ $(document).on('click', '.btn-cancelar', function () {
     appendBodyModal(`
         <div class="row">
             <div class="col-12 text-center">
-                <h3>Cancelación de lote</h3>
+                <h3>${_('cancelacion-lote')}</h3>
             </div>
             <div class="col-12 text-center">
-                <p>¿Está seguro de cambiar el estatus de este lote?</p>
+                <p>${_('cambiar-estatus-lote')}</p>
             </div>
         </div>
     `);
     appendFooterModal(`
-        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="guardarCancelacion(${idCliente})">Aceptar</button>
+        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">${_('cancelar')}</button>
+        <button type="button" class="btn btn-primary" onclick="guardarCancelacion(${idCliente})">${_('aceptar')}</button>
     `);
     showModal();
 });
@@ -193,7 +195,7 @@ function guardarCancelacion(idCliente) {
             hideModal();
             $('#spiner-loader').addClass('hide');
             if (res.code === 200) {
-                alerts.showNotification("top", "right", `El registro se ha actualizado con éxito.`, "success");
+                alerts.showNotification("top", "right", `${_('registro-actualizado')}`, "success");
                 tablaCancelaciones.ajax.reload();
             }
             if (res.code === 400) {

@@ -1,12 +1,5 @@
 $('[data-toggle="tooltip"]').tooltip();
 
-document.addEventListener("DOMContentLoaded", function() {
-    let selectOption = _("select-predeterminado");
-    document.getElementById("idResidencial").title = selectOption;
-    document.getElementById("idCondominio").title = selectOption;
-    document.getElementById("idLote").title = selectOption;
-});
-
 const movimientosPermitidosEstatus7 = [36, 6, 23, 76, 83, 95, 97, 112];
 const rolesPermitidosContratoEspecial = [8];
 const rolesPermitidosEstatus7 = [15];
@@ -78,6 +71,7 @@ let titulos = [];
 Shadowbox.init();
 
 $(document).ready(function () {
+    construirHead("tableDoct"); 
     $('#addDeleteFileModal').on('hidden.bs.modal', function () {
         $('#fileElm').val(null);
         $('#file-name').val('');
@@ -145,7 +139,7 @@ $('#idLote').change(function () {
     const seleccion = $(this).val();
     const datos = seleccion.split(',');
     const valorSeleccionado = datos[0];
-    let titulos = [];
+    /* let titulos = [];
 
     $('#tableDoct thead tr:eq(0) th').each(function (i) {
         $(this).css('text-align', 'center');
@@ -158,9 +152,9 @@ $('#idLote').change(function () {
                 $('#tableDoct').DataTable().column(i).search(this.value).draw();
             }
         });
-    });
+    }); */
 
-    documentacionLoteTabla = $('#tableDoct').DataTable({
+    tabla_6 = $('#tableDoct').DataTable({
         destroy: true,
         ajax: {
             url: `${general_base_url}registroCliente/expedientesWS/${valorSeleccionado}`,
@@ -227,7 +221,7 @@ $('#idLote').change(function () {
 
                     if (data.observacionContratoUrgente && parseInt(data.observacionContratoUrgente) === observacionContratoUrgente) {
                         buttonMain = (data.expediente == null || data.expediente === "")
-                            ? '<p data-i18n="proceso-liberacion">En proceso de liberación</p>'
+                            ? `<p data-i18n="proceso-liberacion">${_("proceso-liberacion")}</p>`
                             : crearBotonAccion(AccionDoc.DOC_CARGADO, data);
 
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
@@ -558,17 +552,17 @@ $(document).on("click", ".addRemoveFile", function (e) {
     if (accion === AccionDoc.DOC_NO_CARGADO || accion === AccionDoc.DOC_CARGADO) {
         document.getElementById("mainLabelText").innerHTML =
             (accion === AccionDoc.DOC_NO_CARGADO)
-                ? 'Selecciona el archivo que desees asociar a <b>' + nombreDocumento + '</b>'
+                ? `${_("selecciona-archivo-asociar")} <b>` + nombreDocumento + '</b>'
                 : (accion === AccionDoc.DOC_CARGADO)
-                    ? '¿Estás seguro de eliminar el archivo <b>' + nombreDocumento + '</b>?'
-                    : 'Selecciona los motivos de rechazo que asociarás al documento <b>' + nombreDocumento + '</b>.';
+                    ? `${_("eliminar-archivo")} <b>` + nombreDocumento + '</b>?'
+                    : `${_("selecciona-motivos")} <b>` + nombreDocumento + '</b>.';
 
         document.getElementById("secondaryLabelDetail").innerHTML =
             (accion === AccionDoc.DOC_NO_CARGADO)
-                ? 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.'
+                ? `${_("el-documento-elegido")} <i data-i18n="guardar">Guardar</i>.`
                 : (accion === AccionDoc.DOC_CARGADO)
-                    ? 'El documento se eliminará de manera permanente una vez que des clic en <i>Guardar</i>.'
-                    : 'Los motivos de rechazo que selecciones se registrarán de manera permanente una vez que des clic en <i>Guardar</i>.';
+                    ? `${_("el-documento-eliminar")} <i data-i18n="guardar">Guardar</i>.`
+                    : `${_("los-motivos")} <i data-i18n="guardar">Guardar</i>.`;
 
         if (accion === AccionDoc.DOC_NO_CARGADO) { // ADD FILE
             $("#selectFileSection").removeClass("hide");

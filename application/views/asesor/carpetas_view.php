@@ -20,10 +20,12 @@
 								<h4 class="card-title" data-i18n="files">Carpetas</h4><br><br>
 								<div class="row">
 									<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-										<div id="msg"></div>
+										<div id="msg" hidden>
+											<center><h2 style="color: #a0a0a0;font-weight: 100;" data-i18n="no-files-available">No hay Carpetas disponibles</h2></center>
+										</div>
 										<div class="toolbar">
 											<div role="tablist" id="navbartabs">
-												<select id="test" name="test" class="selectpicker select-gral" data-container="body" data-style="btn-new" title="CARPETAS" data-size="9">
+												<select id="test" name="test" class="selectpicker select-gral" data-container="body" data-i18n-label="files" data-style="btn-new" data-size="9">
 												</select>
 											</div>
 										</div>

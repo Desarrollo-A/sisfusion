@@ -77,6 +77,7 @@ $("#comisionista").on('change', function () {
     
 });
 
+
 let titulos_intxt = [];
 // $('#reporteLotesPorComisionista thead tr:eq(0) th').each(function (i) {
 //     $(this).css('text-align', 'center');
@@ -101,6 +102,7 @@ let titulos_intxt = [];
 //     });
 //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 // });
+onLoadTranslations(function(){
 
 construirHead('reporteLotesPorComisionista');
 
@@ -116,7 +118,7 @@ $('#reporteLotesPorComisionista').on('xhr.dt', function (e, settings, json, xhr)
 });
 
 function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
-    generalDataTable = $('#reporteLotesPorComisionista').dataTable({
+    generalDataTable = $('#reporteLotesPorComisionista').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -131,7 +133,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -150,6 +152,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        orderable: false,
         destroy: true,
         ordering: false,
         columns: [
@@ -269,7 +272,11 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
             }
         }
     });
+
+    applySearch(generalDataTable);
 }
+
+
 
 $(document).on("click", "#searchByDateRange", function () {
     $('#box-reporteLotesPorComisionista').removeClass('hide');
@@ -350,6 +357,8 @@ $(document).on("click", "#detailComisionistaBtn", function () {
         $("#detailComisionistaModal").modal();
         $('#spiner-loader').addClass('hide');
     }, 'json');
+});
+
 });
 
 function colocarValoresTotales(total, totalAbonado, totalPagado) {

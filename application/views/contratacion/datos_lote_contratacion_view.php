@@ -27,25 +27,26 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" data-i18n = "consulta-historial" >Consulta de historial <b id="nomLoteHistorial"></b></h4>
+                    <h4 class="modal-title"><span data-i18n="consultar-historial"> Consulta de historial </span> <b id="nomLoteHistorial"></b></h4>
                 </div>
                 <div class="modal-body">
                     <div role="tabpanel">
                         <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                             <li role="presentation" class="active">
-                                <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial de contratación</a>
+                                <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab" data-i18n="historial-contratacion">Historial de contratación</a>
                             </li>
                             <li role="presentation">
-                                <a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab">Historial de liberación</a>
+                                <a href="#tabHistoriaLiberacion" aria-controls="tabHistoriaLiberacion" role="tab" data-toggle="tab" data-i18n="historial-liberacion">Historial de liberación</a>
                             </li>
                             <li role="presentation">
-                                <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab">Ventas compartidas</a>
+                                <a href="#tabVentasCompartidas" aria-controls="tabVentasCompartidas" role="tab" data-toggle="tab" data-i18n="ventas-compartidas">Ventas compartidas</a>
                             </li>
                             <li role="presentation" id="divTabHistorialEstatus">
-                                <a href="#tabHistorialEstatus" aria-controls="tabHistorialEstatus" role="tab" data-toggle="tab">Historial Estatus</a>
+                                <a href="#tabHistorialEstatus" aria-controls="tabHistorialEstatus" role="tab" data-toggle="tab" data-i18n="historial-estatus">Historial Estatus</a>
                             </li>
                             <li role="presentation" id="divTabClausulas">
-                                <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab">Cláusulas</a>
+                                <a href="#tabClausulas" aria-controls="tabClausulas" role="tab" data-toggle="tab" data-i18n="clausulas">Cláusulas</a>
+
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -57,12 +58,12 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaHistorialContratacion">
                                                     <thead>
                                                     <tr>
-                                                        <th>LOTE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>DETALLES</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>FECHA DE ESTATUS</th>
-                                                        <th>USUARIO</th>
+                                                        <th>lote</th>
+                                                        <th>estatus</th>
+                                                        <th>detalles</th>
+                                                        <th>comentario</th>
+                                                        <th>fecha-estatus</th>
+                                                        <th>usuario</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -79,11 +80,11 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaHistoriaLiberacion">
                                                     <thead>
                                                     <tr>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO</th>
-                                                        <th>FECHA DE LIBERACIÓN</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>USUARIO</th>
+                                                        <th>lote</th>
+                                                        <th>precio</th>
+                                                        <th>fecha-liberacion</th>
+                                                        <th>comentario</th>
+                                                        <th>usuario</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -100,14 +101,14 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <table id="tablaVentasCompartidas">
                                                     <thead>
                                                     <tr>
-                                                        <th>ASESOR</th>
-                                                        <th>COORDINADOR</th>
-                                                        <th>GERENTE</th>
-                                                        <th>SUBDIRECTOR</th>
-                                                        <th>DIRECTOR REGIONAL</th>
-                                                        <th>DIRECTOR REGIONAL 2</th>
-                                                        <th>FECHA DE ALTA</th>
-                                                        <th>USUARIO</th>
+                                                        <th>asesor</th>
+                                                        <th>coordinador</th>
+                                                        <th>gerente</th>
+                                                        <th>subdirector</th>
+                                                        <th>director-regional</th>
+                                                        <th>director-regional2</th>
+                                                        <th>fecha-alta</th>
+                                                        <th>usuario</th>
                                                     </tr>
                                                     </thead>
                                                 </table>
@@ -142,7 +143,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR </button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar"> CERRAR </button>
                 </div>
             </div>
         </div>
@@ -193,23 +194,23 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                         <div class="row">
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="idResidencial">Proyecto</label>
-                                                    <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n  ="selecciona-una-opcion" title="Selecciona una opción"
-                                                      data-size="7" size="5" data-container="body" required></select>
+                                                    <label class="control-label" for="idResidencial" data-i18n="proyecto">Proyecto</label>
+                                                    <select id="idResidencial" name="idResidencial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                    data-size="7" size="5" data-container="body" required title="SELECCIONA UNA OPCIÓN" data-i18n-label="select-predeterminado"></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group overflow-hidden">
                                                     <label class="control-label" for="idCondominioInventario" data-i18n="condominio">Condominio</label>
-                                                    <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n  ="selecciona-una-opcion" title="Selecciona una opción"
-                                                      data-size="7" data-container="body" required></select>
+                                                    <select name="idCondominioInventario" id="idCondominioInventario" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                     data-size="7" data-container="body" required data-i18n-label="select-predeterminado" title="SELECCIONA UNA OPCIÓN"></select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
                                                 <div class="form-group overflow-hidden">
                                                     <label class="control-label" for="idEstatus" data-i18n="estatus">Estatus</label>
-                                                    <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n  ="selecciona-una-opcion" title="Selecciona una opción"
-                                                      data-size="7" data-container="body" required></select>
+                                                    <select name="idEstatus" id="idEstatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true"
+                                                    data-size="7" data-container="body" data-i18n-label="select-predeterminado" title="SELECCIONA UNA OPCIÓN" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -220,7 +221,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                             <tr>
                                                 <th>proyecto</th>
                                                 <th>referencia</th>
-                                                <th>msi</th>
+                                                <th>meses-sin-intereses</th>
                                                 <th>asesor</th>
                                                 <th>coordinador</th>
                                                 <th>gerente</th>
@@ -229,63 +230,60 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>director-regional2</th>
                                                 <th>estatus</th>
                                                 <th>estatus-contratacion</th>
-                                                <th>apartados</th>
+                                                <th>apartado</th>
                                                 <th>comentario</th>
-                                                <th>lugar-prospeccion</th><!--20-->
-                                                <th>fecha-validacion-enganche</th>
+                                                <th>lugar-prospeccion</th>
+                                                <th>fecha-de-validacion-del-enganche</th>
                                                 <th>cantidad-enganche-pagado</th>
-                                                <th>estatus-de-la-contratacion</th>
+                                                <th>estatus-contratacion</th>
                                                 <th>cliente</th>
-                                                <th>copropietario (s)</th>
+                                                <th>coopropietarios</th>
                                                 <th>comentario-neodata</th>
                                                 <th>fecha-apertura</th>
                                                 <th>apartado-de-reubicacion</th>
                                                 <th>fecha-alta</th>
-                                                <th>venta-compartida</th><!--30-->
-                                                <th>ubicacion-de-la-venta</th>
+                                                <th>venta-compartida</th>
+                                                <th>ubicacion</th>
                                                 <th>tipo-proceso</th>
                                                 <th>sede</th>
-
                                                 <!--solo para popea y el otro sujeto-->
                                                 <th>folio</th>
-                                                <th>documentación entregada</th>
+                                                <th>documentacion-entregada</th>
                                                 <th>nom-cliente</th>
-                                                <th>telefono-casa</th>
+                                                <th>telefono</th>
                                                 <th>celular</th>
                                                 <th>correo</th>
                                                 <th>fecha-nacimiento</th>
                                                 <th>nacionalidad</th><!--40-->
-                                                <th>originario de</th>
-                                                <th>estado civil</th>
-                                                <th>nombre conyugue</th>
+                                                <th>originario-de</th>
+                                                <th>estado-civil</th>
+                                                <th>nombre-conyugue</th>
                                                 <th>regimen</th>
-                                                <th>dom. particular</th>
-                                                <th>ocupación</th>
-                                                <th>empresa en la que trabaja</th>
+                                                <th>domicilio-particular</th>
+                                                <th>ocupacion</th>
+                                                <th>empresa-en-la-que-trabaja</th>
                                                 <th>puesto</th>
-                                                <th>antigüedad</th>
+                                                <th>antuiguedad</th>
                                                 <th>edad</th><!--50-->
-                                                <th>dom. empresa</th>
-                                                <th>tel. empresa</th>
-                                                <th>vive en casa</th>
+                                                <th>domicilio-empresa</th>
+                                                <th>telefono-empresa</th>
+                                                <th>vive-en-casa</th>
                                                 <th>copropietario</th>
-                                                <th>no. referencia pago</th>
-                                                <th>costo m2 lista</th>
-                                                <th>costo m2 final</th>
-
-                                                <th>en el municipio de</th>
-                                                <th>importe de la oferta</th>
-                                                <th>importe en letra</th><!--60-->
-                                                <th>saldo del depósito</th>
-                                                <th>aportación mensual</th>
-                                                <th>fecha 1ra aportación</th>
-                                                <th>fecha liquidación</th>
-                                                <th>fecha 2da liquidación</th>
-                                                <th>referencias personales</th>
-                                                <th>observaciones</th>
-
+                                                <th>referencia-pago</th>
+                                                <th>costo-m2-lista</th>
+                                                <th>costo-m2-final</th>
+                                                <th>en-el-municipio-de</th>
+                                                <th>importe-de-la-oferta</th>
+                                                <th>importe-en-letra</th><!--60-->
+                                                <th>saldo-del-posito</th>
+                                                <th>aportacion-mensual</th>
+                                                <th>fecha-1-aportacion</th>
+                                                <th>fecha-liquidacion</th>
+                                                <th>fecha-2da-liquidacion</th>
+                                                <th>referencias-personales</th>
+                                                <th>observaciones-2</th>
                                                 <!--solo para popea y el otro sujeto end-->
-                                                <th>porcentaje enganche</th>
+                                                <th>porcentaje-enganche</th>
                                                 <th>acciones</th><!--69-->
 
                                             </tr>
@@ -298,7 +296,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                             <div class="row hide" id="card2">
                                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="encabezadoBox">
-                                        <h3 class="card-title center-align">Descargar inventario de lotes por sede</h3>
+                                        <h3 class="card-title center-align" data-i18n="Descargar-inventario-lote-sede">Descargar inventario de lotes por sede</h3>
                                         <p class="card-title pl-1"></p>
                                     </div>
                                     <div  class="toolbar">
@@ -306,10 +304,9 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div class="col-md-4 form-group">
                                                     <div class="form-group select-is-empty">
-                                                        <label class="control-label">Sedes por proyecto</label>
+                                                        <label class="control-label" data-i18n="sedes-por-proyectos">Sedes por proyecto</label>
                                                         <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
-                                                                data-style="btn" data-show-subtext="true"  data-i18n  ="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"
-                                                                
+                                                                data-style="btn" data-show-subtext="true"  data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"                                                                
                                                                 data-size="7" data-live-search="true" required>
                                                         </select>
                                                     </div>
@@ -321,41 +318,41 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                         <table id="tabla_inventario_contraloria" name="tabla_inventario_contraloria" class="table-striped table-hover hide">
                                             <thead>
                                             <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>SUPERFICIE</th>
-                                                <th>PRECIO DE LISTA</th>
-                                                <th>TOTAL CON DESCUENTOS</th>
+                                                <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>id-lote</th>
+                                                <th>superficie</th>
+                                                <th>precio-lista</th>
+                                                <th>total-con-descuentos</th>
                                                 <th>M2</th>
-                                                <th>REFERENCIA</th>
-                                                <th>MESES SIN INTERESES</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>
-                                                <th>DIRECTOR REGIONAL</th>
-                                                <th>DIRECTOR REGIONAL 2</th>
-                                                <th>ESTATUS</th>
-                                                <th>ESTATUS DE CONTRATACION</th>
-                                                <th>FECHA DE APARTADO</th>
-                                                <th>COMENTARIO</th>
-                                                <th>LUGAR DE PROSPECCIÓN</th>
-                                                <th>FECHA DE VALIDACIÓN DEL ENGANCHE</th>
-                                                <th>FECHA DE APERTURA</th>
+                                                <th>referencia</th>
+                                                <th>meses-sin-intereses</th>
+                                                <th>asesor</th>
+                                                <th>coordinador</th>
+                                                <th>gerente</th>
+                                                <th>subdirector</th>
+                                                <th>director-regional</th>
+                                                <th>director-regional2</th>
+                                                <th>estatus</th>
+                                                <th>estatus-contratacion</th>
+                                                <th>fecha-apartado</th>
+                                                <th>comentario</th>
+                                                <th>lugar-prospeccion</th>
+                                                <th>fecha-de-validacion-del-enganche</th>
+                                                <th>fecha-apertura</th>
                                                 <th>CANTIDAD DEL ENGANCHE PAGADO</th>
-                                                <th>CLIENTE</th>
-                                                <th>COMENTARIO DE NEODATA</th>
-                                                <th>FECHA APERTURA</th>
-                                                <th>APARTADO DE REUBICACIÓN</th>
-                                                <th>FECHA ALTA</th>
-                                                <th>VENTA COMPARTIDA</th>
-                                                <th>UBICACIÓN DE LA VENTA</th>
-                                                <th>TIPO PROCESO</th>
-                                                <th>REUBICACIÓN</th>
-                                                <th>FECHA DE REUBICACIÓN</th>
-                                                <th>SEDE</th>
+                                                <th>cliente</th>
+                                                <th>cpmentario-neodata</th>
+                                                <th>fecha-apertura</th>
+                                                <th>apartado-de-reubicacion</th>
+                                                <th>fecha-alta</th>
+                                                <th>venta-compartida</th>
+                                                <th>ubicacion-de-la-venta</th>
+                                                <th>tipo-proceso</th>
+                                                <th>reubicacion</th>
+                                                <th>fecha-de-reubicacion</th>
+                                                <th>sede</th>
                                             </tr>
                                             </thead>
                                         </table>
