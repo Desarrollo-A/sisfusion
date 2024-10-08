@@ -267,14 +267,33 @@ $(document).on('click','#searchByDateRange', function () {
         },
         {
             data: function (d) {
+                let descripcionEstatusTraducido = d.descripcion_estatus == 'Contratado' ? _('contratado') :
+                                                  d.descripcion_estatus == 'Apartado' ? _('apartado') :
+                                                  d.descripcion_estatus == 'Contratado por Intercambio' ? _('contratado-por-intercambio') :
+                                                  d.descripcion_estatus; 
+        
+                let tipoVentaTraducido = d.tipo_venta == 'Venta normal' ? _('venta-normal') :
+                                         d.tipo_venta == 'Donación' ? _('donacion') :
+                                         d.tipo_venta == 'Venta de particulares' ? _('venta-de-particulares') :
+                                         d.tipo_venta == 'Reestructura' ? _('reestructura') :
+                                         d.tipo_venta; 
+        
+                let registroTraducido = d.registro == 'Sin dispersar' ? _('sin-dispersar') :
+                                        d.registro == 'Comisión activa' ? _('comision-activa') :
+                                        d.registro == 'Venta cancelada' ? _('venta_cancelada') :
+                                        d.registro == 'Comisión liquidada' ? _('comision-liquidada') :
+                                        d.registro; 
+        
                 let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
-                let compartida =  d.banderaVC != null || d.banderaVC != undefined ? '<center><span class="label lbl-violetBoots">Compartida</span><center><p><p>' : '';
-                let registro = `<center><span class="label lbl-violetBoots">${d.registro}</span><center><p><p>`; 
+                let compartida = d.banderaVC != null || d.banderaVC != undefined ? '<center><span class="label lbl-violetBoots">Compartida</span><center><p><p>' : '';
+                let registro = `<center><span class="label lbl-violetBoots">${registroTraducido}</span><center><p><p>`; 
+                
                 return d.tipo_venta == null ?
-                    `<center><span class="label" style="background:#${d.color}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>${compartida} ${registro}` :
-                    `<center><span class="label" style="background:#${d.color}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>${compartida} ${registro}`;
+                    `<center><span class="label" style="background:#${d.color}18; color:#${d.color};">${descripcionEstatusTraducido}</span> ${libContraloria} <center>${compartida} ${registro}` :
+                    `<center><span class="label" style="background:#${d.color}18; color:#${d.color};">${descripcionEstatusTraducido}</span> <p><p> <span class="label lbl-green">${tipoVentaTraducido}</span> ${libContraloria} <center>${compartida} ${registro}`;
             }
         },
+        
         {
             "data": function (d) {
                 if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10) {

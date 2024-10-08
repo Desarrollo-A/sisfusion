@@ -1058,7 +1058,12 @@
         "asesores-no-repetidos":"The advisors cannot be duplicated, please verify.",
         "no-aplica":"Not applicable",
         "asesor-comodin": "WILDCARD ADVISOR",
-        "editar-linea-venta":"Edit sales line"
+        "editar-linea-venta":"Edit sales line",
+		"contratado-por-intercambio": "Hired by Exchange",
+		"donacion": "Donation",
+		"reestructura": "Restructure",
+		"comision-activa": "Active Commission",
+		"comision-liquidada": "Liquidated Commission"
 
 
 
@@ -2122,7 +2127,12 @@
                 "asesores-no-repetidos":"Los asesores no pueden estan repetidos, favor de verificarlo.",
                 "no-aplica":"No aplica",
                 "asesor-comodin": "ASESOR COMODÍN",
-                "editar-linea-venta":"Editar línea de venta"
+                "editar-linea-venta":"Editar línea de venta",
+				"contratado-por-intercambio":"Contratado por Intercambio",
+				"donacion": "Donación",
+				"reestructura": "Reestructura",
+				"comision-activa": "Comisión activa",
+				"comision-liquidada": "Comisión liquidada"
 
 
 	    }
