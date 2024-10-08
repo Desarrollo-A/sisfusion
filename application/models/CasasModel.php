@@ -964,7 +964,7 @@ AND vb.proyectos != 1";
             WHERE pc.proceso = 8
             AND pc.status = 1 AND cli.status = 1 AND vb.titulacion = 0";
 
-        }else if($rol == 101){
+        }else if($rol == 101 || $rol ==  33){
 
             $query = "SELECT
             pc.*,

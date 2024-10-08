@@ -513,7 +513,7 @@ let columns = [
         let view_button = '';
         let notarias = '';
 
-        if(idRol == 101){
+        if(idRol == 101 || idRol == 33){
             if (data.constancia) {
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
                 upload_button = new RowButton({ icon: 'file_upload', label: `Cargar documento`, onClick: upload, data })
