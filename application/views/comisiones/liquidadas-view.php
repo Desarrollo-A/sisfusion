@@ -35,8 +35,8 @@
                         </div>
                         <div class="modal-footer">
                             <div class="col-lg-12">
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                                <button type="submit" id="detenerLote" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                             </div>
                         </div>
                     </form>
@@ -54,8 +54,8 @@
                         <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
                             <div class="col-lg-12">
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="updateBandera" class="btn btn-primary">Registrar</button>
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                                <button type="submit" id="updateBandera" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                             </div>
                         </div>
                     </form>
@@ -70,7 +70,7 @@
                     <form method="post" id="form_NEODATA">
                         <div class="modal-body"></div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar</button>
                         </div>
                     </form>
                 </div>
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" >Cerrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -104,8 +104,8 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Comisiones liquidadas</h3>
-                                    <p class="card-title pl-1">Lotes que cubrieron el monto total de comisones.</p>
+                                    <h3 class="card-title center-align" data-i18n="comisiones-liquidadas">Comisiones liquidadas</h3>
+                                    <p class="card-title pl-1" data-i18n="descripcion-comisiones-liquidadas">Lotes que cubrieron el monto total de comisones.</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid">
@@ -119,23 +119,23 @@
                                         <table class="table-striped table-hover" id="tabla_comisiones_liquidadas" name="tabla_comisiones_liquidadas">
                                             <thead>
                                                 <tr>
-                                                    <th></th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>ID LOTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>TIPO DE VENTA</th>
-                                                    <th>MODALIDAD</th>
-                                                    <th>CONTRATACIÓN</th>
-                                                    <th>PLAN DE VENTA</th>
-                                                    <th>PRECIO FINAL LOTE</th>
-                                                    <th>PORCENTAJE</th>
-                                                    <th>IMPORTE COMISION PAGADA</th>
-                                                    <th>IMPORTE COMISION PENDIENTE</th>
-                                                    <th>DETALLES</th>
-                                                    <th>FECHA ACTUALIZACIÓN</th>
-                                                    <th>ACCIONES</th>
+                                                    <th>proyecto</th>
+                                                    <th>proyecto</th>
+                                                    <th>condominio</th>
+                                                    <th>lote</th>
+                                                    <th>id-lote</th>
+                                                    <th>cliente</th>
+                                                    <th>tipo-de-venta</th>
+                                                    <th>modalidad</th>
+                                                    <th>contratacion</th>
+                                                    <th>plan-de-venta</th>
+                                                    <th>precio-final-lote</th>
+                                                    <th>porcentaje</th>
+                                                    <th>importe-comision-pagada</th>
+                                                    <th>importe-comision-pendiente</th>
+                                                    <th>detalles</th>
+                                                    <th>fecha-actualizacion</th>
+                                                    <th>acciones</th>
                                                 </tr>
                                             </thead>
                                         </table>
