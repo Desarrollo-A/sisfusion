@@ -11,23 +11,23 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
+                    <h4 class="modal-title"><span data-i18n="consulta-historial">Consulta de historial</span> <b id="nomLoteHistorial"></b></h4>
                 </div>
 
                 <div class="modal-body">
                     <div role="tabpanel">
                         <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                             <li role="presentation" class="active">
-                                <a href="#changeprocesTab" aria-controls="changeprocesTab" role="tab" onclick="javascript:$('#verDet').DataTable().ajax.reload();" data-toggle="tab">Proceso de contratación</a>
+                                <a href="#changeprocesTab" aria-controls="changeprocesTab" role="tab" onclick="javascript:$('#verDet').DataTable().ajax.reload();" data-toggle="tab"><span data-i18n="proceso-contratacion">Proceso de contratación</span></a>
                             </li>
                             <li role="presentation">
-                                <a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab" onclick="javascript:$('#verDetBloqueo').DataTable().ajax.reload();">Liberación</a>
+                                <a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab" onclick="javascript:$('#verDetBloqueo').DataTable().ajax.reload();"><span data-i18n="liberacion">Liberación</span></a>
                             </li>
                             <li role="presentation">
-                                <a href="#coSellingAdvisers" aria-controls="coSellingAdvisers" role="tab" data-toggle="tab" onclick="javascript:$('#seeCoSellingAdvisers').DataTable().ajax.reload();">Asesores venta compartida</a>
+                                <a href="#coSellingAdvisers" aria-controls="coSellingAdvisers" role="tab" data-toggle="tab" onclick="javascript:$('#seeCoSellingAdvisers').DataTable().ajax.reload();"><span data-i18n="asesores-venta-compartida">Asesores venta compartida</span></a>
                             </li>
                             <li role="presentation" class="hide" id="li_individual_sales">
-                                <a href="#salesOfIndividuals" aria-controls="salesOfIndividuals" role="tab" data-toggle="tab">Clausulas</a>
+                                <a href="#salesOfIndividuals" aria-controls="salesOfIndividuals" role="tab" data-toggle="tab"><span data-i18n="clausulas">Clausulas</span></a>
                             </li>
                         </ul>
                         <!-- Tab panes -->
