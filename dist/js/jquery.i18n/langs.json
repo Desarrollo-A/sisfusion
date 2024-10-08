@@ -1217,7 +1217,24 @@
 		"verificar-en-neodata-ventas": "Check in NEODATA Sales",
 		"verificar-en-neodata-ooam": "Check in NEODATA OOAM",
 		"verificar-en-neodata": "Check in NEODATA",
-		"sin-definir": "N/A"
+		"sin-definir": "N/A",
+		"info-comisiones": "Invoice commissions are peding of pay dispersion",
+		"total-pagar": "Total",
+		"beneficiario": "Beneficiary",
+		"comision-revision": "COMMISSIONS UNDER REVIEW",
+		"info-comisiones-2": "assimilated payment comissions are pending due to payment dispersion",
+		"comision-pausada": "PAUSED COMMISSIONS",
+		"comisiones-detenidas": "Recessed commissions",
+		"comisiones-detenidas-info": "Retained lots due to a controversy appeared during the commission process",
+		"plan-venta": "SALE PLAN",
+		"no-plan": "No plan",
+		"ocurrio-problema": "An error has occurred, try again later",
+		"autorizada": "Authorized",
+		"rechazada": "Rejected",
+		"comisiones-revision": "COMISIONES EN REVISIÓN",
+		"infor-comisiones-2": "Las comisiones de pago a asimilados se encuentran en espera de dispersión de pago",
+		"sale-plan": "PLAN DE VENTA",
+		"asingar-prospecto": "Asignar prospecto"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2437,7 +2454,20 @@
 		"verificar-en-neodata-ventas": "VERIFICAR EN NEODATA VENTAS",
 		"verificar-en-neodata-ooam": "VERIFICAR EN NEODATA OOAM",
 		"verificar-en-neodata": "VERIFICAR EN NEODATA",
-		"sin-definir": "Sin definir"	
+		"sin-definir": "Sin definir",
+		"info-comisiones": "Las comisiones con factura se encuentran en espera de dispersión de pago.",
+		"total-pagar": "Total a pagar",
+		"beneficiario": "beneficiario",
+		"comisiones-revision": "COMISIONES EN REVISIÓN",
+		"infor-comisiones-2": "Las comisiones de pago a asimilados se encuentran en espera de dispersión de pago",
+		"comision-pausada": "COMISIONES PAUSADAS",
+		"comisiones-detenidas": "Comisiones detenidas",
+		"comisiones-detenidas-info": "Lotes detenidos por alguna controversia presentada durante el proceso de comisiones",
+		"sale-plan": "PLAN DE VENTA",
+		"no-plan": "Sin plan",
+		"regresar-dispersion": "REGRESAR A DISPERSIÓN",
+		"ocurrio-problema": "Ocurrió un problema, vuelva a intentarlo más tarde",
+		"autorizada": "autorizada",
+		"rechazada": "Rechazada"	
 	}
 }
-
