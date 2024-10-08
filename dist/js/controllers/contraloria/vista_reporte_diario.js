@@ -33,7 +33,7 @@ $("#calendarioDay").change( function (){
                         columns: [0,1, 2, 3, 4, 5, 6, 7],
                         format: {
                             header:  function (d, columnIdx) {
-                                return ' ' + titulos_intxt[columnIdx]  + ' ';
+                                return $(d).attr('placeholder').toUpperCase();
                                 }
                             }
                     }
@@ -111,6 +111,8 @@ $("#calendarioDay").change( function (){
             ],
             "order": [[ 1, 'asc' ]]
         });
+
+        applySearch(tabla_6);
         
         $('#tabla_ingresar_6 tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
@@ -258,7 +260,7 @@ $("#tabla_ingresar_6").ready( function(){
                     columns: [0,1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header:  function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx]  + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                             }
                         }
                 }

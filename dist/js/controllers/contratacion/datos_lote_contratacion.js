@@ -576,7 +576,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             /***********/
             {
                 data: function (d) {
-                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="${_("ver-mas-informacion")}" data-i18n-tooltip= "${_("ver-mas-informacion")}"><i class="fas fa-history"></i></button></center>`;
+                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="${_("ver-mas-informacion")}" data-i18n-tooltip= "${("ver-mas-informacion")}"><i class="fas fa-history"></i></button></center>`;
               
                 }
             }],
@@ -1076,7 +1076,7 @@ function fillTableInventario(sede) {
                         if(d.apartadoXReubicacion == 1)
                             return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
                         else
-                            return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;
+                            return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
                     }
                 },
                 {
@@ -1084,7 +1084,7 @@ function fillTableInventario(sede) {
                         if(d.apartadoXReubicacion == 1)
                             return d.fechaAlta;
                         else
-                            return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;
+                            return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
                     }
                 },
                 {
@@ -1092,7 +1092,7 @@ function fillTableInventario(sede) {
                         if(d.venta_compartida != 0)
                             return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
                         else
-                            return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;
+                            return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
                     }
                 },
                 {
@@ -1100,7 +1100,7 @@ function fillTableInventario(sede) {
                         if(d.ubicacion != null)
                             return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
                         else
-                            return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;
+                            return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
                     }
                 },
                 {
@@ -1114,7 +1114,7 @@ function fillTableInventario(sede) {
                         if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
                             return `<span class="label lbl-oceanGreen">REUBICADO</span>`;
                         else
-                            return `<span class="label lbl-pink">NO APLICA</span>`;
+                            return `<span class="label lbl-pink">${_("no-vigente")}</span>`;
                     }
                 },
                 {

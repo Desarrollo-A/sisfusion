@@ -1,10 +1,8 @@
 var getInfo1 = new Array(7);
 var getInfo3 = new Array(6);
-let titulos = [];
 
 $("#tabla_reporte_11").ready( function(){
     construirHead("tabla_reporte_11");
-
     tabla_6 = $("#tabla_reporte_11").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -19,9 +17,9 @@ $("#tabla_reporte_11").ready( function(){
                 columns: [0,1,2,3,4,5,6,7,8,9,10,11],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx]  + ' ';
-                        }
+                        return $(d).attr('placeholder').toUpperCase();
                     }
+                }
             }
         }],
         pagingType: "full_numbers",
@@ -114,10 +112,13 @@ $("#tabla_reporte_11").ready( function(){
         },
     });
 
+    applySearch(tabla_6);
+
     $('#tabla_reporte_11').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
-});
 
+    applySearch(tabla_6)
+});

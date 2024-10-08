@@ -10,19 +10,19 @@
                 <div class="modal-content" >
 
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label><span data-i18n="estatus-8">Registro esttaus 8 </span> - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <div id="extra-content-accion-modal-1"></div>
                         <div class="col-md-12 mb-2 comment">
-                            <label>Comentario:</label>
+                            <label data-i18n="comentario">Comentario:</label>
                             <textarea class="text-modal" id="comentario" rows="3"></textarea>
                         </div>       
                     </div>
                     <input type="hidden" id="data-editReg"></input>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save1" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" id="save1" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -33,16 +33,16 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Rechazo/regreso estatus 8 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label data-i18n="rechazo-estatus-8">Rechazo/regreso estatus 8 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <label>Comentario:</label>
+                        <label data-i18n="comentario">Comentario:</label>
                         <textarea class="text-modal" id="comentario3" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save3" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" id="save3" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -53,16 +53,16 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Rechazo estatus 8 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label><span data-i18n="rechazo-estatus-8"> Rechazo estatus 8 </span> - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <label>Comentario:</label>
+                        <label data-i18n="comentario">Comentario:</label>
                         <textarea class="text-modal" id="comentario4" rows="3"></textarea>
                         <br>              
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save4" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" id="save4" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -73,19 +73,19 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label><span data-i18n="estatus-8"> Registro estatus 8 </span> - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <div id="extra-content-accion-modal-5"></div>
                         <div class="col-md-12 mb-2 comment">
-                            <label>Comentario:</label>
+                            <label data-i18n="comentario">Comentario:</label>
                             <textarea class="text-modal" id="comentario5" rows="3"></textarea>
                         </div>     
                     </div>
                     <input type="hidden" id="data-rev8"></input>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save5" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" id="save5" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -96,19 +96,19 @@
             <div class="modal-dialog">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Registro estatus 8 - <b><span class="lote"></span></b></label></h4>
+                        <h4 class="modal-title text-center"><label><span data-i18n="estatus-8"> Registro estatus 8 </span> - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
                         <div id="extra-content-accion-modal-6"></div>
                         <div class="col-md-12 mb-2 comment">
-                            <label>Comentario:</label>
+                            <label data-i18n="comentario">Comentario:</label>
                             <textarea class="text-modal" id="comentario6" rows="3"></textarea>
                         </div>            
                     </div>
                     <input type="hidden" id="data-rev_2"></input>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save6" class="btn btn-primary">Registrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" id="save6" class="btn btn-primary" data-i18n="registrar">Registrar</button>
                     </div>
                 </div>
             </div>
@@ -126,8 +126,8 @@
                         <div id="data-modal"></div>
                     </div> 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="btn-accion">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btn-accion" data-i18n="aceptar">Aceptar</button>
                     </div>
                 </div>
             </div>

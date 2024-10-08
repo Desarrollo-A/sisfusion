@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $.post(`${general_base_url}index.php/asesor/getAllFoldersPDF`, function (data) {
 
-        if (data.length < 0) {
+        if(data.length > 0){
             $('#navbartabs').find('#test').empty().selectpicker('refresh');
             for (var i = 0; i < data.length; i++) {
                 var html_code = '';
@@ -32,9 +32,11 @@ $(document).ready(function () {
                     $('#spiner-loader').addClass('hide');
                 }, 1500);
             });
+
+            $('#msg').prop('hidden', true);
         }
         else {
-            $('#msg').append(`<center><h2 style="color: #a0a0a0;font-weight: 100" data-i18n="no-files-available">No hay Carpetas disponibles</h2></center>`);
+            $('#msg').removeAttr('hidden');
         }
     }, 'json');
 });

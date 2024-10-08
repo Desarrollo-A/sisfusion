@@ -152,18 +152,18 @@ class Metricas_model extends CI_Model {
             WHERE   DateValue + 1 <= '$endDate 23:59:59')
             SELECT 
                 (CASE 
-                    WHEN MONTH(DateValue) = '1' THEN 'Enero'
-                    WHEN MONTH(DateValue) = '2' THEN 'Febrero'
-                    WHEN MONTH(DateValue) = '3' THEN 'Marzo'
-                    WHEN MONTH(DateValue) = '4' THEN 'Abril'
-                    WHEN MONTH(DateValue) = '5' THEN 'Mayo'
-                    WHEN MONTH(DateValue) = '6' THEN 'Junio'
-                    WHEN MONTH(DateValue) = '7' THEN 'Julio'
-                    WHEN MONTH(DateValue) = '8' THEN 'Agosto'
-                    WHEN MONTH(DateValue) = '9' THEN 'Septiembre'
-                    WHEN MONTH(DateValue) = '10' THEN 'Octubre'
-                    WHEN MONTH(DateValue) = '11' THEN 'Noviembre'
-                    WHEN MONTH(DateValue) = '12' THEN 'Diciembre'
+                    WHEN MONTH(DateValue) = '1' THEN 'enero'
+                    WHEN MONTH(DateValue) = '2' THEN 'febrero'
+                    WHEN MONTH(DateValue) = '3' THEN 'marzo'
+                    WHEN MONTH(DateValue) = '4' THEN 'abril'
+                    WHEN MONTH(DateValue) = '5' THEN 'mayo'
+                    WHEN MONTH(DateValue) = '6' THEN 'junio'
+                    WHEN MONTH(DateValue) = '7' THEN 'julio'
+                    WHEN MONTH(DateValue) = '8' THEN 'agosto'
+                    WHEN MONTH(DateValue) = '9' THEN 'septiembre'
+                    WHEN MONTH(DateValue) = '10' THEN 'octubre'
+                    WHEN MONTH(DateValue) = '11' THEN 'noviembre'
+                    WHEN MONTH(DateValue) = '12' THEN 'diciembre'
                 END) MONTH, YEAR(DateValue) año, isNULL(qu.superficieSUMA, 0) superficieSUMA, FORMAT(isNULL(qu.precioSUMA,0),'C') precioSUMA, CAST(isNULL(qu.promedio,0) AS decimal(16,2)) promedio FROM cte 
             LEFT JOIN (
             SELECT SUM(lo.sup) superficieSUMA,
