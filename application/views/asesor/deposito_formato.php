@@ -54,7 +54,7 @@
             <?php echo $html_action;?> 
             <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655, 16679, 17043)) AND $onlyView==0){?>
                 <section id="sectionBtns">
-                    <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction" onclick="validaTipoVivienda();">GUARDAR CAMBIOS</button>
+                    <button data-i18n="guardar-cambios" type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction" onclick="validaTipoVivienda();">GUARDAR CAMBIOS</button>
                 </section>
             <?php } else { ?>
                 <section id="sectionBtns">
@@ -198,7 +198,7 @@
                         <div class="form-group label-floating overflow-hidden">
                             <div class="d-none" name="regimenl" id="regimenl">
                                 <h4 class="label-on-left m-0" data-i18n="regimen-fiscal">RÉGIMEN FISCAL</h4>
-                                <select name="regimenFiscal" title="SELECCIONA UNA OPCIÓN" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                <select name="regimenFiscal" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" id="regimenFiscal" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                     <?php
                                     for($n=0; $n < count($regFis) ; $n++){
                                         if($regFis[$n]['id_opcion'] == $cliente[0]->regimen_fac){
@@ -314,7 +314,7 @@
                                         <span data-i18n="lada-m">LADA</span>
                                         (<small style="color: red;">*</small>)
                                     </label>
-                                    <select id="ladaTelN" name="ladaTel1" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-size="7" data-live-search="true" data-container="body" data-width="100%" <?php echo $statsInput; ?> required>
+                                    <select id="ladaTelN" name="ladaTel1" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-size="7" data-live-search="true" data-container="body" data-width="100%" <?php echo $statsInput; ?> required>
 
                                     </select>
                                 </div>
@@ -340,7 +340,7 @@
                                     <span data-i18n="lada-m">LADA</span>
                                         (<small style="color: red;">*</small>)
                                     </label>
-                                    <select id="ladaTel2" name="ladaTel2" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
+                                    <select id="ladaTel2" name="ladaTel2" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
                                             data-size="7" <?php echo $readOnly; ?>
                                             data-live-search="true" data-container="body" data-width="100%" required>
                                     </select>
@@ -374,7 +374,7 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <label class="label-on-left m-0">
                             <span data-i18n="pais">PAÍS</span>(<small style="color: red;">*</small>)</label>
-                        <select name="pais" id="pais" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                        <select data-i18n-label="selecciona-una-opcion" name="pais" id="pais" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
 
                                 for($n=0; $n < count($paises) ; $n++){
@@ -392,7 +392,7 @@
                         <div class="form-group label-floating select-is-empty overflow-hidden">
                             <label class="label-on-left m-0">
                                 <span data-i18n="estado">ESTADO</span>  (<small style="color: red;">*</small>)</label>
-                            <select name="estado" id="estado" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
+                            <select data-i18n-label="selecciona-una-opcion" name="estado" id="estado" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
                                 <?php
                                     for($n=0; $n < count($estados) ; $n++){
                                         if($estados[$n]['id_opcion'] == $cliente[0]->estado){
@@ -454,7 +454,7 @@
                                         <span data-i18n="genero">GÉNERO</span>
                                         (<small style="color:red;">*</small>)
                                     </label>
-                                    <select name="genero"  title="SELECCIONA UNA OPCIÓN" id="genero" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
+                                    <select data-i18n-label="selecciona-una-opcion" name="genero"  title="SELECCIONA UNA OPCIÓN" id="genero" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
                                         <?php for($i = 0; $i < count($generos); $i++) {
                                             if($generos[$i]['id_opcion'] == $cliente[0]->genero) {
                                                 echo '<option value="'.$generos[$i]['id_opcion'].'" selected>'.$generos[$i]['nombre'].'</option>';
@@ -472,7 +472,7 @@
                                         <span data-i18n="tipo-moneda">TIPO DE MONEDA</span>
                                         (<small style="color:red;">*</small>)
                                     </label>
-                                    <select name="tipoMoneda" title="SELECCIONA UNA OPCIÓN" id="tipoMoneda" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-width="100%">
+                                    <select data-i18n-label="selecciona-una-opcion" name="tipoMoneda" title="SELECCIONA UNA OPCIÓN" id="tipoMoneda" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-width="100%">
                                         <?php 
                                             for($i = 0; $i < count($tipoMoneda); $i++){
                                                 if($tipoMoneda[$i]['id_opcion'] == $cliente[0]->tipoMoneda) {
@@ -492,7 +492,7 @@
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">
                                     <span data-i18n="codigo-postal">CÓDIGO POSTAL</span>(<small style="color: red;">*</small>)</label>
-                                   <select name="cp" required="true" title="SELECCIONA UNA OPCIÓN" id="cp" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-cp="<?=$cliente[0]->cp ?>" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                   <select data-i18n-label="selecciona-una-opcion" name="cp" required="true" title="SELECCIONA UNA OPCIÓN" id="cp" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-cp="<?=$cliente[0]->cp ?>" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                             <?php 
                                                 for($i = 0; $i < count($cp); $i++) {
                                                     if($cp[$i]['codigo_postal'] == $cliente[0]->cp){
@@ -527,7 +527,7 @@
                         <div class="form-group label-floating select-is-empty overflow-hidden">
                             <label class="label-on-left m-0" style="top:-29px;">
                                 <span data-i18n="nacionalidad">NACIONALIDAD</span> (<small style="color: red;">*</small>)</label>
-                            <select name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select data-i18n-label="selecciona-una-opcion" name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
                                                                 for($p=0; $p < count($nacionalidades) ; $p++){
                                     if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
@@ -554,7 +554,7 @@
                             <label class="label-on-left m-0">
                                 <span data-i18n="estado-civil">ESTADO CIVIL</span> 
                                 (<small style="color: red;">*</small>)</label>
-                            <select name="estado_civil" id="estado_civil" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select data-i18n-label="selecciona-una-opcion" name="estado_civil" id="estado_civil" required="true" title="SELECCIONA UNA OPCIÓN" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
 
                                 for($n=0; $n < count($edoCivil) ; $n++){
@@ -578,7 +578,7 @@
                                 <span data-i18n="regimen-matrimonial">
                                     RÉGIMEN MATRIMONIAL
                                 </span></label>
-                            <select name="regimen_matrimonial" title="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                            <select data-i18n-label="selecciona-una-opcion" name="regimen_matrimonial" title="SELECCIONA UNA OPCIÓN" id="regimen_matrimonial" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
                                 for($n=0; $n < count($regMat) ; $n++){
                                     if($regMat[$n]['id_opcion'] == $cliente[0]->regimen_matrimonial){
@@ -743,7 +743,7 @@
                                                                         <label class="label-on-left m-0" data-i18n="lada-tel-casa">
                                                                             LADA TÉLEFONO CASA
                                                                         </label>
-                                                                        <select name="ladaTelCop[]" id="ladaTel'.$i.'" title="SELECCIONA UNA OPCIÓN"  
+                                                                        <select data-i18n-label="selecciona-una-opcion" name="ladaTelCop[]" id="ladaTel'.$i.'" title="SELECCIONA UNA OPCIÓN"  
                                                                         class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body"
                                                                         data-size="7" 
                                                                          data-width="100%">
@@ -766,7 +766,7 @@
                                                                             <span data-i18n="lada-cel">LADA CELULAR</span>
                                                                             (<small style="color: red;">*</small>)
                                                                         </label>
-                                                                        <select name="ladaCelCop[]" id="ladaCel'.$i.'" title="SELECCIONA UNA OPCIÓN"  
+                                                                        <select data-i18n-label="selecciona-una-opcion" name="ladaCelCop[]" id="ladaCel'.$i.'" title="SELECCIONA UNA OPCIÓN"  
                                                                         class=" m-0 select-gral ladaSelect copSelect" data-live-search="true" 
                                                                         data-size="7"
                                                                         data-container="body" data-width="100%" required>
@@ -806,7 +806,7 @@
                                                                 <label class="label-on-left m-0">
                                                                 <span data-i18n="nacionalidad">NACIONALIDAD</span>
                                                                 (<small style="color: red;">*</small>)</label> 
-                                                                <select class="selectpicker select-gral m-0" data-live-search="true" data-container="body" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.' required>';
+                                                                <select data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" name="nacionalidad_cop[]" id="nacionalidad_cop[]" '.$statsInput.' required>';
 
                                                                     for($n=0; $n < count($nacionalidades) ; $n++){
                                                                         if($nacionalidades[$n]['id_opcion'] == $copropiedad[$i]->nacionalidad_valor){
@@ -847,7 +847,7 @@
                                                                 <label class="label-on-left m-0">
                                                                 <span data-i18n="estado-civil">ESTADO CIVIL</span>
                                                                 (<small style="color: red;">*</small>)</label>
-                                                                <select class="selectpicker select-gral m-0" data-container="body" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.' required>
+                                                                <select data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral m-0" data-container="body" data-live-search="true" name="ecivil_cop[]" id="ecivil_cop[]" '.$statsInput.' required>
                                                                         
                                                                 ';
                                                                     for($n=0; $n < count($edoCivil) ; $n++)
@@ -867,7 +867,7 @@
                                                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                                             <div class="form-group label-floating select-is-empty overflow-hidden">
                                                                 <label class="label-on-left m-0" data-i18n="regimen-matrimonial">RÉGIMEN MATRIMONIAL</label>
-                                                                <select name="r_matrimonial_cop[]" data-live-search="true" data-container="body" id="r_matrimonial_cop[]" class="selectpicker select-gral m-0" '.$statsInput.'>';
+                                                                <select data-i18n-label="selecciona-una-opcion" name="r_matrimonial_cop[]" data-live-search="true" data-container="body" id="r_matrimonial_cop[]" class="selectpicker select-gral m-0" '.$statsInput.'>';
                                                                     for($n=0; $n < count($regMat) ; $n++){
                                                                         if($regMat[$n]['id_opcion'] == $copropiedad[$i]->regimen_valor){
                                                                             echo '<option value="'.$regMat[$n]['id_opcion'].'" selected>'.$regMat[$n]['nombre'].'</option>';
@@ -1165,7 +1165,38 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
                         <label style="font-size: 0.7em;" >
                             <span data-i18n="oferta-vigencia">
-                                Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, la empresa cobrará al ofertante únicamente $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación. Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.<br>Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente. Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.
+                                Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. 
+                            </span>
+                            <span data-i18n="oferta-vigencia2">
+                                En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. 
+                            </span>
+                            <span data-i18n="oferta-vigencia3">
+                                En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, 
+                            </span>
+                            <span data-i18n="oferta-vigencia4">
+                                la empresa cobrará al ofertante únicamente $10,000.00
+                            </span>
+                            <span data-i18n="oferta-vigencia5">
+                                $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación.
+                            </span>
+                            <span data-i18n="oferta-vigencia6">
+                                Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, 
+                            </span>
+                            <span data-i18n="oferta-vigencia7">
+                                medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.
+                            </span>
+                            <br>
+                            <span data-i18n="oferta-vigencia8">
+                                Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente.
+                            </span>
+                            <span data-i18n="oferta-vigencia9">
+                                Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. 
+                            </span>
+                            <span data-i18n="oferta-vigencia10">
+                                De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. 
+                            </span>
+                            <span data-i18n="oferta-vigencia11">
+                                Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.
                             </span>
                         </label>
                     </div>
@@ -1175,17 +1206,21 @@
                         <div class="row form-inline">
                             <div class="col">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
-                                    <label class="label-on-left m-0" data-i18n="municipio-de">En el Municipio de
+                                    <label class="label-on-left m-0">
+                                        <span data-i18n="municipio-de">En el Municipio de</span>
                                         (<small style="color: red;">*</small>)
                                         <input class="form-control letrasCaracteres" required="true" name="municipio2" id="municipio2"
                                             <?php echo $readOnly; ?>
-                                                type="text" required="true" value="<?=$cliente[0]->municipio2?>" style="text-align: center;"/>, a
+                                                type="text" required="true" value="<?=$cliente[0]->municipio2?>" style="text-align: center;"/>, 
+                                                <span data-i18n="a">a</span>
                                         (<small style="color: red;">*</small>)
                                         <input min="1" max="31" class="form-control" oninput="validarDia(this)" name="dia" id="dia" <?php echo $readOnly; ?>
-                                                 required="true" value="<?=$cliente[0]->dia?>" style="text-align: center;"/>, del mes de
+                                                 required="true" value="<?=$cliente[0]->dia?>" style="text-align: center;"/>, 
+                                                 <span data-i18n="del-mes-de">del mes de</span>
                                         (<small style="color: red;">*</small>)
                                         <input class="form-control letrasCaracteres" name="mes" min="1" max="12" id="mes" <?php echo $readOnly; ?>
-                                                type="text" required="true" value="<?=$cliente[0]->mes?>" style="text-align: center;"/>, del año
+                                                type="text" required="true" value="<?=$cliente[0]->mes?>" style="text-align: center;"/>, 
+                                                <span data-i18n="del-anu">del año</span>
                                         (<small style="color: red;">*</small>)
                                         <input class="form-control" name="anio" id="anio" min="2015" max="2023"<?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->anio?>" style="text-align: center;"/>
                                     </label>
@@ -1219,27 +1254,28 @@
                                     readonly value="<?=$cliente[0]->nombre?>  <?=$cliente[0]->apellido_paterno?> <?=$cliente[0]->apellido_materno?> <?php echo $copropsNames;?>" style="font-size: 0.9em;"/>
                         </div>
                         <div class="text-center" style="line-height:12px">
-                            <label class="label-on-left m-0">Nombre y Firma <b> Ofertante (*)</b></label>
+                            <label class="label-on-left m-0"><span data-i18n="nombre-firma">Nombre y Firma</span> <b data-i18n="ofer"> Ofertante (*)</b></label>
                             <br>
-                            <label class="label-on-left m-0">Acepto que se realice una verificación de mis datos, en los teléfonos y correos que proporciono para el otorgamiento del crédito.
+                            <label class="label-on-left m-0" data-i18n="verificacion-datos">
+                                Acepto que se realice una verificación de mis datos, en los teléfonos y correos que proporciono para el otorgamiento del crédito.
                             </label>
                         </div>
                     </div>
                 </div>
                 <div class="row mt-3" id="containerReferencia">
-                    <h4 class="text-center pt-3">REFERENCIAS PERSONALES</h4>
+                    <h4 class="text-center pt-3" data-i18n="referencias-personales">REFERENCIAS PERSONALES</h4>
                     <div class="row">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">NOMBRE</label>
+                                <label class="label-on-left m-0" data-i18n="nombre">NOMBRE</label>
                                 <input class="form-control input-gral letrasCaracteres" name="nombre1" <?php echo $readOnly; ?> id="nombre1" type="text" value="<?= ($referencias == 0) ? '' : $referencias[0]->nombre?>"/>
                                 <input name="id_referencia1" <?php echo $readOnly; ?>id="id_referencia1" type="hidden" value="<?= ($referencias == 0) ? '' : $referencias[0]->id_referencia?>"/>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating overflow-hidden">
-                                <label class="label-on-left m-0">PARENTESCO</label>
-                                <select name="parentesco1" title="SELECCIONA UNA OPCIÓN" data-live-search="true" data-container="body" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <label class="label-on-left m-0" data-i18n="parentesco">PARENTESCO</label>
+                                <select data-i18n-label="selecciona-una-opcion" name="parentesco1" title="SELECCIONA UNA OPCIÓN" data-live-search="true" data-container="body" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <?php
                                     
                                     for($p=0; $p < count($parentescos) ; $p++)
@@ -1259,7 +1295,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">TELÉFONO</label>
+                                <label class="label-on-left m-0" data-i18n="telefono">TELÉFONO</label>
                                 <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia1" id="telefono_referencia1" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[0]->telefono?>"/>
                             </div>
                         </div>
@@ -1267,7 +1303,7 @@
                     <div class="row pb-3">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">NOMBRE</label>
+                                <label class="label-on-left m-0" data-i18n="nombre">NOMBRE</label>
                                 <input class="form-control input-gral letrasCaracteres" name="nombre2" <?php echo $readOnly; ?>
                                         id="nombre2" type="text" value="<?= ($referencias == 0) ? '' : $referencias[1]->nombre?>"/>
                                 <input name="id_referencia2" <?php echo $readOnly; ?>
@@ -1276,8 +1312,8 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating select-is-empty overflow-hidden">
-                                <label class="label-on-left m-0">PARENTESCO</label>
-                                <select name="parentesco2" title="SELECCIONA UNA OPCIÓN" data-live-search="true" data-container="body" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
+                                <label class="label-on-left m-0" data-i18n="parentesco">PARENTESCO</label>
+                                <select data-i18n-label="selecciona-una-opcion" name="parentesco2" title="SELECCIONA UNA OPCIÓN" data-live-search="true" data-container="body" <?php echo $readOnly; ?>id="parentesco2" class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
                                     <?php
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
@@ -1296,7 +1332,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <div class="form-group label-floating">
-                                <label class="label-on-left m-0">TELÉFONO</label>
+                                <label class="label-on-left m-0" data-i18n="telefono">TELÉFONO</label>
                                 <input class="form-control input-gral" <?php echo $readOnly; ?> name="telefono_referencia2" id="telefono_referencia2" pattern="/^-?\d+\.?\d*$/*" onKeyPress="if(this.value.length==10) return false;"  type="number" step="any" value="<?= ($referencias == 0) ? '' : $referencias[1]->telefono?>"/>
                             </div>
                         </div>
@@ -1354,14 +1390,16 @@
                 <div class="row pt-3" id="observaciones">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0">OBSERVACIONES (<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0">
+                                <span data-i18n="observaciones">OBSERVACIONES</span>
+                                (<small style="color: red;">*</small>)</label>
                             <textarea class="form-control pr-2 pl-2 espaciosOff scroll-styles" <?php echo $readOnly; ?> id="observacion" name="observacion" rows="10" required><?php echo $cliente[0]->observacion; ?></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="row aligned-row">
                     <div class ="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-                        <label class="label-on-left m-0">CORREO ELECTRÓNICO ASESOR</label>
+                        <label class="label-on-left m-0" data-i18n="correo-asesor">CORREO ELECTRÓNICO ASESOR</label>
                         <input name="correo_asesor" <?php echo $readOnly; ?> id="correo_asesor" type="text" class="form-control input-gral" value="<?=$asesor[0]->correo?>" >
                     </div>
                     <div class="col-xs-12 col-sm-2 col-md-3 col-lg-3">
@@ -1370,7 +1408,7 @@
 
                         
                             <?php if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || in_array($this->session->userdata('id_usuario'), [2752, 2826, 2810, 5957, 6390, 4857, 2834, 11655]) AND $onlyView==0){?>
-                                <h4 class="label-on-left mb-0">ENVIAR DS AL CLIENTE</h4>
+                                <h4 class="label-on-left mb-0" data-i18n="enviar-ds">ENVIAR DS AL CLIENTE</h4>
                                 <input id="pdfOK" name="pdfOK" type="checkbox">
                                 <label class="switch" for="pdfOK"></label>
                             <?php } ?>
@@ -1384,13 +1422,19 @@
                         <div class="form-group label-floating">
                             <input class="form-control text-center" <?php echo $readOnly; ?> name="asesor_datos" id="asesor_datos" type="text" required="true" value="<?=$asesor[0]->nombreAsesor?><?=$asesoresVC?>"/>
                         </div>
-                        <label class="label-on-left m-0">Nombre y Firma <b> Asesor (*)</b></label>
+                        <label class="label-on-left m-0">
+                            <span data-i18n="nombre-firma">.
+                            Nombre y Firma <b> Asesor 
+                            </span>
+                        (*)</b></label>
                     </div>
                     <div class ="col-xs-12 col-sm-6 col-md-6 col-lg-6" align="center">      
                         <div class="form-group label-floating">
                             <input class="form-control text-center" <?php echo $readOnly; ?> type="text" name="gerente_datos" id="gerente_datos" required="true" value="<?=$asesor[0]->nombreCoordinador?>, <?=$asesor[0]->nombreGerente?> <?=$coordGerVC?>"/>
                         </div>
-                        <label class="label-on-left m-0">Nombre y Firma <b> Autorización de operación (*)</b></label>
+                        <label class="label-on-left m-0">
+                            <span data-i18n="nombre-firma">Nombre y Firma</span> 
+                            <b data-i18n="autorizacion-operacion"> Autorización de operación (*)</b></label>
                     </div>
                 </div>
                 <div class="row pt-2">
