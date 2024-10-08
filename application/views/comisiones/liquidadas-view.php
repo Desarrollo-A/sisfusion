@@ -119,7 +119,7 @@
                                         <table class="table-striped table-hover" id="tabla_comisiones_liquidadas" name="tabla_comisiones_liquidadas">
                                             <thead>
                                                 <tr>
-                                                    <th>proyecto</th>
+                                                    <th></th>
                                                     <th>proyecto</th>
                                                     <th>condominio</th>
                                                     <th>lote</th>

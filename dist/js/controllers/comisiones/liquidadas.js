@@ -4,28 +4,9 @@ $(document).ready(function () {
             trigger: "hover"
         });
     });
-
-    let titulos_intxt = [];
-    // $('#tabla_comisiones_liquidadas thead tr:eq(0) th').each( function (i) {
-    //     $(this).css('text-align', 'center');
-    //     var title = $(this).text();
-    //     titulos_intxt.push(title);
-    //     if (i != 0 ) {
-    //         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-    //         $( 'input', this ).on('keyup change', function () {
-    //             if ($('#tabla_comisiones_liquidadas').DataTable().column(i).search() !== this.value ) {
-    //                 $('#tabla_comisiones_liquidadas').DataTable().column(i).search(this.value).draw();
-    //             }
-    //             var index = $('#tabla_comisiones_liquidadas').DataTable().rows({
-    //                 selected: true,
-    //                 search: 'applied'
-    //             }).indexes();
-    //         });
-    //     }
-    // });
     
     construirHead("tabla_comisiones_liquidadas");
-    var liquidadasDataTable = $('#tabla_comisiones_liquidadas').dataTable({
+    var liquidadasDataTable = $('#tabla_comisiones_liquidadas').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -89,14 +70,14 @@ $(document).ready(function () {
                 if(d.compartida == null) {
                     labelCompartida ='<span class="label lbl-yellow">Individual</span>';
                 } else{
-                    labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
+                    labelCompartida = `<span class="label lbl-orangeYellow">${_("compartida")}</span>`;
                 }
                 return labelCompartida;
             }},
             { data: function (d) {
                 var labelStatus;
                 if(d.idStatusContratacion == 15) {
-                    labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
+                    labelStatus = `<span class="label lbl-violetBoots">${_("contratado")}</span>`;
                 }else {
                     labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
                 }
@@ -105,18 +86,18 @@ $(document).ready(function () {
             { data: function (d) {
                 var labelEstatus;
                 if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
-                    labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                    labelEstatus =`<p class="m-0"><b>${_("penalizacion")} ${d.dias_atraso} ${_("dias")}</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
                 else{
                     if(d.totalNeto2 == null && d.proceso == 0){
-                        labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
+                        labelEstatus =`<p class="m-0"><b>${_("sin-precio-lote")}</b></p>`;
                     }else if(d.registro_comision == 2){
-                        labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                        labelEstatus =`<span class="label lbl-cerulean">${_("solicitado-mkt")}</span>`+' '+d.plan_descripcion;
                     }else {
                         if(d.plan_descripcion=="-")
                             return '<p>SIN PLAN</p>';
                         else
-                            labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                            labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="${_("ver-mas-detalles")}"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                     }
                 }
                 return labelEstatus;
@@ -127,7 +108,7 @@ $(document).ready(function () {
             }},
             { data: function (d) {
                 // PORCENTAJE
-                return d.porcentaje_comisiones ? `${parseFloat(d.porcentaje_comisiones).toFixed(2)}%`: 'SIN ESPECIFICAR';
+                return d.porcentaje_comisiones ? `${parseFloat(d.porcentaje_comisiones).toFixed(2)}%`: _("sin-especificar");
             }},
             { data: function (d) {
                 // importe comision PAGADA
@@ -144,18 +125,18 @@ $(document).ready(function () {
                 rescisionLote = '';
                 reactivo = '';
                 if (d.registro_comision == 8){
-                    rescisionLote = '<br><span class="label lbl-warning">Recisión Nueva Venta</span>';
+                    rescisionLote = `<br><span class="label lbl-warning">${_("recision-nueva-venta")}</span>`;
                 }
                 if(d.id_cliente_reubicacion_2 != 0 ) {
                     if((d.bandera_dispersion == 1 && d.registro_comision == 9) ||
                     (d.bandera_dispersion == 2 && d.registro_comision == 9) ||
                     (d.bandera_dispersion == 2  && d.registro_comision != 9) ||
                     (d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
-                        reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
+                        reactivo = `<br><span class="label lbl-gray">${_("dispersion-ventas")}</span>`;
                     } else if((d.bandera_dispersion == 3  && d.registro_comision == 9) ||
                     (d.bandera_dispersion == 3 && d.registro_comision != 9) ||
                     ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
-                        reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
+                        reactivo = `<br><span class="label lbl-lightBlue">${_("dispersion-eec")}</span>`;
                     } 
                 }
                 return rescisionLote+reactivo;
@@ -164,7 +145,7 @@ $(document).ready(function () {
                 var fechaActualizacion;
 
                 if(d.fecha_sistema == null) {
-                    fechaActualizacion ='<span class="label lbl-gray">Sin Definir</span>';
+                    fechaActualizacion = `<span class="label lbl-gray">${_("sin-definir")}</span>`;
                 }else {
                     fechaActualizacion = '<span class="label lbl-azure">'+d.fecha_sistema+'</span>';
                 }
@@ -174,35 +155,35 @@ $(document).ready(function () {
             { data: function (d) {
                 var BtnStats = '';
                 if((d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) && d.proceso == 0) {
-                        BtnStats = 'Asignar Precio';
+                        BtnStats = _("asignar-precio");
                     }else if(d.tipo_venta==null || d.tipo_venta==0) {
-                        BtnStats = 'Asignar Tipo Venta';
+                        BtnStats = _("asignar-tipo-venta");
                     }else if((d.id_prospecto==null || d.id_prospecto==''|| d.id_prospecto==0) && d.lugar_prospeccion == 6) {
-                        BtnStats = 'Asignar Prospecto';
+                        BtnStats = _("asignar-prospecto");
                     }else if(d.id_subdirector==null || d.id_subdirector==''|| d.id_subdirector==0) {
-                        BtnStats = 'Asignar Subdirector';
+                        BtnStats = _("asignar-subdirector");
                     }else if(d.id_sede==null || d.id_sede==''|| d.id_sede==0) {
-                        BtnStats = 'Asignar Sede';
+                        BtnStats = _("asignar-sede");
                     }else if(d.plan_comision==null || d.plan_comision==''|| d.plan_comision==0) {
-                        BtnStats = 'Asignar Plan <br> Sede: '+d.sede;
+                        BtnStats = `${_("asignar-plan")} <br> ${_("sede-2")}: `+d.sede;
                     } else{
                         varColor  = 'btn-deepGray';
                             BtnStats += ``;
 
                             if(d.ooam == 0 && d.ventas == 1){
-                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="VERIFICAR EN NEODATA VENTAS">'+'<span class="material-icons">verified_user</span></button> ';
+                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="' + _("verificar-en-neodata-ventas") + '">'+'<span class="material-icons">verified_user</span></button> ';
 
                             } else if(d.ooam == 1 && d.ventas == 0){
-                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="VERIFICAR EN NEODATA OOAM">'+'<span class="material-icons">verified_user</span></button> ';
+                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="' + _("verificar-en-neodata-ooam") + '">'+'<span class="material-icons">verified_user</span></button> ';
 
                             } else if(d.ooam == 1 && d.ventas == 1){
-                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="VERIFICAR EN NEODATA VENTAS">'+'<span class="material-icons">verified_user</span></button>';
+                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="' + _("verificar-en-neodata-ventas") + '">'+'<span class="material-icons">verified_user</span></button>';
 
-                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="VERIFICAR EN NEODATA OOAM">'+'<span class="material-icons">verified_user</span></button> ';
+                                BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="' + _("verificar-en-neodata-ooam") + '">'+'<span class="material-icons">verified_user</span></button> ';
 
                             } else{
                             
-                            BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="0" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="VERIFICAR EN NEODATA">'+'<span class="material-icons">verified_user</span></button> ';
+                            BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="0" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="' + _("verificar-en-neodata-ventas") + '">'+'<span class="material-icons">verified_user</span></button> ';
                         }
                     }
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
