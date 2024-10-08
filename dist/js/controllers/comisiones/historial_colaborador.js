@@ -280,7 +280,7 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="'+_('lote-bonificacion-neodata')+'"><span class="label lbl-darkPink"">'+_('bonus')+' '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="'+_('lote-bonificacion-neodata')+'"><span class="label lbl-darkPink"">'+_('bonificacion')+' '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -498,7 +498,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
                     lblPenalizacion ='<p class="m-0" title="'+_('penalizacion-noventa-dias')+'"><span class="label lbl-vividOrange">'+_('noventa-dias')+'</span></p>';
                 }
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="'+_('lote-bonificacion-neodata')+'"><span class="label lbl-darkPink"">'+_('bonus')+' '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="'+_('lote-bonificacion-neodata')+'"><span class="label lbl-darkPink"">'+_('bonificacion')+' '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
@@ -531,7 +531,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
                             '</p>'+
                             '<p class="m-0">'+
                                 '<span class="label lbl-green">'+
-                                    'IMPORTACIÓN'+
+                                    _('importacion')+
                                 '</span>'+
                             '</p>';
                         }else{

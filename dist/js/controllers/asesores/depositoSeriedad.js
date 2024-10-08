@@ -29,7 +29,7 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 const STATUS_CONTRATACION = 1;
 
 $(document).ready(function() {
-    construirHead("tabla_deposito_seriedad");  
+    construirHead("tabla_deposito_seriedad");
     construirHead("table_prospectos");  
     if (id_usuario_general == 9651 || id_usuario_general == 11142) { // MJ: ERNESTO DEL PINO SILVA
         $('#tabla_deposito_seriedad').addClass('hide');

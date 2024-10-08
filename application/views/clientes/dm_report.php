@@ -32,7 +32,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <a href="https://youtu.be/u65XqWYjuK8" class="align-center justify-center" target="_blank">
+                                <a href="https://youtu.be/TpHHZy3xgzQ" class="align-center justify-center" target="_blank">
                                     <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                 </a>
                             </div>
@@ -63,7 +63,7 @@
                                                     <th>estado</th>
                                                     <th>etapa</th>
                                                     <th>prospectos</th>
-                                                    <th>MEDIO</th>
+                                                    <th>medio</th>
                                                     <th>asesor</th>
                                                     <th>gerente</th>
                                                     <th>creacion</th>

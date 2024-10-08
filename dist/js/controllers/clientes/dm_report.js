@@ -34,8 +34,9 @@ $(document).on("click", "#searchByDateRange", function () {
     fillTable(3, finalBeginDate, finalEndDate, 0);
 });
 
+var mktdProspectsTable;
 function fillTable(typeTransaction, beginDate, endDate, where) {
-    tabla_6 = $('#mktdProspectsTable').DataTable({
+    mktdProspectsTable = $('#mktdProspectsTable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width:'100%',
         scrollX: true,

@@ -164,7 +164,7 @@ public function getStatusMktdPreventa(){
         public function consultProspects_dir()
     {
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospecto_dir.php");
+        $this->load->view("clientes/consulta_prospecto_dir");
     }
     public function consultProspects_sbdir()
     {
