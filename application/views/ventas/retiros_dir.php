@@ -170,7 +170,7 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div>
+    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
@@ -181,7 +181,7 @@
         var tr;
 
         var id_user_session = "<?=$this->session->userdata('id_usuario')?>"
-        7
+        var id_user = "<?=$this->session->userdata('id_usuario')?>" == 1875 ? 2 : "<?=$this->session->userdata('id_usuario')?>";
         
         function formatMoney( n ) {
             var c = isNaN(c = Math.abs(c)) ? 2 : c,
@@ -242,7 +242,7 @@
 
         let titulos = [];
         $('#tabla_descuentos thead tr:eq(0) th').each( function (i) {
-            if(i!=7){
+            // if(i!=7){
                 var title = $(this).text();
                 titulos.push(title);
                 $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
@@ -260,13 +260,13 @@
                         let to1=0;
                     }
                 });
-            }
+            // }
         });
     
         $("#tabla_ingresar_9").ready( function(){
             let titulos = [];
             $('#tabla_ingresar_9 thead tr:eq(0) th').each( function (i) {
-                if(i != 0 && i != 11){
+                // if(i != 11){
                     var title = $(this).text();
                     titulos.push(title);
                     
@@ -279,7 +279,7 @@
                             .draw();
                         }
                     });
-                }
+                // }
             });
 
             let resto = 0;
@@ -458,7 +458,7 @@
                     orderable: false,
                     className: 'select-checkbox',
                     targets:   0,
-                    searchable:false,
+                    searchable:true,
                     className: 'dt-body-center'
                 }],
                 ajax: {
@@ -691,7 +691,7 @@
                     type: 'POST', // For jQuery < 1.9
                     success: function(data){
                         if( data = 1 ){
-                            $("#modal_nuevas").modal('toggle');
+                            $("#modal_nuevas").modal('toggle' );
                             alerts.showNotification("top", "right", "Se aplicó el descuento correctamente", "success");
                             setTimeout(function() {
                                 tabla_nuevas.ajax.reload();

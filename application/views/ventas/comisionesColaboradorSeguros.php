@@ -571,8 +571,8 @@
     <script>
         Shadowbox.init();
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
-        var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
-        var userSede = <?= $this->session->userdata('id_sede') ?>;
+        var tipo_usuario = <?= $this->session->userdata('id_usuario') == 1980 ? 4 : $this->session->userdata('tipo') ?>;
+        var userSede = <?= $this->session->userdata('id_usuario') == 1980 ? 2 :  $this->session->userdata('id_sede') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador_seguros.js"></script>

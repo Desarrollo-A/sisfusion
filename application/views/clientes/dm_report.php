@@ -9,9 +9,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close"  data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanComments()">clear</i>
+                            <i class="material-icons" onclick="cleanComments()">Borrar</i>
                         </button>
-                        <h4 class="modal-title">Bitácora de cambios</h4>
+                        <h4 class="modal-title" data-i18n="bitacora-cambios">Bitácora de cambios</h4>
                     </div>
                     <div class="modal-body">
                         <div class="conteiner-fluid">
@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-i18n="cerrar" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -34,12 +34,12 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <a href="https://youtu.be/u65XqWYjuK8" class="align-center justify-center" target="_blank">
+                                <a href="https://youtu.be/TpHHZy3xgzQ" class="align-center justify-center" target="_blank">
                                     <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                 </a>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Reporte de estatus por prospecto</h3>
+                                <h3 class="card-title center-align" data-i18n="reporte-estatus-prospecto">Reporte de estatus por prospecto</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
@@ -62,16 +62,16 @@
                                         <table id="mktdProspectsTable" class="table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>ESTADO</th>
-                                                    <th>ETAPA</th>
-                                                    <th>PROSPECTO</th>
-                                                    <th>MEDIO</th>
-                                                    <th>ASESOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>CREACIÓN</th>
-                                                    <th>VENCIMIENTO</th>
-                                                    <th>ÚLTIMA MODIFICACIÓN</th>
-                                                    <th>ACCIONES</th>
+                                                    <th>estado</th>
+                                                    <th>etapa</th>
+                                                    <th>prospectos</th>
+                                                    <th>medio</th>
+                                                    <th>asesor</th>
+                                                    <th>gerente</th>
+                                                    <th>creacion</th>
+                                                    <th>vencimiento</th>
+                                                    <th>ultima-modificacion</th>
+                                                    <th>acciones</th>
                                                 </tr>
                                             </thead>
                                         </table>

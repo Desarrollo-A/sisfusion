@@ -14,25 +14,25 @@
 							</div>
 							<div class="card-content">
 								<div class="encabezadoBox">
-									<h3 class="card-title center-align">Reporte rechazos </h3>
+									<h3 class="card-title center-align" data-i18n="reporte-rechazos">Reporte rechazos </h3>
 								</div>
 								<div class="material-datatables"> 
 									<div class="form-group">
 										<table class="table-striped table-hover" id="tabla_reporte_11" name="tabla_reporte_11">
 											<thead>
 												<tr>
-													<th>PROYECTO</th>
-													<th>CONDOMINIO</th>
-													<th>LOTE</th>
-													<th>ID LOTE</th>
-													<th>CLIENTE</th>
-													<th>FECHA DE APARTADO</th>
-													<th>ESTATUS DE CONTRATACIÓN</th>
-													<th>ESTATUS DEL LOTE</th>
-													<th>QUIEN RECHAZO</th>
-													<th>FECHA DE RECHAZO</th>
-													<th>MOTIVO DE RECHAZO</th>
-													<th>MOVIMIENTO</th>
+													<th>proyecto</th>
+													<th>condominio</th>
+													<th>lote</th>
+													<th>id-lote</th>
+													<th>cliente</th>
+													<th>fecha-apartado</th>
+													<th>estatus-contratacion</th>
+													<th>estatus-lote</th>
+													<th>quien-rechazo</th>
+													<th>fecha-rechazo</th>
+													<th>motivo-rechazo</th>
+													<th>movimiento</th>
 												</tr>
 											</thead>
 										</table>

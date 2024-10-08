@@ -3610,6 +3610,7 @@ class Casas extends BaseController
         // Insert historial
         $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanzó el proceso al paso 8 | Comentario: ' . $comentario, 1);
         $tituloPropiedad = $this->CasasModel->inserDocumentsToProceso($idProceso, 17, 'Titulo de propiedad');
+
         for ($i = 1; $i <= 3; $i++) {
             $cotizacion = $this->CasasModel->insertCotizacion($idProceso);
         }
@@ -3647,7 +3648,7 @@ class Casas extends BaseController
         $fechaModificacion = date("Y-m-d H:i:s");
 
         $dataVobo = [
-            $idRol == 101 ? "gph" : "titulacion" => 1,
+            $idRol = ($idRol == 101 || $idRol == 33) ? "gph" : "titulacion",
             "modificadoPor" => $modificadoPor,
             "fechaModificacion" => $fechaModificacion,
         ];
@@ -5010,7 +5011,7 @@ class Casas extends BaseController
 
         $vobo = $this->CasasModel->getVobos($id, 13);
 
-        if (in_array($this->idUsuario, [5107])) {
+        if (in_array($this->idRol, [11]) || in_array($this->idUsuario, [5107])) {
             $updateData = array(
                 "adm"  => 1,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
@@ -5038,7 +5039,7 @@ class Casas extends BaseController
                 http_response_code(400);
             }
         }
-        if (in_array($this->idUsuario, [15896, 16204, 15897, 16205, 15898, 16206, 4512, 15841])) {
+        if (in_array($this->idRol, [101, 33])) {
             $updateData = array(
                 "gph"  => 1,
                 "modificadoPor" => $this->session->userdata('id_usuario'),

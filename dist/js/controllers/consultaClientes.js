@@ -1,22 +1,11 @@
 $(document).ready(function() {
-    let titulos_encabezado = [];
-    let num_colum_encabezado = [];
-    $('#clients-datatable thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos_encabezado.push(title);
-        num_colum_encabezado.push(i);
-        $(this).html(`<input  data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#clients-datatable').DataTable().column(i).search() !== this.value ) {
-                $('#clients-datatable').DataTable().column(i).search(this.value).draw();
-            }
-        });
-        $('[data-toggle="tooltip"]').tooltip();
-        });
-    
+    crearTabla();  
+})
 
-    num_colum_encabezado.pop();
-    $usersTable = $('#clients-datatable').DataTable({
+
+function crearTabla() {
+    construirHead("clients-datatable-nuevos");
+    var usersTable = $('#clients-datatable-nuevos').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -28,10 +17,10 @@ $(document).ready(function() {
             titleAttr: 'Lista nuevos clientes',
             title:'Lista nuevos clientes',
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                        return $(d).attr('placeholder');
                     }
                 }
             }
@@ -127,9 +116,9 @@ $(document).ready(function() {
         });        
         }
     });
-
-});
-
+    applySearch(usersTable);
+    $('body').i18n();
+}
 function printProspectInfo() {
     id_prospecto = $("#prospecto_lbl").val();
     window.open("printProspectInfo/" + id_prospecto, "_blank")
@@ -221,19 +210,20 @@ function fillFields(v, type) {
 }
 
 function fillChangelog(v) {
+    console.log($(_("campo")));
     $("#changelog").append('<li>\n' +
         '    <div class="container-fluid">\n' +
         '       <div class="row">\n' +
         '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
-        '               <a><small>Campo: </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
+        '               <a><small>'+ _("campo") +': </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
         '           </div>\n' +
         '           <div class="float-end text-right">\n' +
         '               <a>' + v.fecha_creacion + '</a>\n' +
         '           </div>\n' +
         '           <div class="col-md-12">\n' +
-        '               <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
-        '               <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
-        '               <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+        '               <p class="m-0"><small>' + _("usuario") +' : </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
+        '               <p class="m-0"><small>' + _("valor-anterior") +': </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+        '               <p class="m-0"><small>' + _("valor-nuevo") +': </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
         '           </div>\n' +
         '        <h6>\n' +
         '        </h6>\n' +
@@ -262,7 +252,7 @@ function fillTimeline(v, counter) {
             '    </div>\n' +
             '</li>');
     }else{
-        $("#comments-list").append("SIN DATOS POR MOSTRAR");
+        $("#comments-list").append(_("sin-datos-por-mostrar").toUpperCase());
     }
 }
 

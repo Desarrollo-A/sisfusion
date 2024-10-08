@@ -3,6 +3,15 @@ let appointment = '';
 let exists = 1;
 let eventsTable;
 let arrayEvents = [];
+let globalLanguage = localStorage.getItem('locale');
+//triggerChangeFunctions(readyAgenda);
+onChangeTranslations(newCalendar);
+console.log("globalLanguage: ", globalLanguage);
+function newCalendar() {
+  globalLanguage = localStorage.getItem('locale');
+  console.log("globalLanguage inside: ", globalLanguage);
+  readyAgenda();
+}
 
 function readyAgenda(){
   if (!getGoogleTokenStorage()) {
@@ -12,6 +21,7 @@ function readyAgenda(){
   createGoogleCalendar();
 
   getUsersAndEvents(id_rol_general, id_usuario_general, true);
+  $('body').i18n();
 }
 
 const getTimeZone = () => {
@@ -40,7 +50,7 @@ const createGoogleCalendar = () => {
       },
     },
     timeZone: 'none',
-    locale: 'es',
+    locale: globalLanguage,
     initialView: 'dayGridMonth',
     allDaySlot: false,
     selectable: (id_rol_general == 2 || id_rol_general == 3) ? false : true,
@@ -133,7 +143,7 @@ async function listUpcomingEvents(tokenGoogleCalendar) {
 
       calendar.refetchEvents();
 
-      alerts.showNotification("top", "right", "Se han cargado los eventos de Google Calendar de manera exitosa.", "success");
+      alerts.showNotification("top", "right", _("eventos-exito-carga"), "success");
     },
     complete: function () {
       $('#spiner-loader').addClass('hide');
@@ -349,7 +359,7 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
     complete: function () {
       $('#spiner-loader').addClass('hide');
     }
-  });}
+  });
   // Hasta aqui
 
 

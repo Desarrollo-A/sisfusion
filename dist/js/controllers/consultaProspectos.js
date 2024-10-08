@@ -1,22 +1,23 @@
 typeTransaction = 1;
 $(document).ready(function() {
+    construirHead('prospects-datatable');
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
     getStatusRecordatorio();
 });
 
-let titulosListadoProspectos = [];
+// let titulosListadoProspectos = [];
 
-$('#prospects-datatable thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    titulosListadoProspectos.push(title);
-    $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($("#prospects-datatable").DataTable().column(i).search() !== this.value)
-            $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
-    });
-});
+// $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
+//     const title = $(this).text();
+//     titulosListadoProspectos.push(title);
+//     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//     $('input', this).on('keyup change', function () {
+//         if ($("#prospects-datatable").DataTable().column(i).search() !== this.value)
+//             $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
+//     });
+// });
 
 function fillTable(transaction, beginDate, endDate, where) {
     prospectsTable = $('#prospects-datatable').DataTable({
@@ -44,21 +45,21 @@ function fillTable(transaction, beginDate, endDate, where) {
         {
             data: function(d) {
                     if (d.estatus_particular == 1) // DESCARTADO
-                    b = '<span class="label lbl-warning">DESCARTADO</span>';
+                    b = `<span class="label lbl-warning">${_('descartado')}</span>`;
                 else if (d.estatus_particular == 2) // INTERESADO SIN CITA
-                    b = '<span class="label lbl-green">INTERESADO SIN CITA</span>';
+                    b = `<span class="label lbl-green">${_('interesado-sin-cita')}</span>`;
                 else if (d.estatus_particular == 3) // CON CITA
-                    b = '<span class="label lbl-sunny">CON CITA</span>';
+                    b = `<span class="label lbl-sunny">${_('con-cita')}</span>`;
                 else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                    b = '<span class="label lbl-gray">SIN ESPECIFICAR</span>';
+                    b = `<span class="label lbl-gray">${_('sin-especificar')}</span>`;
                 else if (d.estatus_particular == 5) // PAUSADO
-                    b = '<span class="label lbl-orangeYellow">PAUSADO</span>';
+                    b = `<span class="label lbl-orangeYellow">${_('pausado')}</span>`;
                 else if (d.estatus_particular == 6) // PREVENTA
-                    b = '<span class="label lbl-violetDeep">PREVENTA</span>';
+                    b = `<span class="label lbl-violetDeep">${_('preventa')}</span>`;
                 else if (d.estatus_particular == 7) // CLIENTE
-                    b = '<span class="label lbl-oceanGreen">CLIENTE</span>';
+                    b = `<span class="label lbl-oceanGreen">${_('cliente')}</span>`;
                 else // CLIENTE
-                    b = '<span class="label lbl-gray">SIN ESPECIFICAR</span>';
+                    b = `<span class="label lbl-gray">${_('sin-especificar')}</span>`;
                 return b;
             }
         },
@@ -75,33 +76,33 @@ function fillTable(transaction, beginDate, endDate, where) {
         },
         {
             data: function (d) {
-                return d.coordinador == '  ' ? 'SIN ESPECIFICAR' : d.coordinador;
+                return d.coordinador == '  ' ? _('sin-especificar') : d.coordinador;
             }
         },
         {
             data: function (d) {
-                return d.gerente == '  ' ? 'SIN ESPECIFICAR' : d.gerente;
+                return d.gerente == '  ' ? _('sin-especificar') : d.gerente;
             }
         },
         {
             data: function (d) {
-                return (d.subdirector === '  ') ? 'SIN ESPECIFICAR' : d.subdirector;
+                return (d.subdirector === '  ') ? _('sin-especificar') : d.subdirector;
             }
         },
         {
             data: function (d) {
-                return (d.regional === '  ') ? 'SIN ESPECIFICAR' : d.regional;
+                return (d.regional === '  ') ? _('sin-especificar') : d.regional;
             }
         },
         {
             data: function (d) {
-                return (d.regional_2 === '  ') ? 'SIN ESPECIFICAR' : d.regional_2;
+               return (d.regional_2 === '  ') ? _('sin-especificar') : d.regional_2;
             }
         },
         {
             data: function(d) {
                 if(d.nombre_lp == '' || d.nombre_lp === null ){
-                    return 'SIN ESPECIFICAR';
+                    return _('sin-especificar');
                 }else{
                     if (d.nombre_lp == 'MKTD DRAGON')
                         id_dragon = '<br><span class="label lbl-blueMaderas">'+ d.id_dragon +'</span>';
@@ -134,17 +135,17 @@ function fillTable(transaction, beginDate, endDate, where) {
             data: function(d) {
                 if (typeTransaction == 0) { // Marketing
                     if (id_rol_general == "18" || id_rol_general == "19" || id_rol_general == "20") { // Array de roles permitidos para reasignar
-                        id_rol_general == "20" ? change_buttons = '<button class="btn-data btn-warning change-pl mt-1" data-id-prospecto="' + d.id_prospecto +'"data-toggle="tooltip" data-placement="top" title="Remover MKTD de este prospecto"><i class="fas fa-trash"></i></button>' : change_buttons = '';
+                        id_rol_general == "20" ? change_buttons = '<button class="btn-data btn-warning change-pl mt-1" data-id-prospecto="' + d.id_prospecto + `"data-toggle="tooltip" data-placement="top" title=${_('remover-mktd-prospecto')}><i class="fas fa-trash"></i></button>` : change_buttons = '';
                         if (d.estatus == 1) { // IS ACTIVE
                             var actions = '';
                             var group_buttons = '';
-                            group_buttons += '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
+                            group_buttons += '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('ingresar-comentario')}"><i class="far fa-comments"></i></button>` +
                                 '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '"  data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
-                                '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>' +
-                                '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="RE - ASIGNAR"><i class="fab fa-rev"></i></button>';
-                            actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
-                            actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
-                            actions += '<button class="btn-data btn-acidGreen update-status" '+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top"'+'title="ACTUALIZAR ESTATUS">'+'<i class="fas fa-redo"></i>' + change_buttons;
+                                '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title=${_('ver-informacion')}><i class="far fa-eye"></i></button>` +
+                                '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title=${_('re-asignar')}><i class="fab fa-rev"></i></button>`;
+                            actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title=${_('desplegar-opciones')} onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                            actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title=${_('cerrar-opciones')}> <i class="fas fa-chevron-down"></i> </button> </div>`;
+                            actions += '<button class="btn-data btn-acidGreen update-status" '+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top"'+`title=${_('actualizar-estatus')}>`+'<i class="fas fa-redo"></i>' + change_buttons;
                             return '<center>'+actions+'<center>';
                         } else { // IS NOT ACTIVE
                             var actions = '';
@@ -164,14 +165,14 @@ function fillTable(transaction, beginDate, endDate, where) {
                                 if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) {
                                     actions = '';
                                 } else {
-                                    group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
-                                        '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
-                                        '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>' +
-                                        '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="RE - ASIGNAR"><i class="fab fa-rev"></i></button>';
+                                    group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('ingresar-comentario')}"><i class="far fa-comments"></i></button>` +
+                                        '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + `" data-toggle="tooltip" data-placement="top" title="${_('editar-informacion')}"><i class="fas fa-pencil-alt"></i></button>` +
+                                        '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('ver-informacion')}"><i class="far fa-eye"></i></button>` +
+                                        '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('re-asignar')}"><i class="fab fa-rev"></i></button>`;
                                     
-                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
-                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
-                                    actions += '<button class="btn-data btn-acidGreen update-status" '+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top" '+'title="ACTUALIZAR ESTATUS">'+'<i class="fas fa-redo"></i>';
+                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="${_('desplegar-opciones')}" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="${_('cerrar-opciones')}"> <i class="fas fa-chevron-down"></i> </button> </div>`;
+                                    actions += '<button class="btn-data btn-acidGreen update-status" '+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top" '+`title="${_('actualizar-estatus')}">`+'<i class="fas fa-redo"></i>';
                                 }
                                 return '<center>'+actions+'</center>';
                             } else {
@@ -180,12 +181,12 @@ function fillTable(transaction, beginDate, endDate, where) {
                                 if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) {
                                     actions = '';
                                 } else {
-                                    group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
-                                        '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
-                                        '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>' +
-                                        '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="RE - ASIGNAR"><i class="fab fa-rev"></i></button>';
-                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="Desplegar opciones" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
-                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
+                                    group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('ingresar-comentario')}"><i class="far fa-comments"></i></button>` +
+                                        '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + `" data-toggle="tooltip" data-placement="top" title="${_('editar-informacion')}"><i class="fas fa-pencil-alt"></i></button>` +
+                                        '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('ver-informacion')}"><i class="far fa-eye"></i></button>` +
+                                        '<button class="btn-data btn-details-grey re-asign" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('re-asignar')}"><i class="fab fa-rev"></i></button>`;
+                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="${_('desplegar-opciones')}" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="${_('cerrar-opciones')}"> <i class="fas fa-chevron-down"></i> </button> </div>`;
                                 }
                                 return '<center>'+actions+'</center>';
                             }
@@ -196,12 +197,12 @@ function fillTable(transaction, beginDate, endDate, where) {
                                 if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) {
                                     actions = '';
                                 } else { // ES ASESOR Y EL REGISTRO ES DE MKTD - DEJO EL BOTÓN DE VER
-                                    group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
-                                        '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
-                                        '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="far fa-eye"></i></button>';
-                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="DESPLEGAR OPCIONES" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
-                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="CERRAR OPCIONES"> <i class="fas fa-chevron-down"></i> </button> </div>`;
-                                    actions += '<button class="btn-data btn-acidGreen update-status"'+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top" '+'title="ACTUALIZAR ESTATUS">'+'<i class="fas fa-redo"></i>';
+                                    group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('ingresar-comentario')}"><i class="far fa-comments"></i></button>` +
+                                        '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + `" data-toggle="tooltip" data-placement="top" title="${_('editar-informacion')}"><i class="fas fa-pencil-alt"></i></button>` +
+                                        '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('ver-informacion')}"><i class="far fa-eye"></i></button>`;
+                                    actions += `<button class="desplegable btn-data btn-blueMaderas" id="btn_${d.id_prospecto}" data-toggle="tooltip" data-placement="top" title="${_('desplegar-opciones')}" onclick="javascript: $(this).addClass('hide');$('#cnt_${d.id_prospecto}').removeClass('hide');"> <i class="fas fa-chevron-up"></i> </button>`;
+                                    actions += `<div class= "hide boxSBtns" id="cnt_${d.id_prospecto}"> ${group_buttons} <br> <button onclick="javascript: $('#btn_${d.id_prospecto}').removeClass('hide'); $('#cnt_${d.id_prospecto}').addClass('hide');" class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="${_('cerrar-opciones')}"> <i class="fas fa-chevron-down"></i> </button> </div>`;
+                                    actions += '<button class="btn-data btn-acidGreen update-status"'+'data-id-prospecto="' + d.id_prospecto + '" '+'data-telefono="'+d.telefono+'" '+'data-telefono2="'+d.telefono2+'" '+'data-toggle="tooltip"'+'data-placement="top" '+`title="${_('actualizar-estatus')}">`+'<i class="fas fa-redo"></i>';
                                 }
                                 return '<center>'+actions+'</center>';
                             } else {
@@ -210,9 +211,9 @@ function fillTable(transaction, beginDate, endDate, where) {
                                 if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && compareDates(d.fecha_creacion) == true) {
                                     actions = '';
                                 } else {
-                                    group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + '" data-toggle="tooltip" data-placement="top" title="INGRESAR COMENTARIO"><i class="far fa-comments"></i></button>' +
-                                        '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-pencil-alt"></i></button>' +
-                                        '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN">remove_red_eye</i></button>';
+                                    group_buttons = '<button class="btn-data btn-orangeYellow to-comment" data-id-prospecto="' + d.id_prospecto + `" data-toggle="tooltip" data-placement="top" title="${_('ingresar-comentario')}"><i class="far fa-comments"></i></button>` +
+                                        '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + `" data-toggle="tooltip" data-placement="top" title="${_('editar')}"><i class="fas fa-pencil-alt"></i></button>` +
+                                        '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + `"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="${_('ver-informacion')}">remove_red_eye</i></button>`;
                                     actions += '<button class="desplegable btn-blueMaderas" '+'id="btn_' + d.id_prospecto + '" '+'onclick="javascript: $(this).addClass(\'hide\');'+'$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\');">'+'<i class="fas fa-chevron-up"></i>'+'</button>';
                                     actions += '<div class="hide boxSBtns" '+'id="cnt_' + d.id_prospecto + '">' + group_buttons + ''+'<br>'+
                                                     '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+'$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');" '+'class="btn-data btn-blueMaderas">'+
@@ -220,7 +221,7 @@ function fillTable(transaction, beginDate, endDate, where) {
                                                     '</button>'+
                                                 '</div>';
                                     if (d.vigencia >= 0) {
-                                        actions += '<button class="btn-data btn-acidGreen update-validity" '+'data-id-prospecto="' + d.id_prospecto + '" '+'rel="tooltip" '+'data-placement="left"'+'data-toggle="tooltip"'+'data-placement="top" '+'title="Renovar vigencia">'+
+                                        actions += '<button class="btn-data btn-acidGreen update-validity" '+'data-id-prospecto="' + d.id_prospecto + '" '+'rel="tooltip" '+'data-placement="left"'+'data-toggle="tooltip"'+'data-placement="top" '+`title="${_('renovar-vigencia')}">`+
                                                         '<i class="fas fa-history"></i>'+
                                                     '</button>';
                                     }
@@ -269,7 +270,7 @@ function fillTable(transaction, beginDate, endDate, where) {
             });
         },
     });
-
+    changeSelects();
 }
 
 $('#prospects-datatable').on('draw.dt', function() {
@@ -336,14 +337,14 @@ $("#my-coowner-form").on('submit', function(e) {
             if (data == 1) {
                 $('#myCoOwnerModal').modal("hide");
                 cleanFields(3);
-                alerts.showNotification("top", "right", "El registro se ha ingresado exitosamente.", "success");
+                alerts.showNotification("top", "right", _('registro-ingresado-exitoso'), "success");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -362,14 +363,14 @@ $("#my-edit-form").on('submit', function(e) {
         success: function(data) {
             if (data == 1) {
                 $('#myEditModal').modal("hide");
-                alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                alerts.showNotification("top", "right", _('registro-actualizado-exitoso'), "success");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -393,13 +394,13 @@ $("#my-comment-form").on('submit', function(e) {
             if (data == 1) {
                 $('#myCommentModal').modal("hide");
                 $('#observations').val('');
-                alerts.showNotification("top", "right", "El comentario se ha ingresado exitosamente.", "success");
+                alerts.showNotification("top", "right", _('comentario-ingresado-exitosamente'), "success");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -419,13 +420,13 @@ $("#my_reasign_form_sm").on('submit', function(e) {
             if (data == 1) {
                 $('#myReAsignModalSubMktd').modal("hide");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "La reasignación se ha llevado a cabo correctamente.", "success");
+                alerts.showNotification("top", "right", _('reasignacion-ingresada-exitosamente'), "success");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -445,13 +446,13 @@ $("#my_reasign_form_gm").on('submit', function(e) {
             if (data == 1) {
                 $('#myReAsignModalGerMktd').modal("hide");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "La reasignación se ha llevado a cabo correctamente.", "success");
+                alerts.showNotification("top", "right", _('reasignacion-ingresada-exitosamente'), "success");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -471,13 +472,13 @@ $("#my_reasign_form_ve").on('submit', function(e) {
             if (data == 1) {
                 $('#myReAsignModalVentas').modal("hide");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "La reasignación se ha llevado a cabo correctamente.", "success");
+                alerts.showNotification("top", "right", _('reasignacion-ingresada-exitosamente'), "success");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -486,7 +487,7 @@ function validateFile() {
     if ($('#prospecting_place').val() == '' || $('#prospecting_place').val() == null ||
         $('#sales_plaza').val() == '' || $('#sales_plaza').val() == null ||
         $('#asesor_prospecto').val() == '' || $('#asesor_prospecto').val() == null) {
-        alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
+        alerts.showNotification('top', 'right', _('campos-llenos-requeridos'), 'danger');
     } else {
         $('#confirmar').modal('toggle');
     }
@@ -642,7 +643,7 @@ function getAdvisers(element) {
             $("#myselectasesor").append($('<option>').val(id).attr('data-sede', sede).text(name));
         }
         if (len <= 0) {
-            $("#myselectasesor").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+            $("#myselectasesor").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#myselectasesor").selectpicker('refresh');
     }, 'json');
@@ -663,7 +664,7 @@ function getManagers(){
             $("#myselectgerente2").selectpicker('refresh');  
         }
         if (len <= 0) {
-            $("#myselectgerente2").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+            $("#myselectgerente2").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#myselectgerente2").selectpicker('refresh'); 
         selectGerente = $("#myselectgerente2").val();
@@ -682,7 +683,7 @@ function getCoordinatorsByManager(element) {
             $("#myselectcoordinador").append($('<option>').val(id).attr('data-sede', sede).text(name));
         }
         if (len <= 0) {
-            $("#myselectcoordinador").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+            $("#myselectcoordinador").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#myselectcoordinador").selectpicker('refresh');
         selectCoordinador = $("#myselectcoordinador").val();
@@ -702,7 +703,7 @@ function getAdvisersByCoordinator(element) {
             $("#myselectasesor3").append($('<option>').val(id).attr('data-sede', sede).text(name));
         }
         if (len <= 0) {
-            $("#myselectasesor3").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+            $("#myselectasesor3").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#myselectasesor3").selectpicker('refresh');
         selectAsesor = $("#myselectasesor3").val();
@@ -911,13 +912,13 @@ function fillTimeline(v) {
         '    <div class="container-fluid">\n' +
         '       <div class="row">\n' +
         '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
-        '               <a><small>Creador por: </small><b>' + v.creador + '</b></a><br>\n' +
+        `               <a><small>${_('creado-por')}: </small><b>` + v.creador + '</b></a><br>\n' +
         '           </div>\n' +
         '           <div class="float-end text-right">\n' +
         '               <a>' + v.fecha_creacion + '</a>\n' +
         '           </div>\n' +
         '           <div class="col-md-12">\n' +
-    '                <p class="m-0"><small>Comentario: </small><b> ' + v.observacion + '</b></p>\n'+
+        `                <p class="m-0"><small>${_('comentario')}: </small><b> ` + v.observacion + '</b></p>\n'+
         '           </div>\n' +
         '       </div>\n' +
         '    </div>\n' +
@@ -930,15 +931,15 @@ function fillChangelog(v) {
     '    <div class="container-fluid">\n' +
     '       <div class="row">\n' +
     '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
-    '               <a><small>Campo: </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
+    `               <a><small>${_('campo')}: </small><b>` + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
     '           </div>\n' +
     '           <div class="float-end text-right">\n' +
     '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
-    '             <p class="m-0"><small>Usuario: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
-    '             <p class="m-0"><small>Valor anterior: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
-    '             <p class="m-0"><small>Valor Nuevo: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+    `             <p class="m-0"><small>${_('usuario')}Usuario: </small><b> ` + v.creador.toUpperCase() + '</b></p>\n'+
+    `             <p class="m-0"><small>${_('valor-anterior')}: </small><b> ` + v.anterior.toUpperCase() + '</b></p>\n' +
+    `             <p class="m-0"><small>${_('valor-nuevo')}: </small><b> ` + v.nuevo.toUpperCase() + '</b></p>\n' +
     '           </div>\n' +
     '        <h6>\n' +
     '        </h6>\n' +
@@ -976,17 +977,17 @@ $(document).on('click', '.change-reference-status', function() {
         success: function(data) {
             if (data == 1) {
                 if (estatus == 1) {
-                    alerts.showNotification("top", "right", "Se ha activado con éxito.", "success");
+                    alerts.showNotification("top", "right", _('activar-usuario-mensaje-1'), "success");
                 } else {
-                    alerts.showNotification("top", "right", "Se ha desactivado con éxito.", "success");
+                    alerts.showNotification("top", "right", _('desactivar-usuario-mensale-1'), "success");
                 }
                 $referencesTable.ajax.reload();
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -1030,14 +1031,14 @@ $(document).on('click', '.update-validity', function() {
         dataType: 'json',
         success: function(data) {
             if (data == 1) {
-                alerts.showNotification("top", "right", "La vigencia de tu prospecto se ha renovado exitosamente.", "success");
+                alerts.showNotification("top", "right", _('vigencia-prospecto-renovada'), "success");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -1052,17 +1053,17 @@ $(document).on('click', '.change-status', function() {
         success: function(data) {
             if (data == 1) {
                 if (estatus == 1) {
-                    alerts.showNotification("top", "right", "Se ha activado con éxito.", "success");
+                    alerts.showNotification("top", "right", _('activar-usuario-mensaje-1'), "success");
                 } else {
-                    alerts.showNotification("top", "right", "Se ha desactivado con éxito.", "success");
+                    alerts.showNotification("top", "right", _('desactivar-usuario-mensaje-1'), "success");
                 }
                 $sharedSalesTable.ajax.reload();
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -1086,7 +1087,7 @@ $(document).on('click', '.see-information', function(e) {
     });
     $.getJSON("getComments/" + id_prospecto).done(function(data) {
         if (data.length == 0) {
-            $("#comments-list").append('SIN DATOS POR MOSTRAR');
+            $("#comments-list").append(_("sin-datos-por-mostrar").toUpperCase());
         } else {
             counter = 0;
             $.each(data, function(i, v) {
@@ -1097,7 +1098,7 @@ $(document).on('click', '.see-information', function(e) {
     });
     $.getJSON("getChangelog/" + id_prospecto).done(function(data) {
         if (data.length == 0) {
-            $("#changelog").append('SIN DATOS POR MOSTRAR');
+            $("#changelog").append(_("sin-datos-por-mostrar").toUpperCase());
         } else {
             $.each(data, function(i, v) {
                 fillChangelog(v);
@@ -1151,15 +1152,15 @@ $("#my_update_status_form").on('submit', function(e) {
                 $('#estatus_particular').val("0");
                 $("#estatus_particular").selectpicker("refresh");
                 $('#prospects-datatable').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
+                alerts.showNotification("top", "right", _('actualizacion-exitosa'), "success");
             } else if (data == 2) {
-                alerts.showNotification("top", "right", "La asignación no se ha podido llevar a cabo debido a que el lote seleccionado ya se encuentra apartado.", "warning");
+                alerts.showNotification("top", "right", _('asignacion-no-exitosa'), "warning");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });}
 });
@@ -1197,13 +1198,13 @@ $("#my_update_status_prevee").on('submit', function(e) {
                 $('#estatus_particular2').val("0");
                 $("#estatus_particular2").selectpicker("refresh");
                 $prospectsPreventaTable.ajax.reload();
-                alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
+                alerts.showNotification("top", "right", _('actualizacion-exitosa'), "success");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('campos-llenos-requeridos'), "warning");
             }
         },
         error: function() {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 
@@ -1211,7 +1212,7 @@ $("#my_update_status_prevee").on('submit', function(e) {
 
 function getPersonsWhoRecommends() {
     $.getJSON("getCAPListByAdvisor").done(function(data) {
-        $("#specify_recommends").append($('<option disabled selected="true">').val("0").text("Seleccione una opción"));
+        $("#specify_recommends").append($('<option disabled selected="true">').val("0").text(_('select-predeterminado')));
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
@@ -1272,13 +1273,13 @@ $(document).on('click', '.change-pl', function () { // MJ: FUNCIÓN CAMBIO DE ES
         dataType: 'json',
         success: function (data) {
             if (data == 1) {
-                alerts.showNotification("top", "right", "El lugar de prospección se ha actualizado con éxito.", "success");
+                alerts.showNotification("top", "right", _('lugar-prospeccion-actualizado'), "success");
                 prospectsTable.ajax.reload();
             } else {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+                alerts.showNotification("top", "right", _('algo-salio-mal'), "warning");
             }
         }, error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -1312,14 +1313,14 @@ document.querySelector('#estatus_recordatorio_form').addEventListener('submit',a
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
 
 function getStatusRecordatorio(){
     $.post('../Calendar/getStatusRecordatorio', function(data) {
-        $("#estatus_recordatorio").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+        $("#estatus_recordatorio").append($('<option disabled selected>').val("0").text(_('select-predeterminado')));
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
@@ -1327,7 +1328,7 @@ function getStatusRecordatorio(){
             $("#estatus_recordatorio").append($('<option>').val(id).text(name));
         }
         if (len <= 0) {
-            $("#estatus_recordatorio").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+            $("#estatus_recordatorio").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#estatus_recordatorio").selectpicker('refresh');
     }, 'json'); 
@@ -1344,14 +1345,14 @@ function validateNCreate(medio, box){
     let telefono1 = $('#telefono1').val();
     let telefono2 = $('#telefono2').val();
     if(medio == 2 || medio == 5){
-        box.append(`<label class="m-0">Dirección del ${medio == 5 ? 'evento':'recorrido'}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='' required>`);
+        box.append(`<label class="m-0">${_('direccion-de')} ${medio == 5 ? _('evento') : _('recorrido')}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='' required>`);
     }
     else if(medio == 3){
-        box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">Teléfono 1</label><input type="text" class="form-control input-gral" value=${ telefono1 != 'undefined' ? telefono1 : ''} disabled></div>`
-        +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0">Teléfono 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${ telefono2 != 'undefined' ? telefono2 : ''}  ></div></div></div>`);
+        box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">${_('telefono')} 1</label><input type="text" class="form-control input-gral" value=${ telefono1 != 'undefined' ? telefono1 : ''} disabled></div>`
+        +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0" data-i18n="telefono">${_('telefono')} 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${ telefono2 != 'undefined' ? telefono2 : ''}  ></div></div></div>`);
     }
     else if(medio == 4){
-        box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">Dirección de oficina</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
+        box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">${_('direccion-oficina')}</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
         getOfficeAddresses();
     }
     box.removeClass('hide');
@@ -1366,7 +1367,7 @@ function getOfficeAddresses(){
             $("#id_direccion").append($('<option>').val(id).text(direccion));
         }
         if (len <= 0) {
-        $("#id_direccion").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+        $("#id_direccion").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#id_direccion").selectpicker('refresh');
     }, 'json');
