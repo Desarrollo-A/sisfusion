@@ -153,13 +153,11 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         }
     });
 
-    applySearch(tabla_6);
-
+    applySearch(mktdProspectsTable);
+    
     $('#mktdProspectsTable').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
 }
-
-applySearch(mktdProspectsTable);
