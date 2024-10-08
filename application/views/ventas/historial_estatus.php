@@ -57,7 +57,7 @@
                                 aria-hidden="true">
                             <i class="material-icons">clear</i>
                         </button>
-                        <h4 class="modal-title">Cambio de estatus</h4>
+                        <h4 class="modal-title" data-i18n="cambio-estatus">Cambio de estatus</h4>
                     </div>
 
                     <form method="post"
@@ -90,12 +90,12 @@
 
                         <div class="modal-footer">
                             <button type="submit"
-                                    class="btn btn-primary">
+                                    class="btn btn-primary" data-i18n="aceptar">
                                 Aceptar
                             </button>
                             <button type="button"
                                     class="btn btn-danger btn-simple"
-                                    data-dismiss="modal">
+                                    data-dismiss="modal" data-i18n="cancelar">
                                 Cancelar
                             </button>
                         </div>
@@ -124,16 +124,19 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Historial <b>general estatus</b></h3>
-                                    <p class="card-title pl-1">(Listado de todos los pagos por proyecto y estatus)</p>
+                                <h3 class="card-title center-align">
+                                    <span data-i18n="historial">Historial</span>
+                                    <b data-i18n="general-estatus">general estatus</b>
+                                </h3>
+                                    <p class="card-title pl-1" data-i18n="titulo-listado-pagos">(Listado de todos los pagos por proyecto y estatus)</p>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro33">Proyecto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un proyecto" data-size="7" required>
+                                                    <label class="m-0" for="filtro33" data-i18n="proyecto">Proyecto</label>
+                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" data-i18n-label="select-proyecto" title="Selecciona un proyecto" data-size="7" required>
                                                         <option value="0">Seleccione todo</option>
                                                     </select>
                                                     <!-- param -->
@@ -153,18 +156,20 @@
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="filtro44">Estatus</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona estatus" data-size="7" required/>
+                                                    <label class="m-0" for="filtro44" data-i18n="estatus-2">Estatus</label>
+                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-estatus" title="Selecciona estatus" data-size="7" required/>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label class="m-0"
-                                                           for="roles">Puesto</label>
+                                                           for="roles" data-i18n="puesto">Puesto</label>
                                                     <select class="selectpicker select-gral"
                                                             name="roles"
                                                             id="roles"
+                                                            data-i18n-label="selecciona-rol"
+                                                            title="SELECCIONA UN ROL"
                                                             required>
                                                     </select>
                                                 </div>
@@ -173,13 +178,14 @@
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
                                                     <label class="m-0"
-                                                           for="users">Usuario</label>
+                                                           for="users" data-i18n="usuario">Usuario</label>
                                                     <select class="selectpicker select-gral"
                                                             id="users"
                                                             name="users"
                                                             data-style="btn"
                                                             data-show-subtext="true"
                                                             data-live-search="true"
+                                                            data-i18n-label="selecciona-usuario"
                                                             title="SELECCIONA UN USUARIO"
                                                             data-size="7"
                                                             required>
@@ -196,22 +202,22 @@
                                                 <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th>ID</th>
-                                                        <th>PROY.</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>REF.</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COM.</th>
-                                                        <th>PAGO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>PAGADO</th>
-                                                        <th>PENDIENTE</th>
-                                                        <th>USUARIO</th>
-                                                        <th>PUESTO</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>id</th>
+                                                        <th>proy</th>
+                                                        <th>condominio</th>
+                                                        <th>lote</th>
+                                                        <th>ref</th>
+                                                        <th>precio-lote</th>
+                                                        <th>total-com</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>pagado</th>
+                                                        <th>pendiente</th>
+                                                        <th>usuario</th>
+                                                        <th>puesto</th>
+                                                        <th>detalle</th>
+                                                        <th>estatus</th>
+                                                        <th>mas</th>
                                                     </tr>
                                             </thead>
                                         </table>
@@ -355,25 +361,25 @@
             myCommentsLote.innerHTML = '';
         } 
 
-        $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
-            let titulos = [];
-            if(i != 0){
-                var title = $(this).text();
-                titulos.push(title);
-                $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
-                $('input', this).on('keyup change', function() {
-                    if (tabla_historialGral2.column(i).search() !== this.value) {
-                        tabla_historialGral2.column(i).search(this.value).draw();
+        // $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
+        //     let titulos = [];
+        //     if(i != 0){
+        //         var title = $(this).text();
+        //         titulos.push(title);
+        //         $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>');
+        //         $('input', this).on('keyup change', function() {
+        //             if (tabla_historialGral2.column(i).search() !== this.value) {
+        //                 tabla_historialGral2.column(i).search(this.value).draw();
 
-                        var total = 0;
-                        var index = tabla_historialGral2.rows({
-                            selected: true,
-                            search: 'applied'
-                        }).indexes();
-                    }
-                });
-            }
-        });
+        //                 var total = 0;
+        //                 var index = tabla_historialGral2.rows({
+        //                     selected: true,
+        //                     search: 'applied'
+        //                 }).indexes();
+        //             }
+        //         });
+        //     }
+        // });
 
         var url = "<?=base_url()?>";
         var url2 = "<?=base_url()?>index.php/";
@@ -440,12 +446,12 @@
             </div>`;
 
         let seleccionados = [];
-
         //INICIO TABLA QUERETARO*****************************************
 
         function getAssimilatedCommissions(proyecto, condominio, usuario){
             let titulos = [];
             $("#tabla_historialGral").prop("hidden", false);
+            construirHead('tabla_historialGral');
             tabla_historialGral2 = $("#tabla_historialGral").DataTable({
                 dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
                 width: 'auto',
@@ -667,7 +673,7 @@
                         var etiqueta;
                             
                         if((d.id_estatus_actual == 11) && d.descuento_aplicado == 1 ){
-                            etiqueta = '<p class=""m-0><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';
+                            etiqueta = '<p class=""m-0><span class="label" style="background:#ED7D72;">DESCUENTO</span></p>';                            
                         }else if((d.id_estatus_actual == 12) && d.descuento_aplicado == 1 ){
                             etiqueta = '<p class=""m-0><span class="label" style="background:#EDB172;">DESCUENTO RESGUARDO</span></p>';
                         }else if((d.id_estatus_actual == 0) && d.descuento_aplicado == 1 ){
@@ -823,6 +829,7 @@
                     data: function( d ){}
                 },
             });
+            applySearch(tabla_historialGral2);
 
             $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
                 e.preventDefault();
@@ -832,7 +839,7 @@
                 lote = $(this).attr("data-value");
 
                 $("#seeInformationModalAsimilados").modal();
-                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+                $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');               
                 $.getJSON("getComments/"+id_pago).done( function( data ){
                     $.each( data, function(i, v){
                         $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:gray;">'+v.comentario+'</i><br><b style="color:#3982C0">'+v.fecha_movimiento+'</b><b style="color:gray;"> - '+v.nombre_usuario+'</b></p></div>');
@@ -855,6 +862,7 @@
             });
 
             $("#tabla_historialGral tbody").on("click", ".actualizar_pago", function(){
+                
                 var tr = $(this).closest('tr');
                 var row = tabla_historialGral2.row( tr );
 
