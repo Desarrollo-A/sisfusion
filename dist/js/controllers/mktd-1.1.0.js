@@ -4,7 +4,7 @@ $(document).ready( function() {
     $("#myselectasesor2").empty().selectpicker('refresh');
 
     $.post('getAdvisersM', function(data) {
-        $("#myselectasesor2").append($('<option disabled>').val("default").text("Seleccione una opción"));
+        $("#myselectasesor2").append($('<option disabled>').val("default").text(_("select-predeterminado")));
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
@@ -15,14 +15,14 @@ $(document).ready( function() {
         }
         if(len<=0)
         {
-            $("#myselectasesor2").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectasesor2").append(`<option selected="selected" disabled>${_("no-se-han-encontrado-reg")}</option>`);
         }
         $("#myselectasesor2").selectpicker('refresh');
     }, 'json');
 
     // Set options for myselectgerente
     $.post('getManagersMktd', function(data) {
-        $("#myselectgerente").append($('<option disabled>').val("default").text("Seleccione una opción"));
+        $("#myselectgerente").append($('<option disabled>').val("default").text(_("select-predeterminado")));
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
@@ -33,7 +33,7 @@ $(document).ready( function() {
         }
         if(len<=0)
         {
-            $("#myselectgerente").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectgerente").append(`<option selected="selected" disabled>${_("no-se-han-encontrado-reg")}</option>`);
         }
         $("#myselectgerente").selectpicker('refresh');
     }, 'json');
@@ -46,7 +46,7 @@ $(document).on('click', '.see-comments', function(e){
 
     $.getJSON("getComments/"+id_prospecto).done( function( data ){
         counter = 0;
-        data.length > 0 ? data = data : data[0] = {creador:'', fecha_creacion: '', observacion: '<b>SIN COMENTARIOS</b>'};
+        data.length > 0 ? data = data : data[0] = {creador:'', fecha_creacion: '', observacion: `<b>${_("sin-comentarios")}</b>`};
         $.each( data, function(i, v){
             counter ++;
             fillTimeline(v, counter);
@@ -95,15 +95,15 @@ function fillChangelog (v) {
     '    <div class="container-fluid">\n' +
     '       <div class="row">\n' +
     '           <div class="col-md-6">\n' +
-    '               <a><small>CAMPO: </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
+    '               <a><small>'+_("campo")+': </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
     '           </div>\n' +
     '           <div class="float-end text-right">\n' +
     '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
-    ' 	            <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-    '               <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
-    '               <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
+    ' 	            <p class="m-0"><small>'+_("usuario")+': </small><b> ' + v.creador + '</b></p>\n'+
+    '               <p class="m-0"><small>'+_("valor-anterior")+': </small><b> ' + v.anterior + '</b></p>\n' +
+    '               <p class="m-0"><small>'+_("valor-nuevo")+': </small><b> ' + v.nuevo + '</b></p>\n' +
     '           </div>\n' +
     '        <h6>\n' +
     '        </h6>\n' +
@@ -138,13 +138,13 @@ $("#my-comment-form").on('submit', function(e){
                 $('#myCommentModal').modal("hide");
                 $('#observations').val('');
                $('#prospects-datatable_dir').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "El comentario se ha ingresado exitosamente.", "success");
+                alerts.showNotification("top", "right", `${_("comentario-exitoso")}`, "success");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", `${_("campos-llenos-requerido")}`, "warning");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
         }
     });
 });
@@ -266,14 +266,14 @@ $("#my-edit-form").on('submit', function(e){
         success: function(data) {
             if (data == 1) {
                 $('#myEditModal').modal("hide");
-                alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                alerts.showNotification("top", "right", `${_("registro-actualizado")}`, "success");
                 $('#prospects-datatable_dir').DataTable().ajax.reload(null, false);
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", `${_("campos-llenos-requerido")}`, "warning");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
         }
     });
 });
@@ -377,7 +377,6 @@ function showSpecificationObject() {
     }
 }
 
-
 $(document).on('click', '.see-information', function(e){
     id_prospecto = $(this).attr("data-id-prospecto");
     $("#seeInformationModal").modal();
@@ -437,7 +436,7 @@ $(document).on('click', '.re-asign', function(e){
 function getCoordinatorsByManager(element) {
     gerente = $('option:selected', element).val();
     $("#myselectcoordinador").find("option").remove();
-    $("#myselectcoordinador").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    $("#myselectcoordinador").append($('<option disabled>').val("0").text(_("select-predeterminado")));
     $.post('getCoordinatorsByManager/'+gerente, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -449,7 +448,7 @@ function getCoordinatorsByManager(element) {
         }
         if(len<=0)
         {
-            $("#myselectcoordinador").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectcoordinador").append(`<option selected="selected" disabled>${_("no-se-han-encontrado-reg")}</option>`);
         }
         $("#myselectcoordinador").selectpicker('refresh');
     }, 'json');
@@ -459,7 +458,7 @@ function getCoordinatorsByManager(element) {
 function getAdvisersByCoordinator(element) {
     coordinador = $('option:selected', element).val();
     $("#myselectasesor3").find("option").remove();
-    $("#myselectasesor3").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    $("#myselectasesor3").append($('<option disabled>').val("0").text(_("select-predeterminado")));
     $.post('getAdvisersByCoordinator/'+coordinador, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -471,7 +470,7 @@ function getAdvisersByCoordinator(element) {
         }
         if(len<=0)
         {
-            $("#myselectasesor3").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectasesor3").append(`<option selected="selected" disabled>${_("no-se-han-encontrado-reg")}</option>`);
         }
         $("#myselectasesor3").selectpicker('refresh');
     }, 'json');
@@ -493,13 +492,13 @@ $("#my_reasign_form_ve").on('submit', function(e){
             if (data == 1) {
                 $('#myReAsignModalVentas').modal("hide");
                 $('#prospects-datatable_dir').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "La reasignación se ha llevado a cabo correctamente.", "success");
+                alerts.showNotification("top", "right", `${_("reasignacion-correctamente")}`, "success");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", `${_("campos-llenos-requerido")}`, "warning");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
         }
     });
 });
@@ -531,22 +530,22 @@ $("#my_update_status_form").on('submit', function(e){
             if (data == 1) {
                 $('#myUpdateStatusModal').modal("hide");
                 $('#prospects-datatable_dir').DataTable().ajax.reload(null, false);
-                alerts.showNotification("top", "right", "La actualización se ha llevado a cabo correctamente.", "success");
+                alerts.showNotification("top", "right", `${_("actualizacion-correcta")}`, "success");
                 $('#estatus_particular').val("0");
                 $("#estatus_particular").selectpicker("refresh");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right",`${_("campos-llenos-requerido")}`, "warning");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
         }
     });
 });
 
   // Fill the select of matrimonial regime
     $.getJSON("getMatrimonialRegime").done( function( data ){
-        $(".matrimonial_regime").append($('<option selected="true">').val("0").text("Seleccione una opción"));
+        $(".matrimonial_regime").append($('<option selected="true">').val("0").text(_("select-predeterminado")));
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
@@ -611,7 +610,7 @@ function validatePersonality(){
 
     // Set options for myselectgerente
     $.post('getManagersMktd', function(data) {
-        $("#myselectgerente").append($('<option disabled>').val("0").text("Seleccione una opción"));
+        $("#myselectgerente").append($('<option disabled>').val("0").text(_("select-predeterminado")));
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
@@ -622,7 +621,7 @@ function validatePersonality(){
         }
         if(len<=0)
         {
-            $("#myselectgerente").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectgerente").append(`<option selected="selected" disabled>${_("no-se-han-encontrado-reg")}</option>`);
         }
         $("#myselectgerente").selectpicker('refresh');
     }, 'json');
@@ -631,7 +630,7 @@ function validatePersonality(){
 function getAdvisers(element) {
     sede = $('option:selected', element).attr('data-sede');
     $("#myselectasesor").find("option").remove();
-    $("#myselectasesor").append($('<option disabled>').val("0").text("Seleccione una opción"));
+    $("#myselectasesor").append($('<option disabled>').val("0").text(_("select-predeterminado")));
     $.post('getAdvisers/'+sede, function(data) {
         var len = data.length;
         for( var i = 0; i<len; i++)
@@ -643,7 +642,7 @@ function getAdvisers(element) {
         }
         if(len<=0)
         {
-            $("#myselectasesor").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#myselectasesor").append(`<option selected="selected" disabled>${_("no-se-han-encontrado-reg")}</option>`);
         }
         $("#myselectasesor").selectpicker('refresh');
     }, 'json');
@@ -678,7 +677,7 @@ $("#my_reasign_form_sm").on('submit', function(e){
 
 
     $.post('getStatusMktd', function(data) {
-        $("#estatus_particular").append($('<option disabled selected>').val("0").text("Seleccione una opción"));
+        $("#estatus_particular").append($('<option disabled selected>').val("0").text(_("select-predeterminado")));
         var len = data.length;
         for( var i = 0; i<len; i++)
         {
@@ -688,7 +687,7 @@ $("#my_reasign_form_sm").on('submit', function(e){
         }
         if(len<=0)
         {
-            $("#estatus_particular").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#estatus_particular").append(`<option selected="selected" disabled>${_("no-se-han-encontrado-reg")}</option>`);
         }
         $("#estatus_particular").selectpicker('refresh');
     }, 'json');
@@ -711,13 +710,13 @@ $(document).on('click', '.update-validity', function() {
         dataType: 'json',
         success: function(data){
             if( data == 1 ){
-                alerts.showNotification("top", "right", "La vigencia de tu prospecto se ha renovado exitosamente.", "success");
+                alerts.showNotification("top", "right", `${_("vigencia-existosa")}`, "success");
                $('#prospects-datatable_dir').DataTable().ajax.reload(null, false);
             }else{
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", `${_("campos-llenos-requerido")}`, "warning");
             }
         },error: function( ){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
         }
     });
 });

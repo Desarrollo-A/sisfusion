@@ -23,7 +23,7 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    console.log(lang);
+    // console.log(lang);
     $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
