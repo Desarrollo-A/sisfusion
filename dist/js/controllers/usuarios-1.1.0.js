@@ -912,6 +912,17 @@ function fillFields (v) {
         document.getElementById("sucursal").removeAttribute("required");
         $("#sucursal").empty();
     }
+
+    // RADIO TIPO USUARIO
+    if (parseInt(v.tipo) == 1) // NORMAL
+    $('input:radio[name=tipoUsuario]')[0].checked = true;
+    else if (parseInt(v.tipo) == 2) // MADERAS UPGRADE
+    $('input:radio[name=tipoUsuario]')[1].checked = true;
+    else if (parseInt(v.tipo) == 3) // CASAS
+    $('input:radio[name=tipoUsuario]')[2].checked = true;
+    else if (parseInt(v.tipo) == 4) // SEGUROS
+    $('input:radio[name=tipoUsuario]')[3].checked = true;
+
     $("#rol_actual").val(rol_asignado);
     $("#username").val(v.usuario);
     $("#contrasena").val(v.contrasena);
