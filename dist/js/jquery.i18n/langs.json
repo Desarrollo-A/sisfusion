@@ -505,7 +505,7 @@
 		"la-evidencia-ha-sido-marcada-como-rechazada": "The evidence has been marked as rejected.",
 		"lider": "Leader",
 		"lista": "LIST",
-		"listado-de-pagos-aplicados-contratados-activos": "List of applied payments for active contracts",
+		"listado-de-pagos-aplicados-contratados-activos": "List of all applied payments, in process for contracted and active batches.",		
 		"listado-marketing": "Digital marketing clients list",
 		"listado-oficinas-comercializacion": "List of Ciudad Maderas marketing offices",
 		"listado-pago-aplicados-lotes-cancelados": "List of all payments applied, in process of cancelled lots with recission.",
@@ -1145,6 +1145,7 @@
 		"selecciona-estatus": "Select status",
 		"selecciona-rol": "Select a role",
 		"selecciona-usuario": "SELECT A USER",
+		"posicion":"Position",
 		"ventas-de-apartados": "Section sales",
 		"ventas-con-contrato": "Sales with contract",
 		"ventas-con-enganche": "Sales with down payment",
@@ -2374,6 +2375,7 @@
 		"selecciona-estatus": "Selecciona estatus",
 		"selecciona-rol": "Selecciona un rol",
 		"selecciona-usuario": "SELECCIONA UN USUARIO",
+		"posicion":"Posición",
 		"ventas-de-apartados": "Ventas de apartados",
 		"ventas-con-contrato": "Ventas con contrato",
 		"ventas-con-enganche": "Ventas con enganche",
@@ -2458,3 +2460,5 @@
 		"aceptar-2": "ACEPTAR"
 	}
 }
+
+
