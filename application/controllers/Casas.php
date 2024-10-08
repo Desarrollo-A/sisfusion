@@ -5007,7 +5007,7 @@ class Casas extends BaseController
 
         $vobo = $this->CasasModel->getVobos($id, 13);
 
-        if (in_array($this->idUsuario, [5107])) {
+        if (in_array($this->idRol, [33, 11])) {
             $updateData = array(
                 "adm"  => 1,
                 "modificadoPor" => $this->session->userdata('id_usuario'),
