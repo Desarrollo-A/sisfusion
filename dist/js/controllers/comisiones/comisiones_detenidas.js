@@ -31,10 +31,10 @@ $('#comisiones-detenidas-table').ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES DETENIDAS',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                columns: [1,2,3,4,5,6,7,8,9,10,11],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx - 1] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -125,7 +125,7 @@ $('#comisiones-detenidas-table').ready(function () {
                     if(d.plan_descripcion=="-")
                         return '<p data-i18n="no-plan">SIN PLAN</p>';
                     else
-                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top" data-i18n="VIEW MORE DETAILS" title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top" data-i18n="ver-mas-detalles" title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                 }
             }
             return labelEstatus;
@@ -235,7 +235,7 @@ $('#comisiones-detenidas-table').ready(function () {
             'type': 'GET',
             cache: false,
             'data': function (d) { }
-        },
+        }
     });
 
     $('#comisiones-detenidas-table').on('draw.dt', function() {
@@ -897,4 +897,6 @@ $('#comisiones-detenidas-table').ready(function () {
             $("#modal_NEODATA").modal();
         }
     }); //FIN VERIFY_NEODATA
+
+    applySearch(comisionesDetenidasTabla);
 });
