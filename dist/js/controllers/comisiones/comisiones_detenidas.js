@@ -280,14 +280,14 @@ $('#comisiones-detenidas-table').ready(function () {
                 if (data) {
                     $('#estatus-modal').modal("hide");
                     $("#id-lote").val("");
-                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    alerts.showNotification("top", "right", _("registro-actualizado"), "success");
                     comisionesDetenidasTabla.ajax.reload();
                 } else {
-                    alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                    alerts.showNotification("top", "right", _("ocurrio-problema"), "warning");
                 }
             },
             error: function () {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             }
         });
     });

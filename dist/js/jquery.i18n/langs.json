@@ -1204,7 +1204,8 @@
             "sede-2": "Headquarters",
             "verificar-en-neodata-ventas": "Check in NEODATA Sales",
             "verificar-en-neodata-ooam": "Check in NEODATA OOAM",
-            "verificar-en-neodata": "Check in NEODATA"
+            "verificar-en-neodata": "Check in NEODATA",
+            "ocurrio-problema": "An error has occurred, try again later"
     },
     "es": {
             "1-origen": "1% de origen",
@@ -2411,6 +2412,7 @@
             "sede-2": "Sede",
             "verificar-en-neodata-ventas": "VERIFICAR EN NEODATA VENTAS",
             "verificar-en-neodata-ooam": "VERIFICAR EN NEODATA OOAM",
-            "verificar-en-neodata": "VERIFICAR EN NEODATA"
+            "verificar-en-neodata": "VERIFICAR EN NEODATA",
+            "ocurrio-problema": "Ocurrió un problema, vuelva a intentarlo más tarde"
     }
 }
