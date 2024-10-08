@@ -296,7 +296,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                             <div class="row hide" id="card2">
                                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="encabezadoBox">
-                                        <h3 class="card-title center-align" data-i18n="Descargar-inventario-lote-sede">Descargar inventario de lotes por sede</h3>
+                                        <h3 class="card-title center-align" data-i18n="descarga-inventario-lotes-sede">Descargar inventario de lotes por sede</h3>
                                         <p class="card-title pl-1"></p>
                                     </div>
                                     <div  class="toolbar">

@@ -161,3 +161,5 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         });
     });
 }
+
+applySearch(mktdProspectsTable);
