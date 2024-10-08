@@ -1174,8 +1174,8 @@
             "id-prospecto" : "Prospect id",
             "no-vigente"  :"Not active",
             "no-aplica" : "Not applicable",
-            "info-comisiones": "Las comisiones con factura se encuentran en espera de dispersión de pago.",
-            "total-pagar": "Total a pagar",
+            "info-comisiones": "Invoice commissions are peding of pay dispersion",
+            "total-pagar": "Total",
             "beneficiario": "Beneficiary",
             "comision-revision": "COMMISSIONS UNDER REVIEW",
             "info-comisiones-2": "assimilated payment comissions are pending due to payment dispersion",
@@ -1205,7 +1205,9 @@
             "verificar-en-neodata-ventas": "Check in NEODATA Sales",
             "verificar-en-neodata-ooam": "Check in NEODATA OOAM",
             "verificar-en-neodata": "Check in NEODATA",
-            "ocurrio-problema": "An error has occurred, try again later"
+            "ocurrio-problema": "An error has occurred, try again later",
+            "autorizada": "Authorized",
+            "rechazada": "Rejected"
     },
     "es": {
             "1-origen": "1% de origen",
@@ -2384,7 +2386,7 @@
             "no-aplica" : "No aplica",
             "info-comisiones": "Las comisiones con factura se encuentran en espera de dispersión de pago.",
             "total-pagar": "Total a pagar",
-            "beneficiario": "Beneficiary",
+            "beneficiario": "beneficiario",
             "comisiones-revision": "COMISIONES EN REVISIÓN",
             "infor-comisiones-2": "Las comisiones de pago a asimilados se encuentran en espera de dispersión de pago",
             "comision-pausada": "COMISIONES PAUSADAS",
@@ -2413,6 +2415,8 @@
             "verificar-en-neodata-ventas": "VERIFICAR EN NEODATA VENTAS",
             "verificar-en-neodata-ooam": "VERIFICAR EN NEODATA OOAM",
             "verificar-en-neodata": "VERIFICAR EN NEODATA",
-            "ocurrio-problema": "Ocurrió un problema, vuelva a intentarlo más tarde"
+            "ocurrio-problema": "Ocurrió un problema, vuelva a intentarlo más tarde",
+            "autorizada": "autorizada",
+            "rechazada": "Rechazada"
     }
 }
