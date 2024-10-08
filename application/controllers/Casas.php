@@ -3644,7 +3644,7 @@ class Casas extends BaseController
         $fechaModificacion = date("Y-m-d H:i:s");
 
         $dataVobo = [
-            $idRol == 101 ? "gph" : "titulacion" => 1,
+            $idRol = ($idRol == 101 || $idRol == 33) ? "gph" : "titulacion",
             "modificadoPor" => $modificadoPor,
             "fechaModificacion" => $fechaModificacion,
         ];
@@ -3754,8 +3754,6 @@ class Casas extends BaseController
         $this->db->trans_begin();
 
         $updateData = array(
-            "procesoAnterior" => $proceso,
-            "procesoNuevo"    => $proceso,
             "obra"  => $obra,
             "tesoreria" => $tesoreria,
             "serviciosArquitectonicos" => $serviciosArquitectonicos
