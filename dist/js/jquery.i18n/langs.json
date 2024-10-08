@@ -1173,7 +1173,12 @@
                 "limpiar-campos":"Clear fields",
                 "id-prospecto" : "Prospect id",
                 "no-vigente"  :"Not active",
-                "no-aplica" : "Not applicable"
+                "no-aplica" : "Not applicable",
+                "reporte-prospectos-direccion-regional": "Prospects report by regional office",
+                "reporte-prospectos-gerencia": "Prospects report by management office",
+                "reporte-prospectos-coordinacion": "Prospects report by coordination",
+                "reporte-prospectos-subdireccion": "Prospects report by sub-regional office",
+                "reporte-prospectos-asesor": "Prospects report by advisor office"
         },
         "es": {
                 "1-origen": "1% de origen",
@@ -2349,7 +2354,12 @@
                 "limpiar-campos":"Limpiar campos",
                 "id-prospecto" : "Id Prospecto",
                 "no-vigente": "No vigente",
-                "no-aplica" : "No aplica"
+                "no-aplica" : "No aplica",
+                "reporte-prospectos-direccion-regional": "Reporte de prospectos por dirección regional",
+                "reporte-prospectos-gerencia": "Reporte de prospectos por gerencia",
+                "reporte-prospectos-coordinacion": "Reporte de prospectos por coordinación",
+                "reporte-prospectos-subdireccion": "Reporte de prospectos por subdirección",
+                "reporte-prospectos-asesor": "Reporte de prospectos por asesor"
         }
 }
 
