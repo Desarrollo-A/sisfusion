@@ -9,7 +9,7 @@ class Asesor extends CI_Controller {
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
-        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar', /*'Arcus'*/));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar', 'Arcus'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
