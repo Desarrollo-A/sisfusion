@@ -9,7 +9,7 @@ $("#calendarioDay").change( function (){
     
     }else{
     $("#tabla_ingresar_6").ready( function(){
-        tabla_6 = $("#tabla_ingresar_6").DataTable({
+        let tabla_6 = $("#tabla_ingresar_6").DataTable({
             "ajax": {
                 "url": general_base_url + "contraloria/getRegistroDiarioPorFecha/",
                 "dataSrc": "",
@@ -245,7 +245,7 @@ $("#tabla_ingresar_6").ready( function(){
         titulos.push(title);
     });
 
-    tabla_6 = $("#tabla_ingresar_6").DataTable({
+    let tabla_6 = $("#tabla_ingresar_6").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX:true,
@@ -349,6 +349,8 @@ $("#tabla_ingresar_6").ready( function(){
         "order": [[ 1, 'asc' ]]
 
     });
+
+    applySearch(tabla_6);
     
     $('#tabla_ingresar_6').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
