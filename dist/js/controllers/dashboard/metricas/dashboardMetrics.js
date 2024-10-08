@@ -1,4 +1,16 @@
-var dataMetros, dataDisponibilidad, dataLugarProspeccion, dataMedio, metrosChart, disponibilidadChart, lugarChart, medioChart, promedioMetrosChart, dataPromedio, dataSedes;
+var dataVentasM2, dataMetros, dataDisponibilidad, dataLugarProspeccion, dataMedio, metrosChart, disponibilidadChart, lugarChart, medioChart, promedioMetrosChart, dataPromedio, dataSedes;
+
+onChangeTranslations(() => {
+    getPromedio(null, null, formatDate($('#tableBegin_promedio').val()),formatDate($('#tableEnd_promedio').val())).then( response => { 
+        dataPromedio = response;
+        formatPromedio(dataPromedio);
+    });
+    formatMetrosData(dataMetros);
+    formatDisponibilidadData(dataDisponibilidad);
+    formatLugarProspeccion(dataLugarProspeccion);
+    formatMedioProspeccion(dataMedio);
+    formatVentasM2(dataVentasM2);
+})
 
 var optionBarInit = {
     series: [],
@@ -395,6 +407,8 @@ var optionsPromedio = {
 
 
 function readyMetrics(){
+    $('body').i18n();
+    changeSelects();
     $('[data-toggle="tooltip"]').tooltip();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
@@ -550,6 +564,7 @@ function getVentasM2(idCond){
         type: 'POST',
         dataType: 'json',
         success: function (response) {
+            dataVentasM2 = response;
             formatVentasM2(response);
             $('.loadVentasMetrosChart').addClass('d-none');
         }
@@ -569,7 +584,7 @@ function formatMetrosData(data){
     });
 
     metrosChart.updateSeries([{
-        name: 'Cantidad',
+        name: _('cantidad'),
         data: series
     }])
 
@@ -590,14 +605,14 @@ function formatDisponibilidadData(data){
                 x: element.nombreResidencial,
                 y: element.ocupados,
                 goals: [{
-                    name: 'Total',
+                    name: "Total",
                     value: element.totales,
                     strokeWidth: 2,
                     strokeHeight: 10,
                     strokeColor: '#775DD0'
                 },
                 {   
-                    name: 'Disponible',
+                    name: _('disponible2'),
                     value: element.restante,
                     strokeWidth: 0,
                     strokeHeight: 0,
@@ -609,7 +624,7 @@ function formatDisponibilidadData(data){
     });
 
     disponibilidadChart.updateSeries([{
-        name: 'Vendido',
+        name: _('vendido'),
         data: series
     }])
 }
@@ -628,11 +643,11 @@ function formatLugarProspeccion(data){
     });
 
     lugarChart.updateSeries([{
-        name: 'Prospectos',
+        name: _('prospectos'),
         data: series
     },
     {
-        name: 'Clientes',
+        name: _('clientes'),
         data: series2
     }])
 
@@ -645,12 +660,19 @@ function formatLugarProspeccion(data){
 
 function formatMedioProspeccion(data){
     $('.loadMedioChart').addClass('d-none');
-    let series =[] , categories = [];
+    let series =[] , categories = [
+        _('otro-especificar'),
+        _('modulo-centro-comercial'),
+        _('redes-personales'),
+        _('evento-especificar'),
+        _('recomendado-especificar'),
+        _('visita-empresas-especificar')
+    ];
     let count = 0;
     data.forEach(element => {
         if (count < 6) {
             series.push( element.cantidad );
-            categories.push(`${element.nombre}`);
+            // categories.push(`${element.nombre}`);
             count++;
         }
     });
@@ -668,7 +690,7 @@ function formatVentasM2(data){
         categories.push(`(${element.sup} m2)`);
     });
     ventasMetrosChart.updateSeries([{
-        name: 'No. de lotes: ',
+        name: _('numero-lotes'),
         data: series
     }])
 
@@ -773,9 +795,9 @@ function buildEstructuraDTMetros(dataName){
         <table class="table-striped table-hover" id="table`+dataName+`" name="table">
             <thead>
                 <tr>
-                    <th>SUPERFICIE</th>
-                    <th>CANTIDAD</th>
-                    <th>PRECIO</th>
+                    <th>superficie</th>
+                    <th>cantidad</th>
+                    <th>precio</th>
                 </tr>
             </thead>
         </table>
@@ -788,11 +810,11 @@ function buildEstructuraDTDisponibilidad(dataName){
         <table class="table-striped table-hover" id="table`+dataName+`" name="table">
             <thead>
                 <tr>
-                    <th>NOMBRE RESIDENCIAL</th>
-                    <th>DESCRIPCIÓN</th>
-                    <th>TOTALES</th>
-                    <th>OCUPADOS</th>
-                    <th>RESTANTES</th>
+                    <th>nombre-residencial</th>
+                    <th>descripcion</th>
+                    <th>totales</th>
+                    <th>ocupados</th>
+                    <th>restantes</th>
                 </tr>
             </thead>
         </table>
@@ -805,9 +827,9 @@ function buildEstructuraDTLP(dataName){
         <table class="table-striped table-hover" id="table`+dataName+`" name="table">
             <thead>
                 <tr>
-                    <th>NOMBRE</th>
-                    <th>PROSPECTOS</th>
-                    <th>CLIENTES</th>
+                    <th>nombre</th>
+                    <th>prospectos</th>
+                    <th>clientes</th>
                 </tr>
             </thead>
         </table>
@@ -820,8 +842,8 @@ function buildEstructuraDTMedio(dataName){
         <table class="table-striped table-hover" id="table`+dataName+`" name="table">
             <thead>
                 <tr>
-                    <th>NOMBRE</th>
-                    <th>CANTIDAD</th>
+                    <th>nombre</th>
+                    <th>cantidad</th>
                 </tr>
             </thead>
         </table>
@@ -875,16 +897,18 @@ function getProyectos(idSede = null, idProyecto = null){
 }
 
 function buildTableMetros(data){
-    $('#tablemetros thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $('input', this).on('keyup change', function () {
-            if ($("#tablemetros").DataTable().column(i).search() !== this.value) {
-                $("#tablemetros").DataTable().column(i)
-                    .search(this.value).draw();
-            }
-        });
-    });
+    // $('#tablemetros thead tr:eq(0) th').each(function (i) {
+    //     const title = $(this).text();
+    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    //     $('input', this).on('keyup change', function () {
+    //         if ($("#tablemetros").DataTable().column(i).search() !== this.value) {
+    //             $("#tablemetros").DataTable().column(i)
+    //                 .search(this.value).draw();
+    //         }
+    //     });
+    // });
+
+    construirHead('tablemetros')
 
     $('#tablemetros').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
@@ -892,7 +916,7 @@ function buildTableMetros(data){
         });
     });
 
-    $("#tablemetros").DataTable({
+    let tablemetros = $("#tablemetros").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -922,22 +946,33 @@ function buildTableMetros(data){
             searchable: false
         }],
     });
+
+    applySearch(tablemetros);
+    $('body').i18n();
 }
 
 function buildTableDisponibilidad(data){
-    $('#tabledisponibilidad thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $('input', this).on('keyup change', function () {
-            if ($("#tabledisponibilidad").DataTable().column(i).search() !== this.value) {
-                $("#tabledisponibilidad").DataTable().column(i)
-                    .search(this.value).draw();
-            }
+    // $('#tabledisponibilidad thead tr:eq(0) th').each(function (i) {
+    //     const title = $(this).text();
+    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    //     $('input', this).on('keyup change', function () {
+    //         if ($("#tabledisponibilidad").DataTable().column(i).search() !== this.value) {
+    //             $("#tabledisponibilidad").DataTable().column(i)
+    //                 .search(this.value).draw();
+    //         }
+    //     });
+    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+    // });
+
+    construirHead('tabledisponibilidad')
+
+    $('#tabledisponibilidad').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
     });
 
-    $("#tabledisponibilidad").DataTable({
+    let tabledisponibilidad = $("#tabledisponibilidad").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -973,22 +1008,33 @@ function buildTableDisponibilidad(data){
             searchable: false
         }],
     });
+
+    applySearch(tabledisponibilidad);
+    $('body').i18n();
 }
 
 function buildTableLugarProspeccion(data){
-    $('#tablelugar thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $('input', this).on('keyup change', function () {
-            if ($("#tablelugar").DataTable().column(i).search() !== this.value) {
-                $("#tablelugar").DataTable().column(i)
-                    .search(this.value).draw();
-            }
+    // $('#tablelugar thead tr:eq(0) th').each(function (i) {
+    //     const title = $(this).text();
+    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    //     $('input', this).on('keyup change', function () {
+    //         if ($("#tablelugar").DataTable().column(i).search() !== this.value) {
+    //             $("#tablelugar").DataTable().column(i)
+    //                 .search(this.value).draw();
+    //         }
+    //     });
+    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+    // });
+
+    construirHead('tablelugar')
+
+    $('#tablelugar').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
     });
 
-    $("#tablelugar").DataTable({
+    let tablelugar = $("#tablelugar").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -1018,22 +1064,33 @@ function buildTableLugarProspeccion(data){
             searchable: false
         }],
     });
+
+    applySearch(tablelugar);
+    $('body').i18n();
 }
 
 function buildTableMedio(data){
-    $('#tablemedio thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $('input', this).on('keyup change', function () {
-            if ($("#tablemedio").DataTable().column(i).search() !== this.value) {
-                $("#tablemedio").DataTable().column(i)
-                    .search(this.value).draw();
-            }
+    // $('#tablemedio thead tr:eq(0) th').each(function (i) {
+    //     const title = $(this).text();
+    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    //     $('input', this).on('keyup change', function () {
+    //         if ($("#tablemedio").DataTable().column(i).search() !== this.value) {
+    //             $("#tablemedio").DataTable().column(i)
+    //                 .search(this.value).draw();
+    //         }
+    //     });
+    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+    // });
+
+    construirHead('tablemedio')
+
+    $('#tablemedio').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
     });
 
-    $("#tablemedio").DataTable({
+    let tablemedio = $("#tablemedio").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -1062,6 +1119,9 @@ function buildTableMedio(data){
             searchable: false
         }],
     });
+
+    applySearch(tablemedio);
+    $('body').i18n();
 }
 
 function getCacheOptions(){
@@ -1141,7 +1201,7 @@ function formatPromedio(data){
     let months = [];
     let dataPromedio = [];
     data.forEach(element => {
-        months.push(`${element.MONTH} ${element.año}`);
+        months.push(`${_(element.MONTH)} ${element.año}`);
         dataPromedio.push(element.promedio);
     });
 
@@ -1347,9 +1407,9 @@ function buildDatePikcer(dates){
 
 function buildSelect(selected, dataSelect){
     $('.sedes_box').html('');
-    $('.sedes_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="sedes" name="sedes" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required style="height:100%!important"></select>`);
+    $('.sedes_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="sedes" name="sedes" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-i18n-label="select-predeterminado" data-size="7" data-container="body" required style="height:100%!important"></select>`);
     $('.proyecto_box').html('');
-    $('.proyecto_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="proyecto2" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required style="height:100%!important"></select>`);
+    $('.proyecto_box').append(`<select class="selectpicker select-gral m-0 proyecto" id="proyecto2" name="proyecto" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-i18n-label="select-predeterminado" data-size="7" data-container="body" required style="height:100%!important"></select>`);
     getSedes(selected.sede_promedio);
     $('#sedes').selectpicker('refresh');
     getProyectos(selected.sede_promedio, selected.proyecto_promedio);
@@ -1359,36 +1419,45 @@ function buildSelect(selected, dataSelect){
     });
 
     $('#proyecto2').selectpicker('refresh');
+    changeSelects();
 }
 
-let titulosMetricas = [];
-$('#lotesDetailTableMetricas thead tr:eq(0) th').each(function (i) {
-    let title = $(this).text();
-    titulosMetricas.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    $( 'input', this).on('keyup change', function () {
-        if ($('#lotesDetailTableMetricas').DataTable().column(i).search() !== this.value) {
-            $('#lotesDetailTableMetricas').DataTable().column(i).search(this.value).draw();
-        }   
-    });
-});
+// let titulosMetricas = [];
+// $('#lotesDetailTableMetricas thead tr:eq(0) th').each(function (i) {
+//     let title = $(this).text();
+//     titulosMetricas.push(title);
+//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+//     $( 'input', this).on('keyup change', function () {
+//         if ($('#lotesDetailTableMetricas').DataTable().column(i).search() !== this.value) {
+//             $('#lotesDetailTableMetricas').DataTable().column(i).search(this.value).draw();
+//         }   
+//     });
+// });
 
 function fillTableMetrics(dataObject) {
+    construirHead('lotesDetailTableMetricas');
+
+    $('#lotesDetailTableMetricas').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     generalDataTable = $('#lotesDetailTableMetricas').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons:[
             {
                 extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
+                text: `<i class="fa fa-file-excel-o" aria-hidden="true" title=${_('descargar-excel')}></i>`,
                 className: 'btn buttons-excel',
                 titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
-                title: 'Desglose de lotes',
+                title: 'Desglose de lotes' ,
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4,5,6,7,8,9,10,11],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosMetricas[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -1483,4 +1552,6 @@ function fillTableMetrics(dataObject) {
             dataSrc: ""
         }
     });
+    changeButtonTooltips();
+    construirHead('lotesDetailTableMetricas');
 }
