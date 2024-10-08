@@ -1048,7 +1048,17 @@
         "telefono-2": "Phone 2",
         "direccion-oficina": "Office address",
         "pagina-no-encontrada": "We couldn't find the requested page",
-        "regresar-404": "Take me back"
+        "regresar-404": "Take me back",
+        "aprobar-comision": "COMMISSION PAYMENT APPROVEMENT",
+        "datos-factura": "BILLING DATA",
+        "reactivar-comision": "COMMISSION REACTIVATION",
+        "por-pagar-factura": "to be paid with invoice",
+        "por-pagar-asimilados": "To be paid assimilated",
+        "pagos-espera": "pending payments",
+        "comision-nueva-factura": "RECENT COMISSIONS - INVOICE",
+        "total-pagar": "Total due",
+        "precio-lote": "Lot price",
+        "beneficiario": "Beneficiary"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2099,6 +2109,17 @@
         "telefono-2": "Teléfono 2",
         "direccion-oficina": "Dirección de oficina",
         "pagina-no-encontrada": "No encontramos la página a la que quieres acceder",
-        "regresar-404": "Regresar"
-	    }
+        "regresar-404": "Regresar",
+        "aprobar-comision": "APROBAR PAGO DE COMISIÓN",
+        "datos-factura": "DATOS DE FACTURA",
+        "reactivar-comision": "REACTIVAR COMISIÓN",
+        "por-pagar-factura": "por pagar con factura",
+        "por-pagar-asimilados": "Por pagar asimilados",
+        "pagos-espera": "pagos en espera",
+        "comision-nueva-factura": "COMISIONES NUEVAS - FACTURA",
+        "info-comisiones": "Las comisiones con factura se encuentran en espera de dispersión de pago.",
+        "total-pagar": "Total a pagar",
+        "precio-lote": "Precio lote",
+        "beneficiario": "Beneficiary"
+	}
 }
