@@ -2003,6 +2003,7 @@ class Asesor extends CI_Controller {
         $ventaExtranjero = $this->input->post('venta_check') == 'on' ? 2 : 1;
         $escuadronRescate = (isset($_POST['escuadronRescate']) ? (($_POST['escuadronRescate']=='') ? 0 : $_POST['escuadronRescate']) : 0 );
         $idLiderEscuadron = (isset($_POST['liderEscuadron']) ? (($_POST['liderEscuadron']=='') ? 0 : $_POST['liderEscuadron']) : 0 );
+        $idCoordEscuadron = (isset($_POST['idCoordinadorEscuadron']) ? (($_POST['idCoordinadorEscuadron']=='') ? 0 : $_POST['idCoordinadorEscuadron']) : 0 );
         $idiomaUsuario = (isset($_POST['idiomaValor']) ? (($_POST['idiomaValor']=='') ? 0 : $_POST['idiomaValor']) : 0 );
 
 
@@ -2383,6 +2384,7 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["venta_extranjero"] = $ventaExtranjero; 
         $arreglo_cliente["especialistaEscuadron"] = $escuadronRescate;
         $arreglo_cliente["liderEscuadron"] = $idLiderEscuadron;
+        $arreglo_cliente["coordinadorEscuadron"] = $idCoordEscuadron;
         $arreglo_cliente["idioma"] = $idiomaUsuario;
 
         //ARRAY REFERENCIAS

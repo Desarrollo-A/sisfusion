@@ -72,16 +72,16 @@ class Neodata_model extends CI_Model {
         $numeroPlanLote = $data['numeroPlanLoteCancelado'];
 
 //        print_r($nombreLote);
-//        echo '<br>';
-//        print_r($numeroPlanLote);
-//        exit;
+////        echo '<br>';
+////        print_r($numeroPlanLote);
+////        exit;
 
 //        $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
         /**/$response = $this->db->query("
-        EXEC [192.168.16.23].[programacion].[dbo].[CDM302CancelarPlanPago]
+        EXEC [192.168.16.23].[programacion2].[dbo].[CDM302CancelarPlanPago]
         @empresa = N'FRO2',
         @lote = N'$nombreLote',
-        @numPlanPagoCRM = $numeroPlanLote /* Numeración que se acordó con Erik para enlazar los planes de CRM con los de neodata*/
+        @numPlanPagoCRM = $numeroPlanLote 
         ")->result_array();
         return array("responseGeneral" => $response);
 

@@ -246,15 +246,15 @@
                             <?php
                             for($n=0; $n < count($lideresRescateLista) ; $n++){
                                 if($lideresRescateLista[$n]['id_usuario'] == $cliente[0]->liderEscuadron){
-                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" selected>'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" selected data-coodRescate="'.$lideresRescateLista[$n]['id_lider'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
                                 }
                                 else{
-                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" data-coodRescate="'.$lideresRescateLista[$n]['id_lider'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
                                 }
                             }
                             ?>
                         </select>
-
+                        <input type="hidden" name="idCoordinadorEscuadron" id="idCoordinadorEscuadron">
                     </div>
 
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5">

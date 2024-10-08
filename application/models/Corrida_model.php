@@ -673,13 +673,13 @@
     function getPlanesPago($idLote){
 //        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus = 1 AND idLote = ".$idLote);
         $query = $this->db->query("SELECT pp.idPlanPago, res.nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote, 
-        lo.idLote, numeroPeriodos, pp.*, planPagoCatalogo.nombre as planPago, res.empresa,
+        lo.idLote, numeroPeriodos, pp.*,  res.empresa,--planPagoCatalogo.nombre as planPago,
         row_number() over (partition by null order by pp.idPlanPago,res.nombreResidencial) numero_plan_logico
         FROM planes_pago pp 
         INNER JOIN lotes lo ON pp.idLote = lo.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
-        INNER JOIN opcs_x_cats planPagoCatalogo ON planPagoCatalogo.id_opcion =  pp.tipoPlanPago AND planPagoCatalogo.id_catalogo = 137
+        --INNER JOIN opcs_x_cats planPagoCatalogo ON planPagoCatalogo.id_opcion =  pp.tipoPlanPago AND planPagoCatalogo.id_catalogo = 137
         WHERE pp.estatus = 1 AND pp.idLote = ".$idLote." ORDER BY pp.idPlanPago ASC");
         return $query->result_array();
     }
@@ -718,7 +718,15 @@
     }
 
     function totalPlanesPago($idLote){
-        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND idLote=".$idLote);
+        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND tipoPlanPago IN(2, 3) AND idLote=".$idLote);
+        return $query->result_array();
+    }
+    function getPlanesPagoNormales($idLote){
+        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND tipoPlanPago IN(2) AND idLote=".$idLote);
+        return $query->result_array();
+    }
+    function getPlanesPagoOtros($idLote){
+        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND tipoPlanPago IN(3) AND idLote=".$idLote);
         return $query->result_array();
     }
 

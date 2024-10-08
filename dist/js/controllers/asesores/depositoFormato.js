@@ -376,6 +376,7 @@ if(id_rol_general == 7 || usuariosContraloria.includes(id_usuario_general) || on
     const checkLider = document.getElementById("escuadronRescate");
     const selectLiderDiv = document.getElementById("liderEscuadronDiv");
     let selectLider = document.getElementById("liderEscuadronSelect");
+    let idCoordinadorEscuadron = document.getElementById("idCoordinadorEscuadron");
     checkLider.addEventListener("change", function() {
         console.log('checkLider:', checkLider);
         if (checkLider.checked) {
@@ -388,7 +389,17 @@ if(id_rol_general == 7 || usuariosContraloria.includes(id_usuario_general) || on
             selectLiderDiv.classList.add("d-none");
             checkLider.value = 0;
             selectLider.value = 0;
+            idCoordinadorEscuadron.value=0;
         }
+
+    });
+
+    selectLider.addEventListener("change", function()
+    {
+       console.log('cambio el select', selectLider);
+        var selected = $(this).find('option:selected');
+        var idcoordinadorRescate = selected.data('coodrescate');
+        idCoordinadorEscuadron.value=idcoordinadorRescate;
     });
 
 
@@ -504,7 +515,8 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
             if (res.code === 500) {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
-        }, error: function () {
+        },
+        error: function () {
             $('#depositoSeriedadGuardar').attr('disabled', false);
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }

@@ -4062,6 +4062,8 @@ legend {
         $dtoTotalPlanesPago = $this->Corrida_model->totalPlanesPago($idLote);
         $dtoInfoLote = $this->Corrida_model->infoLotePlanPago($idLote);
         $dtoPlanEngActuales = count($this->Corrida_model->getEnganchesDelPlan($idLote));
+        $dtoPlanPagoActuales = count($this->Corrida_model->getPlanesPagoNormales($idLote));
+        $dtoPlanPagoOtros = count($this->Corrida_model->getPlanesPagoOtros($idLote));
 
 
         $flagEstatusPlan2 = 0;
@@ -4073,7 +4075,7 @@ legend {
         $dtoTotalEnviadas = (count($dtoTotalPlanesPago)>0) ? (($flagEstatusPlan2 == count($dtoTotalPlanesPago)) ? 1 : 0) : 0; //si el valor está en 1 quiere decir que ya se mandó a NeoData, si no, aun no se ha mandado
 
         if(count($dtoCatalogos) > 0)
-            $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos", "dtoCatalogos"=> $dtoCatalogos, "planesTotal" => count($dtoTotalPlanesPago), "infoLote" => $dtoInfoLote, "enviadoNeodata" => $dtoTotalEnviadas, "planDeEngancheActual" => $dtoPlanEngActuales);
+            $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos", "dtoCatalogos"=> $dtoCatalogos, "planesTotal" => count($dtoTotalPlanesPago), "infoLote" => $dtoInfoLote, "enviadoNeodata" => $dtoTotalEnviadas, "planDeEngancheActual" => $dtoPlanEngActuales, "totalPlanesPagoNormales" => $dtoPlanPagoActuales, "totalPlanesPagoOtros" => $dtoPlanPagoOtros);
         else
             $response = array( "status" => 0, "mensaje"=>"Error al traer los catalogos", "dtoCatalogos"=> []);
         echo json_encode($response);
@@ -4111,9 +4113,8 @@ legend {
 
         $nombrePlan = ($tipoPlanTxtPP=='Enganche')  ? $tipoPlanTxtPP : $tipoPlanTxtPP.' '.($planPago);
         $fecha_actual = date('Y-m-d H:i:s');
-//        echo 'periodos:<br>';
-//        print_r($noPeriodosPP);
-//        exit;
+
+
 
         if($idPlanPagoModal != '' || !empty($idPlanPagoModal)){
 //            echo 'edicion:<br><br>';
@@ -4176,9 +4177,9 @@ legend {
                                 "idLote" =>(int) $idLotePP,
                                 "idCliente" => (int) $idClientePP,
                                 "nombreLote" => $nombreLotePP,
-                                "nombrePlan" => $descripcionPlanPago, //se compone del plan y el numero del plan
+                                "nombrePlan" => $nombrePlan, //se compone del plan y el numero del plan
                                 "descripcion" => $descripcionPlanPago,
-                                "tipoPlanPago" => (empty($tipoPP)) ? $planPago : $tipoPP,
+                                "tipoPlanPago" => $tipoPP,
                                 "monto" => (int) str_replace(array('$',','),'', $montoPP),
                                 "moneda" => (int) $monedaPP,
                                 "tazaInteres" => (float) $tazaInteresPP,
@@ -4340,6 +4341,7 @@ legend {
     {
         $idLote = $this->input->post('idLote');
         $datos = $this->Corrida_model->getPlanesPagoGenerar($idLote);
+        $totalPlanesPagoNormales = count($this->Corrida_model->getPlanesPagoNormales($idLote));
 
         if(count($datos)>0){
             $arrayFinal = array(
@@ -4353,7 +4355,7 @@ legend {
             foreach ($datos as $index => $elemento) {//recorre los planes de pago generales
                 $arrayIdPagosCompleto = array();
                 $arrayFinal['interes' . $index] = $datos[$index]['tazaInteres'];
-                $arrayIdPagosCompleto['numPlanPago'] = $elemento['ordenPago'];
+                $arrayIdPagosCompleto['numPlanPago'] = ($elemento['tipoPlanPago'] === 3 || $elemento['tipoPlanPago'] == '3') ? 5 : $elemento['ordenPago'];
                 $arrayIdPagosCompleto['idPlanPago'] = $elemento['idPlanPago'];
                 $arrayIdPagosCompleto = (object) $arrayIdPagosCompleto;
                 array_push($arrayIdPagos,  $arrayIdPagosCompleto);
@@ -4380,14 +4382,15 @@ legend {
                 "planServicio" => array()
             );
         }
-        /*print_r($response);
-        exit;*/
+
         print_r(json_encode($response));
         exit;
     }
     function generaPlanPagoEnvioidPago(){
         $idPlanPago = $this->input->post('idPlanPago');
         $datos = $this->Corrida_model->getPlanesPagoGenerarByPP($idPlanPago);
+        $totalPlanesPagoNormales = count($this->Corrida_model->getPlanesPagoNormales($datos[0]['idLote']));
+
         if(count($datos)>0){
             $arrayFinal = array(
                 "lote" => $datos[0]['nombreLote'],
@@ -4399,7 +4402,7 @@ legend {
             foreach ($datos as $index => $elemento) {//recorre los planes de pago generales
                 $arrayIdPagosCompleto = array();
                 $arrayFinal['interes' . $index] = $datos[$index]['tazaInteres'];
-                $arrayIdPagosCompleto['numPlanPago'] = $elemento['ordenPago'];
+                $arrayIdPagosCompleto['numPlanPago'] = ($elemento['tipoPlanPago'] === 3 || $elemento['tipoPlanPago'] == '3') ? 5 : $elemento['ordenPago'];
                 $arrayIdPagosCompleto['idPlanPago'] = $elemento['idPlanPago'];
                 $arrayIdPagosCompleto = (object) $arrayIdPagosCompleto;
                 array_push($arrayIdPagos,  $arrayIdPagosCompleto);
