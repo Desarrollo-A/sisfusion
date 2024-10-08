@@ -264,7 +264,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
                 $paquetes =  $this->db->query("SELECT STRING_AGG(t.descuentos, ',') id_descuento FROM (
                     SELECT DISTINCT(id_descuento) descuentos
                     FROM lotes l
-                    INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
+                    INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND cl.id_cliente_reubicacion_2 IS NULL AND cl.fechaApartado BETWEEN '$fechaInicio 00:00:00.000' AND '$fechaFin 23:59:59.999'
                     INNER JOIN condominios c ON c.idCondominio = l.idCondominio 
                     INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
                     where l.idStatusLote = 3 AND r.idResidencial IN ($desarrollos) AND id_descuento IS NOT NULL
