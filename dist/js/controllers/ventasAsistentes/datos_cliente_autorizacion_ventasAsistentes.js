@@ -80,7 +80,7 @@ tabla_6 = $("#tabla_autorizaciones_ventas").DataTable({
                         columns: [0,1,2,3],
                         format: {
                             header: function (d, columnIdx) {
-                                return ' '+titulos[columnIdx] +' ';
+                                return $(d).attr('placeholder').toUpperCase();
                             }
                         }
                     },
