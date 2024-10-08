@@ -5,19 +5,21 @@ $('#prospects-datatable_dir').on('draw.dt', function() {
     });
 });
 
-$('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    titulosEvidence.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
-                $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
-            }
-        });
-});
+// $('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
+//     var title = $(this).text();
+//     titulosEvidence.push(title);
+//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+//         $( 'input', this ).on('keyup change', function () {
+//             if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
+//                 $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
+//             }
+//         });
+// });
 
 $(document).ready(function () {
+    construirHead("prospects-datatable_dir");
     var url='';
+
     $(document).on('click', '#buscarBtn', function () {
         var nombreField = $('#nombre').val();
         var correoField = $('#correo').val();
@@ -237,7 +239,7 @@ $(document).ready(function () {
 });
 
 function updateTable(typeTransaction, busquedaParams, urlBusqueda){
-    $('#prospects-datatable_dir').dataTable({
+    tabla_6 = $('#prospects-datatable_dir').dataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -249,9 +251,9 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
         { 
             data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">VIGENTE</span><center>';
+                    return '<center><span class="label lbl-green">'+_("vigente")+'</span><center>';
                 } else {
-                    return '<center><span class="label lbl-warinig">NO VIGENTE</span><center>';
+                    return '<center><span class="label lbl-warinig">'+_("no-vigente")+'</span><center>';
                 }
             }
         },
@@ -313,7 +315,7 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
         ,
         { 
             data: function (d) {
-                return '<div class="d-flex justify-center"><button  data-toggle="tooltip"  data-placement="top" title="VER INFORMACIÓN" class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons">remove_red_eye</i></button></div>';
+                return '<div class="d-flex justify-center"><button  data-toggle="tooltip"  data-placement="top" title="'+_("ver-informacion")+'" data-i18n-tooltip="'+_("ver-informacion")+'" class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons">remove_red_eye</i></button></div>';
             }
         }],
         pagingType: "full_numbers",
@@ -461,7 +463,7 @@ function fillTimeline(v) {
         '    <div class="container-fluid">\n' +
         '       <div class="row">\n' +
         '           <div class="col-md-6">\n' +
-        '               <a><small>Usuario: </small><b>' + v.creador + '</b></a><br>\n' +
+        '               <a><small >'+_("usuario")+': </small><b>' + v.creador + '</b></a><br>\n' +
         '           </div>\n' +
         '           <div class="float-end text-right">\n' +
         '               <a>' + v.fecha_creacion + '</a>\n' +
@@ -481,15 +483,15 @@ function fillChangelog(v) {
     '    <div class="container-fluid">\n' +
     '       <div class="row">\n' +
     '           <div class="col-md-6">\n' +
-    '               <a><small>Campo: </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
+    '               <a><small >'+_("campo")+': </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
     '           </div>\n' +
     '           <div class="float-end text-right">\n' +
     '               <a>' + v.fecha_creacion + '</a>\n' +
     '           </div>\n' +
     '           <div class="col-md-12">\n' +
-    '               <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-    '               <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
-    '               <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
+    '               <p class="m-0"><small data-i18n="usuario">'+_("usuario")+': </small><b> ' + v.creador + '</b></p>\n'+
+    '               <p class="m-0"><small data-i18n="valor-anterior">'+_("valor-anterior")+': </small><b> ' + v.anterior + '</b></p>\n' +
+    '               <p class="m-0"><small data-i18n="valor-nuevo" >'+_("valor-nuevo")+': </small><b> ' + v.nuevo + '</b></p>\n' +
     '           </div>\n' +
     '        <h6>\n' +
     '        </h6>\n' +

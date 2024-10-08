@@ -138,7 +138,9 @@ tabla_6 = $("#tabla_autorizaciones_ventas").DataTable({
             ]
 
     });
+    
 
+    applySearch(tabla_6);
     $('#tabla_autorizaciones_ventas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
