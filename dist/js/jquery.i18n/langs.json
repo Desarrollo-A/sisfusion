@@ -1284,7 +1284,8 @@
 		"consultar-historial" : "View history",
 		"fecha-alta": "Start date",
 		"Evidencia": "Evidence",
-		"sin-especificar3" : "UNSPECIFIED"
+		"sin-especificar3" : "UNSPECIFIED",
+		"lotes-cacelados-en-proceso" : "Canceled lots in process"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2566,6 +2567,7 @@
 		"consultar-historial"  : "Consultar historial",
 		"fecha-alta" : "Fecha de alta",
 		"evidencia": "Evidencia",
-		"sin-especificar3" : "SIN ESPECIFICAR"
+		"sin-especificar3" : "SIN ESPECIFICAR",
+		"lotes-cacelados-en-proceso" : "Lotes cancelados en proceso"
 	}
 }
