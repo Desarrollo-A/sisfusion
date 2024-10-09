@@ -1279,7 +1279,9 @@
 		"documento-subido": "The document has been uploaded successfully.",
 		"inactivo-comisionando": "Inactive while commissioning",
 		"ups-alerta-requeridos-busqueda": "Oops, make sure to enter at least one search criterion",
-		"Evidencia": "Evidence"
+		"Evidencia": "Evidence",
+		"lotes-cancelados-proceso": "Cancelled lots in process",
+		"cancelar-lote": "Cancel lot"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2556,6 +2558,8 @@
 		"historial-contratacion": "Historial contratacion",
 		"inactivo-comisionando": "Inactivo comisionando",
 		"ups-alerta-requeridos-busqueda": "Ups, asegurate de colocar al menos un criterío de búsqueda",
-		"evidencia": "Evidencia"
+		"evidencia": "Evidencia",
+		"lotes-cancelados-proceso": "Lotes cancelados en proceso",
+		"cancelar-lote": "Cancelar lote"
 	}
 }

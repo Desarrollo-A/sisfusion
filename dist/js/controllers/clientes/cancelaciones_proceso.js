@@ -31,17 +31,6 @@ $(document).ready(function () {
     setIniDatesXYear('#beginDate', '#endDate');
     fillTable(convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val()), convertDateDDMMYYYYToYYYYMMDD($('#endDate').val()));
 });
-// $('#cancelacionesTabla thead tr:eq(0) th').each(function (i) {
-//     const title = $(this).text();
-//     titulosTabla.push(title);
-//     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-//     $('input', this).on('keyup change', function () {
-//         if ($('#cancelacionesTabla').DataTable().column(i).search() !== this.value) {
-//             $('#cancelacionesTabla').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-//     $('[data-toggle="tooltip"]').tooltip();
-// });
 
 function fillTable(fechaInicio, fechaFin) {
     construirHead('cancelacionesTabla');
@@ -54,8 +43,8 @@ function fillTable(fechaInicio, fechaFin) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Lotes cancelados en proceso',
-                title: "Lotes cancelados en proceso",
+                titleAttr: `${_("lotes-cancelados-proceso")}`,
+                title: `${_("lotes-cancelados-proceso")}`,
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
@@ -69,8 +58,8 @@ function fillTable(fechaInicio, fechaFin) {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
-                titleAttr: 'Lotes cancelados en proceso',
-                title: "Lotes cancelados en proceso",
+                titleAttr: `${_("lotes-cancelados-proceso")}`,
+                title: `${_("lotes-cancelados-proceso")}`,
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
@@ -127,7 +116,7 @@ function fillTable(fechaInicio, fechaFin) {
                         <button class="btn-data btn-warning btn-cancelar"
                                 data-toggle="tooltip" 
                                 data-placement="left"
-                                title="CANCELAR LOTE"
+                                title="${_("cancelar-lote")}"
                                 data-idCliente="${d.idCliente}">
                             <i class="fa fa-close"></i>
                         </button>
@@ -151,7 +140,7 @@ function fillTable(fechaInicio, fechaFin) {
             });
         },
     });
-    applySearch();
+    applySearch(tablaCancelaciones);
 }
 $(document).on('click', '#filtrarPorFecha', function () {
     const fechaInicio = convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val());
