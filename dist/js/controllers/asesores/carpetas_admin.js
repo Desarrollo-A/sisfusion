@@ -120,6 +120,8 @@ $(document).ready(function () {
             }
         },
     });
+    applySearch($tableCarpetas);
+
     $('#tableCarpetas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
@@ -149,8 +151,8 @@ $(document).ready(function () {
                 $('#carpetasP').find('.modal-header').html(htmlModalPreview);
             });
         });
+
     });
-    applySearch($tableCarpetas);
 
 
     function fillFields (v) {
