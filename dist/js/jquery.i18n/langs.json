@@ -1280,7 +1280,8 @@
 		"inactivo-comisionando": "Inactive while commissioning",
 		"ups-alerta-requeridos-busqueda": "Oops, make sure to enter at least one search criterion",
 		"Evidencia": "Evidence",
-		"reporte-retiros-resguardo": "Withdrawal Custody Report."
+		"reporte-retiros-resguardo": "Withdrawal Custody Report.",
+		"correo-2": "Email"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2558,6 +2559,7 @@
 		"inactivo-comisionando": "Inactivo comisionando",
 		"ups-alerta-requeridos-busqueda": "Ups, asegurate de colocar al menos un criterío de búsqueda",
 		"evidencia": "Evidencia",
-		"reporte-retiros-resguardo": "Reporte Retiros Resguardo"
+		"reporte-retiros-resguardo": "Reporte Retiros Resguardo",
+		"correo-2": "Correo"
 	}
 }
