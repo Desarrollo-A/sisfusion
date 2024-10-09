@@ -1168,7 +1168,8 @@
                 "evento-especificar": "EVENT (SPECIFY)",
                 "recomendado-especificar": "RECOMMENDED (SPECIFY)",
                 "visita-empresas-especificar": "COMPANY VISITS (SPECIFY)",
-                "vendido": "Sold"
+                "vendido": "Sold",
+				"mostrar-tabla": "Show table"
 	},
 	"es": {
                 "1-origen": "1% de origen",
@@ -2339,6 +2340,7 @@
                 "evento-especificar": "EVENTO (ESPECIFICAR)",
                 "recomendado-especificar": "RECOMENDADO (ESPECIFICAR)",
                 "visita-empresas-especificar": "VISITA A EMPRESA (ESPECIFICAR)",
-                "vendido": "Vendido"
+                "vendido": "Vendido",
+				"mostrar-tabla": "Mostrar tabla"
 	    }
 }
