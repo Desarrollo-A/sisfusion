@@ -5430,7 +5430,7 @@ class Casas extends BaseController
     {
     }
 
-    public function lista_toda_documentacion(){
+    public function lista_toda_documentacion_casas_banco(){
         $lote = $this->get('lote');
 
         if(!isset($lote)){
@@ -5439,16 +5439,37 @@ class Casas extends BaseController
 
         $documentos_proceso_casas = $this->CasasModel->getListaDocumentacionProcesoCasas($lote);
         $documentos_cotizaciones = $this->CasasModel->getListaDocumentacionCotizaciones($lote);
+
+        $merged_documents = array_merge(
+            $documentos_proceso_casas,
+            $documentos_cotizaciones
+        );
+
+        usort($merged_documents, function($a, $b) {
+            return $a->idProcesoCasas <=> $b->idProcesoCasas;
+        });
+
+        return $this->json($merged_documents);
+    }
+
+    public function lista_toda_documentacion_casas_directo(){
+
+    }
+    public function lista_documentacion_proceso_pagos() {
+        $lote = $this->get('lote');
+
+        if(!isset($lote)){
+            return $this->json([]);
+        }
+
         $documentos_proceso_pagos = $this->CasasModel->getListaDocumentacionProcesoPagos($lote);
         $documentos_avances_pdf = $this->CasasModel->getListaDocumentacionAvancesComplementoPDF($lote);
         $documentos_avances_xml = $this->CasasModel->getListaDocumentacionAvancesComplementoXML($lote);
 
         return $this->json(array_merge(
-            $documentos_proceso_casas,
-            $documentos_cotizaciones,
             $documentos_proceso_pagos,
-            $documentos_avances_pdf,
-             $documentos_avances_xml
+            $documentos_avances_pdf, 
+            $documentos_avances_xml
         ));
     }
 }

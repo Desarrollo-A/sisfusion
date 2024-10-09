@@ -9,7 +9,99 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
+                        <ul class="nav nav-tabs nav-tabs-cm">
+                            <li class="active">
+                                <a href="#procesoCasasBanco" role="tab" data-toggle="tab" onclick="dataFunction(1)">Proceso casas (banco)</a>
+                            </li>
+                            <li>
+                                <a href="#procesoCasasDirecto" role="tab" data-toggle="tab" onclick="dataFunction(2)">Proceso casas (directo)</a>
+                            </li>
+                            <li>
+                                <a href="#procesoPagos" role="tab" data-toggle="tab" onclick="dataFunction(3)">Proceso pagos</a>
+                            </li>
+                        </ul>
+                          <div class="card no-shadow m-0">
+                            <div class="card-content p-0">
+                                <div class="nav-tabs-custom">
+                                    <div class="tab-content p-2">
+
+                                        <div class="tab-pane active" id="reporteCasas">
+                                            <div class="card-content">
+                                                <div class="toolbar">
+                                                    <h3 class="card-title center-align">Documentación por proceso (banco)</h3>
+                                                    <div id="table-filters" class="row mb-1"></div>
+                                                </div>
+
+                                               <table id="tableBanco" class="table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID PROCESO</th>
+                                                            <th>PROYECTO</th>
+                                                            <th>CONDOMINIO</th>
+                                                            <th>NOMBRE LOTE</th>
+                                                            <th>ID LOTE</th>
+                                                            <th>GERENTE</th>
+                                                            <th>ASESOR</th>
+                                                            <th>DOCUMENTO</th>
+                                                            <th>ACCIONES</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane" id="reporteCredito">
+                                            <div class="card-content">
+                                                <div class="toolbar">
+                                                    <h3 class="card-title center-align">Documentación por proceso (directo)</h3>
+                                                    <div id="table-filters-directo" class="row mb-1"></div>
+                                                </div>
+                                                <table id="tableDirecto" class="table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID PROCESO</th>
+                                                            <th>PROYECTO</th>
+                                                            <th>CONDOMINIO</th>
+                                                            <th>NOMBRE LOTE</th>
+                                                            <th>ID LOTE</th>
+                                                            <th>GERENTE</th>
+                                                            <th>ASESOR</th>
+                                                            <th>DOCUMENTO</th>
+                                                            <th>ACCIONES</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="reporteCredito">
+                                            <div class="card-content">
+                                                <div class="toolbar">
+                                                    <h3 class="card-title center-align">Documentación por proceso (pagos)</h3>
+                                                    <div id="table-filters-directo" class="row mb-1"></div>
+                                                </div>
+                                                <table id="tablePagos" class="table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID PROCESO</th>
+                                                            <th>PROYECTO</th>
+                                                            <th>CONDOMINIO</th>
+                                                            <th>NOMBRE LOTE</th>
+                                                            <th>ID LOTE</th>
+                                                            <th>GERENTE</th>
+                                                            <th>ASESOR</th>
+                                                            <th>DOCUMENTO</th>
+                                                            <th>ACCIONES</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+   <!--                     <div class="card no-shadow m-0">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-file-alt fa-2x"></i>
                             </div>
@@ -22,6 +114,7 @@
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th>ID PROCESO</th>
                                             <th>PROYECTO</th>
                                             <th>CONDOMINIO</th>
                                             <th>NOMBRE LOTE</th>
@@ -36,6 +129,7 @@
 
                             </div>
                         </div>
+-->
                     </div>
                 </div>
             </div>

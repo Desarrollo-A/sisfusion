@@ -1,3 +1,57 @@
+var valueTab;
+var valueTabline;
+var table;
+
+document.addEventListener('DOMContentLoaded', function () {
+    dataFunction(1);
+});
+
+function cleanTable(tableId) {
+    if ($.fn.DataTable.isDataTable(tableId)) {
+        let table = $(tableId).DataTable();
+        table.clear().draw();
+        table.rows().remove().draw();
+    }
+}
+
+function dataFunction (value) {
+    valueTab = value;
+    cleanTable('#tableBanco');
+    cleanTable('#tableDirecto');
+    cleanTable('#tablePagos');
+
+    let tableConfig;
+
+    if(valueTab == 1){
+        console.log("reached");
+        tableConfig = {
+            id: '#tableBanco',
+            url: 'casas/lista_toda_documentacion_casas_banco',
+            buttons: buttons,
+            columns: columns
+        };
+    } else if(valueTab == 2) {
+        tableConfig = {
+            id: '#tableBanco',
+            url: 'casas/lista_toda_documentacion_casas_directo',
+            buttons: buttons,
+            columns: columns
+        };
+    }
+    else if(valueTab == 3) {
+        tableConfig = {
+            id: '#tableBanco',
+            url: 'casas/lista_toda_documentacion_casas_directo',
+            buttons: buttons,
+            columns: columns
+        };
+    }
+
+    if(tableConfig) {
+        table = new Table(tableConfig);
+    }
+}
+
 function show_preview(data) {
     let url = `${general_base_url}casas/archivo/${data.archivo}`
 
@@ -14,8 +68,16 @@ function show_preview(data) {
 
 function download_file(data) {
     alerts.showNotification("top", "right", "Descargando archivo...", "info");
-    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+
+    let url = `${general_base_url}casas/archivo/${data.archivo}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = data.archivo;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
+
 
 let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  placeholder: 'Selecciona una opción' })
 let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona una opción' })
@@ -97,6 +159,7 @@ let buttons = [
 ]
 
 let columns = [
+    { data: 'idProcesoCasas'},
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
@@ -105,21 +168,22 @@ let columns = [
     { data: 'asesor' },
     { data: 'documento' },
     {data: function(data) {
-        let view_button = ''
+        let view_button = '';
+        let download_button = '';
 
-        if(data.descargar){
-            view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
-        }else{
+        //if(data.descargar){
+            download_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+        //}else{
             view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
-        }
+        //}
         
-        return `<div class="d-flex justify-center">${view_button}</div>`
+        return `<div class="d-flex justify-center">${view_button}${download_button}</div>`
     }}
 ]
 
-let table = new Table({
+/*let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_toda_documentacion',
     buttons,
     columns,
-})
+})*/
