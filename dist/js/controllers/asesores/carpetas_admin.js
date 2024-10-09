@@ -64,15 +64,7 @@ function save() {
 typeTransaction = 1;
 $(document).ready(function () {
     construirHead("tableCarpetas");
-    /*$('#tableCarpetas thead tr:eq(0) th').each( function (i) {
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#tableCarpetas').DataTable().column(i).search() !== this.value ) {
-            $('#tableCarpetas').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});*/
     $tableCarpetas = $('#tableCarpetas').DataTable({
-       
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -127,6 +119,7 @@ $(document).ready(function () {
             trigger: "hover"
         });
     });
+
     $(document).on('click', '.editarCarpeta', function(e){
         $('#spiner-loader').removeClass('hide');
         id_carpeta = $(this).attr("data-id-carpeta");
@@ -153,7 +146,6 @@ $(document).ready(function () {
         });
 
     });
-
 
     function fillFields (v) {
         $("#idCarpeta").val(v.id_archivo);
@@ -190,14 +182,14 @@ function update() {
         success: function(data) {
             if (data == 1) {
                 $("#carpetasE").modal('hide');
-                alerts.showNotification("top", "right", "El registro se actualizo exitosamente.", "success");
+                alerts.showNotification("top", "right", _("registro-actualizado-exitosamente"), "success");
                 $tableCarpetas.ajax.reload();
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _("campos-minimos"), "warning");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 }

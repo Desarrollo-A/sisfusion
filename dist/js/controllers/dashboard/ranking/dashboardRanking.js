@@ -7,9 +7,12 @@ onChangeTranslations(() => {
         'ConEnganche': dataConEnganche,
         'SinEnganche': dataSinEnganche
     });
+    reorderColumns();
 })
 
 function readyRanking(){
+    $('body').i18n();
+    changeButtonTooltips();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     $('[data-toggle="tooltip"]').tooltip();
@@ -1064,7 +1067,7 @@ function fillTable(dataObject) {
         });
     });
 
-    generalDataTable = $('#lotesInformationTableRanking').dataTable({
+    let generalDataTable = $('#lotesInformationTableRanking').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [
@@ -1077,36 +1080,8 @@ function fillTable(dataObject) {
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
-                        header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return 'PROYECTO';
-                                    break;
-                                case 1:
-                                    return 'CONDOMINIO';
-                                    break;
-                                case 2:
-                                    return 'LOTE'
-                                    break;
-                                case 3:
-                                    return 'PRECIO';
-                                    break;
-                                case 4:
-                                    return 'CLIENTE';
-                                    break;
-                                case 5:
-                                    return 'ASESOR';
-                                    break;
-                                case 6:
-                                    return 'FECHA DE APARTADO';
-                                    break;
-                                case 7:
-                                    return 'ESTATUS DE CONTRATACIÓN';
-                                    break;
-                                case 8:
-                                    return 'ESTATUS DEL LOTE';
-                                    break;
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -1193,4 +1168,5 @@ function fillTable(dataObject) {
             }
         }
     });
+    applySearch(generalDataTable);
 }
