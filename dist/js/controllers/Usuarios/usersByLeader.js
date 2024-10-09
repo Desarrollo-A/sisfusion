@@ -1,14 +1,14 @@
 $(document).ready( function() {
     construirHead("users_datatable");
     tableUsers();
-    asignarValorColumnasDT();
-    let usersTable = $('#users_datatable').DataTable();
-    applySearch(usersTable);
+    // asignarValorColumnasDT();
+    // let usersTable = $('#users_datatable').DataTable();
+    // applySearch(usersTable);
 
 })
 
 let titulos = [];
-asignarValorColumnasDT("users_datatable");
+// asignarValorColumnasDT("users_datatable");
 
 // $('#users_datatable thead tr:eq(0) th').each(function (i) {
 //     var title = $(this).text();
