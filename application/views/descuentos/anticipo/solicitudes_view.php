@@ -143,5 +143,6 @@
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 
 <script type="text/javascript">
-	</script>
+    Shadowbox.init();
+</script>
 </body>

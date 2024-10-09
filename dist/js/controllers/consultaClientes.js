@@ -103,7 +103,7 @@ function loadTable(){
                     if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && id_rol_general != 19 && id_rol_general != 20) { // NO ES ASESORY EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                         return '';
                     } else {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas see-information" data-id-prospecto="${d.id_prospecto}" style="margin-right: 3px;" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="fas fa-eye"></i></button></div>`;
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas see-information" data-id-prospecto="${d.id_prospecto}" style="margin-right: 3px;" data-toggle="tooltip" data-placement="top" title="${_("ver-informacion")}"><i class="fas fa-eye"></i></button></div>`;
                     }
                 }
             }
