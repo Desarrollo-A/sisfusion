@@ -1,11 +1,7 @@
-var totalVentasChart, prospectosChart, chartProspClients, chartWeekly, chartFunnel;
+var totalVentasChart, prospectosChart, chartProspClients, chartWeekly, chartFunnel, globalTitle, globalLanguage;
 var mediaqueryList = window.matchMedia("(min-width: 200px)");
-onChangeTranslations(getClientsAndProspectsByYear);
-onChangeTranslations(removeCard);
-
-function removeCard() {
-
-}
+onChangeTranslations(readyHome);
+globalLanguage = Object.freeze(localStorage.getItem('locale'));
 var optionsTotalVentas = {
     series: [],
     chart: {
@@ -765,19 +761,13 @@ async function prospectsTable() {
         div.classList.add('openDiv');
         fillBoxAccordionsPR(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
         sp.initFormExtendedDatetimepickers();
-        $('.datepicker').datetimepicker({ locale: 'es' });
+
+        $('.datepicker').datetimepicker({locale: localStorage.getItem('locale')});
         setInitialValues2();
     }
-    $('#tablePR thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
-        $('input', this).on('keyup change', function () {
-            if ($('#tablePR').DataTable().column(i).search() !== this.value) {
-                $('#tablePR').DataTable().column(i).search(this.value).draw();
-            }
-        });
-        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
-    });
+    construirHead('tablePR')
+    changeSelects();
+    $('body').i18n();
 }
 
 function getRolDR(idUser) {
@@ -817,7 +807,6 @@ function changeIcon2(anchor) {
 function createAccordionsPR(option, render, rol) {
     console.log("called");
     let tittle = getTitle(option);
-    console.log("title: ", tittle);
     let html = '';
     html = `<div class="bk ${render == 1 ? 'parentTable' : 'childTable'}">
                 <div class="card p-2 h-auto boxTabla">
@@ -877,8 +866,6 @@ function createAccordionsPR(option, render, rol) {
                 </div>
             </div>`;
     $(".table-dinamic").append(html);
-    $('body').i18n();
-    changeSelects();
 }
 
 function multirol() {
@@ -1063,6 +1050,7 @@ function getFirstFilter(rol, secondRol) {
 }
 
 function fillBoxAccordionsPR(option, rol, render) {
+    console.log("fillBoxaccordiions");
     if (rol == 5 && (idUser == 28 && idUser == 30))
         rolEspecial = 59;
     else if (rol == 5 && (idUser != 28 && idUser != 30))
