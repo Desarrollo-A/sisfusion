@@ -34,7 +34,7 @@ function fillTable(transaction, beginDate, endDate, where) {
                     columns: (id_rol_general == 3 || id_rol_general == 6) ? [0, 1, 2, 3, 4, 5, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosListadoProspectos[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -270,6 +270,7 @@ function fillTable(transaction, beginDate, endDate, where) {
             });
         },
     });
+    applySearch(prospectsTable);
     changeSelects();
     changeButtonTooltips();
     applySearch(prospectsTable)
@@ -1356,7 +1357,7 @@ function validateNCreate(medio, box){
         +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0" data-i18n="telefono">${_('telefono')} 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${ telefono2 != 'undefined' ? telefono2 : ''}  ></div></div></div>`);
     }
     else if(medio == 4){
-        box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">${_('direccion-oficina')}</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
+        box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">${_('direccion-oficina')}</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Seleccione una opción" data-size="7" required></select></div>`);
         getOfficeAddresses();
     }
     box.removeClass('hide');
