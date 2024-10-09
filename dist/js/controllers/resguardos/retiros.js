@@ -53,12 +53,12 @@ $(document).ready(function () {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: _('descargar-excel'),
-                title: 'Reporte Retiros Resguardo',
+                title: _("reporte-retiros-resguardo"),
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6],
                     format: {
                         header:  function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                                return $(d).attr('placeholder').toUpperCase();
                             }
                         }
                 }
