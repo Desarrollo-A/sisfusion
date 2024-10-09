@@ -151,7 +151,7 @@ function fillTable(fechaInicio, fechaFin) {
             });
         },
     });
-    applySearch();
+    applySearch(tablaCancelaciones);
 }
 $(document).on('click', '#filtrarPorFecha', function () {
     const fechaInicio = convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val());
