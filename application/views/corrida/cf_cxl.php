@@ -448,7 +448,7 @@
                 <div class="box">
                     <div class="box-body">
                         <div id="exportthis">
-                            <button onclick="javascript:window.history.back();  " class="btn"><i class="fa fa-chevron-left"></i> Regresar</button>
+                            <button onclick="javascript:window.history.back();  " class="btn"><i class="fa fa-chevron-left"></i> <span data-i18n="regresar">Regresar</span></button>
                             <button ng-click="exportc()" class="btn btn-primary hide">Imprimir carátula</button>
                             <button ng-click="exportcf()" class="btn btn-success hide">Imprimir carátula + Corrida Financiera</button>
 
@@ -458,7 +458,7 @@
 
 
                                     <td rowspan=4 align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 70%; height: auto;padding:20px"></td>
-                                    <td rowspan=4 align="right"><p style="font-size: 1.5em;font-family: 'Open Sans', sans-serif;letter-spacing: 5px"> CORRIDA FINANCIERA<BR></p><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
+                                    <td rowspan=4 align="right"><p style="font-size: 1.5em;font-family: 'Open Sans', sans-serif;letter-spacing: 5px" data-i18n="corrida-financiera"> CORRIDA FINANCIERA<BR></p><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
                                     </td>
                                     <td align="right">&nbsp&nbsp</td>
                                 </tr>
@@ -467,7 +467,7 @@
                             <!-- ///////////////////////////////////////////// -->
                             <fieldset>
                                 <legend>
-                                    <section class="content-header" style="font-family: 'Open Sans', sans-serif;font-weight: lighter;letter-spacing: 5px;">INFORMACIÓN:</section>
+                                    <section class="content-header" style="font-family: 'Open Sans', sans-serif;font-weight: lighter;letter-spacing: 5px;" data-i18n="informacion">INFORMACIÓN <span>:</span></section>
                                 </legend>
                                 <div id="areaImprimir">
 

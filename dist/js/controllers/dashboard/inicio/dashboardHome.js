@@ -1,11 +1,7 @@
-var totalVentasChart, prospectosChart, chartProspClients, chartWeekly, chartFunnel;
+var totalVentasChart, prospectosChart, chartProspClients, chartWeekly, chartFunnel, globalTitle, globalLanguage;
 var mediaqueryList = window.matchMedia("(min-width: 200px)");
-onChangeTranslations(getClientsAndProspectsByYear);
-onChangeTranslations(removeCard);
-
-function removeCard() {
-
-}
+onChangeTranslations(readyHome);
+globalLanguage = Object.freeze(localStorage.getItem('locale'));
 var optionsTotalVentas = {
     series: [],
     chart: {
@@ -27,7 +23,7 @@ var optionsTotalVentas = {
                     offsetY: 76,
                     formatter: function (val) {
                         return val + '%'
-                      }
+                    }
                 },
                 total: {
                     show: true,
@@ -58,7 +54,7 @@ var optionsProspectos = {
         zoom: { enabled: false },
         sparkline: {
             enabled: true
-          }
+        }
     },
     colors: ["#2C93E7"],
     grid: {
@@ -71,15 +67,15 @@ var optionsProspectos = {
         width: 2,
     },
     xaxis: {
-    labels: {show: false},
-    axisBorder: {show:false},
-    axisTicks: {show:false},
+        labels: { show: false },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
     },
     yaxis: {
         type: 'numeric',
-        labels: {show: false},
-        axisBorder: {show:false},
-        axisTicks: {show:false},
+        labels: { show: false },
+        axisBorder: { show: false },
+        axisTicks: { show: false },
     },
     fill: {
         opacity: 1,
@@ -88,7 +84,7 @@ var optionsProspectos = {
             shade: 'light',
             type: "vertical",
             shadeIntensity: 1,
-            gradientToColors:  ['#2C93E7'],
+            gradientToColors: ['#2C93E7'],
             inverseColors: true,
             opacityFrom: 0.55,
             opacityTo: 0.2,
@@ -175,7 +171,7 @@ var optionsProspClients = {
 
 var optionsWeekly = {
     series: [{
-        name: 'Cantidad',
+        name: _("cantidad"),
         data: []
     }],
     chart: {
@@ -187,9 +183,9 @@ var optionsWeekly = {
     },
     noData: {
         text: 'No hay informacion para mostrar...'
-      },
+    },
     colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
-    grid:{
+    grid: {
         show: true,
     },
     plotOptions: {
@@ -207,16 +203,16 @@ var optionsWeekly = {
     xaxis: {
         show: false,
         labels: {
-          show: false
+            show: false
         },
         axisBorder: {
-          show: false
+            show: false
         },
         axisTicks: {
-          show: false
+            show: false
         },
-        categories: ['Prospectos nuevos','Prospectos c/cita','Ventas totales','Ventas contratadas',
-        'Ventas apartadas','Cancelados contratados','Cancelados apartados']
+        categories: ['Prospectos nuevos', 'Prospectos c/cita', 'Ventas totales', 'Ventas contratadas',
+            'Ventas apartadas', 'Cancelados contratados', 'Cancelados apartados']
     },
     tooltip: {
         enabled: true,
@@ -269,17 +265,17 @@ var optionsFunnel = {
     }
 };
 
-function readyHome(){
-    userType != 9 ? $('#buttonsCoord').hide():'';
+function readyHome() {
+    userType != 9 ? $('#buttonsCoord').hide() : '';
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({locale: 'es'});
+    $('.datepicker').datetimepicker({ locale: 'es' });
     setInitialValuesHome();
     loadInit();
     loadApexChart();
     $('[data-toggle="tooltip"]').tooltip();
 }
 
-function loadApexChart(){
+function loadApexChart() {
     totalVentasChart = new ApexCharts(document.querySelector("#totalVentasChart"), optionsTotalVentas);
     totalVentasChart.render();
 
@@ -296,20 +292,20 @@ function loadApexChart(){
     chartFunnel.render();
 }
 
-$(document).on('click', '.week', function(e){
+$(document).on('click', '.week', function (e) {
     e.preventDefault();
     var id = $(this).attr('id');
     weekFilter(id);
 });
 
-$(document).on('click', '#searchByDateRangeCP', function(e){
+$(document).on('click', '#searchByDateRangeCP', function (e) {
     e.preventDefault();
     var beginDate = $('#beginDate').val();
     var endDate = $('#endDate').val();
     getClientsAndProspectsByYear(2, formatDate(beginDate), formatDate(endDate));
 });
 
-$(document).on('click', '#searchByDateRange2', function(e){
+$(document).on('click', '#searchByDateRange2', function (e) {
     e.preventDefault();
     var beginDate = $('#beginDate2').val();
     var endDate = $('#endDate2').val();
@@ -322,10 +318,10 @@ $(document).on('click', '#searchByDateRange2', function(e){
     getDataFromDates(com2);
 });
 
-$('.infoMainSelector').unbind().on('click', function(e){
-    let c= $('input:checkbox.infoMainSelector:checked').length
+$('.infoMainSelector').unbind().on('click', function (e) {
+    let c = $('input:checkbox.infoMainSelector:checked').length
     var checkbox = $(this);
-    if (!checkbox.is(":checked") && c<1) {
+    if (!checkbox.is(":checked") && c < 1) {
         // do the confirmation thing here
         e.preventDefault();
         return false;
@@ -333,48 +329,53 @@ $('.infoMainSelector').unbind().on('click', function(e){
     loadInit();
 });
 
-function loadInit(){
-        typeTransaction = validateMainFilters();
-        var com2 = new FormData();
-        com2.append("typeTransaction", typeTransaction);
-        getProspectsByYear(com2);
-        getSalesByYear(com2);
-        generalMetrics(typeTransaction);
-        cicloVenta(com2);
-        getClientsAndProspectsByYear();
+function loadInit() {
+    typeTransaction = validateMainFilters();
+    var com2 = new FormData();
+    com2.append("typeTransaction", typeTransaction);
+    getProspectsByYear(com2);
+    getSalesByYear(com2);
+    generalMetrics(typeTransaction);
+    cicloVenta(com2);
+    getClientsAndProspectsByYear();
 }
 
-function getSalesByYear(com2){
+function getSalesByYear(com2) {
     $('body').i18n();
     $('.loadTotalVentasChart').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/totalVentasData`,
-        data:com2,
+        data: com2,
         cache: false,
         contentType: false,
         processData: false,
         type: 'POST',
         dataType: 'json',
         success: function (response) {
-            let totalVentasArray = [
-                parseFloat(response.porcentajeTotal),
-                parseFloat(response.porcentajeTotalCont),
-                parseFloat(response.porcentajeTotalAp),
-                parseFloat(response.porcentajeTotalC),
-            ];
-            totalVentasChart.updateSeries(totalVentasArray)
+            const updateTranslation = () => {
+                let totalVentasArray = [
+                    parseFloat(response.porcentajeTotal),
+                    parseFloat(response.porcentajeTotalCont),
+                    parseFloat(response.porcentajeTotalAp),
+                    parseFloat(response.porcentajeTotalC),
+                ];
+                totalVentasChart.updateSeries(totalVentasArray)
 
-            totalVentasChart.updateOptions({
-              labels: [
-                `Gran total: ${formatAsThousands(response.totalVentas)}`,
-                `Contratado: ${formatAsThousands(response.totalConT)}`,
-                `Apartado: ${formatAsThousands(response.totalAT)}`,
-                `Cancelado: ${formatAsThousands(response.totalCT)}`
-                ]
-             });
+                totalVentasChart.updateOptions({
+                    labels: [
+                        `${_("gran-total")}: ${formatAsThousands(response.totalVentas)}`,
+                        `Contratado: ${formatAsThousands(response.totalConT)}`,
+                        `Apartado: ${formatAsThousands(response.totalAT)}`,
+                        `Cancelado: ${formatAsThousands(response.totalCT)}`
+                    ]
+                });
 
-            totalVentasChart.toggleDataPointSelection (0);
-            $('.loadTotalVentasChart').addClass('d-none');
+                totalVentasChart.toggleDataPointSelection(0);
+                $('.loadTotalVentasChart').addClass('d-none');
+            }
+
+            updateTranslation(response);
+            onChangeTranslations(() => updateTranslation(response));
         }
     });
 }
@@ -384,7 +385,7 @@ function getProspectsByYear(com2) {
     $('.loadProspectosChart').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/getProspectsByYear`,
-        data:com2,
+        data: com2,
         cache: false,
         contentType: false,
         processData: false,
@@ -407,7 +408,7 @@ function getProspectsByYear(com2) {
                 xaxis: {
                     categories: months
                 },
-                });
+            });
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
             $('.loadProspectosChart').addClass('d-none');
@@ -415,7 +416,7 @@ function getProspectsByYear(com2) {
     });
 }
 
-function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null) {
+function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate = null) {
     $('body').i18n();
     typeTransaction = validateMainFilters();
     var data = new FormData();
@@ -452,13 +453,13 @@ function getClientsAndProspectsByYear(type = 1, beginDate = null, endDate= null)
             chartProspClients.updateSeries([{
                 name: `${_('prospectos')}`,
                 data: dataP
-            },{
+            }, {
                 name: `${_('clientes')}`,
                 data: dataC
             }])
             chartProspClients.updateOptions({
                 xaxis: {
-                    categories: monthsP.length >= monthsC.length ? monthsP:monthsC
+                    categories: monthsP.length >= monthsC.length ? monthsP : monthsC
                 },
             });
             $('.loadChartProspClients').addClass('d-none');
@@ -475,9 +476,9 @@ function generalMetrics(typeTransaction) {
     getDataFromDates(com2);
 }
 
-function weekFilter(element){
+function weekFilter(element) {
     typeTransaction = validateMainFilters();
-    if(element == 'thisWeek'){
+    if (element == 'thisWeek') {
         let thisWeek = getThisWeek();
         var com2 = new FormData();
         com2.append("fecha_inicio", thisWeek.inicio_semana);
@@ -485,16 +486,16 @@ function weekFilter(element){
         com2.append("typeTransaction", typeTransaction);
         getDataFromDates(com2);
     }
-    if(element == 'lastWeek'){
-        let semana_pasada =  getLastWeek();
+    if (element == 'lastWeek') {
+        let semana_pasada = getLastWeek();
         var com2 = new FormData();
         com2.append("fecha_inicio", semana_pasada.inicio_semana);
         com2.append("fecha_fin", semana_pasada.fin_semana);
         com2.append("typeTransaction", typeTransaction);
         getDataFromDates(com2);
     }
-    if(element == 'lastMonth'){
-        let mes_pasada =  getLastMonth();
+    if (element == 'lastMonth') {
+        let mes_pasada = getLastMonth();
         var com2 = new FormData();
         com2.append("fecha_inicio", mes_pasada.inicio_mes);
         com2.append("fecha_fin", mes_pasada.fin_mes);
@@ -503,40 +504,52 @@ function weekFilter(element){
     }
 }
 
-function getDataFromDates(com2){
+function getDataFromDates(com2) {
     $('.loadChartWeekly').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/getDataFromDates`,
-        data:com2,
+        data: com2,
         cache: false,
         contentType: false,
         processData: false,
         type: 'POST',
         dataType: 'json',
-        success : function (response) {
-            const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
-            let suma = sumValues(response)-response.prospTotales;
-            chartWeekly.updateSeries([{
-                data: suma > 0 ? [response.prospNuevos, response.prosCita, response.totalVentas, response.totalConT,
-                response.totalAT, response.totalCanC, response.totalCanA] : []
-            }]);
-            addTextFields(response);
-            $('.loadChartWeekly').addClass('d-none');
+        success: function (response) {
+
+            const callData = () => {
+                const sumValues = obj => Object.values(obj).reduce((a, b) => a + b);
+                let suma = sumValues(response) - response.prospTotales;
+                chartWeekly.updateSeries([{
+                    data: suma > 0 ? [response.prospNuevos, response.prosCita, response.totalVentas, response.totalConT,
+                    response.totalAT, response.totalCanC, response.totalCanA] : []
+                }]);
+                chartWeekly.updateOptions({
+                    series: [{
+                        name: _("cantidad"),
+                        data: []
+                    }]
+                });
+                addTextFields(response);
+                $('.loadChartWeekly').addClass('d-none');
+            }
+
+            callData(response);
+            onChangeTranslations(() => callData(response));
         }
     });
 }
 
-function cicloVenta(com2){
+function cicloVenta(com2) {
     $('.loadChartFunnel').removeClass('d-none');
     $.ajax({
         url: `${base_url}Dashboard/cicloVenta`,
-        data:com2,
+        data: com2,
         cache: false,
         contentType: false,
         processData: false,
         type: 'POST',
         dataType: 'json',
-        success : function (response) {
+        success: function (response) {
             chartFunnel.updateSeries([
                 response.totalProspectosCita, response.totalProspectosCitaSeguimiento,
                 response.totalApartados, response.prospectosNoInteresados
@@ -548,26 +561,26 @@ function cicloVenta(com2){
     });
 }
 
-function getLastWeek(){
+function getLastWeek() {
     var curr = new Date; // get current date
     var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
     var last = first + 6; // last day is the first day + 6
 
     var firstday = new Date(curr.setDate(first));
-    let inicio_semana = new Date(firstday.getFullYear(), firstday.getMonth(), firstday.getDate()-7) // can also be a Temporal object
+    let inicio_semana = new Date(firstday.getFullYear(), firstday.getMonth(), firstday.getDate() - 7) // can also be a Temporal object
     inicio_semana = inicio_semana.toISOString().split('T')[0];
 
     var lastday = new Date(curr.setDate(last));
-    let fin_semana = new Date(lastday.getFullYear(), lastday.getMonth(), lastday.getDate()-7);
+    let fin_semana = new Date(lastday.getFullYear(), lastday.getMonth(), lastday.getDate() - 7);
     fin_semana = fin_semana.toISOString().split('T')[0];
 
     let dates = [];
-    dates.push({"date":inicio_semana, type:1});
-    dates.push({"date":fin_semana, type:2});
-    return {inicio_semana:inicio_semana, fin_semana:fin_semana};
+    dates.push({ "date": inicio_semana, type: 1 });
+    dates.push({ "date": fin_semana, type: 2 });
+    return { inicio_semana: inicio_semana, fin_semana: fin_semana };
 }
 
-function getLastMonth(){
+function getLastMonth() {
     var now = new Date();
     var prevMonthLastDate = new Date(now.getFullYear(), now.getMonth(), 0);
     var prevMonthFirstDate = new Date(now.getFullYear() - (now.getMonth() > 0 ? 0 : 1), (now.getMonth() - 1 + 12) % 12, 1);
@@ -576,44 +589,43 @@ function getLastMonth(){
         return (dateComponent < 10 ? '0' : '') + dateComponent;
     };
 
-    var formatDate = function(date) {
-        return date.getFullYear() + '-' +formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+    var formatDate = function (date) {
+        return date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
     };
 
-    return {inicio_mes:formatDate(prevMonthFirstDate), fin_mes:formatDate(prevMonthLastDate)};
+    return { inicio_mes: formatDate(prevMonthFirstDate), fin_mes: formatDate(prevMonthLastDate) };
 }
 
-function validateMainFilters(){
+function validateMainFilters() {
     let selector1 = $('#infoMainSelector1')[0];
     let selector2 = $('#infoMainSelector2')[0];
     let valueOf = this.value;
     let isCheck = this.checked;
     let transaction = '';
 
-    if(valueOf == 1 && isCheck){
-        if(selector1.checked && selector2.checked){
+    if (valueOf == 1 && isCheck) {
+        if (selector1.checked && selector2.checked) {
             transaction = 3;
         }
-        else{
+        else {
             transaction = 1;
         }
     }
-    else if(valueOf == 2 && isCheck){
-        if(selector1.checked && selector2.checked){
+    else if (valueOf == 2 && isCheck) {
+        if (selector1.checked && selector2.checked) {
             transaction = 3;
-        }else{
+        } else {
             transaction = 2;
         }
-    }else{
-        if(selector1.checked && !selector2.checked){
+    } else {
+        if (selector1.checked && !selector2.checked) {
             transaction = 1;
         }
-        else if(selector2.checked && !selector1.checked){
+        else if (selector2.checked && !selector1.checked) {
             transaction = 2;
-        }else if(selector1.checked && selector2.checked){
+        } else if (selector1.checked && selector2.checked) {
             transaction = 3;
-        }else
-        {
+        } else {
             transaction = 0;
         }
     }
@@ -631,7 +643,7 @@ function cleanValues() {
     $('#pcc_card').text('');
 };
 
-function addTextFields(response){
+function addTextFields(response) {
     $('#pt_card').text(`${(response.prospTotales).toLocaleString('es-MX')} (${response.porcentaje_prospectosTotales}%)`);
     $('#np_card').text(`${(response.prospNuevos).toLocaleString('es-MX')} (${response.porcentaje_prospectosNuevos}%)`);
     $('#va_card').text(`${(response.totalAT).toLocaleString('es-MX')} (${response.porcentaje_totalApartado}%)`);
@@ -651,7 +663,7 @@ function cleanValues2() {
     $('#ni').text('');
 };
 
-function addTextFields2(response){
+function addTextFields2(response) {
     $('#ac').text((response.totalProspectos).toLocaleString('es-MX'));
     $('#cf').text((response.totalMitadProceso).toLocaleString('es-MX'));
     $('#cita').text(`${(response.totalProspectosCita).toLocaleString('es-MX')} (${response.porcentaje_prospectosCita}%)`);
@@ -672,7 +684,7 @@ function getThisWeek() {
     var lastday = new Date(curr.setDate(last));
     let fin_semana = new Date(lastday.getFullYear(), lastday.getMonth(), lastday.getDate());
     fin_semana = fin_semana.toISOString().split('T')[0];
-    return {fin_semana: fin_semana, inicio_semana: inicio_semana}
+    return { fin_semana: fin_semana, inicio_semana: inicio_semana }
 }
 
 function setInitialValuesHome() {
@@ -725,18 +737,18 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-async function prospectsTable(){
+async function prospectsTable() {
     $('body').i18n();
     $('.table-dinamic').empty();
-    let rol = userType == 2 ? await getRolDR(idUser): userType;
+    let rol = userType == 2 ? await getRolDR(idUser) : userType;
     let rolString;
     if (rol == '1' || rol == '18' || rol == '4' || rol == '63' || rol == '33' || rol == '58' || rol == '69' || rol == '72')
         rolString = 'director_regional';
-    else if ( rol == '2' || (rol == '5' && ( idUser != '28' || idUser != '30' )))
+    else if (rol == '2' || (rol == '5' && (idUser != '28' || idUser != '30')))
         rolString = 'gerente';
-    else if ( rol == '3' || rol == '6' )
+    else if (rol == '3' || rol == '6')
         rolString = 'coordinador';
-    else if ( rol == '59' || (rol == '5' && ( idUser == '28' || idUser == '30' )))
+    else if (rol == '59' || (rol == '5' && (idUser == '28' || idUser == '30')))
         rolString = 'subdirector';
     else
         rolString = 'asesor';
@@ -749,37 +761,31 @@ async function prospectsTable(){
         div.classList.add('openDiv');
         fillBoxAccordionsPR(rolString, rol == 18 || rol == '18' ? 1 : rol, idUser, 1, 1, null, [0, null, null, null, null, null, rol]);
         sp.initFormExtendedDatetimepickers();
-        $('.datepicker').datetimepicker({locale: 'es'});
+
+        $('.datepicker').datetimepicker({locale: localStorage.getItem('locale')});
         setInitialValues2();
     }
-    $('#tablePR thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
-            $( 'input', this ).on('keyup change', function () {
-            if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
-                $('#tablePR').DataTable().column(i).search(this.value).draw();
-            }
-        });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-    });
+    construirHead('tablePR')
+    changeSelects();
+    $('body').i18n();
 }
 
-function getRolDR(idUser){
+function getRolDR(idUser) {
     return new Promise(resolve => {
         $.ajax({
             type: "POST",
             url: `${base_url}Reporte/getRolDR`,
-            data: {idUser: idUser},
+            data: { idUser: idUser },
             dataType: 'json',
             cache: false,
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#spiner-loader').removeClass('hide');
             },
-            success: function(data){
+            success: function (data) {
                 $('#spiner-loader').addClass('hide');
-                resolve (data.length > 0 ? 59:2);
+                resolve(data.length > 0 ? 59 : 2);
             },
-            error: function() {
+            error: function () {
                 $('#spiner-loader').addClass('hide');
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
@@ -801,9 +807,8 @@ function changeIcon2(anchor) {
 function createAccordionsPR(option, render, rol) {
     console.log("called");
     let tittle = getTitle(option);
-    console.log("title: ", tittle);
     let html = '';
-    html = `<div class="bk ${render == 1 ? 'parentTable': 'childTable'}">
+    html = `<div class="bk ${render == 1 ? 'parentTable' : 'childTable'}">
                 <div class="card p-2 h-auto boxTabla">
                     <div class="d-flex justify-between align-center">
                         <div class="cursor-point accordionToggle">
@@ -813,10 +818,10 @@ function createAccordionsPR(option, render, rol) {
                             </a>
                         </div>
                         <div>
-                            <h4 class="p-0 accordion-title js-accordion-title">`+tittle+`</h4>
+                            <h4 class="p-0 accordion-title js-accordion-title">`+ tittle + `</h4>
                         </div>
                         <div class="cursor-point">
-                            <a onClick="prospectsTable()">${render == 1 ? '': '<i class="fas fa-times deleteTable"></i>'}</a>
+                            <a onClick="prospectsTable()">${render == 1 ? '' : '<i class="fas fa-times deleteTable"></i>'}</a>
                         </div>
                     </div>
                     <div class="toolbar">
@@ -861,17 +866,15 @@ function createAccordionsPR(option, render, rol) {
                 </div>
             </div>`;
     $(".table-dinamic").append(html);
-    $('body').i18n();
-    changeSelects();
 }
 
-function multirol(){
+function multirol() {
     //validar que tipo de usuario es el que está actualmente sesionado
     let items_activos = [];
     switch (userType) {
         case 1:
         case 4:
-            if(idLider==2 || idLider==0){
+            if (idLider == 2 || idLider == 0) {
                 items_activos.push('subdirector');
                 items_activos.push('gerente');
                 items_activos.push('coordinadors');
@@ -883,9 +886,9 @@ function multirol(){
         case 2:
         case 5:
         case 59:
-            $.post('../General/multirol', function(data){
+            $.post('../General/multirol', function (data) {
                 let unique = [...new Set(data.map(item => item.idRol))]; //los roles unicos del usuario
-                if(unique.includes(59) || unique.includes(60)){
+                if (unique.includes(59) || unique.includes(60)) {
                     items_activos.push('subdirector');
                     items_activos.push('gerente');
                     items_activos.push('coordinadors');
@@ -893,14 +896,14 @@ function multirol(){
                     loadSbdir();
                     createFilters(59, items_activos);
                     getFirstFilter(59, 2);
-                }else{
+                } else {
                     items_activos.push('gerente');
                     items_activos.push('coordinadors');
                     items_activos.push('asesors');
                     createFilters(2, items_activos);
                     getFirstFilter(2, 3);
                 }
-            },'json');
+            }, 'json');
             break;
         case 3:
         case 6:
@@ -916,14 +919,14 @@ function multirol(){
             break;
         case 7:
             setInitialValues2();
-            var url = "../Clientes/getProspectsListByAsesor/"+idUser;
+            var url = "../Clientes/getProspectsListByAsesor/" + idUser;
             let finalBeginDate = $("#beginDate3").val();
             let finalEndDate = $("#endDate3").val();
-            $('#tablePR thead tr:eq(0) th').each( function (i) {
+            $('#tablePR thead tr:eq(0) th').each(function (i) {
                 var title = $(this).text();
                 $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
-                $( 'input', this).on( 'keyup change', function () {
-                    if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
+                $('input', this).on('keyup change', function () {
+                    if ($('#tablePR').DataTable().column(i).search() !== this.value) {
                         $('#tablePR').DataTable().column(i).search(this.value).draw();
                     }
                 });
@@ -933,41 +936,39 @@ function multirol(){
     }
 }
 
-function loadSbdir(){
+function loadSbdir() {
     $("#subdirector").empty().selectpicker('refresh');
-    $.post('../Clientes/getSubdirs/', function(data) {
+    $.post('../Clientes/getSubdirs/', function (data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#subdirector").append($('<option>').val(id).text(name));
         }
-        if(len<=0)
-        {
+        if (len <= 0) {
             $("#subdirector").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
         $("#subdirector").selectpicker('refresh');
     }, 'json');
 }
 
-function loadCoord(){
+function loadCoord() {
     $("#coordinadors").empty().selectpicker('refresh');
     let id_usuario;
-    if(userType==6){
+    if (userType == 6) {
         id_usuario = idLider;
-    }else{
+    } else {
         id_usuario = idUser;
     }
-    $.post('../Clientes/getCoordsByGrs/'+id_usuario, function(data) {
+    $.post('../Clientes/getCoordsByGrs/' + id_usuario, function (data) {
         var len = data.length;
-        if(len<=0){
+        if (len <= 0) {
             $("#coordinadors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
-        }{
+        } {
             $("#coordinadors").append('<option selected="selected">SELECCIONA UNA OPCIÓN</option>');
         }
 
-        for( var i = 0; i<len; i++){
+        for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#coordinadors").append($('<option>').val(id).text(name));
@@ -976,17 +977,17 @@ function loadCoord(){
     }, 'json');
 }
 
-function loadAsesores(){
+function loadAsesores() {
     $("#asesor").empty().selectpicker('refresh');
-    $.post('../Clientes/getAsesorByCoords/'+idUser, function(data) {
+    $.post('../Clientes/getAsesorByCoords/' + idUser, function (data) {
         var len = data.length;
-        if(len<=0){
+        if (len <= 0) {
             $("#asesors").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
         }
-        else{
+        else {
             $("#asesors").append('<option selected="selected">SELECCIONA UNA OPCIÓN</option>');
         }
-        for( var i = 0; i<len; i++){
+        for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#asesors").append($('<option>').val(id).text(name));
@@ -996,60 +997,60 @@ function loadAsesores(){
     }, 'json');
 }
 
-function createSelect(dataDinamic){
-    let nombreID = "div_"+dataDinamic;
+function createSelect(dataDinamic) {
+    let nombreID = "div_" + dataDinamic;
     let dataMaks;
     //se cambiaron de cnombre porque chocaba con otros pickers en los js anidados
-    if(dataDinamic=="coordinadors"){
+    if (dataDinamic == "coordinadors") {
         dataMaks = 'coordinador';
-    }else if(dataDinamic=="asesors"){
+    } else if (dataDinamic == "asesors") {
         dataMaks = 'asesor';
-    }else{
+    } else {
         dataMaks = dataDinamic;
     }
 
-    let html_select ='<div class="col-md-3 form-group m-0"><div id="'+nombreID+'" class="form-group overflow-hidden"><label class="control-label">'+dataMaks.toUpperCase()+'</label></div></div>';
+    let html_select = '<div class="col-md-3 form-group m-0"><div id="' + nombreID + '" class="form-group overflow-hidden"><label class="control-label">' + dataMaks.toUpperCase() + '</label></div></div>';
     var $selectSub = $('<select/>', {
-        'class':"selectpicker select-gral m-0",
+        'class': "selectpicker select-gral m-0",
         'id': dataDinamic,
         'name': dataDinamic,
-        'data-style':"btn",
-        'data-show-subtext':"true",
-        'data-live-search':"true",
-        'data-container':"body",
+        'data-style': "btn",
+        'data-show-subtext': "true",
+        'data-live-search': "true",
+        'data-container': "body",
         'title': 'SELECCIONA UNA OPCIÓN',
         'data-i18n-label': `${_('select-predeterminado')}`
     });
-        $('#filterContainer').append(html_select);
+    $('#filterContainer').append(html_select);
 
     return $selectSub;
 }
 
-function createFilters(rol, selects){
-    selects.map((element, index)=>{
+function createFilters(rol, selects) {
+    selects.map((element, index) => {
         let options_select = createSelect(element);
-        options_select.appendTo("#div_"+element).selectpicker('refresh');
+        options_select.appendTo("#div_" + element).selectpicker('refresh');
     });
 }
 
-function getFirstFilter(rol, secondRol){
-    $(`#${rol == 59 ? 'subdirector':'gerente'}`).empty().selectpicker('refresh');
-    $.post('../General/getUsersByLeader', {rol: rol, secondRol:secondRol},function(data) {
+function getFirstFilter(rol, secondRol) {
+    $(`#${rol == 59 ? 'subdirector' : 'gerente'}`).empty().selectpicker('refresh');
+    $.post('../General/getUsersByLeader', { rol: rol, secondRol: secondRol }, function (data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
-            $(`#${rol == 59 ? 'subdirector':'gerente'}`).append($('<option>').val(id).text(name));
+            $(`#${rol == 59 ? 'subdirector' : 'gerente'}`).append($('<option>').val(id).text(name));
         }
-        if(len<=0){
-            $(`#${rol == 59 ? 'subdirector':'gerente'}`).append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
+        if (len <= 0) {
+            $(`#${rol == 59 ? 'subdirector' : 'gerente'}`).append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
-        $(`#${rol == 59 ? 'subdirector':'gerente'}`).selectpicker('refresh');
+        $(`#${rol == 59 ? 'subdirector' : 'gerente'}`).selectpicker('refresh');
     }, 'json');
 }
 
 function fillBoxAccordionsPR(option, rol, render) {
+    console.log("fillBoxaccordiions");
     if (rol == 5 && (idUser == 28 && idUser == 30))
         rolEspecial = 59;
     else if (rol == 5 && (idUser != 28 && idUser != 30))
@@ -1064,7 +1065,7 @@ function fillBoxAccordionsPR(option, rol, render) {
     multirol();
 }
 
-function getTitle(option){
+function getTitle(option) {
     var title;
     $('body').i18n();
     switch (option) {
@@ -1114,21 +1115,19 @@ function newRoles(option) {
     return rol;
 }
 
-$(document).on('change','#subdirector', function () {
+$(document).on('change', '#subdirector', function () {
     var subdir = $("#subdirector").val();
     $("#gerente").empty().selectpicker('refresh');
     $("#coordinadors").empty().selectpicker('refresh');
     $("#asesor").empty().selectpicker('refresh');
     $('#spiner-loader').removeClass('hide');
     $('#filter_date').addClass('hide');
-    $.post('../Clientes/getGerentesBySubdir/'+subdir, function(data) {
+    $.post('../Clientes/getGerentesBySubdir/' + subdir, function (data) {
         var len = data.length;
-        if(len<=0)
-        {
+        if (len <= 0) {
             $("#gerente").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
-        for( var i = 0; i<len; i++)
-        {
+        for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#gerente").append($('<option>').val(id).text(name));
@@ -1148,12 +1147,12 @@ $(document).on('change', '#gerente', function () {
     $("#coordinadors").empty().selectpicker('refresh');
     $("#asesor").empty().selectpicker('refresh');
     $('#spiner-loader').removeClass('hide');
-    $.post('../Clientes/getCoordsByGrs/'+gerente, function(data) {
+    $.post('../Clientes/getCoordsByGrs/' + gerente, function (data) {
         var len = data.length;
-        if(len<=0){
+        if (len <= 0) {
             $("#coordinadors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
-        for( var i = 0; i<len; i++){
+        for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#coordinadors").append($('<option>').val(id).text(name));
@@ -1161,7 +1160,7 @@ $(document).on('change', '#gerente', function () {
         $("#coordinadors").selectpicker('refresh');
     }, 'json');
     /**///carga tabla
-    var url = general_base_url+"Clientes/getProspectsListByGerente/"+gerente;
+    var url = general_base_url + "Clientes/getProspectsListByGerente/" + gerente;
     let finalBeginDate = $("#beginDate3").val();
     let finalEndDate = $("#endDate3").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
@@ -1173,14 +1172,13 @@ $(document).on('change', '#coordinadors', function () {
     $('#filter_date').removeClass('hide');
     $("#asesor").empty().selectpicker('refresh');
 
-    $.post('../Clientes/getAsesorByCoords/'+coordinador, function(data) {
+    $.post('../Clientes/getAsesorByCoords/' + coordinador, function (data) {
         var len = data.length;
-        if(len<=0)
-        {
+        if (len <= 0) {
             $("#asesors").append('<option selected="selected" disabled>NINGUNA OPCIÓN</option>');
         }
 
-        for( var i = 0; i<len; i++){
+        for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#asesors").append($('<option>').val(id).text(name));
@@ -1191,7 +1189,7 @@ $(document).on('change', '#coordinadors', function () {
 
 
     /**///carga tabla
-    var url = "../Clientes/getProspectsListByCoord/"+coordinador;
+    var url = "../Clientes/getProspectsListByCoord/" + coordinador;
     let finalBeginDate = $("#beginDate3").val();
     let finalEndDate = $("#endDate3").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
@@ -1201,7 +1199,7 @@ $(document).on('change', '#coordinadors', function () {
 $(document).on('change', '#asesors', function () {
     asesor = $("#asesors").val();
 
-    var url = "../Clientes/getProspectsListByAsesor/"+asesor;
+    var url = "../Clientes/getProspectsListByAsesor/" + asesor;
     let finalBeginDate = $("#beginDate3").val();
     let finalEndDate = $("#endDate3").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
@@ -1209,28 +1207,28 @@ $(document).on('change', '#asesors', function () {
 
 
 var prospectsTables;
-function updateTable(url, typeTransaction, beginDate, endDate, where){
+function updateTable(url, typeTransaction, beginDate, endDate, where) {
     let oldDate = beginDate.split('/');
-    let newDate = new Date(oldDate[1]+'-'+oldDate[0]+'-'+oldDate[2]).toISOString();
+    let newDate = new Date(oldDate[1] + '-' + oldDate[0] + '-' + oldDate[2]).toISOString();
     newDate = new Date(newDate);
     let yearP = newDate.getFullYear();
-    let monthP = ((newDate.getMonth()+1)<10) ? '0'+(newDate.getMonth()+1) : (newDate.getMonth()+1);
-    let dayP = (newDate.getDate()<10) ? '0'+ newDate.getDate() : newDate.getDate();
+    let monthP = ((newDate.getMonth() + 1) < 10) ? '0' + (newDate.getMonth() + 1) : (newDate.getMonth() + 1);
+    let dayP = (newDate.getDate() < 10) ? '0' + newDate.getDate() : newDate.getDate();
 
-    beginDate = dayP+'/'+monthP+'/'+yearP;
+    beginDate = dayP + '/' + monthP + '/' + yearP;
 
     let oldDateend = endDate.split('/');
-    let newDateEnd = new Date(oldDateend[1]+'-'+oldDateend[0]+'-'+oldDateend[2]).toISOString();
+    let newDateEnd = new Date(oldDateend[1] + '-' + oldDateend[0] + '-' + oldDateend[2]).toISOString();
     newDateEnd = new Date(newDateEnd);
     let yearPE = newDateEnd.getFullYear();
-    let monthPE = ((newDateEnd.getMonth()+1)<10) ? '0'+(newDateEnd.getMonth()+1) : (newDateEnd.getMonth()+1);
-    let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
-    endDate = dayPE+'/'+monthPE+'/'+yearPE;
+    let monthPE = ((newDateEnd.getMonth() + 1) < 10) ? '0' + (newDateEnd.getMonth() + 1) : (newDateEnd.getMonth() + 1);
+    let dayPE = (newDateEnd.getDate() < 10) ? '0' + newDateEnd.getDate() : newDateEnd.getDate();
+    endDate = dayPE + '/' + monthPE + '/' + yearPE;
 
     prospectsTables = $('#tablePR').dataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        scrollX:true,
+        scrollX: true,
         ordering: false,
         buttons: [
             {
@@ -1238,7 +1236,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Listado general de prospectos',
-                title:"Listado general de prospectos",
+                title: "Listado general de prospectos",
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     format: {
@@ -1297,70 +1295,83 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
         },
         destroy: true,
         columns: [
-            { data: function (d) {
-                if (d.estatus == 1)
-                    return '<center><span class="label lbl-green">Vigente</span><center>';
-                else
-                    return '<center><span class="label lbl-warning">Sin vigencia</span><center>';
-            } },
-            { data: function (d) {
-                if(d.estatus_particular == 1) // DESCARTADO
-                    estatus_particular = 'Descartado';
-                else if(d.estatus_particular == 2) // INTERESADO SIN CITA
-                    estatus_particular = 'Interesado sin cita';
-                else if (d.estatus_particular == 3) // CON CITA
-                    estatus_particular = 'Con cita';
-                else if (d.estatus_particular == 0 || d.estatus_particular == 4) // SIN ESPECIFICAR
-                    estatus_particular = 'Sin especificar';
-                else if (d.estatus_particular == 5) // PAUSADO
-                    estatus_particular = 'Pausado';
-                else if (d.estatus_particular == 6) // PREVENTA
-                    estatus_particular = 'Preventa';
-                else if (d.estatus_particular == 3) // CLIENTE
-                    estatus_particular = 'Cliente';
-                return `<center><span class="label lbl-violetBoots">${d.estatus_particular}</span><center>`;
-            } },
-            {   data: function (d) {
-                if (d.tipo == 0){
-                    return '<center><span class="label lbl-yellow">Prospecto</span></center>';
-                } else {
-                    return '<center><span class="label lbl-oceanGreen">Cliente</span></center>';
+            {
+                data: function (d) {
+                    if (d.estatus == 1)
+                        return '<center><span class="label lbl-green">Vigente</span><center>';
+                    else
+                        return '<center><span class="label lbl-warning">Sin vigencia</span><center>';
                 }
-            } },
-            { data: function (d) {
+            },
+            {
+                data: function (d) {
+                    if (d.estatus_particular == 1) // DESCARTADO
+                        estatus_particular = 'Descartado';
+                    else if (d.estatus_particular == 2) // INTERESADO SIN CITA
+                        estatus_particular = 'Interesado sin cita';
+                    else if (d.estatus_particular == 3) // CON CITA
+                        estatus_particular = 'Con cita';
+                    else if (d.estatus_particular == 0 || d.estatus_particular == 4) // SIN ESPECIFICAR
+                        estatus_particular = 'Sin especificar';
+                    else if (d.estatus_particular == 5) // PAUSADO
+                        estatus_particular = 'Pausado';
+                    else if (d.estatus_particular == 6) // PREVENTA
+                        estatus_particular = 'Preventa';
+                    else if (d.estatus_particular == 3) // CLIENTE
+                        estatus_particular = 'Cliente';
+                    return `<center><span class="label lbl-violetBoots">${d.estatus_particular}</span><center>`;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.tipo == 0) {
+                        return '<center><span class="label lbl-yellow">Prospecto</span></center>';
+                    } else {
+                        return '<center><span class="label lbl-oceanGreen">Cliente</span></center>';
+                    }
+                }
+            },
+            {
+                data: function (d) {
                     return d.nombre;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.asesor;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.coordinador;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.gerente;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.nombre_lp;
                 }
             },
             {
                 data: function (d) {
                     //telefono
-                    let telefono = (d.telefono=='' || d.telefono==null)?'':d.telefono;
-                    let telefono2 = (d.telefono_2==''||d.telefono_2==null)?'':d.telefono_2;
+                    let telefono = (d.telefono == '' || d.telefono == null) ? '' : d.telefono;
+                    let telefono2 = (d.telefono_2 == '' || d.telefono_2 == null) ? '' : d.telefono_2;
                     return telefono + '<br>' + telefono2;
                 },
-                visible: (userType==7) ? false : true
+                visible: (userType == 7) ? false : true
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.fecha_creacion;
                 }
             },
-            { data: function (d) {
+            {
+                data: function (d) {
                     return d.fecha_vencimiento;
                 }
             }
@@ -1395,20 +1406,20 @@ $(document).on("click", "#searchByDateRangePR", function () {
     let finalEndDate = $("#endDate3").val();
     var url_inter;
 
-    if(gerente != undefined && coordinador==undefined && asesor==undefined){
-        url_inter = "../Clientes/getProspectsListByGerente/"+gerente;
-    }else if(gerente != undefined && coordinador!=undefined && asesor==undefined){
-        url_inter = "../Clientes/getProspectsListByCoord/"+coordinador;
-    }else if(gerente != undefined && coordinador!=undefined && asesor!=undefined){
-        url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
-    }else if(gerente == undefined && coordinador==undefined && asesor!=undefined){
-        url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
-    }else if(gerente == undefined && coordinador==undefined && asesor==undefined){
-        url_inter = "../Clientes/getProspectsListByAsesor/"+idUser;
-    }else if(gerente == undefined && coordinador!=undefined && asesor!=undefined){
-        url_inter = "../Clientes/getProspectsListByAsesor/"+asesor;
-    }else if(gerente == undefined && coordinador!=undefined && asesor==undefined){
-        url_inter = "../Clientes/getProspectsListByCoord/"+coordinador;
+    if (gerente != undefined && coordinador == undefined && asesor == undefined) {
+        url_inter = "../Clientes/getProspectsListByGerente/" + gerente;
+    } else if (gerente != undefined && coordinador != undefined && asesor == undefined) {
+        url_inter = "../Clientes/getProspectsListByCoord/" + coordinador;
+    } else if (gerente != undefined && coordinador != undefined && asesor != undefined) {
+        url_inter = "../Clientes/getProspectsListByAsesor/" + asesor;
+    } else if (gerente == undefined && coordinador == undefined && asesor != undefined) {
+        url_inter = "../Clientes/getProspectsListByAsesor/" + asesor;
+    } else if (gerente == undefined && coordinador == undefined && asesor == undefined) {
+        url_inter = "../Clientes/getProspectsListByAsesor/" + idUser;
+    } else if (gerente == undefined && coordinador != undefined && asesor != undefined) {
+        url_inter = "../Clientes/getProspectsListByAsesor/" + asesor;
+    } else if (gerente == undefined && coordinador != undefined && asesor == undefined) {
+        url_inter = "../Clientes/getProspectsListByCoord/" + coordinador;
     }
 
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);
