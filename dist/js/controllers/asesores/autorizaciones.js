@@ -141,7 +141,7 @@ $(document).ready (function() {
         {
             text: '<i class="fas fa-play"></i>',
             className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de autorizaciones podrás visualizarlo en el siguiente tutorial',
+            titleAttr: `${_('video-tutorial')}`,
             action: function (e, dt, button, config) {
                 window.open('https://youtu.be/1zcshxE2nP4', '_blank');
             }
@@ -263,7 +263,7 @@ $(document).ready (function() {
         {
             text: '<i class="fas fa-play"></i>',
             className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de autorizaciones podrás visualizarlo en el siguiente tutorial',
+            titleAttr: `${_('video-tutorial')}`,
             action: function (e, dt, button, config) {
                 window.open('https://youtu.be/1zcshxE2nP4', '_blank');
             }

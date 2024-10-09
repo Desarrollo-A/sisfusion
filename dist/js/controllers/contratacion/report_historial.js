@@ -14,8 +14,6 @@ let titulosEvidence = [];
 // });
 
 $(document).ready(function () {
-  construirHead("Jtabla");
-
   sp.initFormExtendedDatetimepickers();
   $(".datepicker").datetimepicker({ locale: "es" });
   setIniDatesXMonth("#beginDate", "#endDate");
@@ -52,7 +50,8 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 function fillTable(typeTransaction, beginDate, endDate, where) {
-  tabla_6 = $("#Jtabla").dataTable({
+ construirHead("Jtabla");
+ const tb_contratos_recibidos = $("#Jtabla").DataTable({
     dom:
       "Brt" +
       "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -70,7 +69,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
           columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
           format: {
             header: function (d, columnIdx) {
-              return " " + titulos[columnIdx] + " ";
+              return $(d).attr('placeholder').toUpperCase();
             },
           },
         },
@@ -174,6 +173,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
       },
     },
   });
+  applySearch(tb_contratos_recibidos);
 }
 
 $("#Jtabla").on("draw.dt", function () {
