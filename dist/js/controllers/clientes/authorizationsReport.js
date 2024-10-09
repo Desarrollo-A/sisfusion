@@ -1,4 +1,6 @@
 $(document).ready (function() {     
+    construirHead("authorizationsTable");
+
     let funcionToGetData = '';
     funcionToGetData = ( id_rol_general == 1 ) ? `${general_base_url}Clientes/getAuthorizationsByDirector` : `${general_base_url}Clientes/getAuthorizationsBySubdirector`
 
@@ -57,11 +59,11 @@ $(document).ready (function() {
             {
                 data: function (d) {
                     if (d.estatus == 0) {
-                        return '<span class="label lbl-green">Autorizada</span>';
+                        return '<span class="label lbl-green" data-i18n="autorizada">Autorizada</span>';
                     } else if (d.estatus == 1){
-                        return '<span class="label lbl-grayDark">Pendiente</span>';
+                        return '<span class="label lbl-grayDark" data-i18n="pendiente">Pendiente</span>';
                     } else if (d.estatus == 2){
-                        return '<span class="label lbl-warning">Rechazada</span>';
+                        return '<span class="label lbl-warning" data-i18n="rechazada">Rechazada</span>';
                     } else {
                         return '<span class="label lbl-azure">En DC</span>';
                     }
@@ -100,18 +102,6 @@ $(document).ready (function() {
             cache: false,
         }
     });
-});
-
-let titulos = [];
-$('#authorizationsTable thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    $('input', this).on('keyup change', function () {
-        if ($('#authorizationsTable').DataTable().column(i).search() !== this.value)
-            $('#authorizationsTable').DataTable().column(i).search(this.value).draw();
-    });
-    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
 
