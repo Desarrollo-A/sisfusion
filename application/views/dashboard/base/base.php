@@ -19,13 +19,16 @@
                     <?php 
                     $li = '';
                     foreach($sub_menu as $menu){
+                        $nombreMenu = strtolower($menu->nombre);
+
                         $activeClass = $menu->active == 1 ? 'active menuTab':'menuTab';
                         $li .= "<li class='$activeClass' id='$menu->id_li'>";
-                        $li .= "<a href='#$menu->href' data-toggle='tab'><div class='iconBox'><i class='$menu->icono p-0'></i></div><p class='m-0'>$menu->nombre</p></a>";
+                        $li .= "<a href='#$menu->href' data-toggle='tab'><div class='iconBox'><i class='$menu->icono p-0'></i></div><p class='m-0' data-i18n='" . $nombreMenu . "'>$menu->nombre</p></a>";
                         $li .= "</li>";
                     }      
                     echo $li;
 
+                    
                     ?>
 
                     
