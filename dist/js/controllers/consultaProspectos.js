@@ -1,6 +1,8 @@
 typeTransaction = 1;
 $(document).ready(function() {
     construirHead('prospects-datatable');
+    changeSelects();
+    changeButtonTooltips();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
@@ -45,21 +47,21 @@ function fillTable(transaction, beginDate, endDate, where) {
         {
             data: function(d) {
                     if (d.estatus_particular == 1) // DESCARTADO
-                    b = `<span class="label lbl-warning">${_('descartado')}</span>`;
+                    b = `<span class="label lbl-warning" data-i18n="descartado">${_('descartado')}</span>`;
                 else if (d.estatus_particular == 2) // INTERESADO SIN CITA
-                    b = `<span class="label lbl-green">${_('interesado-sin-cita')}</span>`;
+                    b = `<span class="label lbl-green" data-i18n="interesado-sin-cita">${_('interesado-sin-cita')}</span>`;
                 else if (d.estatus_particular == 3) // CON CITA
-                    b = `<span class="label lbl-sunny">${_('con-cita')}</span>`;
+                    b = `<span class="label lbl-sunny" data-i18n="con-cita">${_('con-cita')}</span>`;
                 else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                    b = `<span class="label lbl-gray">${_('sin-especificar')}</span>`;
+                    b = `<span class="label lbl-gray" data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`;
                 else if (d.estatus_particular == 5) // PAUSADO
-                    b = `<span class="label lbl-orangeYellow">${_('pausado')}</span>`;
+                    b = `<span class="label lbl-orangeYellow" data-i18n="pausado">${_('pausado')}</span>`;
                 else if (d.estatus_particular == 6) // PREVENTA
-                    b = `<span class="label lbl-violetDeep">${_('preventa')}</span>`;
+                    b = `<span class="label lbl-violetDeep" data-i18n="preventa">${_('preventa')}</span>`;
                 else if (d.estatus_particular == 7) // CLIENTE
-                    b = `<span class="label lbl-oceanGreen">${_('cliente')}</span>`;
+                    b = `<span class="label lbl-oceanGreen" data-i18n="cliente">${_('cliente')}</span>`;
                 else // CLIENTE
-                    b = `<span class="label lbl-gray">${_('sin-especificar')}</span>`;
+                    b = `<span class="label lbl-gray" data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`;
                 return b;
             }
         },
@@ -76,33 +78,33 @@ function fillTable(transaction, beginDate, endDate, where) {
         },
         {
             data: function (d) {
-                return d.coordinador == '  ' ? _('sin-especificar') : d.coordinador;
+                return d.coordinador == '  ' ?  `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.coordinador;
             }
         },
         {
             data: function (d) {
-                return d.gerente == '  ' ? _('sin-especificar') : d.gerente;
+                return d.gerente == '  ' ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.gerente;
             }
         },
         {
             data: function (d) {
-                return (d.subdirector === '  ') ? _('sin-especificar') : d.subdirector;
+                return (d.subdirector === '  ') ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.subdirector;
             }
         },
         {
             data: function (d) {
-                return (d.regional === '  ') ? _('sin-especificar') : d.regional;
+                return (d.regional === '  ') ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.regional;
             }
         },
         {
             data: function (d) {
-               return (d.regional_2 === '  ') ? _('sin-especificar') : d.regional_2;
+               return (d.regional_2 === '  ') ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.regional_2;
             }
         },
         {
             data: function(d) {
                 if(d.nombre_lp == '' || d.nombre_lp === null ){
-                    return _('sin-especificar');
+                    return `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` ;
                 }else{
                     if (d.nombre_lp == 'MKTD DRAGON')
                         id_dragon = '<br><span class="label lbl-blueMaderas">'+ d.id_dragon +'</span>';
@@ -270,9 +272,8 @@ function fillTable(transaction, beginDate, endDate, where) {
             });
         },
     });
-    changeSelects();
-    changeButtonTooltips();
-    applySearch(prospectsTable)
+    applySearch(prospectsTable);
+    $('body').i18n();
 }
 
 $('#prospects-datatable').on('draw.dt', function() {

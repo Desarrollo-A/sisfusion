@@ -866,33 +866,33 @@
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header mb-1">
-                <h4 class="modal-title text-center">Detalles de la cita</h4>
+                <h4 class="modal-title text-center" data-i18n="detalles-cita-calendar">Detalles de la cita</h4>
             </div>
             <div class="container-fluid">
                 <form id="estatus_recordatorio_form" name="estatus_recordatorio_form" method="post">
                     <div class="col-lg-12 form-group m-0">
-                        <label class="label-gral">Título</label>
+                        <label class="label-gral" data-i18n="titulo">Título</label>
                         <input id="evtTitle" name="evtTitle" type="text" class="form-control input-gral">
                     </div>
                     <div class="col-lg-12 form-group m-0" id="select">
-                        <label class="label-gral">Tipo de cita</label>
-                        <select class="selectpicker select-gral m-0" name="estatus_recordatorio" id="estatus_recordatorio" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                        <label class="label-gral" data-i18n="tipo-cita">Tipo de cita</label>
+                        <select class="selectpicker select-gral m-0" name="estatus_recordatorio" id="estatus_recordatorio" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-i18n-label="select-predeterminado" data-size="7" required></select>
                     </div>
                     <div class="col-lg-12 form-group m-0 hide" id="comodinDIV"></div>
                     <div class="col-lg-12 form-group m-0">
-                        <label class="label-gral">Fecha de cita</label>
+                        <label class="label-gral" data-i18n="fecha-cita">Fecha de cita</label>
                         <div class="d-flex">
                             <input id="dateStart" name="dateStart" type="datetime-local" class="form-control beginDate w-50 text-left pl-1">
                             <input id="dateEnd" name="dateEnd" type="datetime-local" class="form-control endDate w-50 pr-1">
                         </div>
                     </div>
                     <div class="col-lg-12 form-group m-0">
-                        <label class="label-gral">Descripción</label>
+                        <label class="label-gral" data-i18n="descripcion">Descripción</label>
                         <textarea class="text-modal" type="text" name="description" id="description" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
-                        <button type="submit" class="btn btn-primary finishS">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary finishS" data-i18n="aceptar">Aceptar</button>
                     </div>
                 </form>
             </div>
