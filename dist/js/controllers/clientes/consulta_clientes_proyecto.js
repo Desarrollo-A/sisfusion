@@ -38,10 +38,10 @@ $( document ).ready(function() {
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
