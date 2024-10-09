@@ -1263,7 +1263,16 @@
 		"total-ventas": "Total sales",
 		"seleccionar-uno-valor":"You must select at least one value for the field",
 		"activo2": "Active",
-		"inactivo-comisionando": "Inactive while commissioning"
+		"sin-especificar2": "Unspecified",
+		"lib-contraloria": "Lib. comptroller",
+		"reubicacion": "Relocation",
+		"historial-liberacion": "Release log",
+		"historial-contratacion": "Enroll log",
+		"documento-subido": "The document has been uploaded successfully.",
+		"inactivo-comisionando": "Inactive while commissioning",
+		"ups-alerta-requeridos-busqueda": "Oops, make sure to enter at least one search criterion",
+		"Evidencia": "Evidence",
+		"escuadron-rescate":"RESCUE SQUAD"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2526,6 +2535,13 @@
 		"total-ventas":"Total de venta",
 		"seleccionar-uno-valor":"Tienes que seleccionar al menos un valor para el campo",
 		"activo2": "Activo",
-		"inactivo-comisionando": "Inactivo comisionando"
+		"sin-especificar2": "Sin especificar",
+		"reubicacion": "Reubicacion",
+		"historial-liberacion": "Historial liberación",
+		"historial-contratacion": "Historial contratacion",
+		"inactivo-comisionando": "Inactivo comisionando",
+		"ups-alerta-requeridos-busqueda": "Ups, asegurate de colocar al menos un criterío de búsqueda",
+		"evidencia": "Evidencia",
+		"escuadron-rescate":"ESCUADRÓN RESCATE"
 	}
 }

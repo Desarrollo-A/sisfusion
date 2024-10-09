@@ -272,6 +272,49 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- row especialista escuadron -->
+                <div class="row pt-3" >
+                    <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
+                        <div class="pb-1">
+                            <h4 class="label-on-left m-0" data-i18n="escuadron-rescate">ESCUADRÓN RESCATE</h4>
+                            <input type="checkbox" name="escuadronRescate" id="escuadronRescate" <?php echo $statsInput; ?>  <?php if ($cliente[0]->especialistaEscuadron != '' && $cliente[0]->especialistaEscuadron != null && $cliente[0]->especialistaEscuadron != 0) {echo "checked value='1'";}?>>
+                            <label class="switch" for="escuadronRescate"></label>
+                        </div>
+                    </div>
+                    <div class="col col-xs-12 col-sm-3 col-md-6 col-lg-6 <?php echo ($cliente[0]->especialistaEscuadron == 1) ?  '':  'd-none'; ?>" id="liderEscuadronDiv">
+                        <h4 class="label-on-left m-0">LÍDER ESCUADRÓN RESCATE</h4>
+                        <select id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
+                                data-size="7" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
+                                data-live-search="true" data-container="body" data-width="100%">
+                            <?php
+                            for($n=0; $n < count($lideresRescateLista) ; $n++){
+                                if($lideresRescateLista[$n]['id_usuario'] == $cliente[0]->liderEscuadron){
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" selected data-coodRescate="'.$lideresRescateLista[$n]['id_lider'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                }
+                                else{
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" data-coodRescate="'.$lideresRescateLista[$n]['id_lider'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                        <input type="hidden" name="idCoordinadorEscuadron" id="idCoordinadorEscuadron">
+                    </div>
+
+
+                    <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                        <h4 class="label-on-left mb-0">IDIOMA</h4>
+                        <div class="radio_container">
+                            <input type="radio" name="idiomaValor"  id="idiomaValor1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 1) { echo "checked=true"; } ?>>
+                            <label for="idiomaValor1">ESPAÑOL</label>
+
+                            <input type="radio" name="idiomaValor"  id="idiomaValor2" value="2" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 2) { echo "checked=true"; } ?>>
+                            <label for="idiomaValor2">INGLÉS</label>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- fin especialista escuadron -->
                 
                 <h4 class="text-center pt-3" data-i18n="datos-titular">DATOS DEL TITULAR</h4>
                 <div class="row">
@@ -340,7 +383,7 @@
                                     <span data-i18n="lada-m">LADA</span>
                                         (<small style="color: red;">*</small>)
                                     </label>
-                                    <select id="ladaTel2" name="ladaTel2" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
+                                    <select data-i18n-label="selecciona-una-opcion" id="ladaTel2" name="ladaTel2" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
                                             data-size="7" <?php echo $readOnly; ?>
                                             data-live-search="true" data-container="body" data-width="100%" required>
                                     </select>
@@ -990,7 +1033,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">
-                                <span data-i18n="sr"></span>EL SR(A) 
+                                <span data-i18n="sr">EL SR(A) </span>
                                 (<small style="color: red;">*</small>)</label>
                             <?php
 
