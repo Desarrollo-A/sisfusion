@@ -1150,7 +1150,7 @@
                 "ventas-con-enganche": "Sales with down payment",
                 "ventas-sin-enganche": "Sales without down payment",
                 "suma": "Addition",
-                "mostar-tabla": "Show table",
+                "mostrar-tabla": "Show table",
                 "ventas-metro-cuadrado": "Sales per square meter",
                 "precio-promedio-metro": "Average prize per square meter",
                 "metros-cuadrados-proyectos": "Square meters (all projects)",
@@ -1168,8 +1168,7 @@
                 "evento-especificar": "EVENT (SPECIFY)",
                 "recomendado-especificar": "RECOMMENDED (SPECIFY)",
                 "visita-empresas-especificar": "COMPANY VISITS (SPECIFY)",
-                "vendido": "Sold",
-				"mostrar-tabla": "Show table"
+                "vendido": "Sold"
 	},
 	"es": {
                 "1-origen": "1% de origen",
@@ -2322,7 +2321,7 @@
                 "ventas-con-enganche": "Ventas con enganche",
                 "ventas-sin-enganche": "Ventas sin enganche",
                 "suma": "Suma",
-                "mostar-tabla": "Mostrar tabla",
+                "mostrar-tabla": "Mostrar tabla",
                 "ventas-metro-cuadrado": "Ventas por metro cuadrado",
                 "precio-promedio-metro": "Precio promedio por metro cuadrado",
                 "metros-cuadrados-proyectos": "Metros cuadrados (todos los proyectos)",
@@ -2340,7 +2339,6 @@
                 "evento-especificar": "EVENTO (ESPECIFICAR)",
                 "recomendado-especificar": "RECOMENDADO (ESPECIFICAR)",
                 "visita-empresas-especificar": "VISITA A EMPRESA (ESPECIFICAR)",
-                "vendido": "Vendido",
-				"mostrar-tabla": "Mostrar tabla"
+                "vendido": "Vendido"
 	    }
 }
