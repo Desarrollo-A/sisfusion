@@ -13,37 +13,37 @@
 							</div>
 							<div class="card-content">
 								<div class="row">
-									<h3 class="card-title center-align">Búsqueda detallada de prospectos</h3>
+									<h3 class="card-title center-align" data-i18n="busqueda-detallda-de-prospectos" >Búsqueda detallada de prospectos</h3>
 									<div class="toolbar">
 										<div class="container-fluid">
 											<div class="row">
 												<div class="col-12 col-sm-12 col-md-6 col-lg-6">
 													<div class="form-group is-empty m-0">
-														<label class="control-label label-gral">Nombre</label>
+														<label class="control-label label-gral" data-i18n  ="nombre" >Nombre</label>
 														<input type="text" class="form-control input-gral" name="nombre" id="nombre">
 													</div>
 												</div>
 												<div class="col-12 col-sm-12 col-md-6 col-lg-6">
 													<div class="form-group is-empty m-0">
-														<label class="control-label label-gral">Apellido Paterno</label>
+														<label class="control-label label-gral" data-i18n = "apellido-paterno" >Apellido Paterno</label>
 														<input type="text" class="form-control input-gral" name="ap_paterno" id="ap_paterno">
 													</div>
 												</div>
 												<div class="col-12 col-sm-12 col-md-6 col-lg-6">
 													<div class="form-group is-empty m-0">
-														<label class="control-label label-gral">Apellido Materno</label>
+														<label class="control-label label-gral" data-i18n  ="apellido-materno" >Apellido Materno</label>
 														<input type="text" class="form-control input-gral" name="ap_materno" id="ap_materno">
 													</div>
 												</div>
 												<div class="col-12 col-sm-12 col-md-6 col-lg-6">
 													<div class="form-group is-empty m-0">
-														<label class="control-label label-gral">Correo</label>
+														<label class="control-label label-gral" data-i18n  ="correo">Correo</label>
 														<input type="email" class="form-control input-gral" name="correo" id="correo">
 													</div>
 												</div>
 												<div class="col-12 col-sm-12 col-md-6 col-lg-6">
 													<div class="form-group is-empty m-0">
-														<label class="control-label label-gral">Teléfono</label>
+														<label class="control-label label-gral" data-i18n  = "telefono" >Teléfono</label>
 														<input type="text" class="form-control input-gral" name="telefono" id="telefono">
 													</div>
 												</div>
@@ -51,10 +51,10 @@
 													<div class="form-group mt-3">
 														<div class="row">
 															<div class="col-12 col-sm-12 col-md-6 col-lg-6">
-																<button class="btn-data-gral btn-s-blue" id="buscarBtn"><i class="fas fa-search"></i> Buscar</button>
+																<button class="btn-data-gral btn-s-blue" id="buscarBtn" data-i18n="buscar"><i class="fas fa-search"></i>Buscar</button>
 															</div>
 															<div class="col-12 col-sm-12 col-md-6 col-lg-6">
-																<button class="btn-data-gral btn-s-deepGray"id="ResetForm" type="reset"><i class="fas fa-eraser"></i> Limpiar campos</button>
+																<button class="btn-data-gral btn-s-deepGray"id="ResetForm" type="reset" data-i18n="limpiar-campos"><i class="fas fa-eraser" ></i>Limpiar campos</button>
 															</div>
 														</div>
 													</div>
@@ -68,18 +68,18 @@
 										<table id="prospects-datatable_dir" class="table-striped table-hover hide">
 											<thead>
 												<tr>
-													<th>ID PROSPECTO</th>
-													<th>ESTADO</th>
-													<th>MEDIO</th>
-													<th>NOMBRE</th>
-													<th>APELLIDO PATERNO</th>
-													<th>APELLIDO MATERNO</th>
-													<th>ASESOR</th>
-													<th>COORDINADOR</th>
-													<th>GERENTE</th>
-													<th>CREACIÓN</th>
-													<th>VENCIMIENTO</th>
-													<th>ACCIONES</th>
+													<th>id-prospecto</th>
+													<th>estado</th>
+													<th>medio</th>
+													<th>nombre</th>
+													<th>apellido-paterno</th>
+													<th>apellido-materno</th>
+													<th>asesor</th>
+													<th>coordinador</th>
+													<th>gerente</th>
+													<th>creacion</th>
+													<th>vencimiento</th>
+													<th>acciones</th>
 												</tr>
 											</thead>
 											<tbody>

@@ -167,9 +167,7 @@ $("#lote").change(function () {
             data.contratoArchivo
           }" frameborder="0" width="100%" height="500" style="height: 60vh;"></embed >`);
           var myLinkConst = ` <center>
-                                                <a type="button" data-toggle="tooltip" data-placement="top" title="${_(
-                                                  "visualizar"
-                                                )}" class="btn-data btn-blueMaderas contratacion_modal">
+                                                <a type="button" data-toggle="tooltip" data-placement="top" title="${_("visualizar")}" data-i18n-tooltip="${_("visualizar")}" class="btn-data btn-blueMaderas contratacion_modal">
                                                     <center>
                                                         <i class="fas fa-eye" style="cursor: pointer"></i>
                                                     </center>
@@ -180,6 +178,7 @@ $("#lote").change(function () {
       },
     ],
   });
+  applySearch(tabla_6);
 
   $("#tabla_contrato_ventas").on("draw.dt", function () {
     $('[data-toggle="tooltip"]').tooltip({

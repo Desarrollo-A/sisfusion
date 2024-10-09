@@ -11,18 +11,6 @@ var totalSelect2;
 var mesesSelect;
 var mesesSelect2;
 
-$(document).ready(function() {
-    $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];
-            $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $("#filtro3").selectpicker('refresh');
-    }, 'json');
-});
-
 $('#filtro3').change(function(){
     residencial = $('#filtro3').val();
     grupo = $('#filtro5').val();
@@ -229,8 +217,6 @@ $('#formFilters').on('submit', function(event){
     })
 });
 
-let titulos_encabezado = [];
-let num_colum_encabezado = [];
 
 function dataTable(ruta) {
     construirHead('addExp');
@@ -258,7 +244,7 @@ function dataTable(ruta) {
             titleAttr: `${_('descargar-excel')}`,
             title: _("reporte-inventario-disponible"),
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7],
                 format: {
                     header: function (d, columnIdx) {
                         return $(d).attr('placeholder').toUpperCase();
@@ -275,7 +261,7 @@ function dataTable(ruta) {
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7],
                 format: {
                     header: function (d, columnIdx) {
                         return $(d).attr('placeholder').toUpperCase();
@@ -305,11 +291,11 @@ function dataTable(ruta) {
                 data:function(data){
                     if(data.tipo_venta == 1){
                         return `<small  class='label lbl-green'>
-                                    VENTA DE PARTICULARES
+                                    ${_("venta-de-particulares-2")}
                                 </small>`} 
                     else { 
                         return `<small  class='label lbl-sky'>
-                                    VENTA NORMAL
+                                    ${_("venta-normal-2")}
                                 </small>`
                     } 
                 }
@@ -318,7 +304,7 @@ function dataTable(ruta) {
                 function(data){ 
                     if(data.tipo_venta == 1) { 
                         return `<center>
-                                    <button class="btn-data btn-blueMaderas ver_historial" value="${data.idLote}" data-nomLote="${data.nombreLote}" data-tipo-venta="${data.tipo_venta}" data-toggle="tooltip" data-placement="top" title="INFORMACIÓN" ><i class="fas fa-info"></i></button>
+                                    <button class="btn-data btn-blueMaderas ver_historial" value="${data.idLote}" data-nomLote="${data.nombreLote}" data-tipo-venta="${data.tipo_venta}" data-toggle="tooltip" data-placement="top" title="${_("informacion-2")}" ><i class="fas fa-info"></i></button>
                                 </center>`;
                     } else { 
                         return "" 
@@ -328,6 +314,7 @@ function dataTable(ruta) {
         ],
         "data": ruta
     });
+    applySearch(table);
 }
 
 $(document).on("click", ".ver_historial", function(){
