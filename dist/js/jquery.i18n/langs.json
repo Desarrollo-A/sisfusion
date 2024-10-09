@@ -1278,7 +1278,8 @@
 		"activo2": "Active",
 		"inactivo-comisionando": "Inactive while commissioning",
 		"ups-alerta-requeridos-busqueda":"Oops, make sure to enter at least one search criterion",
-		"autorizacion-por-ingresar"  : "Authorizations to be entered"
+		"autorizacion-por-ingresar"  : "Authorizations to be entered",
+		"reubicado" : "REUBICADO"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2556,6 +2557,7 @@
 		"activo2": "Activo",
 		"inactivo-comisionando": "Inactivo comisionando",
 		"ups-alerta-requeridos-busqueda":"Ups, asegurate de colocar al menos un criterío de búsqueda",
-		"autorizacion-por-ingresar" : "Autorizaciones por ingresar"
+		"autorizacion-por-ingresar" : "Autorizaciones por ingresar",
+		"reubicado" : "REPLACED"
 	}
 }
