@@ -370,7 +370,7 @@
                             <div class="col-sm-3" data-i18n="casa-donde-vives">La casa donde vive es</div>
                             <div class="col-lg-10 col-lg-offset-2 d-flex justify-content-between">
                                 <div class="radio radio-inline d-flex mt-0">
-                                    <label><input id="own" name="lives_at_home" type="radio" value"1"></label>
+                                    <label><input id="own" name="lives_at_home" type="radio" value="1"></label>
                                     <span data-i18n="propia">Propia</span>
                                 </div>
                                 <div class="radio radio-inline d-flex">
@@ -524,7 +524,6 @@
                         <button type="button" class="btn btn-default js-btn-step i18nStepper" data-orientation="previous" data-i18n-stepper="anterior" data-i18n="anterior" id="stepperAnterior"></button>
                     </div>
                     <div class="pull-right">
-                        <!--<button type="button" class="btn  js-btn-step" data-orientation="next" style="background-color: #2E86C1;"></button>-->
                         <button type="button" class="btn  js-btn-step i18nStepper"  style="background-color: #2E86C1;" data-i18n="siguiente" data-orientation="next" data-i18n-stepper="siguiente" id="stepperSiguiente"></button>
                         
                         <button type="submit" class="btn" style="background-color: #4caf50;" data-i18n="finalizar">Finalizar</button>
