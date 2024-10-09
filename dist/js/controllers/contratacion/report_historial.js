@@ -63,8 +63,8 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         extend: "excelHtml5",
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: "btn buttons-excel",
-        filename: "Contratos Recibidos",
-        titleAttr: "Descargar archivo de Excel",
+        filename: `${_("contratos-recibidos")}`,
+        titleAttr: `${_("descargar-excel")}`,
         exportOptions: {
           columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
           format: {
