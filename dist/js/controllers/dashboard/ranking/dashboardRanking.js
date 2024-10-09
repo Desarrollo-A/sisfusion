@@ -1,4 +1,13 @@
-var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes, chartApartados, chartContratados, chartEnganche, chartSinenganche;
+var dataApartados, dataContratados, dataConEnganche, dataSinEnganche, dataSedes, chartApartados, chartContratados, chartEnganche, chartSinenganche, data;
+
+onChangeTranslations(() => {
+    updateGraph('general', {
+        'Apartados': dataApartados,
+        'Contratados': dataContratados,
+        'ConEnganche': dataConEnganche,
+        'SinEnganche': dataSinEnganche
+    });
+})
 
 function readyRanking(){
     sp.initFormExtendedDatetimepickers();
@@ -147,16 +156,36 @@ function buildEstructuraDT(dataName, dataApartados){
     }
 
     var id = 'table'+dataName;
-    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+    /*var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
                         <table class="table-striped table-hover" id="`+id+`" name="table">
                             <thead>
                                 <tr>
-                                    `+tableHeaders+`
+                                    <th>ranking</th>
+                                    <th>totales</th>
+                                    <th>suma</th>
+                                    <th>nombre</th>
+                                    <th>puesto</th>
+                                    <th>id</th>
                                 </tr>
                             </thead>
                         </table>
                     </div>`;
-    $("#"+dataName).html(estructura);
+    $("#"+dataName).html(estructura);*/
+    var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
+                        <table class="table-striped table-hover" id="table`+dataName+`" name="table">
+                            <thead>
+                                <tr>
+                                     <th>ranking</th>
+                                    <th>totales</th>
+                                    <th>suma</th>
+                                    <th>nombre</th>
+                                    <th>puesto</th>
+                                    <th>id</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>`;
+                    $("#"+dataName).html(estructura);
 }
 
 function reorderColumns(){
@@ -271,19 +300,27 @@ function divideRankingArrays(data){
 }
 
 function buildTableApartados(data){
-    $('#tableApartados thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
-        $('input', this).on('keyup change', function () {
-            if ($("#tableApartados").DataTable().column(i).search() !== this.value) {
-                $("#tableApartados").DataTable().column(i)
-                    .search(this.value).draw();
-            }
+    // $('#tableApartados thead tr:eq(0) th').each(function (i) {
+    //     const title = $(this).text();
+    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
+    //     $('input', this).on('keyup change', function () {
+    //         if ($("#tableApartados").DataTable().column(i).search() !== this.value) {
+    //             $("#tableApartados").DataTable().column(i)
+    //                 .search(this.value).draw();
+    //         }
+    //     });
+    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+    // });
+    
+    construirHead('tableApartados');
+
+    $('#tableApartados').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
-    $("#tableApartados").DataTable({
+    let tableApartados = $("#tableApartados").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -301,37 +338,37 @@ function buildTableApartados(data){
         order: [[2, "desc"]],
         data: data,
         columns: [{
-            title: 'Ranking',
+            // title: _('ranking'),
             data: function(d){
                 return d.ranking
             }
         },{
-            title: 'Totales',
+            // title: _('totales'),
             data: function(d){
                 return `<button style=" border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.totalAT}</button>`; // APARTADOS
                 //return d.totalAT
             }
         },
         {
-            title: 'Suma',
+            // title: _('suma'),
             data: function(d){
                 return d.sumaTotal
             }
         },
         {
-            title: 'Nombre',
+            // title: _('nombre'),
             data: function(d){
                 return d.nombreUsuario
             }
         },
         {
-            title: 'Puesto',
+            // title: _('puesto'),
             data: function(d){
                 return d.rol.toUpperCase();
             }
         },
         {
-            title: 'ID',
+            // title: 'ID',
             data: function(d){
                 return d.id_asesor
             }
@@ -344,22 +381,33 @@ function buildTableApartados(data){
             $('[data-toggle="tooltip"]').tooltip();
         }
     });
+    applySearch(tableApartados);
+    $('body').i18n();
+
 }
 
 function buildTableContratados(data){
-    $('#tableContratados thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
-        $('input', this).on('keyup change', function () {
-            if ($("#tableContratados").DataTable().column(i).search() !== this.value) {
-                $("#tableContratados").DataTable().column(i)
-                    .search(this.value).draw();
-            }
+    // $('#tableContratados thead tr:eq(0) th').each(function (i) {
+    //     const title = $(this).text();
+    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
+    //     $('input', this).on('keyup change', function () {
+    //         if ($("#tableContratados").DataTable().column(i).search() !== this.value) {
+    //             $("#tableContratados").DataTable().column(i)
+    //                 .search(this.value).draw();
+    //         }
+    //     });
+    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+    // });
+
+    construirHead('tableContratados');
+
+    $('#tableContratados').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
-    $("#tableContratados").DataTable({
+    let tableContratados = $("#tableContratados").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -377,37 +425,37 @@ function buildTableContratados(data){
         order: [[2, "desc"]],
         data: data,
         columns: [{
-            title: 'Ranking',
+            // title: _('ranking'),
             data: function(d){
                 return d.ranking
             }
         },{
-            title: 'Totales',
+            // title: _('totales'),
             data: function(d){
                 return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.totalConT}</button>`; // CONTRATADOS
                 //return d.totalConT
             }
         },
         {
-            title: 'Suma',
+            // title: _('suma'),
             data: function(d){
                 return d.sumaTotal
             }
         },
         {
-            title: 'Nombre',
+            // title: _('nombre'),
             data: function(d){
                 return d.nombreUsuario
             }
         },
         {
-            title: 'Puesto',
+            // title: _('puesto'),
             data: function(d){
                 return d.rol.toUpperCase();
             }
         },
         {
-            title: 'ID',
+            // title: 'ID',
             data: function(d){
                 return d.id_asesor
             }
@@ -417,21 +465,31 @@ function buildTableContratados(data){
             searchable: false
         }],
     });
+    applySearch(tableContratados);
+    $('body').i18n();
 }
 
 function buildTableConEnganche(data){
-    $('#tableConEnganche thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
-        $('input', this).on('keyup change', function () {
-            if ($("#tableConEnganche").DataTable().column(i).search() !== this.value) {
-                $("#tableConEnganche").DataTable().column(i)
-                    .search(this.value).draw();
-            }
+    // $('#tableCoVnEnganche thead tr:eq(0) th').each(function (i) {
+    //     const title = $(this).text();
+    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
+    //     $('input', this).on('keyup change', function () {
+    //         if ($("#tableConEnganche").DataTable().column(i).search() !== this.value) {
+    //             $("#tableConEnganche").DataTable().column(i)
+    //                 .search(this.value).draw();
+    //         }
+    //     });
+    // });
+
+    construirHead('tableConEnganche');
+
+    $('#tableConEnganche').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
     });
 
-    $("#tableConEnganche").DataTable({
+    let tableConEnganche = $("#tableConEnganche").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -449,36 +507,36 @@ function buildTableConEnganche(data){
         order: [[2, "desc"]],
         data: data,
         columns: [{
-            title: 'Ranking',
+            // title: _('ranking'),
             data: function(d){
                 return d.ranking
             }
         },{
-            title: 'Totales',
+            // title: _('totales'),
             data: function(d){
                 return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="3" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.cuantos}</button>`; // CON ENGANCHE
             }
         },
         {
-            title: 'Suma',
+            // title: _('suma'),
             data: function(d){
                 return d.sumaTotal
             }
         },
         {
-            title: 'Nombre',
+            // title: _('nombre'),
             data: function(d){
                 return d.asesor
             }
         },
         {
-            title: 'Puesto',
+            // title: _('puesto'),
             data: function(d){
                 return d.rol.toUpperCase();
             }
         },
         {
-            title: 'ID',
+            // title: 'ID',
             data: function(d){
                 return d.id_asesor
             }
@@ -488,22 +546,32 @@ function buildTableConEnganche(data){
             searchable: false
         }],
     });
+    applySearch(tableConEnganche);
+    $('body').i18n();
 }
 
 function buildTableSinEnganche(data){
-    $('#tablesinEnganche thead tr:eq(0) th').each(function (i) {
-        const title = $(this).text();
-        $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if ($("#tablesinEnganche").DataTable().column(i).search() !== this.value) {
-                $("#tablesinEnganche").DataTable().column(i)
-                    .search(this.value).draw();
-            }
+    // $('#tablesinEnganche thead tr:eq(0) th').each(function (i) {
+    //     const title = $(this).text();
+    //     $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
+    //     $('input', this).on('keyup change', function () {
+    //         if ($("#tablesinEnganche").DataTable().column(i).search() !== this.value) {
+    //             $("#tablesinEnganche").DataTable().column(i)
+    //                 .search(this.value).draw();
+    //         }
+    //     });
+    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+    // });
+
+    construirHead('tablesinEnganche');
+
+    $('#tablesinEnganche').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
         });
-        $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
-    $("#tablesinEnganche").DataTable({
+    let tablesinEnganche = $("#tablesinEnganche").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         pageLength : 10,
@@ -521,36 +589,36 @@ function buildTableSinEnganche(data){
         order: [[2, "desc"]],
         data: data,
         columns: [{
-            title: 'Ranking',
+            // title: _('ranking'),
             data: function(d){
                 return d.ranking
             }
         },{
-            title: 'Totales',
+            // title: _('totales'),
             data: function(d){
                 return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.cuantos}</button>`; // SIN ENGANCHE
             }
         },
         {
-            title: 'Suma',
+            // title: _('suma'),
             data: function(d){
                 return d.sumaTotal
             }
         },
         {
-            title: 'Nombre',
+            // title: _('nombre'),
             data: function(d){
                 return d.asesor
             }
         },
         {
-            title: 'Puesto',
+            // title: _('puesto'),
             data: function(d){
                 return d.rol.toUpperCase();
             }
         },
         {
-            title: 'ID',
+            // title: 'ID',
             data: function(d){
                 return d.id_asesor
             }
@@ -560,6 +628,8 @@ function buildTableSinEnganche(data){
             searchable: false
         }],
     });
+    applySearch(tablesinEnganche);
+    $('body').i18n();
 }
 
 function formatData(data) {
@@ -616,22 +686,22 @@ function formatData(data) {
 
     return {
         apartados: {
-            name: 'Apartados',
+            name: _('apartados'),
             data: apartados
         },
         apartadosLabel: apartadosLabel,
         contratados: {
-            name: 'Contratados',
+            name: _('contratados'),
             data: contratados
         },
         contratadosLabel: contratadosLabel,
         enganche: {
-            name: 'Enganche',
+            name: _('con-enganche'),
             data: enganche
         },
         engancheLabel: engancheLabel,
         sinEnganche: {
-            name: 'Sin enganche',
+            name: _('sin-enganche'),
             data: sinEnganche
         },
         sinEngancheLabel: sinEngancheLabel
@@ -969,23 +1039,31 @@ $(document).on('click', '.btnModalDetailsRanking', function () {
     $("#seeInformationModalRanking").modal();
 });
 
-$('#lotesInformationTableRanking thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    $('input', this).on('keyup change', function () {
-        if(i != 0){
-            if ($("#lotesInformationTableRanking").DataTable().column(i).search() !== this.value) {
-                $("#lotesInformationTableRanking").DataTable().column(i)
-                    .search(this.value).draw();
-            }
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});
+// $('#lotesInformationTableRanking thead tr:eq(0) th').each(function (i) {
+//     const title = $(this).text();
+//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+//     $('input', this).on('keyup change', function () {
+//         if(i != 0){
+//             if ($("#lotesInformationTableRanking").DataTable().column(i).search() !== this.value) {
+//                 $("#lotesInformationTableRanking").DataTable().column(i)
+//                     .search(this.value).draw();
+//             }
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip({
+//         trigger: "hover"
+//     });
+// });
 
 function fillTable(dataObject) {
+    construirHead('lotesInformationTableRanking')
+
+    $('#lotesInformationTableRanking').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     generalDataTable = $('#lotesInformationTableRanking').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -994,7 +1072,7 @@ function fillTable(dataObject) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
+                titleAttr: _('descargar-excel'),
                 title: 'Desglose de lotes',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],

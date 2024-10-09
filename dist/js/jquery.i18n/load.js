@@ -23,7 +23,7 @@ $(document).ready(function() {
 })
 
 function changeIcon(lang) {
-    console.log(lang);
+    // console.log(lang);
     $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
@@ -115,6 +115,12 @@ function applySearch(table) {
             }
         })
     })
+
+    $(`#${id}`).on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 }
 
 function construirHead(table){
@@ -129,11 +135,11 @@ function construirHead(table){
         if(id && idNoPermitidos.indexOf(id)){
             if(id){
                 title = _(id)
-                $(this).html(`<input id="th_${i}_${id}" class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+                $(this).html(`<input id="${table}_${i}_${id}" class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
                 
                 function translatePlaceholder(){
-                    $(`#th_${i}_${id}`).attr('placeholder', _(id))
-                    $(`#th_${i}_${id}`).attr('data-original-title', _(id))
+                    $(`#${table}_${i}_${id}`).attr('placeholder', _(id))
+                    $(`#${table}_${i}_${id}`).attr('data-original-title', _(id))
                 }
 
                 onLoadTranslations(translatePlaceholder)
@@ -174,6 +180,9 @@ function changeButtonTooltips() {
         if(id){
             let title = _(id)
 
+            if($(this).attr('title')){
+                $(this).attr('title', title)
+            }
             $(this).attr('data-original-title', title)
         }
     })
@@ -280,6 +289,20 @@ function changeSteps() {
     })
 }
 
+function changeFontIconTooltips() {
+
+    $('i').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('title', title)
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
@@ -290,3 +313,5 @@ onLoadTranslations(changeListTooltips)
 onChangeTranslations(changeListTooltips)
 onLoadTranslations(changeInputPlaceholder)
 onChangeTranslations(changeInputPlaceholder)
+onLoadTranslations(changeFontIconTooltips)
+onChangeTranslations(changeFontIconTooltips)

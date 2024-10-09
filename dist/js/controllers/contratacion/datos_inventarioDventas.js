@@ -34,7 +34,7 @@ $('#filtro3').change(function(){
 
     if(entra == 1)
     {
-        table_6 = $('#tableTerrenos').DataTable({
+        tabla_6 = $('#tableTerrenos').DataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             buttons: [{
                 extend: 'excelHtml5',
@@ -143,7 +143,7 @@ $('#filtro4').change(function()
 {
     var residencial = $('#filtro3').val();
     var valorSeleccionado = $('#filtro4').val();
-    table_6 = $('#tableTerrenos').DataTable({
+    tabla_6 = $('#tableTerrenos').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         ordering: false,
         buttons: [{
@@ -215,6 +215,8 @@ $('#filtro4').change(function()
             }
         },
     });
+
+    applySearch(tabla_6);
 });
 
 $('#tableTerrenos').on('draw.dt', function() {

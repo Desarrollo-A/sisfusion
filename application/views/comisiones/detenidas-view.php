@@ -39,8 +39,8 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Comisiones detenidas</h3>
-                                    <p class="card-title pl-1">
+                                    <h3 class="card-title center-align" data-i18n="comisiones-detenidas">Comisiones detenidas</h3>
+                                    <p class="card-title pl-1" data-i18n="comisiones-detenidas-info">
                                         Lotes detenidos por alguna controversia presentada durante el proceso de comisiones.
                                     </p>
                                 </div>
@@ -50,18 +50,18 @@
                                             <thead>
                                             <tr>
                                                     <th></th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>ID LOTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>TIPO DE VENTA</th>
-                                                    <th>MODALIDAD</th>
-                                                    <th>CONTRATACIÓN</th>
-                                                    <th>PLAN DE VENTA</th>
-                                                    <th>DETALLES</th>
-                                                    <th>FECHA ACTUALIZACIÓN</th>
-                                                    <th>ACCIONES</th>
+                                                    <th>proyecto</th>
+                                                    <th>condominio</th>
+                                                    <th>lote</th>
+                                                    <th>id-lote</th>
+                                                    <th>cliente</th>
+                                                    <th>tipo-venta</th>
+                                                    <th>modalidad</th>
+                                                    <th>contratacion</th>
+                                                    <th>plan-venta</th>
+                                                    <th>detalles</th>
+                                                    <th>fecha-actualizacion</th>
+                                                    <th>acciones</th>
                                                 </tr>
                                             </thead>
                                         </table>

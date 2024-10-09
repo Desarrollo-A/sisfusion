@@ -234,7 +234,7 @@
                     <?php
                     if( in_array($this->session->userdata('id_rol'), [1,2,3,4,5,6,7,9])){
                     ?>
-                        <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Idioma">
+                        <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Idioma" data-i18n-tooltip="idioma">
                             <a onClick="changeLanguaje()">
                                 <img id="lang_icon" src="<?= base_url() ?>static/images/langs/es.png" width="20" height="20">
                             </a>
@@ -242,7 +242,7 @@
                     <?php
                     }
                     ?>
-                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes">
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes" data-i18n-tooltip="ajustes">
 						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
                             <span class="material-icons">settings</span>
 						</a>
