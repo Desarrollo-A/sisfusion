@@ -1280,6 +1280,9 @@
 		"inactivo-comisionando": "Inactive while commissioning",
 		"ups-alerta-requeridos-busqueda": "Oops, make sure to enter at least one search criterion",
 		"Evidencia": "Evidence"
+        ,"aprobados": "APPROVED"
+        ,"ingresos-extras":"EXTRA INCOME"
+
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2557,5 +2560,7 @@
 		"inactivo-comisionando": "Inactivo comisionando",
 		"ups-alerta-requeridos-busqueda": "Ups, asegurate de colocar al menos un criterío de búsqueda",
 		"evidencia": "Evidencia"
+        ,"aprobados": "APROBADOS"
+        ,"ingresos_extras": "INGRESOS EXTRA"
 	}
 }

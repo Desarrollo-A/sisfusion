@@ -98,17 +98,17 @@ $(document).ready(function () {
             data: function (d) {
                 var labelEstatus;
                 if(d.estatus == 1) {
-                    labelEstatus ='<span class="label lbl-green">ACTIVO</span>';
+                    labelEstatus ='<span class="label lbl-green" data-i18n="activos">ACTIVO</span>';
                 }else if(d.estatus == 3) {
-                    labelEstatus ='<span class="label lbl-warning">CANCELADO</span>';
+                    labelEstatus ='<span class="label lbl-warning" data-i18n="cancelado">CANCELADO</span>';
                 }else if(d.estatus == 2) {
-                    labelEstatus ='<span class="label lbl-violetDeep">APROBADO</span>';
+                    labelEstatus ='<span class="label lbl-violetDeep" >'+ _("aprobados") +'</span>';
                 }else if(d.estatus == 4) {
-                    labelEstatus ='<span class="label lbl-warning">RECHAZÓ DIRECTIVO</span>';
+                    labelEstatus ='<span class="label lbl-warning" data-i18n="motivo-rechazo">RECHAZÓ DIRECTIVO</span>';
                 }else if(d.estatus == 67) {
-                    labelEstatus ='<span class="label lbl-yellow">INGRESO EXTRA</span>';
+                    labelEstatus ='<span class="label lbl-yellow"  data-i18n="ingresos-extras" >INGRESO EXTRA</span>';
                 }else {
-                    labelEstatus ='<span class="label lbl-gray">Sin Definir</span>';
+                    labelEstatus ='<span class="label lbl-gray"  data-i18n="sin-definir">Sin Definir</span>';
                 }
                 return labelEstatus;
             }
