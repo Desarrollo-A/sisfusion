@@ -1281,7 +1281,8 @@
 		"ups-alerta-requeridos-busqueda": "Oops, make sure to enter at least one search criterion",
 		"Evidencia": "Evidence",
 		"reporte-retiros-resguardo": "Withdrawal Custody Report.",
-		"correo-2": "Email"
+		"correo-2": "Email",
+        "mostrar-tabla": "Show table"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2560,6 +2561,7 @@
 		"ups-alerta-requeridos-busqueda": "Ups, asegurate de colocar al menos un criterío de búsqueda",
 		"evidencia": "Evidencia",
 		"reporte-retiros-resguardo": "Reporte Retiros Resguardo",
-		"correo-2": "Correo"
+		"correo-2": "Correo",
+        "mostrar-tabla": "Mostrar tabla"
 	}
 }
