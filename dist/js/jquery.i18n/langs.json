@@ -1261,7 +1261,8 @@
                 "intereses-ordinarios": "Ordinary interests",
                 "total-ventas": "Total sales",
                 "seleccionar-uno-valor":"You must select at least one value for the field",
-                "activo2": "Active"
+                "activo2": "Active",
+                "inactivo-comisionando": "Inactive while commissioning"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2522,6 +2523,7 @@
                 "intereses-ordinarios":"Intereses ordinarios",
                 "total-ventas":"Total de venta",
                 "seleccionar-uno-valor":"Tienes que seleccionar al menos un valor para el campo",
-                "activo2": "Activo"
+                "activo2": "Activo",
+                "inactivo-comisionando": "Inactivo comisionando"
 	}
 }
