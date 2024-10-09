@@ -1279,7 +1279,9 @@
 		"inactivo-comisionando": "Inactive while commissioning",
 		"ups-alerta-requeridos-busqueda":"Oops, make sure to enter at least one search criterion",
 		"autorizacion-por-ingresar"  : "Authorizations to be entered",
-		"reubicado" : "REUBICADO"
+		"reubicado" : "REUBICADO",
+		"consultar-historial" : "View history",
+		"fecha-alta": "Start date"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2558,6 +2560,8 @@
 		"inactivo-comisionando": "Inactivo comisionando",
 		"ups-alerta-requeridos-busqueda":"Ups, asegurate de colocar al menos un criterío de búsqueda",
 		"autorizacion-por-ingresar" : "Autorizaciones por ingresar",
-		"reubicado" : "REPLACED"
+		"reubicado" : "REPLACED",
+		"consultar-historial"  : "Consultar historial",
+		"fecha-alta" : "Fecha de alta"
 	}
 }
