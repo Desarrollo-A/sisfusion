@@ -1,9 +1,6 @@
 $(document).ready( function() {
     construirHead("users_datatable");
     tableUsers();
-    // asignarValorColumnasDT();
-    // let usersTable = $('#users_datatable').DataTable();
-    // applySearch(usersTable);
 
 })
 
