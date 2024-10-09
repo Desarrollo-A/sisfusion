@@ -22,31 +22,7 @@ $('#ano_historial').change(function(){
 });
 
 $('#ano_historial').change(function(){
-    $("#tipo_historial").empty().selectpicker('refresh');
-    // $("#tipo_historial").append($('<option>').val(1).text('NORMAL'));
-    // $("#tipo_historial").append($('<option>').val(3).text('CASAS'));
     $("#tipo_historial").selectpicker('refresh');
-
-    $.ajax({
-        url: general_base_url + 'Casas_comisiones/selectTipo',
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            const len = response.length;
-            for(let i = 0; i<len; i++){
-                const id = response[i]['id_opcion'];
-                const name = response[i]['nombre'];
-
-                if(id != 4){
-                    $("#tipo_historial").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-
-            }
-            $("#tipo_historial").selectpicker('refresh');
-            // $("#spiner-loader").addClass('hide');
-        }
-    });
-
 });
 
 $('#catalogo_historial, #tipo_historial').change(function(){
@@ -1098,6 +1074,24 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
     consultarHistorialOOAM();
+
+    $.ajax({
+        url: general_base_url + 'Casas_comisiones/selectTipo',
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            const len = response.length;
+            for(let i = 0; i<len; i++){
+                const id = response[i]['id_opcion'];
+                const name = response[i]['nombre'];
+
+                if(id != 4){
+                    $("#tipo_historial").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+
+            }
+        }
+    });
 });
 
 function consultarHistorialOOAM() {

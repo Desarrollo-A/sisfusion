@@ -1046,6 +1046,7 @@ class Casas_comisiones extends CI_Controller
         WHEN m.id_multitipo IS NULL THEN CAST(u.tipo AS nvarchar(10)) 
         ELSE CONCAT(CAST(u.tipo AS nvarchar(10)), ',', CAST(m.tipo AS nvarchar(10))) 
       END 
+      AS opciones
     FROM 
         usuarios u
     LEFT JOIN 
@@ -1053,9 +1054,9 @@ class Casas_comisiones extends CI_Controller
     WHERE 
         u.id_usuario = $usuario")->result_array();
 
-     
+    $result = $opciones[0]['opciones'];
 
-    echo json_encode($this->Casas_comisiones_model->selectTipo($opciones)->result_array());
+    echo json_encode($this->Casas_comisiones_model->selectTipo($result)->result_array());
   }
 
   public function cambiarEstatusComisiones(){
