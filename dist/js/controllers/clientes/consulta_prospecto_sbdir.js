@@ -48,22 +48,22 @@ function createFilters(rol){
     if(rol == 59){
         let div = `<div class="col-md-3 form-group">
                         <div id="div1" class="form-group label-floating select-is-empty">
-                            <label class="control-label">${_("subdirector")}</label>
+                            <label class="control-label" data-i18n="subdirector">${_("subdirector")}</label>
                         </div>
                     </div>`;
         div += `<div class="col-md-3 form-group">
                     <div id="div2" class="form-group label-floating select-is-empty">
-                        <label class="control-label">${_("gerente")}</label>
+                        <label class="control-label" data-i18n="gerente">${_("gerente")}</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-3 form-group">
                     <div id="div3" class="form-group label-floating select-is-empty">
-                        <label class="control-label">${_("coordinador")}</label>
+                        <label class="control-label" data-i18n="coordinador">${_("coordinador")}</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-3 form-group">
                     <div id="div4" class="form-group label-floating select-is-empty">
-                        <label class="control-label">${_("asesor")}</label>
+                        <label class="control-label" data-i18n="asesor">${_("asesor")}</label>
                     </div>
                 </div>`;
         var $selectSub = 
@@ -74,6 +74,7 @@ function createFilters(rol){
                 'data-style':"btn btn-round",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
+                'data-i18n-label': "select-predeterminado",
                 'title':`${_("select-predeterminado")}`
             });
         var $selectGer = 
@@ -84,6 +85,7 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
+                'data-i18n-label': "select-predeterminado",
                 'title':`${_("select-predeterminado")}`
             });
         var $selectCoord = 
@@ -94,6 +96,7 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
+                'data-i18n-label': "select-predeterminado",
                 'title':`${_("select-predeterminado")}`
             });
         var $selectAse =
@@ -104,6 +107,7 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
+                'data-i18n-label': "select-predeterminado",
                 'title':`${_("select-predeterminado")}`
             });
         $('#filterContainer').append(div);
@@ -116,17 +120,17 @@ function createFilters(rol){
     }else if(2){ 
         let div =   `<div class="col-md-4 form-group">
                         <div id="div2" class="form-group label-floating select-is-empty">
-                            <label class="control-label">${_("gerente")}</label>
+                            <label class="control-label" data-i18n="gerente">${_("gerente")}</label>
                         </div>
                     </div>`;
         div += `<div class="col-md-4 form-group">
                     <div id="div3" class="form-group label-floating select-is-empty">
-                        <label class="control-label">${_("coordinador")}</label>
+                        <label class="control-label" data-i18n="coordinador">${_("coordinador")}</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-4 form-group">
                     <div id="div4" class="form-group label-floating select-is-empty">
-                        <label class="control-label">${_("asesor")}</label>
+                        <label class="control-label" data-i18n="asesor">${_("asesor")}</label>
                     </div>
                 </div>`;
         
@@ -138,6 +142,7 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
+                'data-i18n-label': "select-predeterminado",
                 'title':`${_("select-predeterminado")}`
             });
         var $selectCoord =
@@ -148,6 +153,7 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
+                'data-i18n-label': "select-predeterminado",
                 'title':`${_("select-predeterminado")}`
             });
         var $selectAse =
@@ -158,6 +164,7 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
+                'data-i18n-label': "select-predeterminado",
                 'title':`${_("select-predeterminado")}`
             });
         $('#filterContainer').append(div);
@@ -317,6 +324,12 @@ $(document).on("click", "#searchByDateRange", function () {
 
 function updateTable(url, typeTransaction, beginDate, endDate, where)
 {
+    $('#prospects-datatable_dir').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
     var prospectsTable = $('#prospects-datatable_dir').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
@@ -426,6 +439,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                                                 style="margin-right: 3px;"
                                                 data-toggle="tooltip" 
                                                 data-placement="top"
+                                                data-i18n-tooltip="ver-informacion"
                                                 title="Ver información">
                                             <i class="material-icons">
                                                 remove_red_eye
@@ -453,6 +467,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             $('[data-toggle="tooltip"]').tooltip();
         }
     });
+    applySearch(prospectsTable);
 }
 
 sp = { //  SELECT PICKER
