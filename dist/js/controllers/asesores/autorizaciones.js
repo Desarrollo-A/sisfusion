@@ -116,7 +116,7 @@ $(document).ready (function() {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: `${_('descargar-excel')}`,
-            title: 'Solicitud de autorizaciones' ,
+            title: `${_('solicitud-autorizacion')}`,
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8,9],
                 format: {
@@ -131,7 +131,7 @@ $(document).ready (function() {
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
             titleAttr: `${_('descargar-pdf')}`,
-            title: 'Solicitud de autorizaciones' ,
+            title: `${_('solicitud-autorizacion')}`,
             orientation: 'landscape',
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8,9],
@@ -147,7 +147,7 @@ $(document).ready (function() {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: _('video-tutorial'),
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/1zcshxE2nP4', '_blank');
+                window.open('https://youtu.be/2pvgEilVZrg', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -363,7 +363,7 @@ $(document).on('click', '.seeAuts', function (e) {
         $('#auts-loads').empty();
         var statusProceso;
         $.each(JSON.parse(data), function(i, item) {
-            if(item['estatus'] == 0){               
+            if(item['estatus'] == 0){
                 statusProceso = `<span class='label lbl-green'>${_('aceptada')}</span>`;
             }
             else if(item['estatus'] == 1){
@@ -435,14 +435,14 @@ function validateNumsOfAutorizacion(){
 }
 
 $(document).ready(function () {
-    validateNumsOfAutorizacion();    
+    validateNumsOfAutorizacion();
     if(id_usuario_general == 1){
         alerts.showNotification("top", "right", "Se enviaron las autorizaciones correctamente", "success");
     }
     else if( id_usuario_general == 99){
         alerts.showNotification("top", "right", "Ocurrio un error al enviar la autorización", "warning");
     }
-    
+
     $("#dirAutoriza").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'registroCliente/getActiveDirs/',

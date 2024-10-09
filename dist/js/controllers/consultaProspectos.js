@@ -1,23 +1,14 @@
 typeTransaction = 1;
 $(document).ready(function() {
     construirHead('prospects-datatable');
+    changeSelects();
+    changeButtonTooltips();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValues();
     getStatusRecordatorio();
 });
 
-// let titulosListadoProspectos = [];
-
-// $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
-//     const title = $(this).text();
-//     titulosListadoProspectos.push(title);
-//     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-//     $('input', this).on('keyup change', function () {
-//         if ($("#prospects-datatable").DataTable().column(i).search() !== this.value)
-//             $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
-//     });
-// });
 
 function fillTable(transaction, beginDate, endDate, where) {
     let prospectsTable = $('#prospects-datatable').DataTable({
@@ -45,21 +36,21 @@ function fillTable(transaction, beginDate, endDate, where) {
         {
             data: function(d) {
                     if (d.estatus_particular == 1) // DESCARTADO
-                    b = `<span class="label lbl-warning">${_('descartado')}</span>`;
+                    b = `<span class="label lbl-warning" data-i18n="descartado">${_('descartado')}</span>`;
                 else if (d.estatus_particular == 2) // INTERESADO SIN CITA
-                    b = `<span class="label lbl-green">${_('interesado-sin-cita')}</span>`;
+                    b = `<span class="label lbl-green" data-i18n="interesado-sin-cita">${_('interesado-sin-cita')}</span>`;
                 else if (d.estatus_particular == 3) // CON CITA
-                    b = `<span class="label lbl-sunny">${_('con-cita')}</span>`;
+                    b = `<span class="label lbl-sunny" data-i18n="con-cita">${_('con-cita')}</span>`;
                 else if (d.estatus_particular == 4) // SIN ESPECIFICAR
-                    b = `<span class="label lbl-gray">${_('sin-especificar')}</span>`;
+                    b = `<span class="label lbl-gray" data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`;
                 else if (d.estatus_particular == 5) // PAUSADO
-                    b = `<span class="label lbl-orangeYellow">${_('pausado')}</span>`;
+                    b = `<span class="label lbl-orangeYellow" data-i18n="pausado">${_('pausado')}</span>`;
                 else if (d.estatus_particular == 6) // PREVENTA
-                    b = `<span class="label lbl-violetDeep">${_('preventa')}</span>`;
+                    b = `<span class="label lbl-violetDeep" data-i18n="preventa">${_('preventa')}</span>`;
                 else if (d.estatus_particular == 7) // CLIENTE
-                    b = `<span class="label lbl-oceanGreen">${_('cliente')}</span>`;
+                    b = `<span class="label lbl-oceanGreen" data-i18n="cliente">${_('cliente')}</span>`;
                 else // CLIENTE
-                    b = `<span class="label lbl-gray">${_('sin-especificar')}</span>`;
+                    b = `<span class="label lbl-gray" data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`;
                 return b;
             }
         },
@@ -76,33 +67,18 @@ function fillTable(transaction, beginDate, endDate, where) {
         },
         {
             data: function (d) {
-                return d.coordinador == '  ' ? _('sin-especificar') : d.coordinador;
+                return d.coordinador == '  ' ?  `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.coordinador;
             }
         },
         {
             data: function (d) {
-                return d.gerente == '  ' ? _('sin-especificar') : d.gerente;
-            }
-        },
-        {
-            data: function (d) {
-                return (d.subdirector === '  ') ? _('sin-especificar') : d.subdirector;
-            }
-        },
-        {
-            data: function (d) {
-                return (d.regional === '  ') ? _('sin-especificar') : d.regional;
-            }
-        },
-        {
-            data: function (d) {
-               return (d.regional_2 === '  ') ? _('sin-especificar') : d.regional_2;
+                return d.gerente == '  ' ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.gerente;
             }
         },
         {
             data: function(d) {
                 if(d.nombre_lp == '' || d.nombre_lp === null ){
-                    return _('sin-especificar');
+                    return `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` ;
                 }else{
                     if (d.nombre_lp == 'MKTD DRAGON')
                         id_dragon = '<br><span class="label lbl-blueMaderas">'+ d.id_dragon +'</span>';
@@ -271,9 +247,7 @@ function fillTable(transaction, beginDate, endDate, where) {
         },
     });
     applySearch(prospectsTable);
-    changeSelects();
-    changeButtonTooltips();
-    applySearch(prospectsTable)
+    $('body').i18n();
 }
 
 $('#prospects-datatable').on('draw.dt', function() {
@@ -651,28 +625,6 @@ function getAdvisers(element) {
         $("#myselectasesor").selectpicker('refresh');
     }, 'json');
 }
-var selectGerente ;
-var selectCoordinador;
-var selectAsesor;
-//SELECT gerente
-function getManagers(){
-    $("#myselectgerente2").find("option").remove();
-    $.post('getManagers/', function(data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_usuario'];
-            var name = data[i]['nombre'];
-            var sede = data[i]['id_sede'];
-            $("#myselectgerente2").append($('<option>').val(id).attr('data-sede', sede).text(name));
-            $("#myselectgerente2").selectpicker('refresh');  
-        }
-        if (len <= 0) {
-            $("#myselectgerente2").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
-        }
-        $("#myselectgerente2").selectpicker('refresh'); 
-        selectGerente = $("#myselectgerente2").val();
-    }, 'json');
-}
 
 function getCoordinatorsByManager(element) {
     gerente = $('option:selected', element).val();
@@ -689,7 +641,6 @@ function getCoordinatorsByManager(element) {
             $("#myselectcoordinador").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#myselectcoordinador").selectpicker('refresh');
-        selectCoordinador = $("#myselectcoordinador").val();
 
     }, 'json');
 }
@@ -709,7 +660,6 @@ function getAdvisersByCoordinator(element) {
             $("#myselectasesor3").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#myselectasesor3").selectpicker('refresh');
-        selectAsesor = $("#myselectasesor3").val();
     }, 'json');
 }
 
@@ -788,7 +738,7 @@ function fillFields(v, type) {
         pp = v.lugar_prospeccion;
         if (pp == 3 || pp == 7 || pp == 9 || pp == 10) {
             $("#specify").val(v.otro_lugar);
-        } else if (pp == 6) { 
+        } else if (pp == 6) {
             document.getElementById('specify_mkt').value = v.otro_lugar;
         } else if (pp == 21) {
             document.getElementById('specify_recommends').value = v.otro_lugar;
@@ -1115,7 +1065,6 @@ $(document).on('click', '.re-asign', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
     if (id_rol_general == 3 || id_rol_general == 6) {
         $("#myReAsignModalVentas").modal();
-        getManagers();
         $("#id_prospecto_re_asign_ve").val(id_prospecto);
     } else if (id_rol_general == 19) {
         $("#myReAsignModalSubMktd").modal();
@@ -1152,7 +1101,7 @@ $("#my_update_status_form").on('submit', function(e) {
         beforeSend: function() {
         },
         success: function(data) {
-            if (data == 1) { 
+            if (data == 1) {
                 $('#myUpdateStatusModal').modal("hide");
                 $('#estatus_particular').val("0");
                 $("#estatus_particular").selectpicker("refresh");
@@ -1231,7 +1180,7 @@ function getPersonsWhoRecommends() {
 function showSpecificationObject() {
     pp = document.getElementById('prospecting_place');
     pp = pp.value;
-    if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { 
+    if (pp == 3 || pp == 7 || pp == 9 || pp == 10) {
         $("#specify").removeAttr("style");
         $("#specify_mkt_div").css({ "display": "none" });
     } else if (pp == 6) {
@@ -1350,14 +1299,14 @@ function validateNCreate(medio, box){
     let telefono1 = $('#telefono1').val();
     let telefono2 = $('#telefono2').val();
     if(medio == 2 || medio == 5){
-        box.append(`<label class="m-0">${_('direccion-de')} ${medio == 5 ? _('evento') : _('recorrido')}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='' required>`);
+        box.append(`<label class="m-0">${_('direccion-del')} ${medio == 5 ? _('evento') : _('recorrido')}</label><input id="direccion" name="direccion" type="text" class="form-control input-gral" value='' required>`);
     }
     else if(medio == 3){
         box.append(`<div class="container-fluid"><div class="row"><div class="col-sm-12 col-md-6 col-lg-6 pl-0 m-0"><label class="m-0">${_('telefono')} 1</label><input type="text" class="form-control input-gral" value=${ telefono1 != 'undefined' ? telefono1 : ''} disabled></div>`
         +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0" data-i18n="telefono">${_('telefono')} 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${ telefono2 != 'undefined' ? telefono2 : ''}  ></div></div></div>`);
     }
     else if(medio == 4){
-        box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">${_('direccion-oficina')}</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Seleccione una opción" data-size="7" required></select></div>`);
+        box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">${_('direccion-oficina')}</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="${_('selecciona-una-opcion')}" data-size="7" required></select></div>`);
         getOfficeAddresses();
     }
     box.removeClass('hide');

@@ -11,18 +11,6 @@ var totalSelect2;
 var mesesSelect;
 var mesesSelect2;
 
-$(document).ready(function() {
-    $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];
-            $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $("#filtro3").selectpicker('refresh');
-    }, 'json');
-});
-
 $('#filtro3').change(function(){
     residencial = $('#filtro3').val();
     grupo = $('#filtro5').val();
@@ -229,8 +217,6 @@ $('#formFilters').on('submit', function(event){
     })
 });
 
-let titulos_encabezado = [];
-let num_colum_encabezado = [];
 
 function dataTable(ruta) {
     construirHead('addExp');
