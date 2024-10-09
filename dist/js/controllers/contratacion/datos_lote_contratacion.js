@@ -200,7 +200,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) {
                     if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return '<span data-i18n="sin-definir"> SIN ESPECIFICAR </span>';
+                        return `<span data-i18n="sin-especificar3"> SIN ESPECIFICAR </span>`;
                     else
                         return d.regional2;
                 }
@@ -225,7 +225,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
                     if (d.comentario == null || d.comentario == 'NULL' || d.comentario == '')
-                        return `<span data-i18n="sin-definir"> ${_("sin-definir")} </span>`;
+                        return '<span data-i18n="sin-especificar3"> SIN ESPECIFICAR </span>';
                     else
                         return d.comentario;
                 }
@@ -259,7 +259,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function(d){
                     if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
-                        return `<span data-i18n="sin-definir">${_("sin-definir")}</span>`;
+                        return '<span data-i18n="sin-definir"> SIN ESPECIFICAR </span>'
                     else
                         return d.fecha_creacion;
                 }
@@ -267,9 +267,9 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function(d){
                     if(d.apartadoXReubicacion == 1)
-                        return `<center><span class="label lbl-violetBoots" data-i18n="reubicacion">${_("reubicacion")}</span> <center>`;
+                        return `<center><span class="label lbl-violetBoots" data-i18n="${("reubicacion")}" >${("reubicacion")}</span> <center>`;
                     else
-                        return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
+                        return `<center><span class="label lbl-gray" data-i18n="${("no-aplica")}" >${("no-aplica")}</span> <center>`;
                 }
             },
             {
@@ -277,16 +277,16 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     if(d.apartadoXReubicacion == 1)
                         return d.fechaAlta;
                     else
-                        return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
+                        return `<center><span class="label lbl-gray" data-i18n="${("no-aplica")}" >${("no-aplica")}</span> <center>`;
                 }
             },
             {
                 data: function(d){
                   let banderaTexas =   [98851,94330,98896,98889,98816,98845,99531,94380,97928,93716,97811,65997,98772,98773,85297,100658,100481,100427,100522,100717,100765,100816,100041,100283,100545,101059,101567,100120,101323,100199,99978,99968,99937,101377,102005,102006,99964,100780,100340,100339,101377,101911].indexOf(parseInt(d.idLote)) >= 0 ? 1 : 0;
                     if(d.venta_compartida != 0)
-                        return `<center><span class="label lbl-green" data-i18n="compartida">${_("compartida")}</span> <center>`;
+                        return `<center><span class="label lbl-green" data-i18n="${("compartida")}" >${("compartida")}</span> <center>`;
                     else
-                        return (parseInt(banderaTexas) == 1 ? `<center><span class="label lbl-green" data-i18n="compartida-subdirector">${_("compartida-subdirector")}</span> <center>` : `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`);
+                        return (parseInt(banderaTexas) == 1 ? `<center><span class="label lbl-green" data-i18n="compartida-subdirector">COMPARTIDA SUBDIRECTOR</span> <center>`   : `<center><span class="label lbl-gray" data-i18n="${("no-aplica")}" >${("no-aplica")}</span> <center>`);
                 }
             },
             {
@@ -294,7 +294,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     if(d.ubicacion != null)
                         return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
                     else
-                        return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
+                        return `<center><span class="label lbl-gray" data-i18n="${("no-aplica")}" >${("no-aplica")}</span> <center>`;
                 }
             },
             {
@@ -549,7 +549,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) {
                     if (d.tipoEnganche == 0 || d.tipoEnganche == null) {
-                        return `<span data-i18n="sin-definir">${_("sin-definir")}</span>`;  
+                        return `<span data-i18n="sin-definir"> SIN ESPECIFICAR </span>`;  
                     }
                     return `<center>${d.nombre}<center>`;
                 }
@@ -617,9 +617,8 @@ function consultarHistoriaContratacion(idLote) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: `${_("descargar-excel")}`,
-                title: `${_("historial-contratacion")}`,
-                filename: `${_("historial-contratacion")}`,    
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'HISTORIAL CONTRATACIÓN',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5],
                     format: {
@@ -672,8 +671,8 @@ function consultarHistoriaLiberacion(idLote) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: `${_("descargar-excel")}`,
-            title: `${_("historial-liberacion")}`,
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'HISTORIAL LIBERACIÓN',
             exportOptions: {
                 columns: [0, 1, 2, 3, 4],
                 format: {
@@ -717,9 +716,8 @@ function consultarVentasCompartidas(idLote) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: `${_("descargar-excel")}`,
-            title: `${_("ventas-compartidas")}`,
-            filename : `${_("ventas-compartidas")}`,
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'VENTAS COMPARTIDAS',
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7],
                 format: {
@@ -771,9 +769,9 @@ function fillChangelog(v) {
             '               <p>' + v[i].fecha_creacion + '</p>\n' +
             '           </div>\n' +
             '           <div class="col-md-12">\n' +
-            '             <p class="m-0"><small>'+_("usuario")+': </small><b> ' + v[i].creado_por + '</b></p>\n'+
-            '             <p class="m-0"><small>'+_("valor-anterior")+': </small><b> ' + v[i].valorAnterior + '</b></p>\n' +
-            '             <p class="m-0"><small>'+_("valor-nuevo")+': </small><b> ' + v[i].valorNuevo + '</b></p>\n' +
+            '             <p class="m-0"><small>Usuario: </small><b> ' + v[i].creado_por + '</b></p>\n'+
+            '             <p class="m-0"><small>Valor anterior: </small><b> ' + v[i].valorAnterior + '</b></p>\n' +
+            '             <p class="m-0"><small>Valor Nuevo: </small><b> ' + v[i].valorNuevo + '</b></p>\n' +
             '           </div>\n' +
             '        <h6>\n' +
             '        </h6>\n' +
@@ -930,7 +928,7 @@ function fillTableInventario(sede) {
                 {
                     data: function (d) {
                         if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                            return 'SIN ESPECIFICAR';
+                            return `<span data-i18n="sin-definir"> SIN ESPECIFICAR </span>`;
                         else
                             return d.regional2;
                     }
@@ -945,7 +943,7 @@ function fillTableInventario(sede) {
                 },
                 {
                     data: function (d) {
-                        return (d.estatusContratacion == null || d.estatusContratacion=='') ? 'SIN ESPECIFICAR':d.estatusContratacion;
+                        return (d.estatusContratacion == null || d.estatusContratacion=='') ? `<span data-i18n="sin-especificar"> ${_("sin-especificar")}</span>`:d.estatusContratacion;
                     }
                 },
                 {
@@ -1008,7 +1006,7 @@ function fillTableInventario(sede) {
                 {
                     data: function(d){
                         if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
-                            return 'SIN ESPECIFICAR';
+                            return `<span data-i18n="sin-especificar"> ${_("sin-especificar")}</span>`;
                         else
                             return d.fecha_creacion;
                     }
@@ -1016,7 +1014,7 @@ function fillTableInventario(sede) {
                 {
                     data: function(d){
                         if(d.apartadoXReubicacion == 1)
-                            return `<center><span class="label lbl-violetBoots">${_("reubicacion")}</span> <center>`;
+                            return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
                         else
                             return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
                     }
@@ -1032,7 +1030,7 @@ function fillTableInventario(sede) {
                 {
                     data: function(d){
                         if(d.venta_compartida != 0)
-                            return `<center><span class="label lbl-green">${_("compartida")}</span> <center>`;
+                            return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
                         else
                             return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
                     }
@@ -1054,7 +1052,7 @@ function fillTableInventario(sede) {
                 {
                     data: function (d) {
                         if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
-                            return `<span class="label lbl-oceanGreen">${_("reubicado")}</span>`;
+                            return `<span class="label lbl-oceanGreen">REUBICADO</span>`;
                         else
                             return `<span class="label lbl-pink">${_("no-vigente")}</span>`;
                     }
@@ -1064,7 +1062,7 @@ function fillTableInventario(sede) {
                         if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
                             return d.fechaAlta;
                         else
-                            return `${_("no-aplica")}`;
+                            return 'NO APLICA';
                     }
                 },
                 {
