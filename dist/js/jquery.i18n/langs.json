@@ -1282,6 +1282,9 @@
 		"Evidencia": "Evidence"
         ,"aprobados": "APPROVED"
         ,"ingresos-extras":"EXTRA INCOME"
+        ,"autorizar-a" : "Authorize to"
+        ,"Rechazar-a": "Autorizar a"
+        ,"la-cantidad-de":"the amount of"
 
 	},
 	"es": {
@@ -2562,5 +2565,8 @@
 		"evidencia": "Evidencia"
         ,"aprobados": "APROBADOS"
         ,"ingresos_extras": "INGRESOS EXTRA"
+        ,"autorizar-a": "Autorizar a"
+        ,"Rechazar-a": "Autorizar a"
+        ,"la-cantidad-de" : "la cantidad de"
 	}
 }
