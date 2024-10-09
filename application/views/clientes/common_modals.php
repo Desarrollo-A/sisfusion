@@ -32,6 +32,7 @@
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0 overflow-hidden">
                             <select data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="5" data-container="body"></select>
+
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end pt-1">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()" data-i18n="cancelar">Cancelar</button>
@@ -167,8 +168,8 @@
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_ve">
                 <input type="hidden" name="request_type" id="request_type_ve" value="3">
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                 </div>
             </form>
         </div>

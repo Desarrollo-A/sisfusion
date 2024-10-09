@@ -110,10 +110,10 @@
                                                                         if($opn_cumplimiento[0]['estatus'] == 1){
                                                                             $idDoc=$opn_cumplimiento[0]["id_opn"];
                                                                             
-                                                                            echo '<label class="control-label" style="font-size:1em">Opinión SAT de este mes cargada con éxito</label><br>';
+                                                                            echo '<label class="control-label" style="font-size:1em"><span data-i18n="opinion-subida-con-exito">Opinión SAT de este mes cargada con éxito</span></label><br>';
                                                                             echo '<div class="d-flex ">';
-                                                                            echo '<button  class="btn-data btn-blueMaderas  verPDF " title="Ver Opinión de cumplimiento"  style="margin-right:5px;" data-nombreArchivo="'.$opn_cumplimiento[0]["archivo_name"].'" ><i class="fas fa-eye"></i></button>';
-                                                                            echo '<button type="button" class="btn-data btn-warning DelPDF" data-toggle="modal" data-target="#Aviso2"  title="Borrar"><i class="material-icons">delete</i></button>';
+                                                                            echo '<button  type="button" class="btn-data btn-blueMaderas  verPDF " title="Ver Opinión de cumplimiento" data-i18n-tooltip="ver-opinion-cumplimiento" style="margin-right:5px;" data-nombreArchivo="'.$opn_cumplimiento[0]["archivo_name"].'" ><i class="fas fa-eye"></i></button>';
+                                                                            echo '<button type="button" class="btn-data btn-warning DelPDF" data-toggle="modal" data-target="#Aviso2" title="Borrar" data-i18n-tooltip="borrar"><i class="material-icons">delete</i></button>';
                                                                             echo '</div>';
                                                                         }else if($opn_cumplimiento[0]['estatus'] == 0){
                                                                             ?>
@@ -190,7 +190,7 @@
                             </center>-->
                             <div class="file-gph">
                             <input class="d-none" type="file" id="fileElm" name="fileElm" required accept="application/pdf">
-                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" data-i18n-label="no-has-seleccionado" readonly="">
                             <label class="upload-btn m-0" for="fileElm"><span data-i18n="seleccionar">Seleccionar</span><i class="fas fa-folder-open"></i></label>
                         </div>
                         <div class="modal-footer">
