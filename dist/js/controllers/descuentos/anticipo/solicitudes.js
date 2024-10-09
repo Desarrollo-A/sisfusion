@@ -31,13 +31,13 @@ $("#tabla_anticipo_revision").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Registro estatus 9',
-            title: "Registro estatus 9",
+            titleAttr: _('descargar-excel'), 
+            title: _("registro-estatus-9"),
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                columns: [0,1, 2, 3, 4, 5, 7, 8, 9,10,11],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx - 1] + ' ';
+                        header: function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
