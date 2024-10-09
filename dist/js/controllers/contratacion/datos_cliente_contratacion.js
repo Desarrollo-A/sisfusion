@@ -139,7 +139,7 @@ function fillTable(index_proyecto, index_condominio) {
             {
                 data: function (d) {
                     return `<center>
-                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "${ventas-compartidas}" data-i18n-tooltip="ventas-compartidas" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
+                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "${_("ventas-compartidas")}" data-i18n-tooltip="ventas-compartidas" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
                             </center>`;
                 }
             }
@@ -163,8 +163,9 @@ function fillTable(index_proyecto, index_condominio) {
         "order": [
             [1, 'asc']
         ],
+    
     });
-
+    applySearch(tabla_valores_cliente);
     $('#tabla_clientes').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
@@ -269,6 +270,7 @@ function fillTable(index_proyecto, index_condominio) {
             $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         }
     });
+    
 }
 
 var id_lote_global = 0;
@@ -371,6 +373,7 @@ $(document).ready(function () {
         }
     });
 });
+
 
 $(window).resize(function () {
     tabla_valores_cliente.columns.adjust();
