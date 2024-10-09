@@ -1238,7 +1238,8 @@
         "lib-contraloria": "Lib. comptroller",
         "reubicacion": "Relocation",
         "historial-liberacion": "Release log",
-        "historial-contratacion": "Enroll log"
+        "historial-contratacion": "Enroll log",
+        "compartida-subdirector": "Shared subdirector"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2476,6 +2477,7 @@
         "lib-contraloria": "Lib. Contraloría",
         "reubicacion": "Reubicacion",
         "historial-liberacion": "Historial liberación",
-        "historial-contratacion": "Historial contratacion"
+        "historial-contratacion": "Historial contratacion",
+        "compartida-subdirector": "COMPARTIDA SUBDIRECTOR"
 	}
 }
