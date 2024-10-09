@@ -46,8 +46,6 @@ function cambiarColor() {
 function cargaLinea(){
     let linea = document.getElementById('linea_proceso');
     linea.innerHTML =  '';
-    // onChangeTranslations(cargaLinea());
-    
     $.ajax({
         url: 'todos_los_pasos',
         type: 'post',
@@ -84,9 +82,8 @@ function cargaLinea(){
                     let bandera = 0;
 
                     data['USUARIO'].forEach(elementoUSUARIO => {
-                        if (elementoUSUARIO.id_anticipo === elementANTICIPOS.id_anticipo && elementoUSUARIO.id_opcion === elementTODOS.id_opcion) {
-                            color = (elementANTICIPOS.estatus === 0) ? 'inner-circle_negativp' : ((elementANTICIPOS.estatus === 11) ? 'inner-circle_succes' : 'inner-circle');
-
+                        if (elementoUSUARIO.id_anticipo == elementANTICIPOS.id_anticipo && elementoUSUARIO.id_opcion == elementTODOS.id_opcion){
+                            color = (elementANTICIPOS.estatus == 0 ) ? 'inner-circle_negativp' : ((elementANTICIPOS.estatus == 11) ? 'inner-circle_succes':'inner-circle');
                             let especial = (elementoUSUARIO.id_opcion === 5 && elementANTICIPOS.estatus === 1) ? 
                                 `<button class="especial boton_confirmar_contraloria" 
                                     id="boton_confirmar_contraloria" 
@@ -131,10 +128,8 @@ function cargaLinea(){
                         </div>`;
                     }
                 });
-
                 linea_armada += `</div></div></div><br>`;
             });
-            
             linea.innerHTML = linea_armada;
         }
     });

@@ -55,3 +55,5 @@
     <?php $this->load->view('template/footer');?>
     <script type="text/javascript" src="<?=base_url()?>dist/js/controllers/clientes/consulta_clientes_proyecto.js"></script>
 </body>
+
+

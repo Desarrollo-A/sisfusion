@@ -46,18 +46,18 @@ $(document).on('change', '.btn-file :file', function() {
 //     });
 // });
 
-$('#aut-verificacion thead tr:eq(0) th').each( function (i) {
-    const title = $(this).text();
-    titulosAutCliente.push(title);
+// $('#aut-verificacion thead tr:eq(0) th').each( function (i) {
+//     const title = $(this).text();
+//     titulosAutCliente.push(title);
 
-    $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#aut-verificacion').DataTable().column(i).search() !== this.value ) {
-            $('#aut-verificacion').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-});
+//     $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
+//     $( 'input', this ).on('keyup change', function () {
+//         if ($('#aut-verificacion').DataTable().column(i).search() !== this.value ) {
+//             $('#aut-verificacion').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip();
+// });
 
 $(document).ready (function() {
     const funcionToGetData = (id_rol_general == 1) ? 'autsByDC' : 'tableAut';
@@ -70,15 +70,13 @@ $(document).ready (function() {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
+                titleAttr: `${_('descargar-excel')}`,
                 title: 'Tus autorizaciones',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
-                        header: function (d, columnIdx) {
-                            if (columnIdx <= 4) {
-                                return ' ' + titulosAu[columnIdx] + ' ';
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -87,17 +85,15 @@ $(document).ready (function() {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
-                titleAttr: 'Descargar archivo PDF',
+                titleAttr: `${_('descargar-pdf')}`,
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 title:'Tus autorizaciones',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
-                        header: function (d, columnIdx) {
-                            if (columnIdx <= 4) {
-                                return ' ' + titulosAu[columnIdx] + ' ';
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -152,7 +148,7 @@ $(document).ready (function() {
             trigger: "hover"
         });
     });
-
+    construirHead('aut-verificacion');
     tablaAutClientes = $('#aut-verificacion').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width:'100%',
@@ -161,15 +157,13 @@ $(document).ready (function() {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
+                titleAttr: `${_('descargar-excel')}`,
                 title: 'Tus autorizaciones de verificación',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
-                        header: function (d, columnIdx) {
-                            if (columnIdx <= 4) {
-                                return ' ' + titulosAutCliente[columnIdx] + ' ';
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -178,17 +172,15 @@ $(document).ready (function() {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
-                titleAttr: 'Descargar archivo PDF',
+                titleAttr: `${_('descargar-pdf')}`,
                 title: 'Tus autorizaciones de verificación',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
-                        header: function (d, columnIdx) {
-                            if (columnIdx <= 4) {
-                                return ' ' + titulosAutCliente[columnIdx] + ' ';
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -238,7 +230,7 @@ $(document).ready (function() {
             }
         ]
     });
-
+    applySearch(tablaAutClientes);
     $('#aut-verificacion').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"

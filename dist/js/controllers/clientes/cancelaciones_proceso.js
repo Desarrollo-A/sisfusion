@@ -46,7 +46,7 @@ $(document).ready(function () {
 function fillTable(fechaInicio, fechaFin) {
     construirHead('cancelacionesTabla');
     tablaCancelaciones = $('#cancelacionesTabla').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: [
@@ -55,12 +55,12 @@ function fillTable(fechaInicio, fechaFin) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Lotes cancelados en proceso',
-                title:"Lotes cancelados en proceso",
+                title: "Lotes cancelados en proceso",
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosTabla[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -70,14 +70,14 @@ function fillTable(fechaInicio, fechaFin) {
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
                 titleAttr: 'Lotes cancelados en proceso',
-                title:"Lotes cancelados en proceso",
+                title: "Lotes cancelados en proceso",
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    columns: [0,1,2,3,4,5,6,7,8,9,10,11],
                     format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosTabla[columnIdx] + ' ';
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -94,7 +94,7 @@ function fillTable(fechaInicio, fechaFin) {
         fixedColumns: true,
         ordering: false,
         language: {
-            url: general_base_url+"static/spanishLoader_v2.json",
+            url: general_base_url + "static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
