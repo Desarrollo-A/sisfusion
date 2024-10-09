@@ -80,7 +80,7 @@ tabla_6 = $("#tabla_autorizaciones_ventas").DataTable({
                         columns: [0,1,2,3],
                         format: {
                             header: function (d, columnIdx) {
-                                return ' '+titulos[columnIdx] +' ';
+                                return $(d).attr('placeholder').toUpperCase();
                             }
                         }
                     },
@@ -201,12 +201,12 @@ $(document).on("submit", "#envioAutorizacion", function (e) {
         $("#sendRequestButton").prop("disabled", false);
 
         if (res.message === "OK") {
-            alerts.showNotification("top", "right", `El documento se ha subido con éxito.`, "success");
+            alerts.showNotification("top", "right", `${_("documento-subido")}`, "success");
             $("#modal_autorizacion").modal("hide");
         }
         
       },error: function () {
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
       }
     });
 });

@@ -14,20 +14,20 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Tus autorizaciones</h3>
+                                    <h3 class="card-title center-align" data-i18n="tus-autorizaciones">Tus autorizaciones</h3>
                                 </div>
                                 <div class="material-datatables">
                                     <table id="authorizationsTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ESTATUS</th>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ASESOR</th>
-                                                <th>CLIENTE</th>
-                                                <th>SOLICITUD</th>
-                                                <th>COMENTARIO</th>
+                                                <th>estatus</th>
+                                                <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>asesor</th>
+                                                <th>cliente</th>
+                                                <th>solicitud</th>
+                                                <th>comentario</th>
                                             </tr>
                                         </thead>
                                     </table>

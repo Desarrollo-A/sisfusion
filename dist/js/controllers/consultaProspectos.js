@@ -9,17 +9,6 @@ $(document).ready(function() {
     getStatusRecordatorio();
 });
 
-// let titulosListadoProspectos = [];
-
-// $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
-//     const title = $(this).text();
-//     titulosListadoProspectos.push(title);
-//     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-//     $('input', this).on('keyup change', function () {
-//         if ($("#prospects-datatable").DataTable().column(i).search() !== this.value)
-//             $("#prospects-datatable").DataTable().column(i).search(this.value).draw();
-//     });
-// });
 
 function fillTable(transaction, beginDate, endDate, where) {
     let prospectsTable = $('#prospects-datatable').DataTable({
@@ -36,7 +25,7 @@ function fillTable(transaction, beginDate, endDate, where) {
                     columns: (id_rol_general == 3 || id_rol_general == 6) ? [0, 1, 2, 3, 4, 5, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosListadoProspectos[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -84,21 +73,6 @@ function fillTable(transaction, beginDate, endDate, where) {
         {
             data: function (d) {
                 return d.gerente == '  ' ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.gerente;
-            }
-        },
-        {
-            data: function (d) {
-                return (d.subdirector === '  ') ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.subdirector;
-            }
-        },
-        {
-            data: function (d) {
-                return (d.regional === '  ') ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.regional;
-            }
-        },
-        {
-            data: function (d) {
-               return (d.regional_2 === '  ') ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>` : d.regional_2;
             }
         },
         {
@@ -651,28 +625,6 @@ function getAdvisers(element) {
         $("#myselectasesor").selectpicker('refresh');
     }, 'json');
 }
-var selectGerente ;
-var selectCoordinador;
-var selectAsesor;
-//SELECT gerente
-function getManagers(){
-    $("#myselectgerente2").find("option").remove();
-    $.post('getManagers/', function(data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_usuario'];
-            var name = data[i]['nombre'];
-            var sede = data[i]['id_sede'];
-            $("#myselectgerente2").append($('<option>').val(id).attr('data-sede', sede).text(name));
-            $("#myselectgerente2").selectpicker('refresh');  
-        }
-        if (len <= 0) {
-            $("#myselectgerente2").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
-        }
-        $("#myselectgerente2").selectpicker('refresh'); 
-        selectGerente = $("#myselectgerente2").val();
-    }, 'json');
-}
 
 function getCoordinatorsByManager(element) {
     gerente = $('option:selected', element).val();
@@ -689,7 +641,6 @@ function getCoordinatorsByManager(element) {
             $("#myselectcoordinador").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#myselectcoordinador").selectpicker('refresh');
-        selectCoordinador = $("#myselectcoordinador").val();
 
     }, 'json');
 }
@@ -709,7 +660,6 @@ function getAdvisersByCoordinator(element) {
             $("#myselectasesor3").append(`<option selected="selected" disabled>${_('ninguna-opcion')}</option>`);
         }
         $("#myselectasesor3").selectpicker('refresh');
-        selectAsesor = $("#myselectasesor3").val();
     }, 'json');
 }
 
@@ -788,7 +738,7 @@ function fillFields(v, type) {
         pp = v.lugar_prospeccion;
         if (pp == 3 || pp == 7 || pp == 9 || pp == 10) {
             $("#specify").val(v.otro_lugar);
-        } else if (pp == 6) { 
+        } else if (pp == 6) {
             document.getElementById('specify_mkt').value = v.otro_lugar;
         } else if (pp == 21) {
             document.getElementById('specify_recommends').value = v.otro_lugar;
@@ -1115,7 +1065,6 @@ $(document).on('click', '.re-asign', function(e) {
     id_prospecto = $(this).attr("data-id-prospecto");
     if (id_rol_general == 3 || id_rol_general == 6) {
         $("#myReAsignModalVentas").modal();
-        getManagers();
         $("#id_prospecto_re_asign_ve").val(id_prospecto);
     } else if (id_rol_general == 19) {
         $("#myReAsignModalSubMktd").modal();
@@ -1152,7 +1101,7 @@ $("#my_update_status_form").on('submit', function(e) {
         beforeSend: function() {
         },
         success: function(data) {
-            if (data == 1) { 
+            if (data == 1) {
                 $('#myUpdateStatusModal').modal("hide");
                 $('#estatus_particular').val("0");
                 $("#estatus_particular").selectpicker("refresh");
@@ -1231,7 +1180,7 @@ function getPersonsWhoRecommends() {
 function showSpecificationObject() {
     pp = document.getElementById('prospecting_place');
     pp = pp.value;
-    if (pp == 3 || pp == 7 || pp == 9 || pp == 10) { 
+    if (pp == 3 || pp == 7 || pp == 9 || pp == 10) {
         $("#specify").removeAttr("style");
         $("#specify_mkt_div").css({ "display": "none" });
     } else if (pp == 6) {
@@ -1357,7 +1306,7 @@ function validateNCreate(medio, box){
         +`<div class="col-sm-12 col-md-6 col-lg-6 pr-0 m-0"><label class="m-0" data-i18n="telefono">${_('telefono')} 2</label><input type="text" class="form-control input-gral" id="telefono2" name="telefono2" value=${ telefono2 != 'undefined' ? telefono2 : ''}  ></div></div></div>`);
     }
     else if(medio == 4){
-        box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">${_('direccion-oficina')}</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione una opción" data-size="7" required></select></div>`);
+        box.append(`<div class="col-sm-12 col-md-12 col-lg-12 p-0"><label class="m-0">${_('direccion-oficina')}</label><select class="selectpicker select-gral m-0 w-100" name="id_direccion" id="id_direccion" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Seleccione una opción" data-size="7" required></select></div>`);
         getOfficeAddresses();
     }
     box.removeClass('hide');
