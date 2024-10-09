@@ -1277,7 +1277,8 @@
 		"seleccionar-uno-valor":"You must select at least one value for the field",
 		"activo2": "Active",
 		"inactivo-comisionando": "Inactive while commissioning",
-		"ups-alerta-requeridos-busqueda":"Oops, make sure to enter at least one search criterion"
+		"ups-alerta-requeridos-busqueda":"Oops, make sure to enter at least one search criterion",
+		"autorizacion-por-ingresar"  : "Authorizations to be entered"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2554,6 +2555,7 @@
 		"seleccionar-uno-valor":"Tienes que seleccionar al menos un valor para el campo",
 		"activo2": "Activo",
 		"inactivo-comisionando": "Inactivo comisionando",
-		"ups-alerta-requeridos-busqueda":"Ups, asegurate de colocar al menos un criterío de búsqueda"
+		"ups-alerta-requeridos-busqueda":"Ups, asegurate de colocar al menos un criterío de búsqueda",
+		"autorizacion-por-ingresar" : "Autorizaciones por ingresar"
 	}
 }
