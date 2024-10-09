@@ -1234,7 +1234,11 @@
 		"comisiones-revision": "COMISIONES EN REVISIÓN",
 		"infor-comisiones-2": "Las comisiones de pago a asimilados se encuentran en espera de dispersión de pago",
 		"sale-plan": "PLAN DE VENTA",
-		"asingar-prospecto": "Asignar prospecto"
+		"asingar-prospecto": "Asignar prospecto",
+        "lib-contraloria": "Lib. comptroller",
+        "reubicacion": "Relocation",
+        "historial-liberacion": "Release log",
+        "historial-contratacion": "Enroll log"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2468,6 +2472,10 @@
 		"regresar-dispersion": "REGRESAR A DISPERSIÓN",
 		"ocurrio-problema": "Ocurrió un problema, vuelva a intentarlo más tarde",
 		"autorizada": "autorizada",
-		"rechazada": "Rechazada"	
+		"rechazada": "Rechazada",
+        "lib-contraloria": "Lib. Contraloría",
+        "reubicacion": "Reubicacion",
+        "historial-liberacion": "Historial liberación",
+        "historial-contratacion": "Historial contratacion"
 	}
 }
