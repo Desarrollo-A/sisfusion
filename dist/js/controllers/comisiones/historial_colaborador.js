@@ -172,8 +172,8 @@ function getAssimilatedCommissions(proyecto, condominio, tipo) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: _('descargar-excel'),
-            title: _('historial-general-activas'),
+            titleAttr: `${_('descargar-excel')}`,
+            title: `${_('historial-general-activas')}`,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                 format: {
@@ -393,7 +393,7 @@ function getAssimilatedCancelacion(proyecto, condominio) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: _('descargar-excel'),
+            titleAttr: `${_('descargar-excel')}`,
             title: _('historial-general-canceladas'),
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
@@ -740,7 +740,7 @@ function tableComisionesSuma(anio) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: _('descargar-excel'),
+            titleAttr:`${_('descargar-excel')}`,
             title: _('reporte-comision-suma-pagadas'),
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -920,7 +920,7 @@ function consultarHistorialDescuentos(enlace) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: _('descargar-excel'),
+                titleAttr: `${_('descargar-excel')}`,
                 title: _('historial-descuentos'),
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -1117,7 +1117,7 @@ function consultarHistorialOOAM() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: _('descargar-excel'),
+            titleAttr:`${_('descargar-excel')}`,
             title: _('historial-descuentos'),
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -1313,7 +1313,7 @@ $(document).on('click', ".ver_bonos", function (e) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: `${_('descargar-excel')}`,
             title: 'HISTORIAL BONOS',
             exportOptions: {
                 columns: columnas_datatable.tabla_bono.num_encabezados,
