@@ -9,7 +9,10 @@ onChangeTranslations(() => {
     formatDisponibilidadData(dataDisponibilidad);
     formatLugarProspeccion(dataLugarProspeccion);
     formatMedioProspeccion(dataMedio);
-    formatVentasM2(dataVentasM2);
+    if (dataVentasM2) {
+        formatVentasM2(dataVentasM2);
+    }
+    reorderColumnsMetrics();
 })
 
 var optionBarInit = {
@@ -1443,7 +1446,7 @@ function fillTableMetrics(dataObject) {
         });
     });
 
-    generalDataTable = $('#lotesDetailTableMetricas').dataTable({
+    let generalDataTable = $('#lotesDetailTableMetricas').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons:[
@@ -1552,6 +1555,6 @@ function fillTableMetrics(dataObject) {
             dataSrc: ""
         }
     });
-    changeButtonTooltips();
-    construirHead('lotesDetailTableMetricas');
+    
+    applySearch(generalDataTable);
 }
