@@ -111,13 +111,13 @@ $(document).ready (function() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: `${_('descargar-excel')}`,
             title: 'Autorizaciones' ,
             exportOptions: {
-                columns: num_colum_autorizaciones,
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_autorizaciones[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -126,14 +126,14 @@ $(document).ready (function() {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
+            titleAttr: `${_('descargar-pdf')}`,
             title: 'Autorizaciones' ,
             orientation: 'landscape',
             exportOptions: {
-                columns: num_colum_autorizaciones,
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' '+titulos_autorizaciones[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -233,13 +233,13 @@ $(document).ready (function() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: `${_('descargar-excel')}`,
             title: 'Solicitud de autorizaciones' ,
             exportOptions: {
-                columns: num_colum_solicitud,
+                columns: [0,1,2,3,4,5,6,7,8,9],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_solicitud[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -248,14 +248,14 @@ $(document).ready (function() {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
+            titleAttr: `${_('descargar-pdf')}`,
             title: 'Solicitud de autorizaciones' ,
             orientation: 'landscape',
             exportOptions: {
-                columns: num_colum_solicitud,
+                columns: [0,1,2,3,4,5,6,7,8,9],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' '+titulos_solicitud[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }

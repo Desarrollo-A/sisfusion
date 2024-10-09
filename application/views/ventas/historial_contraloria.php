@@ -29,16 +29,16 @@
                                 <table class="table-striped table-hover" id="tabla_bono" name="tabla_bono">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>PRECIO DEL LOTE</th>
-                                            <th>TOTAL DE LA COMISIÓN</th>
-                                            <th>DISPERSADO</th>
-                                            <th>USUARIO</th>
-                                            <th>PUESTO</th>
-                                            <th>ESTATUS</th>
+                                            <th>id</th>
+                                            <th>proyecto</th>
+                                            <th>condominio</th>
+                                            <th>lote</th>
+                                            <th>precio-del-lote</th>
+                                            <th>total-de-la-comision</th>
+                                            <th>dispersado</th>
+                                            <th>usuario</th>
+                                            <th>puesto</th>
+                                            <th>estatus</th>
                                             <!-- <th>ACCIONES</th> -->
                                         </tr>
                                     </thead>
@@ -67,12 +67,12 @@
                                 <table class="table-striped table-hover" id="tabla_modal" name="tabla_modal">
                                     <thead>
                                         <tr>
-                                            <th><span>ID PAGO</span></th>
-                                            <th><span>LOTE</span></th>
-                                            <th><span>MONTO</span></th>
-                                            <th><span>FECHA DE APLICADO</span></th>
-                                            <th><span>MONTO ANTERIOR</span></th>
-                                            <th><span>ESTATUS</span></th>
+                                            <th><span>id-pago</span></th>
+                                            <th><span>lote</span></th>
+                                            <th><span>monto</span></th>
+                                            <th><span>fecha-de-aplicado</span></th>
+                                            <th><span>monto-anterior</span></th>
+                                            <th><span>estatus</span></th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -163,14 +163,14 @@
                                                                 <th>condominio</th>
                                                                 <th>lote</th>
                                                                 <th>referencia</th>
-                                                                <th id="titulo_precio"></th>
+                                                                <th id="titulo_precio">precio-del-lote</th>
                                                                 <th>total-comision</th>
                                                                 <th>pago-cliente</th>
                                                                 <th>dispersado</th>
                                                                 <th>pagado</th>
                                                                 <th>pendiente</th>
                                                                 <th>usuario</th>
-                                                                <th>position</th>
+                                                                <th>posicion</th>
                                                                 <th>detalles</th>
                                                                 <th>estatus</th>
                                                                 <th>acciones</th>
