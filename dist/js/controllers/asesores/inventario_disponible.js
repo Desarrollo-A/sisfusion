@@ -258,7 +258,7 @@ function dataTable(ruta) {
             titleAttr: `${_('descargar-excel')}`,
             title: _("reporte-inventario-disponible"),
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7],
                 format: {
                     header: function (d, columnIdx) {
                         return $(d).attr('placeholder').toUpperCase();
@@ -275,7 +275,7 @@ function dataTable(ruta) {
             orientation: 'landscape',
             pageSize: 'LEGAL',
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7],
                 format: {
                     header: function (d, columnIdx) {
                         return $(d).attr('placeholder').toUpperCase();
