@@ -380,7 +380,7 @@
                                         <div class="tab-pane" id="resguardo-1">
                                             <div class="encabezadoBox">
                                         
-                                            <p class="card-title pl-1"> <span data-il8n="comentario-resguardo-rigel" >  </span>  . <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <span class="card-title pl-1" > <span data-i18n="comentario-resguardo-rigel"></span>  <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</span>
 
                                             </div>
                                             <div class="toolbar">
@@ -446,7 +446,7 @@
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1" data-id8n="comisiones-proceso-pago"> <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1" > <span data-i18n="comisiones-proceso-pago"></span> <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -568,7 +568,7 @@
                                         </div>
                                         <div class="tab-pane" id="sin_pago_neodata">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1" data-il8n="sin-pago-neodata">.</p>
+                                            <p class="card-title pl-1" data-i18n="sin-pago-neodata">.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
