@@ -4,17 +4,59 @@
     {
         parent::__construct();
     }
+/*función respaldada del servidor*/
+    /*#05092024
+        public function getPaquetes($idLote){
+			$query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote.'');
+			foreach ($query->result_array() as $desc)
+			{
+			}
+			$query = $this->db-> query('SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ('.$desc['id_descuento'].')');
+			return $query->result_array();
+		}
+     * */
+
+
+
 
     public function getPaquetes($idLote){
 
-        $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote.'');
+        /*if(!empty($idLote)){
+            $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote.'');
 
-        foreach ($query->result_array() as $desc)
-        {
+            if($query->result_array()[0]['id_descuento'] == ''){//se valida si tiene paquetes activos
+              return array();
+            }
+
+            foreach ($query->result_array() as $desc)
+            {
+            }
+
+            $query = $this->db-> query('SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ('.$desc['id_descuento'].')');
+
+            return $query->result_array();
         }
-        $query = $this->db-> query('SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ('.$desc['id_descuento'].')');
+        else{
+            return array();
+        }*/
 
-        return $query->result_array();
+        if(!empty($idLote)){
+                $query = $this->db-> query('SELECT id_descuento from [lotes] where idLote = '.$idLote);
+                if($query->result_array()[0]['id_descuento'] == ''){//se valida si tiene paquetes activos
+                    return array();
+                  }
+      
+                $desc = $query->row();
+
+                if($desc->id_descuento){
+                    return $this->db-> query("SELECT id_paquete, descripcion from [paquetes] WHERE estatus = 1 and id_paquete IN ($desc->id_descuento)")->result_array();
+                }else{
+                    return [];
+                }
+        }else{
+            return array();
+        }
+        
     }
 
 
@@ -74,8 +116,8 @@
     }
     public function getinfoCorrida($id_corrida) {
         $query = $this->db->query("SELECT id_lote, nombre, edad, telefono, correo, id_asesor, id_coordinador, id_gerente, plan_corrida, anio, dias_pagar_enganche, porcentaje_enganche, cantidad_enganche, 
-                            meses_diferir, apartado, paquete, opcion_paquete, precio_m2_final, saldo, precio_final, fecha_limite, pago_enganche, msi_1p, msi_2p, msi_3p, primer_mensualidad, observaciones, 
-                            finalMesesp1, finalMesesp2, finalMesesp3 FROM corridas_financieras WHERE id_corrida = ".$id_corrida);
+                            meses_diferir, apartado, paquete, opcion_paquete, precio_m2_final, saldo, precio_final, fecha_limite, pago_enganche, msi_1p, msi_2p, msi_3p, msi_4p, primer_mensualidad, observaciones, 
+                            finalMesesp1, finalMesesp2, finalMesesp3, finalMesesp4 FROM corridas_financieras WHERE id_corrida = ".$id_corrida);
         return $query->row();
 
     }
@@ -346,7 +388,7 @@
             case '4': // ASISTENTE DIRECTOR
             case '5': // ASISTENTE SUBDIRECTOR
             case '6': // ASISTENTE GERENTE
-            case '9': // COORDINADOR
+             case '9': // COORDINADOR
             case '13': // CONTRALORIA
             case '17': // CONTRALORIA
             case '32': // CONTRALORIA
@@ -631,13 +673,13 @@
     function getPlanesPago($idLote){
 //        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus = 1 AND idLote = ".$idLote);
         $query = $this->db->query("SELECT pp.idPlanPago, res.nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote, 
-        lo.idLote, numeroPeriodos, pp.*, planPagoCatalogo.nombre as planPago, res.empresa,
+        lo.idLote, numeroPeriodos, pp.*,  res.empresa,--planPagoCatalogo.nombre as planPago,
         row_number() over (partition by null order by pp.idPlanPago,res.nombreResidencial) numero_plan_logico
         FROM planes_pago pp 
         INNER JOIN lotes lo ON pp.idLote = lo.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
-        INNER JOIN opcs_x_cats planPagoCatalogo ON planPagoCatalogo.id_opcion =  pp.tipoPlanPago AND planPagoCatalogo.id_catalogo = 137
+        --INNER JOIN opcs_x_cats planPagoCatalogo ON planPagoCatalogo.id_opcion =  pp.tipoPlanPago AND planPagoCatalogo.id_catalogo = 137
         WHERE pp.estatus = 1 AND pp.idLote = ".$idLote." ORDER BY pp.idPlanPago ASC");
         return $query->result_array();
     }
@@ -676,7 +718,15 @@
     }
 
     function totalPlanesPago($idLote){
-        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND idLote=".$idLote);
+        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND tipoPlanPago IN(2, 3) AND idLote=".$idLote);
+        return $query->result_array();
+    }
+    function getPlanesPagoNormales($idLote){
+        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND tipoPlanPago IN(2) AND idLote=".$idLote);
+        return $query->result_array();
+    }
+    function getPlanesPagoOtros($idLote){
+        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND tipoPlanPago IN(3) AND idLote=".$idLote);
         return $query->result_array();
     }
 

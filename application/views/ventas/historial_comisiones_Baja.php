@@ -151,13 +151,11 @@
             </div>
         </div>
     </div>
-
-
-
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>
-</div>
+
+</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer'); ?>
 <script>
@@ -648,7 +646,7 @@ function  fillCommissionTableWithoutPayment2(proyecto,condominio){
     });
 
 }
-    /*jQuery(document).ready(function () {
+    jQuery(document).ready(function () {
 
         jQuery('#editReg').on('hidden.bs.modal', function (e) {
             jQuery(this).removeData('bs.modal');
@@ -662,10 +660,10 @@ function  fillCommissionTableWithoutPayment2(proyecto,condominio){
             jQuery(this).find('#comentario3').val('');
         })
 
-    })*/
+    })
 
 
-    /*function SoloNumeros(evt) {
+    function SoloNumeros(evt) {
         if (window.event) {
             keynum = evt.keyCode;
         } else {
@@ -678,7 +676,7 @@ function  fillCommissionTableWithoutPayment2(proyecto,condominio){
             alerts.showNotification("top", "left", "Solo Numeros.", "danger");
             return false;
         }
-    }*/
+    }
 
 
 

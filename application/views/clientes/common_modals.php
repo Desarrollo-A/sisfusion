@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">Ingresa tus comentarios</h4>
+                <h4 class="modal-title" data-i18n="ingresa-tus-comentarios">Ingresa tus comentarios</h4>
             </div>
             <form id="my-comment-form" name="my-comment-form" method="post">
                 <div class="modal-body">
@@ -13,8 +13,8 @@
                     <input type="hidden" name="id_prospecto" id="id_prospecto">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -28,14 +28,14 @@
                 <div class="container-fluid pl-2 pr-2 pt-3 pb-1">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                            <h4 class="modal-title">¿Qué estatus asignarás a este prospecto?</h4>
+                            <h4 class="modal-title" data-i18n="que-estatus-prospecto">¿Qué estatus asignarás a este prospecto?</h4>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0 overflow-hidden">
                             <select class="selectpicker select-gral m-0" name="estatus_particular" id="estatus_particular" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="5" data-container="body"></select>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end pt-1">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()">Cancelar</button>
-                            <button type="submit" class="btn btn-primary finishS">Aceptar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanSelects()" data-i18n="cancelar">Cancelar</button>
+                            <button type="submit" class="btn btn-primary finishS" data-i18n="aceptar">Aceptar</button>
                         </div>
                     </div>
                     <input type="hidden" name="id_prospecto_estatus_particular" id="id_prospecto_estatus_particular">
@@ -95,22 +95,22 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">¿A quién asignarás a este prospecto?</h4>
+                <h4 class="modal-title" data-i18n="quien-asignar-prospecto">¿A quién asignarás a este prospecto?</h4>
             </div>
             <form id="my_reasign_form_sm" name="my_reasign_form_sm" method="post">
                 <div class="col-lg-12 form-group">
-                    <label>Gerente</label>
+                    <label data-i18n="gerente">Gerente</label>
                     <select class="selectpicker" name="id_gerente" id="myselectgerente" data-live-search="true" data-style="select-with-transition" onchange="getAdvisers(this)" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
-                    <label>Asesor</label>
+                    <label data-i18n="asesor">Asesor</label>
                     <select class="selectpicker" name="id_asesor" id="myselectasesor" data-live-search="true" data-style="select-with-transition" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_sm">
                 <input type="hidden" name="request_type" id="request_type_sm" value="1"> 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -124,18 +124,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">¿A quién asignarás a este prospecto?</h4>
+                <h4 class="modal-title" data-i18n="quien-asignar-prospecto">¿A quién asignarás a este prospecto?</h4>
             </div>
             <form id="my_reasign_form_gm" name="my_reasign_form_gm" method="post">
                 <div class="col-lg-12 form-group">
-                    <label>Asesor</label>
+                    <label data-i18n="asesor">Asesor</label>
                     <select class="selectpicker" name="id_asesor" id="myselectasesor2" data-live-search="true" data-style="select-with-transition" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_gm">
                 <input type="hidden" name="request_type" id="request_type_gm" value="2">
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                 </div>
             </form>
         </div>
@@ -149,19 +149,19 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">clear</i>
                 </button>
-                <h4 class="modal-title">¿A quién asignarás a este prospecto?</h4>
+                <h4 class="modal-title" data-i18n="quien-asignar-prospecto">¿A quién asignarás a este prospecto?</h4>
             </div>
             <form id="my_reasign_form_ve" name="my_reasign_form_ve" method="post">
                 <div class="col-lg-12 form-group">
-                    <label>Gerente</label>
+                    <label data-i18n="gerente">Gerente</label>
                     <select class="selectpicker select-gral m-0" name="id_gerente" id="myselectgerente2" data-style="btn" data-live-search="true" data-style="select-with-transition" onchange="getCoordinatorsByManager(this)" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
-                    <label>Coordinador</label>
+                    <label data-i18n="coordinador">Coordinador</label>
                     <select class="selectpicker select-gral m-0" name="id_coordinador" id="myselectcoordinador" data-style="btn" data-live-search="true" data-style="select-with-transition" onchange="getAdvisersByCoordinator(this)" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <div class="col-lg-12 form-group">
-                    <label>Asesor</label>
+                    <label data-i18n="asesor">Asesor</label>
                     <select class="selectpicker select-gral m-0" name="id_asesor" id="myselectasesor3" data-style="btn" data-live-search="true" data-style="select-with-transition" title="Selecciona una opción" data-size="7" required></select>
                 </div>
                 <input type="hidden" name="id_prospecto_re_asign" id="id_prospecto_re_asign_ve">
@@ -201,23 +201,34 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" onclick="cleanCombos()"><span aria-hidden="true"><i class="fa fa-times"></i></span><span class="sr-only">Cerrar</span></button>
-                <h4 class="modal-title">Mantén la información actualizada</h4>
+                <h4 class="modal-title" data-i18n="manten-informacion-actualizada">Mantén la información actualizada</h4>
                 <h4 class="js-title-step"></h4>
             </div>
             <form id="my-edit-form" name="my-edit-form" method="post">
                 <div class="modal-body">
-                    <div class="row" data-step="1" data-title="Acerca de">
+                    <div class="row" data-step="1" data-title="">
+                        <h4 style="padding-left: 2.5rem; margin-block: 0px;" data-i18n="acerca-de">Acerca de</h4>
                         <div>
                             <div class="col-sm-3 ">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label">Nacionalidad<small> (requerido)</small></label>
-                                    <select id="nationality" name="nationality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required>
+                                    <label class="control-label"><span data-i18n="nacionalidad">Nacionalidad</span><small data-i18n="requerido"> (requerido)</small></label>
+                                    <select id="nationality"
+                                        name="nationality"
+                                        class="selectpicker select-gral m-0"
+                                        data-style="btn"
+                                        data-show-subtext="true"
+                                        data-live-search="true"
+                                        title="Selecciona una opción"
+                                        data-i18n-label="select-predeterminado"
+                                        data-size="7"
+                                        data-container="body"
+                                        required>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label">Personalidad jurídica<small> (requerido)</small></label>
+                                    <label class="control-label" data-i18n="personalidad-juridica">Personalidad jurídica<small data-i18n="requerido"> (requerido)</small></label>
                                     <select id="legal_personality"
                                             name="legal_personality"
                                             class="selectpicker select-gral m-0"
@@ -225,6 +236,7 @@
                                             data-show-subtext="true"
                                             data-live-search="true"
                                             title="SELECCIONA UNA OPCIÓN"
+                                            data-i18n-label="select-predeterminado"
                                             data-size="7"
                                             data-container="body"
                                             required>
@@ -233,7 +245,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating div-curp">
-                                    <label class="control-label">CURP</label>
+                                    <label class="control-label" data-i18n="curp">CURP</label>
                                     <input  id="curp" 
                                             name="curp"
                                             type="text"
@@ -245,61 +257,61 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating div-rfc">
-                                    <label class="control-label">RFC</label>
+                                    <label class="control-label" data-i18n="rfc">RFC</label>
                                     <input id="rfc" name="rfc" type="text" class="form-control input-gral" minlength="12" maxlength="13" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group label-floating div-name">
-                                    <label class="control-label">Nombre / Razón social<small> (requerido)</small></label>
+                                    <label class="control-label" data-i18n="nombre-razon-social">Nombre / Razón social<small data-i18n="requerido"> (requerido)</small></label>
                                     <input id="name" name="name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating div-last-name">
-                                    <label class="control-label">Apellido paterno</label>
+                                    <label class="control-label" data-i18n="apellido-paterno">Apellido paterno</label>
                                     <input id="last_name" name="last_name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating div-mothers-last-name">
-                                    <label class="control-label">Apellido materno</label>
+                                    <label class="control-label" data-i18n="apellido-materno">Apellido materno</label>
                                     <input id="mothers_last_name" name="mothers_last_name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating div-date-birth">
-                                    <label class="control-label">Fecha de nacimiento</label>
+                                    <label class="control-label" data-i18n="fecha-nacimiento">Fecha de nacimiento</label>
                                     <input id="date_birth" name="date_birth" type="date" class="form-control input-gral" onchange="getAge(2)">
                                 </div>
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group label-floating div-company-antiquity">
-                                    <label class="control-label">Edad</label>
+                                    <label class="control-label" data-i18n="edad">Edad</label>
                                     <input id="company_antiquity" name="company_antiquity" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-7">
                                 <div class="form-group label-floating div-email">
-                                    <label class="control-label">Correo electrónico</label>
+                                    <label class="control-label" data-i18n="correo-electronico">Correo electrónico</label>
                                     <input id="email" name="email" type="email" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating div-phone-number">
-                                    <label class="control-label">Teléfono celular<small> (requerido)</small></label>
+                                    <label class="control-label" data-i18n="telefono">Teléfono celular<small data-i18n="requerido"> (requerido)</small></label>
                                     <input id="phone_number" name="phone_number" type="text" class="form-control input-gral" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" readonly>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating div-phone-number2">
-                                    <label class="control-label">Teléfono casa</label>
+                                    <label class="control-label" data-i18n="telefono-casa">Teléfono casa</label>
                                     <input id="phone_number2" name="phone_number2" type="text" class="form-control input-gral" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label">Estado civil</label>
+                                    <label class="control-label" data-i18n="estado-civil">Estado civil</label>
                                     <select id="civil_status"
                                             name="civil_status"
                                             class="selectpicker select-gral m-0"
@@ -307,6 +319,7 @@
                                             data-show-subtext="true"
                                             data-live-search="true"
                                             title="SELECCIONA UNA OPCIÓN"
+                                            data-i18n-label="select-predeterminado"
                                             data-size="7"
                                             data-container="body"
                                             onchange="validateCivilStatus(2)">
@@ -315,7 +328,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label">Régimen matrimonial</label>
+                                    <label class="control-label" data-i18n="regimen-matrimonial">Régimen matrimonial</label>
                                     <select id="matrimonial_regime"
                                             name="matrimonial_regime"
                                             class="selectpicker select-gral m-0"
@@ -323,6 +336,7 @@
                                             data-show-subtext="true"
                                             data-live-search="true"
                                             title="SELECCIONA UNA OPCIÓN"
+                                            data-i18n-label="select-predeterminado"
                                             data-size="7"
                                             data-container="body"
                                             onchange="validateMatrimonialRegime(2)">
@@ -331,85 +345,91 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group label-floating div-spouce">
-                                    <label class="control-label">Cónyuge</label>
+                                    <label class="control-label" data-i18n="conyugue">Cónyuge</label>
                                     <input id="spouce" name="spouce" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
 
                             <div class="col-sm-4">
                                 <div class="form-group label-floating div-street-name">
-                                    <label class="control-label">Originario de</label>
+                                    <label class="control-label" data-i18n="originario-de">Originario de</label>
                                     <input id="from" name="from" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-8">
                                 <div class="form-group label-floating div-ext-number">
-                                    <label class="control-label">Domicilio particular</label>
+                                    <label class="control-label" data-i18n="domicilio-particular">Domicilio particular</label>
                                     <input id="home_address" name="home_address" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
 
-                            <div class="col-sm-3">La casa donde vive es</div>
-                            <div class="col-lg-10 col-lg-offset-2 align-center">
-                                <div class="radio"></div>
-                                <div class="radio radio-inline">
-                                    <label><input id="own" name="lives_at_home" type="radio" value="1"> Propia</label>
+                            <div class="col-sm-3" data-i18n="casa-donde-vives">La casa donde vive es</div>
+                            <div class="col-lg-10 col-lg-offset-2 d-flex justify-content-between">
+                                <div class="radio radio-inline d-flex mt-0">
+                                    <label><input id="own" name="lives_at_home" type="radio" value"1"></label>
+                                    <span data-i18n="propia">Propia</span>
                                 </div>
-                                <div class="radio radio-inline">
-                                    <label><input id="rented" name="lives_at_home" type="radio" value="2"> Rentada</label>
+                                <div class="radio radio-inline d-flex">
+                                    <label><input id="rented" name="lives_at_home" type="radio" value="2"></label>
+                                    <span data-i18n="rentada">Rentada</span>
                                 </div>
-                                <div class="radio radio-inline">
-                                    <label><input id="paying" name="lives_at_home" type="radio" value="3"> Pagándose</label>
+                                <div class="radio radio-inline d-flex">
+                                    <label><input id="paying" name="lives_at_home" type="radio" value="3"></label>
+                                    <span data-i18n="pagandose">Pagandose</span>
                                 </div>
-                                <div class="radio radio-inline">
-                                    <label><input id="family" name="lives_at_home" type="radio" value="4"> Familiar</label>
+                                <div class="radio radio-inline d-flex">
+                                    <label><input id="family" name="lives_at_home" type="radio" value="4"></label>
+                                    <span data-i18n="familiar">Familiar</span>
                                 </div>
-                                <div class="radio radio-inline">
-                                    <label><input id="other" name="lives_at_home" type="radio" value="5"> Otro</label>
+                                <div class="radio radio-inline d-flex">
+                                    <label><input id="other" name="lives_at_home" type="radio" value="5"></label>
+                                    <span data-i18n="otro">Otro</span>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                    <div class="row hide" data-step="2" data-title="Empleo">
+                    <div class="row hide" data-step="2" data-title="">
+                        <h4 style="padding-left: 2.5rem; margin-block: 0px;" data-i18n="empleo">Empleo</h4>
                         <div>
                             <div class="col-sm-4">
                                 <div class="form-group label-floating div-occupation">
-                                    <label class="control-label">Ocupación</label>
+                                    <label class="control-label" data-i18n="ocupacion">Ocupación</label>
                                     <input id="occupation" name="occupation" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-8">
                                 <div class="form-group label-floating div-company">
-                                    <label class="control-label">Empresa</label>
+                                    <label class="control-label" data-i18n="empresa">Empresa</label>
                                     <input id="company" name="company" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-8">
                                 <div class="form-group label-floating div-position">
-                                    <label class="control-label">Puesto</label>
+                                    <label class="control-label" data-i18n="puesto">Puesto</label>
                                     <input id="position" name="position" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group label-floating div-antiquity">
-                                    <label class="control-label">Antigüedad (años)</label>
+                                    <label class="control-label" data-i18n="antiguedad">Antigüedad (años)</label>
                                     <input id="antiquity" name="antiquity" type="number" class="form-control input-gral"maxlength="2" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group label-floating div-company-residence">
-                                    <label class="control-label">Domicilio</label>
+                                    <label class="control-label" data-i18n="domicilio">Domicilio</label>
                                     <input id="company_residence" name="company_residence" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row hide" data-step="3" data-title="Prospección">
+                    <div class="row hide" data-step="3" data-title="">
+                        <h4 style="padding-left: 2.5rem; margin-block: 0px;" data-i18n="prospeccion">Prospeccion</h4>
                         <div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label">¿Cómo nos contactaste?<small> (requerido)</small></label>
+                                    <label class="control-label" data-i18n="como-nos-contactaste">¿Cómo nos contactaste?<small data-i18n="requerido"> (requerido)</small></label>
                                     <select id="prospecting_place"
                                             name="prospecting_place"
                                             class="selectpicker select-gral m-0"
@@ -417,6 +437,7 @@
                                             data-show-subtext="true"
                                             data-live-search="true"
                                             title="SELECCIONA UNA OPCIÓN"
+                                            data-i18n-label="select-predeterminado"
                                             data-size="7"
                                             data-container="body"
                                             disabled>
@@ -425,7 +446,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group label-floating select-is-empty">
-                                    <label class="control-label">Específique cuál</label>
+                                    <label class="control-label" data-i18n="especifique-cual">Específique cuál</label>
                                     <input  id="specify"
                                             name="specify"
                                             type="text"
@@ -443,15 +464,16 @@
                                                 data-show-subtext="true"
                                                 data-live-search="true"
                                                 title="SELECCIONA UNA OPCIÓN"
+                                        data-i18n-label="select-predeterminado"
                                                 data-size="7"
                                                 style="display: none;"
                                                 disabled>
                                             <option value="01 800">01 800</option>
                                             <option value="Chat">Chat</option>
-                                            <option value="Contacto web">Contacto web</option>
+                                            <option value="Contacto web" data-i18n="contacto-web">Contacto web</option>
                                             <option value="Facebook">Facebook</option>
                                             <option value="Instagram">Instagram</option>
-                                            <option value="Recomendado">Recomendado</option>
+                                            <option value="Recomendado" data-i18n="recomendado">Recomendado</option>
                                             <option value="WhatsApp">WhatsApp</option>
                                         </select>
                                     </div>
@@ -465,7 +487,7 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group label-floating select-is-empty overflow-hidden">
-                                    <label class="control-label">Plaza de venta<small> (requerido)</small></label>
+                                    <label class="control-label" data-i18n="plaza-venta">Plaza de venta<small data-i18n="requerido"> (requerido)</small></label>
                                     <select id="sales_plaza"
                                             name="sales_plaza"
                                             class="selectpicker select-gral m-0"
@@ -473,6 +495,7 @@
                                             data-show-subtext="true"
                                             data-live-search="true"
                                             title="SELECCIONA UNA OPCIÓN"
+                                            data-i18n-label="select-predeterminado"
                                             data-size="7"
                                             data-container="body"
                                             required>
@@ -481,7 +504,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group label-floating div-observations">
-                                    <label class="control-label">Observaciones</label>
+                                    <label class="control-label" data-i18n="observaciones">Observaciones</label>
                                     <textarea type="text" id="observation" name="observation"  class="text-modal" onkeyup="javascript:this.value=this.value.toUpperCase();"></textarea>
                                     <input type="hidden" name="id_prospecto_ed" id="id_prospecto_ed">
                                     <input type="hidden" name="owner" id="owner">
@@ -494,11 +517,13 @@
                 </div>
                 <div class="modal-footer">
                     <div class="pull-left">
-                        <button type="button" class="btn btn-default js-btn-step" data-orientation="previous"></button>
+                        <button type="button" class="btn btn-default js-btn-step i18nStepper" data-orientation="previous" data-i18n-stepper="anterior" data-i18n="anterior" id="stepperAnterior"></button>
                     </div>
                     <div class="pull-right">
-                        <button type="button" class="btn  js-btn-step" data-orientation="next" style="background-color: #2E86C1;"></button>
-                        <button type="submit" class="btn" style="background-color: #4caf50;">Finalizar</button>
+                        <!--<button type="button" class="btn  js-btn-step" data-orientation="next" style="background-color: #2E86C1;"></button>-->
+                        <button type="button" class="btn  js-btn-step i18nStepper"  style="background-color: #2E86C1;" data-i18n="siguiente" data-orientation="next" data-i18n-stepper="siguiente" id="stepperSiguiente"></button>
+                        
+                        <button type="submit" class="btn" style="background-color: #4caf50;" data-i18n="finalizar">Finalizar</button>
                     </div>
                 </div>
             </form>
@@ -699,15 +724,15 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons" onclick="cleanComments()">clear</i>
                 </button>
-                <h4 class="modal-title">Consulta información</h4>
+                <h4 class="modal-title" data-i18n="consulta-informacion">Consulta información</h4>
             </div>
             <div class="modal-body">
                 <div role="tabpanel">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                         <li role="presentation" class="active"><a href="#generalTab" aria-controls="generalTab" role="tab" data-toggle="tab">General</a></li>
-                        <li role="presentation"><a href="#commentsTab" aria-controls="commentsTab" role="tab" data-toggle="tab">Comentarios</a></li>
-                        <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab">Bitácora de cambios</a></li>
+                        <li role="presentation"><a href="#commentsTab" aria-controls="commentsTab" role="tab" data-toggle="tab" data-i18n="comentarios">Comentarios</a></li>
+                        <li role="presentation"><a href="#changelogTab" aria-controls="changelogTab" role="tab" data-toggle="tab" data-i18n="bitacora-cambios">Bitácora de cambios</a></li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
@@ -715,25 +740,25 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <div class="form-group m-0">
-                                        <label class="control-label">Personalidad jurídica</label>
+                                        <label class="control-label" data-i18n="personalidad-juridica">Personalidad jurídica</label>
                                         <input id="legal-personality-lbl" type="text" class="form-control input-gral" disabled>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group m-0">
-                                        <label class="control-label">Nacionalidad</label>
+                                        <label class="control-label" data-i18n="nacionalidad">Nacionalidad</label>
                                         <input id="nationality-lbl" type="text" class="form-control input-gral" disabled>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group m-0">
-                                        <label class="control-label">CURP</label>
+                                        <label class="control-label" data-i18n="curp">CURP</label>
                                         <input id="curp-lbl" type="text" class="form-control input-gral" disabled>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group m-0">
-                                        <label class="control-label">RFC</label>
+                                        <label class="control-label" data-i18n="rfc">RFC</label>
                                         <input id="rfc-lbl" type="text" class="form-control input-gral" disabled>
                                     </div>
                                 </div>
@@ -743,19 +768,19 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group m-0">
-										<label class="control-label">Nombre / Razón social</label>
+										<label class="control-label" data-i18n="nombre-razon-social">Nombre / Razón social</label>
 										<input id="name-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-4">
 									<div class="form-group m-0">
-										<label class="control-label">Correo electrónico</label>
+										<label class="control-label" data-i18n="correo-electronico">Correo electrónico</label>
 										<input id="email-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-2">
 									<div class="form-group m-0">
-										<label class="control-label">Teléfono</label>
+										<label class="control-label" data-i18n="telefono">Teléfono</label>
 										<input id="phone-number-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
@@ -763,13 +788,13 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group m-0">
-										<label class="control-label">¿Cómo nos contactaste?</label>
+										<label class="control-label" data-i18n="como-nos-contactaste">¿Cómo nos contactaste?</label>
 										<input id="prospecting-place-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-6">
 									<div class="form-group m-0">
-										<label class="control-label">Plaza de venta</label>
+										<label class="control-label" data-i18n="plaza-venta">Plaza de venta</label>
 										<input id="sales-plaza-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
@@ -777,25 +802,25 @@
 							<div class="row">
 								<div class="col-sm-4">
 									<div class="form-group m-0">
-										<label class="control-label">Asesor</label>
+										<label class="control-label" data-i18n="asesor">Asesor</label>
 										<input id="asesor-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-4">
 									<div class="form-group m-0">
-										<label class="control-label">Coordinador</label>
+										<label class="control-label" data-i18n="coordinador">Coordinador</label>
 										<input id="coordinador-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-4">
 									<div class="form-group m-0">
-										<label class="control-label">Gerente</label>
+										<label class="control-label" data-i18n="gerente">Gerente</label>
 										<input id="gerente-lbl" type="text" class="form-control input-gral" disabled>
 									</div>
 								</div>
 								<div class="col-sm-12">
 									<div class="form-group m-0">
-                                        <label class="control-label">Observaciones</label>
+                                        <label class="control-label" data-i18n="observaciones">Observaciones</label>
                                         <textarea class="text-modal scroll-styles" id="comentario" rows="3" placeholder="Comentario" readonly></textarea>
 									</div>
                                 </div>    
@@ -831,8 +856,8 @@
                 <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="{{$('#prospecting-place-lbl').val() == 'MKT digital (especificar)' ? printProspectInfoMktd() : printProspectInfo()}}"><i class="material-icons">cloud_download</i> Descargar pdf</button>
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()" data-i18n="cerrar">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="{{$('#prospecting-place-lbl').val() == 'MKT digital (especificar)' ? printProspectInfoMktd() : printProspectInfo()}}" data-i18n="descargar-pdf"><i class="material-icons">cloud_download</i> Descargar pdf</button>
             </div>
         </div>
     </div>

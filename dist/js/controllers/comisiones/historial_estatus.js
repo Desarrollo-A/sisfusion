@@ -1,24 +1,3 @@
-
-const tipo_ventas =  [
-    {
-        id_venta:1,
-        ruta:'Comisiones/getDatosHistorialPagoEstatus'
-    },
-    {
-        id_venta:2,
-        ruta:'Comisiones/getDatosHistorialPagoEstatus'
-    },
-    {
-        id_venta:3,
-        ruta:'Casas_comisiones/getDatosHistorialCasas'
-    },
-    {
-        id_venta:0,
-        ruta: ''	
-    }
-];
-
-
 $(document).ready(function() {
     $("#tabla_historialGral").prop("hidden", true);
     $("#spiner-loader").removeClass('hide');
@@ -27,11 +6,26 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#catalogo_general").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogo_general").selectpicker('refresh');
+        $("#filtro33").selectpicker('refresh');
     }, 'json');
 
+    $.get(`${general_base_url}Comisiones/getPuestoByIdOpts`, function (data) {
+        const puestos = JSON.parse(data);
+        puestos.forEach(puesto => {
+            const id = puesto.id_opcion;
+            const name = puesto.nombre.toUpperCase();
+            $('#roles').append($('<option>').val(id).text(name));
+        });
+        $("#roles").selectpicker('refresh');
+        $("#spiner-loader").addClass('hide');
+    });
+});
+
+$('#filtro33').change(function(ruta){
+    $("#filtro44").empty().selectpicker('refresh');
+    $("#spiner-loader").removeClass('hide');
     $.ajax({
         url: general_base_url + 'Comisiones/lista_estatus',
         type: 'post',
@@ -41,175 +35,95 @@ $(document).ready(function() {
             for(let i = 0; i<len; i++){
                 const id = response[i]['idEstatus'];
                 const name = response[i]['nombre'];
-                $("#estatus_general").append($('<option>').val(id).text(name));
+                $("#filtro44").append($('<option>').val(id).text(name));
             }
-            $("#estatus_general").selectpicker('refresh');
+            $("#filtro44").selectpicker('refresh');
             $("#spiner-loader").addClass('hide');
         }
     });
-
-    $.getJSON( general_base_url + "Incidencias/getUsers/").done( function( data ){
-        listaUsuarios = data;
-        gerente = data.filter((gere) => gere.id_rol == parseInt(3));
-        len3 = gerente.length;
-        for( let i3=0; i3<len3; i3++){
-            var id_usario_gerente = gerente[i3]['id_usuario'];
-            var nombre_gerente = gerente[i3]['name_user'];
-
-            var id3 = id_usario_gerente+','+nombre_gerente;
-            
-            $("#elegir_gerente").append($('<option>').val(id_usario_gerente).attr('data-value',id_usario_gerente ).text(id_usario_gerente+ "- "+ nombre_gerente));
-        }
-        coordinador = data.filter((coor) => coor.id_rol == parseInt(9));
-        len2 = coordinador.length;
-        for( var i2= 0; i2<len2; i2++){
-            var id_opcion_coordinador = coordinador[i2]['id_usuario'];
-            var nombre_coordinador = coordinador[i2]['name_user'];
-
-            var id2 = id_opcion_coordinador+','+nombre_coordinador;
-            $("#elegir_coordinador").append($('<option>').val(id_opcion_coordinador).attr('data-value',id_opcion_coordinador ).text(id_opcion_coordinador+ "- "+ nombre_coordinador)); 
-        }
-        asesor = data.filter((ases) => ases.id_rol == parseInt(7));
-        len = asesor.length;
-        for( var i= 0; i<len; i++){
-            var id_usuario_asesor = asesor[i]['id_usuario'];
-            var nombre_asesor = asesor[i]['name_user'];
-            
-            id =id_usuario_asesor+','+nombre_asesor; 
-            $("#elegir_asesor").append($('<option>').val(id_usuario_asesor).attr('data-value',id_usuario_asesor ).text(id_usuario_asesor+ "- "+ nombre_asesor));             
-        }
-        $("#elegir_coordinador, #elegir_gerente, #elegir_subdirector, #elegir_asesor").selectpicker('refresh');
-        
-    });
-
-    $.ajax({
-        url: general_base_url + 'Casas_comisiones/selectTipo',
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            const len = response.length;
-            for(let i = 0; i<len; i++){
-                const id = response[i]['id_opcion'];
-                const name = response[i]['nombre'];
-
-                if(id != 4){
-                    $("#tipo_general").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-
-            }
-            $("#tipo_general").selectpicker('refresh');
-            $("#spiner-loader").addClass('hide');
-        }
-    });
-
-    
-
 });
 
-
-function validar(proyecto, condominio, ruta, usuario) { 
-
-    if(proyecto === '' || proyecto === null || proyecto === undefined || condominio === '' || condominio === null || condominio === undefined || ruta === '' || ruta === null || ruta === undefined ){
-
-    }else {
-
-        $('#puesto_general').html('');
-        $("#puesto_general").selectpicker("refresh");
-        $('#puesto_general').val('default');
-
-        $('#puesto_general').append($('<option>').val(1).text('GERENTE'));
-        $('#puesto_general').append($('<option>').val(2).text('ASESOR'));
-        $('#puesto_general').append($('<option>').val(3).text('COORDINADOR'));
-        $("#puesto_general").selectpicker('refresh');
-
-        if (usuario === undefined || usuario === null || usuario === '' || usuario === 0) {
-            usuario = 0;
-            $('#puesto_general').html('');
-            $("#puesto_general").selectpicker("refresh");
-            $('#puesto_general').val('default');
-            $('#puesto_general').append($('<option>').val(1).text('GERENTE'));
-            $('#puesto_general').append($('<option>').val(2).text('ASESOR'));
-            $('#puesto_general').append($('<option>').val(3).text('COORDINADOR'));
-            $("#puesto_general").selectpicker('refresh');
-            $('#add_coordinador, #add_asesor,#add_gerente').addClass('hidden'); 
-
-        }
-        $("#spiner-loader").removeClass('hide');
-
-        asimiladoComisiones(ruta, proyecto, condominio, usuario);
-      
+$('#filtro44').change(function(ruta){
+    $("#spiner-loader").removeClass('hide');
+    const proyecto = $('#filtro33').val();
+    let condominio = $('#filtro44').val();
+    if(condominio === '' || condominio === null || condominio === undefined){
+        condominio = 0;
     }
-
-}
-
-$('#tipo_general, #catalogo_general, #estatus_general').change(function(ruta){
-    
-    var seleccionado = $('#tipo_general').val();
-    tipo_selec = seleccionado == '' ? 0 : seleccionado; 
-    const dataTipo = tipo_ventas.find((tipo) => tipo.id_venta == parseInt(tipo_selec));
-    var ruta = dataTipo.ruta;
-    var proyecto = $('#catalogo_general').val();
-    var condominio = $('#estatus_general').val();
-    var usuario = 0
-
-    validar(proyecto, condominio,ruta, usuario);
-    
+    let usuario = $('#users').val();
+    if (usuario === undefined || usuario === null || usuario === '') {
+        usuario = 0;
+    }
+    getAssimilatedCommissions(proyecto, condominio, usuario);
 });
 
-$('#puesto_general').change(function(ruta){
-    $('#elegir_gerente, #elegir_asesor, #elegir_coordinador').val('default');
-    $("#elegir_gerente, #elegir_asesor, #elegir_coord inador").selectpicker("refresh");
-
-    let puesto_seleccionado = $(this).val();
-    puesto_seleccionado == 1 ? $('#add_coordinador, #add_asesor').addClass('hidden') && $('#add_gerente').removeClass('hidden') : '';  
-    puesto_seleccionado == 2 ? $('#add_coordinador, #add_gerente').addClass('hidden') && $('#add_asesor').removeClass('hidden') : '';  
-    puesto_seleccionado == 3 ? $('#add_asesor, #add_gerente').addClass('hidden') && $('#add_coordinador').removeClass('hidden') : '';  
-
-
+$('#roles').change(function () {
+    $("#users").empty().selectpicker('refresh');
+    $("#spiner-loader").removeClass('hide');
+    $.ajax({
+        url: `${general_base_url}Comisiones/getUsersName`,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            const len = data.length;
+            for(let i = 0; i < len; i++){
+                const id = data[i]['id_usuario'];
+                const name = data[i]['name_user'].toUpperCase();
+                $("#users").append($('<option>').val(id).text(name));
+            }
+            $("#users").selectpicker('refresh');
+            const proyecto = $('#filtro33').val();
+            let condominio = $('#filtro44').val();
+            if (proyecto === undefined || proyecto === null || proyecto === '') {
+                return;
+            }
+            if(condominio === '' || condominio === null || condominio === undefined){
+                condominio = 0;
+            }
+            let usuario = $('#users').val();
+            if (usuario === undefined || usuario === null || usuario === '') {
+                usuario = 0;
+            }
+            getAssimilatedCommissions(proyecto, condominio, usuario);
+        }
+    });
 });
 
-$('.seleccionar_puesto').change(function () {
-   usuario = $(this).val();
-   var seleccionado = $('#tipo_general').val();
-   tipo_selec = seleccionado == '' ? 0 : seleccionado; 
-   const dataTipo = tipo_ventas.find((tipo) => tipo.id_venta == parseInt(tipo_selec));
-   var ruta = dataTipo.ruta;
-   var proyecto = $('#catalogo_general').val();
-   var condominio = $('#estatus_general').val();
-
-   validar(proyecto, condominio,ruta, usuario);
-    
-});
-
-$('#usuario_general').change(function () {
-    let proyecto = $('#catalogo_general').val();
-    let condominio = $('#estatus_general').val();
+$('#users').change(function () {
+    const proyecto = $('#filtro33').val();
+    let condominio = $('#filtro44').val();
     $("#spiner-loader").removeClass('hide');
     if(condominio === '' || condominio === null || condominio === undefined){
         condominio = 0;
     }
 
-    let usuario = $('#usuario_general').val();
+    let usuario = $('#users').val();
     if (usuario === undefined || usuario === null || usuario === '') {
         usuario = 0;
     }
 
-    asimiladoComisiones(proyecto, condominio, usuario);
+    getAssimilatedCommissions(proyecto, condominio, usuario);
 });
+
+function cleanCommentsAsimilados() {
+    var myCommentsList = document.getElementById('comments-list-asimilados');
+    var myCommentsLote = document.getElementById('nameLote');
+    myCommentsList.innerHTML = '';
+    myCommentsLote.innerHTML = '';
+} 
 
 let titulos_intxt = [];
 $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos_intxt.push(title);
-    if(i != 0){
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function() {
-            if (tabla_historialGral2.column(i).search() !== this.value) {
-                tabla_historialGral2.column(i).search(this.value).draw();
-            }
-        });
-    }      
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $('input', this).on('keyup change', function() {
+        if (tabla_historialGral2.column(i).search() !== this.value) {
+            tabla_historialGral2.column(i).search(this.value).draw();
+        }
+    });
 });
+
 
 var totalLeon = 0;
 var totalQro = 0;
@@ -221,13 +135,29 @@ var tr;
 var tabla_historialGral2 ;
 var totaPen = 0;
 
-const optNueva = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-nueva" value="1" required><label class="w-100" for="estatus-nueva">Nueva</label></div>`;
-const optRevision = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-revision" value="4" required><label class="w-100" for="estatus-revision"> Revisión contraloría</label></div>`;
-const optPausado = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-pausado" value="6" required><label class="w-100" for="estatus-pausado"> Pausado</label></div>`;
-const optPagado = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-pagado" value="11" required><label class="w-100" for="estatus-pagado"> Pagado</label></div>`;
+const optNueva = `
+    <div class="w-100">
+        <input class="d-none" type="radio" name="estatus" id="estatus-nueva" value="1" required>
+        <label class="w-100" for="estatus-nueva">Nueva</label>
+    </div>`;
+const optRevision = `
+    <div class="w-100">
+        <input class="d-none" type="radio" name="estatus" id="estatus-revision" value="4" required>
+        <label class="w-100" for="estatus-revision"> Revisión contraloría</label>
+    </div>`;
+const optPausado = `
+    <div class="w-100">
+        <input class="d-none" type="radio" name="estatus" id="estatus-pausado" value="6" required>
+        <label class="w-100" for="estatus-pausado"> Pausado</label>
+    </div>`;
+const optPagado = `
+    <div class="w-100">
+        <input class="d-none" type="radio" name="estatus" id="estatus-pagado" value="11" required>
+        <label class="w-100" for="estatus-pagado"> Pagado</label>
+    </div>`;
 
 let seleccionados = [];
-function asimiladoComisiones(ruta, proyecto, condominio, usuario){
+function getAssimilatedCommissions(proyecto, condominio, usuario){
     $("#tabla_historialGral").prop("hidden", false);
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -239,7 +169,7 @@ function asimiladoComisiones(ruta, proyecto, condominio, usuario){
             action: function() {
                 seleccionados = [];
                 if ($('input[name="idTQ[]"]:checked').length > 0) {
-                    const estatus = $('#estatus_general').val();
+                    const estatus = $('#filtro44').val();
                     const idComisiones = $(tabla_historialGral2.$('input[name="idTQ[]"]:checked')).map(function () { return this.value; }).get();
                     seleccionados = idComisiones;
                     let options = '';
@@ -368,8 +298,7 @@ function asimiladoComisiones(ruta, proyecto, condominio, usuario){
         },
         {
             "data": function( d ){
-                var lblPenalizacion = '', p3='', p1='';
-
+                var lblPenalizacion = '';
                 if (d.penalizacion == 1){
                     lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-orange">Penalización + 90 días</span></p>';
                 }
@@ -411,6 +340,8 @@ function asimiladoComisiones(ruta, proyecto, condominio, usuario){
             "data": function( data ){
                 var BtnStats;
                 BtnStats = '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.nombreLote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="HISTORIAL DE PAGO">' +'<i class="fas fa-info"></i></button></div>';
+                console.log(id_usuario_general);
+
                 return BtnStats;
             }
         }],
@@ -421,21 +352,21 @@ function asimiladoComisiones(ruta, proyecto, condominio, usuario){
             'searchable':true,
             'className': 'dt-body-center',
             'render': function (d, type, full) {
-                const estatus = $('#estatus_general').val();
-                if (( full.recision == '1' || estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') && id_rol_general != 17 ) {
+                const estatus = $('#filtro44').val();
+                if ((( full.recision == '1' || estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') && id_rol_general != 17) || ([11655].indexOf(id_usuario_general) >= 0)  ) {
                     return '';
                 } else if ( full.recision != '1' && estatus === '7' && (full.estatus === '1' || full.estatus === '6') && id_rol_general == 17 ) {
                     return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                } else if ($('#estatus_general').val() === 2 && id_rol_general == 17 ) {
-                    if (full.forma_pago !== 2 && id_rol_general == 17 && full.recision != '1' ) {
+                } else if ($('#filtro44').val() === '2' && id_rol_general == 17 ) {
+                    if (full.forma_pago.toLowerCase() !== 'factura' && id_rol_general == 17 && full.recision != '1' ) {
                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     } else {
                         return '';
                     }
                 } else {
-                    if(id_rol_general == 17 && full.recision != '1' && full.estatus != 11 ){
+                    if(id_rol_general == 17 && full.recision != '1'){
                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                    }else{     
+                    }else{
                         return '';
                     }
                 }
@@ -446,7 +377,7 @@ function asimiladoComisiones(ruta, proyecto, condominio, usuario){
             },
         }],
         ajax: {
-            url: `${general_base_url}${ruta}/${proyecto}/${condominio}/${usuario}`,
+            url: `${general_base_url}Comisiones/getDatosHistorialPagoEstatus/${proyecto}/${condominio}/${usuario}`,
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -457,65 +388,36 @@ function asimiladoComisiones(ruta, proyecto, condominio, usuario){
     });
 
     $('#tabla_historialGral').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
-        let tipo = $('#tipo_general').val();
-        let ruta = tipo == 1 || tipo == 2 ? 'Comisiones/getComments' : 'Casas_comisiones/getComments';
-        $("#nombreLote").html('');
-        $("#comentariosListaAsimilados").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
-        changeSizeModal("modal-md");
-        appendBodyModal(`<div class="modal-body">
-            <div role="tabpanel">
-                <ul class="nav" role="tablist">
-                    <div id="nombreLote"></div>
-                </ul>
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-plain">
-                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                        <ul class="timeline-3" id="comentariosListaAsimilados"></ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"<b>Cerrar</b></button>
-        </div>`);
-        showModal();
-
-        $("#nombreLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON(general_base_url+ruta+"/"+id_pago).done( function( data ){
+        $("#seeInformationModalAsimilados").modal();
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comentariosListaAsimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });
         });
     }); 
 }
 
 $('#estatus-form').on('submit', function (e) {
-    let tipo = $('#tipo_general').val();
-    let ruta = tipo == 1 || tipo == 2 ? 'Comisiones/cambiarEstatusComisiones' : 'Casas_comisiones/cambiarEstatusComisiones';
     e.preventDefault();
     const estatusId = $('input[name="estatus"]:checked').val();
     let comentario = $('#comentario').val();
-    if (estatusId === 1) {
+
+    if (estatusId === '1') {
         comentario = `Se marcó como NUEVA: ${comentario}`;
-    } else if (estatusId === 4) {
+    } else if (estatusId === '4') {
         comentario = `Se marcó como REVISIÓN CONTRALORÍA: ${comentario}`;
-    } else if (estatusId === 6) {
+    } else if (estatusId === '6') {
         comentario = `Se marcó como PAUSADA: ${comentario}`;
     }
 
@@ -526,7 +428,7 @@ $('#estatus-form').on('submit', function (e) {
 
     $.ajax({
         type: 'POST',
-        url: general_base_url+ruta,
+        url: 'cambiarEstatusComisiones',
         data: formData,
         contentType: false,
         cache: false,
@@ -534,14 +436,16 @@ $('#estatus-form').on('submit', function (e) {
         success: function (response) {
             if (JSON.parse(response)) {
                 $('#movimiento-modal').modal('hide');
-                appendBodyModal(`<div class="row">
+                appendBodyModal(`
+                    <div class="row">
                         <div class="col-lg-12 text-center">
                             <h3 style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados</h3>
                         </div>
                         <div class="col-lg-12 text-right ">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                         </div>
-                    </div>`);
+                    </div>
+                `);
                 showModal();
                 tabla_historialGral2.ajax.reload();
             } else {

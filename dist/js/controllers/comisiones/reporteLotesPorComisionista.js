@@ -1,5 +1,9 @@
 $(document).ready(function () {
-    $.post('getOpcionesParaReporteComisionistas', function (data) {
+    let seeAll = 0;
+    if (id_rol_general == 1 || id_rol_general == 4 || id_rol_general == 18 || id_rol_general == 63)
+        seeAll = 1;
+
+    $.post('getOpcionesParaReporteComisionistas', { seeAll: seeAll }, function (data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
                 $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({ 'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2'] }).text(data[i]['nombre']));
@@ -73,30 +77,34 @@ $("#comisionista").on('change', function () {
     
 });
 
+
 let titulos_intxt = [];
-$('#reporteLotesPorComisionista thead tr:eq(0) th').each(function (i) {
-    $(this).css('text-align', 'center');
-    var title = $(this).text();
-    titulos_intxt.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    $('input', this).on('keyup change', function () {
-        if ($('#reporteLotesPorComisionista').DataTable().column(i).search() !== this.value)
-            $('#reporteLotesPorComisionista').DataTable().column(i).search(this.value).draw();
-        let total = 0, totalAbonado = 0, totalPagado = 0;
-        var index = $('#reporteLotesPorComisionista').DataTable().rows({
-            selected: true,
-            search: 'applied'
-        }).indexes();
-        var data = $('#reporteLotesPorComisionista').DataTable().rows(index).data();
-        $.each(data, function (i, v) {
-            total = total + parseFloat(v.comisionTotal);
-            totalAbonado = totalAbonado + parseFloat(v.abonoDispersado);
-            totalPagado = totalPagado + parseFloat(v.abonoPagado);
-        });
-        colocarValoresTotales(total, totalAbonado, totalPagado);
-    });
-    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-});
+// $('#reporteLotesPorComisionista thead tr:eq(0) th').each(function (i) {
+//     $(this).css('text-align', 'center');
+//     var title = $(this).text();
+//     titulos_intxt.push(title);
+//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+//     $('input', this).on('keyup change', function () {
+//         if ($('#reporteLotesPorComisionista').DataTable().column(i).search() !== this.value)
+//             $('#reporteLotesPorComisionista').DataTable().column(i).search(this.value).draw();
+//         let total = 0, totalAbonado = 0, totalPagado = 0;
+//         var index = $('#reporteLotesPorComisionista').DataTable().rows({
+//             selected: true,
+//             search: 'applied'
+//         }).indexes();
+//         var data = $('#reporteLotesPorComisionista').DataTable().rows(index).data();
+//         $.each(data, function (i, v) {
+//             total = total + parseFloat(v.comisionTotal);
+//             totalAbonado = totalAbonado + parseFloat(v.abonoDispersado);
+//             totalPagado = totalPagado + parseFloat(v.abonoPagado);
+//         });
+//         colocarValoresTotales(total, totalAbonado, totalPagado);
+//     });
+//     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+// });
+onLoadTranslations(function(){
+
+construirHead('reporteLotesPorComisionista');
 
 $('#reporteLotesPorComisionista').on('xhr.dt', function (e, settings, json, xhr) {
     let total = 0, totalAbonado = 0, totalPagado = 0;
@@ -110,7 +118,7 @@ $('#reporteLotesPorComisionista').on('xhr.dt', function (e, settings, json, xhr)
 });
 
 function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
-    generalDataTable = $('#reporteLotesPorComisionista').dataTable({
+    generalDataTable = $('#reporteLotesPorComisionista').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -119,13 +127,13 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title:'Reporte de lostes por comisionista',
+                titleAttr: _('descargar-excel'),
+                title: _('reporte-lotes-comisionista'),
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -144,6 +152,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 next: "<i class='fa fa-angle-right'>"
             }
         },
+        orderable: false,
         destroy: true,
         ordering: false,
         columns: [
@@ -185,7 +194,7 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 data: function (d) {
                     let labelStatus;
                     if (d.rec == 8)
-                        labelStatus = `<span class="label lbl-warning">VENTA CANCELADA</span>`;
+                        labelStatus = `<span class="label lbl-warning">${_('venta_cancelada')}</span>`;
                     else
                         labelStatus = `<span class="label lbl-yellow">${d.nombreEstatusLote}</span>`;
                     return labelStatus;
@@ -195,16 +204,16 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                 data: function (d) {
                     let labelStatus;
                     if (d.rec == 8)
-                        labelStatus = `<span class="label lbl-warning">RESCISIÓN DE CONTRATO</span>`;
+                        labelStatus = `<span class="label lbl-warning">${_('rescision_contrato')}</span>`;
                     else {
                         if (d.registroComision == 2 || d.registroComision == 8 || d.registroComision == 88 || d.registroComision == 0)
-                        labelStatus = `<span class="label lbl-gray">SIN DISPERSAR</span>`;
+                        labelStatus = `<span class="label lbl-gray">${_('sin-dispersar')}</span>`;
                         else if (d.registroComision == 7)
-                            labelStatus = `<span class="label lbl-green">LIQUIDADA</span>`;
+                            labelStatus = `<span class="label lbl-green">${_('liquidada')}</span>`;
                         else if (d.registroComision == 1)
-                            labelStatus = `<span class="label lbl-violetDeep">EN PROCESO DE DISPERSIÓN</span></span>`;
+                            labelStatus = `<span class="label lbl-violetDeep">${_('proceso-dispersion')}</span></span>`;
                         else
-                            labelStatus = `<span class="label lbl-grayDark">SIN DEFINIR ESTATUS</span>`;
+                            labelStatus = `<span class="label lbl-grayDark">${_('sin-definir-estatus')}</span>`;
                     }
                     return labelStatus;
                 }
@@ -227,22 +236,22 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     if (d.rec == 8 && d.comisionTotal == '0.0')
                         return '-';
                     else
-                        return formatMoney(d.pagoCliente);
+                        return '$' + formatMoney(d.pagoCliente);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.comisionTotal);
+                    return '$' + formatMoney(d.comisionTotal);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.abonoDispersado);
+                    return '$' + formatMoney(d.abonoDispersado);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.abonoPagado);
+                    return '$' + formatMoney(d.abonoPagado);
                 }
             },
             { data: 'lugar_prospeccion' }
@@ -263,7 +272,11 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
             }
         }
     });
+
+    applySearch(generalDataTable);
 }
+
+
 
 $(document).on("click", "#searchByDateRange", function () {
     $('#box-reporteLotesPorComisionista').removeClass('hide');
@@ -277,7 +290,7 @@ $(document).on("click", "#searchByDateRange", function () {
         $("#rowTotales").removeClass("d-none");
     }
     else
-        alerts.showNotification("top", "right", "No se han seleccionado algunos o ningún campo", "danger");
+        alerts.showNotification("top", "right", _('campo-no-seleccionado'), "danger");
 });
 
 $(document).on("click", "#detailComisionistaBtn", function () {
@@ -321,11 +334,11 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                 }
             }
         }
-        
+
         for (let i = 0; i < orderedArray.length; i++) {
             let htmlRol = '';
             for (let j = 0; j < orderedArray[i].datos.length; j++) {
-                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> comisiones como ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activas}</b> activos</li><li><b>${orderedArray[i].datos[j].canceladas}</b> cancelados</li></ul></div>`;
+                htmlRol += `<div class="tl-date mt-1"><b>${orderedArray[i].datos[j].total}</b> ${_('comisiones-como')} ${(orderedArray[i].datos[j].rol).replace('id_', '')}<ul class="m-0" style="list-style:none"><li><b>${orderedArray[i].datos[j].activas}</b> ${_('activos')}</li><li><b>${orderedArray[i].datos[j].canceladas}</b> ${_('cancelados')}</li></ul></div>`;
             }
             html += `<div class="tl-item">
                         <div class="tl-dot b-warning"></div>
@@ -346,8 +359,10 @@ $(document).on("click", "#detailComisionistaBtn", function () {
     }, 'json');
 });
 
+});
+
 function colocarValoresTotales(total, totalAbonado, totalPagado) {
-    document.getElementById("txt_totalComision").textContent = formatMoney(total);
-    document.getElementById("txt_totalAbonado").textContent = formatMoney(totalAbonado);
-    document.getElementById("txt_totalPagado").textContent = formatMoney(totalPagado);
+    document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
+    document.getElementById("txt_totalAbonado").textContent = '$' + formatMoney(totalAbonado);
+    document.getElementById("txt_totalPagado").textContent = '$' + formatMoney(totalPagado);
 }

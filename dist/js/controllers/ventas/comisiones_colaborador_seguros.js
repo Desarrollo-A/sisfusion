@@ -165,7 +165,7 @@ $(document).ready(function () {
              if(tipo_usuario == 4){
 
             if (
-                [1,2,4].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                [1,2,4].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                                 ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION FECHA CORTE
                 ) {
                 requestCodigoPostal();
@@ -278,7 +278,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 var hora = hoy.getHours();
 
                 if(
-                    [1,2,4].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                    [1,2,4].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                                 ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION FECHA CORTE
                     ) {
             
@@ -390,63 +390,37 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de ' + d.porcentaje_abono + '% GENERAL </p>';
+                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de 10% DEL COSTO TOTAL DEL SEGURO </p>';
             }
         },
         {
             "data": function( d ){
-                var lblPenalizacion = '';
-
-                if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
-                }
-
-                if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON.  '+formatMoney(d.bonificacion)+'</span></p>';
-                }
-                else{
-                    p1 = '';
-                }
-
-                if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
-                }
-                else{
-                    p2 = '';
-                }
-
-                if(d.id_cliente_reubicacion_2 != 0 ) {
-                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
-                }else{
-                    p3 = '';
-                }
-
-                return p1 + p2 + lblPenalizacion + p3;
+                return '';
             }
         },
         {
@@ -553,7 +527,8 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     var dia = hoy.getDate();
                     var mes = hoy.getMonth() + 1;
                     var hora = hoy.getHours();
-                    if([1,2,4].includes(datosFechaCorte[0].tipoCorte) && ((mes == parseInt(fechaInicioCorteGlobal[1]) && dia == parseInt(fechaInicioCorteGlobal[2]))  
+
+                    if([1,2,4].includes(datosFechaCorte[0].corteOoam) && ((mes == parseInt(fechaInicioCorteGlobal[1]) && dia == parseInt(fechaInicioCorteGlobal[2]))  
                     ||  (mes == parseInt(fechaFinCorteGlobal[1]) && dia == parseInt(fechaFinCorteGlobal[2]) && hora <= parseInt(horaFinCorteGlobal[0]))) //VALIDACION FECHA CORTE
                         ) {
 
@@ -625,7 +600,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
-        $.getJSON("getComments/" + id_pago).done(function (data) {
+        $.getJSON(general_base_url+"Seguros/getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
@@ -729,32 +704,32 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de ' + d.porcentaje_abono + '% GENERAL </p>';
+                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de 10% DEL COSTO TOTAL DEL SEGURO </p>';
             }
         },
         {
@@ -827,7 +802,7 @@ $("#tabla_revision_comisiones").ready(function () {
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#2242CB; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
-        $.getJSON("getComments/" + id_pago).done(function (data) {
+        $.getJSON(general_base_url+"Seguros/getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:2242CB;">' + v.comentario + '</i><br><b style="color:#2242CB">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
@@ -929,32 +904,32 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de ' + d.porcentaje_abono + '% GENERAL </p>';
+                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de 10% DEL COSTO TOTAL DEL SEGURO </p>';
             }
         },
         {
@@ -1027,7 +1002,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#9321B6; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
-        $.getJSON("getComments/" + id_pago).done(function (data) {
+        $.getJSON(general_base_url+"Seguros/getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:9321B6;">' + v.comentario + '</i><br><b style="color:#9321B6">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
@@ -1128,63 +1103,38 @@ $("#tabla_otras_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de ' + d.porcentaje_abono + '% GENERAL </p>';
+                return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de 10% DEL COSTO TOTAL DEL SEGURO </p>';
             }
         },
         {
             "data": function( d ){
                 var lblPenalizacion = '';
-
-                if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
-                }
-
-                if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. '+formatMoney(d.bonificacion)+'</span></p>';
-                }
-                else{
-                    p1 = '';
-                }
-
-                if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
-                }
-                else{
-                    p2 = '';
-                }
-
-                if(d.id_cliente_reubicacion_2 != 0 ) {
-                    p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
-                }else{
-                    p3 = '';
-                }
-
-                return p1 + p2 + lblPenalizacion + p3;
+                return lblPenalizacion;
             }
         },
         {
@@ -1228,7 +1178,7 @@ $("#tabla_otras_comisiones").ready(function () {
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#CB7922; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
-        $.getJSON("getComments/" + id_pago).done(function (data) {
+        $.getJSON(general_base_url+"Seguros/getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:CB7922;">' + v.comentario + '</i><br><b style="color:#CB7922">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
             });
@@ -1502,7 +1452,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
 
     if(
-        [1,2,4].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+        [1,2,4].includes(datosFechaCorte[0].corteOoam) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
         ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION FECHA CORTE
         ) {
 

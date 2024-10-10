@@ -12,7 +12,7 @@
 								<i class="fas fa-user-friends fa-2x"></i>
 							</div>
 							<div class="card-content">
-								<h3 class="card-title center-align">Listado general de clientes marketing digital</h3>
+								<h3 class="card-title center-align" data-i18n="listado-marketing">Listado general de clientes marketing digital</h3>
 								<div class="toolbar">
 									<div class="row">
 										<div class="col-12 col-sm-6 col-md-6 col-lg-6">
@@ -39,26 +39,26 @@
 											<table id="clients_report_datatable" class="table-striped table-hover hide">
 												<thead>
 													<tr>
-														<th>PROYECTO</th>
-														<th>CONDOMINIO</th>
-														<th>LOTE</th>
-														<th>ID LOTE</th>
-														<th>CLIENTE</th>
-														<th>TELÉFONO</th>
-														<th>MEDIO</th>
-														<th>PLAZA</th>
-														<th>ASESOR</th>
-														<th>COORDINADOR</th>
-														<th>GERENTE</th>
-														<th>SUBDIRECTOR</th>
-														<th>DIRECTOR REGIONAL</th>
-														<th>DIRECTOR REGIONAL 2</th>
-														<th>TOTAL</th>
-														<th>ENGANCHE</th>
-														<th>PLAN DE ENGANCHE</th>
-														<th>ESTATUS</th>
-														<th>FECHA DE APARTADO</th>
-														<th>FECHA DE ESTATUS 15</th>
+														<th>proyecto</th>
+														<th>condominio</th>
+														<th>lote</th>
+														<th>id-lote</th>
+														<th>cliente</th>
+														<th>telefono</th>
+														<th>medio</th>
+														<th>Plaza</th>
+														<th>asesor</th>
+														<th>coordinador</th>
+														<th>gerente</th>
+														<th>subdirector</th>
+														<th>director-regional</th>
+														<th>director-regional2</th>
+														<th>total</th>
+														<th>enganche</th>
+														<th>plan-enganche</th>
+														<th>estatus</th>
+														<th>fecha-apartado</th>
+														<th>fecha-estatus-15</th>
 													</tr>
 												</thead>
 											</table>
