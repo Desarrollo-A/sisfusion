@@ -248,34 +248,41 @@ class CasasModel extends CI_Model
 
     public function getListaAsignacionEsquema(){
         $query = $this->db->query("SELECT 
-            cli.id_cliente,
-            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-            UPPER(REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
-            FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
-            CASE WHEN cli.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono1 END telefono1,
-            CASE WHEN cli.telefono2 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono2 END telefono2,
-            CASE WHEN cli.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono3 END telefono3,
-            CASE WHEN cli.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.correo END correo,
-            CASE 
-                WHEN cli.id_asesor_c = 0 THEN 'SIN ASESOR' ELSE CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
-            END AS nombreAsesor,
-            usA.id_usuario AS idAsesor,
-            lo.idLote,
-            lo.nombreLote,
-            lo.sup,
-            co.nombre AS condominio,
-            re.descripcion AS proyecto,
-            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente,
-            cli.id_subdirector_c, cli.id_gerente_c
-            FROM clientes cli
-            INNER JOIN lotes lo ON lo.idLote = cli.idLote
-            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
-            LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
-            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
-            WHERE cli.id_asesor_c = ? AND cli.esquemaCreditoCasas IN (0,1) AND cli.pre_proceso_casas = 2
-            AND (cli.idPropuestaCasa = '0' OR cli.idPropuestaCasa IS NULL)", array($this->idUsuario));
+        cli.id_cliente,
+        pc.idProcesoCasas,
+        cli.idPropuestaCasa ,
+        pcd.idProceso,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        UPPER(REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
+        CASE WHEN cli.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono1 END telefono1,
+        CASE WHEN cli.telefono2 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono2 END telefono2,
+        CASE WHEN cli.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono3 END telefono3,
+        CASE WHEN cli.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.correo END correo,
+        CASE 
+            WHEN cli.id_asesor_c = 0 THEN 'SIN ASESOR' ELSE CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
+        END AS nombreAsesor,
+        usA.id_usuario AS idAsesor,
+        lo.idLote,
+        lo.nombreLote,
+        lo.sup,
+        co.nombre AS condominio,
+        re.descripcion AS proyecto,
+        CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente,
+        cli.id_subdirector_c, cli.id_gerente_c
+        FROM clientes cli
+        INNER JOIN lotes lo ON lo.idLote = cli.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
+        LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote
+        LEFT JOIN proceso_casas_directo pcd ON pcd.idLote = lo.idLote
+        LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
+        WHERE cli.id_asesor_c = ?
+        AND cli.esquemaCreditoCasas IN (0,1) 
+        AND cli.pre_proceso_casas = 2
+        AND (pc.idProcesoCasas IS NULL OR (pc.idProcesoCasas IS NOT NULL AND pc.status = 5))", array($this->idUsuario));
 
         return $query;
     }

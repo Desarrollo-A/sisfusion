@@ -670,49 +670,18 @@ class Casas extends BaseController
     public function back_to_asignacion()
     {
         $this->form();
-
         $id = $this->form('id');
         $idCliente = $this->form('idCliente');
         $comentario = $this->form('comentario');
-        $banderaSuccess = true;
+        $proceso = $this->form('idProcesoCasas');
 
-        if (!isset($id) || !isset($idCliente)) {
+        if(!isset($id) || isset($idCliente)) {
             http_response_code(400);
         }
 
-        $new_status = 0;
+        
 
-        $proceso = $this->CasasModel->getProceso($id);
-
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
-        if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso el proceso a asignación de asesor | Comentario: ' . $comentario, 1);
-        } else {
-            $banderaSuccess = false;
-        }
-
-        $updateDataClientes = array(
-            "pre_proceso_casas" => 2,
-            "idPropuestaCasa" => 0
-        );
-        $updateDataProceso = array(
-            "tipoMovimiento" => 4,
-            "idPropuestaCasa" => 0,
-            "status" => 0,
-
-        );
-
-        $update = $this->General_model->updateRecord("clientes", $updateDataClientes, "id_cliente", $idCliente);
-        $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $updateDataProceso, "id_cliente", $idCliente);
-        if (!$update) {
-            $banderaSuccess = false;
-        }
-
-        if ($banderaSuccess) {
-            $this->json([]);
-        } else {
-            http_response_code(404);
-        }
+        
     }
 
     public function generateFileName($documento, $lote, $proceso, $archivo)
