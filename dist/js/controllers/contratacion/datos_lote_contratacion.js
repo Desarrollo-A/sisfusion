@@ -57,7 +57,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
     ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
     ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
     ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
-    tabla_6 = $("#tablaInventario").DataTable({
+    let tabla_6 = $("#tablaInventario").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -72,13 +72,13 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: (roles_excluidos.includes(id_rol_general)) ? 'hide' : 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'Inventario lotes',
+            title: _('inventario-lotes'),
             exportOptions: {
                 columns: coordinador = (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70  || id_usuario_general == 9897)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 69] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31, 69]  : ((id_usuario_general==9495 || id_usuario_general==14944) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 5, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31, 69])),
 
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -88,14 +88,14 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                 text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
                 className: (roles_excluidos.includes(id_rol_general)) ? 'hide' : 'btn buttons-pdf',
                 titleAttr: 'PDF',
-                title: 'Inventario lotes',
+                title: _('inventario-lotes'),
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22],
                     format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosInventario[columnIdx]  + ' ';
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -200,14 +200,14 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) {
                     if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                        return `<span data-i18n="sin-especificar3"> SIN ESPECIFICAR </span>`;
+                        return `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`;
                     else
                         return d.regional2;
                 }
             },
             {
                 data: function (d) {
-                    let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-pink" data-i18n="li-controller">Lib. Contraloría</span> <center><p><p>' : '';
+                    let libContraloria = (d.observacionContratoUrgente == '1') ? `<center><span class="label lbl-pink" data-i18n="lib-controloria">${_('lib-contraloria')}</span> <center><p><p>` : '';
                     return d.tipo_venta == null ?
                         `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
                         `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>`;
@@ -225,7 +225,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
                     if (d.comentario == null || d.comentario == 'NULL' || d.comentario == '')
-                        return '<span data-i18n="sin-especificar3"> SIN ESPECIFICAR </span>';
+                        return `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`;
                     else
                         return d.comentario;
                 }
@@ -259,7 +259,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function(d){
                     if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
-                        return '<span data-i18n="sin-definir"> SIN ESPECIFICAR </span>'
+                        return `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`
                     else
                         return d.fecha_creacion;
                 }
@@ -267,9 +267,9 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function(d){
                     if(d.apartadoXReubicacion == 1)
-                        return `<center><span class="label lbl-violetBoots" data-i18n="${("reubicacion")}" >${("reubicacion")}</span> <center>`;
+                        return `<center><span class="label lbl-violetBoots" data-i18n="reubicacion">${_("reubicacion")}</span> <center>`;
                     else
-                        return `<center><span class="label lbl-gray" data-i18n="${("no-aplica")}" >${("no-aplica")}</span> <center>`;
+                        return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
                 }
             },
             {
@@ -277,16 +277,16 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     if(d.apartadoXReubicacion == 1)
                         return d.fechaAlta;
                     else
-                        return `<center><span class="label lbl-gray" data-i18n="${("no-aplica")}" >${("no-aplica")}</span> <center>`;
+                        return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
                 }
             },
             {
                 data: function(d){
                   let banderaTexas =   [98851,94330,98896,98889,98816,98845,99531,94380,97928,93716,97811,65997,98772,98773,85297,100658,100481,100427,100522,100717,100765,100816,100041,100283,100545,101059,101567,100120,101323,100199,99978,99968,99937,101377,102005,102006,99964,100780,100340,100339,101377,101911].indexOf(parseInt(d.idLote)) >= 0 ? 1 : 0;
                     if(d.venta_compartida != 0)
-                        return `<center><span class="label lbl-green" data-i18n="${("compartida")}" >${("compartida")}</span> <center>`;
+                        return `<center><span class="label lbl-green" data-i18n="compartida">${_("compartida")}</span> <center>`;
                     else
-                        return (parseInt(banderaTexas) == 1 ? `<center><span class="label lbl-green" data-i18n="compartida-subdirector">COMPARTIDA SUBDIRECTOR</span> <center>`   : `<center><span class="label lbl-gray" data-i18n="${("no-aplica")}" >${("no-aplica")}</span> <center>`);
+                        return (parseInt(banderaTexas) == 1 ? `<center><span class="label lbl-green" data-i18n="compartida-subdirector">${_('compartida-subdirector')}</span> <center>`   : `<center><span class="label lbl-gray" data-i18n="no-aplica" >${_("no-aplica")}</span> <center>`);
                 }
             },
             {
@@ -294,7 +294,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     if(d.ubicacion != null)
                         return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
                     else
-                        return `<center><span class="label lbl-gray" data-i18n="${("no-aplica")}" >${("no-aplica")}</span> <center>`;
+                        return `<center><span class="label lbl-gray" data-i18n="no-aplica" >${_("no-aplica")}</span> <center>`;
                 }
             },
             {
@@ -323,26 +323,26 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                         //32
                         //persona moral: ds.actaConstitutiva_pm, ds.poder_pm, ds.idOficialApoderado_pm, ds.idDomicilio_pm
                         if(d.actaConstitutiva_pm==1){
-                            documentacionString += '-ACTA CONSTITUTIVA<br>';
+                            documentacionString += `-<span data-i18n="acta-constitutiva">${_('acta-constitutiva')}</span><br>`;
                         }
                         if(d.poder_pm==1){
-                            documentacionString += '-CARTA PODER<br>';
+                            documentacionString += `-<span data-i18n="carta-poder">${_('carta-poder')}</span><br>`;
                         }
                         if(d.idOficialApoderado_pm==1){
-                            documentacionString += '-IDENTIFICACIÓN OFICIAL APODERADO<br>';
+                            documentacionString += `-<span data-i18n="id-oficial">${_('id-oficial')}</span><br>`;
                         }
                     }
                     else if(d.personalidad_juridica == 2){
                         //31
                         //persona fisica: ds.idOficial_pf, ds.idDomicilio_pf, ds.actaMatrimonio_pf
                         if(d.idOficial_pf==1){
-                            documentacionString += '-IDENTIFICACIÓN OFICIAL<br>';
+                            documentacionString += `-<span data-i18n="identificacion-oficial">${_('identificacion-oficial')}</span><br>`;
                         }
                         if(d.idDomicilio_pf==1){
-                            documentacionString += '-COMPROBANTE DE DOMICILIO<br>';
+                            documentacionString += `-<span data-i18n="comprobante-domicilio">${_('comprobante-domicilio')}</span><br>`;
                         }
                         if(d.actaMatrimonio_pf==1){
-                            documentacionString += '-ACTA DE MATRIMONIO<br>';
+                            documentacionString += `-<span data-i18n="acta-matrimonio">${_('acta-matrimonio')}</span><br>`;
                         }
                     }
                     return myFunctions.validateEmptyField(documentacionString); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
@@ -549,14 +549,14 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             {
                 data: function (d) {
                     if (d.tipoEnganche == 0 || d.tipoEnganche == null) {
-                        return `<span data-i18n="sin-definir"> SIN ESPECIFICAR </span>`;  
+                        return `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`;  
                     }
                     return `<center>${d.nombre}<center>`;
                 }
             },
             {
                 data: function (d) {
-                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="${_("ver-mas-informacion")}" data-i18n-tooltip= "${("ver-mas-informacion")}"><i class="fas fa-history"></i></button></center>`;
+                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="${_("ver-mas-informacion")}" data-i18n-tooltip="ver-mas-informacion"><i class="fas fa-history"></i></button></center>`;
                 }
             }],
         initComplete: function() {
@@ -578,7 +578,7 @@ $(document).on("click", ".ver_historial", function () {
             if (data.length >= 1)
                 $('#clauses_content').html(data[0]['nombre']);
             else
-                $('#clauses_content').html('SIN DATOS QUE MOSTRAR');
+                $('#clauses_content').html(_('sin-datos-mostrar'));
         });
         element.classList.remove("hide");
     } else {
@@ -597,7 +597,7 @@ $(document).on("click", ".ver_historial", function () {
         $.getJSON(`${general_base_url}Contratacion/getInformationHistorialEstatus/${idLote}`).done(function (data) {
             $('#HistorialEstatus').empty()
             if (data.length == 0)
-                $("#HistorialEstatus").append('<b data-i18n="sin-registro">SIN REGISTROS</b>');
+                $("#HistorialEstatus").append(`<b data-i18n="sin-registro">${_('sin-registro')}</b>`);
             else
                 fillChangelog(data);
         });
@@ -610,7 +610,7 @@ $(document).on("click", ".ver_historial", function () {
 
 
 function consultarHistoriaContratacion(idLote) {
-    tablaHistorialContratacion = $('#tablaHistorialContratacion').DataTable({
+    let tablaHistorialContratacion = $('#tablaHistorialContratacion').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [
             {
@@ -618,12 +618,12 @@ function consultarHistoriaContratacion(idLote) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title: 'HISTORIAL CONTRATACIÓN',
+                title: _('historial-contratacion'),
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5],
                     format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulostablaHistorialContratacion[columnIdx] + ' ';
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 },
@@ -661,23 +661,25 @@ function consultarHistoriaContratacion(idLote) {
             $('[data-toggle="tooltip"]').tooltip();
         }
     });
+
+    applySearch(tablaHistorialContratacion);
 }
 
 
 function consultarHistoriaLiberacion(idLote) {
-    tablaHistoriaLiberacion = $('#tablaHistoriaLiberacion').DataTable({
+    let tablaHistoriaLiberacion = $('#tablaHistoriaLiberacion').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'HISTORIAL LIBERACIÓN',
+            title: _('historial-liberacion'),
             exportOptions: {
                 columns: [0, 1, 2, 3, 4],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosTablaHistoriaLiberacion[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -706,23 +708,25 @@ function consultarHistoriaLiberacion(idLote) {
             dataSrc: ""
         },
     });
+
+    applySearch(tablaHistoriaLiberacion);
 }
 
 
 function consultarVentasCompartidas(idLote) {
-    tablaVentasCompartidas = $('#tablaVentasCompartidas').DataTable({
+    let tablaVentasCompartidas = $('#tablaVentasCompartidas').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'VENTAS COMPARTIDAS',
+            title: _('ventas-compartidas'),
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosTablaVentasCompartidas[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -754,6 +758,8 @@ function consultarVentasCompartidas(idLote) {
             dataSrc: ""
         },
     });
+
+    applySearch(tablaVentasCompartidas);
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -769,9 +775,9 @@ function fillChangelog(v) {
             '               <p>' + v[i].fecha_creacion + '</p>\n' +
             '           </div>\n' +
             '           <div class="col-md-12">\n' +
-            '             <p class="m-0"><small>Usuario: </small><b> ' + v[i].creado_por + '</b></p>\n'+
-            '             <p class="m-0"><small>Valor anterior: </small><b> ' + v[i].valorAnterior + '</b></p>\n' +
-            '             <p class="m-0"><small>Valor Nuevo: </small><b> ' + v[i].valorNuevo + '</b></p>\n' +
+            `             <p class="m-0"><small><span data-i18n="usuario">${_('usuario')}</span>: </small><b> ` + v[i].creado_por + '</b></p>\n'+
+            `             <p class="m-0"><small><span data-i18n="valor-anterior">${_('valor-anterior')}</span>: </small><b> ` + v[i].valorAnterior + '</b></p>\n' +
+            `             <p class="m-0"><small><span data-i18n="valor-nuevo">${_('valor-nuevo')}</span>: </small><b> ` + v[i].valorNuevo + '</b></p>\n' +
             '           </div>\n' +
             '        <h6>\n' +
             '        </h6>\n' +
@@ -810,7 +816,7 @@ $(document).on('change', "#sedes", function () {
 
 
 function fillTableInventario(sede) {
-    tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
+    let tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -820,13 +826,13 @@ function fillTableInventario(sede) {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: (roles_excluidos.includes(id_rol_general)) ? 'hide' : 'btn buttons-excel',
             titleAttr: 'Inventario Lotes',
-            title: "Inventario Lotes",
+            title: _('inventario-lotes'),
             exportOptions: {
                 //columns: coordinador = (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70   || id_usuario_general == 9897)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31]  : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31, 32]),
                 columns: coordinador = ( id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70   || id_usuario_general == 9897)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31]  : ( (id_rol_general == 11) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 29, 30, 31]  : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31, 32])),
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -928,14 +934,14 @@ function fillTableInventario(sede) {
                 {
                     data: function (d) {
                         if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                            return `<span data-i18n="sin-definir"> SIN ESPECIFICAR </span>`;
+                            return `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`;
                         else
                             return d.regional2;
                     }
                 },
                 {
                     data: function (d) {
-                        libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-warning";">Lib. Contraloría</span> <center><p><p>' : '';
+                        libContraloria = (d.observacionContratoUrgente == '1') ? `<center><span class="label lbl-warning" data-i18n="lib-contraloria">${_('lib-contraloria')}</span> <center><p><p>` : '';
                         valTV = (d.tipo_venta == null) ? '<center><span class="label lbl-danger" style="background:#' + d.background_sl + '18; color:#' + d.color + ';">' + d.descripcion_estatus + '</span> <center>' :
                             '<center><span class="label lbl-danger" style="background:#' + d.background_sl + '18; color:#' + d.color + ';">' + d.descripcion_estatus + '</span> <p><p> <span class="label lbl-warning">' + d.tipo_venta + '</span> <center>';
                         return valTV + libContraloria;
@@ -943,7 +949,7 @@ function fillTableInventario(sede) {
                 },
                 {
                     data: function (d) {
-                        return (d.estatusContratacion == null || d.estatusContratacion=='') ? `<span data-i18n="sin-especificar"> ${_("sin-especificar")}</span>`:d.estatusContratacion;
+                        return (d.estatusContratacion == null || d.estatusContratacion=='') ? `<span data-i18n="sin-especificar2"> ${_("sin-especificar2")}</span>`:d.estatusContratacion;
                     }
                 },
                 {
@@ -989,7 +995,7 @@ function fillTableInventario(sede) {
                 },
                 {
                     data: function (d) {
-                        return (d.nombreCliente == null || d.nombreCliente=='' || d.nombreCliente==' '|| d.nombreCliente=='  ') ? 'SIN EPECIFICAR': d.nombreCliente;
+                        return (d.nombreCliente == null || d.nombreCliente=='' || d.nombreCliente==' '|| d.nombreCliente=='  ') ? `<span data-i18n="sin-especificar2">${_('sin-especificar2')}</span>`: d.nombreCliente;
                     }
                 },
                 {
@@ -1006,7 +1012,7 @@ function fillTableInventario(sede) {
                 {
                     data: function(d){
                         if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
-                            return `<span data-i18n="sin-especificar"> ${_("sin-especificar")}</span>`;
+                            return `<span data-i18n="sin-especificar2"> ${_("sin-especificar2")}</span>`;
                         else
                             return d.fecha_creacion;
                     }
@@ -1014,9 +1020,9 @@ function fillTableInventario(sede) {
                 {
                     data: function(d){
                         if(d.apartadoXReubicacion == 1)
-                            return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
+                            return `<center><span class="label lbl-violetBoots" data-i18n="reubicacion">${_('reubicacion')}</span> <center>`;
                         else
-                            return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
+                            return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
                     }
                 },
                 {
@@ -1024,15 +1030,15 @@ function fillTableInventario(sede) {
                         if(d.apartadoXReubicacion == 1)
                             return d.fechaAlta;
                         else
-                            return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
+                            return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
                     }
                 },
                 {
                     data: function(d){
                         if(d.venta_compartida != 0)
-                            return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
+                            return `<center><span class="label lbl-green" data-i18n="compartida">${_('compartida')}</span> <center>`;
                         else
-                            return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
+                            return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
                     }
                 },
                 {
@@ -1040,7 +1046,7 @@ function fillTableInventario(sede) {
                         if(d.ubicacion != null)
                             return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
                         else
-                            return `<center><span class="label lbl-gray">${_("no-aplica")}</span> <center>`;
+                            return `<center><span class="label lbl-gray" data-i18n="no-aplica">${_("no-aplica")}</span> <center>`;
                     }
                 },
                 {
@@ -1052,9 +1058,9 @@ function fillTableInventario(sede) {
                 {
                     data: function (d) {
                         if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
-                            return `<span class="label lbl-oceanGreen">REUBICADO</span>`;
+                            return `<span class="label lbl-oceanGreen" data-i18n="reubicado">${_('reubicado')}</span>`;
                         else
-                            return `<span class="label lbl-pink">${_("no-vigente")}</span>`;
+                            return `<span class="label lbl-pink" data-i18n="no-vigente">${_("no-vigente")}</span>`;
                     }
                 },
                 {
@@ -1062,7 +1068,7 @@ function fillTableInventario(sede) {
                         if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
                             return d.fechaAlta;
                         else
-                            return 'NO APLICA';
+                            return `<span data-i18n="no-aplica">${_('no-aplica')}</span>`;
                     }
                 },
                 {
