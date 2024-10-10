@@ -406,12 +406,31 @@ class Casas extends BaseController
     public function lotes_option()
     {
         $idCondominio = $this->input->get('condominio');
+        $idRol = $this->idRol = $this->session->userdata('id_rol');
+        $extraColumns = "";
+        $extraSelect = "";
+        $idUsuario = $this->idUsuario = $this->session->userdata('id_usuario');
+
+        switch($idRol) {
+            case '3': 
+                $extraColumns = " AND (cl.id_gerente_c = $idUsuario)";
+                break;
+            case '6':
+                $extraColumns = " AND (cl.id_gerente_c = $idUsuario)";
+                break;
+            case '7':
+                $extraColumns = " AND (cl.id_asesor_c = $idUsuario)";
+                break;
+            default: 
+                $extraColumns = " AND (cl.id_asesor_c != 0 AND cl.id_gerente_c != 0)";
+
+        }
 
         if (!isset($idCondominio)) {
             $this->json([]);
         }
 
-        $lotes = $this->CasasModel->getLotesOption($idCondominio);
+        $lotes = $this->CasasModel->getLotesOption($idCondominio, $extraColumns);
 
         $this->json($lotes);
     }
@@ -5444,23 +5463,11 @@ class Casas extends BaseController
 
     public function lista_toda_documentacion_casas_banco(){
         $lote = $this->get('lote');
-        $idRol = $this->idRol = $this->session->userdata('id_rol');
-        $extraColums = "";
-        $idUsuario = $this->idUsuario = $this->session->userdata('id_usuario');
 
         if(!isset($lote)){
             return $this->json([]);
         }
-
-        switch($idRol) {
-            case '7':
-                $extraColums = " AND (cli.id_asesor_c = $idUsuario)";
-                break;
-            //case ''
-        }
         
-        
-
         $documentos_proceso_casas = $this->CasasModel->getListaDocumentacionProcesoCasas($lote);
         $documentos_cotizaciones = $this->CasasModel->getListaDocumentacionCotizaciones($lote);
 
@@ -5493,9 +5500,9 @@ class Casas extends BaseController
             return $this->json([]);
         }
 
-        $documentos_proceso_pagos = $this->CasasModel->getListaDocumentacionProcesoPagos($lote);
-        $documentos_avances_pdf = $this->CasasModel->getListaDocumentacionAvancesComplementoPDF($lote);
-        $documentos_avances_xml = $this->CasasModel->getListaDocumentacionAvancesComplementoXML($lote);
+        $documentos_proceso_pagos = $this->CasasModel->getListaDocumentacionProcesoPagos($lote, $extraColumns);
+        $documentos_avances_pdf = $this->CasasModel->getListaDocumentacionAvancesComplementoPDF($lote, $extraColumns);
+        $documentos_avances_xml = $this->CasasModel->getListaDocumentacionAvancesComplementoXML($lote, $extraColumns);
 
         $merged_documents = array_merge(
             $documentos_proceso_pagos,

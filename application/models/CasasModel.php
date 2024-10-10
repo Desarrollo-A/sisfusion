@@ -2524,16 +2524,18 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->row();
     }
 
-    public function getLotesOption($idCondominio){
+    public function getLotesOption($idCondominio, $extraColumns){
         $query = "SELECT 
             lo.idLote as value, 
             lo.nombreLote as label
         FROM 
             lotes lo
         LEFT JOIN proceso_casas_banco pcb ON pcb.idLote = lo.idLote AND pcb.status = 1
+        LEFT JOIN clientes cl ON cl.idLote = lo.idLote
         WHERE lo.idCondominio = $idCondominio
         AND pcb.idProcesoCasas IS NOT NULL
-        GROUP BY lo.idLote, lo.nombreLote
+        $extraColumns
+        GROUP BY lo.idLote, lo.nombreLote, cl.id_gerente_c, cl.id_asesor_c
         ORDER BY lo.idLote";
 
         return $this->db->query($query)->result();
@@ -2570,7 +2572,7 @@ AND vb.proyectos != 1";
             LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
             LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
-            WHERE pcb.idLote = $idLote AND dpc.archivo IS NOT NULL
+            WHERE pcb.idLote = $idLote AND dpc.archivo IS NOT NULL 
         )
         SELECT idDocumento, idProcesoCasas, documento, archivo, proyecto, condominio, nombreLote,  idLote, gerente, asesor, descargar,visualizarZIP
         FROM fullData
@@ -2630,7 +2632,7 @@ AND vb.proyectos != 1";
                     LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
                     LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
                     WHERE pcb.idLote = $idLote
-                    AND dpp.archivo IS NOT NULL
+                    AND dpp.archivo IS NOT NULL 
                 )
 
                 SELECT documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, descargar, idProcesoCasas
@@ -2694,7 +2696,8 @@ AND vb.proyectos != 1";
                     LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
                     LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
                     WHERE pcb.idLote = $idLote
-                    AND app.complementoPDF IS NOT NULL)
+                    AND app.complementoPDF IS NOT NULL
+                    )
                     SELECT documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, descargar,idProcesoCasas
                     FROM fullData
                     WHERE (gerente != '' AND asesor != '')
