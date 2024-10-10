@@ -893,11 +893,11 @@ $("#tipo_historial_casas").on("change", function(){
     seleccion = $(this).val();
 
     if(seleccion == 1) {
-        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
-        $("#tabla_historialGral, #ocultar_descuento").removeClass('hide');
+        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario';
+        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
     } else if(seleccion == 3) {
-        var enlace = 'Casas_comisiones/getHistorialDescuentosPorUsuario'
-        $("#tabla_historialGral, #ocultar_descuento").removeClass('hide');
+        var enlace = 'Casas_comisiones/getHistorialDescuentosPorUsuario';
+        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
     }
 
     consultarHistorialDescuentos(enlace)
@@ -1085,9 +1085,9 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
 $(document).ready(function () {
 
     if(usuario_id !=3){
-    var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
-    $("#ocultar_descuento").addClass('hide');
-    consultarHistorialDescuentos(enlace)
+        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario';
+        $("#tablaHistorialDescuentos").removeClass('hide');
+        consultarHistorialDescuentos(enlace);
     }
 
     let titulosHistorialOOAM = [];
