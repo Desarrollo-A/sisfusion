@@ -95,6 +95,8 @@ function applySearch(table) {
 
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
         $('input', this).on('keyup change', function () {
+            console.log(this)
+
             if (table.column(i).search() !== this.value) {
                 table.column(i).search(this.value).draw();
                 const searchTabla = datosTablasComisiones.find((idTables) => idTables.idTabla == id);
@@ -155,6 +157,8 @@ function construirHead(table){
         $('.dt-button').each(function (i) {
             let is_excel = $(this).hasClass('buttons-excel')
             let is_pdf = $(this).hasClass('buttons-pdf')
+            let is_yt = $(this).hasClass('buttons-youtube')
+            
             
             if(is_excel){
                 $(this).attr('title', _('descargar-excel'))
@@ -163,6 +167,11 @@ function construirHead(table){
 
             if(is_pdf){
                 $(this).attr('title', _('descargar-pdf'))
+                $(this).children().children().removeAttr('title')
+            }
+
+            if(is_yt){
+                $(this).attr('title', _('video-tutorial'))
                 $(this).children().children().removeAttr('title')
             }
         })
@@ -303,6 +312,23 @@ function changeFontIconTooltips() {
     })
 }
 
+function changeDivTooltips() {
+    $('div').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+
+        if(id){
+            let title = _(id)
+
+            if($(this).attr('title')){
+                $(this).attr('title', title)
+            }
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
@@ -315,3 +341,5 @@ onLoadTranslations(changeInputPlaceholder)
 onChangeTranslations(changeInputPlaceholder)
 onLoadTranslations(changeFontIconTooltips)
 onChangeTranslations(changeFontIconTooltips)
+onLoadTranslations(changeDivTooltips)
+onChangeTranslations(changeDivTooltips)

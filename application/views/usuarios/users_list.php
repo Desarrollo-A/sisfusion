@@ -200,7 +200,7 @@
                                         <div class="col-sm-3">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label" data-i18n="forma-pago">Forma de pago (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral payment_method m-0" id="payment_method" name="payment_method" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required disabled></select>
+                                                <select class="selectpicker select-gral payment_method m-0" id="payment_method" name="payment_method" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required disabled></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
@@ -220,7 +220,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label" data-i18n="sede">Sede (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()"></select>
+                                                <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true"data-i18n-label="select-predeterminado" title=""data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()"></select>
                                             </div>
                                         </div>
                                         <div class="col-estructura">
@@ -231,7 +231,7 @@
                                         <div class="col-sm-3" id="tipoMiembro_column">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label"> <span data-i18n="tipo-miembro"> Tipo de miembro </span> (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
+                                                <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
                                             </div>
                                         </div>
                                         <div class="simbolico_column"></div>
@@ -242,7 +242,7 @@
                                             <div class="form-group overflow-hidden">
                                                 <input type="hidden" name="rol_actual" id="rol_actual">
                                                 <label class="control-label"> <span data-i18n="lider"> Líder </span> (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6"></div>
@@ -261,16 +261,16 @@
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                                            <label class="control-label">Tipo (<small class="isRequired">*</small>)</label>
+                                            <label class="control-label" data-i18n="tipo">Tipo (<small class="isRequired">*</small>)</label>
                                             <div class="radio_container">
                                                 <input class="d-none" type="radio" name="tipoUsuario" id="normal" value="1">
                                                 <label for="normal">NORMAL</label>
                                                 <input class="d-none" type="radio" name="tipoUsuario" id="mupgrade" value="2">
                                                 <label for="mupgrade">MADERAS UPGRADE</label>                                            
                                                 <input class="d-none" type="radio" name="tipoUsuario" id="casas" value="3">
-                                                <label for="casas">CASAS</label>
+                                                <label for="casas" data-i18n="casas-m">CASAS</label>
                                                 <input class="d-none" type="radio" name="tipoUsuario" id="seguros" value="4">
-                                                <label for="seguros">SEGUROS</label>
+                                                <label for="seguros"data-i18n="seguros">SEGUROS</label>
                                             </div>
                                         </div>
                                     </div>
@@ -288,7 +288,7 @@
                                                 <div class="boxInfoEsp">
                                                     <i class="fas fa-info" data-toggle="tooltip" data-placement="bottom" title="Sede de asignación del asesor"></i>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -297,7 +297,7 @@
                                                 <div class="boxInfoEsp" data-toggle="tooltip" data-placement="bottom" title="Oficina en la que se encuentra ubicado el asesor">
                                                     <i class="fas fa-info"></i>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>

@@ -46,6 +46,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             className: 'btn buttons-excel',
             titleAttr: `${_("descargar-excel")}`,
             title: `${_("reporte-estatus-prospecto")}`,
+            filename: `${_("reporte-estatus-prospecto")}`,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 format: {

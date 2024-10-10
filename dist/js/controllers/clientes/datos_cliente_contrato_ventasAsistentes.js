@@ -101,8 +101,9 @@ $("#lote").change(function () {
         extend: "excelHtml5",
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: "btn buttons-excel",
-        titleAttr: "Contrato",
-        title: "Contrato",
+        titleAttr: `${_("descargar-excel")}`,
+        filename : `${_("contrato")}`,
+        title: `${_("contrato")}`,
         exportOptions: {
           columns: [0, 1, 2, 3, 4],
           format: {

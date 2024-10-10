@@ -316,6 +316,49 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- row especialista escuadron -->
+                <div class="row pt-3" >
+                    <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
+                        <div class="pb-1">
+                            <h4 class="label-on-left m-0" data-i18n="escuadron-rescate">ESCUADRÓN RESCATE</h4>
+                            <input type="checkbox" name="escuadronRescate" id="escuadronRescate" <?php echo $statsInput; ?>  <?php if ($cliente[0]->especialistaEscuadron != '' && $cliente[0]->especialistaEscuadron != null && $cliente[0]->especialistaEscuadron != 0) {echo "checked value='1'";}?>>
+                            <label class="switch" for="escuadronRescate"></label>
+                        </div>
+                    </div>
+                    <div class="col col-xs-12 col-sm-3 col-md-6 col-lg-6 <?php echo ($cliente[0]->especialistaEscuadron == 1) ?  '':  'd-none'; ?>" id="liderEscuadronDiv">
+                        <h4 class="label-on-left m-0">LÍDER ESCUADRÓN RESCATE</h4>
+                        <select id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
+                                data-size="7" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
+                                data-live-search="true" data-container="body" data-width="100%">
+                            <?php
+                            for($n=0; $n < count($lideresRescateLista) ; $n++){
+                                if($lideresRescateLista[$n]['id_usuario'] == $cliente[0]->liderEscuadron){
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" selected data-coodRescate="'.$lideresRescateLista[$n]['id_lider'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                }
+                                else{
+                                    echo '<option value="'.$lideresRescateLista[$n]['id_usuario'].'" data-coodRescate="'.$lideresRescateLista[$n]['id_lider'].'">'.$lideresRescateLista[$n]['nombre'].' '.$lideresRescateLista[$n]['apellido_paterno'].' '.$lideresRescateLista[$n]['apellido_materno'].'</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                        <input type="hidden" name="idCoordinadorEscuadron" id="idCoordinadorEscuadron">
+                    </div>
+
+
+                    <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                        <h4 class="label-on-left mb-0">IDIOMA</h4>
+                        <div class="radio_container">
+                            <input type="radio" name="idiomaValor"  id="idiomaValor1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 1) { echo "checked=true"; } ?>>
+                            <label for="idiomaValor1">ESPAÑOL</label>
+
+                            <input type="radio" name="idiomaValor"  id="idiomaValor2" value="2" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 2) { echo "checked=true"; } ?>>
+                            <label for="idiomaValor2">INGLÉS</label>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- fin especialista escuadron -->
                 
                 <h4 class="text-center pt-3" data-i18n="datos-titular">DATOS DEL TITULAR</h4>
                 <div class="row">
@@ -384,7 +427,7 @@
                                     <span data-i18n="lada-m">LADA</span>
                                         (<small style="color: red;">*</small>)
                                     </label>
-                                    <select id="ladaTel2" name="ladaTel2" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
+                                    <select data-i18n-label="selecciona-una-opcion" id="ladaTel2" name="ladaTel2" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
                                             data-size="7" <?php echo $readOnly; ?>
                                             data-live-search="true" data-container="body" data-width="100%" required>
                                     </select>
@@ -1034,7 +1077,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">
-                                <span data-i18n="sr"></span>EL SR(A) 
+                                <span data-i18n="sr">EL SR(A) </span>
                                 (<small style="color: red;">*</small>)</label>
                             <?php
 
@@ -1207,42 +1250,7 @@
                 </div>
                 <div class="row pt-3">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
-                        <label style="font-size: 0.7em;" >
-                            <span data-i18n="oferta-vigencia">
-                                Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. 
-                            </span>
-                            <span data-i18n="oferta-vigencia2">
-                                En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. 
-                            </span>
-                            <span data-i18n="oferta-vigencia3">
-                                En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, 
-                            </span>
-                            <span data-i18n="oferta-vigencia4">
-                                la empresa cobrará al ofertante únicamente $10,000.00
-                            </span>
-                            <span data-i18n="oferta-vigencia5">
-                                $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación.
-                            </span>
-                            <span data-i18n="oferta-vigencia6">
-                                Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, 
-                            </span>
-                            <span data-i18n="oferta-vigencia7">
-                                medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.
-                            </span>
-                            <br>
-                            <span data-i18n="oferta-vigencia8">
-                                Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente.
-                            </span>
-                            <span data-i18n="oferta-vigencia9">
-                                Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. 
-                            </span>
-                            <span data-i18n="oferta-vigencia10">
-                                De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. 
-                            </span>
-                            <span data-i18n="oferta-vigencia11">
-                                Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.
-                            </span>
-                        </label>
+                        <label style="font-size: 0.7em;" id = "lablespan"></label>
                     </div>
                 </div>
                 <div class="row pb-2">

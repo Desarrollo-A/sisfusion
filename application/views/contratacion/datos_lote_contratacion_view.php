@@ -66,7 +66,7 @@
                                                         <th>estatus</th>
                                                         <th>detalles</th>
                                                         <th>comentario</th>
-                                                        <th>fecha-estatus</th>
+                                                        <th>fecha-de-estatus</th>
                                                         <th>usuario</th>
                                                     </tr>
                                                     </thead>
