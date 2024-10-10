@@ -805,7 +805,6 @@ function changeIcon2(anchor) {
 
 
 function createAccordionsPR(option, render, rol) {
-    console.log("called");
     let tittle = getTitle(option);
     let html = '';
     html = `<div class="bk ${render == 1 ? 'parentTable' : 'childTable'}">
