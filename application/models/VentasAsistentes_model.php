@@ -83,7 +83,7 @@ class VentasAsistentes_model extends CI_Model {
                                         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
                                         LEFT JOIN usuarios coordinador ON asesor.id_lider = coordinador.id_usuario
                                         LEFT JOIN usuarios gerente ON coordinador.id_lider = gerente.id_usuario
-                                    WHERE  l.idStatusContratacion = '3' and l.idMovimiento  = '82' and cl.status = 1 
+                                    WHERE  l.idStatusContratacion = '3' and l.idMovimiento  = '82' -- and cl.status = 1 
                                     GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
                                         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
                                         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
