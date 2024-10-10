@@ -31,17 +31,6 @@ $(document).ready(function () {
     setIniDatesXYear('#beginDate', '#endDate');
     fillTable(convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val()), convertDateDDMMYYYYToYYYYMMDD($('#endDate').val()));
 });
-// $('#cancelacionesTabla thead tr:eq(0) th').each(function (i) {
-//     const title = $(this).text();
-//     titulosTabla.push(title);
-//     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-//     $('input', this).on('keyup change', function () {
-//         if ($('#cancelacionesTabla').DataTable().column(i).search() !== this.value) {
-//             $('#cancelacionesTabla').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-//     $('[data-toggle="tooltip"]').tooltip();
-// });
 
 function fillTable(fechaInicio, fechaFin) {
     construirHead('cancelacionesTabla');
@@ -129,7 +118,7 @@ function fillTable(fechaInicio, fechaFin) {
                         <button class="btn-data btn-warning btn-cancelar"
                                 data-toggle="tooltip" 
                                 data-placement="left"
-                                title="CANCELAR LOTE"
+                                title="${_("cancelar-lote")}"
                                 data-idCliente="${d.idCliente}">
                             <i class="fa fa-close"></i>
                         </button>
