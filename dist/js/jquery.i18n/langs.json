@@ -1346,7 +1346,11 @@
 		"ingresos-extras": "EXTRA INCOME",
 		"autorizar-a": "Authorize to",
 		"Rechazar-a": "Autorizar a",
-		"la-cantidad-de": "the amount of"
+		"la-cantidad-de": "the amount of",
+		"fecha-45": "Date +45",
+		"enterado": "Informed",
+		"asesor-titular": "Titular advisor",
+		"reporte-ventas-compartidas": "Shared sales report"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2690,6 +2694,10 @@
 		"ingresos_extras": "INGRESOS EXTRA",
 		"autorizar-a": "Autorizar a",
 		"Rechazar-a": "Autorizar a",
-		"la-cantidad-de": "la cantidad de"
+		"la-cantidad-de": "la cantidad de",
+		"fecha-45": "Fecha +45",
+		"enterado": "Enterado",
+		"asesor-titular": "Asesor titular",
+		"reporte-ventas-compartidas": "Reporte ventas compartidas"
 	}
 }

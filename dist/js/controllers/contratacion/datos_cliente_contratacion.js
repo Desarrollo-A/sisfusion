@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    construirHead("tabla_clientes")
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
@@ -30,6 +29,7 @@ $('#proyecto').change(function () {
             $('#spiner-loader').addClass('hide');
         }, 'json');
     });
+    construirHead("tabla_clientes")
     fillTable(index_proyecto, 0);
 });
 
@@ -45,41 +45,41 @@ let titulos_encabezado = [];
 let num_colum_encabezado = [];
 const excluir_column = ['ACCIONES', 'MÁS'];
 
-$("#tabla_clientes").ready(function () {
-    $('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        if (!excluir_column.includes(title) && title !== ''){
-            titulos_encabezado.push(title);
-            num_colum_encabezado.push(titulos_encabezado.length);
-        }
-        if(title !== ''){
-            let readOnly = excluir_column.includes(title) ? 'readOnly': '';
-            let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 57px;' : '');
-            $(this).html(`<input type="text" style="${width}" class="textoshead " data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
-            $('input', this).on('keyup change', function () {
-                if (tabla_valores_cliente.column(i).search() !== this.value) {
-                    tabla_valores_cliente.column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
-});
+// $("#tabla_clientes").ready(function () {
+//     $('#tabla_clientes thead tr:eq(0) th').each(function (i) {
+//         var title = $(this).text();
+//         if (!excluir_column.includes(title) && title !== ''){
+//             titulos_encabezado.push(title);
+//             num_colum_encabezado.push(titulos_encabezado.length);
+//         }
+//         if(title !== ''){
+//             let readOnly = excluir_column.includes(title) ? 'readOnly': '';
+//             let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 57px;' : '');
+//             $(this).html(`<input type="text" style="${width}" class="textoshead " data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+//             $('input', this).on('keyup change', function () {
+//                 if (tabla_valores_cliente.column(i).search() !== this.value) {
+//                     tabla_valores_cliente.column(i).search(this.value).draw();
+//                 }
+//             });
+//         }
+//     });
+// });
 
 function fillTable(index_proyecto, index_condominio) {
-    tabla_valores_cliente = $("#tabla_clientes").DataTable({
+    let tabla_valores_cliente = $("#tabla_clientes").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Registro de clientes',
-            title: 'Registro de clientes',
+            titleAttr: _('registro-cliente'),
+            title: _('registro-cliente'),
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx-1] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -123,7 +123,7 @@ function fillTable(index_proyecto, index_condominio) {
             { data: 'tipo' },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + (d.fechaApartado == null || d.fechaApartado == '' ? `${_("sin-especificar")}` : d.fechaApartado) + '</p>';
+                    return '<p class="m-0">' + (d.fechaApartado == null || d.fechaApartado == '' ? `<span data-i18n="sin-especificar2">${_("sin-especificar2")}</span>` : d.fechaApartado) + '</p>';
                 }
             },
             {
@@ -133,13 +133,13 @@ function fillTable(index_proyecto, index_condominio) {
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + (d.fechaEnganche == null || d.fechaEnganche == '' ? `${_("sin-especificar")}` : d.fechaEnganche) + '</p>';
+                    return '<p class="m-0">' + (d.fechaEnganche == null || d.fechaEnganche == '' ? `<span data-i18n="sin-especificar2">${_("sin-especificar2")}</span>` : d.fechaEnganche) + '</p>';
                 }
             },
             {
                 data: function (d) {
                     return `<center>
-                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "${ventas-compartidas}" data-i18n-tooltip="ventas-compartidas" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
+                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "${_('ventas-compartidas')}" data-i18n-tooltip="ventas-compartidas" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
                             </center>`;
                 }
             }
@@ -165,12 +165,9 @@ function fillTable(index_proyecto, index_condominio) {
         ],
     });
 
-    $('#tabla_clientes').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
-    
+    applySearch(tabla_valores_cliente);
+    $('body').i18n();
+
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_valores_cliente.row(tr);
@@ -192,73 +189,73 @@ function fillTable(index_proyecto, index_condominio) {
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    Correo:
-                                </b>
+                                <b data-i18n="correo">
+                                    ${_('correo')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().correo)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    Teléfono:
-                                </b>
+                                <b data-i18n="telefono">
+                                    ${_('telefono')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().telefono1)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    RFC: 
-                                </b>
+                                <b data-i18n="rfc">
+                                    ${_('rfc')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().rfc)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    Fecha +45: 
-                                </b>
+                                <b data-i18n="fecha-45">
+                                    ${_('fecha-45')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().fechaVecimiento)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    Fecha de nacimiento: 
-                                </b>
+                                <b data-i18n="fecha-nacimiento">
+                                    ${_('fecha-nacimiento')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().fechaNacimiento)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    Domicilio particular: 
-                                </b>
+                                <b data-i18n="domicilio-particular">
+                                    ${_('domicilio-particular')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().domicilio_particular)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    Enterado: 
-                                </b>
+                                <b data-i18n="enterado">
+                                    ${_('enterado')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().enterado)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    Gerente: 
-                                </b>
+                                <b data-i18n="gerente">
+                                    ${_('gerente')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().gerente)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
-                                    Asesor titular: 
-                                </b>
+                                <b data-i18n="asesor-titular">
+                                    ${_('asesor-titular')}
+                                </b>:
                                 ${myFunctions.validateEmptyField(row.data().asesor)}
                             </label>
                         </div>
@@ -296,6 +293,8 @@ let num_colum_encabezado_detalle = [];
 // });
 
 $(document).ready(function () {
+    construirHead('tabla_clientes_detalles');
+
     tabla_6 = $('#tabla_clientes_detalles').DataTable({
         responsive: true,
         searchable: false,
@@ -307,12 +306,13 @@ $(document).ready(function () {
             titleAttr: 'Reporte ventas compartidas',
             title: 'Reporte ventas compartidas',
             exportOptions: {
-                columns: num_colum_encabezado_detalle,
+                columns: [0,1,2,3,4,5,6,7],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado_detalle[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
+
             }
         }],
         "scrollX": true,
@@ -370,6 +370,7 @@ $(document).ready(function () {
             $('[data-toggle="tooltip_details"]').tooltip({trigger: "hover"});
         }
     });
+    applySearch(tabla_6)
 });
 
 $(window).resize(function () {
