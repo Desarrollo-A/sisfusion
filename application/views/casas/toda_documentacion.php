@@ -13,7 +13,7 @@
                             <li class="active">
                                 <a href="#procesoCasasBanco" role="tab" data-toggle="tab" onclick="dataFunction(1)">Proceso casas (banco)</a>
                             </li>
-                            <li>
+                            <li class="hidden">
                                 <a href="#procesoCasasDirecto" role="tab" data-toggle="tab" onclick="dataFunction(2)">Proceso casas (directo)</a>
                             </li>
                             <li>
@@ -25,7 +25,7 @@
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
 
-                                        <div class="tab-pane active" id="reporteCasas">
+                                        <div class="tab-pane active" id="procesoCasasBanco">
                                             <div class="card-content">
                                                 <div class="toolbar">
                                                     <h3 class="card-title center-align">Documentación por proceso (banco)</h3>
@@ -51,7 +51,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="tab-pane" id="reporteCredito">
+                                        <div class="tab-pane" id="procesoCasasDirecto">
                                             <div class="card-content">
                                                 <div class="toolbar">
                                                     <h3 class="card-title center-align">Documentación por proceso (directo)</h3>
@@ -74,11 +74,11 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="tab-pane" id="reporteCredito">
+                                        <div class="tab-pane" id="procesoPagos">
                                             <div class="card-content">
                                                 <div class="toolbar">
                                                     <h3 class="card-title center-align">Documentación por proceso (pagos)</h3>
-                                                    <div id="table-filters-directo" class="row mb-1"></div>
+                                                    <div id="table-filters-pagos" class="row mb-1"></div>
                                                 </div>
                                                 <table id="tablePagos" class="table-striped table-hover">
                                                     <thead>
@@ -101,35 +101,7 @@
                                 </div>
                             </div>
                         </div>
-   <!--                     <div class="card no-shadow m-0">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-file-alt fa-2x"></i>
-                            </div>
-                            <div class="card-content">
-                                <div class="toolbar">
-                                    <h3 class="card-title center-align">Documentación por proceso</h3>
-                                    <div id="table-filters" class="row mb-1"></div>
-                                </div>
-                                
-                                <table id="tableDoct" class="table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>ID PROCESO</th>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>NOMBRE LOTE</th>
-                                            <th>ID LOTE</th>
-                                            <th>GERENTE</th>
-                                            <th>ASESOR</th>
-                                            <th>DOCUMENTO</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-
-                            </div>
-                        </div>
--->
+ 
                     </div>
                 </div>
             </div>

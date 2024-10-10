@@ -2539,14 +2539,29 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->result();
     }
 
+    public function getLotesOptionDirecto($idCondominio) {
+        $query = "SELECT 
+            lo.idLote as value, 
+            lo.nombreLote as label
+        FROM 
+            lotes lo
+        LEFT JOIN proceso_casas_directo pcd ON pcd.idLote = lo.idLote AND pcd.estatus = 1
+        WHERE lo.idCondominio = $idCondominio
+        AND pcd.idProceso IS NOT NULL
+        GROUP BY lo.idLote, lo.nombreLote
+        ORDER BY lo.idLote";
+
+        return $this->db->query($query)->result();
+    }
+
     public function getListaDocumentacionProcesoCasas($idLote)
     {
         $query = "WITH fullData AS (
-            SELECT dpc.idDocumento, CASE WHEN dpc.documento = 'Titulo de propiedad' THEN 'ARCHIZO ZIP' ELSE dpc.documento END AS documento, dpc.archivo, CAST(resi.descripcion AS VARCHAR(MAX)) AS proyecto, CAST(con.nombre AS VARCHAR(MAX)) AS condominio,lo.nombreLote,
+            SELECT dpc.idDocumento, CASE WHEN dpc.documento = 'Titulo de propiedad' THEN 'ARCHIVO ZIP' ELSE dpc.documento END AS documento, dpc.archivo, CAST(resi.descripcion AS VARCHAR(MAX)) AS proyecto, CAST(con.nombre AS VARCHAR(MAX)) AS condominio,lo.nombreLote,
             lo.idLote, CASE WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) END AS gerente,
             CASE WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) END AS asesor,
             CASE WHEN dpc.tipo IN (0) THEN 1 ELSE 0 END AS descargar,
-            pcb.idProcesoCasas
+            pcb.idProcesoCasas,CASE WHEN dpc.documento = 'Titulo de propiedad' THEN 1 ELSE 0 END AS visualizarZIP
             FROM documentos_proceso_casas dpc
             LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = dpc.idProcesoCasas
             LEFT JOIN lotes lo ON lo.idLote = pcb.idLote
@@ -2557,10 +2572,10 @@ AND vb.proyectos != 1";
             LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
             WHERE pcb.idLote = $idLote AND dpc.archivo IS NOT NULL
         )
-        SELECT idDocumento, idProcesoCasas, documento, archivo, proyecto, condominio, nombreLote,  idLote, gerente, asesor, descargar 
+        SELECT idDocumento, idProcesoCasas, documento, archivo, proyecto, condominio, nombreLote,  idLote, gerente, asesor, descargar,visualizarZIP
         FROM fullData
         WHERE (gerente != '' AND asesor != '')
-        GROUP BY idDocumento, documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, descargar, idProcesoCasas ORDER BY idProcesoCasas;
+        GROUP BY idDocumento, documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, descargar, idProcesoCasas,visualizarZIP ORDER BY idProcesoCasas;
         ";
 
         return $this->db->query($query)->result();
@@ -2684,6 +2699,30 @@ AND vb.proyectos != 1";
                     FROM fullData
                     WHERE (gerente != '' AND asesor != '')
                     GROUP BY documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, descargar, idProcesoCasas";
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentacionProcesoCasasDirecto($idLote) {
+        $query = "  WITH fullData AS
+                        (SELECT dpcd.idDocumento,  dpcd.documento , dpcd.archivo, CAST(resi.descripcion AS VARCHAR(MAX)) AS proyecto, CAST(con.nombre AS VARCHAR(MAX)) AS condominio,lo.nombreLote,
+                                lo.idLote, CASE WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) END AS gerente,
+                                CASE WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) END AS asesor,
+                                CASE WHEN dpcd.tipo IN (0) THEN 1 ELSE 0 END AS descargar,
+                                pcd.idProceso
+                                FROM documentos_proceso_credito_directo dpcd 
+                                LEFT JOIN proceso_casas_directo  pcd ON pcd.idProceso = dpcd.idProceso
+                                LEFT JOIN lotes lo ON lo.idLote = pcd.idLote
+                                LEFT JOIN clientes cli ON cli.idLote = lo.idLote
+                                LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+                                LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+                                LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
+                                LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
+                            WHERE pcd.idLote = $idLote  AND dpcd.archivo IS NOT NULL
+                        )
+                        SELECT idDocumento, documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, idProceso
+                        FROM fullData
+                        WHERE (gerente != '' AND asesor != '')
+                        GROUP BY idDocumento, documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, idProceso";
         return $this->db->query($query)->result();
     }
 }

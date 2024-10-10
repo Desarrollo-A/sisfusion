@@ -416,6 +416,18 @@ class Casas extends BaseController
         $this->json($lotes);
     }
 
+    public function lotes_option_directo() {
+        $idCondominio = $this->input->get('condominio');
+
+        if (!isset($idCondominio)) {
+            $this->json([]);
+        }
+
+        $lotes = $this->CasasModel->getLotesOptionDirecto($idCondominio);
+
+        $this->json($lotes);
+    }
+
     public function lotesCreditoDirecto()
     {
         $data = $this->input->get();
@@ -5432,10 +5444,22 @@ class Casas extends BaseController
 
     public function lista_toda_documentacion_casas_banco(){
         $lote = $this->get('lote');
+        $idRol = $this->idRol = $this->session->userdata('id_rol');
+        $extraColums = "";
+        $idUsuario = $this->idUsuario = $this->session->userdata('id_usuario');
 
         if(!isset($lote)){
             return $this->json([]);
         }
+
+        switch($idRol) {
+            case '7':
+                $extraColums = " AND (cli.id_asesor_c = $idUsuario)";
+                break;
+            //case ''
+        }
+        
+        
 
         $documentos_proceso_casas = $this->CasasModel->getListaDocumentacionProcesoCasas($lote);
         $documentos_cotizaciones = $this->CasasModel->getListaDocumentacionCotizaciones($lote);
@@ -5452,10 +5476,17 @@ class Casas extends BaseController
         return $this->json($merged_documents);
     }
 
-    public function lista_toda_documentacion_casas_directo(){
+    public function lista_toda_documentacion_casas_directo(){ 
+        $lote = $this->get('lote');
 
+        if(!isset($lote)){
+            return $this->json([]);
+        }
+        
+        $documentos_proceso_casas_directo = $this->CasasModel->getListaDocumentacionProcesoCasasDirecto($lote);
+        return $this->json($documentos_proceso_casas_directo);
     }
-    public function lista_documentacion_proceso_pagos() {
+    public function lista_toda_documentacion_casas_pagos() {
         $lote = $this->get('lote');
 
         if(!isset($lote)){
@@ -5466,10 +5497,17 @@ class Casas extends BaseController
         $documentos_avances_pdf = $this->CasasModel->getListaDocumentacionAvancesComplementoPDF($lote);
         $documentos_avances_xml = $this->CasasModel->getListaDocumentacionAvancesComplementoXML($lote);
 
-        return $this->json(array_merge(
+        $merged_documents = array_merge(
             $documentos_proceso_pagos,
             $documentos_avances_pdf, 
             $documentos_avances_xml
-        ));
+        );
+
+        usort($merged_documents, function($a, $b) {
+            return $a->idProcesoCasas <=> $b->idProcesoCasas;
+        });
+
+        return $this->json($merged_documents);
+
     }
 }
