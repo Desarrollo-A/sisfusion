@@ -5,19 +5,7 @@ $('#prospects-datatable_dir').on('draw.dt', function() {
     });
 });
 
-// $('#prospects-datatable_dir thead tr:eq(0) th').each( function (i) {
-//     var title = $(this).text();
-//     titulosEvidence.push(title);
-//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-//         $( 'input', this ).on('keyup change', function () {
-//             if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value ) {
-//                 $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
-//             }
-//         });
-// });
-
 $(document).ready(function () {
-    construirHead("prospects-datatable_dir");
     var url='';
 
     $(document).on('click', '#buscarBtn', function () {
@@ -126,6 +114,8 @@ $(document).ready(function () {
             updateTable(typeTransaction, busquedaParams, urlBusqueda);
         }
 
+        /**********************************************************/
+        
         // CORREO + TELEFONO vacío     -------  nombre, ap_paterno, ap_maternov
         if(nombreField.length > 0 && correoField.length <= 0 && telefonoField.length <= 0 && ap_paterno.length>0 && ap_materno.length>0){
             let busquedaParams = {nombre: nombreField, ap_paterno: ap_paterno, ap_materno:ap_materno};
@@ -239,7 +229,8 @@ $(document).ready(function () {
 });
 
 function updateTable(typeTransaction, busquedaParams, urlBusqueda){
-    tabla_6 = $('#prospects-datatable_dir').dataTable({
+    construirHead("prospects-datatable_dir");
+    tabla_6 = $('#prospects-datatable_dir').DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -253,7 +244,7 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
                 if (d.estatus == 1) {
                     return '<center><span class="label lbl-green">'+_("vigente")+'</span><center>';
                 } else {
-                    return '<center><span class="label lbl-warinig">'+_("no-vigente")+'</span><center>';
+                    return '<center><span class="label lbl-danger">'+_("no-vigente")+'</span><center>';
                 }
             }
         },
@@ -315,7 +306,7 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
         ,
         { 
             data: function (d) {
-                return '<div class="d-flex justify-center"><button  data-toggle="tooltip"  data-placement="top" title="'+_("ver-informacion")+'" data-i18n-tooltip="'+_("ver-informacion")+'" class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons">remove_red_eye</i></button></div>';
+                return '<div class="d-flex justify-center"><button data-toggle="tooltip" data-placement="top" title="'+_("ver-informacion")+'" class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons">remove_red_eye</i></button></div>';
             }
         }],
         pagingType: "full_numbers",
@@ -335,6 +326,7 @@ function updateTable(typeTransaction, busquedaParams, urlBusqueda){
             data:busquedaParams
         }	
     })
+    applySearch(tabla_6);
 }
 
 $(document).on('click', '.see-information', function(e) {
@@ -373,7 +365,11 @@ $(document).on('click', "#ResetForm", function() {
 });
 
 function fillFields(v, type) {
-
+/*
+* 0 update prospect
+* 1 see information modal
+* 2 update reference
+*/
     if (type == 0) {
         $("#nationality").val(v.nacionalidad);
         $("#legal_personality").val(v.personalidad_juridica);
