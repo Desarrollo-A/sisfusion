@@ -165,7 +165,7 @@ var optionsProspClients = {
         },
     },
     noData: {
-        text: _('no-informacion-para-mostrar')
+        text: 'No hay informacion para mostrar...'
     }
 };
 
@@ -182,7 +182,7 @@ var optionsWeekly = {
         },
     },
     noData: {
-        text: _('no-informacion-para-mostrar')
+        text: 'No hay informacion para mostrar...'
     },
     colors: ['#103F75', '#006A9D', '#0089B7', '#039590', '#008EAB', '#00ACB8', '#16C0B4', '#4BBC8E', '#00CDA3', '#92E784'],
     grid: {
@@ -259,7 +259,7 @@ var optionsFunnel = {
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
             title: {
-                formatter: (seriesName) => _('cantidad'),
+                formatter: (seriesName) => 'Cantidad',
             },
         },
     }
@@ -273,8 +273,6 @@ function readyHome() {
     loadInit();
     loadApexChart();
     $('[data-toggle="tooltip"]').tooltip();
-    changeDivTooltips();
-    $('body').i18n();
 }
 
 function loadApexChart() {
@@ -287,12 +285,7 @@ function loadApexChart() {
     chartProspClients = new ApexCharts(document.querySelector("#chartProspClients"), optionsProspClients);
     chartProspClients.render();
 
-    chartWeekly = new ApexCharts(document.querySelector("#chartWeekly"), {
-        ...optionsWeekly,
-        noData: {
-            text: _('no-informacion-para-mostrar')
-        }
-    });
+    chartWeekly = new ApexCharts(document.querySelector("#chartWeekly"), optionsWeekly);
     chartWeekly.render();
 
     chartFunnel = new ApexCharts(document.querySelector("#chartFunnel"), optionsFunnel);
