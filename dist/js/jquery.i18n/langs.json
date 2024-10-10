@@ -1284,7 +1284,8 @@
         ,"ingresos-extras":"EXTRA INCOME"
         ,"autorizar-a" : "Authorize to"
         ,"Rechazar-a": "Autorizar a"
-        ,"la-cantidad-de":"the amount of"
+        ,"la-cantidad-de":"the amount of",
+		"este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you."
 
 	},
 	"es": {
@@ -2567,6 +2568,7 @@
         ,"ingresos_extras": "INGRESOS EXTRA"
         ,"autorizar-a": "Autorizar a"
         ,"Rechazar-a": "Autorizar a"
-        ,"la-cantidad-de" : "la cantidad de"
+        ,"la-cantidad-de" : "la cantidad de",
+		"este-listado-todos-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado."
 	}
 }
