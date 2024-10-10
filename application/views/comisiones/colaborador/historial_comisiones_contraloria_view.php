@@ -85,7 +85,7 @@
                                     <a href="#solicitudesSUMA" role="tab" data-toggle="tab">Historial SUMA</a>
                                 </li>
                                 <li>
-                                    <a href="#historialDescuentos" role="tab" data-toggle="tab">Historial descuentos</a>
+                                    <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="cargartabla()">Historial descuentos</a>
                                 </li>
 
                             <?php } ?>
@@ -271,7 +271,7 @@
                                                 </div>
                                                 <div class="material-datatables">
                                                     <div class="form-group">
-                                                        <table class="table-striped table-hover" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
+                                                        <table class="table-striped table-hover hide" id="tablaHistorialDescuentos" name="tablaHistorialDescuentos">
                                                             <thead>
                                                                 <tr>
                                                                     <th>ID PAGO</th>

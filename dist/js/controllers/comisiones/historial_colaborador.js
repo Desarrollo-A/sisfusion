@@ -1053,13 +1053,15 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
     });
 });
 
-$(document).ready(function () {
-
+function cargartabla(){
     if(usuario_id !=3){
-    var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
-    $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
-    consultarHistorialDescuentos(enlace)
+        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
+        $("#tablaHistorialDescuentos").removeClass('hide');
+        consultarHistorialDescuentos(enlace)
     }
+}
+
+$(document).ready(function () {
 
     let titulosHistorialOOAM = [];
     $('#tablaHistorialOOAM thead tr:eq(0) th').each(function (i) {
