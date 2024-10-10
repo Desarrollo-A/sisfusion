@@ -111,13 +111,13 @@ $(document).ready (function() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Autorizaciones' ,
+            titleAttr: `${_('descargar-excel')}`,
+            title: `${_('autorizaciones')}`,
             exportOptions: {
-                columns: num_colum_autorizaciones,
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_autorizaciones[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -126,14 +126,14 @@ $(document).ready (function() {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
-            title: 'Autorizaciones' ,
+            titleAttr: `${_('descargar-pdf')}`,
+            title: `${_('autorizaciones')}`,
             orientation: 'landscape',
             exportOptions: {
-                columns: num_colum_autorizaciones,
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' '+titulos_autorizaciones[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -143,7 +143,7 @@ $(document).ready (function() {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de autorizaciones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/1zcshxE2nP4', '_blank');
+                window.open('https://youtu.be/2pvgEilVZrg', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -190,22 +190,6 @@ $('#addExp').on('draw.dt', function() {
     });
 });
 
-let titulos_solicitud = [];
-let num_colum_solicitud = [];
-// $('#sol_aut thead tr:eq(0) th').each( function (i) {
-//     var title = $(this).text();
-//     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-//     titulos_solicitud.push(title);
-//     num_colum_solicitud.push(i);
-//     $( 'input', this ).on('keyup change', function () {
-//         if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
-//             $('#sol_aut').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-//     $('[data-toggle="tooltip"]').tooltip();
-// });
-num_colum_solicitud.pop();
-
 $(document).ready (function() {
     construirHead('sol_aut');
     var table2;
@@ -233,13 +217,13 @@ $(document).ready (function() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Solicitud de autorizaciones' ,
+            titleAttr: `${_('descargar-excel')}`,
+            title: `${_('solicitud-autorizacion')}`,
             exportOptions: {
-                columns: num_colum_solicitud,
+                columns: [0,1,2,3,4,5,6,7,8,9],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_solicitud[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -248,14 +232,14 @@ $(document).ready (function() {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
-            title: 'Solicitud de autorizaciones' ,
+            titleAttr: `${_('descargar-pdf')}`,
+            title: `${_('solicitud-autorizacion')}`,
             orientation: 'landscape',
             exportOptions: {
-                columns: num_colum_solicitud,
+                columns: [0,1,2,3,4,5,6,7,8,9],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' '+titulos_solicitud[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -265,7 +249,7 @@ $(document).ready (function() {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de autorizaciones podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/1zcshxE2nP4', '_blank');
+                window.open('https://youtu.be/2pvgEilVZrg', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -368,7 +352,7 @@ $(document).on('click', '.seeAuts', function (e) {
         $('#auts-loads').empty();
         var statusProceso;
         $.each(JSON.parse(data), function(i, item) {
-            if(item['estatus'] == 0){               
+            if(item['estatus'] == 0){
                 statusProceso = `<span class='label lbl-green'>${_('aceptada')}</span>`;
             }
             else if(item['estatus'] == 1){
@@ -440,14 +424,14 @@ function validateNumsOfAutorizacion(){
 }
 
 $(document).ready(function () {
-    validateNumsOfAutorizacion();    
+    validateNumsOfAutorizacion();
     if(id_usuario_general == 1){
         alerts.showNotification("top", "right", "Se enviaron las autorizaciones correctamente", "success");
     }
     else if( id_usuario_general == 99){
         alerts.showNotification("top", "right", "Ocurrio un error al enviar la autorización", "warning");
     }
-    
+
     $("#dirAutoriza").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'registroCliente/getActiveDirs/',

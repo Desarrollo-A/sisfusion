@@ -52,7 +52,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <h4 class="card-title"><b>Cargar de documento fiscal</b></h4>
+                        <h4 class="card-title" data-i18n  = "carga-de-documento-fiscal"><b>Cargar de documento fiscal</b></h4>
                     </div>
                     <form id="EditarPerfilExtranjeroForm" name="EditarPerfilExtranjeroForm" method="post">
                         <div class="modal-body">
@@ -263,16 +263,16 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#nuevas" role="tab" data-toggle="tab">Nuevas</a>
+                                <a href="#nuevas" role="tab" data-toggle="tab" data-i18n  ="nuevas">Nuevas</a>
                             </li>
                             <li>
-                                <a href="#revision" role="tab" data-toggle="tab">En revisión</a>
+                                <a href="#revision" role="tab" data-toggle="tab" data-i18n  ="en-revision">En revisión</a>
                             </li>
                             <li>
-                                <a href="#porPagar" role="tab" data-toggle="tab">Por pagar</a>
+                                <a href="#porPagar" role="tab" data-toggle="tab" data-i18n  = "x-pagar">Por pagar</a>
                             </li>
                             <li>
-                                <a href="#pausadas" role="tab" data-toggle="tab">Pausadas</a>
+                                <a href="#pausadas" role="tab" data-toggle="tab" data-i18n  = "pausadas">Pausadas</a>
                             </li>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -283,16 +283,16 @@
                                             <div class="encabezadoBox">
                                                 <div class="row">
                                                     <div class="col-md-12 pb-2">
-                                                        <p class="card-title">
+                                                        <p class="card-title" data-i18n  ="mensaje-nuevas-comiciones-suma">
                                                             Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial 
                                                             <a href="<?= base_url() ?>Comisiones/historial_colaborador">
-                                                                <b>Da clic aquí para ir al historial</b>
+                                                                <b data-i18n = "click-historial-suma">Da clic aquí para ir al historial</b>
                                                             </a>
                                                         </p>
                                                     </div>
                                                     <?php if ($this->session->userdata('forma_pago') == 3) { ?>
                                                         <div class="col-md-12">
-                                                            <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Al monto mostrado habrá que descontar el <b>impuesto estatal</b> del 
+                                                            <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Al monto mostrado habrá que descontar el <b data-i18n  ="impuesto-estatal-mensaje">impuesto estatal</b> del 
                                                             <?php
                                                                 $sede = $this->session->userdata('id_sede');
                                                                 $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = " . $sede . "");
@@ -306,16 +306,18 @@
                                                         </div>
                                                     <?php } else if ($this->session->userdata('forma_pago') == 4) { ?>
                                                         <div class="col-md-12 m-1">
-                                                            <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
+                                                            <p style="color:#0a548b;" data-i18n = "mensaje-nuevas-deduciones" ><i class="fa fa-info-circle" aria-hidden="true" ></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b data-i18n = "mensaje-remanente-dis">Remanente Distribuible.</b>
                                                         </div>
                                                     <?php } ?>
             
                                                     <?php if ($this->session->userdata('forma_pago') == 5) { ?>
                                                         <div class="col-md-6">
-                                                            <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b>
-                                                                sin establecimiento permanente en México.
+                                                            <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b data-i18n = "estranjero">extranjero</b>
+                                                                <p data-i18n = "sin-establecimiento-permanente-mx">
+                                                                    sin establecimiento permanente en México.
+                                                                </p>    
                                                                 <a data-toggle="modal" data-target="#info-modal" style="cursor: pointer;">
-                                                                    <u>Da clic aquí para más información</u>
+                                                                    <u data-i18n = "click-mas-informacion">Da clic aquí para más información</u>
                                                                 </a>
                                                             </p>
                                                         </div>
@@ -327,13 +329,13 @@
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-6">
                                                             <div class="form-group text-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo sin impuestos:</h4>
+                                                                <h4 class="title-tot center-align m-0" data-i18n = "saldo-sn-impuesto">Saldo sin impuestos:</h4>
                                                                 <p class="input-tot" name="myText_nuevas" id="myText_nuevas">$0.00</p>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-6">
                                                             <div class="form-group text-center">
-                                                                <h4 class="title-tot center-align m-0">Solicitar:</h4>
+                                                                <h4 class="title-tot center-align m-0" data-i18n = "solicitar">Solicitar:</h4>
                                                                 <p class="input-tot" id="totpagarPen">$0.00</p>
                                                             </div>
                                                         </div>
@@ -351,16 +353,16 @@
                                                         <thead>
                                                             <tr>
                                                                 <th></th>
-                                                                <th>ID DE PAGO</th>
-                                                                <th>REFERENCIA</th>
-                                                                <th>NOMBRE</th>
-                                                                <th>SEDE</th>
-                                                                <th>FORMA DE PAGO</th>
-                                                                <th>TOTAL DE LA COMISIÓN</th>
-                                                                <th>IMPUESTO</th>
-                                                                <th>% COMISIÓN</th>
-                                                                <th>ESTATUS</th>
-                                                                <th>MÁS</th>
+                                                                <th>id-pago</th>
+                                                                <th>referencia</th>
+                                                                <th>nombre</th>
+                                                                <th>sede</th>
+                                                                <th>forma-pago</th>
+                                                                <th>total-comision</th>
+                                                                <th>impuesto</th>
+                                                                <th>porc-comision</th>
+                                                                <th>estatus</th>
+                                                                <th>mas</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -382,7 +384,7 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Solicitado sin impuestos:</h4>
+                                                                <h4 class="title-tot center-align m-0" data-i18n = "solicitado-sin-impuestos" >Solicitado sin impuestos:</h4>
                                                                 <p class="input-tot pl-1" name="myText_revision" id="myText_revision">$0.00</p>
                                                             </div>
                                                         </div>
@@ -392,16 +394,16 @@
                                             <table class="table-striped table-hover" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID DE PAGO</th>
-                                                        <th>REFERENCIA</th>
-                                                        <th>NOMBRE</th>
-                                                        <th>SEDE</th>
-                                                        <th>FORMA DE PAGO</th>
-                                                        <th>TOTAL DE LA COMISIÓN</th>
-                                                        <th>IMPUESTO</th>
-                                                        <th>% COMISIÓN</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>id-pago</th>
+                                                        <th>referencia</th>
+                                                        <th>nombre</th>
+                                                        <th>sede</th>
+                                                        <th>forma-pago</th>
+                                                        <th>total-comision</th>
+                                                        <th>impuesto</th>
+                                                        <th>porc-comision</th>
+                                                        <th>estatus</th>
+                                                        <th>mas</th>
                                                     </tr>
                                                 </thead>
                                             </table>

@@ -81,7 +81,7 @@
                                     <table id="tablaLista" name="tablaListaProspectos" class="table-striped table-hover">
                                         <thead>
                                         <tr>
-                                            <th><span data-i18n="proyecto">proyecto</span></th>
+                                            <th>proyecto</th>
                                             <th>condominio</th>
                                             <th>lote</th>
                                             <th>id-lote</th>

@@ -61,11 +61,11 @@ function tableUsers(){
         columns: [
             { data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">ACTIVO</span><center>';
+                    return `<center><span class="label lbl-green">${_("activo")}</span><center>`;
                 } else if (d.estatus == 3) {
-                    return '<center><span class="label lbl-orangeYellow">INACTIVO COMISIONADO</span><center>';
+                    return `<center><span class="label lbl-orangeYellow">${_("inactivo")}</span><center>`;
                 } else {
-                    return '<center><span class="label lbl-warning">INACTIVO</span><center>';
+                    return `<center><span class="label lbl-warning">${_("inactivo")}</span><center>`;
                 }
             }
             },
