@@ -38,7 +38,7 @@ $('#catalogo_historial, #tipo_historial').change(function () {
         proyecto = $('#ano_historial').val();
         condominio = $('#catalogo_historial').val();
         tipo = $('#tipo_historial').val();
-        // $('#tabla_historialGral').removeClass('hide');
+         $('#tabla_historialGral').removeClass('hide');
 
         if (condominio == '' || condominio == null || condominio == undefined) {
             condominio = 0;

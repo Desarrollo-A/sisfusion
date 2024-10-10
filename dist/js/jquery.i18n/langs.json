@@ -1174,7 +1174,9 @@
                 "id-prospecto" : "Prospect id",
                 "no-vigente"  :"Not active",
                 "no-aplica" : "Not applicable",
-                "este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you."
+                "este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you.",
+				"posicion":"Position"
+
         },
         "es": {
                 "1-origen": "1% de origen",
@@ -2351,6 +2353,8 @@
                 "id-prospecto" : "Id Prospecto",
                 "no-vigente": "No vigente",
                 "no-aplica" : "No aplica",
-                "este-listado-todos-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado."
+                "este-listado-todos-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado.",
+				"posicion":"Posición"
+
         }
 }
