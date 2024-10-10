@@ -229,8 +229,6 @@ $('#formFilters').on('submit', function(event){
     })
 });
 
-let titulos_encabezado = [];
-let num_colum_encabezado = [];
 
 function dataTable(ruta) {
     construirHead('addExp');

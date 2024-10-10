@@ -30,9 +30,9 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: _('descargar-excel'), 
-            title: _('adelantos'),
+            title: _('reporte-anticipos'),
             exportOptions: {
-                columns: [0,1, 2, 3, 4, 5, 7, 8, 9,10,11],
+                columns: [0,1, 2, 3, 4, 7],
                 format: {
                         header: function (d, columnIdx) {
                         return $(d).attr('placeholder').toUpperCase();
@@ -128,12 +128,13 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         }
 
             ],
-        columnDefs: [{
-            defaultContent: "Sin especificar",
-            targets: [5], visible: false,
-            searchable: true,
-            orderable: false
-        }],
+            columnDefs: [{
+                defaultContent: "Sin especificar",
+               // targets: "_all",
+                targets: [5], visible: false,
+                searchable: true,
+                orderable: false
+            }],
         ajax: {
             url: `${general_base_url}Descuentos/solicitudes_generales_dc`,
             dataSrc: "",
