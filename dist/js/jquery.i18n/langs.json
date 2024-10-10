@@ -1348,6 +1348,8 @@
 		"ingresos-extras": "EXTRA INCOME",
 		"autorizar-a": "Authorize to",
 		"Rechazar-a": "Autorizar a",
+		"fecha-45": "Date +45",
+		"reporte-ventas-compartidas": "Shared sales report",
 		"la-cantidad-de":"the amount of",
 		"mensaje-oferta-vigencia1": "This offer will have",
 		"mensaje-oferta-vigencia2": "a validity of",
@@ -2794,9 +2796,7 @@
 		"lotes-cancelados-proceso": "Lotes cancelados en proceso",
 		"cancelar-lote": "Cancelar lote",
 		"reporte-retiros-resguardo": "Reporte Retiros Resguardo",
-		"correo-2": "Correo",        
-		"enterado":"ENTERADO",
-		"asesor-titular":"Asesor titular",
+		"correo-2": "Correo",
 		"rechazo": "Rechazo",
 		"rechazo-juridico-2": "RECHAZO (JURÍDICO)",
 		"vencido": "VENCIDO",
@@ -2961,6 +2961,10 @@
 		"ingresos_extras": "INGRESOS EXTRA",
 		"autorizar-a": "Autorizar a",
 		"Rechazar-a": "Autorizar a",
-		"la-cantidad-de": "la cantidad de"
+		"la-cantidad-de": "la cantidad de",
+		"fecha-45": "Fecha +45",
+		"enterado": "Enterado",
+		"asesor-titular": "Asesor titular",
+		"reporte-ventas-compartidas": "Reporte ventas compartidas"
 	}
 }
