@@ -13,6 +13,7 @@ $(document).ready(function () {
     }, 'json');
 });
 
+
 $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
     $("#condominio").html("");
@@ -33,6 +34,7 @@ $('#proyecto').change(function () {
     fillTable(index_proyecto, 0);
 });
 
+
 $('#condominio').change(function () {
     $('#spiner-loader').removeClass('hide');
     let index_proyecto = $("#proyecto").val();
@@ -41,20 +43,22 @@ $('#condominio').change(function () {
     $('#spiner-loader').addClass('hide');
 });
 
+
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 const excluir_column = ['ACCIONES', 'MÁS'];
 
+
 $("#tabla_clientes").ready(function () {
     $('#tabla_clientes thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
-        if (!excluir_column.includes(title) && title !== ''){
+        if (!excluir_column.includes(title) && title !== '') {
             titulos_encabezado.push(title);
             num_colum_encabezado.push(titulos_encabezado.length);
         }
-        if(title !== ''){
-            let readOnly = excluir_column.includes(title) ? 'readOnly': '';
-            let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 57px;' : '');
+        if (title !== '') {
+            let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+            let width = title == 'MÁS' ? 'width: 37px;' : (title == 'ACCIONES' ? 'width: 57px;' : '');
             $(this).html(`<input type="text" style="${width}" class="textoshead " data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
             $('input', this).on('keyup change', function () {
                 if (tabla_valores_cliente.column(i).search() !== this.value) {
@@ -65,21 +69,23 @@ $("#tabla_clientes").ready(function () {
     });
 });
 
+
 function fillTable(index_proyecto, index_condominio) {
+    construirHead('tabla_clientes');
     tabla_valores_cliente = $("#tabla_clientes").DataTable({
         width: '100%',
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Registro de clientes',
-            title: 'Registro de clientes',
+            titleAttr: `${_('descargar-excel')}`,
+            title: `${_('descargar-excel')}`,
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx-1] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -139,7 +145,7 @@ function fillTable(index_proyecto, index_condominio) {
             {
                 data: function (d) {
                     return `<center>
-                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "${ventas-compartidas}" data-i18n-tooltip="ventas-compartidas" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
+                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "${_('ventas-compartidas')}" data-i18n-tooltip="ventas-compartidas" data-idcliente="${d.id_cliente}" data-idLote="${d.idLote}"><i class="material-icons">people</i></button>
                             </center>`;
                 }
             }
@@ -164,23 +170,28 @@ function fillTable(index_proyecto, index_condominio) {
             [1, 'asc']
         ],
     });
-
-    $('#tabla_clientes').on('draw.dt', function() {
+    applySearch(tabla_valores_cliente);
+    $('#tabla_clientes').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
-    
+
+    $(window).resize(function () {
+        tabla_valores_cliente.columns.adjust();
+    });
+
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_valores_cliente.row(tr);
 
-        if (row.child.isShown() ) {
+
+        if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } else {
-            var informacion_adicional = 
+            var informacion_adicional =
                 `<div class="container subBoxDetail">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
@@ -209,7 +220,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    RFC: 
+                                    RFC:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().rfc)}
                             </label>
@@ -217,7 +228,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Fecha +45: 
+                                    Fecha +45:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().fechaVecimiento)}
                             </label>
@@ -225,7 +236,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Fecha de nacimiento: 
+                                    Fecha de nacimiento:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().fechaNacimiento)}
                             </label>
@@ -233,7 +244,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Domicilio particular: 
+                                    Domicilio particular:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().domicilio_particular)}
                             </label>
@@ -241,7 +252,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Enterado: 
+                                    Enterado:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().enterado)}
                             </label>
@@ -249,7 +260,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Gerente: 
+                                    Gerente:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().gerente)}
                             </label>
@@ -257,7 +268,7 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Asesor titular: 
+                                    Asesor titular:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().asesor)}
                             </label>
@@ -271,6 +282,7 @@ function fillTable(index_proyecto, index_condominio) {
     });
 }
 
+
 var id_lote_global = 0;
 $(document).on('click', '.cop', function (e) {
     e.preventDefault();
@@ -281,7 +293,8 @@ $(document).on('click', '.cop', function (e) {
     $('#verDetalles').modal('show');
 });
 
-let titulos_encabezado_detalle= [];
+
+let titulos_encabezado_detalle = [];
 let num_colum_encabezado_detalle = [];
 // $('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
 //     var title = $(this).text();
@@ -295,22 +308,24 @@ let num_colum_encabezado_detalle = [];
 //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 // });
 
+
 $(document).ready(function () {
+    construirHead('tabla_clientes_detalles');
     tabla_6 = $('#tabla_clientes_detalles').DataTable({
         responsive: true,
         searchable: false,
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Reporte ventas compartidas',
-            title: 'Reporte ventas compartidas',
+            titleAttr: `${_('descargar-excel')}`,
+            title: `${_('descargar-excel')}`,
             exportOptions: {
-                columns: num_colum_encabezado_detalle,
+                columns: [0,1,2,3,4,5,6,7],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado_detalle[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -367,11 +382,13 @@ $(document).ready(function () {
         },
         initComplete: function () {
             $('[data-toggle="tooltip_details"]').tooltip("destroy");
-            $('[data-toggle="tooltip_details"]').tooltip({trigger: "hover"});
+            $('[data-toggle="tooltip_details"]').tooltip({ trigger: "hover" });
         }
     });
+    applySearch(tabla_6);
 });
 
-$(window).resize(function () {
-    tabla_valores_cliente.columns.adjust();
-});
+
+// $(window).resize(function () {
+//     tabla_valores_cliente.columns.adjust();
+// });
