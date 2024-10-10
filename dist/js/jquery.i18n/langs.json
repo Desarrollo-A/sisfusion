@@ -1474,12 +1474,12 @@
 		"mensaje-oferta-vigencia125": "must send it",
 		"mensaje-oferta-vigencia126": "signed within a",
 		"mensaje-oferta-vigencia127": "period not exceeding",
-		"mensaje-oferta-vigencia128": "5 (five) days.",
 		"informacion-adicional2": "ADDITIONAL INFORMATION",
 		"vencido2" : "EXPIRED",
 		"status-13-listo-contraloria" : "STATUS 13 READY (COMPTROLLER)",
 		"status-14-rechazo-contraloria" :"STATUS 14 REJECTED (CONTRALORÍA)",
-		"el-status-ya-fue-registrado" : "The status has already been entered"
+		"el-status-ya-fue-registrado" : "The status has already been entered",
+		"mensaje-oferta-vigencia128": "5 (five) days."
 	},
 		
 	"es": {
@@ -2800,32 +2800,6 @@
 		"fecha-vencimiento-2": "Fecha vencimiento",
 		"mostrar-tabla": "Mostrar tabla",
 		"compartida-subdirector": "Compartida subdirector",
-		"sede-ya-seleccionada":"La sede seleccionada fue elegida previamente",
-		"rol-eliminado-correctamente":"El rol se ha eliminado correctamente",
-		"informacion-actualizada-correctamente":"La información se ha actualizado correctamente",
-		"usuario-registrado-correctamente":"El usuario se ha registrado correctamente.",
-		"nombre-usuario-en-uso":"El nombre de usuario ya está en uso, intentalo con otro",
-		"selecciona-opciones-menu":"Selecciona opciones de menú",
-		"ingresa-nombre":"Ingresa un nombre",
-		"ingresa-apellido-pa":"Ingresa apellido paterno",
-		"ingresa-correo":"Ingresa un correo",
-		"ingresa-metodo-pago":"Ingresa un método de pago",
-		"ingresa-telefono":"Ingresa un teléfono",
-		"ingresa-sede":"Ingresa una sede",
-		"selecciona-miembro":"Selecciona tipo de miembro",
-		"ingresa-nombre-usuario":"Ingresa nombre de usuario",
-		"ingresa-contraseña":"Ingresa contraseña",
-		"inactivo-comisionado":"Inactivo Comisionado",
-		"simbolico":"Simbólico",
-		"factor-humano":"Factor humano",
-		"seguros":"SEGUROS",
-		"casas-m":"CASAS",
-		"evidencia": "Evidencia"
-        ,"aprobados": "APROBADOS"
-        ,"ingresos_extras": "INGRESOS EXTRA"
-        ,"autorizar-a": "Autorizar a"
-        ,"Rechazar-a": "Autorizar a"
-        ,"la-cantidad-de" : "la cantidad de",
 		"mensaje-oferta-vigencia1": "Esta oferta tendrá",
 		"mensaje-oferta-vigencia2": "una vigencia de",
 		"mensaje-oferta-vigencia3": "180 (ciento ochenta)",
@@ -2953,7 +2927,6 @@
 		"mensaje-oferta-vigencia125": "deberá enviarlo",
 		"mensaje-oferta-vigencia126": "firmado en un",
 		"mensaje-oferta-vigencia127": "plazo no mayor a",
-		"mensaje-oferta-vigencia128": "5 (cinco) días.",
 		"informacion-adicional2": "INFORMACIÓN ADICIONAL",
 		"vencido2": "VENCIDO",
 		"status-13-listo-contraloria" : "STATUS 13 LISTO (CONTRALORÍA)",
