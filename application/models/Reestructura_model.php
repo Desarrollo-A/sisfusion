@@ -1915,7 +1915,7 @@ class Reestructura_model extends CI_Model
 
     public function checkReubicacion($id_lote)
     {
-        $query = $this->db->query('SELECT *FROM propuestas_x_lote WHERE id_lotep != ' . $id_lote . ' AND idLote =' . $id_lote);
+        $query = $this->db->query('SELECT pxl.*, lo.tipo_estatus_regreso FROM propuestas_x_lote pxl LEFT JOIN lotes lo ON lo.idLote = pxl.id_lotep WHERE id_lotep != ' . $id_lote . ' AND pxl.idLote = ' . $id_lote);
         return $query;
     }
 
@@ -1943,7 +1943,8 @@ class Reestructura_model extends CI_Model
 
     public function deleteFusion($id_lote)
     {
-        $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ( SELECT idLotePvOrigen FROM lotes WHERE idLote = ? )', $id_lote);
+        $idLote = $this->db->query("SELECT idLotePvOrigen FROM lotesFusion WHERE idLote = ?", $id_lote)->row();
+        $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ?', $idLote->idLotePvOrigen);
 
         return $query;
     }
