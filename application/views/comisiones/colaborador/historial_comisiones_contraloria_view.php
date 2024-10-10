@@ -147,7 +147,7 @@
                                                                 <th>pagado</th>
                                                                 <th>pendiente</th>
                                                                 <th>usuario</th>
-                                                                <th>position</th>
+                                                                <th>posicion</th>
                                                                 <th>detalles</th>
                                                                 <th>estatus</th>
                                                                 <th>acciones</th>
@@ -210,7 +210,7 @@
                                                                 <th>pagado</th>
                                                                 <th>pendiente</th>
                                                                 <th>usuario</th>
-                                                                <th>position</th>
+                                                                <th>posicion</th>
                                                                 <th>detalles</th>
                                                                 <th>estatus</th>
                                                                 <th>acciones</th>
@@ -246,15 +246,15 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>id-pago</th>
-                                                                    <th>reference</th>
-                                                                    <th>nombren</th>
+                                                                    <th>referencia</th>
+                                                                    <th>nombre</th>
                                                                     <th>sede</th>
                                                                     <th>forma-pago</th>
                                                                     <th>total-comision</th>
-                                                                    <th>impuestopan</th>
+                                                                    <th>impuesto</th>
                                                                     <th>porc-comision</th>
                                                                     <th>estatus</th>
-                                                                    <th>accionespan</th>
+                                                                    <th>acciones</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>
