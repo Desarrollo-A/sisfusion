@@ -1,18 +1,3 @@
-let titulosEvidence = [];
-
-// $('#Jtabla thead tr:eq(0) th').each(function (i) {
-
-//
-//     let title = $(this).text();
-//     titulosEvidence.push(title);
-//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-//     $( 'input', this).on('keyup change', function () {
-//         if ($('#Jtabla').DataTable().column(i).search() !== this.value) {
-//             $('#Jtabla').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-// });
-
 $(document).ready(function () {
   sp.initFormExtendedDatetimepickers();
   $(".datepicker").datetimepicker({ locale: "es" });
