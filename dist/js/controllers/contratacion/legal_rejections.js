@@ -11,13 +11,13 @@ $("#Jtabla").ready( function(){
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Rechazos Jurídico',
+            titleAttr: `${_('descargar-excel')}`,
+            title: _("rechazo-juridico"),
             exportOptions: {
                 columns: [1,2,3,4,5,6],
                 format: {
-                    header:  function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                    header: function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -42,7 +42,7 @@ $("#Jtabla").ready( function(){
         },
         {
             "data": function( d ){
-                var lblStats = '<span class="label label-danger">Rechazo</span>';
+                var lblStats = `<span class="label label-danger">${_("rechazo")}</span>`;
                 return lblStats;
             }
         },
@@ -98,6 +98,8 @@ $("#Jtabla").ready( function(){
         },
     });
 
+    applySearch(tabla_6);
+
     $('#Jtabla tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_6.row(tr);
@@ -107,9 +109,9 @@ $("#Jtabla").ready( function(){
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } 
         else {
-            var status = _("rechazo-juridico-2");
-            var fechaVenc = _("vencido");
-            var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>${_("informacion-adicional")}</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>${_("estatus-2")}: </b>'+status+'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>${_("comentario2")} </b>'+ row.data().comentario +'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha vencimiento: </b>' + fechaVenc + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha realizado: </b>' + row.data().modificado + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>'+row.data().coordinador+'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>'+row.data().asesor+'</label></div></div></div>`;
+            var status = `<span data-i18n="rechazo-juridico-2"> ${_("rechazo-juridico-2")}</span>`;
+            var fechaVenc = `<span data-i18n="vencido"> ${_("vencido")}</span>`;
+            var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b data-i18n="informacion-adicional">${_("informacion-adicional")}</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="estatus-2">${_("estatus-2")}</b>: ${status}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="comentario">${_("comentario")}</b>: ${row.data().comentario}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="fecha-vencimiento-2">${_("fecha-vencimiento-2")}</b>: ${fechaVenc}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="fecha-realizado">${_("fecha-realizado")}</b>: ${row.data().modificado}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="coordinador">${_("coordinador")}</b>: ${row.data().coordinador}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="asesor">${_("asesor")}</b>: ${row.data().asesor}</label></div></div></div>`;
             row.child(informacion_adicional).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");

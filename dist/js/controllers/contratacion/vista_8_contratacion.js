@@ -8,7 +8,7 @@ var getInfo6 = new Array(7);
 $(document).ready(function () {
     construirHead("Jtabla")
 
-    tabla_6 = $("#Jtabla").DataTable({
+    let tabla_6 = $("#Jtabla").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX:true,
@@ -21,8 +21,8 @@ $(document).ready(function () {
             exportOptions: {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx - 1] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -46,7 +46,7 @@ $(document).ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label lbl-green" data-i18n="venta-normal">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
             }
         },
         {
@@ -98,23 +98,23 @@ $(document).ready(function () {
 
                     var cntActions;
                     if (data.vl == '1') {
-                        cntActions = 'EN PROCESO DE LIBERACIÓN';
+                        cntActions = `<span data-i18n="proceso-liberacion">${_('proceso-liberacion')}</span>`;
                     }
                     else {
                         if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS" data-i18n-tooltip="registrar-estatus">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
+                                'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)" data-i18n-tooltip="rechazo-estado-juridico">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
+                                'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)" data-i18n-tooltip="rechazo-estado-asesor">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
                             cntActions += `${datatableButtons(data, 2)}`;
@@ -123,17 +123,17 @@ $(document).ready(function () {
                             || (data.idStatusContratacion == 11 && data.idMovimiento == 41)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS" data-i18n-tooltip="registrar-estatus">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
+                                'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)" data-i18n-tooltip="rechazo-estado-juridico">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
+                                'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)" data-i18n-tooltip="rechazo-estado-asesor">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
                             
                             cntActions += `${datatableButtons(data, 2)}`;
@@ -141,17 +141,17 @@ $(document).ready(function () {
                         else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) { //RECHAZO
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" data-i18n-tooltip="estatus-8" title="REGISTRAR ESTATUS">' +
+                                'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" data-i18n-tooltip="estatus-8" title="REGISTRAR ESTATUS" data-i18n-tooltip="registrar-estatus">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
+                                'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)" data-i18n-tooltip="rechazo-estado-juridico">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
                             cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
-                                'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
+                                'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)" data-i18n-tooltip="rechazo-estado-asesor">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
                             cntActions += `${datatableButtons(data, 2)}`;
@@ -180,13 +180,17 @@ $(document).ready(function () {
         },
     });
 
+    applySearch(tabla_6);
+    changeButtonTooltips()
+    $('body').i18n()
+
     $('#Jtabla').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
 
+        changeButtonTooltips()
         $('body').i18n()
-        // changeButtonTooltips()
     });
 
     const idStatusContratacion = [7,11];
@@ -206,22 +210,22 @@ $(document).ready(function () {
             var fechaVenc;
 
             if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37) {
-                status = "ESTATUS 7 LISTO (JURÍDICO)";
+                status = `<span data-i18n="estado-7-listo">${_('estado-7-listo')}</span>`;
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7) {
-                status = "ESTATUS 7 LISTO CON MODIFICACIONES (JURÍDICO)";
+                status = `<span data-i18n="estado-7-modificaciones">${_('estado-7-modificaciones')}</span>`;
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64) {
-                status = "ESTATUS 8 RECHAZADO (CONTRALORIA)";
+                status = `<span data-i18n="estado-8-rechazado-contra">${_('estado-8-rechazado-contra')}</span>`;
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
-                status = "ESTATUS 8 RECHAZADO (ADMINISTRACIÓN)";
+                status = `<span data-i18n="estado-8-rechazado-admin">${_('estado-8-rechazado-admin')}</span>`;
             }
             else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
-                status = "ESTATUS 2 ENVIADO REVISIÓN (VENTAS)";
+                status = `<span data-i18n="estado-2-enviado">${_('estado-2-enviado')}</span>`;
             }
             else if (row.data().idStatusContratacion == 11 && row.data().idMovimiento == 41) {
-                status = "ESTATUS 11 VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
+                status = `<span data-i18n="estado-11-validacion">${_('estado-11-validacion')}</span>`;
             }
 
             if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37 ||
@@ -230,31 +234,31 @@ $(document).ready(function () {
                 row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77) {
                 fechaVenc = row.data().fechaVenc;
             } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66) {
-                fechaVenc = 'VENCIDO';
+                fechaVenc = `<span data-i18n="vencido">${_('vencido')}</span>`;
             }
 
             var informacion_adicional = 
             '<div class="container subBoxDetail bottom"><div class="row">'+
                 '<div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">'+
-                    '<label><b>INFORMACIÓN ADICIONAL</b></label>'+
+                    `<label><b data-i18n="informacion-adicional">${_('informacion-adicional')}</b></label>`+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Estatus: </b>' + status + '</label>'+
+                    `<label><b><span data-i18n="estatus">${_('estatus')}</span>: </b>` + status + '</label>'+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Comentario: </b>' + row.data().comentario + '</label>'+
+                    `<label><b><span data-i18n="comentarios">${_('comentarios')}</span>: </b>` + row.data().comentario + '</label>'+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Fecha de vencimiento: </b>' + fechaVenc + '</label>'+
+                    `<label><b><span data-i18n="fecha-vencimiento">${_('fecha-vencimiento')}</span>: </b>` + fechaVenc + '</label>'+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Fecha de realizado: </b>' + row.data().modificado + '</label> '+
+                    `<label><b><span data-i18n="fecha-realizado">${_('fecha-realizado')}</span>: </b>` + row.data().modificado + '</label> '+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Coordinador: </b>' + row.data().coordinador + '</label> '+
+                    `<label><b><span data-i18n="coordinador">${_('coordinador')}</span>: </b>` + row.data().coordinador + '</label> '+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Asesor: </b>' + row.data().asesor + '</label>'+
+                    `<label><b><span data-i18n="asesor">${_('asesor')}</span>: </b>` + row.data().asesor + '</label>'+
                 '</div>'+
             '</div>'+
             '</div>';
@@ -359,11 +363,11 @@ $(document).on('click', '#save1', async function (e) {
     const d = JSON.parse($("#data-editReg").val());
     
     if (validaComent == 0) {
-        return alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
+        return alerts.showNotification("top", "right", _('ingresa-comentario'), "warning");
     }
     if ( d.movimiento ){ // <--- Debe anexar complemento de pago
         if (!d.expediente) { // <--- No tiene archivo o expediente agregado
-          return alerts.showNotification("top", "right", "No has subido el complemento de pago", "warning");
+          return alerts.showNotification("top", "right", _('no-subido-complemento'), "warning");
         }
     }
 
@@ -392,29 +396,29 @@ $(document).on('click', '#save1', async function (e) {
                 $('#save1').prop('disabled', false);
                 $('#editReg').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                alerts.showNotification("top", "right", _('estatus-enviado'), "success");
             } else if (response.message == 'MISSING_CARTA_UPLOAD') {
                 $('#save1').prop('disabled', false);
                 $('#editReg').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
+                alerts.showNotification("top", "right", _('subir-carta-domicilio'), "danger");
             } else if (response.message == 'FALSE') {
                 $('#save1').prop('disabled', false);
                 $('#editReg').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
             } else if (response.message == 'ERROR') {
                 $('#save1').prop('disabled', false);
                 $('#editReg').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", _('error-solicitud'), "danger");
             }
         },
         error: function (data) {
             $('#save1').prop('disabled', false);
             $('#editReg').modal('hide');
             $('#Jtabla').DataTable().ajax.reload();
-            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            alerts.showNotification("top", "right", _('error-solicitud'), "danger");
         }
     });
 });
@@ -434,7 +438,7 @@ $(document).on('click', '#save3', function (e) {
     dataExp3.append("fechaVenc", getInfo3[6]);
     dataExp3.append("numContrato", getInfo3[7]);
     if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
+        alerts.showNotification("top", "right", _('ingresar-comentario'), "warning");
 
     if (validaComent == 1) {
         $('#save3').prop('disabled', true);
@@ -451,24 +455,24 @@ $(document).on('click', '#save3', function (e) {
                     $('#save3').prop('disabled', false);
                     $('#rechReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification("top", "right", _('estatus-enviado'), "success");
                 } else if (response.message == 'FALSE') {
                     $('#save3').prop('disabled', false);
                     $('#rechReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
                 } else if (response.message == 'ERROR') {
                     $('#save3').prop('disabled', false);
                     $('#rechReg').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", _('error-solicidud'), "danger");
                 }
             },
             error: function (data) {
                 $('#save3').prop('disabled', false);
                 $('#rechReg').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", _('error-solicitud'), "danger");
             }
         });
     }
@@ -489,7 +493,7 @@ $(document).on('click', '#save4', function (e) {
     dataExp4.append("fechaVenc", getInfo4[6]);
     dataExp4.append("numContrato", getInfo4[7]);
     if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
+        alerts.showNotification("top", "right", _('ingresar-comentario'), "warning");
 
     if (validaComent == 1) {
         $('#save4').prop('disabled', true);
@@ -506,24 +510,24 @@ $(document).on('click', '#save4', function (e) {
                     $('#save4').prop('disabled', false);
                     $('#rechazoAs').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification("top", "right", _('estatus-enviado'), "success");
                 } else if (response.message == 'FALSE') {
                     $('#save4').prop('disabled', false);
                     $('#rechazoAs').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
                 } else if (response.message == 'ERROR') {
                     $('#save4').prop('disabled', false);
                     $('#rechazoAs').modal('hide');
                     $('#Jtabla').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", _('error-solicitud'), "danger");
                 }
             },
             error: function (data) {
                 $('#save4').prop('disabled', false);
                 $('#rechazoAs').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", _('error-solicitud'), "danger");
             }
         });
     }
@@ -538,11 +542,11 @@ $(document).on('click', '#save5', async function (e) {
     const d = JSON.parse($("#data-rev8").val());
 
     if (validaComent == 0) {
-        return alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
+        return alerts.showNotification("top", "right", _('ingresar-comentario'), "warning");
     }
     if ( d.movimiento ){ // <--- Debe anexar complemento de pago
         if (!d.expediente) { // <--- No tiene archivo o expediente agregado
-          return alerts.showNotification("top", "right", "No has subido el complemento de pago", "warning");
+          return alerts.showNotification("top", "right", _('no-subido-complemento'), "warning");
         }
     }
 
@@ -579,30 +583,30 @@ $(document).on('click', '#save5', async function (e) {
                 $('#save5').prop('disabled', false);
                 $('#rev8').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                alerts.showNotification("top", "right", _('estatus-enviado'), "success");
             } else if (response.message == 'FALSE') {
                 $('#save5').prop('disabled', false);
                 $('#rev8').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
             } else if(response.message == 'MISSING_CARTA_UPLOAD'){
                 $('#save5').prop('disabled', false);
                 $('#rev8').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
+                alerts.showNotification("top", "right", _('subir-carta-domicilio'), "danger");
             }
             else if (response.message == 'ERROR') {
                 $('#save5').prop('disabled', false);
                 $('#rev8').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", _('error-solicitud'), "danger");
             }
         },
         error: function (data) {
             $('#save5').prop('disabled', false);
             $('#rev8').modal('hide');
             $('#Jtabla').DataTable().ajax.reload();
-            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            alerts.showNotification("top", "right", _('error-solicitud'), "danger");
         }
     });
 });
@@ -614,11 +618,11 @@ $(document).on('click', '#save6', async function (e) {
     const d = JSON.parse($("#data-rev_2").val());
 
     if (validaComent == 0) {
-        return alerts.showNotification("top", "right", "Ingresa un comentario.", "warning");
+        return alerts.showNotification("top", "right", _('ingresar-comentario'), "warning");
     }
     if ( d.movimiento ){ // <--- Debe anexar complemento de pago
         if (!d.expediente) { // <--- No tiene archivo o expediente agregado
-          return alerts.showNotification("top", "right", "No has subido el complemento de pago", "warning");
+          return alerts.showNotification("top", "right", _('no-subido-complemento'), "warning");
         }
     }
 
@@ -654,24 +658,24 @@ $(document).on('click', '#save6', async function (e) {
                 $('#save6').prop('disabled', false);
                 $('#rev_2').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                alerts.showNotification("top", "right", _('estatus-enviado'), "success");
             } else if (response.message == 'FALSE') {
                 $('#save6').prop('disabled', false);
                 $('#rev_2').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
             } else if (response.message == 'ERROR') {
                 $('#save6').prop('disabled', false);
                 $('#rev_2').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", _('error-solicitud'), "danger");
             }
         },
         error: function (data) {
             $('#save6').prop('disabled', false);
             $('#rev_2').modal('hide');
             $('#Jtabla').DataTable().ajax.reload();
-            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            alerts.showNotification("top", "right", _('error-solicitud'), "danger");
         }
     });
 });
@@ -695,7 +699,7 @@ const accionesComplementoPago = async (d) => {
         });
         rs1 = JSON.parse(rs1);
         if (rs1.code == 500) {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "warning");
             return false;
         }
     }
@@ -730,7 +734,7 @@ const accionesComplementoPago = async (d) => {
     });
     rs = JSON.parse(rs);
     if (rs.code == 500) {
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+        alerts.showNotification("top", "right", _('algo-salio-mal'), "warning");
         return false;
     } else {
         return true;
@@ -783,7 +787,7 @@ $(document).on('click', '.btn-archivo', function () {
   Shadowbox.open({
       content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${filePath}"></iframe></div>`,
       player: "html",
-      title: `Visualizando archivo: ${d.movimiento}`,
+      title: `${_('visualizando-archivo2')}: ${d.movimiento}`,
       width: 985,
       height: 660
   });
@@ -799,21 +803,21 @@ $(document).on('click', '.btn-subir-archivo', function () {
     // --------------------------
     content = `
         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-            <label>Compemento de pago:</label>
+            <label data-i18n="complemento-pago">${_('complemento-pago')}</label>
             <div id="selectFileSection">
                 <div class="file-gph">
                     <input type="file" accept=".pdf" id="archivo_complemento">
-                    <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                    <input class="file-name" id="file-name" type="text" placeholder="${_('archivo-no-selecionado')}" readonly="">
                     <label class="upload-btn m-0" for="archivo_complemento">
-                      <span>Seleccionar</span>
+                      <span>${_('seleccionar')}</span>
                       <i class="fas fa-folder-open"></i>
                     </label>
                 </div>
             </div>
-            <span><label class='pt-1'>NOTA: ${d.expediente ? 'Se reemplazará el archivo actual si adjuntas un nuevo archivo' : 'Si ya existe un complemento de pago, el mismo se reemplazará  con el nuevo'}.</label></span>
+            <span><label class='pt-1'><span data-i18n="nota-2">${_('nota-2')}</span>: ${d.expediente ? _('reemplazara-archivo-adjunto') : _('existe-complemento-reemplazara')}.</label></span>
         </div>`;
     
-    const titulo = `<h4>Anexar complemento de pago <b>${d.nombreLote}</b></h4>`;
+    const titulo = `<h4 data-i18n="anexar-complemento-pago">${_('anexar-complemento-pago')}<b> ${d.nombreLote}</b></h4>`;
     $('#labelHeaderAccionModal').html(titulo);
     // Embebemos el contenido extra
     $('#extra-content-accion-modal').html(content);
@@ -840,11 +844,11 @@ $(document).on("click", "#btn-accion", async function (e) {
     const archivo = $("#archivo_complemento");
     // Input sin archivo
     if (archivo.val().length === 0) {
-        return alerts.showNotification("top", "right", "Selecciona el archivo a adjuntar.", "warning");
+        return alerts.showNotification("top", "right", _('selecciona-archivo-adjuntar'), "warning");
     }
       // Archivo incorrecto
     else if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) {
-        return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+        return alerts.showNotification("top", "right", _('tipo-archivo-incorrecto'), "warning");
     }
 
     $('.btn-subir-archivo').attr('disabled', true);  // Lo vuelvo a activar
@@ -854,21 +858,21 @@ $(document).on("click", "#btn-accion", async function (e) {
 
     $('#spiner-loader').addClass('hide'); // Quito spinner 
     if (accion == false) {
-        return alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+        return alerts.showNotification("top", "right", _('algo-salio-mal'), "warning");
     }else if (accion == true) {
         $('#accion-modal').modal('hide');
         $('#Jtabla').DataTable().ajax.reload();
         $('.btn-subir-archivo').attr('disabled', false);  // Lo vuelvo a activar 
-        return alerts.showNotification("top", "right", "¡El documento COMPLEMENTO DE PAGO se ha cargado con éxito.!", "success");
+        return alerts.showNotification("top", "right", _('documento-complemento-cargado'), "success");
     }else {
-        return alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+        return alerts.showNotification("top", "right", _('algo-salio-mal'), "warning");
     }
 });
 
 const datatableButtons = (d, type) => {
-    const BTN_SUBIR_DOC = newButton('btn-data btn-green btn-subir-archivo', 'SUBIR DOCUMENTO', 'VER-ARCHIVO', d, 'fas fa-upload');
-    const BTN_VER_DOC = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR DOCUMENTO', 'VER-ARCHIVO', d, 'fas fa-eye');
-    const BTN_REMPLAZAR_DOC = newButton('btn-data btn-green btn-subir-archivo', 'REMPLAZAR DOCUMENTO', 'VER-ARCHIVO', d, 'fas fa-copy');
+    const BTN_SUBIR_DOC = newButton('btn-data btn-green btn-subir-archivo', 'subir-documento', 'VER-ARCHIVO', d, 'fas fa-upload');
+    const BTN_VER_DOC = newButton('btn-data btn-sky btn-archivo', 'visualizar-documento', 'VER-ARCHIVO', d, 'fas fa-eye');
+    const BTN_REMPLAZAR_DOC = newButton('btn-data btn-green btn-subir-archivo', 'reemplazar-documento', 'VER-ARCHIVO', d, 'fas fa-copy');
 
     let NO_BTN = ''; 
 
@@ -884,7 +888,8 @@ const newButton = (btnClass, title, action = '', data, icon) => {
   const CUSTOM_BTN = `<button class='${btnClass}'
       data-toggle='tooltip' 
       data-placement='top'
-      title='${title.toUpperCase()}'
+      title='${_(title).toUpperCase()}'
+      data-i18n-tooltip="${title}"
       data-accion='${action}'
       data-data='${JSON.stringify(data)}'>
           <i class='${icon}'></i>
