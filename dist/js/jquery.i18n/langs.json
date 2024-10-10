@@ -663,7 +663,7 @@
 		"porcentaje-cancelados": "Percentage of cancellations",
 		"porcentaje-enganche": "Ercentage down payment",
 		"porcentaje-y-monto": "Porcentage and/or amount",
-		"por-pagar": "Por pagar",
+		"por-pagar": "To pay",
 		"por-pagar-sin-impuesto": "Pending payment without taxes:",
 		"precio": "PRICE",
 		"precio-del-lote": "Lot price",
@@ -1279,7 +1279,6 @@
 		"documento-subido": "The document has been uploaded successfully.",
 		"inactivo-comisionando": "Inactive while commissioning",
 		"ups-alerta-requeridos-busqueda": "Oops, make sure to enter at least one search criterion",
-		"Evidencia": "Evidence",
 		"proceso-liberacion": "In process of release",
 		"registrar-estatus": "Register status",
 		"rechazo-estado-juridico": "Status (Legal) decline/return",
@@ -1338,7 +1337,13 @@
 		"simbolico":"Symbolic",
 		"factor-humano":"Human factor",
 		"seguros":"INSURANCE",
-		"casas-m":"HOUSES"
+		"casas-m":"HOUSES",
+		"Evidencia": "Evidence",
+		"aprobados": "APPROVED",
+		"ingresos-extras":"EXTRA INCOME",
+		"autorizar-a" : "Authorize to",
+		"Rechazar-a": "Autorizar a",
+		"la-cantidad-de":"the amount of"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2615,7 +2620,6 @@
 		"historial-contratacion": "Historial contratacion",
 		"inactivo-comisionando": "Inactivo comisionando",
 		"ups-alerta-requeridos-busqueda": "Ups, asegurate de colocar al menos un criterío de búsqueda",
-		"evidencia": "Evidencia",
 		"proceso-liberacion": "En proceso de liberación",
 		"registrar-estatus": "Registrar estatus",
 		"rechazo-estado-juridico": "Rechazo/regreso estatus (jurídico)",
@@ -2674,6 +2678,12 @@
 		"simbolico":"Simbólico",
 		"factor-humano":"Factor humano",
 		"seguros":"SEGUROS",
-		"casas-m":"CASAS"
+		"casas-m":"CASAS",
+		"evidencia": "Evidencia"
+        ,"aprobados": "APROBADOS"
+        ,"ingresos_extras": "INGRESOS EXTRA"
+        ,"autorizar-a": "Autorizar a"
+        ,"Rechazar-a": "Autorizar a"
+        ,"la-cantidad-de" : "la cantidad de"
 	}
 }
