@@ -9,9 +9,9 @@
                     <div class="hide" id="selectFileSection">
                         <div class="file-gph">
                             <input class="d-none" type="file" id="fileElm">
-                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionado nada aún" readonly="">
                             <label class="upload-btn m-0" for="fileElm">
-                                <span>Seleccionar</span>
+                                <span data-i18n="seleccionar">Seleccionar</span>
                                 <i class="fas fa-folder-open"></i>
                             </label>
                         </div>
@@ -25,8 +25,8 @@
                 <input type="text" class="hide" id="accion">
             </div>
             <div class="modal-footer mt-2">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                <button type="button" id="sendRequestButton" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                <button type="button" id="sendRequestButton" class="btn btn-primary" data-i18n="guardar">Guardar</button>
             </div>
         </div>
     </div>
