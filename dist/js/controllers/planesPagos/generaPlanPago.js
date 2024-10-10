@@ -152,7 +152,7 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
                 mes = '12';
             }
 
-            let fechaPlan = ((day<=10) ? '0'+day : day) + '-' + (mes) + '-' + yearc;
+            let fechaPlan = ((day<10) ? '0'+day : day) + '-' + (mes) + '-' + yearc;
             console.log('Periodos', fechaPlan);
             let p2;
             let total;
