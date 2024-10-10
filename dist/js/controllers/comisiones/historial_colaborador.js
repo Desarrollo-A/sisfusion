@@ -884,179 +884,183 @@ let titulosHistorialDescuentos = [];
 // 	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 // });
 
-onLoadTranslations(function(){
 
 
-construirHead("tablaHistorialDescuentos");
+// onLoadTranslations(function(){
+    construirHead("tablaHistorialDescuentos");
 
-$("#tipo_historial_casas").on("change", function(){
-    seleccion = $(this).val();
-
-    if(seleccion == 1) {
-        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario';
-        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
-    } else if(seleccion == 3) {
-        var enlace = 'Casas_comisiones/getHistorialDescuentosPorUsuario';
-        $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
-    }
-
-    consultarHistorialDescuentos(enlace)
-});
-
-
-
-function consultarHistorialDescuentos(enlace) {
     
-    tablaHistorialDescuentos = $("#tablaHistorialDescuentos").DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%', 
-        scrollX:true,  
-        ordering: false,             
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: _('descargar-excel'),
-                title: _('historial-descuentos'),
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return $(d).attr('placeholder').toUpperCase();
+    
+
+
+    $("#tipo_historial_casas").on("change", function(){
+        seleccion = $(this).val();
+
+        if(seleccion == 1) {
+            var enlace = 'Comisiones/getHistorialDescuentosPorUsuario';
+            $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+        } else if(seleccion == 3) {
+            var enlace = 'Casas_comisiones/getHistorialDescuentosPorUsuario';
+            $("#tabla_historialGral, #tablaHistorialDescuentos").removeClass('hide');
+        }
+
+        consultarHistorialDescuentos(enlace)
+    });
+
+
+
+    function consultarHistorialDescuentos(enlace) {
+        
+        tablaHistorialDescuentos = $("#tablaHistorialDescuentos").DataTable({
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%', 
+            scrollX:true,  
+            ordering: false,             
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: _('descargar-excel'),
+                    title: _('historial-descuentos'),
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                        format: {
+                            header: function (d, columnIdx) {
+                                return $(d).attr('placeholder').toUpperCase();
+                            }
                         }
                     }
                 }
-            }
-        ],
-        pagingType: "full_numbers",
-        fixedHeader: true,
-        language: {
-            url: `${general_base_url}/static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        ordering: false,
-        destroy: true,
-        deferRender: true,
-        columns: [{
-            data: 'id_pago_i'
-        },
-        {   
-            data: 'nombreResidencial'
-        },
-        {   
-            data: 'nombreCondominio'
-        },
-        {   
-            data: 'nombreLote'
-        },
-        {
-            data: 'referencia'
-        },
-        {   
-            data: 'precioLote'
-        },
-        {   
-            data: 'comisionTotal'
-        },
-        {   
-            data: 'montoDescuento'
-        },
-        {
-            data: function(d){
-                TextoMostrar = '';
-                if(d.RelacionMotivo == 'NA'){
-                    if(d.evidencia == null ){
-                        TextoMostrar += `
+            ],
+            pagingType: "full_numbers",
+            fixedHeader: true,
+            language: {
+                url: `${general_base_url}/static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            ordering: false,
+            destroy: true,
+            deferRender: true,
+            columns: [{
+                data: 'id_pago_i'
+            },
+            {   
+                data: 'nombreResidencial'
+            },
+            {   
+                data: 'nombreCondominio'
+            },
+            {   
+                data: 'nombreLote'
+            },
+            {
+                data: 'referencia'
+            },
+            {   
+                data: 'precioLote'
+            },
+            {   
+                data: 'comisionTotal'
+            },
+            {   
+                data: 'montoDescuento'
+            },
+            {
+                data: function(d){
+                    TextoMostrar = '';
+                    if(d.RelacionMotivo == 'NA'){
+                        if(d.evidencia == null ){
+                            TextoMostrar += `
+                            <p class="m-0">
+                            <span  id="textoInformacion" name="textoInformacion" class="label lbl-gray">
+                                ${_('prestamo-sin-evidencia')}
+                            </span>
+                            </p>
+                            `;
+                        }else{
+
+                        }
+                    }else if(d.RelacionMotivo == 'Sin préstamo relacionado'){
+
+                        TextoMostrar += `	
                         <p class="m-0">
                         <span  id="textoInformacion" name="textoInformacion" class="label lbl-gray">
-                            ${_('prestamo-sin-evidencia')}
+                            ${d.RelacionMotivo} 
                         </span>
-                        </p>
-                        `;
-                    }else{
-
+                        </p>`;
+        
                     }
-                }else if(d.RelacionMotivo == 'Sin préstamo relacionado'){
+                    
 
-                    TextoMostrar += `	
-                    <p class="m-0">
-                    <span  id="textoInformacion" name="textoInformacion" class="label lbl-gray">
-                        ${d.RelacionMotivo} 
-                    </span>
-                    </p>`;
-    
-                }
-                
+                    TextoMostrar += `<p class="m-0"><span class="label lbl-green">${d.tipoDescuento}</span></p>`;
+                    return TextoMostrar;
+                    }
+            },
+            { 
+                data: function(d) {
+                    
+                    var botonesMostrar = ``;
 
-                TextoMostrar += `<p class="m-0"><span class="label lbl-green">${d.tipoDescuento}</span></p>`;
-                return TextoMostrar;
-                }
-        },
-        { 
-            data: function(d) {
-                
-                var botonesMostrar = ``;
-
-            if(d.relacion_evidencia != '' && d.relacion_evidencia !== null){
-                if(d.relacion_evidencia != 'true' ){
-                    botonesMostrar += `
-                    <button href="#" value="${d.id_pago_i}"  id="preview" 
-                    data-ruta="UPLOADS/EvidenciaGenericas"
-                    data-doc="${d.relacion_evidencia}"   
-                    class="btn-data btn-orangeYellow " title="${_('ver-evidencia')}">
-                        <i class="fas fa-folder-open">
-                        </i>
-                    </button>`; 
-                    botonesMostrar += 
-                    ` <button href="#" value="${d.id_pago_i}"  
-                        id="historial_previa"  name="historial_previa"
+                if(d.relacion_evidencia != '' && d.relacion_evidencia !== null){
+                    if(d.relacion_evidencia != 'true' ){
+                        botonesMostrar += `
+                        <button href="#" value="${d.id_pago_i}"  id="preview" 
                         data-ruta="UPLOADS/EvidenciaGenericas"
-                        data-opcion="${d.opcion}"   
-                        class="btn-data btn-gray " title="${_('ver-historial-evidencia')}">
-                        <i class="fas fa-th-list"></i>
-                        </i>
-                    </button>`; 
-                } else if(d.evidencia != null){
-                    botonesMostrar += `
-                    <button href="#" value="${d.id_pago_i}"  id="preview" data-doc="${d.evidencia}"  
-                    data-ruta="static/documentos/evidencia_prestamo_auto" 
-                    class="btn-data btn-violetDeep " title="${_('ver-evidencia')}">
-                        <i class="fas fa-folder-open">
-                        </i>
-                    </button>`; 
-                    }else{
-                        botonesMostrar += ``; 
-                    }
-            
+                        data-doc="${d.relacion_evidencia}"   
+                        class="btn-data btn-orangeYellow " title="${_('ver-evidencia')}">
+                            <i class="fas fa-folder-open">
+                            </i>
+                        </button>`; 
+                        botonesMostrar += 
+                        ` <button href="#" value="${d.id_pago_i}"  
+                            id="historial_previa"  name="historial_previa"
+                            data-ruta="UPLOADS/EvidenciaGenericas"
+                            data-opcion="${d.opcion}"   
+                            class="btn-data btn-gray " title="${_('ver-historial-evidencia')}">
+                            <i class="fas fa-th-list"></i>
+                            </i>
+                        </button>`; 
+                    } else if(d.evidencia != null){
+                        botonesMostrar += `
+                        <button href="#" value="${d.id_pago_i}"  id="preview" data-doc="${d.evidencia}"  
+                        data-ruta="static/documentos/evidencia_prestamo_auto" 
+                        class="btn-data btn-violetDeep " title="${_('ver-evidencia')}">
+                            <i class="fas fa-folder-open">
+                            </i>
+                        </button>`; 
+                        }else{
+                            botonesMostrar += ``; 
+                        }
+                
+                }
+                    return `<div class="d-flex justify-center">${botonesMostrar} <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="${_('detalles')}" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button><div>`;
+                }
+            }],
+            columnDefs: [{
+                defaultContent: "",
+                targets: "_all",
+                searchable: true,
+                orderable: false
+            }],
+            initComplete: function () {
+                $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+            },
+            ajax: {
+                url: `${general_base_url}${enlace}`,
+                type: "POST",
+                cache: false,
             }
-                return `<div class="d-flex justify-center">${botonesMostrar} <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="${_('detalles')}" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button><div>`;
-            }
-        }],
-        columnDefs: [{
-			defaultContent: "",
-			targets: "_all",
-			searchable: true,
-			orderable: false
-		}],
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
-        },
-        ajax: {
-            url: `${general_base_url}${enlace}`,
-            type: "POST",
-            cache: false,
-        }
-    });
+        });
 
-    applySearch(tablaHistorialDescuentos);
+        applySearch(tablaHistorialDescuentos);
 
-}
+    }
 
-});
+// });
 
 $(document).on('click', '.consultarDetalleDelPago', function(e) {
     let ruta = $('#tipo_historial').val() == 4 ? 'Seguros' : ($('#tipo_historial').val() == 3 || $('#tipo_historial_casas').val() == 3 ?'Casas_comisiones':'Pagos');
@@ -1082,13 +1086,18 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
     });
 });
 
+
+    function cargartabla(){
+        if(usuario_id !=3){
+            var enlace = 'Comisiones/getHistorialDescuentosPorUsuario';
+            $("#tablaHistorialDescuentos").removeClass('hide');
+            consultarHistorialDescuentos(enlace);
+        }
+    }
+
 $(document).ready(function () {
 
-    if(usuario_id !=3){
-        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario';
-        $("#tablaHistorialDescuentos").removeClass('hide');
-        consultarHistorialDescuentos(enlace);
-    }
+    
 
     let titulosHistorialOOAM = [];
     $('#tablaHistorialOOAM thead tr:eq(0) th').each(function (i) {
