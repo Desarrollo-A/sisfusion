@@ -24,8 +24,8 @@
                         </div>
                         <div class="modal-footer">
                             <div class="col-lg-12">
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary">Aceptar</button>
+                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                             </div>
                         </div>
                     </form>
