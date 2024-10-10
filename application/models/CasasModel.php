@@ -250,7 +250,8 @@ class CasasModel extends CI_Model
         $query = $this->db->query("SELECT 
         cli.id_cliente,
         pc.idProcesoCasas,
-        cli.idPropuestaCasa ,
+        CASE WHEN pc.tipoMovimiento IS NULL THEN 1 ELSE 4 END AS tipoMovimiento,
+        CASE WHEN cli.idPropuestaCasa IS NULL THEN '0' ELSE cli.idPropuestaCasa END AS idPropuestaCasa ,
         pcd.idProceso,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
         UPPER(REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
@@ -269,7 +270,8 @@ class CasasModel extends CI_Model
         co.nombre AS condominio,
         re.descripcion AS proyecto,
         CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente,
-        cli.id_subdirector_c, cli.id_gerente_c
+        cli.id_subdirector_c, cli.id_gerente_c, cli.esquemaCreditoCasas,
+        CASE WHEN oxc2.nombre IS NULL THEN 'Nuevo' ELSE oxc2.nombre END AS nombreMovimiento
         FROM clientes cli
         INNER JOIN lotes lo ON lo.idLote = cli.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -279,10 +281,11 @@ class CasasModel extends CI_Model
         LEFT JOIN proceso_casas_directo pcd ON pcd.idLote = lo.idLote
         LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
+        LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion  = pc.tipoMovimiento  AND oxc2.id_catalogo = 136
         WHERE cli.id_asesor_c = ?
         AND cli.esquemaCreditoCasas IN (0,1) 
         AND cli.pre_proceso_casas = 2
-        AND (pc.idProcesoCasas IS NULL OR (pc.idProcesoCasas IS NOT NULL AND pc.status = 5))", array($this->idUsuario));
+        AND (pc.idProcesoCasas IS NULL OR (pc.idProcesoCasas IS NOT NULL AND pc.tipoMovimiento = 4))", array($this->idUsuario));
 
         return $query;
     }
@@ -459,7 +462,8 @@ class CasasModel extends CI_Model
         AND pc.status = 1
         AND cli.status = 1
         AND cli.id_asesor_c != 0
-        AND cli.id_gerente_c != 0";
+        AND cli.id_gerente_c != 0
+        AND (pc.idProcesoCasas IS NOT NULL AND pc.tipoMovimiento != 4)";
 
         return $this->db->query($query)->result();
     }

@@ -1,8 +1,3 @@
-let motivosRechazos = [
-    {value: 1, label: 'Cambio de esquema (credito)'},
-    {value: 2, label: 'Cambio de modelo de casa'}
-]
-
 back_process = function (data) {
 
     let form = new Form({
@@ -31,10 +26,8 @@ back_process = function (data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'idProceso', value: data.idProcesoCasas }),
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
-            new HiddenField({ id: 'proceso', value: data.idProcesoCasas}),
-            new SelectField({id: 'rechazo', placeholder: 'SELECCIONA EL MOTIVO', data: motivosRechazos, required: true}),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

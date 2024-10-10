@@ -670,18 +670,32 @@ class Casas extends BaseController
     public function back_to_asignacion()
     {
         $this->form();
-        $id = $this->form('id');
+        $idProceso = $this->form('idProceso');
         $idCliente = $this->form('idCliente');
         $comentario = $this->form('comentario');
-        $proceso = $this->form('idProcesoCasas');
 
-        if(!isset($id) || isset($idCliente)) {
+        $this->db->trans_begin();
+
+        if(!isset($idProceso) || !isset($idCliente)) {
             http_response_code(400);
         }
+        $dataProceso = array(
+            "comentario" => $comentario,
+            "tipoMovimiento" => 4,
 
-        
+        );
 
+        $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
         
+        if($updateProceso) {
+            $response["result"] = true;
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+            $response["result"] = false;
+        }
+
+        $this->output->set_output(json_encode($response));
     }
 
     public function generateFileName($documento, $lote, $proceso, $archivo)

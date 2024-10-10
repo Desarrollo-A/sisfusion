@@ -72,8 +72,8 @@ avanzar_proceso = function(data) {
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new HiddenField({ id: 'idGerente', value: data.id_gerente_c}),
             new HiddenField({id: 'idSubdirector', value: data.id_subdirector_c}),
-            new SelectField({ id: 'esquemaCredito', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true}),
-            new MultiSelectField({ id: 'modeloCasa', label: 'Propuestas de casas', data: modeloCasa, placeholder: 'Seleccciona una opción', width: '12', required: true}),
+            new SelectField({ id: 'esquemaCredito', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true, value: data.esquemaCreditoCasas}),
+            new MultiSelectField({ id: 'modeloCasa', label: 'Propuestas de casas', data: modeloCasa, placeholder: 'Seleccciona una opción', width: '12', required: true, value: data.idPropuestaCasa}),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -182,6 +182,22 @@ let columns = [
     },
     { data: 'correo' },
     { data: 'lugar_prospeccion' },
+    { data: function (data) {
+        let clase = '';
+        let movimiento = '';
+
+        switch(data.tipoMovimiento){
+            case 4 :
+                clase = "warning";
+                break;
+            default :
+                clase = "blueMaderas";
+                break;
+        }
+
+        return `<span class="label lbl-${clase}">${data.nombreMovimiento}</span>`;
+    }},
+    
     {
         data: function (data) {
             let asesor_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanzar_proceso, data })            
