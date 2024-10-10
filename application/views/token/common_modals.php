@@ -4,7 +4,7 @@
     <div class="modal-dialog">
         <div class="modal-content content_video">
             <div class="modal-header d-flex align-center justify-center mb-1">
-                <h3 class="modal-title text-center preview_title">Evidencia <span id="nombre_lote"></span></h3>
+                <h3 class="modal-title text-center preview_title"><span data-i18n="evidencia">Evidencia</span> <span id="nombre_lote"></span></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

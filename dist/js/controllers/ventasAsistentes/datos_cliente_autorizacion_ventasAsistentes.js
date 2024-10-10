@@ -74,8 +74,9 @@ tabla_6 = $("#tabla_autorizaciones_ventas").DataTable({
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
-                    titleAttr: 'Autorizaciones por ingresar',
+                    titleAttr: `${_("descargar-excel")}`,
                     title:'Autorizaciones por ingresar',
+                    fileName : `${"autorizacion-por-ingresar"}`,
                     exportOptions: {
                         columns: [0,1,2,3],
                         format: {
