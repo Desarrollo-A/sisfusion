@@ -1291,7 +1291,9 @@
 		"cancelar-lote": "Cancel lot",
 		"reporte-retiros-resguardo": "Withdrawal Custody Report.",
 		"correo-2": "Email",
-        "mostrar-tabla": "Show table"
+        "mostrar-tabla": "Show table",
+		"enterado":"ACKNOWLEDGED",
+		"asesor-titular":"Lead advisor"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2580,6 +2582,8 @@
 		"cancelar-lote": "Cancelar lote",
 		"reporte-retiros-resguardo": "Reporte Retiros Resguardo",
 		"correo-2": "Correo",
-        "mostrar-tabla": "Mostrar tabla"
+        "mostrar-tabla": "Mostrar tabla",
+		"enterado":"ENTERADO",
+		"asesor-titular":"Asesor titular"
 	}
 }

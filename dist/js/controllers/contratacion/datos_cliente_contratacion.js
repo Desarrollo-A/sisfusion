@@ -179,8 +179,7 @@ function fillTable(index_proyecto, index_condominio) {
 
     $(window).resize(function () {
         tabla_valores_cliente.columns.adjust();
-    });
-
+    });    
     $('#tabla_clientes tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = tabla_valores_cliente.row(tr);
@@ -190,7 +189,7 @@ function fillTable(index_proyecto, index_condominio) {
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
-        } else {
+        } else {            
             var informacion_adicional =
                 `<div class="container subBoxDetail">
                     <div class="row">
@@ -203,7 +202,7 @@ function fillTable(index_proyecto, index_condominio) {
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
+                                <b data-i18n="correo">
                                     Correo:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().correo)}
@@ -211,7 +210,7 @@ function fillTable(index_proyecto, index_condominio) {
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
+                                <b data-i18n="telefono">
                                     Teléfono:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().telefono1)}
@@ -219,7 +218,7 @@ function fillTable(index_proyecto, index_condominio) {
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
+                                <b data-i18n="rfc">
                                     RFC:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().rfc)}
@@ -228,14 +227,14 @@ function fillTable(index_proyecto, index_condominio) {
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
                                 <b>
-                                    Fecha +45:
+                                   <b data-i18n="fecha">Fecha</b> +45:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().fechaVecimiento)}
                             </label>
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
+                                <b data-i18n="fecha-nacimiento">
                                     Fecha de nacimiento:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().fechaNacimiento)}
@@ -243,7 +242,7 @@ function fillTable(index_proyecto, index_condominio) {
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
+                                <b data-i18n="domicilio-particular">
                                     Domicilio particular:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().domicilio_particular)}
@@ -251,7 +250,7 @@ function fillTable(index_proyecto, index_condominio) {
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
+                                <b data-i18n="enterado">
                                     Enterado:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().enterado)}
@@ -259,7 +258,7 @@ function fillTable(index_proyecto, index_condominio) {
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
+                                <b data-i18n="gerente">
                                     Gerente:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().gerente)}
@@ -267,7 +266,7 @@ function fillTable(index_proyecto, index_condominio) {
                         </div>
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12">
                             <label>
-                                <b>
+                                <b data-i18n="asesor-titular">
                                     Asesor titular:
                                 </b>
                                 ${myFunctions.validateEmptyField(row.data().asesor)}
