@@ -497,6 +497,8 @@ class Asesor_model extends CI_Model {
                                         ds.noRefPago,
                                         cl.ladaTel1,
                                         cl.ladaTel2,
+                                        cl.especialistaEscuadron,
+                                        cl.idioma,
                                         FORMAT(TRY_CAST(ds.costoM2 AS float), 'C') AS costoM2,
                                         ds.proyecto,
                                         ds.municipio AS municipioDS,
