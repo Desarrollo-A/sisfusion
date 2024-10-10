@@ -12,6 +12,7 @@ $(document).ready(function () {
     }, 'json');
 });
 
+
 $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
     $("#condominio").html("");
@@ -33,6 +34,7 @@ $('#proyecto').change(function () {
     fillTable(index_proyecto, 0);
 });
 
+
 $('#condominio').change(function () {
     $('#spiner-loader').removeClass('hide');
     let index_proyecto = $("#proyecto").val();
@@ -40,6 +42,7 @@ $('#condominio').change(function () {
     fillTable(index_proyecto, index_condominio);
     $('#spiner-loader').addClass('hide');
 });
+
 
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
@@ -65,10 +68,12 @@ const excluir_column = ['ACCIONES', 'MÁS'];
 //     });
 // });
 
+
 function fillTable(index_proyecto, index_condominio) {
     let tabla_valores_cliente = $("#tabla_clientes").DataTable({
+
         width: '100%',
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -163,6 +168,7 @@ function fillTable(index_proyecto, index_condominio) {
         "order": [
             [1, 'asc']
         ],
+    
     });
 
     applySearch(tabla_valores_cliente);
@@ -172,12 +178,13 @@ function fillTable(index_proyecto, index_condominio) {
         var tr = $(this).closest('tr');
         var row = tabla_valores_cliente.row(tr);
 
-        if (row.child.isShown() ) {
+
+        if (row.child.isShown()) {
             row.child.hide();
             tr.removeClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
-        } else {
-            var informacion_adicional = 
+        } else {            
+            var informacion_adicional =
                 `<div class="container subBoxDetail">
                     <div class="row">
                         <div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
@@ -266,7 +273,9 @@ function fillTable(index_proyecto, index_condominio) {
             $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         }
     });
+    
 }
+
 
 var id_lote_global = 0;
 $(document).on('click', '.cop', function (e) {
@@ -278,7 +287,8 @@ $(document).on('click', '.cop', function (e) {
     $('#verDetalles').modal('show');
 });
 
-let titulos_encabezado_detalle= [];
+
+let titulos_encabezado_detalle = [];
 let num_colum_encabezado_detalle = [];
 // $('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
 //     var title = $(this).text();
@@ -292,19 +302,19 @@ let num_colum_encabezado_detalle = [];
 //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 // });
 
+
 $(document).ready(function () {
     construirHead('tabla_clientes_detalles');
-
     tabla_6 = $('#tabla_clientes_detalles').DataTable({
         responsive: true,
         searchable: false,
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Reporte ventas compartidas',
-            title: 'Reporte ventas compartidas',
+            titleAttr: `${_('descargar-excel')}`,
+            title: `${_('descargar-excel')}`,
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7],
                 format: {
@@ -367,7 +377,7 @@ $(document).ready(function () {
         },
         initComplete: function () {
             $('[data-toggle="tooltip_details"]').tooltip("destroy");
-            $('[data-toggle="tooltip_details"]').tooltip({trigger: "hover"});
+            $('[data-toggle="tooltip_details"]').tooltip({ trigger: "hover" });
         }
     });
     applySearch(tabla_6)
