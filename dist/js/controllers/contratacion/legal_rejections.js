@@ -1,5 +1,3 @@
-let titulos_intxt = [];
-
 $("#Jtabla").ready( function(){
     
     construirHead("Jtabla");
@@ -36,6 +34,7 @@ $("#Jtabla").ready( function(){
         destroy: true,
         ordering: false,
         columns: [{
+            "width": "3%",
             "className": 'details-control',
             "orderable": false,
             "data" : null,
@@ -43,31 +42,36 @@ $("#Jtabla").ready( function(){
         },
         {
             "data": function( d ){
-                var lblStats = '<span class="label lbl-warning">Rechazo</span>';
+                var lblStats = '<span class="label label-danger">Rechazo</span>';
                 return lblStats;
             }
         },
         {
+            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombreResidencial+'</p>';
             }
         },
         {
+            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
             }
         },
         {
+            "width": "15%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombreLote+'</p>';
             }
         },
         {
+            "width": "20%",
             "data": function( d ){
                 return '<p class="m-0">'+d.gerente+'</p>';
             }
         },
         {
+            "width": "20%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
             }
@@ -103,9 +107,9 @@ $("#Jtabla").ready( function(){
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } 
         else {
-            var status = 'RECHAZO (JURÍDICO)';
-            var fechaVenc = 'VENCIDO';
-            var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información adicional</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>'+status+'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Comentario: </b>'+ row.data().comentario +'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha de vencimiento: </b>' + fechaVenc + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha de realizado: </b>' + row.data().modificado.split('.')[0] + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>'+row.data().coordinador+'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>'+row.data().asesor+'</label></div></div></div>';
+            var status = _("rechazo-juridico-2");
+            var fechaVenc = _("vencido");
+            var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>${_("informacion-adicional")}</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>${_("estatus-2")}: </b>'+status+'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>${_("comentario2")} </b>'+ row.data().comentario +'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha vencimiento: </b>' + fechaVenc + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha realizado: </b>' + row.data().modificado + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>'+row.data().coordinador+'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>'+row.data().asesor+'</label></div></div></div>`;
             row.child(informacion_adicional).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
