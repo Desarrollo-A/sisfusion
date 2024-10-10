@@ -1278,16 +1278,13 @@
 		"historial-contratacion": "Enroll log",
 		"documento-subido": "The document has been uploaded successfully.",
 		"inactivo-comisionando": "Inactive while commissioning",
-<<<<<<< HEAD
 		"video-tutorial":"To view more details about the use and functionality of the authorizations section, you can watch the following tutorial.",
-=======
 		"autorizacion-por-ingresar"  : "Authorizations to be entered",
 		"reubicado" : "REUBICADO",
 		"consultar-historial" : "View history",
 		"fecha-alta": "Start date",
 		"sin-especificar3" : "UNSPECIFIED",
 		"lotes-cacelados-en-proceso" : "Canceled lots in process",
->>>>>>> 7175fef228f3dd5874d1125fc416b6acaee86ce2
 		"ups-alerta-requeridos-busqueda": "Oops, make sure to enter at least one search criterion",
 		"Evidencia": "Evidence",
 		"lotes-cancelados-proceso": "Cancelled lots in process",
@@ -2570,16 +2567,13 @@
 		"historial-liberacion": "Historial liberación",
 		"historial-contratacion": "Historial contratacion",
 		"inactivo-comisionando": "Inactivo comisionando",
-<<<<<<< HEAD
 		"video-tutorial":"Para consultar más detalles sobre el uso y funcionalidad del apartado de autorizaciones podrás visualizarlo en el siguiente tutorial.",
-=======
 		"autorizacion-por-ingresar" : "Autorizaciones por ingresar",
 		"reubicado" : "REPLACED",
 		"consultar-historial"  : "Consultar historial",
 		"fecha-alta" : "Fecha de alta",
 		"sin-especificar3" : "SIN ESPECIFICAR",
 		"lotes-cacelados-en-proceso" : "Lotes cancelados en proceso",
->>>>>>> 7175fef228f3dd5874d1125fc416b6acaee86ce2
 		"ups-alerta-requeridos-busqueda": "Ups, asegurate de colocar al menos un criterío de búsqueda",
 		"evidencia": "Evidencia",
 		"lotes-cancelados-proceso": "Lotes cancelados en proceso",
