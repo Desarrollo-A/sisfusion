@@ -43,7 +43,7 @@ $(document).ready(function () {
 
     var id_user = id_usuario_general == 1875 ? 2 : id_usuario_general;
 
-    retirosDataTable = $('#tabla_retiros_resguardo').dataTable({
+    retirosDataTable = $('#tabla_retiros_resguardo').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -143,7 +143,7 @@ $(document).ready(function () {
         ],
         columnDefs: [{
             visible: false,
-            searchable: false
+            searchable: true
         }],
         ajax: {
             url: 'getRetiros/'+id_user+'/'+1,   
@@ -152,7 +152,7 @@ $(document).ready(function () {
             data: function( d ){}
         }
     });
-
+    applySearch(retirosDataTable);
     $('#tabla_retiros_resguardo').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });

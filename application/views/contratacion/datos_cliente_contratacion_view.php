@@ -35,7 +35,7 @@
                                             <th>asesor</th>
                                             <th>coordinador</th>
                                             <th>gerente</th>
-                                            <th>subdirectos</th>
+                                            <th>subdirector</th>
                                             <th>director-regional</th>
                                             <th>director-regional-2</th>
                                             <th>fecha-alta</th>
