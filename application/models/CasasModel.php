@@ -1677,7 +1677,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query);
     }
 
-    public function getListaReporteCasas($proceso, $finalizado, $extraFields){
+    public function getListaReporteCasas($proceso, $finalizado, $extraFields, $extraValidation){
         $query = " 
         WITH HistorialCte AS (
             SELECT CAST(SUBSTRING(hpc.descripcion, PATINDEX('%IDLOTE%', hpc.descripcion) + 7, LEN(hpc.descripcion)) AS INT) AS idLote,
@@ -1716,6 +1716,7 @@ AND vb.proyectos != 1";
         --AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
         $extraFields
         AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
+        $extraValidation
         GROUP BY hct.idLote ,lo.nombreLote, pc.idLote, con.nombre, CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno),
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), us.nombre, cli.id_gerente_c,
         CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno), oxc.nombre, oxc2.nombre, 

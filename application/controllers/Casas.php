@@ -2209,7 +2209,21 @@ class Casas extends BaseController
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
         $finalizado = "0, 1";
         $extraFields = "";
+        $extraValidation = "";
+        $idRol = $this->idRol;
+        $idUsuario = $this->idUsuario;
 
+        switch($this->idRol) {
+            case '3' :
+                $extraValidation = " AND (cli.id_gerente_c) = $idUsuario";
+                break;
+            case '7':
+                $extraValidation = "AND (cli.id_asesor_c) = $idUsuario";
+                break;
+            default: 
+                $extraValidation = "";
+                break;
+        }
         if ($opcion != -1 && $opcion != -2 && isset($opcion)) {
             $proceso = $opcion;
             $finalizado = "0";
@@ -2225,7 +2239,7 @@ class Casas extends BaseController
 
         }
 
-        $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado, $extraFields);
+        $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado, $extraFields, $extraValidation);
 
         $this->json($lotes);
     }
