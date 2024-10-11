@@ -1175,7 +1175,9 @@
                 "no-vigente"  :"Not active",
                 "no-aplica" : "Not applicable",
                 "este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you.",
-                "posicion":"Position"
+                "posicion":"Position",
+				"detalle-total-comisiones":"Total detail of commissions"
+
         },
         "es": {
                 "1-origen": "1% de origen",
@@ -2353,6 +2355,8 @@
                 "no-vigente": "No vigente",
                 "no-aplica" : "No aplica",
                 "este-listado-todos-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado.",
-                "posicion":"Posición"
+                "posicion":"Posición",
+				"detalle-total-comisiones":"Detalle total de comisiones"
+
         }
 }
