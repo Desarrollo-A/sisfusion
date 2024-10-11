@@ -29,7 +29,7 @@ $("#tabla_ingresar_14").ready(function () {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx - 1] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -241,7 +241,7 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
     if (validaComent == 0)
-        alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
+        alerts.showNotification('top', 'right', `${_("ingresa-comentario")}`, 'danger');
     
     if (validaComent == 1) {
         $('#save1').prop('disabled', true);
@@ -296,7 +296,6 @@ $(document).on('click', '#save2', function (e) {
     dataExp2.append("fechaVenc", getInfo1[6]);
     if (validaComent == 0)
         alerts.showNotification("top", "right", `${_("ingresa-comentario")}`, "danger");
-    
 
     if (validaComent == 1) {
         $('#save1').prop('disabled', true);
