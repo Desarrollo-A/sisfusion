@@ -6,12 +6,13 @@ $(document).ready(function () {
         relatedTarget.val(fileName);
     });
     setInitialDates();
-    if( id_rol_global == 31 )
+    if( id_rol_global == 31 ){
         $('.generate').trigger('click');
-    else
+    }else{
         $('.find-results').trigger('click');
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({locale: 'es'});
+    $('.datepicker').datetimepicker({locale: 'en'});
+    }
 });
 
 
