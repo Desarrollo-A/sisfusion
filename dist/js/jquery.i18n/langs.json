@@ -1480,15 +1480,8 @@
 		"mensaje-oferta-vigencia125": "must send it",
 		"mensaje-oferta-vigencia126": "signed within a",
 		"mensaje-oferta-vigencia127": "period not exceeding",
-		"informacion-adicional2": "ADDITIONAL INFORMATION",
-<<<<<<< HEAD
-		"vencido2" : "EXPIRED",
-		"status-13-listo-contraloria" : "STATUS 13 READY (COMPTROLLER)",
-		"status-14-rechazo-contraloria" :"STATUS 14 REJECTED (CONTRALORÍA)",
-		"el-status-ya-fue-registrado" : "The status has already been entered",
-		"mensaje-oferta-vigencia128": "5 (five) days.",
-		"lote-origen":"Source batch"
-=======
+		"informacion-adicional2": "ADDITIONAL INFORMATION",		
+		"lote-origen":"Source batch",
 		"documentacion":"Documentation",
 		"nombre-documento2":"Document Name",
 		"guardar-documento":"Save document",
@@ -1511,7 +1504,6 @@
 		"status-14-rechazo-contraloria": "STATUS 14 REJECTED (CONTRALORÍA)",
 		"el-status-ya-fue-registrado": "The status has already been entered",
 		"mensaje-oferta-vigencia128": "5 (five) days."
->>>>>>> cb0f792d3728f04d07beb97c52b5b71607af2998
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2995,9 +2987,7 @@
 		"enterado": "Enterado",
 		"asesor-titular": "Asesor titular",
 		"reporte-ventas-compartidas": "Reporte ventas compartidas",
-<<<<<<< HEAD
-		"lote-origen":"Lote origen"		
-=======
+		"lote-origen":"Lote origen",	
 		"documentacion":"Documentación",
 		"guardar-documento":"Guardar documento",
 		"eliminar-archivo2":"¡Eliminar archivo!",
@@ -3015,7 +3005,6 @@
 		"adjuntar-archivo":"Adjuntar archivo",
 		"no-se-permite-adjuntar":"No se permite adjuntar archivos",
 		"en-progreso":"En proceso"
->>>>>>> cb0f792d3728f04d07beb97c52b5b71607af2998
 	}
 }
 
