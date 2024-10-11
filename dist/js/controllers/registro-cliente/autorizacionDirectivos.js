@@ -34,31 +34,6 @@ $(document).on('change', '.btn-file :file', function() {
     input.trigger('fileselect', [numFiles, label]);
 });
 
-// $('#addExp thead tr:eq(0) th').each( function (i) {
-//     const title = $(this).text();
-//     titulosAu.push(title);
-
-//     $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-//     $( 'input', this ).on('keyup change', function () {
-//         if ($('#addExp').DataTable().column(i).search() !== this.value ) {
-//             $('#addExp').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-// });
-
-// $('#aut-verificacion thead tr:eq(0) th').each( function (i) {
-//     const title = $(this).text();
-//     titulosAutCliente.push(title);
-
-//     $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-//     $( 'input', this ).on('keyup change', function () {
-//         if ($('#aut-verificacion').DataTable().column(i).search() !== this.value ) {
-//             $('#aut-verificacion').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-//     $('[data-toggle="tooltip"]').tooltip();
-// });
-
 $(document).ready (function() {
     const funcionToGetData = (id_rol_general == 1) ? 'autsByDC' : 'tableAut';
     construirHead('addExp');
@@ -134,7 +109,7 @@ $(document).ready (function() {
                 "data": function( d ){
                     return `
                         <div class="d-flex justify-center">
-                            <a href="" class="btn-data btn-blueMaderas getInfo" data-id_autorizacion="${d.id_autorizacion}" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}"data-toggle="tooltip" data-placement="top" title="VER AUTORIZACIONES">
+                            <a href="" class="btn-data btn-blueMaderas getInfo" data-id_autorizacion="${d.id_autorizacion}" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}"data-toggle="tooltip" data-placement="top" title="${_("ver-autorizaciones")}">
                             <i class="fas fa-key"></i>
                             </a>
                         </div>
@@ -434,7 +409,7 @@ $("#filtro4").on("change", function(){
 $("#sendAutsFromD").on('submit', function(e){
     e.preventDefault();
 
-    if (parseInt($('#numeroDeRow').val()) !== $('#autClienteForm input:radio:checked').length) {
+    if (parseInt($('#numeroDeRow').val()) !== $('#sendAutsFromD input:radio:checked').length) {
         alerts.showNotification("top", "right", `${_('aprobar-todas-solicitudes')}`, "warning");
         return;
     }
