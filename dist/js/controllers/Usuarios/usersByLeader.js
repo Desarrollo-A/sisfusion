@@ -1,5 +1,4 @@
 $(document).ready( function() {
-    construirHead("users_datatable");
     tableUsers();
 
 })
@@ -26,6 +25,7 @@ let titulos = [];
 
 
 function tableUsers(){
+    construirHead("users_datatable");
     usersTable = $('#users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",

@@ -6,18 +6,18 @@ $(document).ready(function () {
     function (data) {
       var len = data.length;
       for (var i = 0; i < len; i++) {
-        var id = data[i]["idResidencial"];
-        var name = data[i]["descripcionConcat"];
-        $("#proyecto").append($("<option>").val(id).text(name.toUpperCase()));
+        var id = data[i]['idResidencial'];
+        var name = data[i]['descripcion'];
+        $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
       }
-      $("#proyecto").selectpicker("refresh");
+      $("#proyecto").selectpicker('refresh');
       $("#spiner-loader").addClass("hide");
     },
     "json"
   );
 });
 
-$("#proyecto").change(function () {
+$('#proyecto').change(function () {
   index_proyecto = $(this).val();
   $("#condominio").html("");
   $("#spiner-loader").removeClass("hide");
@@ -27,13 +27,11 @@ $("#proyecto").change(function () {
       function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
-          var id = data[i]["idCondominio"];
-          var name = data[i]["nombre"];
-          $("#condominio").append(
-            $("<option>").val(id).text(name.toUpperCase())
-          );
+          var id = data[i]['idCondominio'];
+          var name = data[i]['nombre'];
+          $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#condominio").selectpicker("refresh");
+        $("#condominio").selectpicker('refresh');
         $("#spiner-loader").addClass("hide");
       },
       "json"
@@ -41,7 +39,7 @@ $("#proyecto").change(function () {
   });
 });
 
-$("#condominio").change(function () {
+$('#condominio').change(function () {
   index_condominio = $(this).val();
   $("#lote").html("");
   $("#spiner-loader").removeClass("hide");
@@ -64,21 +62,9 @@ $("#condominio").change(function () {
 });
 
 var titulos_encabezado = [];
-// $('#tabla_contrato_ventas thead tr:eq(0) th').each(function (i) {
-//     var title = $(this).text();
-//     titulos_encabezado.push(title);
-//     let readOnly = (title == 'CONTRATO' || title == '') ? 'readOnly': '';
-//     let width = title=='CONTRATO' ? 'style="width: 65px;"': '';
-//     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
-//     $('input', this).on('keyup change', function () {
-//         if (tabla_contrato.column(i).search() !== this.value) {
-//             tabla_contrato.column(i).search(this.value).draw();
-//         }
-//     });
-// });
 
 var tabla_contrato;
-$("#lote").change(function () {
+$('#lote').change(function () {
   index_lote = $(this).val();
   $("#spiner-loader").removeClass("hide");
   $("#tabla_contrato_ventas").removeClass("hide");
@@ -101,13 +87,14 @@ $("#lote").change(function () {
         extend: "excelHtml5",
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: "btn buttons-excel",
-        titleAttr: "Contrato",
-        title: "Contrato",
+        titleAttr: `${_("descargar-excel")}`,
+        filename : `${_("contrato")}`,
+        title: `${_("contrato")}`,
         exportOptions: {
           columns: [0, 1, 2, 3, 4],
           format: {
             header: function (d, columnIdx) {
-              return " " + titulos_encabezado[columnIdx] + " ";
+              return $(d).attr('placeholder').toUpperCase();
             },
           },
         },
@@ -130,7 +117,6 @@ $("#lote").change(function () {
     searching: true,
     ordering: false,
     fixedColumns: true,
-
     columns: [
       { data: "nombreResidencial" },
       { data: "condominio" },
@@ -155,30 +141,29 @@ $("#lote").change(function () {
       {
         orderable: false,
         data: function (data) {
-          $("#cnt-file").html(`<h3 style="font-weight:100">
-                                        Visualizando
-                                        <b>
-                                            ${myFunctions.validateEmptyField(
-                                              data.contratoArchivo
-                                            )}
-                                        </b>
-                                    </h3>
-                                    <embed  src="${general_base_url}static/documentos/cliente/contrato/${
-            data.contratoArchivo
-          }" frameborder="0" width="100%" height="500" style="height: 60vh;"></embed >`);
-          var myLinkConst = ` <center>
-                                                <a type="button" data-toggle="tooltip" data-placement="top" title="${_("visualizar")}" data-i18n-tooltip="${_("visualizar")}" class="btn-data btn-blueMaderas contratacion_modal">
-                                                    <center>
-                                                        <i class="fas fa-eye" style="cursor: pointer"></i>
-                                                    </center>
-                                                </a>
-                                            </center>`;
-          return myLinkConst;
+        $("#cnt-file").html(`<h3 style="font-weight:100">
+                                ${_("visualizando")}
+                                <b>
+                                    ${myFunctions.validateEmptyField(
+                                      data.contratoArchivo
+                                    )}
+                                </b>
+                            </h3>
+                            <embed  src="${general_base_url}static/documentos/cliente/contrato/${data.contratoArchivo}" frameborder="0" width="100%" height="500" style="height: 60vh;"></embed>`
+        );
+        var myLinkConst = ` <center>
+                                <a type="button" data-toggle="tooltip" data-placement="top" title="${_("visualizar")}" data-i18n-tooltip="visualizar" class="btn-data btn-blueMaderas contratacion_modal">
+                                    <center>
+                                        <i class="fas fa-eye" style="cursor: pointer"></i>
+                                    </center>
+                                </a>
+                            </center>`;
+        return myLinkConst;
         },
-      },
-    ],
-  });
-  applySearch(tabla_6);
+    },
+],
+});
+applySearch(tabla_6);
 
   $("#tabla_contrato_ventas").on("draw.dt", function () {
     $('[data-toggle="tooltip"]').tooltip({

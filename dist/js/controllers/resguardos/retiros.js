@@ -57,8 +57,8 @@ $(document).ready(function () {
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6],
                     format: {
-                            header:  function (d, columnIdx) {
-                            return $(d).attr('placeholder').toUpperCase();
+                        header:  function (d, columnIdx) {
+                                return $(d).attr('placeholder').toUpperCase();
                             }
                         }
                 }
