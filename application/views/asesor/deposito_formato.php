@@ -1206,42 +1206,7 @@
                 </div>
                 <div class="row pt-3">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
-                        <label style="font-size: 0.7em;" >
-                            <span data-i18n="oferta-vigencia">
-                                Esta oferta tendrá una vigencia de 180 (ciento ochenta) días naturales. Dicho lapso de tiempo será para la firma del contrato privado el cual contendrá entre otras cláusulas, los términos y condiciones suspensivas que regulan esta oferta. 
-                            </span>
-                            <span data-i18n="oferta-vigencia2">
-                                En caso de no llevarse a cabo la firma del contrato, todo compromiso u obligación quedará sin efectos. En caso de que el ofertante realizara alguna aportación con cheque, éste será recibido salvo buen cobro y en el supuesto de que no fuera cobrable el título, esta operación también quedará sin efectos. 
-                            </span>
-                            <span data-i18n="oferta-vigencia3">
-                                En caso de cancelarse la presente operación o de no firmarse el contrato en el lapso arriba mencionado, 
-                            </span>
-                            <span data-i18n="oferta-vigencia4">
-                                la empresa cobrará al ofertante únicamente $10,000.00
-                            </span>
-                            <span data-i18n="oferta-vigencia5">
-                                $10,000.00 (Diez mil pesos 00/100 m.n.) que cubren parcialmente los gastos generados por la operación.
-                            </span>
-                            <span data-i18n="oferta-vigencia6">
-                                Que el ofertante sabe que como consecuencia de la modificación del proyecto por parte del desarrollador o de las autorizaciones definitivas emitidas por el Municipio correspondiente, la ubicación, la superficie, 
-                            </span>
-                            <span data-i18n="oferta-vigencia7">
-                                medidas y colindancias del lote señalado en el presente documento, así como la nomenclatura o el número definitivo de lotes del Desarrollo Inmobiliario, en el que se encuentra, puede variar, así mismo con motivo de ello, el lote puede sufrir afectaciones y/o servidumbres libres de construcción.
-                            </span>
-                            <br>
-                            <span data-i18n="oferta-vigencia8">
-                                Durante el periodo de contingencia derivado de la prevención contra el virus denominado COVID-19, la suscripción de éste Depósito de Seriedad, será documento suficiente para la formalización de la compraventa con la empresa titular del inmueble que por este medio adquiere el cliente.
-                            </span>
-                            <span data-i18n="oferta-vigencia9">
-                                Una vez que se decrete el término del periodo de contingencia a que se hace referencia en el párrafo anterior, el comprador se compromete a suscribir el contrato de compraventa respectivo, mismo que le será entregado impreso en un periodo máximo de 60 (sesenta) días naturales, contados a partir del término del periodo de contingencia. 
-                            </span>
-                            <span data-i18n="oferta-vigencia10">
-                                De acuerdo a lo estipulado en el contrato de compraventa que habrá de suscribirse entre el comprador y el vendedor, la pena convencional en caso de que el comprador incumpla con cualquiera de sus obligaciones es del 25% (veinticinco por ciento) del precio total pactado. 
-                            </span>
-                            <span data-i18n="oferta-vigencia11">
-                                Una vez formalizada la compraventa y en caso de que el comprador solicite el envío del contrato de compraventa en forma digital, éste podrá ser solicitado a través de su asesor de ventas.
-                            </span>
-                        </label>
+                        <label style="font-size: 0.7em;" id = "lablespan"></label>
                     </div>
                 </div>
                 <div class="row pb-2">

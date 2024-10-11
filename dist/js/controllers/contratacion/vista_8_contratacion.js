@@ -287,6 +287,21 @@ $(document).ready(function () {
         $('#editReg').modal('show');
     });
 
+    $("#Jtabla tbody").on("click", ".editLoteRev", function (e) {
+        e.preventDefault();
+        getInfo2[0] = $(this).attr("data-idCliente");
+        getInfo2[1] = $(this).attr("data-nombreResidencial");
+        getInfo2[2] = $(this).attr("data-nombreCondominio");
+        getInfo2[3] = $(this).attr("data-idcond");
+        getInfo2[4] = $(this).attr("data-nomlote");
+        getInfo2[5] = $(this).attr("data-idLote");
+        getInfo2[6] = $(this).attr("data-fecven");
+        getInfo2[7] = $(this).attr("data-code");
+        nombreLote = $(this).data("nomlote");
+        $(".lote").html(nombreLote);
+        $('#editLoteRev').modal('show');
+    });
+
     $("#Jtabla tbody").on("click", ".cancelReg", function (e) {
         e.preventDefault();
         getInfo3[0] = $(this).attr("data-idCliente");
@@ -569,46 +584,51 @@ $(document).on('click', '#save5', async function (e) {
     dataExp5.append("comentario", comentario);
     dataExp5.append("fechaVenc", getInfo5[6]);
     dataExp5.append("numContrato", getInfo5[7]);
+    if (validaComent == 0)
+        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
 
-    $.ajax({
-        url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentesAadministracion11_proceceso8/`,
-        data: dataExp5,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (data) {
-            response = JSON.parse(data);
-            if (response.message == 'OK') {
-                $('#save5').prop('disabled', false);
-                $('#rev8').modal('hide');
-                $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", _('estatus-enviado'), "success");
-            } else if (response.message == 'FALSE') {
-                $('#save5').prop('disabled', false);
-                $('#rev8').modal('hide');
-                $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
-            } else if(response.message == 'MISSING_CARTA_UPLOAD'){
-                $('#save5').prop('disabled', false);
-                $('#rev8').modal('hide');
-                $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", _('subir-carta-domicilio'), "danger");
-            }
-            else if (response.message == 'ERROR') {
+    if (validaComent == 1) {
+        $('#save5').prop('disabled', true);
+        $.ajax({
+            url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentesAadministracion11_proceceso8/`,
+            data: dataExp5,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                response = JSON.parse(data);
+                if (response.message == 'OK') {
+                    $('#save5').prop('disabled', false);
+                    $('#rev8').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", _('estatus-enviado'), "success");
+                } else if (response.message == 'FALSE') {
+                    $('#save5').prop('disabled', false);
+                    $('#rev8').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
+                } else if(response.message == 'MISSING_CARTA_UPLOAD'){
+                    $('#save5').prop('disabled', false);
+                    $('#rev8').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", _('subir-carta-domicilio'), "danger");
+                }
+                else if (response.message == 'ERROR') {
+                    $('#save5').prop('disabled', false);
+                    $('#rev8').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", _('error-solicitud'), "danger");
+                }
+            },
+            error: function (data) {
                 $('#save5').prop('disabled', false);
                 $('#rev8').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", _('error-solicitud'), "danger");
             }
-        },
-        error: function (data) {
-            $('#save5').prop('disabled', false);
-            $('#rev8').modal('hide');
-            $('#Jtabla').DataTable().ajax.reload();
-            alerts.showNotification("top", "right", _('error-solicitud'), "danger");
-        }
-    });
+        });
+    }
 });
 
 $(document).on('click', '#save6', async function (e) {
@@ -645,39 +665,45 @@ $(document).on('click', '#save6', async function (e) {
     dataExp6.append("comentario", comentario);
     dataExp6.append("fechaVenc", getInfo6[6]);
     dataExp6.append("numContrato", getInfo6[7]);
-    $.ajax({
-        url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentes_proceceso8`,
-        data: dataExp6,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (data) {
-            response = JSON.parse(data);
-            if (response.message == 'OK') {
-                $('#save6').prop('disabled', false);
-                $('#rev_2').modal('hide');
-                $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", _('estatus-enviado'), "success");
-            } else if (response.message == 'FALSE') {
-                $('#save6').prop('disabled', false);
-                $('#rev_2').modal('hide');
-                $('#Jtabla').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
-            } else if (response.message == 'ERROR') {
+    if (validaComent == 0)
+        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+
+    if (validaComent == 1) {
+        $('#save6').prop('disabled', true);
+        $.ajax({
+            url: `${general_base_url}Asistente_gerente/editar_registro_loteRevision_asistentes_proceceso8`,
+            data: dataExp6,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                response = JSON.parse(data);
+                if (response.message == 'OK') {
+                    $('#save6').prop('disabled', false);
+                    $('#rev_2').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", _('estatus-enviado'), "success");
+                } else if (response.message == 'FALSE') {
+                    $('#save6').prop('disabled', false);
+                    $('#rev_2').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", _('estatus-registrado'), "danger");
+                } else if (response.message == 'ERROR') {
+                    $('#save6').prop('disabled', false);
+                    $('#rev_2').modal('hide');
+                    $('#Jtabla').DataTable().ajax.reload();
+                    alerts.showNotification("top", "right", _('error-solicitud'), "danger");
+                }
+            },
+            error: function (data) {
                 $('#save6').prop('disabled', false);
                 $('#rev_2').modal('hide');
                 $('#Jtabla').DataTable().ajax.reload();
                 alerts.showNotification("top", "right", _('error-solicitud'), "danger");
             }
-        },
-        error: function (data) {
-            $('#save6').prop('disabled', false);
-            $('#rev_2').modal('hide');
-            $('#Jtabla').DataTable().ajax.reload();
-            alerts.showNotification("top", "right", _('error-solicitud'), "danger");
-        }
-    });
+        });
+    }
 });
 
 const accionesComplementoPago = async (d) => {
