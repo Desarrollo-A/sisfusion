@@ -1,9 +1,5 @@
-var dar_baja = _("dar-baja");
-var puestos = [{id : 59, nombre : 'Director regional'}], sedes = []; 
-
 $(document).ready( function() {
     construirHead("all_users_datatable")
-
     $('[data-toggle="tooltip"]').tooltip(); 
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
@@ -18,10 +14,6 @@ $(document).ready( function() {
 
             if (data[i]['id_catalogo'] == 0){
                 $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-                sedes.push({
-                    id : data[i]['id_opcion'],
-                    nombre : data[i]['nombre']
-                });
             }
         }
         $('#payment_method').selectpicker('refresh');
@@ -32,162 +24,6 @@ $(document).ready( function() {
     fillUsersTable();
 });
 
-$(document).on('change', '#leader', function() {
-    let sede = $('#headquarter').val();
-    let puesto = $('#member_type').val();
-    let lider = $('#leader').val();
-    document.getElementById('lineaVenta').innerHTML = '';
-
-    let puestosVentas = [3,7,9];
-    let sedeSelected = document.getElementById("headquarter");
-    let selectedSede = sedeSelected.options[sedeSelected.selectedIndex].text;
-    let puestoSelected = document.getElementById("member_type");
-    let selectedPuesto = puestoSelected.options[puestoSelected.selectedIndex].text;
-    let nombreSelected = $('#name').val() + ' ' + $('#last_name').val() + ' ' + $('#mothers_last_name').val();
-
-    if(puestosVentas.includes(parseInt(puesto))){
-        $.post("consultarLinea",{
-            sede: sede,
-            puesto: puesto,
-            lider : lider
-        },
-
-        function (data) {
-        let sedesSinRegional = [5,2,3,6];
-        let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
-    let buscarDiff = arraySedes.filter(element => element != sede);
-    if(buscarDiff.length > 0){
-        $('#btn_acept').prop('disabled', true);
-    }else{
-        $('#btn_acept').prop('disabled', false);
-    }
-
-    let tabla = `
-    <div class="row subBoxDetail">
-        <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b data-i18n="nueva-linea-venta">NUEVA LÍNEA DE VENTAS</b></label></div>
-        <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b data-i18n="nombre">Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label data-i18n="puesto"><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b data-i18n="sede">Sede</b></label></div>
-        <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${nombreSelected}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedPuesto}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedSede}</label></div>`;
-        tabla += puesto == 7  ? `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>` : '';
-        tabla += puesto == 3 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>`;
-        tabla += `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>`;
-        tabla += sedesSinRegional.includes(parseInt(sede)) ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
-        tabla += `</div>`;
-        $('#lineaVenta').append(tabla);
-        },"json");
-    }
-});
-$(document).on('change', '#member_type', function() {
-    document.getElementById('lineaVenta').innerHTML = '';
-    //MOC: SI SE DETECTA UN SUBDIRECTOR Ó DIR. REGIONAL AGREGAR OPCIÓN DE MULTIROL
-    if($(this).val() == 2 || $(this).val() == 59){
-        $('#btnmultirol').append(`
-        <button class="btn-data btn-green" type="button" id="btnMultiRol" data-toggle="tooltip" data-placement="top" data-i18n-tooltip="agregar-rol" title="Agregar rol"><i class="fas fa-user-plus"></i></button>
-        `);
-    }else{
-        // document.getElementById('btnmultirol').innerHTML = '';
-        // document.getElementById('multirol').innerHTML = '';
-        $('#index').val(0);
-    }
-});
-
-function validarSede(indexActual){
-    let index = parseInt($('#index').val());
-    let c = 0;
-    for (let j = 0; j < index; j++) {
-        if(document.getElementById(`sedes_${j}`)){
-            if(j != indexActual){
-                let sedeActual = $(`#sedes_${indexActual}`).val();
-                let sedes = $(`#sedes_${j}`).val();
-                if(sedeActual == sedes){
-                    c++;
-                    alerts.showNotification("top", "right", _("sede-ya-seleccionada"), "warning");
-                    $('#btn_acept').prop('disabled', true);
-                }
-            }
-        }
-    }
-    if(c == 0){
-        $('#btn_acept').prop('disabled', false);
-    }
-}
-
-$(document).on("click","#btnMultiRol",function(){
-    let index = parseInt($('#index').val());
-    $('#multirol').append(`
-            <div class="col-md-12 aligned-row" id="mult_${index}">
-                <div class="col-md-6 pr-0 pr-0">
-                    <div class="form-group text-left m-0">
-                        <label class="control-label"><span data-i18n="tipo-miembro">Tipo de miembro</span> (<small class="isRequired">*</small>)</label>
-                        <select class="selectpicker select-gral m-0" name="multi_${index}" id="multi_${index}" data-style="btn" data-show-subtext="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select></div>
-                    </div>
-                <div class="col-md-4 pr-0 pr-0">
-                    <div class="form-group text-left m-0">
-                        <label class="control-label"><span data-i18n="sede">Sede</span> (<small class="isRequired">*</small>)</label>
-                        <select class="selectpicker select-gral m-0" onchange="validarSede(${index},'sedes_');" name="sedes_${index}" id="sedes_${index}" data-style="btn" data-show-subtext="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select>
-                    </div>
-                </div>
-                <div class="col-md-2 justify-center d-flex align-end">
-                    <div class="form-group m-0 p-0">
-                        <button class="btn-data btn-warning mb-1" type="button" onclick="borrarMulti(${index})" data-toggle="tooltip" data-placement="top" data-i18n-tooltip="eliminar-rol" title="Eliminar rol"><i class="fa fa-trash"></i></button>
-                    </div>
-                </div>
-            </div>`);
-        $('[data-toggle="tooltip"]').tooltip();
-        for (var i = 0; i < puestos.length; i++) {
-            var id = puestos[i].id;
-            var name = puestos[i].nombre;
-            $(`#multi_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        for (var i = 0; i < sedes.length; i++) {
-            var id = sedes[i].id;
-            var name = sedes[i].nombre;
-            $(`#sedes_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $(`#multi_${index}`).selectpicker('refresh');
-        $(`#sedes_${index}`).selectpicker('refresh');
-        index = parseInt(index + 1);
-        $('#index').val(index);
-});
-
-$("#deleteRol").on('submit', function(e){
-    let indice = $('#indice').val();
-
-    e.preventDefault();
-    $.ajax({
-        type: 'POST',
-        url: 'borrarMulti',
-        data: new FormData(this),
-        contentType: false,
-        cache: false,
-        processData:false,
-        beforeSend: function(){},
-        success: function(data) {
-            if (data == true) {
-                alerts.showNotification("top", "right", _("rol-eliminado"), "success");
-                $('#modalDelRol').modal('toggle');
-                document.getElementById(`mult_${indice}`).innerHTML = '';
-                document.getElementById("deleteRol").reset();
-            } else {
-                alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
-            }
-        },
-        error: function(){
-            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
-            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
-        }
-    });
-});
-
-function borrarMulti(index,id = ''){
-
-    if( id != ''){
-        $('#idRU').val(id);
-        $('#indice').val(index);
-        $('#modalDelRol').modal('show');
-    }else{
-        document.getElementById(`mult_${index}`).innerHTML = '';
-    }
-}
 //DESCARGAR BT-EXCEL
 function translationsUserTable() {
     onChangeTranslations(function() {
@@ -195,6 +31,7 @@ function translationsUserTable() {
         
     });
 }
+
 function fillUsersTable() {
     const $allUsersTable = $('#all_users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -454,84 +291,6 @@ $("#my_add_user_form").on('submit', function(e){
         });
     }
 });
-function validarNuevoUsuario(){
-    let flagSubmit = false;
-    let nombre = $('#name').val();
-    let last_name = $('#last_name').val();
-    let mothers_last_name = $('#mothers_last_name').val();
-    let email = $('#email').val();
-    let payment_method = $('#payment_method').val();
-    let phone_number = $('#phone_number').val();
-    let headquarter = $('#headquarter').val();
-    let member_type = $('#member_type').val();
-    let leader = $('#leader').val();
-    let username = $('#username').val();
-    let contrasena = $('#contrasena').val();
-    let checkboxGeneral = $('#checkboxGeneral').is(":checked");
-
-    if(nombre=='' || nombre==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-nombre"), 'warning');
-        $('#name').focus();
-        flagSubmit = false;
-    }
-    else if(last_name=='' || last_name==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-apellido-paterno"), 'warning');
-        $('#last_name').focus();
-        flagSubmit = false;
-    }
-    else if(email=='' || email==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-correo"), 'warning');
-        alerts.showNotification('top', 'right', _("ingresa-correo"), 'warning');
-        $('#email').focus();
-        flagSubmit = false;
-    }
-    else if(payment_method=='' || payment_method==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-metodo-pago"), 'warning');
-        alerts.showNotification('top', 'right', _("ingresa-metodo-pago"), 'warning');
-        $('#payment_method').focus();
-        flagSubmit = false;
-    }
-    else if(phone_number=='' || phone_number==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-telefono"), 'warning');
-        alerts.showNotification('top', 'right', _("ingresa-telefono"), 'warning');
-        $('#phone_number').focus();
-        flagSubmit = false;
-    }
-    else if(headquarter=='' || headquarter==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-sede"), 'warning');
-        alerts.showNotification('top', 'right', _("ingresa-sede"), 'warning');
-        $('#headquarter').focus();
-        flagSubmit = false;
-    }
-    else if(member_type=='' || member_type==undefined){
-        alerts.showNotification('top', 'right', _("selecciona-tipo-miembro"), 'warning');
-        $('#member_type').focus();
-        flagSubmit = false;
-    }
-    else if(leader=='' || leader==undefined){
-        alerts.showNotification('top', 'right',  _("selecciona-tipo-miembro"), 'warning');
-        $('#leader').focus();
-        flagSubmit = false;
-    }
-    else if(username=='' || username==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-usuario"), 'warning');
-        $('#username').focus();
-        flagSubmit = false;
-    }
-    else if(contrasena=='' || contrasena==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-contrasena"), 'warning');
-        $('#contrasena').focus();
-        flagSubmit = false;
-    }
-    // else if(checkboxGeneral=='' || checkboxGeneral==undefined){
-    //     alerts.showNotification('top', 'right', 'Selecciona alguna opción de menú', 'warning');
-    //     flagSubmit = false;
-    // }
-    else{
-        flagSubmit = true;
-    }
-    return flagSubmit;
-}
 
 function getLeadersList(){
     headquarter = $('#headquarter').val();
@@ -735,7 +494,6 @@ $(document).on('click', '.change-user-status', function(e) {
 
 $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
-    document.getElementById('lineaVenta').innerHTML = '';
     $('#btn_acept').prop('disabled', false);
     $('.simbolico_column').html('');
     $('.col-estructura').html('');
@@ -1097,61 +855,3 @@ $(document).on('change', '#nueva_estructura', function() {
     $("#member_type").val('').selectpicker("refresh");
     $("#leader").val('').selectpicker("refresh");
 });
-
-function menuOptions(member_type){
-    let valueMemberType = member_type;
-    $.ajax({
-        url: general_base_url+'Usuarios/getMenuOptionsByRol/'+valueMemberType,
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            printMenuCheck(response);
-        }
-    });
-}
-
-function printMenuCheck(data){
-    let contenedorHTML = document.getElementById('listadoHTML');
-    let containerMenu = document.getElementById('containerMenu');
-    contenedorHTML.innerHTML = '';
-    let contenidoInternoHTML = '';
-    let selectorTodo = '';
-    let arrayInterno = [];
-    let arrayJSON = '';
-    data.map((elemento, index)=>{
-        if(elemento.hijos == 1 || Number.isInteger(elemento.orden)){
-            arrayInterno = [];
-            arrayInterno.push(elemento.padre);
-            arrayInterno.push(elemento.idmenu);
-            arrayInterno.push(elemento.orden);
-            arrayJSON = JSON.stringify(arrayInterno);
-            contenidoInternoHTML += '<ul><li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="padre'+elemento.nombre+index+'"> <label for="padre'+elemento.nombre+index+'"> '+elemento.nombre+'</label></li><ul>';
-            data.map((element2, index2)=>{
-                arrayInterno = [];
-                if(element2.hijos == 0 && ((element2.orden>=data[index].orden ) && (element2.orden<=(data[index].orden+1)))){
-                    arrayInterno.push(element2.padre);
-                    arrayInterno.push(element2.idmenu);
-                    arrayInterno.push(element2.orden);
-                    arrayJSON = JSON.stringify(arrayInterno);
-                    contenidoInternoHTML += '<li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="'+element2.nombre+index2+'"> <label for="'+element2.nombre+index2+'"> '+element2.nombre+'</label></li>';
-                }
-            });
-            contenidoInternoHTML += '</ul></ul>';
-        }
-    });
-    selectorTodo = '<input type="checkbox" name="seleccionaTodo" class="seleccionaTodo" id="seleccionaTodo"/> <label for="seleccionaTodo" data-i18n="seleccionar-todas"> Seleccionar todas las opciones</label>';
-    contenedorHTML.innerHTML += selectorTodo;
-    contenedorHTML.innerHTML += contenidoInternoHTML;
-    contenedorHTML.style.height = '300px';
-    contenedorHTML.style.overflowY = 'auto';
-    containerMenu.classList.remove('hide');
-}
-
-
-$(document).on('click', '#seleccionaTodo', function(){
-    if ($(this).is(':checked')) {
-        $('input:checkbox').attr('checked', true);
-    } else {
-        $('input:checkbox').attr('checked', false);
-    }
-})
