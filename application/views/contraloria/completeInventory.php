@@ -13,7 +13,7 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align" data-i18n  ="descarga-inventario-lotes-sede">Descargar inventario de lotes por sede</h3>
+                                <h3 class="card-title center-align" data-i18n="descarga-inventario-lotes-sede">Descargar inventario de lotes por sede</h3>
                                 <p class="card-title pl-1"></p>
                             </div>
                             <div  class="toolbar">
