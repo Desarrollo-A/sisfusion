@@ -1502,7 +1502,9 @@
 		"status-13-listo-contraloria": "STATUS 13 READY (COMPTROLLER)",
 		"status-14-rechazo-contraloria": "STATUS 14 REJECTED (CONTRALORÍA)",
 		"el-status-ya-fue-registrado": "The status has already been entered",
-		"mensaje-oferta-vigencia128": "5 (five) days."
+		"mensaje-oferta-vigencia128": "5 (five) days.",
+		"este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you.",
+		"detalle-total-comisiones":"Total detail of commissions"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -3002,6 +3004,8 @@
 		"contrato-inhabilitado":"Contrato inhabilitado",
 		"adjuntar-archivo":"Adjuntar archivo",
 		"no-se-permite-adjuntar":"No se permite adjuntar archivos",
-		"en-progreso":"En proceso"
+		"en-progreso":"En proceso",
+		"este-listado-todos-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado.",
+		"detalle-total-comisiones":"Detalle total de comisiones"
 	}
 }
