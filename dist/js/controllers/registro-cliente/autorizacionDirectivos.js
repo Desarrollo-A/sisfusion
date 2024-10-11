@@ -1,7 +1,5 @@
 let titulosAu = [];
 let titulosAutCliente = [];
-let tablaAut = null;
-let tablaAutClientes = null;
 
 const TIPO_AUTORIZACION = Object.freeze({
     NORMAL: 1,
@@ -62,7 +60,7 @@ $(document).on('change', '.btn-file :file', function() {
 $(document).ready (function() {
     const funcionToGetData = (id_rol_general == 1) ? 'autsByDC' : 'tableAut';
     construirHead('addExp');
-    tablaAut = $('#addExp').DataTable( {
+    let tablaAut = $('#addExp').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [
@@ -149,7 +147,7 @@ $(document).ready (function() {
         });
     });
     construirHead('aut-verificacion');
-    tablaAutClientes = $('#aut-verificacion').DataTable( {
+    let tablaAutClientes = $('#aut-verificacion').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width:'100%',
         buttons: [
