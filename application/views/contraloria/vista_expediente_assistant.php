@@ -16,7 +16,7 @@
 					<div class="modal-body">
 						<div class="input-group">
 							<label class="input-group-btn">
-								<span class="btn btn-primary btn-file">
+								<span class="btn btn-primary btn-file"data-i18n="seleccionar">
 								Seleccionar archivo&hellip;<input type="file" name="expediente" id="expediente" style="display: none;">
 								</span>
 							</label>
@@ -25,9 +25,9 @@
 
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="sendFile" class="btn btn-primary"><span
-								class="material-icons" >send</span> Guardar documento </button>
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+					<button type="button" id="sendFile" class="btn btn-primary"><span
+								class="material-icons" >send</span data-i18n="guardar-documento">Guardar documento</button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
 					</div>
 				</div>
 			</div>
@@ -38,8 +38,8 @@
 		<div class="modal fade" id="cuestionDelete" >
 			<div class="modal-dialog">
 				<div class="modal-content" >
-					<div class="modal-header">
-						<center><h3 class="modal-title">¡Eliminar archivo!</h3></center>
+				<div class="modal-header">
+						<center><h3 class="modal-title" data-i18n="eliminar-archivo2">¡Eliminar archivo!</h3></center>
 					</div>
 					<div class="modal-body">
 						<div class="container-fluid">
@@ -48,8 +48,8 @@
 									<h1 class="modal-title"> <i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i></h1>
 								</div>
 								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-10">
-									<h4 class="modal-title">¿Está seguro de querer eliminar definivamente este archivo (<b><span class="tipoA"></span></b>)? </h4>
-									<h5 class="modal-title"><i> Esta acción no se puede deshacer.</i> </h5>
+									<h4 class="modal-title" data-i18n="seguro-eliminar-archivo">¿Está seguro de querer eliminar definivamente este archivo (<b><span class="tipoA"></span></b>)? </h4>
+									<h5 class="modal-title"><i> <span data-i18n="accion-no-deshacer">Esta acción no se puede deshacer.</span></i> </h5>
 								</div>
 							</div>
 
@@ -57,8 +57,8 @@
 					</div>
 					<div class="modal-footer">
 						<br><br>
-						<button type="button" id="aceptoDelete" class="btn btn-primary"> Sí, borrar </button>
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar </button>
+						<button type="button" id="aceptoDelete" class="btn btn-primary" data-i18n="cancelar"> Sí, borrar </button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"data-i18n="cancelar"> Cancelar </button>
 					</div>
 				</div>
 			</div>
@@ -84,7 +84,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Aceptar </button>
+					<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"data-i18n="aceptar">Aceptar</button>
 					</div>
 				</div>
 			</div>
@@ -103,14 +103,14 @@
 								<i class="material-icons">next_week</i>
 							</div>
 							<div class="card-content">
-								<h3 class="card-title center-align">Documentación</h3>
+								<h3 class="card-title center-align"data-i18n="documentacion">Documentación</h3>
 								<div class="toolbar">
 									<div class="container-fluid p-0">
 										<div class="row">
 											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 												<div class="form-group">
-													<label class="m-0" for="filtro3">Proyecto:</label>
-													<select name="filtro3" id="filtro3" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Proyecto" data-size="7" required>
+													<label class="m-0" for="filtro3"data-i18n="proyecto">Proyecto:</label>
+													<select name="filtro3" id="filtro3" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" data-i18n-label="selecciona-proyecto" title="" data-size="7" required>
 													<?php
 													if($residencial != NULL) :
 														foreach($residencial as $fila) : ?>
@@ -123,14 +123,14 @@
 											</div>
 											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 												<div class="form-group">
-													<label class="m-0" for="filtro4">Condominio</label>
-													<select id="filtro4" name="filtro4" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Condominio" data-size="7"></select>
+													<label class="m-0" for="filtro4"data-i18n="condominio-2">Condominio</label>
+													<select id="filtro4" name="filtro4" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn"data-i18n-label="select-condominio" title="" data-size="7"></select>
 												</div>
 											</div>
 											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 												<div class="form-group">
-													<label class="m-0" for="filtro5">Lote</label>
-													<select id="filtro5" name="filtro5" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Lote" data-size="7"></select>
+													<label class="m-0" for="filtro5"data-i18n="lote">Lote</label>
+													<select id="filtro5" name="filtro5" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn"data-i18n-label="select-lote" title="" data-size="7"></select>
 												</div>
 											</div>
 										</div>
@@ -142,15 +142,15 @@
 											<table id="tableDoct" class="table-striped table-hover">
 												<thead>
 													<tr>
-														<th>PROYECTO</th>
-														<th>CONDOMINIO</th>
-														<th>LOTE</th>
-														<th>CLIENTE</th>
-														<th>NOMBRE DE DOCUMENTO</th>
-														<th>HORA/FECHA</th>
-														<th>DOCUMENTO</th>
-														<th>RESPONSABLE</th>
-														<th>UBICACIÓN</th>
+														<th>proyecto</th>
+														<th>condominio</th>
+														<th>lote</th>
+														<th>cliente</th>
+														<th>nombre-documento2</th>
+														<th>hora-fecha</th>
+														<th>documento</th>
+														<th>responsable</th>
+														<th>ubicacion</th>
 													</tr>
 												</thead>
 											</table>
@@ -197,7 +197,6 @@
 
 
 			$('#filtro3').change(function(){
-
 				var valorSeleccionado = $(this).val();
 				$("#filtro4").empty().selectpicker('refresh');
 				$.ajax({
@@ -240,9 +239,11 @@
 					}
 				});
 			});
-
+			$(document).ready(function(){
+			 construirHead("tableDoct");
+			})
 			$('#filtro5').change(function(){
-				var valorSeleccionado = $(this).val();				
+				var valorSeleccionado = $(this).val();	
 				$('#tableDoct').DataTable({
 					ajax:
 						{
@@ -254,7 +255,8 @@
 						extend: 'excelHtml5',
 						text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
 						className: 'btn buttons-excel',
-						titleAttr: 'Descargar archivo de Excel',
+						titleAttr: _('descargar-excel'), 
+
 					}],
 					pagingType: "full_numbers",
 					fixedHeader: true,
@@ -288,7 +290,7 @@
 					{
 						data: 'modificado'
 					},
-					{
+				{
 						data: null,
 						render: function ( data, type, row ){
 							if (getFileExtension(data.expediente) == "pdf") {
@@ -425,21 +427,14 @@
 				$('#auts-loads').empty();
 				var statusProceso;
 				$.each(JSON.parse(data), function(i, item) {
-					if(item['estatus'] == 0)
-					{
-						statusProceso="<small class='label bg-green' style='background-color: #00a65a'>ACEPTADA</small>";
-					}
-					else if(item['estatus'] == 1)
-					{
-						statusProceso="<small class='label bg-orange' style='background-color: #FF8C00'>En proceso</small>";
-					}
-					else if(item['estatus'] == 2)
-					{
-						statusProceso="<small class='label bg-red' style='background-color: #8B0000'>DENEGADA</small>";
-					}
-					else if(item['estatus'] == 3)
-					{
-						statusProceso="<small class='label bg-blue' style='background-color: #00008B'>En DC</small>";
+					if(item['estatus'] == 0) {
+					statusProceso = "<small class='label bg-green' style='background-color: #00a65a'>{{ _('aceptada') }}</small>";
+					} else if(item['estatus'] == 1) {
+						statusProceso = "<small class='label bg-orange' style='background-color: #FF8C00'>{{ _('en-progreso') }}</small>";
+					} else if(item['estatus'] == 2) {
+						statusProceso = "<small class='label bg-red' style='background-color: #8B0000'>{{ _('denegada') }}</small>";
+					} else if(item['estatus'] == 3) {
+						statusProceso = "<small class='label bg-blue' style='background-color: #00008B'>{{ _('en-dc') }}</small>";
 					}
 					else
 					{
@@ -513,7 +508,7 @@
 			dataFile.append("idDocumento", iddoc);
 
 			if (validaFile == 0) {
-				alerts.showNotification('top', 'right', 'Debes seleccionar un archivoo', 'danger');
+				alerts.showNotification('top', 'right', _("seleccionar-archivo"), 'danger');
 			}
 
 			if (validaFile == 1) {
@@ -528,12 +523,12 @@
 					success : function (response) {
 						response = JSON.parse(response);
 						if(response.message == 'OK') {
-							alerts.showNotification('top', 'right', 'Expediente enviado', 'success');
+							alerts.showNotification('top', 'right', _("expediente-enviado"), 'success');
 							$('#sendFile').prop('disabled', false);
 							$('#addFile').modal('hide');
 							$('#tableDoct').DataTable().ajax.reload();
 						} else if(response.message == 'ERROR'){
-							alerts.showNotification('top', 'right', 'Error al enviar expediente y/o formato no válido', 'danger');
+							alerts.showNotification('top', 'right', _("error-al-enviar-expediente"), 'danger');
 							$('#sendFile').prop('disabled', false);
 						}
 					}
@@ -570,13 +565,13 @@
 				success : function (response) {
 					response = JSON.parse(response);
 					if(response.message == 'OK') {
-						alerts.showNotification('top', 'right', 'Archivo eliminado', 'danger');
+						alerts.showNotification('top', 'right', _("archivo-eliminado") , 'danger');
 						$('#aceptoDelete').prop('disabled', false);
 						$('#cuestionDelete').modal('hide');
 						$('#tableDoct').DataTable().ajax.reload();
 					} 
 					else if(response.message == 'ERROR'){
-						alerts.showNotification('top', 'right', 'Error al eliminar el archivo', 'danger');
+						alerts.showNotification('top', 'right', _("error-intenta-nuevamente"), 'danger');
 						$('#tableDoct').DataTable().ajax.reload();
 					}
 				}
