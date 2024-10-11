@@ -20,6 +20,7 @@ $(document).ready(function() {
     });
     setInitialValues();
 });
+
 sp = { //  SELECT PICKER
     initFormExtendedDatetimepickers: function() {
         $('.datepicker').datetimepicker({
@@ -39,6 +40,7 @@ sp = { //  SELECT PICKER
         });
     }
 }
+
 function setInitialValues() {
     // BEGIN DATE
     const fechaInicio = new Date();
@@ -54,6 +56,7 @@ function setInitialValues() {
     $("#endDate").val(convertDate(endDate));
     // fillTable(1, finalBeginDate, finalEndDate, 0);
 }
+
 $(document).on("click", "#searchByDateRange", function() {
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
@@ -67,6 +70,7 @@ $(document).on("click", "#searchByDateRange", function() {
     }
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);
 });
+
 $('#subDir').on('change', function() {
     var subdir = $("#subDir").val();
     //gerente
@@ -89,9 +93,11 @@ $('#subDir').on('change', function() {
         $('#spiner-loader').addClass('hide');
     }, 'json');
 });
+
 var gerente;
 var coordinador;
 var asesor;
+
 $('#gerente').on('change', function() {
     $('#filter_date').removeClass('hide');
     /**/
@@ -118,6 +124,7 @@ $('#gerente').on('change', function() {
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
+
 $('#coordinador').on('change', function() {
     coordinador = $("#coordinador").val();
     $('#filter_date').removeClass('hide');
@@ -143,6 +150,7 @@ $('#coordinador').on('change', function() {
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
+
 //asesor
 $('#asesores').on('change', function() {
     asesor = $("#asesores").val();
@@ -152,6 +160,7 @@ $('#asesores').on('change', function() {
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
+
 var prospectsTable;
 function updateTable(url, typeTransaction, beginDate, endDate, where) {
     construirHead("prospects-datatable_dir");
@@ -162,8 +171,8 @@ function updateTable(url, typeTransaction, beginDate, endDate, where) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Listado general de prospectos',
-            title: "Listado general de prospectos",
+            titleAttr: _('descargar-excel'),
+            title: _("listado-prospectos"),
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                 format: {
@@ -198,17 +207,17 @@ function updateTable(url, typeTransaction, beginDate, endDate, where) {
             {
                 data: function(d) {
                     if (d.estatus_particular == 1) { // DESCARTADO
-                        b = '<center><span class="label" style="background:#E74C3C">Descartado</span><center>';
+                        b = `<center><span class="label" style="background:#E74C3C" data-i18n="descartado-2">${_("descartado-2")}</span><center>`;
                     } else if (d.estatus_particular == 2) { // INTERESADO SIN CITA
-                        b = '<center><span class="label" style="background:#B7950B">Interesado sin cita</span><center>';
+                        b = `<center><span class="label" style="background:#B7950B" data-i18n="interesado-sin-cita">${_("interesado-sin-cita")}</span><center>`;
                     } else if (d.estatus_particular == 3) { // CON CITA
-                        b = '<center><span class="label" style="background:#27AE60">Con cita</span><center>';
+                        b = `<center><span class="label" style="background:#27AE60" data-i18n="con-cita-2">${_("con-cita-2")}</span><center>`;
                     } else if (d.estatus_particular == 4) { // SIN ESPECIFICAR
-                        b = '<center><span class="label" style="background:#5D6D7E">Sin especificar</span><center>';
+                        b = `<center><span class="label" style="background:#5D6D7E" data-i18n="sin-especificar2">${_("sin-especificar2")}</span><center>`;
                     } else if (d.estatus_particular == 5) { // PAUSADO
-                        b = '<center><span class="label" style="background:#2E86C1">Pausado</span><center>';
+                        b = `<center><span class="label" style="background:#2E86C1" data-i18n="pausado-2">${_("pausado-2")}</span><center>`;
                     } else if (d.estatus_particular == 6) { // PREVENTA
-                        b = '<center><span class="label" style="background:#8A1350">Preventa</span><center>';
+                        b = `<center><span class="label" style="background:#8A1350" data-i18n="preventa-2">${_("preventa-2")}</span><center>`;
                     }
                     return b;
                 }
@@ -216,9 +225,9 @@ function updateTable(url, typeTransaction, beginDate, endDate, where) {
             {
                 data: function(d) {
                     if (d.tipo == 0) {
-                        return '<center><span class="label label-danger" style="background: #B7950B">Prospecto</span></center>';
+                        return `<center><span class="label label-danger" style="background: #B7950B" data-i18n="prospecto">${_("prospecto")}</span></center>`;
                     } else {
-                        return '<center><span class="label label-danger" style="background: #75DF8F">Cliente</span></center>';
+                        return `<center><span class="label label-danger" style="background: #75DF8F" data-i18n="cliente">${_("cliente")}</span></center>`;
                     }
                 }
             },

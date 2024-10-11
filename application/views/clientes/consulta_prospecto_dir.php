@@ -116,8 +116,6 @@
 <script>
     userType = <?= $this->session->userdata('id_rol') ?>;
     typeTransaction = 1;
-
-    construirHead("prospects-datatable_dir");
 </script>
 
 <!-- MODAL WIZARD -->
