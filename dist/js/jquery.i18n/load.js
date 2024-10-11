@@ -312,6 +312,23 @@ function changeFontIconTooltips() {
     })
 }
 
+function changeDivTooltips() {
+    $('div').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        // console.log(id)
+
+        if(id){
+            let title = _(id)
+
+            if($(this).attr('title')){
+                $(this).attr('title', title)
+            }
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
@@ -324,3 +341,5 @@ onLoadTranslations(changeInputPlaceholder)
 onChangeTranslations(changeInputPlaceholder)
 onLoadTranslations(changeFontIconTooltips)
 onChangeTranslations(changeFontIconTooltips)
+onLoadTranslations(changeDivTooltips)
+onChangeTranslations(changeDivTooltips)
