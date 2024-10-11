@@ -1479,7 +1479,8 @@
 		"mensaje-oferta-vigencia124": "buyer, who",
 		"mensaje-oferta-vigencia125": "must send it",
 		"mensaje-oferta-vigencia126": "signed within a",
-		"mensaje-oferta-vigencia127": "period not exceeding",
+		"mensaje-oferta-vigencia127": "period not exceeding",			
+		"lote-origen":"Source batch",
 		"informacion-adicional2": "ADDITIONAL INFORMATION",
 		"cantidad-del-enganche-pagado" : "Amount of down payment paid",
 		"inventario-Lotes" : "Inventory Lots",
@@ -2992,6 +2993,7 @@
 		"enterado": "Enterado",
 		"asesor-titular": "Asesor titular",
 		"reporte-ventas-compartidas": "Reporte ventas compartidas",
+		"lote-origen":"Lote origen",	
 		"documentacion":"Documentación",
 		"guardar-documento":"Guardar documento",
 		"eliminar-archivo2":"¡Eliminar archivo!",
@@ -3013,3 +3015,4 @@
 		"detalle-total-comisiones":"Detalle total de comisiones"
 	}
 }
+
