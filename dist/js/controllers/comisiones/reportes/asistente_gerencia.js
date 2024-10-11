@@ -136,8 +136,8 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'HISTORIAL_GENERAL_COMISIONES',
+            titleAttr: _("descargar-excel"),
+            title: _("reporte-comisiones"),
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                 format: {
@@ -223,7 +223,7 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
         {
             "data": function( d ){
                 if(d.activo == 0 || d.activo == '0'){
-                    return '<p class="m-0"><b>'+d.user_names+'</b></p><p><span class="label lbl-warning">BAJA</span></p>';
+                    return `<p class="m-0"><b>${d.user_names}</b></p><p><span class="label lbl-warning">${_("baja")}</span></p>`;
                 }
                 else{
                     return '<p class="m-0"><b>'+d.user_names+'</b></p>';
