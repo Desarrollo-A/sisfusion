@@ -1,4 +1,4 @@
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
 <body>
@@ -57,7 +57,7 @@
                                                             <input type="text" class="form-control datepicker" id="beginDate" value="01/01/2021" />
                                                             <input type="text" class="form-control datepicker" id="endDate" value="01/01/2021" />
                                                             <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                                <span class="material-icons update-dataTable" data-i18n="buscar">Buscar</span>
+                                                                <span class="material-icons update-dataTable">search</span>
                                                             </button>
                                                         </div>
                                                     </div>
@@ -103,7 +103,7 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-    <!--main-panel close-->
+
 </body>
 
 <?php $this->load->view('template/footer'); ?>
@@ -120,7 +120,7 @@
 
 <!-- MODAL WIZARD -->
 <script src="<?= base_url() ?>dist/js/modal-steps.min.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/clientes/consulta_prospectos_director.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/clientes/consulta_prospecto_director.js"></script>
 <script src="<?= base_url() ?>static/yadcf/jquery.dataTables.yadcf.js"></script>
 
 </html>

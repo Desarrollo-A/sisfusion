@@ -1,8 +1,7 @@
-
 $(document).ready(function() {
     /*primera carga*/
     $("#subDir").empty().selectpicker('refresh');
-    $.post('<?= base_url() ?>index.php/Clientes/getSubdirs/', function(data) {
+    $.post(`${general_base_url}index.php/Clientes/getSubdirs/`, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -52,26 +51,28 @@ function setInitialValues() {
     const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
     finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
     finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');        
+        // console.log('Fecha inicio: ', finalBeginDate);
+    // console.log('Fecha final: ', finalEndDate);
     $("#beginDate").val(convertDate(beginDate));
     $("#endDate").val(convertDate(endDate));
     // fillTable(1, finalBeginDate, finalEndDate, 0);
 }
 
-$(document).on("click", "#searchByDateRange", function() {
+$(document).on("click", "#searchByDateRange", function () {
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     var url_inter;
-    if (gerente != undefined && coordinador == undefined && asesor == undefined) {
-        url_inter = "<?= base_url() ?>index.php/Clientes/getProspectsListByGerente/" + gerente;
+    if (gerente != undefined && coordinador==undefined && asesor==undefined) {
+        url_inter = `${general_base_url}index.php/Clientes/getProspectsListByGerente/` + gerente;
     } else if (gerente != undefined && coordinador != undefined && asesor == undefined) {
-        url_inter = "<?= base_url() ?>index.php/Clientes/getProspectsListByCoord/" + coordinador;
+        url_inter = `${general_base_url}index.php/Clientes/getProspectsListByCoord/` + coordinador;
     } else if (gerente != undefined && coordinador != undefined && asesor != undefined) {
-        url_inter = "<?= base_url() ?>index.php/Clientes/getProspectsListByAsesor/" + asesor;
+        url_inter = `${general_base_url}index.php/Clientes/getProspectsListByAsesor/` + asesor;
     }
     updateTable(url_inter, 3, finalBeginDate, finalEndDate, 0);
 });
 
-$('#subDir').on('change', function() {
+$('#subDir').on('change', function () {
     var subdir = $("#subDir").val();
     //gerente
     $("#gerente").empty().selectpicker('refresh');
@@ -79,7 +80,7 @@ $('#subDir').on('change', function() {
     $("#asesores").empty().selectpicker('refresh');
     $('#spiner-loader').removeClass('hide');
     $('#filter_date').addClass('hide');
-    $.post('<?= base_url() ?>index.php/Clientes/getGerentesBySubdir/' + subdir, function(data) {
+    $.post(`${general_base_url}index.php/Clientes/getGerentesBySubdir/` + subdir, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -98,14 +99,13 @@ var gerente;
 var coordinador;
 var asesor;
 
-$('#gerente').on('change', function() {
+$('#gerente').on('change', function () {
     $('#filter_date').removeClass('hide');
-    /**/
     gerente = $("#gerente").val();
     $("#coordinador").empty().selectpicker('refresh');
     $("#asesores").empty().selectpicker('refresh');
     $('#spiner-loader').removeClass('hide');
-    $.post('<?= base_url() ?>index.php/Clientes/getCoordsByGrs/' + gerente, function(data) {
+    $.post(`${general_base_url}index.php/Clientes/getCoordsByGrs/` + gerente, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -118,20 +118,20 @@ $('#gerente').on('change', function() {
         $("#coordinador").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
-    /**/ //carga tabla
-    var url = "<?= base_url() ?>index.php/Clientes/getProspectsListByGerente/" + gerente;
+
+    var url = `${general_base_url}index.php/Clientes/getProspectsListByGerente/` + gerente;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
 
-$('#coordinador').on('change', function() {
+$('#coordinador').on('change', function () {
     coordinador = $("#coordinador").val();
     $('#filter_date').removeClass('hide');
     //gerente
     $("#asesores").empty().selectpicker('refresh');
     $('#spiner-loader').removeClass('hide');
-    $.post('<?= base_url() ?>index.php/Clientes/getAsesorByCoords/' + coordinador, function(data) {
+    $.post(`${general_base_url}index.php/Clientes/getAsesorByCoords/` + coordinador, function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -145,17 +145,17 @@ $('#coordinador').on('change', function() {
         $('#spiner-loader').addClass('hide');
     }, 'json');
     /**/ //carga tabla
-    var url = "<?= base_url() ?>index.php/Clientes/getProspectsListByCoord/" + coordinador;
+    var url = `${general_base_url}index.php/Clientes/getProspectsListByCoord/` + coordinador;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
 
 //asesor
-$('#asesores').on('change', function() {
+$('#asesores').on('change', function () {
     asesor = $("#asesores").val();
     /**/ //carga tabla
-    var url = "<?= base_url() ?>index.php/Clientes/getProspectsListByAsesor/" + asesor;
+    var url = `${general_base_url}index.php/Clientes/getProspectsListByAsesor/` + asesor;
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
