@@ -1,5 +1,4 @@
 $(document).ready( function() {
-    construirHead("users_datatable");
     tableUsers();
 
 })
@@ -26,6 +25,7 @@ let titulos = [];
 
 
 function tableUsers(){
+    construirHead("users_datatable");
     usersTable = $('#users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
@@ -61,11 +61,11 @@ function tableUsers(){
         columns: [
             { data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">ACTIVO</span><center>';
+                    return `<center><span class="label lbl-green">${_("activo")}</span><center>`;
                 } else if (d.estatus == 3) {
-                    return '<center><span class="label lbl-orangeYellow">INACTIVO COMISIONADO</span><center>';
+                    return `<center><span class="label lbl-orangeYellow">${_("inactivo")}</span><center>`;
                 } else {
-                    return '<center><span class="label lbl-warning">INACTIVO</span><center>';
+                    return `<center><span class="label lbl-warning">${_("inactivo")}</span><center>`;
                 }
             }
             },

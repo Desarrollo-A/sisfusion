@@ -1,16 +1,4 @@
 $( document ).ready(function() {   
-    let titulos_encabezado = [];
-    let num_colum_encabezado = [];
-    // $('#tabla_clientes thead tr:eq(0) th').each( function (i) {
-    //     var title = $(this).text();
-    //     titulos_encabezado.push(title);
-    //     num_colum_encabezado.push(i);
-    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>` );
-    //     $( 'input', this ).on('keyup change', function () {
-    //         if ($('#tabla_clientes').DataTable().column(i).search() !== this.value)
-    //             $('#tabla_clientes').DataTable().column(i).search(this.value).draw();
-    //     });
-    // });
     construirHead('tabla_clientes');
     var table=$('#tabla_clientes').DataTable({
         destroy: true,
@@ -36,12 +24,12 @@ $( document ).ready(function() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: `${_('descargar-excel')}`,           
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }

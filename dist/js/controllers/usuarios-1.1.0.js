@@ -1,7 +1,7 @@
 var dar_baja = _("dar-baja");
 var puestos = [{id : 59, nombre : 'Director regional'}], sedes = []; 
 
-$(document).ready( function() { 
+$(document).ready( function() {
     construirHead("all_users_datatable")
 
     $('[data-toggle="tooltip"]').tooltip(); 
@@ -100,7 +100,7 @@ function validarSede(indexActual){
                 let sedes = $(`#sedes_${j}`).val();
                 if(sedeActual == sedes){
                     c++;
-                    alerts.showNotification("top", "right", "LA SEDE SELECCIONADA YA FUE SELECCIONADA", "warning");
+                    alerts.showNotification("top", "right",  _("sede-ya-seleccionada"), "warning");
                     $('#btn_acept').prop('disabled', true);
                 }
             }
@@ -163,16 +163,16 @@ $("#deleteRol").on('submit', function(e){
         beforeSend: function(){},
         success: function(data) {
             if (data == true) {
-                alerts.showNotification("top", "right", "El rol se ha eliminado correctamente", "success");
+                alerts.showNotification("top", "right",  _("rol-eliminado-correctamente"), "success");
                 $('#modalDelRol').modal('toggle');
                 document.getElementById(`mult_${indice}`).innerHTML = '';
                 document.getElementById("deleteRol").reset();
             } else {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right",_("algo-salio-mal"), "danger");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -187,9 +187,15 @@ function borrarMulti(index,id = ''){
         document.getElementById(`mult_${index}`).innerHTML = '';
     }
 }
-
+//DESCARGAR BT-EXCEL
+function translationsUserTable() {
+    onChangeTranslations(function() {
+        $('#all_users_datatable').DataTable().rows().invalidate().draw(false);
+        
+    });
+}
 function fillUsersTable() {
-    $allUsersTable = $('#all_users_datatable').DataTable({
+    const $allUsersTable = $('#all_users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -197,13 +203,13 @@ function fillUsersTable() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Listado de usuarios',
+            titleAttr: " _('descargar-excel'))", 
             title: 'Listado de usuarios',
             exportOptions: {
-                columns:  (id_rol_general==54) ? [0, 1, 2, 3, 4, 5, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                columns: [0,1,2,3,4,5,6,7,8],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -226,11 +232,11 @@ function fillUsersTable() {
         columns: [{
             data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">ACTIVO</span><center>';
+                    return '<center><span class="label lbl-green"data-i18n="activo">Activo</span><center>';
                 } else if (d.estatus == 3) {
-                    return '<center><span class="label lbl-orangeYellow">INACTIVO COMISIONADO</span><center>';
+                    return '<center><span class="label lbl-orangeYellow" data-i18n="inactivo-comisionado">INACTIVO COMISIONADO</span><center>';
                 } else {
-                    return '<center><span class="label lbl-warning">INACTIVO</span><center>';
+                    return '<center><span class="label lbl-warning" data-i18n="inactivo">Inactivo</span><center>';
                 }
             }
         },
@@ -259,10 +265,10 @@ function fillUsersTable() {
                 var propiedadExtra = '';
                 let factorEstatus = '';
                 if(d.puesto == 'Asesor' && d.simbolico==1){
-                    propiedadExtra = '<br><label class="label lbl-sky">SIMBÓLICO</label>';
+                    propiedadExtra = '<br><label class="label lbl-sky" data-i18n="simbolico">SIMBÓLICO</label>';
                 }
                 if(d.fac_humano == 1) {
-                    factorEstatus = '<br><label class="label lbl-violetBoots">FACTOR HUMANO</label>';
+                    factorEstatus = '<br><label class="label lbl-violetBoots" data-i18n="factor-humano">FACTOR HUMANO</label>';
                 }
                 return d.puesto + propiedadExtra + factorEstatus;
             }
@@ -279,7 +285,7 @@ function fillUsersTable() {
         },
         {
             data: function (d) {
-                return d.jefe_directo == '  ' ? 'NO APLICA' : d.jefe_directo;
+                return d.jefe_directo == '  ' ? _('no-aplica') : d.jefe_directo;
             }
         },
         {
@@ -288,29 +294,29 @@ function fillUsersTable() {
                 if(id_rol == 8 && d.estatus == 1){
                     if (id_usuario_general == 1297 || id_usuario_general == 1) { 
                         // filtro para soporte excluyendo ambos perfiles
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" data-id-usuario="' + d.id_usuario +'"> '+
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion"  data-id-usuario="' + d.id_usuario +'"> '+
                         '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
                             '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+
                             '</div>';
                         } 
                         else {
                             //TODO SOPORTE
-                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS"class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top"title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                             '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock"></i></button></div>';
                         }
                     }
                 else {
                     if (id_usuario_general == 1297 || id_usuario_general == 1) {
-                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
                         }
                         else {
                             if (id_usuario_general != 1297 || id_usuario_general != 1  ) {
                                 let bt = ``;
                                 if (id_usuario_general != 16621)
-                                    bt =  '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" ><i class="fas fa-eye"></i> </button>' ;
+                                    bt =  '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
+                                    '<button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" ><i class="fas fa-eye"></i> </button>' ;
                                 else
-                                    bt = '<div class="d-flex justify-center"><button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="BITACORA DE CAMBIOS" ><i class="fas fa-eye"></i> </button>' ;
+                                    bt = '<div class="d-flex justify-center"><button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" ><i class="fas fa-eye"></i> </button>' ;
                                     if ((d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') && (id_rol != 6 && id_rol != 5 && id_rol != 4)) {
                                 }
                                 else {
@@ -325,34 +331,34 @@ function fillUsersTable() {
                                 return bt;
                             }
                         if(id_rol == 8 && id_usuario_general != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
-                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' + '<button data-toggle="tooltip"  data-placement="top" title="DAR DE ALTA" class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock-open"></i></button>'+ '</div>';
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' + '<button data-toggle="tooltip"  data-placement="top" title="DAR DE ALTA" class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock-open"></i></button>'+ '</div>';
                         }
                     }
                 }
                 if (id_rol == 53) {
-                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
                 } else if (id_rol == 41) {
-                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                            '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                            '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                         '</div>';
                 } else if(id_rol_general==25){
                     return '';
                 }
                 else{
                     if (d.estatus == 1) {
-                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                            '<button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
+                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion"class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                            '<button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
                             '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-idrol="'+d.id_rol+'"><i class="fas fa-lock"></i></button>'+ '</div>';
                         } 
                         else {
                         if (d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') {
-                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                                '<button data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top"title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                                '<button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
                                 '</div>';
                             }
                             else {
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
-                                '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS" ><i class="fas fa-eye"></i></button>' +
+                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" ><i class="fas fa-pencil-alt"></i></button>' +
+                                '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" ><i class="fas fa-eye"></i></button>' +
                                 '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>' +
                                 '</div>';
                         }
@@ -371,11 +377,15 @@ function fillUsersTable() {
         let arrayNOView = [8];
         $allUsersTable.columns(arrayNOView).visible(false);
     }
+
+    applySearch($allUsersTable);
 }
 
 $('#all_users_datatable').on('draw.dt', function() {
     $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
+translationsUserTable();
+
 
 function showPassword() {
     if ($("#contrasena").attr("type") == "password") $("#contrasena").attr("type", "text");
@@ -394,16 +404,16 @@ $("#my_personal_info_form").on('submit', function(e){
         processData:false,
         success: function(data) {
             if (data == 1) {
-                alerts.showNotification("top", "right", "La información se ha actualizado correctamente.", "success");
+                alerts.showNotification("top", "right",_("informacion-actualizada-correctamente"), "success");
                 setTimeout(function() {
                     document.location.reload()
                 }, 3000);
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _("campos-minimos"), "warning");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -422,22 +432,22 @@ $("#my_add_user_form").on('submit', function(e){
             success: function(data) {
                 data = JSON.parse(data);
                 if (data.response == 1) {
-                    alerts.showNotification("top", "right", "El usuario se ha registrado correctamente.", "success");
+                    alerts.showNotification("top", "right", _("usuario-registrado-correctamente"), "success");
                     setTimeout(function() {
                         document.location.reload();
                     }, 3000);
                 } else if(data.response == -1){
-                    alerts.showNotification("top", "right", "El nombre de usuario ya está en uso, intentalo con otro.", "warning");
+                    alerts.showNotification("top", "right", _("nombre-usuario-en-uso"), "warning");
                     $('#username').focus();
                 } else if(data.response == -2){
-                    alerts.showNotification("top", "right", "Selecciona opciones de menú", "warning");
+                    alerts.showNotification("top", "right", _("selecciona-opciones-menu"), "warning");
                     $('#seleccionaTodo').focus();
                 }else{
-                    alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                    alerts.showNotification("top", "right",_("campos-minimos"), "warning");
                 }
             },
             error: function(){
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             }
         });
     }
@@ -458,52 +468,52 @@ function validarNuevoUsuario(){
     let checkboxGeneral = $('#checkboxGeneral').is(":checked");
 
     if(nombre=='' || nombre==undefined){
-        alerts.showNotification('top', 'right', 'Ingresa un nombre', 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-nombre"), 'warning');
         $('#name').focus();
         flagSubmit = false;
     }
     else if(last_name=='' || last_name==undefined){
-        alerts.showNotification('top', 'right', 'Ingresa apellido paterno', 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-apellido-pa"), 'warning');
         $('#last_name').focus();
         flagSubmit = false;
     }
     else if(email=='' || email==undefined){
-        alerts.showNotification('top', 'right', 'Ingresa un correo', 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-correo"), 'warning');
         $('#email').focus();
         flagSubmit = false;
     }
     else if(payment_method=='' || payment_method==undefined){
-        alerts.showNotification('top', 'right', 'Ingresa un método de pago', 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-metodo-pago"), 'warning');
         $('#payment_method').focus();
         flagSubmit = false;
     }
     else if(phone_number=='' || phone_number==undefined){
-        alerts.showNotification('top', 'right', 'Ingresa un teléfono', 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-telefono"), 'warning');
         $('#phone_number').focus();
         flagSubmit = false;
     }
     else if(headquarter=='' || headquarter==undefined){
-        alerts.showNotification('top', 'right', 'Ingresa una sede', 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-sede"), 'warning');
         $('#headquarter').focus();
         flagSubmit = false;
     }
     else if(member_type=='' || member_type==undefined){
-        alerts.showNotification('top', 'right', 'Selecciona tipo de miembro', 'warning');
+        alerts.showNotification('top', 'right',_("selecciona-miembro"), 'warning');
         $('#member_type').focus();
         flagSubmit = false;
     }
     else if(leader=='' || leader==undefined){
-        alerts.showNotification('top', 'right', 'Selecciona tipo de miembro', 'warning');
+        alerts.showNotification('top', 'right', _("selecciona-miembro"), 'warning');
         $('#leader').focus();
         flagSubmit = false;
     }
     else if(username=='' || username==undefined){
-        alerts.showNotification('top', 'right', 'Ingresa nombre de usuario', 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-nombre-usuario"), 'warning');
         $('#username').focus();
         flagSubmit = false;
     }
     else if(contrasena=='' || contrasena==undefined){
-        alerts.showNotification('top', 'right', 'Ingresa contraseña', 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-contraseña"), 'warning');
         $('#contrasena').focus();
         flagSubmit = false;
     }
@@ -615,13 +625,13 @@ $("#BajaUserForm").on('submit', function(e){
                 CloseModalBaja();
                 $allUsersTable.ajax.reload();
             }else{
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _("campos-minimos"), "warning");
             }
             document.getElementById('btnS').disabled = false;
         },
         error: function(){
             document.getElementById('btnS').disabled = false;
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -787,6 +797,10 @@ $(document).on('click', '.edit-user-information', function(e){
             $('#nueva_estructura').selectpicker('refresh');
             getLeadersListForEdit(v.id_sede, v.id_rol, leader);
             $("#editUserModal").modal();
+
+            $("#div-info").html(`<div class="boxIcon" data-html="true" data-toggle="tooltip" data-placement="bottom" title="${_("sede-capital-info")}">
+                                    <i class="fas fa-info"></i>
+                                </div>`);
             fillFields(v);
             validateEmptyFields(v);
         });
@@ -906,6 +920,17 @@ function fillFields (v) {
         document.getElementById("sucursal").removeAttribute("required");
         $("#sucursal").empty();
     }
+
+    // RADIO TIPO USUARIO
+    if (parseInt(v.tipo) == 1) // NORMAL
+    $('input:radio[name=tipoUsuario]')[0].checked = true;
+    else if (parseInt(v.tipo) == 2) // MADERAS UPGRADE
+    $('input:radio[name=tipoUsuario]')[1].checked = true;
+    else if (parseInt(v.tipo) == 3) // CASAS
+    $('input:radio[name=tipoUsuario]')[2].checked = true;
+    else if (parseInt(v.tipo) == 4) // SEGUROS
+    $('input:radio[name=tipoUsuario]')[3].checked = true;
+
     $("#rol_actual").val(rol_asignado);
     $("#username").val(v.usuario);
     $("#contrasena").val(v.contrasena);
@@ -954,15 +979,15 @@ $("#editUserForm").on('submit', function(e){
             if (data.respuesta == 1) {
                 $allUsersTable.ajax.reload();
                 $('#editUserModal').modal("hide");
-                alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                alerts.showNotification("top", "right",_("registro-actualizado"), "success");
             } else if (data.respuesta == 0) {
                 alerts.showNotification("top", "right", data.message, "warning");
             } else {
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _("campos-minimos"), "warning");
             }
         },
         error: function(){
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });

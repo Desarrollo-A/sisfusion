@@ -1433,6 +1433,7 @@
   background-color: #103f75;
   color: #ffffff;
   transition: 0.3s;
+  padding: 0 12px;
 }
 
 .text-modal {
