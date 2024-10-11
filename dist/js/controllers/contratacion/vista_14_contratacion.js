@@ -23,8 +23,8 @@ $("#tabla_ingresar_14").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            filename:'Registro Estatus 14',
-            titleAttr: 'Descargar archivo de Excel',
+            filename:`${_("estatus-14")}`,
+            titleAttr: `${_("descargar-excel")}`,
             exportOptions: {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
@@ -98,19 +98,19 @@ $("#tabla_ingresar_14").ready(function () {
                 if (id_rol_global != 53 && id_rol_global != 54 && id_rol_global != 63) { // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
                     var cntActions;
                     if (data.vl == '1') {
-                        cntActions = 'EN PROCESO DE LIBERACIÓN';
+                        cntActions = `${_("proceso-liberacion")}`;
                     }
                     else {
                         if (data.idStatusContratacion == 13 && data.idMovimiento == 43 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR STATUS">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="'+_("registrar-estatus")+'" >' +
                                 '<i class="far fa-thumbs-up"></i></button>';
                         }
                         else if (data.idStatusContratacion == 13 && data.idMovimiento == 68 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="revCont btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title= "REGISTRAR STATUS">' +
+                                'class="revCont btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title= "'+_("registrar-estatus")+'">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
                         }
                         else {
@@ -295,7 +295,7 @@ $(document).on('click', '#save2', function (e) {
     dataExp2.append("comentario", comentario);
     dataExp2.append("fechaVenc", getInfo1[6]);
     if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+        alerts.showNotification("top", "right", `${_("ingresa-comentario")}`, "danger");
     
 
     if (validaComent == 1) {
