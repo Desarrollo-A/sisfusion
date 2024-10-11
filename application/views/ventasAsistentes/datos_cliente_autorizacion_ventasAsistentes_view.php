@@ -2,7 +2,7 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
 <div class="wrapper ">
-	<?php  $this->load->view('template/sidebar', ""); ?>
+    <?php $this->load->view('template/sidebar'); ?>
 	
 	<!--Contenido de la página-->
 	<div class="modal fade modal-alertas" id="modal_autorizacion" role="dialog">
@@ -10,7 +10,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title" data-i18n = "subir-archivo-autorizacion">Subir archivo de autorización.</h4>
+					<h4 class="modal-title" data-i18n="subir-archivo-autorizacion">Subir archivo de autorización.</h4>
 				</div>
 				<form method="post" id="envioAutorizacion" name="envioAutorizacion" enctype="multipart/form-data">
 					<input type="hidden" name="idCliente" id="idCliente">
@@ -24,8 +24,8 @@
 					<div class="modal-body">
 					</div>
 					<div class="modal-footer"><br><br>
-       					<button type="button" class="btn btn-danger btn-simple" data-i18n = "cancelar" data-dismiss="modal">Cancelar</button>
-       					<button class="btn btn-primary" data-i18n = "guardar" type="submit">Guardar</button>
+       					<button type="button" class="btn btn-danger btn-simple" data-i18n="cancelar" data-dismiss="modal">Cancelar</button>
+       					<button class="btn btn-primary" data-i18n="guardar" type="submit">Guardar</button>
 					</div>
 				</form>
 			</div>
@@ -41,7 +41,7 @@
 							<i class="fas fa-user-friends fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align"  data-i18n="ingresar-autorizacion">Ingresar autorización</h3>
+                            <h3 class="card-title center-align" data-i18n="ingresar-autorizacion">Ingresar autorización</h3>
                             <div class="toolbar">
                                 <div class="row">
                                     <div class="col-md-4 form-group">
@@ -52,7 +52,7 @@
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label" data-i18n="condominio">Condominio</label>
+                                            <label class="control-label" data-i18n="condominio-2">Condominio</label>
                                             <select name="condominio" id="condominio" data-i18n-label = "selecciona-una-opcion" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
@@ -70,7 +70,7 @@
 										<thead>
 											<tr>
 												<th>lote</th>
-												<th>condominio</th>
+												<th>condominio-2</th>
 												<th>proyecto</th>
 												<th>cliente</th>
 												<th>autorizacion</th>
@@ -92,4 +92,3 @@
 </body>
 <?php $this->load->view('template/footer');?>
 <script src="<?=base_url()?>dist/js/controllers/ventasAsistentes/datos_cliente_autorizacion_ventasAsistentes.js"></script>
-
