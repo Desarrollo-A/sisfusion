@@ -1346,7 +1346,8 @@
 		"ingresos-extras": "EXTRA INCOME",
 		"autorizar-a": "Authorize to",
 		"Rechazar-a": "Autorizar a",
-		"la-cantidad-de": "the amount of"
+		"la-cantidad-de": "the amount of",
+		"visualizando": "Viewing"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2690,6 +2691,7 @@
 		"ingresos_extras": "INGRESOS EXTRA",
 		"autorizar-a": "Autorizar a",
 		"Rechazar-a": "Autorizar a",
-		"la-cantidad-de": "la cantidad de"
+		"la-cantidad-de": "la cantidad de",
+		"visualizando": "Visualizando"
 	}
 }
