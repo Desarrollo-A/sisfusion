@@ -1474,7 +1474,8 @@
 		"mensaje-oferta-vigencia125": "must send it",
 		"mensaje-oferta-vigencia126": "signed within a",
 		"mensaje-oferta-vigencia127": "period not exceeding",
-		"mensaje-oferta-vigencia128": "5 (five) days."
+		"mensaje-oferta-vigencia128": "5 (five) days.",
+		"ver-autorizaciones":"SEE AUTHORIZATIONS"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2946,6 +2947,7 @@
 		"ingresos_extras": "INGRESOS EXTRA",
 		"autorizar-a": "Autorizar a",
 		"Rechazar-a": "Autorizar a",
-		"la-cantidad-de": "la cantidad de"
+		"la-cantidad-de": "la cantidad de",
+		"ver-autorizaciones":"VER AUTORIZACIONES"
 	}
 }
