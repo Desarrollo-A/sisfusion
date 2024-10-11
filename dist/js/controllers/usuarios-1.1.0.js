@@ -173,6 +173,7 @@ $("#deleteRol").on('submit', function(e){
         },
         error: function(){
             alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -187,7 +188,13 @@ function borrarMulti(index,id = ''){
         document.getElementById(`mult_${index}`).innerHTML = '';
     }
 }
-
+//DESCARGAR BT-EXCEL
+function translationsUserTable() {
+    onChangeTranslations(function() {
+        $('#all_users_datatable').DataTable().rows().invalidate().draw(false);
+        
+    });
+}
 function fillUsersTable() {
     const $allUsersTable = $('#all_users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -228,6 +235,7 @@ function fillUsersTable() {
                 if (d.estatus == 1) {
                     return '<center><span class="label lbl-green" data-i18n="activo">ACTIVO</span><center>';
                 } else if (d.estatus == 3) {
+                    return '<center><span class="label lbl-orangeYellow" data-i18n="inactivo-comisionado">INACTIVO COMISIONADO</span><center>';
                     return '<center><span class="label lbl-orangeYellow" data-i18n="inactivo-comisionado">INACTIVO COMISIONADO</span><center>';
                 } else {
                     return '<center><span class="label lbl-warning" data-i18n="inactivo">INACTIVO</span><center>';
@@ -325,15 +333,15 @@ function fillUsersTable() {
                                 return bt;
                             }
                         if(id_rol == 8 && id_usuario_general != 1297 && d.puesto == 'Contraloría' && d.estatus == 0){
-                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="bitacora-cambios" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' + '<button data-toggle="tooltip"  data-placement="top" title="DAR DE ALTA" class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock-open"></i></button>'+ '</div>';
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' + '<button data-toggle="tooltip"  data-placement="top" title="DAR DE ALTA" class="btn-data btn-green change-user-status" id="' + d.id_usuario +'" data-estatus="1" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock-open"></i></button>'+ '</div>';
                         }
                     }
                 }
                 if (id_rol == 53) {
-                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="bitacora-cambios" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
                 } else if (id_rol == 41) {
-                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="editar-informacion" data-i18n-tooltip="editar-informacion" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                            '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="bitacora-cambios" data-i18n-tooltip="bitacora-cambios" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                    return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                            '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
                         '</div>';
                 } else if(id_rol_general==25){
                     return '';
@@ -346,14 +354,14 @@ function fillUsersTable() {
                         } 
                         else {
                         if (d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') {
-                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="editar-informacion" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                                '<button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="bitacora-cambios" data-i18n-tooltip="bitacora-cambios" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top"title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                                '<button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i></button>' +
                                 '</div>';
                             }
                             else {
-                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="editar-informacion" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button>' +
-                                '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="bitacora-cambios" data-i18n-tooltip="bitacora-cambios" title="BITÁCORA DE CAMBIOS" ><i class="fas fa-eye"></i></button>' +
-                                '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="dar-baja" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>' +
+                            return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas  edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" ><i class="fas fa-pencil-alt"></i></button>' +
+                                '<button class="btn-data btn-orangeYellow see-changes-log" data-id-usuario="' + d.id_usuario + '" data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" ><i class="fas fa-eye"></i></button>' +
+                                '<button class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="1" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>' +
                                 '</div>';
                         }
                     }
@@ -378,6 +386,8 @@ function fillUsersTable() {
 $('#all_users_datatable').on('draw.dt', function() {
     $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
 });
+translationsUserTable();
+
 
 function showPassword() {
     if ($("#contrasena").attr("type") == "password") $("#contrasena").attr("type", "text");
@@ -396,12 +406,12 @@ $("#my_personal_info_form").on('submit', function(e){
         processData:false,
         success: function(data) {
             if (data == 1) {
-                alerts.showNotification("top", "right", _("info_actualizada"), "success");
+                alerts.showNotification("top", "right",_("informacion-actualizada-correctamente"), "success");
                 setTimeout(function() {
                     document.location.reload()
                 }, 3000);
             } else {
-                alerts.showNotification("top", "right", _("campos_llenos_requeridos"), "warning");
+                alerts.showNotification("top", "right", _("campos-minimos"), "warning");
             }
         },
         error: function(){
@@ -471,20 +481,24 @@ function validarNuevoUsuario(){
     }
     else if(email=='' || email==undefined){
         alerts.showNotification('top', 'right', _("ingresa-correo"), 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-correo"), 'warning');
         $('#email').focus();
         flagSubmit = false;
     }
     else if(payment_method=='' || payment_method==undefined){
+        alerts.showNotification('top', 'right', _("ingresa-metodo-pago"), 'warning');
         alerts.showNotification('top', 'right', _("ingresa-metodo-pago"), 'warning');
         $('#payment_method').focus();
         flagSubmit = false;
     }
     else if(phone_number=='' || phone_number==undefined){
         alerts.showNotification('top', 'right', _("ingresa-telefono"), 'warning');
+        alerts.showNotification('top', 'right', _("ingresa-telefono"), 'warning');
         $('#phone_number').focus();
         flagSubmit = false;
     }
     else if(headquarter=='' || headquarter==undefined){
+        alerts.showNotification('top', 'right', _("ingresa-sede"), 'warning');
         alerts.showNotification('top', 'right', _("ingresa-sede"), 'warning');
         $('#headquarter').focus();
         flagSubmit = false;
@@ -979,6 +993,7 @@ $("#editUserForm").on('submit', function(e){
             }
         },
         error: function(){
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });

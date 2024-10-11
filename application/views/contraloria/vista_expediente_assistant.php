@@ -16,8 +16,8 @@
 					<div class="modal-body">
 						<div class="input-group">
 							<label class="input-group-btn">
-								<span class="btn btn-primary btn-file">
-									<span data-i18n="seleccionar-archivo"> Seleccionar archivo</span>&hellip;<input type="file" name="expediente" id="expediente" style="display: none;">
+								<span class="btn btn-primary btn-file"data-i18n="seleccionar">
+								Seleccionar archivo&hellip;<input type="file" name="expediente" id="expediente" style="display: none;">
 								</span>
 							</label>
 							<input type="text" class="form-control" id= "txtexp" readonly>
@@ -25,8 +25,8 @@
 
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="sendFile" class="btn btn-primary"><span
-								class="material-icons" >send</span> <span data-i18n="guardar-documento"> Guardar documento </span> </button>
+					<button type="button" id="sendFile" class="btn btn-primary"><span
+								class="material-icons" >send</span data-i18n="guardar-documento">Guardar documento</button>
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
 					</div>
 				</div>
@@ -200,7 +200,6 @@
 
 
 			$('#filtro3').change(function(){
-
 				var valorSeleccionado = $(this).val();
 				$("#filtro4").empty().selectpicker('refresh');
 				$.ajax({
@@ -243,9 +242,11 @@
 					}
 				});
 			});
-
+			$(document).ready(function(){
+			 construirHead("tableDoct");
+			})
 			$('#filtro5').change(function(){
-				var valorSeleccionado = $(this).val();				
+				var valorSeleccionado = $(this).val();	
 				$('#tableDoct').DataTable({
 					ajax:
 						{
@@ -291,7 +292,7 @@
 					{
 						data: 'modificado'
 					},
-					{
+				{
 						data: null,
 						render: function ( data, type, row ){
 							if (getFileExtension(data.expediente) == "pdf") {
@@ -531,6 +532,7 @@
 					success : function (response) {
 						response = JSON.parse(response);
 						if(response.message == 'OK') {
+							alerts.showNotification('top', 'right', _("expediente-enviado"), 'success');
 							alerts.showNotification('top', 'right', _("expediente-enviado"), 'success');
 							$('#sendFile').prop('disabled', false);
 							$('#addFile').modal('hide');

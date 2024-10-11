@@ -21,7 +21,9 @@
 					<form name="sendAutsFromD" id="sendAutsFromD">
 						<div class="modal-header d-flex justify-between align-center">
 							<h3 class="modal-title" id="myModalLabel" data-i18n="autorizaciones">Autorizaciones</h3>
-							<label class="m-0">(<span class="items"></span>) <label data-i18n="autorizaciones-pendientes">autorizaciones pendientes</label></label>
+							<label class="m-0">(<span class="items"></span>) 
+                            <label data-i18n="autorizaciones-pendientes">autorizaciones pendientes</label>
+                        </label>
 						</div>
 						<div class="modal-body pl-0 pr-0">
 							<div class="scroll-styles" id="loadAuts" style="max-height:450px; padding:0 20px; overflow:auto"></div>
@@ -50,7 +52,9 @@
                     <form name="autClienteForm" id="autClienteForm">
                         <div class="modal-header d-flex justify-between align-center">
                             <h3 class="modal-title" id="myModalLabel" data-i18n="autorizaciones">Autorizaciones</h3>
-                            <label class="m-0">(<span class="items-aut"></span>) <label data-i18n="autorizaciones-pendientes">autorizaciones pendientes</label></label>
+                            <label class="m-0">(<span class="items-aut"></span>) 
+                            <label data-i18n="autorizaciones-pendientes">autorizaciones pendientes</label>
+                        </label>
                         </div>
                         <div class="modal-body pl-0 pr-0">
                             <div class="scroll-styles" id="loadAutsCliente" style="max-height:450px; padding:0 20px; overflow:auto"></div>

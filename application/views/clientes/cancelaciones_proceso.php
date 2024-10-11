@@ -70,6 +70,3 @@
 <script src="<?= base_url() ?>dist/js/moment.min.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-
-
-

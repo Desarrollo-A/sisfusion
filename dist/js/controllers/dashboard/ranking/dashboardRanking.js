@@ -7,9 +7,12 @@ onChangeTranslations(() => {
         'ConEnganche': dataConEnganche,
         'SinEnganche': dataSinEnganche
     });
+    reorderColumns();
 })
 
 function readyRanking(){
+    $('body').i18n();
+    changeButtonTooltips();
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     $('[data-toggle="tooltip"]').tooltip();
@@ -156,21 +159,6 @@ function buildEstructuraDT(dataName, dataApartados){
     }
 
     var id = 'table'+dataName;
-    /*var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
-                        <table class="table-striped table-hover" id="`+id+`" name="table">
-                            <thead>
-                                <tr>
-                                    <th>ranking</th>
-                                    <th>totales</th>
-                                    <th>suma</th>
-                                    <th>nombre</th>
-                                    <th>puesto</th>
-                                    <th>id</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>`;
-    $("#"+dataName).html(estructura);*/
     var estructura = `<div class="container-fluid p-0" style="padding:15px!important">
                         <table class="table-striped table-hover" id="table`+dataName+`" name="table">
                             <thead>
@@ -276,7 +264,7 @@ function getRankings(general = false, typeRanking = null){
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 }
@@ -300,18 +288,6 @@ function divideRankingArrays(data){
 }
 
 function buildTableApartados(data){
-    // $('#tableApartados thead tr:eq(0) th').each(function (i) {
-    //     const title = $(this).text();
-    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
-    //     $('input', this).on('keyup change', function () {
-    //         if ($("#tableApartados").DataTable().column(i).search() !== this.value) {
-    //             $("#tableApartados").DataTable().column(i)
-    //                 .search(this.value).draw();
-    //         }
-    //     });
-    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-    // });
-    
     construirHead('tableApartados');
 
     $('#tableApartados').on('draw.dt', function() {
@@ -338,37 +314,31 @@ function buildTableApartados(data){
         order: [[2, "desc"]],
         data: data,
         columns: [{
-            // title: _('ranking'),
             data: function(d){
                 return d.ranking
             }
         },{
-            // title: _('totales'),
             data: function(d){
                 return `<button style=" border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.totalAT}</button>`; // APARTADOS
                 //return d.totalAT
             }
         },
         {
-            // title: _('suma'),
             data: function(d){
                 return d.sumaTotal
             }
         },
         {
-            // title: _('nombre'),
             data: function(d){
                 return d.nombreUsuario
             }
         },
         {
-            // title: _('puesto'),
             data: function(d){
                 return d.rol.toUpperCase();
             }
         },
         {
-            // title: 'ID',
             data: function(d){
                 return d.id_asesor
             }
@@ -387,18 +357,6 @@ function buildTableApartados(data){
 }
 
 function buildTableContratados(data){
-    // $('#tableContratados thead tr:eq(0) th').each(function (i) {
-    //     const title = $(this).text();
-    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
-    //     $('input', this).on('keyup change', function () {
-    //         if ($("#tableContratados").DataTable().column(i).search() !== this.value) {
-    //             $("#tableContratados").DataTable().column(i)
-    //                 .search(this.value).draw();
-    //         }
-    //     });
-    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-    // });
-
     construirHead('tableContratados');
 
     $('#tableContratados').on('draw.dt', function() {
@@ -425,37 +383,31 @@ function buildTableContratados(data){
         order: [[2, "desc"]],
         data: data,
         columns: [{
-            // title: _('ranking'),
             data: function(d){
                 return d.ranking
             }
         },{
-            // title: _('totales'),
             data: function(d){
                 return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.totalConT}</button>`; // CONTRATADOS
                 //return d.totalConT
             }
         },
         {
-            // title: _('suma'),
             data: function(d){
                 return d.sumaTotal
             }
         },
         {
-            // title: _('nombre'),
             data: function(d){
                 return d.nombreUsuario
             }
         },
         {
-            // title: _('puesto'),
             data: function(d){
                 return d.rol.toUpperCase();
             }
         },
         {
-            // title: 'ID',
             data: function(d){
                 return d.id_asesor
             }
@@ -469,19 +421,7 @@ function buildTableContratados(data){
     $('body').i18n();
 }
 
-function buildTableConEnganche(data){
-    // $('#tableCoVnEnganche thead tr:eq(0) th').each(function (i) {
-    //     const title = $(this).text();
-    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);  
-    //     $('input', this).on('keyup change', function () {
-    //         if ($("#tableConEnganche").DataTable().column(i).search() !== this.value) {
-    //             $("#tableConEnganche").DataTable().column(i)
-    //                 .search(this.value).draw();
-    //         }
-    //     });
-    // });
-
-    construirHead('tableConEnganche');
+function buildTableConEnganche(data){ construirHead('tableConEnganche');
 
     $('#tableConEnganche').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
@@ -507,36 +447,30 @@ function buildTableConEnganche(data){
         order: [[2, "desc"]],
         data: data,
         columns: [{
-            // title: _('ranking'),
             data: function(d){
                 return d.ranking
             }
         },{
-            // title: _('totales'),
             data: function(d){
                 return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="3" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.cuantos}</button>`; // CON ENGANCHE
             }
         },
         {
-            // title: _('suma'),
             data: function(d){
                 return d.sumaTotal
             }
         },
         {
-            // title: _('nombre'),
             data: function(d){
                 return d.asesor
             }
         },
         {
-            // title: _('puesto'),
             data: function(d){
                 return d.rol.toUpperCase();
             }
         },
         {
-            // title: 'ID',
             data: function(d){
                 return d.id_asesor
             }
@@ -551,18 +485,6 @@ function buildTableConEnganche(data){
 }
 
 function buildTableSinEnganche(data){
-    // $('#tablesinEnganche thead tr:eq(0) th').each(function (i) {
-    //     const title = $(this).text();
-    //     $(this).html('<input type="text" center;" class="textoshead"  placeholder="' + title + '"/>');
-    //     $('input', this).on('keyup change', function () {
-    //         if ($("#tablesinEnganche").DataTable().column(i).search() !== this.value) {
-    //             $("#tablesinEnganche").DataTable().column(i)
-    //                 .search(this.value).draw();
-    //         }
-    //     });
-    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-    // });
-
     construirHead('tablesinEnganche');
 
     $('#tablesinEnganche').on('draw.dt', function() {
@@ -589,36 +511,30 @@ function buildTableSinEnganche(data){
         order: [[2, "desc"]],
         data: data,
         columns: [{
-            // title: _('ranking'),
             data: function(d){
                 return d.ranking
             }
         },{
-            // title: _('totales'),
             data: function(d){
                 return `<button style="border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-asesor="${d.id_asesor}" class="btnModalDetailsRanking label lbl-gray">${d.cuantos}</button>`; // SIN ENGANCHE
             }
         },
         {
-            // title: _('suma'),
             data: function(d){
                 return d.sumaTotal
             }
         },
         {
-            // title: _('nombre'),
             data: function(d){
                 return d.asesor
             }
         },
         {
-            // title: _('puesto'),
             data: function(d){
                 return d.rol.toUpperCase();
             }
         },
         {
-            // title: 'ID',
             data: function(d){
                 return d.id_asesor
             }
@@ -854,7 +770,7 @@ function getSedesRanking(){
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 }
@@ -1039,22 +955,6 @@ $(document).on('click', '.btnModalDetailsRanking', function () {
     $("#seeInformationModalRanking").modal();
 });
 
-// $('#lotesInformationTableRanking thead tr:eq(0) th').each(function (i) {
-//     const title = $(this).text();
-//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-//     $('input', this).on('keyup change', function () {
-//         if(i != 0){
-//             if ($("#lotesInformationTableRanking").DataTable().column(i).search() !== this.value) {
-//                 $("#lotesInformationTableRanking").DataTable().column(i)
-//                     .search(this.value).draw();
-//             }
-//         }
-//     });
-//     $('[data-toggle="tooltip"]').tooltip({
-//         trigger: "hover"
-//     });
-// });
-
 function fillTable(dataObject) {
     construirHead('lotesInformationTableRanking')
 
@@ -1064,7 +964,7 @@ function fillTable(dataObject) {
         });
     });
 
-    generalDataTable = $('#lotesInformationTableRanking').dataTable({
+    let generalDataTable = $('#lotesInformationTableRanking').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [
@@ -1077,36 +977,8 @@ function fillTable(dataObject) {
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
-                        header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return 'PROYECTO';
-                                    break;
-                                case 1:
-                                    return 'CONDOMINIO';
-                                    break;
-                                case 2:
-                                    return 'LOTE'
-                                    break;
-                                case 3:
-                                    return 'PRECIO';
-                                    break;
-                                case 4:
-                                    return 'CLIENTE';
-                                    break;
-                                case 5:
-                                    return 'ASESOR';
-                                    break;
-                                case 6:
-                                    return 'FECHA DE APARTADO';
-                                    break;
-                                case 7:
-                                    return 'ESTATUS DE CONTRATACIÓN';
-                                    break;
-                                case 8:
-                                    return 'ESTATUS DEL LOTE';
-                                    break;
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -1193,4 +1065,5 @@ function fillTable(dataObject) {
             }
         }
     });
+    applySearch(generalDataTable);
 }
