@@ -5495,6 +5495,7 @@ class Casas extends BaseController
     }
     public function lista_toda_documentacion_casas_pagos() {
         $lote = $this->get('lote');
+        $extraColumns = "";
 
         if(!isset($lote)){
             return $this->json([]);
