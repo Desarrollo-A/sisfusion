@@ -17,13 +17,13 @@
                                     <table id="tablaInventario" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>poyecto</th>
+                                                <th>proyecto</th>
                                                 <th>condominio</th>
                                                 <th>lote</th>
                                                 <th>id-lote</th>
                                                 <th>superficie</th>
                                                 <th>precio-m2</th>
-                                                <th>TOTAL</th>
+                                                <th>total</th>
                                                 <th>tipo-lote</th>
                                                 <th>estatus</th>
                                                 <th>estatus-lote</th>

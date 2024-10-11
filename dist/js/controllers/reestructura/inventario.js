@@ -1,17 +1,17 @@
 let titulosTabla = [];
-$('#tablaInventario thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    titulosTabla.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
-            $('#tablaInventario').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-});
-
-$('#tablaInventario').DataTable({
+// $('#tablaInventario thead tr:eq(0) th').each(function (i) {
+//     const title = $(this).text();
+//     titulosTabla.push(title);
+//     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+//     $('input', this).on('keyup change', function () {
+//         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
+//             $('#tablaInventario').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip();
+// });
+construirHead('tablaInventario');
+var tabla=$('#tablaInventario').DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
     scrollX: true,
@@ -19,13 +19,13 @@ $('#tablaInventario').DataTable({
         extend: 'excelHtml5',
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
-        titleAttr: 'Inventario disponible reubicación',
-        title:"Inventario disponible reubicación",
+        titleAttr: `${_('descargar-excel')}`,
+        title:`${_('descargar-excel')}`,
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,13],
             format: {
-                header: function (d, columnIdx) {
-                    return ' ' + titulosTabla[columnIdx] + ' ';
+                header:  function (d, columnIdx) {
+                    return $(d).attr('placeholder').toUpperCase();
                 }
             }
         }
@@ -83,4 +83,6 @@ $('#tablaInventario').DataTable({
         });
     },
 });
+applySearch(tabla);
+
 

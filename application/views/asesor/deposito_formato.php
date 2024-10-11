@@ -78,7 +78,7 @@
                 <!-- encabezados -->
                 <div class="row pt-2" id="radioDS">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <h6 class="label-on-left mb-0" data-i18n="desarrollo">DESARROLLO </h6>
+                        <h6 class="label-on-left mb-0" data-i18n="desarrollo">DESARROLLO</h6>
                         <div class="radio_container">
                             <?php
                             $inputRender = '';
@@ -572,7 +572,7 @@
                                 <span data-i18n="nacionalidad">NACIONALIDAD</span> (<small style="color: red;">*</small>)</label>
                             <select data-i18n-label="selecciona-una-opcion" name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
-                                                                for($p=0; $p < count($nacionalidades) ; $p++){
+                                    for($p=0; $p < count($nacionalidades) ; $p++){
                                     if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
                                         echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
                                     }
