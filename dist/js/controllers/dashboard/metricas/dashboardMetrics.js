@@ -675,7 +675,6 @@ function formatMedioProspeccion(data){
     data.forEach(element => {
         if (count < 6) {
             series.push( element.cantidad );
-            // categories.push(`${element.nombre}`);
             count++;
         }
     });
@@ -900,17 +899,6 @@ function getProyectos(idSede = null, idProyecto = null){
 }
 
 function buildTableMetros(data){
-    // $('#tablemetros thead tr:eq(0) th').each(function (i) {
-    //     const title = $(this).text();
-    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    //     $('input', this).on('keyup change', function () {
-    //         if ($("#tablemetros").DataTable().column(i).search() !== this.value) {
-    //             $("#tablemetros").DataTable().column(i)
-    //                 .search(this.value).draw();
-    //         }
-    //     });
-    // });
-
     construirHead('tablemetros')
 
     $('#tablemetros').on('draw.dt', function() {
@@ -955,18 +943,6 @@ function buildTableMetros(data){
 }
 
 function buildTableDisponibilidad(data){
-    // $('#tabledisponibilidad thead tr:eq(0) th').each(function (i) {
-    //     const title = $(this).text();
-    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    //     $('input', this).on('keyup change', function () {
-    //         if ($("#tabledisponibilidad").DataTable().column(i).search() !== this.value) {
-    //             $("#tabledisponibilidad").DataTable().column(i)
-    //                 .search(this.value).draw();
-    //         }
-    //     });
-    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
-    // });
-
     construirHead('tabledisponibilidad')
 
     $('#tabledisponibilidad').on('draw.dt', function() {
@@ -1017,18 +993,6 @@ function buildTableDisponibilidad(data){
 }
 
 function buildTableLugarProspeccion(data){
-    // $('#tablelugar thead tr:eq(0) th').each(function (i) {
-    //     const title = $(this).text();
-    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    //     $('input', this).on('keyup change', function () {
-    //         if ($("#tablelugar").DataTable().column(i).search() !== this.value) {
-    //             $("#tablelugar").DataTable().column(i)
-    //                 .search(this.value).draw();
-    //         }
-    //     });
-    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
-    // });
-
     construirHead('tablelugar')
 
     $('#tablelugar').on('draw.dt', function() {
@@ -1073,18 +1037,6 @@ function buildTableLugarProspeccion(data){
 }
 
 function buildTableMedio(data){
-    // $('#tablemedio thead tr:eq(0) th').each(function (i) {
-    //     const title = $(this).text();
-    //     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-    //     $('input', this).on('keyup change', function () {
-    //         if ($("#tablemedio").DataTable().column(i).search() !== this.value) {
-    //             $("#tablemedio").DataTable().column(i)
-    //                 .search(this.value).draw();
-    //         }
-    //     });
-    //     $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
-    // });
-
     construirHead('tablemedio')
 
     $('#tablemedio').on('draw.dt', function() {
@@ -1424,18 +1376,6 @@ function buildSelect(selected, dataSelect){
     $('#proyecto2').selectpicker('refresh');
     changeSelects();
 }
-
-// let titulosMetricas = [];
-// $('#lotesDetailTableMetricas thead tr:eq(0) th').each(function (i) {
-//     let title = $(this).text();
-//     titulosMetricas.push(title);
-//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
-//     $( 'input', this).on('keyup change', function () {
-//         if ($('#lotesDetailTableMetricas').DataTable().column(i).search() !== this.value) {
-//             $('#lotesDetailTableMetricas').DataTable().column(i).search(this.value).draw();
-//         }   
-//     });
-// });
 
 function fillTableMetrics(dataObject) {
     construirHead('lotesDetailTableMetricas');
