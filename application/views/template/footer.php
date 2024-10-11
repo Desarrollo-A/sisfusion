@@ -1,3 +1,4 @@
+
 <!--   Core JS Files   -->
 <script src="<?=base_url()?>dist/js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/jquery-ui.min.js" type="text/javascript"></script>
@@ -65,14 +66,12 @@
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
-    let id_sede_general = '<?= (empty($this->session->userdata('id_sede')) ? 0 : $this->session->userdata('id_sede')) ?>';
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
+    let id_sede_general = '<?= (empty($this->session->userdata('id_sede')) ? 0 : $this->session->userdata('id_sede')) ?>';
     let tipoUsuarioGeneral =  <?=$this->session->userdata('tipo')?>;
     let sede_usuario_general_div = " <?= $this->session->userdata('id_sede') ?> ";
     let lider_general = "<?=$this->session->userdata('id_lider')?> ";
-
-    
-    let forma_de_pago_general = <?=$this->session->userdata('forma_pago');?>;
+    let forma_de_pago_general = "<?=$this->session->userdata('forma_pago')?> ";
 
 
     let sede_usuario_general_array = sede_usuario_general_div.split(",");
@@ -81,7 +80,7 @@
 
     
 	$(document).ready(function() {
-		//demo.initDashboardPageCharts();
+		demo.initDashboardPageCharts();
 	});
 
     function validaCheckSession(){
@@ -100,7 +99,7 @@
 <script src="<?= base_url() ?>dist/js/components/components.js"></script>
 <script src="<?= base_url() ?>dist/js/components/table.js"></script>
 <script src="<?= base_url() ?>dist/js/components/dialogs.js"></script>
-<script src="<?= base_url() ?>dist/js/components/forms.js?v=3"></script>
+<script src="<?= base_url() ?>dist/js/components/forms.js"></script>
 
 <!-- jquery.i18n -->
 
@@ -113,47 +112,4 @@
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/he.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/fi.js"></script>
 <script src="<?= base_url() ?>dist/js/jquery.i18n/languages/ml.js"></script>
-<script type="text/javascript">
-    let locale = localStorage.getItem('locale')
-
-    $.i18n().load('<?= base_url() ?>dist/js/jquery.i18n/langs.json')
-    .done(function() {
-        $('body').i18n()
-    })
-
-    $.i18n( { 
-        locale: 'es' // Locale is English 
-    });
-
-    // Load locale from config
-    if(locale){
-        $.i18n().locale = locale;
-    }
-
-    $(document).ready(function() {
-        changeIcon(locale)
-    })
-
-    function changeIcon(lang) {
-        $('#lang_icon').attr("src", `<?= base_url() ?>static/images/langs/${lang}.png`)
-    }
-
-    function changeLanguaje() {
-        let locale = localStorage.getItem('locale')
-
-        if(locale == 'en'){
-            new_locale = 'es'
-        }else{
-            new_locale = 'en'
-        }
-
-        $.i18n().locale = new_locale
-        localStorage.setItem('locale', new_locale)
-        changeIcon(new_locale)
-
-        $('body').i18n()
-    }
-
-    _ = $.i18n
-
-</script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script>

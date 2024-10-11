@@ -1,15 +1,5 @@
-$('#tablaOficinas thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
-
-    $('input', this).on('keyup change', function () {
-        if ($('#tablaOficinas').DataTable().column(i).search() !== this.value) {
-            $('#tablaOficinas').DataTable().column(i).search(this.value).draw();
-        }
-    });
-
-    $('[data-toggle="tooltip"]').tooltip();
-});
+construirHead('tablaOficinas');
+changeButtonTooltips();
 
 let tablaOficinas = $('#tablaOficinas').DataTable({
     dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -48,16 +38,16 @@ let tablaOficinas = $('#tablaOficinas').DataTable({
     },
     {
         data: function (d) {
-            return `<span class='label ${d.estatus == 0 ? 'lbl-warning' : 'lbl-green'}'>${d.estatus == 0 ? 'INACTIVO' : 'ACTIVO'}</span>`;
+            return `<span class='label ${d.estatus == 0 ? 'lbl-warning' : 'lbl-green'}'>${d.estatus == 0 ? _('inactivo') : _('activo2')}</span>`;
         }
     },
     { 
         data: function (d) {
             var btn = `<div class="d-flex justify-center">
-                <button class="btn-data btn-sky updateOffice" data-toggle="tooltip" data-placement="top" title="EDITAR">
+                <button class="btn-data btn-sky updateOffice" data-toggle="tooltip" data-placement="top" title="${_('editar')}" data-i18n-tooltip="editar">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="btn-data statusOfficeBtn ${d.estatus == 0 ? 'btn-violetBoots' : 'btn-gray'}" data-toggle="tooltip" data-placement="top" title="${d.estatus == 0 ? 'ACTIVAR' : 'DESACTIVAR'}">
+                <button class="btn-data statusOfficeBtn ${d.estatus == 0 ? 'btn-violetBoots' : 'btn-gray'}" data-toggle="tooltip" data-placement="top" title="${d.estatus == 0 ? _('activar') : _('desactivar')}" data-i18n-tooltip="${d.estatus == 0 ? 'activar' : 'desactivar'}">
                     <i class="fas ${d.estatus == 0 ? 'fa-thumbs-up' : 'fa-thumbs-down'}"></i>
                 </button>
             </div>`;
@@ -76,6 +66,8 @@ let tablaOficinas = $('#tablaOficinas').DataTable({
     }
 });
 
+applySearch(tablaOficinas);
+
 
 $(document).on("click", ".updateOffice", function () {
     let tr = this.closest('tr');
@@ -93,7 +85,7 @@ $(document).on("click", ".statusOfficeBtn", function () {
     $('#idDireccionS').val(row.id_direccion);
     $('#status').val(row.estatus);
     $('#statusOffice .modal-body').append(`
-        <h6 style="text-align: justify">¿Estás seguro que deseas cambiar el estatus para la dirección <b>${row.nombre}</b>?</h6>
+        <h6 style="text-align: justify">${_('confirmar-estatus-direccion')}<b>${row.nombre}</b>?</h6>
     `);
     $('#statusOffice').modal('show');
 });
@@ -107,7 +99,7 @@ $(document).on("click", "#btnAgregarOffice", function () {
             $("#idSede").append($('<option>').val(id).text(name));
         }
         if (len <= 0) {
-            $("#idSede").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#idSede").append(`<option selected="selected" disabled>${_('sin-registros-mostrar')}</option>`);
         }
         $("#idSede").selectpicker('refresh');
     }, 'json');
@@ -129,13 +121,13 @@ $("#formEditOffice").on('submit', function (e) {
             if (data == 1) {
                 tablaOficinas.ajax.reload();
                 $("#editOffice").modal('hide');
-                alerts.showNotification("top", "right", "El registro se actualizó exitosamente.", "success");
+                alerts.showNotification("top", "right", _('registro-actualizado-exitosamente'), "success");
             } else {
-                alerts.showNotification("top", "right", "Error al actualizar.", "warning");
+                alerts.showNotification("top", "right", _('error-actualizar'), "warning");
             }
         },
         error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -154,13 +146,13 @@ $("#formStatus").on('submit', function (e) {
             if (data == 1) {
                 tablaOficinas.ajax.reload();
                 $("#statusOffice").modal('hide');
-                alerts.showNotification("top", "right", "El registro se actualizó exitosamente.", "success");
+                alerts.showNotification("top", "right", _('registro-actualizado-exitosamente'), "success");
             } else {
-                alerts.showNotification("top", "right", "Error al actualizar.", "warning");
+                alerts.showNotification("top", "right", _('error-actualizar'), "warning");
             }
         },
         error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -168,10 +160,10 @@ $("#formStatus").on('submit', function (e) {
 $("#formAddOffice").on('submit', function (e) {
     e.preventDefault();
     if(this.newOffice.value == '' || this.inicio.value == '' || this.fin.value == '' || this.idSede.value == ''){
-        alerts.showNotification("top", "right", "Faltan datos a ingresar", "warning");
+        alerts.showNotification("top", "right", _('faltan-datos-ingresar'), "warning");
     }
     else if(parseInt(this.inicio.value) > 12 || parseInt(this.fin.value) > 12){
-        alerts.showNotification("top", "right", "Formato de 12 horas", "warning");
+        alerts.showNotification("top", "right", _('format-12'), "warning");
     }
     else{
         let formData = new FormData(this);
@@ -186,13 +178,13 @@ $("#formAddOffice").on('submit', function (e) {
                 if (data == 1) {
                     tablaOficinas.ajax.reload();
                     $("#addOffice").modal('hide');
-                    alerts.showNotification("top", "right", "Se ha añadido el registro exitosamente.", "success");
+                    alerts.showNotification("top", "right", _('registro-exitosamente'), "success");
                 } else {
-                    alerts.showNotification("top", "right", "Error al añadir el registro.", "warning");
+                    alerts.showNotification("top", "right", _('error-actualizar'), "warning");
                 }
             },
             error: function () {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
             }
         });
     }

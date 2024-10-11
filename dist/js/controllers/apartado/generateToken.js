@@ -12,36 +12,24 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-let titulos = [];
-$('#evidenceTable thead tr:eq(0) th').each( function (i) {
-    var title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#evidenceTable').DataTable().column(i).search() !== this.value ) {
-            $('#evidenceTable').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-})
-
 function fillevidenceTable() {
-    evidenceTable = $("#evidenceTable").dataTable({
+    construirHead('evidenceTable');
+    evidenceTable = $("#evidenceTable").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
         buttons:[{
             extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
-            title: 'Consulta BBVA',
+            titleAttr: _('descargar-excel'),
+            title: _('consulta-bbva'),
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -72,7 +60,7 @@ function fillevidenceTable() {
                     if(d.id_lote != null){
                         lote = d.id_lote;
                     }else{
-                        lote = "SIN ESPECIFICAR";
+                        lote = _("sin-especificar");
                     }
                     return lote;
                 }
@@ -83,7 +71,7 @@ function fillevidenceTable() {
                     if(d.nombreLote != null){
                         nombreLote = d.nombreLote;
                     }else{
-                        nombreLote = "SIN ESPECIFICAR";
+                        nombreLote = _("sin-especificar");
                     }
                     return nombreLote;
                 }
@@ -94,7 +82,7 @@ function fillevidenceTable() {
                     if(d.nombreCliente != "  "){
                         cliente = d.nombreCliente;
                     }else{
-                        cliente = "SIN ESPECIFICAR";
+                        cliente = _("sin-especificar");
                     }
                     return cliente;
                 }
@@ -105,7 +93,7 @@ function fillevidenceTable() {
                     if(d.fechaApartado != null){
                         fecha_apartado = d.fechaApartado;
                     }else{
-                        fecha_apartado = "SIN ESPECIFICAR";
+                        fecha_apartado = _("sin-especificar");
                     }
                     return fecha_apartado;
                 }
@@ -130,13 +118,13 @@ function fillevidenceTable() {
                     let estatus;
                     switch (d.estatus) {
                         case 0:
-                            estatus = `<span class="label lbl-deepGray">No validada</span>`;
+                            estatus = `<span class="label lbl-deepGray">${_("no-validada")}</span>`;
                             break;
                         case 1:
-                            estatus = `<span class="label lbl-green">Aceptada</span>`;
+                            estatus = `<span class="label lbl-green">${_("aceptada-2")}</span>`;
                             break;
                         case 2:
-                            estatus = `<span class="label lbl-warning">Rechazada</span>`;
+                            estatus = `<span class="label lbl-warning"${_("rechazada")}Rechazada</span>`;
                             break;
                     }
                     return estatus;
@@ -145,14 +133,14 @@ function fillevidenceTable() {
             {
                 data: function (d) {
                     let btns = `<div class="d-flex align-center justify-center">`;
-                    btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-eye"></i></button>`;
+                    btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="${_("ver-evidencia-2")}"></body><i class="fas fa-eye"></i></button>`;
                     if (d.currentRol == 3 && d.type == 1)
-                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" data-toggle="tooltip"  data-placement="top" title="COPIAR TOKEN"><i class="fas fa-copy"></i></button>`;
+                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" data-toggle="tooltip"  data-placement="top" title="${_("copiar-token")}"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
                         if (d.estatus == 1 || d.estatus == 0)
-                            btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="RECHAZAR"><i class="fas fa-minus"></i></button>`;
+                            btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="${_("rechazar-2")}"><i class="fas fa-minus"></i></button>`;
                         if (d.estatus == 2 || d.estatus == 0)
-                            btns += `<button class="btn-data btn-green validateEvidence" data-type="${d.type}" data-action="1" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="ACEPTAR"><i class="fas fa-check"></i></button>`;
+                            btns += `<button class="btn-data btn-green validateEvidence" data-type="${d.type}" data-action="1" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="${_("aceptar-2")}"><i class="fas fa-check"></i></button>`;
                     }
                     btns += '</div>';
                     return btns;
@@ -170,6 +158,7 @@ function fillevidenceTable() {
             cache: false
         }
     });
+    applySearch(evidenceTable);
 }
 
 $('body').tooltip({
@@ -191,12 +180,12 @@ function generateToken() {
     fileElm = document.getElementById("fileElm");
     file = fileElm.value;
     if (file == "" || $("#asesoresList").val() == "")
-        alerts.showNotification("top", "right", "Asegúrate de seleccionar un asesor y cargar un archivo para generar el token.", "warning");
+        alerts.showNotification("top", "right", _("msg-1-modal-generar-token"), "warning");
     else {
         let extension = file.substring(file.lastIndexOf("."));
         let statusValidateExtension = validateExtension(extension, ".jpg, .jpeg, .png");
         if (statusValidateExtension == false) // MJ: ARCHIVO VÁLIDO PARA CARGAR
-            alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo de imagen.", "warning");
+            alerts.showNotification("top", "right", `${_("archivo-extension")} <b>${extension}</b> ${"no-valido"}`, "warning");
         else {
             $('#spiner-loader').removeClass('hide');
             let data = new FormData();
@@ -213,7 +202,7 @@ function generateToken() {
                 dataType: 'json',
                 success: function (response) {
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", response["message"], response["status"] != 200 ? "danger" : "success");
+                    alerts.showNotification("top", "right", _(stringToI18(response["message"])), response["status"] != 200 ? "danger" : "success");
                     if (response["status"] == 200) { // MJ: TOKEN GENERADO CON EXITO
                         $(".generated-token").val("http://pagosciudadmaderas.com/apartado/token.html?token=" + response["id_token"]);
                         $("#generateTokenModal").modal("hide");
@@ -221,7 +210,7 @@ function generateToken() {
                     }
                 }, error: function () {
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
                 }
             });
         }
@@ -236,14 +225,14 @@ function copyToClipBoard() {
     /* Get the text field */
     let copyText = document.getElementById("generatedToken");
     if (copyText.value == "")
-        alerts.showNotification("top", "right", "No hay ningún token que copiar.", "warning");
+        alerts.showNotification("top", "right", _("no-hay-ningun-token-que-copiar"), "warning");
     else {
         /* Select the text field */
         copyText.select();
         copyText.setSelectionRange(0, 99999); /* For mobile devices */
         /* Copy the text inside the text field */
         navigator.clipboard.writeText(copyText.value);
-        alerts.showNotification("top", "right", "Token copiado al portapapeles.", "success");
+        alerts.showNotification("top", "right", _("token-copiado-al-portapapeles"), "success");
     }
 }
 
@@ -280,9 +269,9 @@ $(document).on('click', '.validateEvidence', function () {
         dataType: 'json',
         success: function (data) {
             $("#evidenceTable").DataTable().ajax.reload(null, false);
-            alerts.showNotification("top", "right", action == 2 ? "La evidencia ha sido marcada como rechazada."  : "La evidencia ha sido marcada como aceptada.", action == 2 ? "danger" : "success");
+            alerts.showNotification("top", "right", action == 2 ? _("la-evidencia-ha-sido-marcada-como-rechazada") : _("la-evidencia-ha-sido-marcada-como-aceptada"), action == 2 ? "danger" : "success");
         }, error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
 });
@@ -306,7 +295,7 @@ function verEvidencia(fileName, lote){
             $('#spiner-loader').addClass('hide');
         }, error: function () {
             $("#sendRequestButton").prop("disabled", false);
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             $('#spiner-loader').addClass('hide');
         }
     });

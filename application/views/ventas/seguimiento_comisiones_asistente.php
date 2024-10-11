@@ -4,6 +4,36 @@
 <div class="wrapper">
 <?php $this->load->view('template/sidebar'); ?>
 
+    <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+            <div class="modal-content"> 
+                <div class="modal-body">
+                    <div role="tabpanel">
+                        <ul class="nav" role="tablist">
+                            <div id="nameLote"></div>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card card-plain m-0">
+                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -53,24 +83,24 @@
                             <div id="div-tabla" class="material-datatables">
                                 <table class="table-striped table-hover" id="tabla-historial">
                                     <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>REFERENCIA</th>
-                                            <th>PRECIO DEL LOTE</th>
-                                            <th>TOTAL DE LA COMISIÓN</th>
-                                            <th>PAGO DEL CLIENTE</th>
-                                            <th>DISPERSADO</th>
-                                            <th>PAGADO</th>
-                                            <th>PENDIENTE</th>
-                                            <th>USUARIO</th>
-                                            <th>PUESTO</th>
-                                            <th>DETALLE</th>
-                                            <th>ESTATUS</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
+                                    <tr>
+                                                                <th>ID</th>
+                                                                <th>PROYECTO</th>
+                                                                <th>CONDOMINIO</th>
+                                                                <th>LOTE</th>
+                                                                <th>REFERENCIA</th>
+                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>TOTAL DE LA COMISIÓN</th>
+                                                                <th>PAGO DEL CLIENTE</th>
+                                                                <th>DISPERSADO</th>
+                                                                <th>PAGADO</th>
+                                                                <th>PENDIENTE</th>
+                                                                <th>USUARIO</th>
+                                                                <th>PUESTO</th>
+                                                                <th>DETALLE</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>ACCIONES</th>
+                                                            </tr>
                                     </thead>
                                 </table>
                             </div>
@@ -83,5 +113,4 @@
     <?php $this->load->view('template/footer_legend');?>
 </div>
 <?php $this->load->view('template/footer');?>
-<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/ventas/seguimiento_comisiones_asistente.js"></script>

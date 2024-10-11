@@ -38,24 +38,12 @@ $(document).ready(function () {
         extra = formatMoney(sumaExtras);
         document.getElementById("totalExtras").textContent = extra;
     });
+    
+    construirHead("tabla_retiros_resguardo");
 
-    $('#tabla_retiros_resguardo thead tr:eq(0) th').each( function (i) {
-        $(this).css('text-align', 'center');
-        var title = $(this).text();
-        titulos_intxt.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_retiros_resguardo').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_retiros_resguardo').DataTable().column(i).search(this.value).draw();
-            }
-            var index = $('#tabla_retiros_resguardo').DataTable().rows({ selected: true, search: 'applied' }).indexes();
-            var data = $('#tabla_retiros_resguardo').DataTable().rows(index).data();
-        });
-        
-    });
     var id_user = id_usuario_general == 1875 ? 2 : id_usuario_general;
 
-    retirosDataTable = $('#tabla_retiros_resguardo').dataTable({
+    retirosDataTable = $('#tabla_retiros_resguardo').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -64,13 +52,13 @@ $(document).ready(function () {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'Reporte Retiros Resguardo',
+                titleAttr: _('descargar-excel'),
+                title: _("reporte-retiros-resguardo"),
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6],
                     format: {
                         header:  function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                                return $(d).attr('placeholder').toUpperCase();
                             }
                         }
                 }
@@ -110,17 +98,17 @@ $(document).ready(function () {
             data: function (d) {
                 var labelEstatus;
                 if(d.estatus == 1) {
-                    labelEstatus ='<span class="label lbl-green">ACTIVO</span>';
+                    labelEstatus ='<span class="label lbl-green" data-i18n="activos">ACTIVO</span>';
                 }else if(d.estatus == 3) {
-                    labelEstatus ='<span class="label lbl-warning">CANCELADO</span>';
+                    labelEstatus ='<span class="label lbl-warning" data-i18n="cancelado">CANCELADO</span>';
                 }else if(d.estatus == 2) {
-                    labelEstatus ='<span class="label lbl-violetDeep">APROBADO</span>';
+                    labelEstatus ='<span class="label lbl-violetDeep" >'+ _("aprobados") +'</span>';
                 }else if(d.estatus == 4) {
-                    labelEstatus ='<span class="label lbl-warning">RECHAZÓ DIRECTIVO</span>';
+                    labelEstatus ='<span class="label lbl-warning" data-i18n="motivo-rechazo">RECHAZÓ DIRECTIVO</span>';
                 }else if(d.estatus == 67) {
-                    labelEstatus ='<span class="label lbl-yellow">INGRESO EXTRA</span>';
+                    labelEstatus ='<span class="label lbl-yellow"  data-i18n="ingresos-extras" >INGRESO EXTRA</span>';
                 }else {
-                    labelEstatus ='<span class="label lbl-gray">Sin Definir</span>';
+                    labelEstatus ='<span class="label lbl-gray"  data-i18n="sin-definir">Sin Definir</span>';
                 }
                 return labelEstatus;
             }
@@ -143,9 +131,10 @@ $(document).ready(function () {
                     } 
                 } else{
                     if(d.estatus == 1){
-                        BtnStats = `<button class="btn-data btn-warning btn-cancelar" value="'+d.id_rc+','+d.monto+','+d.usuario+'" data-toggle="tooltip"  data-placement="top" title="RECHAZAR RETIRO"><i class="fas fa-trash"></i></button><button class="btn-data btn-green btn-autorizar" value="${d.id_rc},${d.monto},${d.usuario}" data-toggle="tooltip"  data-placement="top" title="APROBAR RETIRO"><i class="fas fa-check"></i></button>`;
+                        BtnStats = `<button class="btn-data btn-warning btn-cancelar" value="'+d.id_rc+','+d.monto+','+d.usuario+'" data-toggle="tooltip"  data-placement="top" title="${ _("rechazar") }"><i class="fas fa-trash"></i></button>
+                        <button class="btn-data btn-green btn-autorizar" value="${d.id_rc},${d.monto},${d.usuario}" data-toggle="tooltip"  data-placement="top" title="APROBAR RETIRO"><i class="fas fa-check"></i></button>`;
                     } else if(d.estatus == 3 || d.estatus == 4 || d.estatus == 2){
-                        BtnStats = `<button class="btn-data btn-blueMaderas btn-log" value="${d.id_rc}" data-toggle="tooltip" data-placement="left" title="HISTORIAL RETIRO"><i class="fas fa-info"></i></button>`;
+                        BtnStats = `<button class="btn-data btn-blueMaderas btn-log" value="${d.id_rc}" data-toggle="tooltip" data-placement="left" title="${_("historial-retiro")}"><i class="fas fa-info"></i></button>`;
                     } 
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -154,7 +143,7 @@ $(document).ready(function () {
         ],
         columnDefs: [{
             visible: false,
-            searchable: false
+            searchable: true
         }],
         ajax: {
             url: 'getRetiros/'+id_user+'/'+1,   
@@ -163,7 +152,7 @@ $(document).ready(function () {
             data: function( d ){}
         }
     });
-
+    applySearch(retirosDataTable);
     $('#tabla_retiros_resguardo').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
@@ -176,7 +165,7 @@ $(document).ready(function () {
 
         changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-header">
-            <h3>Historial Retiro</h3>
+            <h3>${_("historial-retiro")}</h3>
         </div>
         <div class="modal-body pt-0" >
             <div role="tabpanel">
@@ -197,14 +186,14 @@ $(document).ready(function () {
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>${_("cerrar")}</b></button>
         </div>`);
         showModal();
 
         $("#seeInformationModalRetiros").modal();
         $.getJSON(general_base_url+"Resguardos/getListaRetiros/"+id_rc, function (data) {
             $.each( data, function(i, v){
-                $("#comments-list-retiros").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+v.usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_creacion+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-retiros").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>'+_("nombre_usuario")+': </small><b>'+v.usuario+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_creacion+' </a></div><div class="col-md-12"><p class="m-0"><small>'+_("comentario")+': </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -215,7 +204,7 @@ $(document).ready(function () {
         id_pago_i = $(this).val();
         $("#autorizar-modal .modal-body").html("");
         $("#autorizar-modal .modal-header").html("");
-        $("#autorizar-modal .modal-header").append('<h4 class="modal-title">Autorizar a <b>'+row.data().usuario+'</b> la cantidad de <b style="color:blue;">'+formatMoney(row.data().monto)+'</b></h4>');
+        $("#autorizar-modal .modal-header").append('<h4 class="modal-title">'+ _('autorizar-a')+' : <b>'+row.data().usuario+'</b> '+ _("la-cantidad-de") +' <b style="color:blue;">'+formatMoney(row.data().monto)+'</b></h4>');
         $("#autorizar-modal .modal-body").append('<input type="hidden" name="id_descuento" id="id_descuento" value="'+row.data().id_rc+'"><input type="hidden" name="opcion" id="opcion" value="Autorizar">');
         $("#autorizar-modal").modal();
     });
@@ -226,7 +215,7 @@ $(document).ready(function () {
         id_pago_i = $(this).val();
         $("#autorizar-modal .modal-body").html("");
         $("#autorizar-modal .modal-header").html("");
-        $("#autorizar-modal .modal-header").append('<h4 class="modal-title">Rechazar retiro a <b>'+row.data().usuario+'</b> por la cantidad de <b style="color:blue;">'+formatMoney(row.data().monto)+'</b></h4>');
+        $("#autorizar-modal .modal-header").append('<h4 class="modal-title"> '+ _("Rechazar-a") +' <b>'+row.data().usuario+'</b> '+ _("la-cantidad-de") +' <b style="color:blue;">'+formatMoney(row.data().monto)+'</b></h4>');
         $("#autorizar-modal .modal-body").append('<input type="hidden" name="id_descuento" id="id_descuento" value="'+row.data().id_rc+'"><input type="hidden" name="opcion" id="opcion" value="Rechazar">');
         $("#autorizar-modal").modal();
     });

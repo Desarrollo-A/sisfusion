@@ -1,20 +1,9 @@
 var getInfo1 = new Array(7);
 var getInfo3 = new Array(6);
-let titulos = [];
 
 $("#tabla_reporte_11").ready( function(){
-    $('#tabla_reporte_11 thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
-        $( 'input', this ).on('keyup change', function () {
-            if (tabla_9.column(i).search() !== this.value ) {
-                tabla_9.column(i).search(this.value).draw();
-            }
-        } );
-    });
-
-    tabla_9 = $("#tabla_reporte_11").DataTable({
+    construirHead("tabla_reporte_11");
+    tabla_6 = $("#tabla_reporte_11").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -22,15 +11,15 @@ $("#tabla_reporte_11").ready( function(){
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            filename: 'Reporte rechazos',
+            titleAttr: `${_("descargar-excel")}`,
+            filename: `${_("reporte-rechazos")}`,
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8,9,10,11],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx]  + ' ';
-                        }
+                        return $(d).attr('placeholder').toUpperCase();
                     }
+                }
             }
         }],
         pagingType: "full_numbers",
@@ -123,10 +112,11 @@ $("#tabla_reporte_11").ready( function(){
         },
     });
 
+    applySearch(tabla_6);
+
     $('#tabla_reporte_11').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
 });
-

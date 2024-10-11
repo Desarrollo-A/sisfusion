@@ -164,7 +164,7 @@ public function getStatusMktdPreventa(){
         public function consultProspects_dir()
     {
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospecto_dir.php");
+        $this->load->view("clientes/consulta_prospecto_dir");
     }
     public function consultProspects_sbdir()
     {
@@ -2335,7 +2335,7 @@ public function getStatusMktdPreventa(){
             case '17': // CONTRALORÍA
             case '63': // CONTROL INTERNO
             case '70': // EJECUTIVO CONTRALORIA JR
-                $this->load->view("clientes/clients_report_ventas");
+                $this->load->view("clientes/clients_report");
             break;
         }
     }
