@@ -1479,9 +1479,11 @@
 		"mensaje-oferta-vigencia124": "buyer, who",
 		"mensaje-oferta-vigencia125": "must send it",
 		"mensaje-oferta-vigencia126": "signed within a",
-		"mensaje-oferta-vigencia127": "period not exceeding",
-		"informacion-adicional2": "ADDITIONAL INFORMATION",		
+		"mensaje-oferta-vigencia127": "period not exceeding",			
 		"lote-origen":"Source batch",
+		"informacion-adicional2": "ADDITIONAL INFORMATION",
+		"cantidad-del-enganche-pagado" : "Amount of down payment paid",
+		"inventario-Lotes" : "Inventory Lots",
 		"documentacion":"Documentation",
 		"nombre-documento2":"Document Name",
 		"guardar-documento":"Save document",
@@ -1503,7 +1505,9 @@
 		"status-13-listo-contraloria": "STATUS 13 READY (COMPTROLLER)",
 		"status-14-rechazo-contraloria": "STATUS 14 REJECTED (CONTRALORÍA)",
 		"el-status-ya-fue-registrado": "The status has already been entered",
-		"mensaje-oferta-vigencia128": "5 (five) days."
+		"mensaje-oferta-vigencia128": "5 (five) days.",
+		"este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you.",
+		"detalle-total-comisiones":"Total detail of commissions"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2981,6 +2985,8 @@
 		"autorizar-a": "Autorizar a",
 		"Rechazar-a": "Autorizar a",
 		"la-cantidad-de": "la cantidad de",
+		"cantidad-del-enganche-pagado" : "Cantidad del enganche pagado",
+		"inventario-Lotes" : "Inventario Lotes",
 		"ver-autorizaciones":"VER AUTORIZACIONES",
 		"visualizando": "Visualizando",
 		"fecha-45": "Fecha +45",
@@ -3004,7 +3010,9 @@
 		"contrato-inhabilitado":"Contrato inhabilitado",
 		"adjuntar-archivo":"Adjuntar archivo",
 		"no-se-permite-adjuntar":"No se permite adjuntar archivos",
-		"en-progreso":"En proceso"
+		"en-progreso":"En proceso",
+		"este-listado-todos-descuentos-aplicados":"Este es un listado de todos los descuentos que te han aplicado.",
+		"detalle-total-comisiones":"Detalle total de comisiones"
 	}
 }
 

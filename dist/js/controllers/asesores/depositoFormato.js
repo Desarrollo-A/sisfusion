@@ -396,6 +396,35 @@ function historial() {
     });
 }
 
+function cargarInputs() {
+    var inputs = document.getElementsByTagName("input");
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].name === "cantidad") {
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "costom2f") {
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "costoM2") {
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "importOferta"){
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "saldoDeposito"){
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "aportMensualOfer"){
+            inputs[i].value = inputs[i].value;
+        }
+    }
+}
+
+function guardarInputs() {
+  var button = document.getElementsByTagName("button");
+  var inputs = document.getElementsByTagName("input");
+  for (var i = 0; i < inputs.length; i++) {
+    if (button[i].type === "submit") {
+        inputs[i].value = inputs[i].value.replace(/\,/g, "");
+    }
+  }
+}
+
 $( ".letrasCaracteres" ).on( "focusout", function(){
     const input = event.target;
     input.value = input.value.trim();
@@ -422,6 +451,51 @@ $( ".espaciosOff" ).on( "focusout", function(){
     const input = event.target;
     input.value = input.value.trim();
 });
+
+$("input[data-type='currency']").on({
+    keyup: function() {
+        formatCurrency($(this));
+    },
+});
+
+function formatCurrency(input, blur) {
+    var input_val = input.val();
+    if (input_val === "") { return; }
+    // original length
+    var original_len = input_val.length;
+
+    // initial caret position 
+    var caret_pos = input.prop("selectionStart");
+        
+    // check for decimal
+    if (input_val.indexOf(".") >= 0) {
+        var decimal_pos = input_val.indexOf(".");
+        var left_side = input_val.substring(0, decimal_pos);
+        var right_side = input_val.substring(decimal_pos);
+        left_side = formatNumber(left_side);
+        right_side = formatNumber(right_side);
+        if (blur === "blur") {
+            right_side += "00";
+        }
+        right_side = right_side.substring(0, 2);
+        input_val = "$" + left_side + "." + right_side;
+
+    } else {
+        input_val = formatNumber(input_val);
+        input_val = "$" + input_val;
+        if (blur === "blur") {
+        input_val += ".00";
+        }
+    }
+    input.val(input_val);
+    var updated_len = input_val.length;
+    caret_pos = updated_len - original_len + caret_pos;
+    input[0].setSelectionRange(caret_pos, caret_pos);
+}
+
+function formatNumber(n) {
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
 
 function historialCampoHtml(data) {
     let dataTable = '<h5 data-i18n="historial-movimientos">HISTORIAL DE MOVIMIENTOS</h5>';
