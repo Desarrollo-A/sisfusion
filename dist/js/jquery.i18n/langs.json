@@ -1347,11 +1347,8 @@
 		"aprobados": "APPROVED",
 		"ingresos-extras": "EXTRA INCOME",
 		"autorizar-a": "Authorize to",
-		"Rechazar-a": "Autorizar a",
-<<<<<<< HEAD
-		"la-cantidad-de": "the amount of",
-		"ver-autorizaciones":"VIEW AUTHORIZATIONS"
-=======
+		"Rechazar-a": "Autorizar a",		
+		"ver-autorizaciones":"VIEW AUTHORIZATIONS",
 		"fecha-45": "Date +45",
 		"reporte-ventas-compartidas": "Shared sales report",
 		"la-cantidad-de":"the amount of",
@@ -1488,7 +1485,6 @@
 		"status-14-rechazo-contraloria" :"STATUS 14 REJECTED (CONTRALORÍA)",
 		"el-status-ya-fue-registrado" : "The status has already been entered",
 		"mensaje-oferta-vigencia128": "5 (five) days."
->>>>>>> 78e669a3c287f71950f5c6a331b615fdf0356e9a
 	},
 		
 	"es": {
@@ -2967,13 +2963,10 @@
 		"autorizar-a": "Autorizar a",
 		"Rechazar-a": "Autorizar a",
 		"la-cantidad-de": "la cantidad de",
-<<<<<<< HEAD
-		"ver-autorizaciones":"VER AUTORIZACIONES"
-=======
+		"ver-autorizaciones":"VER AUTORIZACIONES",
 		"fecha-45": "Fecha +45",
 		"enterado": "Enterado",
 		"asesor-titular": "Asesor titular",
 		"reporte-ventas-compartidas": "Reporte ventas compartidas"
->>>>>>> 78e669a3c287f71950f5c6a331b615fdf0356e9a
 	}
 }
