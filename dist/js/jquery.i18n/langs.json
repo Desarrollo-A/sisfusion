@@ -1484,7 +1484,8 @@
 		"status-13-listo-contraloria" : "STATUS 13 READY (COMPTROLLER)",
 		"status-14-rechazo-contraloria" :"STATUS 14 REJECTED (CONTRALORÍA)",
 		"el-status-ya-fue-registrado" : "The status has already been entered",
-		"mensaje-oferta-vigencia128": "5 (five) days."
+		"mensaje-oferta-vigencia128": "5 (five) days.",
+		"lote-origen":"Source batch"
 	},
 		
 	"es": {
@@ -2967,6 +2968,8 @@
 		"fecha-45": "Fecha +45",
 		"enterado": "Enterado",
 		"asesor-titular": "Asesor titular",
-		"reporte-ventas-compartidas": "Reporte ventas compartidas"
+		"reporte-ventas-compartidas": "Reporte ventas compartidas",
+		"lote-origen":"Lote origen"		
 	}
 }
+
