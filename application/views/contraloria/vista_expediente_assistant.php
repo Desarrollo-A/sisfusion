@@ -17,7 +17,7 @@
 						<div class="input-group">
 							<label class="input-group-btn">
 								<span class="btn btn-primary btn-file">
-								Seleccionar archivo&hellip;<input type="file" name="expediente" id="expediente" style="display: none;">
+									<span data-i18n="seleccionar-archivo"> Seleccionar archivo</span>&hellip;<input type="file" name="expediente" id="expediente" style="display: none;">
 								</span>
 							</label>
 							<input type="text" class="form-control" id= "txtexp" readonly>
@@ -26,8 +26,8 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" id="sendFile" class="btn btn-primary"><span
-								class="material-icons" >send</span> Guardar documento </button>
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+								class="material-icons" >send</span> <span data-i18n="guardar-documento"> Guardar documento </span> </button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
 					</div>
 				</div>
 			</div>
@@ -39,7 +39,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<div class="modal-header">
-						<center><h3 class="modal-title">¡Eliminar archivo!</h3></center>
+						<center><h3 class="modal-title" data-i18n="eliminar-archivo-ex">¡Eliminar archivo!</h3></center>
 					</div>
 					<div class="modal-body">
 						<div class="container-fluid">
@@ -48,8 +48,8 @@
 									<h1 class="modal-title"> <i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i></h1>
 								</div>
 								<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-10">
-									<h4 class="modal-title">¿Está seguro de querer eliminar definivamente este archivo (<b><span class="tipoA"></span></b>)? </h4>
-									<h5 class="modal-title"><i> Esta acción no se puede deshacer.</i> </h5>
+									<h4 class="modal-title"><span data-i18n="eliminar-archivo"> ¿Está seguro de querer eliminar definivamente este archivo </span> (<b><span class="tipoA"></span></b>)? </h4>
+									<h5 class="modal-title"><i data-i18n="accion-info"> Esta acción no se puede deshacer.</i> </h5>
 								</div>
 							</div>
 
@@ -57,8 +57,8 @@
 					</div>
 					<div class="modal-footer">
 						<br><br>
-						<button type="button" id="aceptoDelete" class="btn btn-primary"> Sí, borrar </button>
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar </button>
+						<button type="button" id="aceptoDelete" class="btn btn-primary" data-i18n="si-borrar"> Sí, borrar </button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar"> Cancelar </button>
 					</div>
 				</div>
 			</div>
@@ -70,7 +70,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<div class="modal-header">
-						<center><h3 class="modal-title">Autorizaciones <span class="material-icons">vpn_key</span></h3></center>
+						<center><h3 class="modal-title"><span data-i18n="autorizaciones"> Autorizaciones </span> <span class="material-icons">vpn_key</span></h3></center>
 					</div>
 					<div class="modal-body">
 						<div class="container-fluid">
@@ -84,7 +84,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Aceptar </button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="aceptar"> Aceptar </button>
 					</div>
 				</div>
 			</div>
@@ -103,14 +103,14 @@
 								<i class="material-icons">next_week</i>
 							</div>
 							<div class="card-content">
-								<h3 class="card-title center-align">Documentación</h3>
+								<h3 class="card-title center-align" data-i18n="documentacion">Documentación</h3>
 								<div class="toolbar">
 									<div class="container-fluid p-0">
 										<div class="row">
 											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 												<div class="form-group">
-													<label class="m-0" for="filtro3">Proyecto:</label>
-													<select name="filtro3" id="filtro3" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Proyecto" data-size="7" required>
+													<label class="m-0" for="filtro3" data-i18n="proyecto">Proyecto:</label>
+													<select name="filtro3" id="filtro3" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" data-i18n-label="selecciona-proyecto" title="Selecciona Proyecto" data-size="7" required>
 													<?php
 													if($residencial != NULL) :
 														foreach($residencial as $fila) : ?>
@@ -123,14 +123,14 @@
 											</div>
 											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 												<div class="form-group">
-													<label class="m-0" for="filtro4">Condominio</label>
-													<select id="filtro4" name="filtro4" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Condominio" data-size="7"></select>
+													<label class="m-0" for="filtro4" data-i18n="condominio">Condominio</label>
+													<select id="filtro4" name="filtro4" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" data-i18n-label="selecciona-condominio" title="Selecciona Condominio" data-size="7"></select>
 												</div>
 											</div>
 											<div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
 												<div class="form-group">
-													<label class="m-0" for="filtro5">Lote</label>
-													<select id="filtro5" name="filtro5" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" title="Selecciona Lote" data-size="7"></select>
+													<label class="m-0" for="filtro5" data-i18n="lote">Lote</label>
+													<select id="filtro5" name="filtro5" class="selectpicker select-gral" data-show-subtext="true" data-live-search="true"  data-style="btn" data-i18n-label="selecciona-lote" title="Selecciona Lote" data-size="7"></select>
 												</div>
 											</div>
 										</div>
@@ -142,15 +142,15 @@
 											<table id="tableDoct" class="table-striped table-hover">
 												<thead>
 													<tr>
-														<th>PROYECTO</th>
-														<th>CONDOMINIO</th>
-														<th>LOTE</th>
-														<th>CLIENTE</th>
-														<th>NOMBRE DE DOCUMENTO</th>
-														<th>HORA/FECHA</th>
-														<th>DOCUMENTO</th>
-														<th>RESPONSABLE</th>
-														<th>UBICACIÓN</th>
+														<th>proyecto</th>
+														<th>condominio</th>
+														<th>lote</th>
+														<th>cliente</th>
+														<th>nombre-documento</th>
+														<th>hora-fecha</th>
+														<th>documento</th>
+														<th>responsable</th>
+														<th>ubicacion</th>
 													</tr>
 												</thead>
 											</table>
@@ -175,6 +175,9 @@
 	<script>
 		var id_rol_current = <?php echo $this->session->userdata('id_rol')?>;
 		$(document).ready (function() {
+
+			construirHead("tableDoct");
+
 			$(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
 				var input = $(this).closest('.input-group').find(':text'),
 					log = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -254,7 +257,7 @@
 						extend: 'excelHtml5',
 						text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
 						className: 'btn buttons-excel',
-						titleAttr: 'Descargar archivo de Excel',
+						titleAttr: _("descargar-excel"),
 					}],
 					pagingType: "full_numbers",
 					fixedHeader: true,
@@ -293,15 +296,15 @@
 						render: function ( data, type, row ){
 							if (getFileExtension(data.expediente) == "pdf") {
 								if(data.tipo_doc == 8){
-									file = '<a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+									file = '<a class="pdfLink3 btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "'+ _(ver-archivo) +'" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
 								} else {
 									<?php if($this->session->userdata('id_rol') == 6){?>
 									if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96){
-										file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-gray delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+										file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "'+ _(ver-archivo) +'" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-gray delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
 									} else {
-										file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+										file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "'+ _(ver-archivo) +'" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
 									}
-									<?php } else {?>file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';<?php } ?>
+									<?php } else {?>file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "'+ _(ver-archivo) +'" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';<?php } ?>
 								}
 							}
 							else if (getFileExtension(data.expediente) == "xlsx" || getFileExtension(data.expediente) == "XLSX") {
@@ -309,33 +312,33 @@
 							}
 							else if (getFileExtension(data.expediente) == "NULL" || getFileExtension(data.expediente) == 'null' || getFileExtension(data.expediente) == "") {
 								if(data.tipo_doc == 7){
-									file = '<button type="button" title= "Corrida inhabilitada" class="btn-data btn-orangeYellow" disabled><i class="fas fa-th"></i></button>';
+									file = '<button type="button" data-i18n-tooltip="corrida-inhabilitada" title= "Corrida inhabilitada" class="btn-data btn-orangeYellow" disabled><i class="fas fa-th"></i></button>';
 								} else if(data.tipo_doc == 8){
-									file = '<button type="button" title= "Contrato inhabilitado" class="btn-data btn-sky" disabled><i class="fas fa-file"></i></button>';
+									file = '<button type="button" data-i18n-tooltip="contrato-inhabilitada" title= "Contrato inhabilitado" class="btn-data btn-sky" disabled><i class="fas fa-file"></i></button>';
 								} else {
 									<?php if($this->session->userdata('id_rol') == 6){?>
 									if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96){
-										file = '<button type="button" id="updateDoc" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
+										file = '<button type="button" id="updateDoc" data-i18n-label="adjuntar-archivo" title= "Adjuntar archivo" class="btn-data btn-green update" data-iddoc="'+data.idDocumento+'" data-tipodoc="'+data.tipo_doc+'" data-descdoc="'+data.movimiento+'" data-idCliente="'+data.idCliente+'" data-nombreResidencial="'+data.nombreResidencial+'" data-nombreCondominio="'+data.nombre+'" data-nombreLote="'+data.nombreLote+'" data-idCondominio="'+data.idCondominio+'" data-idLote="'+data.idLote+'"><i class="fas fa-cloud-upload-alt"></i></button>';
 									} else {
-										file = '<button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green" disabled><i class="fas fa-cloud-upload-alt"></i></button>';
+										file = '<button type="button" id="updateDoc" data-i18n-tooltip="no-adjuntar-archivos" title= "No se permite adjuntar archivos" class="btn-data btn-green" disabled><i class="fas fa-cloud-upload-alt"></i></button>';
 									}
 							
-									<?php } else {?> file = '<button type="button" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green" disabled><i class="fas fa-cloud-upload-alt"></i></button>'; <?php } ?>
+									<?php } else {?> file = '<button type="button" data-i18n-label="" id="updateDoc" title= "No se permite adjuntar archivos" class="btn-data btn-green" disabled><i class="fas fa-cloud-upload-alt"></i></button>'; <?php } ?>
 								}
 							}
 							else if (getFileExtension(data.expediente) == "Depósito de seriedad") {
-								file = '<a class="btn-data btn-sky pdfLink2" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "Depósito de seriedad"><i class="fas fa-file"></i></a>';
+								file = '<a class="btn-data btn-sky pdfLink2" data-idc="'+data.id_cliente+'" data-nomExp="'+data.expediente+'" title= "'+ _("deposito-seriedad") +'"><i class="fas fa-file"></i></a>';
 							}
 							else if (getFileExtension(data.expediente) == "Autorizaciones") {
-								file = '<a href="#" class="btn-data btn-warning seeAuts" title= "Autorizaciones" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
+								file = '<a href="#" class="btn-data btn-warning seeAuts" title= "'+ _("autorizaciones") +'" data-id_autorizacion="'+data.id_autorizacion+'" data-idLote="'+data.idLote+'"><i class="fas fa-key"></i></a>';
 							}
 							else if (getFileExtension(data.expediente) == "Prospecto") {
-								file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" title= "Prospección" data-id-prospeccion="'+data.id_prospecto+'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'"><i class="fas fa-user-plus"></i></a>';
+								file = '<a href="#" class="btn-data btn-blueMaderas verProspectos" title= "'+ _("prospeccion") +'" data-id-prospeccion="'+data.id_prospecto+'" data-nombreProspecto="'+data.nomCliente+' '+data.apellido_paterno+' '+data.apellido_materno+'"><i class="fas fa-user-plus"></i></a>';
 							}
 							else{
 								<?php if($this->session->userdata('id_rol') == 6){?>
 								if(data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82 || data.idMovimiento == 92 || data.idMovimiento == 96){
-									file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-gray delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
+									file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a><button type="button" data-i18n-tooltip="eliminar-archivo-ex" title= "Eliminar archivo" id="deleteDoc" class="btn-data btn-gray delete" data-tipodoc="'+data.movimiento+'" data-iddoc="'+data.idDocumento+'" ><i class="fas fa-trash"></i></button>';
 								} else {
 									file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
 								}
@@ -375,7 +378,7 @@
 			Shadowbox.open({
 				content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>static/documentos/cliente/expediente/'+$itself.attr('data-Pdf')+'"></iframe></div>',
 				player:     "html",
-				title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+				title:      _("visualizando-archivo2") + ": " + $itself.attr('data-nomExp'),
 				width:      985,
 				height:     660
 			});
@@ -386,7 +389,7 @@
 			Shadowbox.open({
 				content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>asesor/deposito_seriedad/'+$itself.attr('data-idc')+'/1/"></iframe></div>',
 				player:     "html",
-				title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+				title:      _("visualizando-archivo2") + ": " + $itself.attr('data-nomExp'),
 				width:      1600,
 				height:     900
 			});
@@ -398,7 +401,7 @@
 			Shadowbox.open({
 				content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>static/documentos/cliente/contrato/'+$itself.attr('data-Pdf')+'"></iframe></div>',
 				player:     "html",
-				title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
+				title:      _("visualizando-archivo2") + ": " + $itself.attr('data-nomExp'),
 				width:      985,
 				height:     660
 			});
@@ -409,7 +412,7 @@
 			Shadowbox.open({
 				content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>clientes/printProspectInfo/'+$itself.attr('data-id-prospeccion')+'"></iframe></div>',
 				player:     "html",
-				title:      "Visualizando Prospecto: " + $itself.attr('data-nombreProspecto'),
+				title:      _("visualizando-prospecto") + ": " + $itself.attr('data-nombreProspecto'),
 				width:      985,
 				height:     660
 
@@ -427,25 +430,25 @@
 				$.each(JSON.parse(data), function(i, item) {
 					if(item['estatus'] == 0)
 					{
-						statusProceso="<small class='label bg-green' style='background-color: #00a65a'>ACEPTADA</small>";
+						statusProceso="<small class='label bg-green' style='background-color: #00a65a' data-i18n='aceptada'>ACEPTADA</small>";
 					}
 					else if(item['estatus'] == 1)
 					{
-						statusProceso="<small class='label bg-orange' style='background-color: #FF8C00'>En proceso</small>";
+						statusProceso="<small class='label bg-orange' style='background-color: #FF8C00' data-i18n='en-proceso'>En proceso</small>";
 					}
 					else if(item['estatus'] == 2)
 					{
-						statusProceso="<small class='label bg-red' style='background-color: #8B0000'>DENEGADA</small>";
+						statusProceso="<small class='label bg-red' style='background-color: #8B0000' data-i18n='denegada'>DENEGADA</small>";
 					}
 					else if(item['estatus'] == 3)
 					{
-						statusProceso="<small class='label bg-blue' style='background-color: #00008B'>En DC</small>";
+						statusProceso="<small class='label bg-blue' style='background-color: #00008B' data-i18n='en-proceso'>En DC</small>";
 					}
 					else
 					{
 						statusProceso="<small class='label bg-gray' style='background-color: #2F4F4F'>N/A</small>";
 					}
-					$('#auts-loads').append('<h4>Solicitud de autorización:  '+statusProceso+'</h4><br>');
+					$('#auts-loads').append('<h4><span data-i18n="solicitud-autorizacion">Solicitud de autorización</span>:  '+statusProceso+'</h4><br>');
 					$('#auts-loads').append('<p style="text-align: justify;"><i>'+item['autorizacion']+'</i></p>' +
 						'<br><hr>');
 
@@ -513,7 +516,7 @@
 			dataFile.append("idDocumento", iddoc);
 
 			if (validaFile == 0) {
-				alerts.showNotification('top', 'right', 'Debes seleccionar un archivoo', 'danger');
+				alerts.showNotification('top', 'right', _("debes-seleccionar-archivo"), 'danger');
 			}
 
 			if (validaFile == 1) {
@@ -528,12 +531,12 @@
 					success : function (response) {
 						response = JSON.parse(response);
 						if(response.message == 'OK') {
-							alerts.showNotification('top', 'right', 'Expediente enviado', 'success');
+							alerts.showNotification('top', 'right', _("expediente-enviado"), 'success');
 							$('#sendFile').prop('disabled', false);
 							$('#addFile').modal('hide');
 							$('#tableDoct').DataTable().ajax.reload();
 						} else if(response.message == 'ERROR'){
-							alerts.showNotification('top', 'right', 'Error al enviar expediente y/o formato no válido', 'danger');
+							alerts.showNotification('top', 'right', _("error-expediente"), 'danger');
 							$('#sendFile').prop('disabled', false);
 						}
 					}
@@ -570,13 +573,13 @@
 				success : function (response) {
 					response = JSON.parse(response);
 					if(response.message == 'OK') {
-						alerts.showNotification('top', 'right', 'Archivo eliminado', 'danger');
+						alerts.showNotification('top', 'right', _("archivo-eliminado"), 'danger');
 						$('#aceptoDelete').prop('disabled', false);
 						$('#cuestionDelete').modal('hide');
 						$('#tableDoct').DataTable().ajax.reload();
 					} 
 					else if(response.message == 'ERROR'){
-						alerts.showNotification('top', 'right', 'Error al eliminar el archivo', 'danger');
+						alerts.showNotification('top', 'right', _("error-eliminar-archivo"), 'danger');
 						$('#tableDoct').DataTable().ajax.reload();
 					}
 				}
