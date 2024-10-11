@@ -250,6 +250,8 @@ class CasasModel extends CI_Model
         $query = $this->db->query("SELECT 
         cli.id_cliente,
         pc.idProcesoCasas,
+        pcd.idProceso AS idProcesoDirecto,
+        --CASE WHEN pc.idProcesoCasas IS NULL THEN 1
         CASE WHEN pc.tipoMovimiento IS NULL THEN 1 ELSE 4 END AS tipoMovimiento,
         CASE WHEN cli.idPropuestaCasa IS NULL THEN '0' ELSE cli.idPropuestaCasa END AS idPropuestaCasa ,
         pcd.idProceso,
@@ -2534,6 +2536,11 @@ AND vb.proyectos != 1";
         $query = "SELECT cl.revisionEscrituracion, sc.id_estatus, cl.escrituraFinalizada  FROM clientes cl 
         LEFT JOIN solicitudes_escrituracion sc ON sc.id_lote = cl.idLote 
         WHERE cl.idLote = $idLote AND status = 1";
+        return $this->db->query($query)->row();
+    }
+
+    public function getModeloCasaEsquemaCliente($idCliente) {
+        $query = "SELECT idPropuestaCasa, esquemaCreditoCasas FROM clientes WHERE id_cliente = $idCliente";
         return $this->db->query($query)->row();
     }
 }

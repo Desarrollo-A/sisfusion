@@ -5396,4 +5396,27 @@ class Casas extends BaseController
     public function ingresar_adeudo_directo()
     {
     }
+
+    public function actualizarPreProceso (){
+       //CHECK THE VALUES 
+       $idCliente = $this->form('idCliente');
+       $idProcesoCasas = $this->form('idProcesoCasas');
+       $idProcesoDirecto = $this->form('idProcesoCasasDirecto');
+       $comentario = $this->form('comentario');
+       $esqumeCreditoActual = $this->form('esquemaCreditoActual');
+       $esquemaCreditoNuevo = $this->form('esquemaCreditoNuevo');
+       $tabla = $esquemaCreditoNuevo == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
+       $banderaSuccess = true;
+
+       if($esqumeCreditoActual == $esquemaCreditoNuevo) {
+        echo json_encode("same");
+        echo json_encode($tabla);
+       }
+       else {
+        //DEACTIVATE RECORD ON OTHER TABLE
+        echo json_encode($tabla);
+        echo json_encode("change");
+       }
+       exit();
+    }
 }
