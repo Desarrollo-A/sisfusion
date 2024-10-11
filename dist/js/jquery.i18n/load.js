@@ -97,8 +97,10 @@ function applySearch(table) {
         $('input', this).on('keyup change', function () {
             console.log(this)
 
+
+
             if (table.column(i).search() !== this.value) {
-                table.column(i).search(this.value).draw();
+                searchTabla !== undefined ? '' : table.column(i).search(this.value).draw();
                 const searchTabla = datosTablasComisiones.find((idTables) => idTables.idTabla == id);
 
                 if( searchTabla !== undefined){
@@ -115,6 +117,8 @@ function applySearch(table) {
                     document.getElementById(`${searchTabla.idText}`).textContent = '$' + formatMoney(total);
                 }
             }
+
+            
         })
     })
 
@@ -149,7 +153,7 @@ function construirHead(table){
             }
         }else if(id == 'checkComisionesNuevas'){
             title = _(id)
-            $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas" id="head-${id}"  data-placement="top" title="${title}"/>`);
+            $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip" data-placement="top" data-toggle="tooltip_nuevas"  data-placement="top" title="${title}"/>`);
         }
     });
 
