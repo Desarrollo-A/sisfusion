@@ -1474,16 +1474,15 @@
 		"mensaje-oferta-vigencia125": "must send it",
 		"mensaje-oferta-vigencia126": "signed within a",
 		"mensaje-oferta-vigencia127": "period not exceeding",
-		"mensaje-oferta-vigencia128": "5 (five) days.",
 		"informacion-adicional2": "ADDITIONAL INFORMATION",
 		"vencido2" : "EXPIRED",
 		"status-13-listo-contraloria" : "STATUS 13 READY (COMPTROLLER)",
 		"status-14-rechazo-contraloria" :"STATUS 14 REJECTED (CONTRALORÍA)",
 		"el-status-ya-fue-registrado" : "The status has already been entered",
 		"cantidad-del-enganche-pagado" : "Amount of down payment paid",
-		"inventario-Lotes" : "Inventory Lots"
-	},
-		
+		"inventario-Lotes" : "Inventory Lots",
+		"mensaje-oferta-vigencia128": "5 (five) days."
+	},	
 	"es": {
 		"1-origen": "1% de origen",
 		"5-excedente": "$ .5 del excedente.",
@@ -2929,7 +2928,6 @@
 		"mensaje-oferta-vigencia125": "deberá enviarlo",
 		"mensaje-oferta-vigencia126": "firmado en un",
 		"mensaje-oferta-vigencia127": "plazo no mayor a",
-		"mensaje-oferta-vigencia128": "5 (cinco) días.",
 		"informacion-adicional2": "INFORMACIÓN ADICIONAL",
 		"vencido2": "VENCIDO",
 		"status-13-listo-contraloria" : "STATUS 13 LISTO (CONTRALORÍA)",
