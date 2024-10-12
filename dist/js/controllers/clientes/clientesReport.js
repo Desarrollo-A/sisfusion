@@ -1,6 +1,4 @@
 $(document).ready(function () {
-    construirHead("clients_report_datatable");
-
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth('#beginDate','#endDate');
@@ -34,7 +32,8 @@ $('#clients_report_datatable').on('draw.dt', function() {
 
 
 function fillDataTable(typeTransaction, beginDate, endDate, where){
-    $('#clients_report_datatable').dataTable({
+    construirHead('clients_report_datatable');
+    let tabla=$('#clients_report_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -42,13 +41,13 @@ function fillDataTable(typeTransaction, beginDate, endDate, where){
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title:'Listado general de clientes marketing digital',
+            titleAttr: `${_('descargar-excel')}`,
+            title:`${_('descargar-excel')}`,
             exportOptions: {
-                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,15,16,17,18,19,20],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosEvidence[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             },
@@ -147,7 +146,12 @@ function fillDataTable(typeTransaction, beginDate, endDate, where){
             data: function (d) {
                 return d.fechaEstatusQuince;
             }
-        }],
+        },
+    {
+        data: function(d) {
+            return  d.fechaApartado;
+        }
+    }],
         ajax: {
             url: 'getClientsReportMktd',
             type: "POST",
@@ -160,6 +164,7 @@ function fillDataTable(typeTransaction, beginDate, endDate, where){
             }
         }
     });
+    applySearch(tabla);
 }
 
 $(document).on("click", "#searchByDateRange", function () {
@@ -168,5 +173,6 @@ $(document).on("click", "#searchByDateRange", function () {
     fillDataTable(3, finalBeginDate, finalEndDate, 0);
     $('#clients_report_datatable').removeClass('hide');
 });
+
 
 
