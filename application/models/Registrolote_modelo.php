@@ -3566,7 +3566,7 @@
 					$id_lider = $id_lider . ', 7474';
 					$sede = "";
 				} else if ($id_usuario == 16783) { // Mayra Alejandra Angulo Muñiz
-					$id_lider = $id_lider . ', 13821';
+					$id_lider = $id_lider . ', 13821, 234';
 					$sede = "";
 				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
 					$id_lider = $id_lider . ', 11680';

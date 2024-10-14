@@ -222,7 +222,7 @@ class Usuarios_modelo extends CI_Model
                     $id_lider = $this->session->userdata('id_lider') . ', 7474';
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                 } else if ($this->session->userdata('id_usuario') == 16783) { // Mayra Alejandra Angulo Muñiz
-                    $id_lider = $this->session->userdata('id_lider') . ', 13821';
+                    $id_lider = $this->session->userdata('id_lider') . ', 13821, 234';
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                 } else if ($this->session->userdata('id_usuario') == 16813) { // Vanessa Castro Muñoz
                     $id_lider = $this->session->userdata('id_lider') . ', 11680';

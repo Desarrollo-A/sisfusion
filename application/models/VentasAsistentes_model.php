@@ -384,7 +384,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 7474) OR cl.id_asesor IN ($id_lider, 7474))";
                     $filtroSede = "";
 				} else if ($id_usuario == 16783) { // Mayra Alejandra Angulo Muñiz
-                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 13821) OR cl.id_asesor IN ($id_lider, 13821))";
+                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 13821, 234) OR cl.id_asesor IN ($id_lider, 13821, 234))";
                     $filtroSede = "";
 				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 11680) OR cl.id_asesor IN ($id_lider, 11680))";

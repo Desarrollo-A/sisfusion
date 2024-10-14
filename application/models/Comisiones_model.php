@@ -5362,7 +5362,7 @@ function getDatosGralInternomex(){
         else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
             $id_lider .= ", 7474";
         else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
-            $id_lider .= ", 13821";
+            $id_lider .= ", 13821, 234";
         else if ($id_usuario == 16813) // Vanessa Castro Muñoz
             $id_lider .= ", 11680";
         else if ($id_usuario == 2987) // Alan Michell Alba Sánchez

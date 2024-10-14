@@ -1132,7 +1132,7 @@ class Asesor_model extends CI_Model {
         }
         $query = $this->db->query("SELECT res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100)) descripcion,
 	co.nombre as nombreCondominio, lo.nombreLote, lo.sup, lo.msi as mesesn,
-	precio, total, porcentaje, enganche, saldo, lo.tipo_venta, lo.idLote
+	precio, total, porcentaje, enganche, saldo, lo.tipo_venta, lo.idLote, co.esRs
 	FROM residenciales res
 	JOIN condominios co ON co.idResidencial = res.idResidencial
 	JOIN lotes lo ON lo.idCondominio = co.idCondominio
