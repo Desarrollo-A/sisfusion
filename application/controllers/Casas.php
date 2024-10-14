@@ -500,7 +500,7 @@ class Casas extends BaseController
         $this->db->trans_begin();
 
         $getGerente = $this->CasasModel->getGerente($gerente);
-        $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $idLote", 0);
+        $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $idLote", 0, $idCliente, $idCliente);
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
@@ -550,7 +550,7 @@ class Casas extends BaseController
 
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
 
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote ", 0);
+        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote ", 0, $idCliente);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -613,7 +613,7 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
             if ($is_ok) {
-                $this->CasasModel->addHistorial($id, $proceso, $new_status, $comentario, 1);
+                $this->CasasModel->addHistorial($id, $proceso, $new_status, $comentario, 1, $idCliente);
             } else {
                 $banderaSuccess = false;
             }
@@ -645,7 +645,8 @@ class Casas extends BaseController
                 "fechaMovimiento" => date("Y-m-d H:i:s"),
                 "creadoPor"       => $this->session->userdata("id_usuario"),
                 "descripcion"     => $comentario,
-                "esquemaCreditoProceso" => 2
+                "esquemaCreditoProceso" => 2,
+                "idCliente" => $idCliente
             );
 
 
@@ -746,6 +747,87 @@ class Casas extends BaseController
         }
 
         $this->output->set_output(json_encode($response));
+    }
+
+    public function back_to_asignacion_cartera()
+    {
+        $this->form();
+        $idCliente = $this->form('idCliente');
+        $idGerente = $this->form('idGerente');
+        $idLote = $this->form('idLote');
+        $banderaSuccess = true;
+
+        if (!isset($idCliente)) {
+            http_response_code(400);
+        }
+
+        $this->db->trans_begin();
+
+        $updateCliente = array(
+            "id_asesor_c" => 0,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario'),
+            "pre_proceso_casas" => 1,
+        );
+
+        $getGerente = $this->CasasModel->getGerente($idGerente);
+        $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
+        $this->CasasModel->addHistorial(0, 2, 1, "Pre proceso | se regresa a gerente $getGerente->nombre IDLOTE: $idLote ", 0, $idCliente);
+
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+            $this->json([]);
+        } else {
+            $this->db->trans_rollback();
+            http_response_code(404);
+
+            $this->json([]);
+        }
+    }
+
+    public function back_to_originacion_cartera()
+    {
+        $this->form();
+        $idCliente = $this->form('idCliente');
+        $idSubdirector = $this->form('idSubdirector');
+        $idLote = $this->form('idLote');
+        $banderaSuccess = true;
+
+        if (!isset($idCliente)) {
+            http_response_code(400);
+        }
+
+        $this->db->trans_begin();
+
+        $updateCliente = array(
+            "id_gerente_c" => 0,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario'),
+            "pre_proceso_casas" => null,
+            "plan_comision_c" => null
+        );
+
+        $getSubdirector = $this->CasasModel->getGerente($idSubdirector);
+        $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
+        $this->CasasModel->addHistorial(0, 1, '0', "Pre proceso | se regresa a subdirector: $getSubdirector->nombre IDLOTE: $idLote ", 0, $idCliente);
+
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+            $this->json([]);
+        } else {
+            $this->db->trans_rollback();
+            http_response_code(404);
+
+            $this->json([]);
+        }
     }
 
     public function generateFileName($documento, $lote, $proceso, $archivo)
@@ -5255,8 +5337,9 @@ class Casas extends BaseController
         }
         $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla);
         if ($checkPreproceso != null) {
-            $update = $this->General_model->updateRecord($tabla, $procesoData, "idProcesoCasas", $checkPreproceso->idProcesoCasas);
-            $insert = $checkPreproceso->idProcesoCasas;
+            $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
+            $update = $this->General_model->updateRecord($tabla, $procesoData, "idProcesoCasas", $idProcesoCasas);
+            $insert = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
         } else {
             $insert = $this->CasasModel->insertProceso($procesoData, $tabla); // valor del id de casas que se inserta en el momento
             if (!$insert) {
@@ -5272,7 +5355,8 @@ class Casas extends BaseController
             "creadoPor" => $this->session->userdata('id_usuario'),
             "idMovimiento" => $this->session->userdata('id_usuario'),
             "descripcion" => "Pre proceso | se inicia proceso comentario: " . $comentario . " IDLOTE: $idLote",
-            "esquemaCreditoProceso" => $esquemaCredito
+            "esquemaCreditoProceso" => $esquemaCredito,
+            "idCliente" => $idCliente
         );
 
         $insertHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
@@ -5287,7 +5371,9 @@ class Casas extends BaseController
                 "archivo" => NULL,
                 "tipo" => 1,
                 "creadoPor" => $idUsuario,
-                "modificadoPor" => $idUsuario
+                "modificadoPor" => $idUsuario,
+                "estatus" => 1,
+                "idCliente" => $idCliente
             );
 
             $insertDocumento = $this->General_model->addRecord("documentos_proceso_casas", $documentoData);
@@ -5519,25 +5605,133 @@ class Casas extends BaseController
     }
 
     public function actualizarPreProceso (){
-       //CHECK THE VALUES 
-       $idCliente = $this->form('idCliente');
-       $idProcesoCasas = $this->form('idProcesoCasas');
-       $idProcesoDirecto = $this->form('idProcesoCasasDirecto');
-       $comentario = $this->form('comentario');
-       $esqumeCreditoActual = $this->form('esquemaCreditoActual');
-       $esquemaCreditoNuevo = $this->form('esquemaCreditoNuevo');
-       $tabla = $esquemaCreditoNuevo == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
-       $banderaSuccess = true;
+        //CHECK THE VALUES 
+        $idLote = $this->form('idLote');
+        $idCliente = $this->form('idCliente');
+        $comentario = $this->form('comentario');
+        $esquemaCreditoActual = $this->form('esquemaCreditoActual');
+        $esquemaCreditoNuevo = $this->form('esquemaCreditoNuevo');
+        $tabla = $esquemaCreditoNuevo == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
+        $tablaActual = $esquemaCreditoActual == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
+        $modeloCasa = $this->form('modeloCasa');
+        $idUsuario = $this->session->userdata('id_usuario');
+        $banderaSuccess = true;
+        $insert = '';
 
-       if($esqumeCreditoActual == $esquemaCreditoNuevo) {
-        echo json_encode("same");
-        echo json_encode($tabla);
-       }
-       else {
-        //DEACTIVATE RECORD ON OTHER TABLE
-        echo json_encode($tabla);
-        echo json_encode("change");
-       }
-       exit();
+        if (!isset($idLote) || !isset($idCliente) || !isset($esquemaCreditoActual) || !isset($esquemaCreditoNuevo)) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        $dataUpdate = array(
+            "esquemaCreditoCasas" => $esquemaCreditoNuevo,
+            "idPropuestaCasa" => $modeloCasa,
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
+        );
+
+        $procesoData = array(
+            "idLote" => $idLote,
+            "proceso" => 1,
+            "tipoMovimiento" => 0,
+            "comentario" => $comentario,
+            "creadoPor" => $this->session->userdata('id_usuario')
+        );
+
+        $this->db->trans_begin();
+
+        $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
+
+        if (!$update) {
+            $banderaSuccess = false;
+        }
+
+        // cambia el esquema
+        if($esquemaCreditoActual != $esquemaCreditoNuevo) {
+            $dataEsquemaActual = array(
+                'estatus' => 0
+            );
+
+            $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tablaActual);
+            if ($checkPreproceso != null) {
+                $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
+                // actualizar estatus de tabla actual
+                $update = $this->General_model->updateRecord($tablaActual, $dataEsquemaActual, $esquemaCreditoActual == 1 ? "idProcesoCasas" : "idProceso", $idProcesoCasas);
+
+                $checkPreprocesoNuevo = $this->CasasModel->checkPreproceso($idLote, $tabla);
+                // si existe un registro en la tabla nueva solo lo actualizamos
+                if($checkPreprocesoNuevo != null) {
+                    $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
+                    $update = $this->General_model->updateRecord($tabla, $procesoData, $esquemaCreditoActual == 1 ? "idProcesoCasas" : "idProceso", $idProcesoCasas);
+                    $insert = $checkPreproceso->idProcesoCasas;
+                } else { // si no existe lo creamos
+                    $insert = $this->CasasModel->insertProceso($procesoData, $tabla); // valor del id de casas que se inserta en el momento
+                    if (!$insert) {
+                        $banderaSuccess = false;
+                    }
+                }
+            }
+        } else {
+            // solo cambia otro campo, actualizamos registro exitente
+            $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla);
+            if ($checkPreproceso != null) {
+                $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
+                $update = $this->General_model->updateRecord($tabla, $procesoData, $esquemaCreditoActual == 1 ? "idProcesoCasas" : "idProceso", $idProcesoCasas);
+                $insert = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
+            }
+        }
+
+        $dataHistorial = array(
+            "idProcesoCasas" => $insert,
+            "procesoAnterior" => 2,
+            "procesoNuevo" => 1,
+            "fechaMovimiento" => date("Y-m-d H:i:s"),
+            "creadoPor" => $this->session->userdata('id_usuario'),
+            "idMovimiento" => $this->session->userdata('id_usuario'),
+            "descripcion" => "Pre proceso | se inicia proceso comentario: " . $comentario . " IDLOTE: $idLote",
+            "esquemaCreditoProceso" => $esquemaCreditoNuevo,
+            "idCliente" => $idCliente
+        );
+
+        $insertHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
+        if (!$insertHistorial) {
+            $banderaSuccess = false;
+        }
+
+        if ($esquemaCreditoNuevo == 1) {
+            $documentoData = array(
+                "idProcesoCasas" => $insert,
+                "documento" => "Carta de autorización",
+                "archivo" => NULL,
+                "tipo" => 1,
+                "creadoPor" => $idUsuario,
+                "modificadoPor" => $idUsuario,
+                "estatus" => 1,
+                "idCliente" => $idCliente
+            );
+
+            $checkDocumento = $this->CasasModel->checkDocument($insert);
+            if ($checkDocumento == null) {
+                $insertDocumento = $this->General_model->addRecord("documentos_proceso_casas", $documentoData);
+                if (!$insertDocumento) {
+                    $banderaSuccess = false;
+                }
+            }
+        }
+
+        if ($banderaSuccess) {
+            $this->db->trans_commit();
+
+            $response["result"] = true;
+            $response["message"] = "Se ha avanzado el proceso correctamente";
+        } else {
+            $this->db->trans_rollback();
+
+            $response["result"] = false;
+            $response["message"] = "No se puede avanzar el proceso";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output($this->json([]));
     }
 }

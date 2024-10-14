@@ -98,7 +98,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion, $esquema){
+    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion, $esquema, $idCliente = null){
         $idMovimiento = $this->session->userdata('id_usuario');
 
         $query = "INSERT INTO historial_proceso_casas
@@ -109,7 +109,8 @@ class CasasModel extends CI_Model
             idMovimiento,
             creadoPor,
             descripcion,
-            esquemaCreditoProceso
+            esquemaCreditoProceso,
+            idCliente
         )
         VALUES
         (
@@ -119,7 +120,8 @@ class CasasModel extends CI_Model
             $idMovimiento,
             $idMovimiento,
             '$descripcion',
-            $esquema
+            $esquema,
+            $idCliente
         )";
 
         return $this->db->query($query);
@@ -228,6 +230,7 @@ class CasasModel extends CI_Model
                 WHEN cli.id_asesor_c = 0 THEN 'SIN ASESOR' ELSE CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
             END AS nombreAsesor,
             usA.id_usuario AS idAsesor,
+            cli.id_subdirector_c AS idSubdirector,
             lo.idLote,
             lo.nombreLote,
             lo.sup,
@@ -266,6 +269,7 @@ class CasasModel extends CI_Model
             WHEN cli.id_asesor_c = 0 THEN 'SIN ASESOR' ELSE CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
         END AS nombreAsesor,
         usA.id_usuario AS idAsesor,
+        cli.id_gerente_c AS idGerente,
         lo.idLote,
         lo.nombreLote,
         lo.sup,
@@ -285,9 +289,10 @@ class CasasModel extends CI_Model
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion  = pc.tipoMovimiento  AND oxc2.id_catalogo = 136
         WHERE cli.id_asesor_c = ?
-        AND cli.esquemaCreditoCasas IN (0,1) 
+        AND cli.esquemaCreditoCasas IN (0,1,2) 
         AND cli.pre_proceso_casas = 2
-        AND (pc.idProcesoCasas IS NULL OR (pc.idProcesoCasas IS NOT NULL AND pc.tipoMovimiento = 4))", array($this->idUsuario));
+        AND (pc.idProcesoCasas IS NULL OR (pc.idProcesoCasas IS NOT NULL AND pc.tipoMovimiento = 4))
+        AND (pcd.idProceso IS NULL OR (pcd.idProceso IS NOT NULL AND pcd.tipoMovimiento = 4))", array($this->idUsuario));
 
         return $query;
     }
@@ -1677,7 +1682,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query);
     }
 
-    public function getListaReporteCasas($proceso, $finalizado, $extraFields, $extraValidation){
+    public function getListaReporteCasas($proceso, $finalizado, $extraFields){
         $query = " 
         WITH HistorialCte AS (
             SELECT CAST(SUBSTRING(hpc.descripcion, PATINDEX('%IDLOTE%', hpc.descripcion) + 7, LEN(hpc.descripcion)) AS INT) AS idLote,
@@ -1716,7 +1721,6 @@ AND vb.proyectos != 1";
         --AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
         $extraFields
         AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
-        $extraValidation
         GROUP BY hct.idLote ,lo.nombreLote, pc.idLote, con.nombre, CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno),
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), us.nombre, cli.id_gerente_c,
         CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno), oxc.nombre, oxc2.nombre, 
@@ -2497,7 +2501,7 @@ AND vb.proyectos != 1";
             $query = "SELECT idProcesoCasas FROM $tableName WHERE idLote = $idLote";
         }
         elseif($tableName == 'proceso_casas_directo') {
-            $query = "SELECT idProceso AS idProcesoCasasBanco FROM $tableName WHERE idLote = $idLote";
+            $query = "SELECT idProceso AS idProcesoCasas FROM $tableName WHERE idLote = $idLote";
         }
         return $this->db->query($query)->row();
     }
@@ -2529,7 +2533,7 @@ AND vb.proyectos != 1";
         if($idProceso == null) {
             return null;
         }
-        $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND tipo = 11";
+        $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND estatus = 1";
         return $this->db->query($query)->row();
     }
 
