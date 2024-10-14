@@ -300,6 +300,12 @@ class Casas extends BaseController
         $this->load->view("casas/creditoBanco/tipo_proveedor");
     }
 
+    public function toda_documentacion($value='')
+    {
+        $this->load->view('template/header');
+        $this->load->view("casas/toda_documentacion");
+    }
+
     public function documentos_proveedor($proceso)
     {
         $lote = $this->CasasModel->getProceso($proceso);
@@ -393,6 +399,50 @@ class Casas extends BaseController
         }
 
         $lotes = $this->CasasModel->getCarteraLotes($idCondominio);
+
+        $this->json($lotes);
+    }
+
+    public function lotes_option()
+    {
+        $idCondominio = $this->input->get('condominio');
+        $idRol = $this->idRol = $this->session->userdata('id_rol');
+        $extraColumns = "";
+        $extraSelect = "";
+        $idUsuario = $this->idUsuario = $this->session->userdata('id_usuario');
+
+        switch($idRol) {
+            case '3': 
+                $extraColumns = " AND (cl.id_gerente_c = $idUsuario)";
+                break;
+            case '6':
+                $extraColumns = " AND (cl.id_gerente_c = $idUsuario)";
+                break;
+            case '7':
+                $extraColumns = " AND (cl.id_asesor_c = $idUsuario)";
+                break;
+            default: 
+                $extraColumns = " AND (cl.id_asesor_c != 0 AND cl.id_gerente_c != 0)";
+
+        }
+
+        if (!isset($idCondominio)) {
+            $this->json([]);
+        }
+
+        $lotes = $this->CasasModel->getLotesOption($idCondominio, $extraColumns);
+
+        $this->json($lotes);
+    }
+
+    public function lotes_option_directo() {
+        $idCondominio = $this->input->get('condominio');
+
+        if (!isset($idCondominio)) {
+            $this->json([]);
+        }
+
+        $lotes = $this->CasasModel->getLotesOptionDirecto($idCondominio);
 
         $this->json($lotes);
     }
@@ -5410,5 +5460,63 @@ class Casas extends BaseController
 
     public function ingresar_adeudo_directo()
     {
+    }
+
+    public function lista_toda_documentacion_casas_banco(){
+        $lote = $this->get('lote');
+
+        if(!isset($lote)){
+            return $this->json([]);
+        }
+        
+        $documentos_proceso_casas = $this->CasasModel->getListaDocumentacionProcesoCasas($lote);
+        $documentos_cotizaciones = $this->CasasModel->getListaDocumentacionCotizaciones($lote);
+
+        $merged_documents = array_merge(
+            $documentos_proceso_casas,
+            $documentos_cotizaciones
+        );
+
+        usort($merged_documents, function($a, $b) {
+            return $a->idProcesoCasas <=> $b->idProcesoCasas;
+        });
+
+        return $this->json($merged_documents);
+    }
+
+    public function lista_toda_documentacion_casas_directo(){ 
+        $lote = $this->get('lote');
+
+        if(!isset($lote)){
+            return $this->json([]);
+        }
+        
+        $documentos_proceso_casas_directo = $this->CasasModel->getListaDocumentacionProcesoCasasDirecto($lote);
+        return $this->json($documentos_proceso_casas_directo);
+    }
+    public function lista_toda_documentacion_casas_pagos() {
+        $lote = $this->get('lote');
+        $extraColumns = "";
+
+        if(!isset($lote)){
+            return $this->json([]);
+        }
+
+        $documentos_proceso_pagos = $this->CasasModel->getListaDocumentacionProcesoPagos($lote, $extraColumns);
+        $documentos_avances_pdf = $this->CasasModel->getListaDocumentacionAvancesComplementoPDF($lote, $extraColumns);
+        $documentos_avances_xml = $this->CasasModel->getListaDocumentacionAvancesComplementoXML($lote, $extraColumns);
+
+        $merged_documents = array_merge(
+            $documentos_proceso_pagos,
+            $documentos_avances_pdf, 
+            $documentos_avances_xml
+        );
+
+        usort($merged_documents, function($a, $b) {
+            return $a->idProcesoCasas <=> $b->idProcesoCasas;
+        });
+
+        return $this->json($merged_documents);
+
     }
 }
