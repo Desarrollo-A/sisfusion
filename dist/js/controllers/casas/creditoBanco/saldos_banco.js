@@ -7,11 +7,11 @@ let tipoSaldo = 0; // se define el tipo de saldo
 let campo = ""
 
 switch(idRol){
-    case 33:
     case 76: 
     case 81: 
     case 55: // portventa 
-        if(idUsuario == 5107){ // yolanda 
+    case 11: // portventa 
+        if(idUsuario == 5107 || idRol == 11){ // yolanda 
             tipoSaldo = 1;
             campo = "saldoAdmon";
         }
@@ -29,10 +29,20 @@ switch(idRol){
         tipoSaldo = 2;
         campo = "saldoOOAM";
         break;
+
+    case 33:
+        tipoSaldo = 3;
+        campo = "saldoGPH";
+        break;
     
     case 101: // gph
         tipoSaldo = 3;
         campo = "saldoGPH";
+        break;
+
+    case 11: // ADM
+        tipoSaldo = 1;
+        campo = "saldoAdmon";
         break;
 }
 

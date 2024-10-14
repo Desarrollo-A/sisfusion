@@ -441,7 +441,7 @@
                 <div class="box">
                     <div class="box-body">
                         <div id="exportthis">
-                            <button onclick="javascript:window.history.back();  " class="btn"><i class="fa fa-chevron-left"></i> <span data-i18n="regresar">Regresar</span></button>
+                            <button onclick="javascript:window.history.back();  " class="btn"><i class="fa fa-chevron-left"></i> Regresar</button>
                             <button ng-click="exportc()" class="btn btn-primary hide">Imprimir carátula</button>
                             <button ng-click="exportcf()" class="btn btn-success hide">Imprimir carátula + Corrida Financiera</button>
 
@@ -451,7 +451,7 @@
 
 
                                     <td rowspan=4 align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 70%; height: auto;padding:20px"></td>
-                                    <td rowspan=4 align="right"><p style="font-size: 1.5em;font-family: 'Open Sans', sans-serif;letter-spacing: 5px" data-i18n="corrida-financiera"> CORRIDA FINANCIERA<BR></p><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
+                                    <td rowspan=4 align="right"><p style="font-size: 1.5em;font-family: 'Open Sans', sans-serif;letter-spacing: 5px"> CORRIDA FINANCIERA<BR></p><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
                                     </td>
                                     <td align="right">&nbsp&nbsp</td>
                                 </tr>
@@ -460,7 +460,7 @@
                             <!-- ///////////////////////////////////////////// -->
                             <fieldset>
                                 <legend>
-                                    <section class="content-header" style="font-family: 'Open Sans', sans-serif;font-weight: lighter;letter-spacing: 5px;" data-i18n="informacion">INFORMACIÓN <span>:</span></section>
+                                    <section class="content-header" style="font-family: 'Open Sans', sans-serif;font-weight: lighter;letter-spacing: 5px;">INFORMACIÓN:</section>
                                 </legend>
                                 <div id="areaImprimir">
 
@@ -645,6 +645,87 @@
 
                             </fieldset>
                             <fieldset>
+                                <legend>
+                                    <section class="content-header" style="font-family: 'Open Sans', sans-serif;font-weight: lighter;letter-spacing: 5px;">
+                                        DESCUENTOS DISPONIBLES:
+                                    </section>
+                                </legend>
+
+
+                                <div class="row" ng-if="paquetes.length>0">
+                                    <div  class="col-md-12">
+                                        <h3 >Mostrando paquetes activos para el lote: {{lote.nombreLote}}</h3>
+                                    </div>
+                                    <div class="col-md-4" ng-model="id" ng-repeat="paquete in paquetes">
+                                        <div class="foreach">
+                                            <input type="radio" id="checkPack" name="checkPack" required="required" ng-model="paquete.id_paquete"/>
+                                            <span>Plan {{paquete.descripcion}} </span>
+                                            <div ng-repeat="descuento in paquete.response | orderBy:'-apply'">
+
+
+
+
+                                                <div ng-if="descuento.apply == 1">
+                                                    <li class="list-group-item">
+                                                        <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
+                                                               id="paquete.id_paquete" ng-checked="checkedStatus"/>
+                                                        <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2" style="color:#000;">{{descuento.porcentaje}}% </span>
+                                                        <span ng-if="descuento.id_condicion == 3 || descuento.id_condicion == 4" style="color:#000;">{{descuento.porcentaje | currency }} </span>
+                                                        <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2 || descuento.id_condicion == 3" class="animate-if" style="color:#000;">Descuento al total.</span>
+                                                        <span ng-if="descuento.id_condicion == 4" class="animate-if" style="color:#000;">Descuento al total por m2.</span>
+                                                        <span ng-if="descuento.id_condicion == 7" class="animate-if" style="color:#000;">Enganche diferido sin descontar MSI</span>
+                                                        <span ng-if="descuento.msi_descuento > 0 && descuento.id_condicion != 13" class="animate-if pill-msi" style="color:#000;">{{descuento.msi_descuento}} MSI adicional</span>
+                                                        <span ng-if="descuento.id_condicion == 12" class="animate-if" style="color:#000;">Bono al m2 de {{descuento.porcentaje | currency }}</span>
+                                                        <span ng-if="descuento.msi_descuento > 0 && descuento.id_condicion == 13" class="animate-if" style="color:#000;">{{descuento.msi_descuento}} MSI adicionales</span>
+                                                    </li>
+                                                </div>
+
+                                                <div ng-if="day.day == 15 && porcentajeEng>=10">
+                                                    <div ng-if="descuento.apply == 0">
+                                                        <li class="list-group-item">
+                                                            <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
+                                                                   ng-checked="checkedStatus"/>
+                                                            <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2" style="color:#000;">{{descuento.porcentaje}}%</span>
+                                                            <span ng-if="descuento.id_condicion == 3 || descuento.id_condicion == 4" style="color:#000;">{{descuento.porcentaje | currency }} </span>
+                                                            <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2 || descuento.id_condicion == 3" class="animate-if" style="color:#000;">Descuento al Enganche.</span>
+                                                            <span ng-if="descuento.id_condicion == 4" class="animate-if" style="color:#000;">Descuento al total por m2.</span>
+
+                                                            <span ng-if="descuento.id_condicion == 7" class="animate-if" style="color:#000;">Enganche diferido sin descontar MSI</span>
+                                                            <span ng-if="descuento.id_condicion == 12" class="animate-if" style="color:#000;">Bono al m2 de {{descuento.porcentaje | currency }}</span>
+                                                            <span ng-if="descuento.msiExtra > 0 && descuento.id_condicion == 13" class="animate-if" style="color:#000;">{{descuento.msiExtra}} MSI adicionales</span>
+                                                        </li>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <div ng-if="descuento.apply == null">
+                                                    <li class="list-group-item">
+                                                        <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
+                                                               id="paquete.id_paquete" ng-checked="checkedStatus"/>
+                                                        <span ng-if="descuento.id_condicion == 6" class="animate-if" style="color:#000;">Primera Mensualidad Enero.</span>
+                                                        <span ng-if="descuento.id_condicion == 8" class="animate-if" style="color:#000;">Primera Mensualidad Octubre.</span>
+                                                    </li>
+                                                </div>
+
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="paquetes.length==0 && lote.hasOwnProperty('idLote')" style="border:1px solid #ddd;margin:20px 10px 70px 10px">
+                                    <div class="col-md-12" style="text-align:center;font-weight: 800">
+                                        <h3>Sin paquetes activos para el lote: {{lote.nombreLote}}</h3>
+                                    </div>
+                                </div>
+
+
+                            </fieldset>
+                            <fieldset>
                                 <div class="row">
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                         <div class="col-md-12 form-group" >
@@ -769,88 +850,6 @@
                                     </div>
                                 </div>
                             </fieldset>
-                            <fieldset>
-                                <legend>
-                                    <section class="content-header" style="font-family: 'Open Sans', sans-serif;font-weight: lighter;letter-spacing: 5px;">
-                                        DESCUENTOS DISPONIBLES:
-                                    </section>
-                                </legend>
-
-
-                                <div class="row" ng-if="paquetes.length>0">
-                                    <div  class="col-md-12">
-                                        <h3 >Mostrando paquetes activos para el lote: {{lote.nombreLote}}</h3>
-                                    </div>
-                                    <div class="col-md-4" ng-model="id" ng-repeat="paquete in paquetes">
-                                        <div class="foreach">
-                                            <input type="radio" id="checkPack" name="checkPack" required="required" ng-model="paquete.id_paquete"/>
-                                            <span>Plan {{paquete.descripcion}} </span>
-                                            <div ng-repeat="descuento in paquete.response | orderBy:'-apply'">
-
-
-
-
-                                                <div ng-if="descuento.apply == 1">
-                                                    <li class="list-group-item">
-                                                        <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
-                                                               id="paquete.id_paquete" ng-checked="checkedStatus"/>
-                                                        <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2" style="color:#000;">{{descuento.porcentaje}}% </span>
-                                                        <span ng-if="descuento.id_condicion == 3 || descuento.id_condicion == 4" style="color:#000;">{{descuento.porcentaje | currency }} </span>
-                                                        <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2 || descuento.id_condicion == 3" class="animate-if" style="color:#000;">Descuento al total.</span>
-                                                        <span ng-if="descuento.id_condicion == 4" class="animate-if" style="color:#000;">Descuento al total por m2.</span>
-                                                        <span ng-if="descuento.id_condicion == 7" class="animate-if" style="color:#000;">Enganche diferido sin descontar MSI</span>
-                                                        <span ng-if="descuento.msi_descuento > 0 && descuento.id_condicion != 13" class="animate-if pill-msi" style="color:#000;">{{descuento.msi_descuento}} MSI adicional</span>
-                                                        <span ng-if="descuento.id_condicion == 12" class="animate-if" style="color:#000;">Bono al m2 de {{descuento.porcentaje | currency }}</span>
-                                                        <span ng-if="descuento.msi_descuento > 0 && descuento.id_condicion == 13" class="animate-if" style="color:#000;">{{descuento.msi_descuento}} MSI adicionales</span>
-                                                    </li>
-                                                </div>
-
-                                                <div ng-if="day.day == 15 && porcentajeEng>=10">
-                                                    <div ng-if="descuento.apply == 0">
-                                                        <li class="list-group-item">
-                                                            <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
-                                                                   ng-checked="checkedStatus"/>
-                                                            <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2" style="color:#000;">{{descuento.porcentaje}}%</span>
-                                                            <span ng-if="descuento.id_condicion == 3 || descuento.id_condicion == 4" style="color:#000;">{{descuento.porcentaje | currency }} </span>
-                                                            <span ng-if="descuento.id_condicion == 1 || descuento.id_condicion == 2 || descuento.id_condicion == 3" class="animate-if" style="color:#000;">Descuento al Enganche.</span>
-                                                            <span ng-if="descuento.id_condicion == 4" class="animate-if" style="color:#000;">Descuento al total por m2.</span>
-
-                                                            <span ng-if="descuento.id_condicion == 7" class="animate-if" style="color:#000;">Enganche diferido sin descontar MSI</span>
-                                                            <span ng-if="descuento.id_condicion == 12" class="animate-if" style="color:#000;">Bono al m2 de {{descuento.porcentaje | currency }}</span>
-                                                            <span ng-if="descuento.msiExtra > 0 && descuento.id_condicion == 13" class="animate-if" style="color:#000;">{{descuento.msiExtra}} MSI adicionales</span>
-                                                        </li>
-                                                    </div>
-                                                </div>
-
-
-
-
-                                                <div ng-if="descuento.apply == null">
-                                                    <li class="list-group-item">
-                                                        <input type="checkbox" checklist-model="selected.descuentos" checklist-value="descuento" ng-change="selectDescuentos(descuento, checked)" ng-disabled="paquete.id_paquete"
-                                                               id="paquete.id_paquete" ng-checked="checkedStatus"/>
-                                                        <span ng-if="descuento.id_condicion == 6" class="animate-if" style="color:#000;">Primera Mensualidad Enero.</span>
-                                                        <span ng-if="descuento.id_condicion == 8" class="animate-if" style="color:#000;">Primera Mensualidad Octubre.</span>
-                                                    </li>
-                                                </div>
-
-
-
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" ng-if="paquetes.length==0 && lote.hasOwnProperty('idLote')" style="border:1px solid #ddd;margin:20px 10px 70px 10px">
-                                    <div class="col-md-12" style="text-align:center;font-weight: 800">
-                                        <h3>Sin paquetes activos para el lote: {{lote.nombreLote}}</h3>
-                                    </div>
-                                </div>
-
-
-                            </fieldset>
-
 
                             <table class="table table-striped table-bordered table-hover table-condensed">
                                 <tr>
@@ -1183,10 +1182,6 @@
 
         <div style="float: right;bottom: 2%;right: 3%;position: fixed;display: inline-flex;align-content: center;
                             flex-wrap: wrap;flex-direction: column;">
-            <button class="btn-circle" ng-click="recargaEnganche()"
-                    data-toggle="tooltip" title="Recargar enganche"><i class="fas fa-print fa-reload"></i>
-            </button>
-
             <button class="btn-circle green" ng-click="provFTRE()"
                     data-toggle="tooltip" title="Recargar corrida"><i class="fas fa-print fa-history"></i></button>
             <button class="btn-circle blue" ng-click="exportc()"
@@ -1808,7 +1803,6 @@
 
                 }
                 else if(porcentajeDeEnganche != 0  && orderTotal.length > 0){
-                    let cantidadInputEnganche = document.getElementById("cantidadEnganche");
                     angular.forEach(orderTotal, function(item, index) {
 
                         if(item.id_condicion == 1){
@@ -1818,12 +1812,8 @@
                             msi = parseInt(msi + parseInt(item.msi_descuento));
                             console.log('condicion 1');
                             console.log('condicion 1 DESCONTAR AL TOTAL');
-                            // enganche = ($scope.engancheFinal == 0 || $scope.engancheFinal == '') ? ($scope.porcentaje * $scope.precioFinal) / 100 : 0 ;//= ($scope.porcentaje * r1) / 100;
-                            enganche = ($scope.porcentaje * $scope.precioFinal) / 100 ;//= ($scope.porcentaje * r1) / 100;
-                            cantidadInputEnganche.value = enganche; // este asigna valor al input view
-                            console.log('enganche deps dl dsc:', enganche);
-                            console.log('preciofinal deps dl dsc:', $scope.precioFinal);
-                            $scope.engancheFinal = enganche;
+                            enganche = ($scope.engancheFinal == 0 || $scope.engancheFinal == '') ? ($scope.porcentaje * $scope.precioFinal) / 100 : 0 ;//= ($scope.porcentaje * r1) / 100;
+                            $scope.engancheFinal = $scope.cantidad;
                             console.log('VACOND1:', $scope.engancheFinal);
                         }
                         if( item.id_condicion == 2){
@@ -1846,7 +1836,7 @@
                             msi = parseInt(msi + parseInt(item.msi_descuento));
                             console.log('msi', msi);
                             console.log('condicion 2 DESCONTAR AL ENGANCHE NO AL TOTAL');
-                            //enganche = ($scope.engancheFinal == 0 || $scope.engancheFinal == '') ? ($scope.porcentaje * $scope.precioFinal) / 100 : 0 ;//= ($scope.porcentaje * r1) / 100;
+                            enganche = ($scope.engancheFinal == 0 || $scope.engancheFinal == '') ? ($scope.porcentaje * $scope.precioFinal) / 100 : 0 ;//= ($scope.porcentaje * r1) / 100;
 
                         }
 
@@ -1887,7 +1877,7 @@
                             // r1 = (r1 );
                             msi = ((msi+ parseInt(item.msi_descuento)) >=48 ) ? 48 : parseInt(msi + parseInt(item.msi_descuento));
                             //     console.log("condicion12 alv: ", r1);
-                            enganche = ($scope.engancheFinal == 0 || $scope.engancheFinal == '') ? ($scope.porcentaje * $scope.precioFinal) / 100 : $scope.engancheFinal ;//= ($scope.porcentaje * r1) / 100;
+                            enganche = ($scope.engancheFinal == 0 || $scope.engancheFinal == '') ? ($scope.porcentaje * $scope.precioFinal) / 100 : 0 ;//= ($scope.porcentaje * r1) / 100;
                             $scope.engancheFinal = enganche;
                         }
 
@@ -1924,26 +1914,9 @@
                             console.log('tot', tot);
                             b = (tot - a);
                             console.log('b', b);
-
                             c = b/supLote;
                             console.log('supLote', supLote);
                             console.log('c', c);
-
-                            if(item.id_condicion==1){
-                                let pea = document.getElementById("porcentajeEnganche").value / 100 ; //porcentaje de enganche actual
-                                console.log('pea', pea);
-                                document.getElementById('cantidadEnganche').value=b * pea;
-                                console.log('b', b);
-
-                                $scope.cantidad = b * pea;
-                                $scope.engancheFinal = b * pea;
-                                console.log("b * pea", b * pea);
-                            }
-                            // if(item.id_condicion==2){
-                            //
-                            // }
-
-
                         }
 
                         // a +=  porcentaje2;
@@ -2214,7 +2187,7 @@
                             porcentaje2 = (r1 * porcentaje1);
                             r1 -= porcentaje2;
                             msi = parseInt(msi + parseInt(item.msi_descuento));
-                            console.log('condicion 1 y 2');
+                            // console.log('condicion 1 y 2');
 
                         }
 
@@ -2298,8 +2271,6 @@
                 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
                 var ini;
                 var ini2;
@@ -2636,8 +2607,6 @@
                     }
                 }
 
-
-
 /////////////////////////// ENGANCHE DIFERIDO ////////////////////////////////////
                 if($scope.day.day!='' && $scope.mesesdiferir > 0 && ($scope.mensualidad_con_enganche == false || $scope.mensualidad_con_enganche == undefined))
                 {
@@ -2659,7 +2628,6 @@
 
 
                     saldoDif =  ($scope.mesesdiferir == 0 || $scope.mesesdiferir==undefined) ?  saldoDif: $scope.precioFinal - $scope.apartado ;//debe de descontar también al precio final para inicio de cf SOLO PARA ENG DIFERIDOS -- SE DEBE DESCONTAR AL ENGANCHE NO A LA CANTIDAD FINAL SE PASA AL SIG DE DIF
-                    console.log('PRIMO:', saldoDif);
                     var rangEd=[];
                     for (var e = 0; e < $scope.mesesdiferir; e++) {
 
@@ -2833,8 +2801,7 @@
                     }
                     if($scope.mensualidad_con_enganche==true){
 
-                        console.log('apartadoSum true', apartadoSum);
-                        $scope.saldoFinal = (parseFloat(r1) + apartadoSum);
+                        $scope.saldoFinal = (parseFloat(r1));
                         r1_virtual = $scope.saldoFinal;
                         r1 = r1_virtual;
                         console.log('r1_virtual:', r1_virtual);
@@ -2886,10 +2853,6 @@
                     //$scope.engancheFinal = ($scope.decFin.length<=0)  ? $scope.precioFinal * $scope.porcentaje / 100: $scope.engancheFinal;
                     console.log('>>>>$scope.engancheFinal  III ', $scope.engancheFinal  );
                     console.log('>>>>$scope.decFin ', $scope.decFin  );
-
-                    /////////codigo de prueba
-
-                    /////////TERMINA CODIGO DE PRUEBA
 
                 }
 
@@ -2946,17 +2909,16 @@
                     interes_p3: ($scope.casaFlag==1) ? 0.011083333 : 0.0125,
                     interes_p4: ($scope.casaFlag==1) ? 0.011083333 : 0.0150,
                     contadorInicial: 0,
-                    capital: ($scope.mesesdiferir > 0) ? ($scope.mensualidad_con_enganche == undefined ? (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1_virtual / (($scope.age_plan*12)))) : (r1_virtual / ($scope.age_plan*12)) , //($scope.mesesdiferir > 0) ? (r1_virtual / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1_virtual / ($scope.age_plan*12))
+                    capital: ($scope.mesesdiferir > 0) ? ($scope.mensualidad_con_enganche == undefined ? (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1 / (($scope.age_plan*12)))) : (r1 / ($scope.age_plan*12)) , //($scope.mesesdiferir > 0) ? (r1_virtual / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1_virtual / ($scope.age_plan*12))
                     fechaActual: $scope.date = new Date(),
                     engancheF: enganche
                 };
                 console.log('>>> c:$scope.mesesdiferir: ', $scope.mesesdiferir);
                 console.log('>>> c:$scope.age_plan: ', $scope.age_plan);
-                console.log('>>> c:r1_virtual: ', r1_virtual);
-                console.log('>>> c:r1: ', r1);
+                console.log('>>> c:r1: ', r1_virtual);
                 console.log('>>> meses a diferir ', $scope.mesesdiferir);
                 console.log('>>> $scope.mensualidad_con_enganche ', $scope.mensualidad_con_enganche);
-                console.log('>>>($scope.mesesdiferir > 0) ? ($scope.mensualidad_con_enganche == undefined ? (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1_virtual / (($scope.age_plan*12)))) : (r1_virtual / ($scope.age_plan*12))', ($scope.mesesdiferir > 0) ? ($scope.mensualidad_con_enganche == undefined ? 'eje1'+(r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : 'eje1-2'+(r1_virtual / (($scope.age_plan*12)))) : 'eje2'+(r1_virtual / ($scope.age_plan*12)));
+                console.log('>>> c:($scope.mesesdiferir > 0) ? (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : (r1 / ($scope.age_plan*12)): ', ($scope.mesesdiferir > 0) ? ($scope.mensualidad_con_enganche == undefined ? 'ej1:'+ (r1 / (($scope.age_plan*12) - $scope.mesesdiferir)) : 'eje1-2:'+(r1 / (($scope.age_plan*12) - $scope.mesesdiferir))) : 'ej2'+(r1 / ($scope.age_plan*12)));
 
                 // console.log('$scope.infoLote.engancheF', $scope.infoLote.engancheF);
 
@@ -4731,9 +4693,6 @@
                             let longitud_diferidos = $scope.rangEd.length;
 
                             if($scope.day.day=='Diferido'){
-                                if(i == 0){
-                                    $scope.infoLote.precioTotal =  $scope.infoLote.precioTotal + $scope.engancheFinal;
-                                }
                                 if(i>longitud_diferidos && $scope.mensualidad_con_enganche==true){
                                     console.log('i', i);
                                     console.log('longitud_diferidos', longitud_diferidos);
@@ -5790,7 +5749,7 @@
                         ini = $scope.infoLote.contadorInicial;
                         var engd = (enganche - $scope.apartado);
                         var engd2 = (engd/$scope.mesesdiferir);
-                        var saldoDif = ($scope.precioFinal - $scope.apartado); //sólo cuando sea enganche diferido en mensualidades hace esto
+                        var saldoDif = ($scope.precioFinal);
                         console.log('saldoDif->',saldoDif);
 
                         var rangEd=[];
@@ -6363,15 +6322,7 @@
 
                             if($scope.day.day=='Diferido' && $scope.mensualidad_con_enganche==true){
                                 if(i == 0){
-                                    console.log('Dentro de dif y true');
-                                    console.log(' $scope.infoLote.precioTotal :',  $scope.infoLote.precioTotal );
-                                    console.log(' $scope.enganche :',  $scope.enganche  );
-                                    console.log(' $scope.apartado :',  $scope.apartado  );
-                                    console.log(' $scope.infoLote.precioTotal + ($scope.enganche - $scope.apartado) :', $scope.infoLote.precioTotal + ($scope.enganche - $scope.apartado)  );
-                                    console.log(' $scope.infoLote.precioTotal + ($scope.enganche ) :', $scope.infoLote.precioTotal + ($scope.enganche )  );
-                                    console.log(' $scope.precioFinal - $scope.apartado:',$scope.precioFinal - $scope.apartado  );
-                                    console.log(' $scope.infoLote:',$scope.infoLote  );
-                                    $scope.infoLote.precioTotal =  $scope.infoLote.precioTotal + $scope.engancheFinal;
+                                    $scope.infoLote.precioTotal =  $scope.infoLote.precioTotal + ($scope.enganche - $scope.apartado);
                                 }
                                 let longitud_diferidos = $scope.rangEd.length;
                                 if((i+1) <= longitud_diferidos ){
@@ -7178,7 +7129,6 @@
             $scope.getAgePlan = function() {
                 $scope.age_plan = $scope.yearplan.yearplan;
                 // console.log("$scope.age_plan: ", $scope.age_plan);
-
                 calcularCF();
             };
 
@@ -7472,9 +7422,6 @@
 
             $scope.provFTRE = function(){
                 calcularCF();
-            };
-            $scope.recargaEnganche = function (){
-
             };
             $scope.onSelectChangec = function(condominio) {
                 $scope.yearplan = '';
@@ -10512,7 +10459,7 @@
                 if(planPay == 'Crédito') {
                     yearplan.prop('disabled', false);
                     day.prop('disabled', false);
-                    porcentajeEnganche.val(10);
+                    porcentajeEnganche.val($scope.porcentajeInv);
                     porcentajeEnganche.prop('disabled', false);
                     cantidadEnganche.val($scope.enganche);
                     cantidadEnganche.prop('disabled', false);
