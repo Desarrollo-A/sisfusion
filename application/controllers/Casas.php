@@ -308,7 +308,7 @@ class Casas extends BaseController
 
     public function toda_documentacion_cliente($value = '' ) {
         $this->load->view('template/header');
-        $this->load->view("casas/toda_documentacion_cliente")
+        $this->load->view("casas/toda_documentacion_cliente");
     }
 
     public function documentos_proveedor($proceso)
