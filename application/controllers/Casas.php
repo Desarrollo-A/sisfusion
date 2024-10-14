@@ -306,6 +306,11 @@ class Casas extends BaseController
         $this->load->view("casas/toda_documentacion");
     }
 
+    public function toda_documentacion_cliente($value = '' ) {
+        $this->load->view('template/header');
+        $this->load->view("casas/toda_documentacion_cliente")
+    }
+
     public function documentos_proveedor($proceso)
     {
         $lote = $this->CasasModel->getProceso($proceso);
@@ -5517,6 +5522,14 @@ class Casas extends BaseController
         });
 
         return $this->json($merged_documents);
+    }
 
+    public function lista_toda_documentacion_casas_clientes_banco() {
+        $lote = $this->get('lote');
+        $extraColumns = "";
+
+        if(!isset($lote)) {
+            return $this->json([]);
+        }
     }
 }

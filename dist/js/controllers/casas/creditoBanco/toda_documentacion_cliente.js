@@ -25,10 +25,12 @@ let buttons = [
 
 let columnsBanco = [
     { data: 'idProcesoCasas'},
+    { data: 'idProcesoCasas'},
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
     { data: 'idLote' },
+    { data: 'nombreCliente'},
     { data: 'gerente' },
     { data: 'asesor' },
     { data: 'documento' },
@@ -47,10 +49,12 @@ let columnsBanco = [
 ]
 
 let columnsDirecto = [
+    { data: 'idProcesoCasas'},
     { data: 'idProceso'},
     { data: 'proyecto'},
     { data: 'condominio'},
     { data: 'nombreLote'},
+    { data: 'nombreCliente'},
     { data: 'idLote'},
     { data: 'gerente'},
     { data: 'asesor'},
@@ -66,10 +70,12 @@ let columnsDirecto = [
 
 let columnsPagos = [
     { data: 'idProcesoCasas'},
+    { data: 'idProcesoCasas'},
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
     { data: 'idLote' },
+    { data: 'nombreCliente'},
     { data: 'gerente' },
     { data: 'asesor' },
     { data: 'documento' },
@@ -90,7 +96,7 @@ function dataFunction(value) {
     if (valueTab == 1) {
         tableConfig = {
             id: '#tableBanco',
-            url: 'casas/lista_toda_documentacion_casas_banco',
+            url: 'casas/lista_toda_documentacion_casas_clientes_banco',
             buttons: buttons,
             columns: columnsBanco
         };
