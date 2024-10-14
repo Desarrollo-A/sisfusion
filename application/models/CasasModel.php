@@ -2728,4 +2728,39 @@ AND vb.proyectos != 1";
                         GROUP BY idDocumento, documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, idProceso";
         return $this->db->query($query)->result();
     }
+
+    public function getListaDatosCliente($idLote, $extraWhere) {
+        $query = "WITH dataBanco AS (
+                    SELECT cli.id_cliente, pcb.idProcesoCasas,pcd.idProceso,
+                    dpc.documento AS documentoBanco, dpc.archivo AS archivoBanco,
+                    dpc2.documento AS documentoDirecto, dpc2.archivo AS archivoDirecto,
+                    CAST(resi.descripcion AS VARCHAR(MAX)) AS proyecto, CAST(con.nombre AS VARCHAR(MAX)) AS condominio, lo.nombreLote, 
+                    lo.idLote, 
+                    CASE WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) END AS gerente,
+                    CASE WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) END AS asesor,
+                    CASE WHEN CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR' ELSE CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) END AS nombreCliente
+                    FROM clientes cli
+                    LEFT JOIN lotes lo ON lo.idLote = cli.idLote 
+                    LEFT JOIN proceso_casas_banco pcb ON pcb.idLote = lo.idLote 
+                    LEFT JOIN proceso_casas_directo pcd ON pcd.idLote = lo.idLote
+                    LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio 
+                    LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+                    LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c 
+                    LEFT JOIN usuarios asesor ON asesor.id_usuario  = cli.id_asesor_c 
+                    LEFT JOIN documentos_proceso_casas dpc ON dpc.idProcesoCasas = pcb.idProcesoCasas
+                    LEFT JOIN documentos_proceso_casas dpc2 ON dpc2.idProcesoCasas = pcd.idProceso
+                    WHERE  lo.idLote = $idLote $extraWhere
+                    AND (dpc2.archivo IS NOT NULL OR dpc.archivo IS NOT NULL)
+                    GROUP BY cli.id_cliente, pcb.idProcesoCasas, CAST(resi.descripcion AS VARCHAR(MAX)), CAST(con.nombre AS VARCHAR(MAX)), 
+                    lo.nombreLote, lo.idLote, cli.id_gerente_c, CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+                    CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),cli.id_asesor_c,pcd.idProceso,
+                    CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno), dpc.documento, dpc2.documento,
+                    dpc.archivo, dpc2.archivo
+                )
+                SELECT id_cliente, idProcesoCasas, proyecto, condominio, nombreLote, idLote, gerente, asesor, idProceso, nombreCliente, documentoBanco, documentoDirecto, archivoBanco, archivoDirecto
+                FROM dataBanco
+                WHERE  (gerente != '' AND asesor != '')
+                GROUP BY id_cliente, idProcesoCasas, condominio, nombreLote, idLote, gerente, asesor, proyecto, idProceso, nombreCliente, documentoBanco, documentoDirecto, archivoBanco, archivoDirecto";
+        return $this->db->query($query)->result();
+    }
 }

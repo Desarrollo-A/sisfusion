@@ -96,14 +96,14 @@ function dataFunction(value) {
     if (valueTab == 1) {
         tableConfig = {
             id: '#tableBanco',
-            url: 'casas/lista_toda_documentacion_casas_clientes_banco',
+            url: 'casas/documentacion_clientes',
             buttons: buttons,
             columns: columnsBanco
         };
     } else if (valueTab == 2) {
         tableConfig = {
             id: '#tableDirecto',
-            url: 'casas/lista_toda_documentacion_casas_directo',
+            url: 'casas/documentacion_clientes',
             buttons: buttons,
             columns: columnsDirecto
         };
@@ -201,15 +201,11 @@ filtro_condominios_banco.onChange(function(option){
 });
 
 filtro_lotes_banco.onChange(function(option){
-    table.setParams({lote: option.value})
+    console.log("option: ", option);
+    console.log("valueTab: ", valueTab);
+    table.setParams({lote: option.value, valueTab: valueTab})
     table.reload()
 })
-
-
-
-
-
-
 
 let filtro_proyectos_directo = new SelectFilter({ id: 'proyecto-directo', label: 'Proyecto', placeholder: 'Selecciona una opción' });
 let filtro_condominios_directo = new SelectFilter({ id: 'condominio-directo', label: 'Condominio', placeholder: 'Selecciona una opción' });
@@ -236,10 +232,6 @@ let filtros_pagos = new Filters({
         filtro_lotes_pagos,
     ],
 });
-
-
-
-
 
 filtro_proyectos_directo.onChange(function(option){
     $.ajax({

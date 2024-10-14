@@ -5524,12 +5524,29 @@ class Casas extends BaseController
         return $this->json($merged_documents);
     }
 
-    public function lista_toda_documentacion_casas_clientes_banco() {
-        $lote = $this->get('lote');
-        $extraColumns = "";
+    public function documentacion_clientes() {
+        $idLote = $this->get('lote');
+        $valueTab = $this->get('valueTab');
+        $tableName = '';
+        $extraWhere = '';
 
-        if(!isset($lote)) {
+        switch($valueTab) {
+            case '1':
+                $extraWhere = " AND (pcb.idProcesoCasas IS NOT NULL AND pcd.idProceso IS NULL)";
+                break;
+            case '2' :
+                $extraWhere = " AND (pcd.idProceso IS NOT NULL AND pcb.idProcesoCasas IS NULL)";
+                break;
+            default: 
+                break;
+        }
+
+        if(!isset($idLote)) {
             return $this->json([]);
         }
+
+        $documentos_cliente = $this->CasasModel->getListaDatosCliente($idLote, $extraWhere);
+
+        return $this->json($documentos_cliente);
     }
 }

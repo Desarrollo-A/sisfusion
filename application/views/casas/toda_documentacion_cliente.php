@@ -118,5 +118,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/toda_documentacion.js?=v2"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/toda_documentacion_cliente.js?=v2"></script>
 </body>
