@@ -19,6 +19,12 @@ if(locale){
 }
 
 $(document).ready(function() {
+    if(!locale){
+        locale = 'es'
+        
+        localStorage.setItem('locale', locale)
+    }
+
     changeIcon(locale)
 })
 
