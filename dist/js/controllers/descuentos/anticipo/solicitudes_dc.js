@@ -241,7 +241,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 <a  name="nuevosNumeros"  
                     id="nuevosNumeros" 
                     onclick="validar_nuevosNumeros()"
-                    title="Calcular datos"
+                    title="${_("calcular-datos")}"
                     class="btn-data btn-green">
                     <i class="fas fa-calculator" style="font-size: 24px;"></i>
                     
@@ -439,8 +439,8 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                     '    <h6>\n' +
                     '    </h6>\n' +
                     '    </div>\n' +
-                    '  </div>\n' +
-                    '</li>');
+                    '  </div>\n'+
+                    '</li>');
             });
             $('#spiner-loader').addClass('hide');
         });

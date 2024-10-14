@@ -796,16 +796,17 @@ $('#tabla_nuevas_comisiones').on('draw.dt', function() {
 // INICIO TABLA EN PROCESO
 $("#tabla_revision_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_revision_comisiones");
-    construirHead("tabla_revision_comisiones");
+   // construirHead("tabla_revision_comisiones");
 
-   /* $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
+    $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
+        var id = $(this).text();
         if (!excluir_column.includes(title)) {
             columnas_datatable.tabla_revision_comisiones.titulos_encabezados.push(title);
             columnas_datatable.tabla_revision_comisiones.num_encabezados.push(columnas_datatable.tabla_revision_comisiones.titulos_encabezados.length-1);
         }
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
-        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_revision" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+        title = _(id)
+        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_revision" data-placement="top" data-i18n-label="" title="${title}" placeholder="${title}" ${readOnly}/>`);
         $('input', this).on('keyup change', function () {
             if (tabla_revision.column(i).search() !== this.value) {
                 tabla_revision
@@ -824,7 +825,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
             }
         });
-    });*/
+    });
 
     $('#tabla_revision_comisiones').on('xhr.dt', function (e, settings, json, xhr) {
         var total = 0;
@@ -996,7 +997,7 @@ $("#tabla_revision_comisiones").ready(function () {
             });
         });
     });
-    applySearch(tabla_revision)
+  //  applySearch(tabla_revision)
 
 });
 

@@ -78,7 +78,8 @@ function triggerChangeFunctions() {
 const datosTablasComisiones = [
     {
         idTabla : 'tabla_nuevas_comisiones',
-        idText: 'myText_nuevas'
+        idText: 'myText_nuevas',
+        idcheck: ''
     },
     {
         idTabla : 'tabla_revision_comisiones',
@@ -95,13 +96,15 @@ function applySearch(table) {
 
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
         $('input', this).on('keyup change', function () {
-            console.log(this)
+            console.log(id)
+            console.log(this.value)
 
+            console.log(i)
 
 
             if (table.column(i).search() !== this.value) {
-                searchTabla !== undefined ? '' : table.column(i).search(this.value).draw();
                 const searchTabla = datosTablasComisiones.find((idTables) => idTables.idTabla == id);
+                searchTabla !== undefined ? (parseInt(i) == 0 ? '' : table.column(i).search(this.value).draw()) : table.column(i).search(this.value).draw();
 
                 if( searchTabla !== undefined){
                     var total = 0;
