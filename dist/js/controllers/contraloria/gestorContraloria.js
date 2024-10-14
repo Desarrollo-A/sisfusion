@@ -16,6 +16,7 @@ let usuariosPermitidosModelosCasas = [2749];
 $(document).ready(function () {
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
     $.getJSON("getOpcionesPorCatalogo").done(function (data) {
+        console.warn("data:",data);
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 155) {
                 if (data[i]['id_opcion'] == 1 && usuariosPermitidosRL.includes(id_usuario_general)) {
@@ -23,6 +24,10 @@ $(document).ready(function () {
                 } else if (data[i]['id_opcion'] == 2 && usuariosPermitidosIntercambio.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 } else if (data[i]['id_opcion'] == 3 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                }else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                }else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 }
             }
@@ -33,17 +38,61 @@ $(document).ready(function () {
 
 $(document).on('change', '#selector', function () {
     $("#divTablaRL, #divTablaIntercambio, #divmodelosTable").addClass("hide");
+    console.log("$(this).val()", $(this).val());
     if ($(this).val() == 1) {
         $("#divTablaIntercambio").addClass("hide");
         $("#divTablaRL").removeClass("hide");
         llenarTablaRl($(this).val());
     } else if ($(this).val() == 2) {
         $("#divTablaIntercambio").removeClass("hide");
+        $('#proyecto').addClass('hide');
+        $('#condominio').addClass('hide');
         $("#divTablaRL").addClass("hide");
         llenarTablaIntercambios($(this).val());
     } else if ($(this).val() == 3) {
+        $('#proyecto').addClass('hide');
+        $('#condominio').addClass('hide');
         $("#divmodelosTable").removeClass("hide");
+    } else if ($(this).val() == 4) {
+         // crearTablaTipoVenta();
+         $('#proyecto').removeClass('hide');
+         $('#condominio').removeClass('hide');
+    } else if ($(this).val() == 5) {
+        // LLEAR EL SELECT DE PROYECTO
+        console.warn("VISIBILIZAR SELECTS DE PROYECTO")
     } 
+});
+
+function loadSelectOptions (){
+    $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
+        }
+        $("#idResidencial").selectpicker('refresh');
+    }, 'json');
+
+    $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
+        }
+        $("#idEstatus").selectpicker('refresh');
+    }, 'json');
+}
+
+$('#idResidencial').change(function () {
+    $('#spiner-loader').removeClass('hide');
+    $('#tablaInventario').removeClass('hide');
+    index_idResidencial = $(this).val();
+    $("#idCondominioInventario").html("");
+    $(document).ready(function () {
+        $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#idCondominioInventario").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));
+            }
+            $("#idCondominioInventario").selectpicker('refresh');
+            $('#spiner-loader').addClass('hide');
+        }, 'json');
+    });
 });
 
 // FUNCIóN PARA LLENAR TABLA CON REPRESENTANTES LEGALES
@@ -146,6 +195,9 @@ function llenarTablaRl(tipoOperacion) {
         });
     });
 }
+
+// FUNCIÓN PARA LLENAR LA CON REPRESENTANTES LEGALES PARA EDITAR
+
 
 // FUNCIóN PARA LLENAR LA TABLA DE LOTES PARA CAMBIO DE ESTATUS
 function llenarTablaIntercambios(tipoOperacion) {
@@ -625,4 +677,5 @@ $(document).ready(function() {
             });
         }
     });
+    loadSelectOptions();
 });
