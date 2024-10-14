@@ -462,7 +462,7 @@ class Reestructura_model extends CI_Model
                     enganche = (((" . $row[0]['sup'] . ") * " . $row[0]['precio'] . ") * 0.1), 
                     saldo = (((" . $row[0]['sup'] . ") * " . $row[0]['precio'] . ") - (((" . $row[0]['sup'] . ") * " . $row[0]['precio'] . ") * 0.1)),
                     asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso, solicitudCancelacion = 0, 
-                    id_usuario_asignado = 0, id_gerente_asignado = 0, id_subdirector_asignado = 0, estatus_preproceso = 0
+                    id_usuario_asignado = 0, id_gerente_asignado = 0, id_subdirector_asignado = 0, estatus_preproceso = 0, inicioCancelacionFlag = 0
                     WHERE idLote IN (" . $datos['idLote'] . ") and status = 1");
 
         if (!in_array($datos["tipo"], array(7, 8, 9))) {

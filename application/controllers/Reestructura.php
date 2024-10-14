@@ -184,7 +184,6 @@ class Reestructura extends CI_Controller{
                 echo json_encode(0);
         } else { // CANCELACIÓN
             $data['modificado_por'] = $id_usuario;
-            $data['inicioCancelacionFlag'] = 0;
         $data['tipoCancelacion'] = isset($dataPost['tipoCancelacion']) ? $dataPost['tipoCancelacion'] : 1;
         $update1 = TRUE;
         if (isset($dataPost['idCliente']) )
