@@ -135,6 +135,16 @@
                                         <label class="control-label" for="nombreLote">Opciones</label>
                                         <select class="selectpicker select-gral" id="selector" title="SELECCIONA UNA OPCIÓN"></select>
                                     </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="proyecto">
+                                        <label class="control-label" for="nombreLote" >Proyecto</label>
+                                        <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO" id="selectProyecto">
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="condominio">
+                                        <label class="control-label" for="nombreLote">Condominio</label>
+                                        <select class="selectpicker select-gral" title="SELECCIONA UN CONDOMINIO" id="selectCondominio"></select>
+                                    </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="divBusquedaLote">
                                         <label class="control-label" for="nombreLote">Buscar Lote</label>
                                         <div class="form-inline toolbar">
@@ -189,6 +199,23 @@
                                 <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divmodelosTable">
                                     <div class="table-responsive">
                                         <table class="table-striped table-hover" id="modelosTable" name="modelosTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>MODELO</th>
+                                                    <th>SUPERFICIE</th>
+                                                    <th>COSTO</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>ACCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaCambiarVenta">
+                                    <div class="table-responsive">
+                                        <table class="table-striped table-hover" id="tipo-venta" name="tipo-venta">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>

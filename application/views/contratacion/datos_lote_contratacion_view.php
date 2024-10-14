@@ -327,7 +327,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="material-datatables">
+                                    <div class="material-datatables">                                        
                                         <table id="tabla_inventario_contraloria" name="tabla_inventario_contraloria" class="table-striped table-hover hide">
                                             <thead>
                                             <tr>
