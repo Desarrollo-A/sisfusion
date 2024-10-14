@@ -66,7 +66,7 @@ const observacionContratoUrgente = 1; // Bandera para inhabilitar
  * @type {number}
  */
 const status8Flag = 1;
-let documentacionLoteTabla = null;
+var documentacionLoteTabla = null;
 let titulos = [];
 Shadowbox.init();
 
@@ -141,7 +141,7 @@ $('#idLote').change(function () {
     const datos = seleccion.split(',');
     const valorSeleccionado = datos[0];
 
-    let tabla_6 = $('#tableDoct').DataTable({
+    documentacionLoteTabla = $('#tableDoct').DataTable({
         destroy: true,
         ajax: {
             url: `${general_base_url}registroCliente/expedientesWS/${valorSeleccionado}`,
@@ -467,7 +467,7 @@ $('#idLote').change(function () {
         },
     });
 
-    applySearch(tabla_6);
+    applySearch(documentacionLoteTabla);
     changeButtonTooltips();
     $('body').i18n();
 });
@@ -668,7 +668,6 @@ $(document).on("click", "#sendRequestButton", function () {
 
                 if (res.code === 200) {
                     alerts.showNotification("top", "right", `${_("el-documento")} ${nombreDocumento} ${_("eliminado-exito")}`, "success");
-
                     documentacionLoteTabla.ajax.reload();
                     $("#addDeleteFileModal").modal("hide");
                 }
