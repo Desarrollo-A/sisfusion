@@ -16,6 +16,7 @@ let usuariosPermitidosModelosCasas = [2749];
 $(document).ready(function () {
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
     $.getJSON("getOpcionesPorCatalogo").done(function (data) {
+        console.warn("data:",data);
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 155) {
                 if (data[i]['id_opcion'] == 1 && usuariosPermitidosRL.includes(id_usuario_general)) {
@@ -23,6 +24,10 @@ $(document).ready(function () {
                 } else if (data[i]['id_opcion'] == 2 && usuariosPermitidosIntercambio.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 } else if (data[i]['id_opcion'] == 3 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                }else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                }else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 }
                 else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
@@ -35,15 +40,14 @@ $(document).ready(function () {
         }
         $('#selector').selectpicker('refresh');
     });  
-    $('#selectProyecto').append('<option value="opcion1">Opción 1</option>');
-    $('#selectProyecto').append('<option value="opcion2">Opción 2</option>');
-    $('#selectProyecto').append('<option value="opcion3">Opción 3</option>');
+
 });
 
 
 
 $(document).on('change', '#selector', function () {
     $("#divTablaRL, #divTablaIntercambio, #divmodelosTable").addClass("hide");
+    console.log("$(this).val()", $(this).val());
     if ($(this).val() == 1) {
         $("#divTablaIntercambio").addClass("hide");
         $('#proyecto').addClass('hide');
@@ -168,6 +172,39 @@ function crearTablaTipoVenta() {
     });
 }
 
+
+function loadSelectOptions (){
+    $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#selectProyecto").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
+        }
+        $("#selectProyecto").selectpicker('refresh');
+    }, 'json');
+
+    $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
+        }
+        $("#idEstatus").selectpicker('refresh');
+    }, 'json');
+}
+
+$('#selectProyecto').change(function () {
+    $('#spiner-loader').removeClass('hide');
+    $('#tablaInventario').removeClass('hide');
+    index_idResidencial = $(this).val();
+    $("#selectCondominio").html("");
+    $(document).ready(function () {        
+        $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#selectCondominio").append($('<option>').val(data[i]['selectCondominio']).text(data[i]['nombre']));
+            }
+            $("#selectCondominio").selectpicker('refresh');
+            $('#spiner-loader').addClass('hide');
+        }, 'json');
+    });
+});
+
 // FUNCIóN PARA LLENAR TABLA CON REPRESENTANTES LEGALES
 function llenarTablaRl(tipoOperacion) {
     $('#gestorContraloria thead tr:eq(0) th').each(function (i) {
@@ -268,6 +305,9 @@ function llenarTablaRl(tipoOperacion) {
         });
     });
 }
+
+// FUNCIÓN PARA LLENAR LA CON REPRESENTANTES LEGALES PARA EDITAR
+
 
 // FUNCIóN PARA LLENAR LA TABLA DE LOTES PARA CAMBIO DE ESTATUS
 function llenarTablaIntercambios(tipoOperacion) {
@@ -749,4 +789,5 @@ $(document).ready(function () {
             });
         }
     });
+    loadSelectOptions();
 });
