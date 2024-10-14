@@ -301,6 +301,7 @@
                                                 <th>FECHA VENCIMIENTO</th>
                                                 <th>ESTATUS CONTRALORÍA</th>
                                                 <th>PROCESO URGENTE</th>
+                                                <th>ESTATUS CANCELACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

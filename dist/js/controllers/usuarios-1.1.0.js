@@ -1,9 +1,5 @@
-var dar_baja = _("dar-baja");
-var puestos = [{id : 59, nombre : 'Director regional'}], sedes = []; 
-
 $(document).ready( function() {
     construirHead("all_users_datatable")
-
     $('[data-toggle="tooltip"]').tooltip(); 
     code = '';
     $.getJSON("fillSelectsForUsers").done(function(data) {
@@ -18,10 +14,6 @@ $(document).ready( function() {
 
             if (data[i]['id_catalogo'] == 0){
                 $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-                sedes.push({
-                    id : data[i]['id_opcion'],
-                    nombre : data[i]['nombre']
-                });
             }
         }
         $('#payment_method').selectpicker('refresh');
@@ -32,161 +24,6 @@ $(document).ready( function() {
     fillUsersTable();
 });
 
-$(document).on('change', '#leader', function() {
-    let sede = $('#headquarter').val();
-    let puesto = $('#member_type').val();
-    let lider = $('#leader').val();
-    document.getElementById('lineaVenta').innerHTML = '';
-
-    let puestosVentas = [3,7,9];
-    let sedeSelected = document.getElementById("headquarter");
-    let selectedSede = sedeSelected.options[sedeSelected.selectedIndex].text;
-    let puestoSelected = document.getElementById("member_type");
-    let selectedPuesto = puestoSelected.options[puestoSelected.selectedIndex].text;
-    let nombreSelected = $('#name').val() + ' ' + $('#last_name').val() + ' ' + $('#mothers_last_name').val();
-
-    if(puestosVentas.includes(parseInt(puesto))){
-        $.post("consultarLinea",{
-            sede: sede,
-            puesto: puesto,
-            lider : lider
-        },
-
-        function (data) {
-        let sedesSinRegional = [5,2,3,6];
-        let arraySedes = puesto == 7 ? ( data[0].banderaGer == 0 ? [data[0].idSedeCoor,data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg]) : ( puesto == 9 ? sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeGer,data[0].idSedeSub] : [data[0].idSedeGer,data[0].idSedeSub,data[0].idSedeReg] : sedesSinRegional.includes(parseInt(sede)) ? [data[0].idSedeSub] : [data[0].idSedeSub,data[0].idSedeReg]);
-    let buscarDiff = arraySedes.filter(element => element != sede);
-    if(buscarDiff.length > 0){
-        $('#btn_acept').prop('disabled', true);
-    }else{
-        $('#btn_acept').prop('disabled', false);
-    }
-
-    let tabla = `
-    <div class="row subBoxDetail">
-        <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>NUEVA LÍNEA DE VENTAS</b></label></div>
-        <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label><b>Nombre </b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Puesto</b></label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label><b>Sede</b></label></div>
-        <div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${nombreSelected}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedPuesto}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${selectedSede}</label></div>`;
-        tabla += puesto == 7  ? `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].coordinador}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoCoor}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeCoor}</label></div>` : '';
-        tabla += puesto == 3 ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].gerente}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoGer}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeGerente}</label></div>`;
-        tabla += `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].sub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoSub}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeSubdirector}</label></div>`;
-        tabla += sedesSinRegional.includes(parseInt(sede)) ? '' : `<div class="col-2 col-sm-12 col-md-6 col-lg-6 text-center"><label>${data[0].regional_1}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].puestoReg}</label></div><div class="col-2 col-sm-12 col-md-3 col-lg-3 text-center"><label>${data[0].sedeReg}</label></div>`;
-        tabla += `</div>`;
-        $('#lineaVenta').append(tabla);
-        },"json");
-    }
-});
-$(document).on('change', '#member_type', function() {
-    document.getElementById('lineaVenta').innerHTML = '';
-    //MOC: SI SE DETECTA UN SUBDIRECTOR Ó DIR. REGIONAL AGREGAR OPCIÓN DE MULTIROL
-    if($(this).val() == 2 || $(this).val() == 59){
-        $('#btnmultirol').append(`
-        <button class="btn-data btn-green" type="button" id="btnMultiRol" data-toggle="tooltip" data-placement="top" title="Agregar rol"><i class="fas fa-user-plus"></i></button>
-        `);
-    }else{
-        // document.getElementById('btnmultirol').innerHTML = '';
-        // document.getElementById('multirol').innerHTML = '';
-        $('#index').val(0);
-    }
-});
-
-function validarSede(indexActual){
-    let index = parseInt($('#index').val());
-    let c = 0;
-    for (let j = 0; j < index; j++) {
-        if(document.getElementById(`sedes_${j}`)){
-            if(j != indexActual){
-                let sedeActual = $(`#sedes_${indexActual}`).val();
-                let sedes = $(`#sedes_${j}`).val();
-                if(sedeActual == sedes){
-                    c++;
-                    alerts.showNotification("top", "right",  _("sede-ya-seleccionada"), "warning");
-                    $('#btn_acept').prop('disabled', true);
-                }
-            }
-        }
-    }
-    if(c == 0){
-        $('#btn_acept').prop('disabled', false);
-    }
-}
-
-$(document).on("click","#btnMultiRol",function(){
-    let index = parseInt($('#index').val());
-    $('#multirol').append(`
-            <div class="col-md-12 aligned-row" id="mult_${index}">
-                <div class="col-md-6 pr-0 pr-0">
-                    <div class="form-group text-left m-0">
-                        <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
-                        <select class="selectpicker select-gral m-0" name="multi_${index}" id="multi_${index}" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select></div>
-                    </div>
-                <div class="col-md-4 pr-0 pr-0">
-                    <div class="form-group text-left m-0">
-                        <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
-                        <select class="selectpicker select-gral m-0" onchange="validarSede(${index},'sedes_');" name="sedes_${index}" id="sedes_${index}" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-live-search="true" data-container="body"></select>
-                    </div>
-                </div>
-                <div class="col-md-2 justify-center d-flex align-end">
-                    <div class="form-group m-0 p-0">
-                        <button class="btn-data btn-warning mb-1" type="button" onclick="borrarMulti(${index})" data-toggle="tooltip" data-placement="top" title="Eliminar rol"><i class="fa fa-trash"></i></button>
-                    </div>
-                </div>
-            </div>`);
-        $('[data-toggle="tooltip"]').tooltip();
-        for (var i = 0; i < puestos.length; i++) {
-            var id = puestos[i].id;
-            var name = puestos[i].nombre;
-            $(`#multi_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        for (var i = 0; i < sedes.length; i++) {
-            var id = sedes[i].id;
-            var name = sedes[i].nombre;
-            $(`#sedes_${index}`).append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $(`#multi_${index}`).selectpicker('refresh');
-        $(`#sedes_${index}`).selectpicker('refresh');
-        index = parseInt(index + 1);
-        $('#index').val(index);
-});
-
-$("#deleteRol").on('submit', function(e){
-    let indice = $('#indice').val();
-
-    e.preventDefault();
-    $.ajax({
-        type: 'POST',
-        url: 'borrarMulti',
-        data: new FormData(this),
-        contentType: false,
-        cache: false,
-        processData:false,
-        beforeSend: function(){},
-        success: function(data) {
-            if (data == true) {
-                alerts.showNotification("top", "right",  _("rol-eliminado-correctamente"), "success");
-                $('#modalDelRol').modal('toggle');
-                document.getElementById(`mult_${indice}`).innerHTML = '';
-                document.getElementById("deleteRol").reset();
-            } else {
-                alerts.showNotification("top", "right",_("algo-salio-mal"), "danger");
-            }
-        },
-        error: function(){
-            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
-        }
-    });
-});
-
-function borrarMulti(index,id = ''){
-
-    if( id != ''){
-        $('#idRU').val(id);
-        $('#indice').val(index);
-        $('#modalDelRol').modal('show');
-    }else{
-        document.getElementById(`mult_${index}`).innerHTML = '';
-    }
-}
 //DESCARGAR BT-EXCEL
 function translationsUserTable() {
     onChangeTranslations(function() {
@@ -194,6 +31,7 @@ function translationsUserTable() {
         
     });
 }
+
 function fillUsersTable() {
     const $allUsersTable = $('#all_users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -203,8 +41,8 @@ function fillUsersTable() {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: " _('descargar-excel'))", 
-            title: 'Listado de usuarios',
+            titleAttr: 'Listado de usuarios',
+            title: _("lista-usuarios"),
             exportOptions: {
                 columns: [0,1,2,3,4,5,6,7,8],
                 format: {
@@ -232,11 +70,12 @@ function fillUsersTable() {
         columns: [{
             data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green"data-i18n="activo">Activo</span><center>';
+                    return '<center><span class="label lbl-green" data-i18n="activo">ACTIVO</span><center>';
                 } else if (d.estatus == 3) {
                     return '<center><span class="label lbl-orangeYellow" data-i18n="inactivo-comisionado">INACTIVO COMISIONADO</span><center>';
+                    return '<center><span class="label lbl-orangeYellow" data-i18n="inactivo-comisionado">INACTIVO COMISIONADO</span><center>';
                 } else {
-                    return '<center><span class="label lbl-warning" data-i18n="inactivo">Inactivo</span><center>';
+                    return '<center><span class="label lbl-warning" data-i18n="inactivo">INACTIVO</span><center>';
                 }
             }
         },
@@ -285,7 +124,7 @@ function fillUsersTable() {
         },
         {
             data: function (d) {
-                return d.jefe_directo == '  ' ? _('no-aplica') : d.jefe_directo;
+                return d.jefe_directo == '  ' ? '<span data-i18n="no-aplica"> NO APLICA </span>' : d.jefe_directo;
             }
         },
         {
@@ -294,29 +133,29 @@ function fillUsersTable() {
                 if(id_rol == 8 && d.estatus == 1){
                     if (id_usuario_general == 1297 || id_usuario_general == 1) { 
                         // filtro para soporte excluyendo ambos perfiles
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion"  data-id-usuario="' + d.id_usuario +'"> '+
-                        '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
-                            '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+
+                        return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" data-i18n-label="editar-informacion" title="EDITAR INFORMACIÓN" data-id-usuario="' + d.id_usuario +'"> '+
+                        '<i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow  see-changes-log"  data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" data-i18n-label="bitacora-cambios" title="CONSULTA LA INFORMACIÓN" ><i class="fas fa-eye"></i> </button>' +
+                            '<button class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'" data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="dar-baja" title="DAR DE BAJA"><i class="fas fa-lock"></i></button>'+
                             '</div>';
                         } 
                         else {
                             //TODO SOPORTE
-                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top"title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
-                            '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock"></i></button></div>';
+                            return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" data-i18n-label="editar-informacion" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="bitacora-cambios" title="BITÁCORA DE CAMBIOS"class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' +
+                            '<button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="dar-baja" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario +'" data-estatus="0" data-id-usuario="' + d.id_usuario +'" data-name="'+d.nombre+'" data-rol="'+d.puesto+'" data-idrol="'+d.id_rol+'"><i class="fas fa-lock"></i></button></div>';
                         }
                     }
                 else {
                     if (id_usuario_general == 1297 || id_usuario_general == 1) {
-                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
+                        return '<div class="d-flex justify-center"><button data-toggle="tooltip" data-placement="top" data-i18n-tooltip="editar-informacion" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="bitacora-cambios" title="BITACORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" ><i class="fas fa-eye"></i> </button>' ;
                         }
                         else {
                             if (id_usuario_general != 1297 || id_usuario_general != 1  ) {
                                 let bt = ``;
                                 if (id_usuario_general != 16621)
-                                    bt =  '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
-                                    '<button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" ><i class="fas fa-eye"></i> </button>' ;
+                                    bt =  '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="editar-informacion" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="'+d.id_rol+'" data-id-usuario="' + d.id_usuario +'"><i class="fas fa-pencil-alt"></i></button>' +
+                                    '<button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="editar-informacion" data-i18n-tooltip="bitacora-cambios" title="BITACORA DE CAMBIOS" ><i class="fas fa-eye"></i> </button>' ;
                                 else
-                                    bt = '<div class="d-flex justify-center"><button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" ><i class="fas fa-eye"></i> </button>' ;
+                                    bt = '<div class="d-flex justify-center"><button  class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario +'" data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="editar-informacion" data-i18n-tooltip="bitacora-cambios" title="BITACORA DE CAMBIOS" ><i class="fas fa-eye"></i> </button>' ;
                                     if ((d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') && (id_rol != 6 && id_rol != 5 && id_rol != 4)) {
                                 }
                                 else {
@@ -346,9 +185,9 @@ function fillUsersTable() {
                 }
                 else{
                     if (d.estatus == 1) {
-                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" title="'+_('editar-informacion')+'"data-i18n-tooltip="editar-informacion"class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
-                            '<button data-toggle="tooltip"  data-placement="top" title="'+_('bitacora-cambios')+'"data-i18n-tooltip="bitacora-cambios" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
-                            '<button data-toggle="tooltip"  data-placement="top" title="DAR DE BAJA" class="btn-data btn-warning change-user-status"  id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-idrol="'+d.id_rol+'"><i class="fas fa-lock"></i></button>'+ '</div>';
+                        return '<div class="d-flex justify-center"><button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="editar-informacion" title="EDITAR INFORMACIÓN" class="btn-data btn-blueMaderas edit-user-information" data-rol="' + d.id_rol + '" data-id-usuario="' + d.id_usuario + '"><i class="fas fa-pencil-alt"></i></button>' +
+                            '<button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="bitacora-cambios" data-i18n-tooltip="bitacora-cambios" title="BITÁCORA DE CAMBIOS" class="btn-data btn-orangeYellow  see-changes-log" data-id-usuario="' + d.id_usuario + '" ><i class="fas fa-eye"></i> </button>' +
+                            '<button data-toggle="tooltip"  data-placement="top" data-i18n-tooltip="dar-baja" title="DAR DE BAJA" class="btn-data btn-warning change-user-status" id="' + d.id_usuario + '" data-estatus="0" data-id-usuario="' + d.id_usuario + '" data-name="' + d.nombre + '" data-rol="' + d.puesto + '" data-idrol="'+d.id_rol+'"><i class="fas fa-lock"></i></button>'+ '</div>';
                         } 
                         else {
                         if (d.puesto == 'Asesor' || d.puesto == 'Coordinador de ventas' || d.puesto == 'Gerente') {
@@ -432,18 +271,18 @@ $("#my_add_user_form").on('submit', function(e){
             success: function(data) {
                 data = JSON.parse(data);
                 if (data.response == 1) {
-                    alerts.showNotification("top", "right", _("usuario-registrado-correctamente"), "success");
+                    alerts.showNotification("top", "right", _("usuario-registrado"), "success");
                     setTimeout(function() {
                         document.location.reload();
                     }, 3000);
                 } else if(data.response == -1){
-                    alerts.showNotification("top", "right", _("nombre-usuario-en-uso"), "warning");
+                    alerts.showNotification("top", "right", _("usuario-ya-existe"), "warning");
                     $('#username').focus();
                 } else if(data.response == -2){
                     alerts.showNotification("top", "right", _("selecciona-opciones-menu"), "warning");
                     $('#seleccionaTodo').focus();
                 }else{
-                    alerts.showNotification("top", "right",_("campos-minimos"), "warning");
+                    alerts.showNotification("top", "right", _("campos-llenos-requeridos"), "warning");
                 }
             },
             error: function(){
@@ -452,80 +291,6 @@ $("#my_add_user_form").on('submit', function(e){
         });
     }
 });
-function validarNuevoUsuario(){
-    let flagSubmit = false;
-    let nombre = $('#name').val();
-    let last_name = $('#last_name').val();
-    let mothers_last_name = $('#mothers_last_name').val();
-    let email = $('#email').val();
-    let payment_method = $('#payment_method').val();
-    let phone_number = $('#phone_number').val();
-    let headquarter = $('#headquarter').val();
-    let member_type = $('#member_type').val();
-    let leader = $('#leader').val();
-    let username = $('#username').val();
-    let contrasena = $('#contrasena').val();
-    let checkboxGeneral = $('#checkboxGeneral').is(":checked");
-
-    if(nombre=='' || nombre==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-nombre"), 'warning');
-        $('#name').focus();
-        flagSubmit = false;
-    }
-    else if(last_name=='' || last_name==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-apellido-pa"), 'warning');
-        $('#last_name').focus();
-        flagSubmit = false;
-    }
-    else if(email=='' || email==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-correo"), 'warning');
-        $('#email').focus();
-        flagSubmit = false;
-    }
-    else if(payment_method=='' || payment_method==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-metodo-pago"), 'warning');
-        $('#payment_method').focus();
-        flagSubmit = false;
-    }
-    else if(phone_number=='' || phone_number==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-telefono"), 'warning');
-        $('#phone_number').focus();
-        flagSubmit = false;
-    }
-    else if(headquarter=='' || headquarter==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-sede"), 'warning');
-        $('#headquarter').focus();
-        flagSubmit = false;
-    }
-    else if(member_type=='' || member_type==undefined){
-        alerts.showNotification('top', 'right',_("selecciona-miembro"), 'warning');
-        $('#member_type').focus();
-        flagSubmit = false;
-    }
-    else if(leader=='' || leader==undefined){
-        alerts.showNotification('top', 'right', _("selecciona-miembro"), 'warning');
-        $('#leader').focus();
-        flagSubmit = false;
-    }
-    else if(username=='' || username==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-nombre-usuario"), 'warning');
-        $('#username').focus();
-        flagSubmit = false;
-    }
-    else if(contrasena=='' || contrasena==undefined){
-        alerts.showNotification('top', 'right', _("ingresa-contraseña"), 'warning');
-        $('#contrasena').focus();
-        flagSubmit = false;
-    }
-    // else if(checkboxGeneral=='' || checkboxGeneral==undefined){
-    //     alerts.showNotification('top', 'right', 'Selecciona alguna opción de menú', 'warning');
-    //     flagSubmit = false;
-    // }
-    else{
-        flagSubmit = true;
-    }
-    return flagSubmit;
-}
 
 function getLeadersList(){
     headquarter = $('#headquarter').val();
@@ -625,7 +390,7 @@ $("#BajaUserForm").on('submit', function(e){
                 CloseModalBaja();
                 $allUsersTable.ajax.reload();
             }else{
-                alerts.showNotification("top", "right", _("campos-minimos"), "warning");
+                alerts.showNotification("top", "right", _("campos-llenos-requeridos"), "warning");
             }
             document.getElementById('btnS').disabled = false;
         },
@@ -709,14 +474,14 @@ $(document).on('click', '.change-user-status', function(e) {
         $('#id_rol').val(0);
         $('#status').val(0);
         if(estatus == 0){
-            document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de baja a ';
+            document.getElementById('msj').innerHTML = '<span data-i18n="seguro-dar-baja">¿Está seguro que desea dar de baja a </span>';
             document.getElementById('nameUs2').innerHTML = nameUser;
             $('#iduser').val(id_user);
             $('#id_rol').val(id_rol);
             $('#status').val(estatus);
             $("#BajaConfirm").modal();
         }else{
-            document.getElementById('msj').innerHTML = '¿Está seguro que desea dar de alta a ';
+            document.getElementById('msj').innerHTML = '<span data-i18n="seguro-dar-alta">¿Está seguro que desea dar de alta a </span>';
             document.getElementById('nameUs2').innerHTML = nameUser;
             $('#iduser').val(id_user);
             $('#id_rol').val(id_rol);
@@ -729,7 +494,6 @@ $(document).on('click', '.change-user-status', function(e) {
 
 $(document).on('click', '.edit-user-information', function(e){
     id_usuario = $(this).attr("data-id-usuario");
-    document.getElementById('lineaVenta').innerHTML = '';
     $('#btn_acept').prop('disabled', false);
     $('.simbolico_column').html('');
     $('.col-estructura').html('');
@@ -751,9 +515,9 @@ $(document).on('click', '.edit-user-information', function(e){
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">${_("nueva-estructura")}(<small class="isRequired">*</small>)</label>
-                            <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
+                            <select class="selectpicker select-gral m-0" id="nueva_estructura" name="nueva_estructura" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                 <option value="0" ${ (v.nueva_estructura == 0 || v.nueva_estructura != null ) ? 'checked' : ''}>No</option>
-                                <option value="1" ${ (v.nueva_estructura == 1 || v.nueva_estructura != null ) ? 'checked' : ''}>Sí</option>
+                                <option value="1" ${ (v.nueva_estructura == 1 || v.nueva_estructura != null ) ? 'checked' : ''} data-i18n="si">Sí</option>
                             </select>
                         </div>
                     </div>
@@ -763,8 +527,8 @@ $(document).on('click', '.edit-user-information', function(e){
                         <div class="col-sm-6 mt-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
                             <label class="control-label"><small class="isRequired">*</small>${_("asesor-factor-humano")}</label>
-                            <select class="selectpicker select-gral m-0" id="fac_humano" name="fac_humano" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                <option value="1" ${ (v.fac_humano == 1 || v.fac_humano == '1' ) ? 'selected' : ''}>SÍ</option>
+                            <select class="selectpicker select-gral m-0" id="fac_humano" name="fac_humano" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
+                                <option value="1" ${ (v.fac_humano == 1 || v.fac_humano == '1' ) ? 'selected' : ''} data-i18n="si">SÍ</option>
                                 <option value="0" ${ (v.fac_humano == 0 || v.fac_humano == '0' || v.fac_humano == null ) ? 'selected' : ''}>NO</option>
                             </select>
                         </div>
@@ -780,8 +544,8 @@ $(document).on('click', '.edit-user-information', function(e){
                     <div class="col-sm-3 mt-3">
                         <div class="form-group label-floating select-is-empty div_membertype">
                             <label class="control-label"><small class="isRequired">*</small>${_("asesor-simbolico")}</label>
-                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" data-live-search="true" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
-                                <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''}>SÍ</option>
+                            <select class="selectpicker select-gral m-0" id="simbolicoType" name="simbolicoType" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-simbolico" title="Seleccione sí es simbolíco" data-size="7" data-container="body" required>
+                                <option value="1" ${ (v.simbolico == 1 || v.simbolico == '1' ) ? 'selected' : ''} data-i18n="si">SÍ</option>
                                 <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
                             </select>
                         </div>
@@ -810,7 +574,7 @@ $(document).on('click', '.edit-user-information', function(e){
 $(document).on('change', '#sedech', function() {
     let id_sede = $('#sedech').val();
     $("#sucursal").empty();
-    $("#sucursal").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
+    $("#sucursal").append($('<option disabled selected>').val("").text(_("selecciona-una-opcion")));
     $.getJSON("getSucursalCH/"+id_sede).done( function( data ){
         var select = document.getElementsByName('sucursal')[0];
         if(data.data.length > 0){
@@ -832,7 +596,7 @@ function getSedesCH(sede = 0,sucursal = 0){
     $('#spiner-loader').removeClass('hide');
     $('#sedech').selectpicker('refresh');
     $("#sedech").empty();
-    sede == 0 ?  $("#sedech").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN")) : '';
+    sede == 0 ?  $("#sedech").append($('<option disabled selected>').val("").text(_("selecciona-una-opcion"))) : '';
     $('#sedech').prop('required', true);
     $.getJSON("getSedesCH").done( function( data ){
         $('#spiner-loader').addClass('hide');
@@ -878,7 +642,7 @@ function fillFields (v) {
     $("#member_type").val(v.id_rol);
     let rol_asignado = v.id_rol;
     if (v.id_rol == 2 && (v.id_usuario == 3 || v.id_usuario == 5 || v.id_usuario == 607 || v.id_usuario == 4 ))
-        $("#member_type option[value=2]").text("DIRECTOR REGIONAL");
+        $("#member_type option[value=2]").text(_("director-regional"));
     else if (v.id_rol == 2 && (v.id_usuario != 3 || v.id_usuario != 5 || v.id_usuario != 607))
         $("#member_type option[value=2]").text("SUBDIRECTOR");
     $("#lastTM").val(v.id_rol);
@@ -898,20 +662,20 @@ function fillFields (v) {
         $("#sedech").empty();
         document.getElementById("sucursal").removeAttribute("required");
         $("#sucursal").empty();
-        /*if(v.sedech == null) {
+        if(v.sedech == null) {
             getSedesCH();
         } else {
             getSedesCH(v.sedech,v.sucursalch);
-        }*/
+        }
         $('#sedech').selectpicker('refresh');
         if (v.nueva_estructura == 1) {
-            $("#member_type option[value=7]").text("ASESOR FINANCIERO");
-            $("#member_type option[value=9]").text("LÍDER COMERCIAL");
-            $("#member_type option[value=3]").text("EMBAJADOR");
+            $("#member_type option[value=7]").text(_("asesor-financiero"));
+            $("#member_type option[value=9]").text(_("lider-comercial"));
+            $("#member_type option[value=3]").text(_("embajador"));
         } else {
-            $("#member_type option[value=7]").text("ASESOR");
-            $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
-            $("#member_type option[value=3]").text("GERENTE");
+            $("#member_type option[value=7]").text(_("asesor"));
+            $("#member_type option[value=9]").text(_("coordinador-ventas"));
+            $("#member_type option[value=3]").text(_("gerente"));
         }
     } else {
         $('#ch'). hide();
@@ -979,14 +743,15 @@ $("#editUserForm").on('submit', function(e){
             if (data.respuesta == 1) {
                 $allUsersTable.ajax.reload();
                 $('#editUserModal').modal("hide");
-                alerts.showNotification("top", "right",_("registro-actualizado"), "success");
+                alerts.showNotification("top", "right", _("registro-actualizado"), "success");
             } else if (data.respuesta == 0) {
                 alerts.showNotification("top", "right", data.message, "warning");
             } else {
-                alerts.showNotification("top", "right", _("campos-minimos"), "warning");
+                alerts.showNotification("top", "right", _("campos-llenos-requeridos"), "warning");
             }
         },
         error: function(){
+            alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
         }
     });
@@ -1010,49 +775,49 @@ function fillChangelogUsers(v) {
     switch (v.col_afect) {
         case 'nombre':
             nombreMovimiento = 'Nombre';
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+            dataMovimiento = '<b data-i18n="valor-anterior">Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
         case 'apellido_paterno':
             nombreMovimiento = 'Apellido paterno';
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+            dataMovimiento = '<b data-i18n="valor-anterior">Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
-        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
+        '            <b data-i18n="valor-nuevo">Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
         case 'apellido_materno':
             nombreMovimiento = 'Apellido materno';
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+            dataMovimiento = '<b data-i18n="valor-anterior">Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
         case 'contrasena':
             nombreMovimiento = 'Contraseña';
-            dataMovimiento = 'Cambio de Contraseña';
+            dataMovimiento = '<span data-i18n="cambio-contrasena">Cambio de Contraseña';
         break;
         case 'telefono':
             nombreMovimiento = 'Teléfono';
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+            dataMovimiento = '<b data-i18n="valor-anterior">Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
-        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
+        '            <b data-i18n="valor-nuevo">Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
         case 'imagen_perfil':
             nombreMovimiento = 'Imagen de perfil';
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+            dataMovimiento = '<b data-i18n="valor-anterior">Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
-        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
+        '            <b data-i18n="valor-nuevo">Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
         case 'forma_pago':
             nombreMovimiento = 'Forma de pago';
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+            dataMovimiento = '<b data-i18n="valor-anterior">Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
-        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
+        '            <b data-i18n="valor-nuevo">Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
         default:
             nombreMovimiento = v.col_afect;
-            dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+            dataMovimiento = '<b data-i18n="valor-anterior">Valor anterior:</b> ' + v.anterior + '\n' +
         '            <br>\n' +
-        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
+        '            <b data-i18n="valor-nuevo">Valor nuevo:</b> ' + v.nuevo + '\n';
         break;
     }
 
@@ -1079,72 +844,14 @@ function fillChangelogUsers(v) {
 
 $(document).on('change', '#nueva_estructura', function() {
     if ($(this).val() == 1) {
-        $("#member_type option[value=7]").text("ASESOR FINANCIERO");
-        $("#member_type option[value=9]").text("LÍDER COMERCIAL");
-        $("#member_type option[value=3]").text("EMBAJADOR");
+        $("#member_type option[value=7]").text(_("asesor-financiero"));
+        $("#member_type option[value=9]").text(_("lider-comercial"));
+        $("#member_type option[value=3]").text(_("embajador"));
     } else {
-        $("#member_type option[value=7]").text("ASESOR");
-        $("#member_type option[value=9]").text("COORDINADOR DE VENTAS");
-        $("#member_type option[value=3]").text("GERENTE");
+        $("#member_type option[value=7]").text(_("asesor"));
+        $("#member_type option[value=9]").text(_("coordinador-ventas"));
+        $("#member_type option[value=3]").text(_("gerente"));
     }
     $("#member_type").val('').selectpicker("refresh");
     $("#leader").val('').selectpicker("refresh");
 });
-
-function menuOptions(member_type){
-    let valueMemberType = member_type;
-    $.ajax({
-        url: general_base_url+'Usuarios/getMenuOptionsByRol/'+valueMemberType,
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            printMenuCheck(response);
-        }
-    });
-}
-
-function printMenuCheck(data){
-    let contenedorHTML = document.getElementById('listadoHTML');
-    let containerMenu = document.getElementById('containerMenu');
-    contenedorHTML.innerHTML = '';
-    let contenidoInternoHTML = '';
-    let selectorTodo = '';
-    let arrayInterno = [];
-    let arrayJSON = '';
-    data.map((elemento, index)=>{
-        if(elemento.hijos == 1 || Number.isInteger(elemento.orden)){
-            arrayInterno = [];
-            arrayInterno.push(elemento.padre);
-            arrayInterno.push(elemento.idmenu);
-            arrayInterno.push(elemento.orden);
-            arrayJSON = JSON.stringify(arrayInterno);
-            contenidoInternoHTML += '<ul><li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="padre'+elemento.nombre+index+'"> <label for="padre'+elemento.nombre+index+'"> '+elemento.nombre+'</label></li><ul>';
-            data.map((element2, index2)=>{
-                arrayInterno = [];
-                if(element2.hijos == 0 && ((element2.orden>=data[index].orden ) && (element2.orden<=(data[index].orden+1)))){
-                    arrayInterno.push(element2.padre);
-                    arrayInterno.push(element2.idmenu);
-                    arrayInterno.push(element2.orden);
-                    arrayJSON = JSON.stringify(arrayInterno);
-                    contenidoInternoHTML += '<li><input value="'+arrayJSON+'" type="checkbox" name="menu[]" id="'+element2.nombre+index2+'"> <label for="'+element2.nombre+index2+'"> '+element2.nombre+'</label></li>';
-                }
-            });
-            contenidoInternoHTML += '</ul></ul>';
-        }
-    });
-    selectorTodo = '<input type="checkbox" name="seleccionaTodo" class="seleccionaTodo" id="seleccionaTodo"/> <label for="seleccionaTodo"> Seleccionar todas las opciones</label>';
-    contenedorHTML.innerHTML += selectorTodo;
-    contenedorHTML.innerHTML += contenidoInternoHTML;
-    contenedorHTML.style.height = '300px';
-    contenedorHTML.style.overflowY = 'auto';
-    containerMenu.classList.remove('hide');
-}
-
-
-$(document).on('click', '#seleccionaTodo', function(){
-    if ($(this).is(':checked')) {
-        $('input:checkbox').attr('checked', true);
-    } else {
-        $('input:checkbox').attr('checked', false);
-    }
-})

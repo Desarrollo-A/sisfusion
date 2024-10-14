@@ -140,20 +140,6 @@ $('#idLote').change(function () {
     const seleccion = $(this).val();
     const datos = seleccion.split(',');
     const valorSeleccionado = datos[0];
-    /* let titulos = [];
-
-    $('#tableDoct thead tr:eq(0) th').each(function (i) {
-        $(this).css('text-align', 'center');
-        const title = $(this).text();
-        titulos.push(title);
-
-        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if ($('#tableDoct').DataTable().column(i).search() !== this.value) {
-                $('#tableDoct').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    }); */
 
     let tabla_6 = $('#tableDoct').DataTable({
         destroy: true,
@@ -630,7 +616,6 @@ $(document).on("click", "#sendRequestButton", function () {
         data.append('tituloDocumento', $('#tituloDocumento').val());
 
         $.ajax({
-            //url: "subirArchivo",
             url: `${general_base_url}Documentacion/subirArchivo`,
             data: data,
             cache: false,
@@ -646,9 +631,7 @@ $(document).on("click", "#sendRequestButton", function () {
 
                 if (res.code === 200) {
                     alerts.showNotification("top", "right", `${_("el-documento")} ${nombreDocumento} ${_("descarga-exito")}`, "success");
-                    console.log("documentacionTable: ", documentacionLoteTabla);
                     documentacionLoteTabla.ajax.reload();
-
                     $("#addDeleteFileModal").modal("hide");
                 }
 
@@ -672,7 +655,6 @@ $(document).on("click", "#sendRequestButton", function () {
         data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
 
         $.ajax({
-            //url: "eliminarArchivo",
             url: `${general_base_url}Documentacion/eliminarArchivo`,
             data: data,
             cache: false,

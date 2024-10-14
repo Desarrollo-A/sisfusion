@@ -419,7 +419,7 @@ class Contratacion_model extends CI_Model {
       else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
          $idsGerente = $id_lider . ", 7474";
       else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
-         $idsGerente = $id_lider . ", 13821";
+         $idsGerente = $id_lider . ", 13821, 234";
       else if ($id_usuario == 16813) // Vanessa Castro Muñoz
          $idsGerente = $id_lider . ", 11680";
       else if ($id_usuario == 2987) // Alan Michell Alba Sánchez

@@ -48,7 +48,8 @@ class Reestructura_model extends CI_Model
         tbl.totalCorridaFusion, tbl.totalCorridasFusionNumero, tbl.totalContratosFusion, tbl.totalContratoFusionNumero, tbl.totalContratoFirmadoFusionNumero, tbl.totalRescisionFusion, tbl.totalRescisionFusionNumero, tbl.comentario, 
         tbl.id_estatus_modificacion, tbl.estatus_modificacion, tbl.estatus_modificacion_color, tbl.id_juridico_preproceso, tbl.sedeAsesorAsignado, tbl.idAsesorAsignado, tbl.id_lider, tbl.nombreEjecutivoJuridico, tbl.idStatusLote, 
         tbl.tipo_estatus_regreso, tbl.contratoFirmadoFusion, tbl.flagProcesoContraloria, tbl.flagProcesoJuridico, tbl.cantidadTraspaso, tbl.comentarioTraspaso, tbl.fechaUltimoEstatus, tbl.fechaVencimiento, tbl.lotePreseleccionado, 
-        tbl.nombreLotePreseleccionado, tbl.banderaProcesoUrgenteTexto, tbl.banderaProcesoUrgente, tbl.bucket
+        tbl.nombreLotePreseleccionado, tbl.banderaProcesoUrgenteTexto, tbl.banderaProcesoUrgente, tbl.bucket,
+        tbl.inicioCancelacionFlag, tbl.labelInicioCancelacion, tbl.textoInicioCancelacionFlag
         FROM (
        SELECT dxc4.flagProcesoContraloria AS flagContraloriaFusion, dxc4.flagProcesoJuridico AS flagJuridicoFusion, lf.rescision,cl.plan_comision, lo.registro_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
@@ -76,7 +77,9 @@ class Reestructura_model extends CI_Model
         ISNULL(dxc2.flagProcesoContraloria, 0) flagProcesoContraloria, ISNULL(dxc2.flagProcesoJuridico, 0) flagProcesoJuridico, 
         dxc2.cantidadTraspaso, dxc2.comentario comentarioTraspaso, hpl3.fechaUltimoEstatus, lo.fechaVencimiento, ISNULL(pxl4.id_lotep, 0) lotePreseleccionado, ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLotePreseleccionado,
         CASE WHEN ISNULL(dxc2.banderaProcesoUrgente, 0) = 0 THEN 'NO APLICA' ELSE 'URGENTE' END banderaProcesoUrgenteTexto,
-        ISNULL(dxc2.banderaProcesoUrgente, 0) banderaProcesoUrgente, HD.bucket
+        ISNULL(dxc2.banderaProcesoUrgente, 0) banderaProcesoUrgente, HD.bucket,
+        lo.inicioCancelacionFlag, CASE lo.inicioCancelacionFlag WHEN 1 THEN 'lbl-blueMaderas' ELSE 'lbl-gray' END labelInicioCancelacion,
+        CASE lo.inicioCancelacionFlag WHEN 1 THEN 'CANCELACIÓN EN PROCESO' ELSE 'NO APLICA' END textoInicioCancelacionFlag
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6, 7)
         LEFT JOIN ( select dxc.* 
@@ -137,7 +140,7 @@ class Reestructura_model extends CI_Model
         tbl.totalCorridaFusion, tbl.totalCorridasFusionNumero, tbl.totalContratosFusion, tbl.totalContratoFusionNumero, tbl.totalContratoFirmadoFusionNumero, tbl.totalRescisionFusion, tbl.totalRescisionFusionNumero, tbl.comentario, 
         tbl.id_estatus_modificacion, tbl.estatus_modificacion, tbl.estatus_modificacion_color, tbl.id_juridico_preproceso, tbl.sedeAsesorAsignado, tbl.idAsesorAsignado, tbl.id_lider, tbl.nombreEjecutivoJuridico, tbl.idStatusLote, 
         tbl.tipo_estatus_regreso, tbl.contratoFirmadoFusion, tbl.flagProcesoContraloria, tbl.flagProcesoJuridico, tbl.cantidadTraspaso, tbl.comentarioTraspaso, tbl.fechaUltimoEstatus, tbl.fechaVencimiento, tbl.lotePreseleccionado, 
-        tbl.nombreLotePreseleccionado, tbl.banderaProcesoUrgenteTexto, tbl.banderaProcesoUrgente, tbl.bucket")->result_array();
+        tbl.nombreLotePreseleccionado, tbl.banderaProcesoUrgenteTexto, tbl.banderaProcesoUrgente, tbl.bucket, tbl.inicioCancelacionFlag, tbl.labelInicioCancelacion, tbl.textoInicioCancelacionFlag")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote)
@@ -595,7 +598,9 @@ class Reestructura_model extends CI_Model
                 hl.observacionLiberacion as observacion, 'CONTRATO CANCELADO' AS estatusLiberacion, lo.liberaBandera, lo.idStatusLote, '2' as consulta,
                 ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion, lo.solicitudCancelacion, 'CANCELADA' AS estatusCancelacion,
                 lo.solicitudCancelacion, lo.comentarioReubicacion, CASE WHEN hl.idLiberacion IS NULL THEN lo.comentarioLiberacion ELSE hl.comentarioLiberacion END comentarioLiberacion,
-                UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) usuarioLiberacion
+                UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) usuarioLiberacion, 
+                lo.inicioCancelacionFlag, CASE lo.inicioCancelacionFlag WHEN 1 THEN 'lbl-blueMaderas' ELSE 'lbl-gray' END labelInicioCancelacion,
+                CASE lo.inicioCancelacionFlag WHEN 1 THEN 'CANCELACIÓN EN PROCESO' ELSE 'NO APLICA' END textoInicioCancelacionFlag
             FROM historial_liberacion as hl
                 INNER JOIN lotes as lo ON lo.idLote = hl.idLote
                 INNER JOIN condominios as co ON co.idCondominio = lo.idCondominio
@@ -648,7 +653,9 @@ class Reestructura_model extends CI_Model
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, ISNULL(u6.id_usuario, 0) idAsesorAsignado, 
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, lo.totalNeto2
+        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, lo.totalNeto2,
+        lo.inicioCancelacionFlag, CASE lo.inicioCancelacionFlag WHEN 1 THEN 'lbl-blueMaderas' ELSE 'lbl-gray' END labelInicioCancelacion,
+        CASE lo.inicioCancelacionFlag WHEN 1 THEN 'CANCELACIÓN EN PROCESO' ELSE 'NO APLICA' END textoInicioCancelacionFlag
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6)
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
@@ -889,7 +896,9 @@ class Reestructura_model extends CI_Model
         ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
-        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND (cl.id_gerente = $id_usuario OR cl.id_asesor = $id_usuario)" : ( $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
+        if ($this->session->userdata('id_usuario') == 10534) // BRENDA PAOLA VEGA GUERRERO
+            $id_usuario = $this->session->userdata('id_lider') .  ", 13549, 13549";
+        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND (cl.id_gerente IN ($id_usuario) OR cl.id_asesor IN ($id_usuario))" : ( $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
 
         return $this->db->query(
             "WITH UltimoValor AS (
@@ -2338,4 +2347,9 @@ class Reestructura_model extends CI_Model
 
         return $query;
     }
+
+    function getOpcionesModuloCancelacion() {
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (117, 160) AND estatus = 1");
+    }
+
 }
