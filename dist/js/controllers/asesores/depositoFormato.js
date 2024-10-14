@@ -1,14 +1,33 @@
+window.onload = function () {
+    const selectElements = document.querySelectorAll('select[data-i18n-label]');
+
+    const updateTitle = (selectElement) => {
+        const selectedOption = selectElement.options[selectElement.selectedIndex]?.text || 'No option selected';
+        selectElement.setAttribute('title', selectedOption);
+    };
+
+    selectElements.forEach(selectElement => {
+        if (selectElement.options.length > 0) {
+            updateTitle(selectElement);
+        }
+
+        selectElement.addEventListener('change', function () {
+            updateTitle(selectElement);
+        });
+    });
+};
+
 let copropietarioCollapse = false;
 let usuariosContraloria = [2752, 2826, 2810, 5957, 6390, 4857, 2834, 11655];
 function validarMensaje(tipoMensaje) {
     if (tipoMensaje === 'danger_1') {
-        alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
+        alerts.showNotification('top', 'right', `${_("alerta-danger_1")}`, 'danger');
         return;
     } else if (tipoMensaje === 'danger_2') {
-        alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
+        alerts.showNotification('top', 'right', `${_("alerta-danger_2")}`, 'danger');
         return;
     } else if (tipoMensaje === 'success') {
-        alerts.showNotification('top', 'right', 'El costo FINAL ingresado es válido', 'success');
+        alerts.showNotification('top', 'right', `${_("costo-final")}`, 'success');
         return;
     }
 }
@@ -30,7 +49,141 @@ $(document).ready(function() {
         });
     }
 
-
+    setTimeout(function() {
+    console.warn("Timeout");
+    let spans  = `
+                            <span data-i18n="${_("mensaje-oferta-vigencia1")}">${_("mensaje-oferta-vigencia1")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia2")}">${_("mensaje-oferta-vigencia2")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia3")}">${_("mensaje-oferta-vigencia3")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia4")}">${_("mensaje-oferta-vigencia4")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia5")}">${_("mensaje-oferta-vigencia5")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia6")}">${_("mensaje-oferta-vigencia6")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia7")}">${_("mensaje-oferta-vigencia7")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia8")}">${_("mensaje-oferta-vigencia8")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia9")}">${_("mensaje-oferta-vigencia9")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia10")}">${_("mensaje-oferta-vigencia10")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia11")}">${_("mensaje-oferta-vigencia11")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia12")}">${_("mensaje-oferta-vigencia12")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia13")}">${_("mensaje-oferta-vigencia13")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia14")}">${_("mensaje-oferta-vigencia14")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia15")}">${_("mensaje-oferta-vigencia15")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia16")}">${_("mensaje-oferta-vigencia16")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia17")}">${_("mensaje-oferta-vigencia17")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia18")}">${_("mensaje-oferta-vigencia18")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia19")}">${_("mensaje-oferta-vigencia19")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia20")}">${_("mensaje-oferta-vigencia20")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia21")}">${_("mensaje-oferta-vigencia21")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia22")}">${_("mensaje-oferta-vigencia22")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia23")}">${_("mensaje-oferta-vigencia23")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia24")}">${_("mensaje-oferta-vigencia24")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia25")}">${_("mensaje-oferta-vigencia25")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia26")}">${_("mensaje-oferta-vigencia26")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia27")}">${_("mensaje-oferta-vigencia27")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia28")}">${_("mensaje-oferta-vigencia28")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia29")}">${_("mensaje-oferta-vigencia29")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia30")}">${_("mensaje-oferta-vigencia30")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia31")}">${_("mensaje-oferta-vigencia31")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia32")}">${_("mensaje-oferta-vigencia32")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia33")}">${_("mensaje-oferta-vigencia33")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia34")}">${_("mensaje-oferta-vigencia34")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia35")}">${_("mensaje-oferta-vigencia35")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia36")}">${_("mensaje-oferta-vigencia36")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia37")}">${_("mensaje-oferta-vigencia37")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia38")}">${_("mensaje-oferta-vigencia38")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia39")}">${_("mensaje-oferta-vigencia39")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia40")}">${_("mensaje-oferta-vigencia40")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia41")}">${_("mensaje-oferta-vigencia41")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia42")}">${_("mensaje-oferta-vigencia42")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia43")}">${_("mensaje-oferta-vigencia43")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia44")}">${_("mensaje-oferta-vigencia44")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia45")}">${_("mensaje-oferta-vigencia45")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia46")}">${_("mensaje-oferta-vigencia46")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia47")}">${_("mensaje-oferta-vigencia47")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia48")}">${_("mensaje-oferta-vigencia48")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia49")}">${_("mensaje-oferta-vigencia49")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia50")}">${_("mensaje-oferta-vigencia50")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia51")}">${_("mensaje-oferta-vigencia51")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia52")}">${_("mensaje-oferta-vigencia52")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia53")}">${_("mensaje-oferta-vigencia53")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia54")}">${_("mensaje-oferta-vigencia54")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia55")}">${_("mensaje-oferta-vigencia55")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia56")}">${_("mensaje-oferta-vigencia56")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia57")}">${_("mensaje-oferta-vigencia57")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia58")}">${_("mensaje-oferta-vigencia58")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia59")}">${_("mensaje-oferta-vigencia59")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia60")}">${_("mensaje-oferta-vigencia60")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia61")}">${_("mensaje-oferta-vigencia61")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia62")}">${_("mensaje-oferta-vigencia62")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia63")}">${_("mensaje-oferta-vigencia63")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia64")}">${_("mensaje-oferta-vigencia64")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia65")}">${_("mensaje-oferta-vigencia65")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia66")}">${_("mensaje-oferta-vigencia66")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia67")}">${_("mensaje-oferta-vigencia67")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia68")}">${_("mensaje-oferta-vigencia68")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia69")}">${_("mensaje-oferta-vigencia69")}</span>
+                            <br>
+                            <span data-i18n="${_("mensaje-oferta-vigencia70")}">${_("mensaje-oferta-vigencia70")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia71")}">${_("mensaje-oferta-vigencia71")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia72")}">${_("mensaje-oferta-vigencia72")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia73")}">${_("mensaje-oferta-vigencia73")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia74")}">${_("mensaje-oferta-vigencia74")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia75")}">${_("mensaje-oferta-vigencia75")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia76")}">${_("mensaje-oferta-vigencia76")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia77")}">${_("mensaje-oferta-vigencia77")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia78")}">${_("mensaje-oferta-vigencia78")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia79")}">${_("mensaje-oferta-vigencia79")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia80")}">${_("mensaje-oferta-vigencia80")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia81")}">${_("mensaje-oferta-vigencia81")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia82")}">${_("mensaje-oferta-vigencia82")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia83")}">${_("mensaje-oferta-vigencia83")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia84")}">${_("mensaje-oferta-vigencia84")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia85")}">${_("mensaje-oferta-vigencia85")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia86")}">${_("mensaje-oferta-vigencia86")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia87")}">${_("mensaje-oferta-vigencia87")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia88")}">${_("mensaje-oferta-vigencia88")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia89")}">${_("mensaje-oferta-vigencia89")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia90")}">${_("mensaje-oferta-vigencia90")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia91")}">${_("mensaje-oferta-vigencia91")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia92")}">${_("mensaje-oferta-vigencia92")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia93")}">${_("mensaje-oferta-vigencia93")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia94")}">${_("mensaje-oferta-vigencia94")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia95")}">${_("mensaje-oferta-vigencia95")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia96")}">${_("mensaje-oferta-vigencia96")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia97")}">${_("mensaje-oferta-vigencia97")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia98")}">${_("mensaje-oferta-vigencia98")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia99")}">${_("mensaje-oferta-vigencia99")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia100")}">${_("mensaje-oferta-vigencia100")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia101")}">${_("mensaje-oferta-vigencia101")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia102")}">${_("mensaje-oferta-vigencia102")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia103")}">${_("mensaje-oferta-vigencia103")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia104")}">${_("mensaje-oferta-vigencia104")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia105")}">${_("mensaje-oferta-vigencia105")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia106")}">${_("mensaje-oferta-vigencia106")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia107")}">${_("mensaje-oferta-vigencia107")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia108")}">${_("mensaje-oferta-vigencia108")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia109")}">${_("mensaje-oferta-vigencia109")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia110")}">${_("mensaje-oferta-vigencia110")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia111")}">${_("mensaje-oferta-vigencia111")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia112")}">${_("mensaje-oferta-vigencia112")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia113")}">${_("mensaje-oferta-vigencia113")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia114")}">${_("mensaje-oferta-vigencia114")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia115")}">${_("mensaje-oferta-vigencia115")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia116")}">${_("mensaje-oferta-vigencia116")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia117")}">${_("mensaje-oferta-vigencia117")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia118")}">${_("mensaje-oferta-vigencia118")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia119")}">${_("mensaje-oferta-vigencia119")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia120")}">${_("mensaje-oferta-vigencia120")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia121")}">${_("mensaje-oferta-vigencia121")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia122")}">${_("mensaje-oferta-vigencia122")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia123")}">${_("mensaje-oferta-vigencia123")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia124")}">${_("mensaje-oferta-vigencia124")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia125")}">${_("mensaje-oferta-vigencia125")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia126")}">${_("mensaje-oferta-vigencia126")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia127")}">${_("mensaje-oferta-vigencia127")}</span>
+                            <span data-i18n="${_("mensaje-oferta-vigencia128")}">${_("mensaje-oferta-vigencia128")}</span>
+                        `;
+                        document.getElementById("lablespan").innerHTML = spans;
+    }, 500);
 
 });
 
@@ -41,7 +194,7 @@ function validarCostos() {
 
 
     if (isNaN(costoFinalM2) || isNaN(costoListaM2)) {
-        alerts.showNotification('top', 'right', 'Asegurate que el campo Precio por M2 Final tenga un valor', 'info');
+        alerts.showNotification('top', 'right', `${_("precio-m2-valor")}`, 'info');
         return;
     }
     const clienteInfo = obtenerCliente(cliente);
@@ -106,13 +259,13 @@ function resizeInput() {
 function validaLadas(){
     if($('#telefono1').val() != '' || $('#telefono1').val() == undefined){
         if($('#ladaTelN').val()=='' || $('#ladaTelN').val() == undefined){
-            alerts.showNotification('top', 'right', 'Debes seleccionar la lada para el teléfono 1', 'danger');
+            alerts.showNotification('top', 'right', `${_("tel-1")}`, 'danger');
         }
     }
 
     if($('#telefono2').val() != '' || $('#telefono2').val() != undefined){
         if($('#ladaTel2').val()=='' || $('#ladaTel2').val() == undefined){
-            alerts.showNotification('top', 'right', 'Debes seleccionar la lada para el teléfono 2', 'danger');
+            alerts.showNotification('top', 'right', `${_("tel-2")}`, 'danger');
         }
     }
 }
@@ -121,11 +274,11 @@ function validaTipoVivienda()
 {
     validaLadas();
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
-        alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+        alerts.showNotification('top', 'right', `${_("tipo-vivienda")}`, 'danger');
     }
     else {
         if (!$("input[name='tipoNc_valor']").is(':checked')) {
-            alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
+            alerts.showNotification('top', 'right', `${_("tipo-residencia")}`, 'danger');
             $('#tipoNc_valor').focus();
             $('#label1').addClass('hover_focus');
             $('#label2').addClass('hover_focus');
@@ -136,7 +289,7 @@ function validaTipoVivienda()
         }
         else{
             if(!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
-                alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
+                alerts.showNotification('top', 'right', `${_("opcion-pagares")}`, 'danger');
                 $('.imprimePagare').focus();
                 $('#labelSi1').addClass('hover_focus');
                 $('#labelNo1').addClass('hover_focus');
@@ -147,7 +300,7 @@ function validaTipoVivienda()
             }
             else{
                 if(!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
-                    alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
+                    alerts.showNotification('top', 'right', `${_("carta-domicilio")}`, 'danger');
                     $('.tipo_comprobante').focus();
                     $('#labelSi2').addClass('hover_focus');
                     $('#labelNo2').addClass('hover_focus');
@@ -170,21 +323,21 @@ function validarDia(input) {
     const valor = parseInt(input.value);
     if (!estaEnRango(valor)) {
         input.value = '';
-        alerts.showNotification('top', 'right', 'El día debe estar dentro del rango del 1 al 31.', 'warning');
+        alerts.showNotification('top', 'right', `${_("rango-dias")}`, 'warning');
     }
 }
 
 function validarRFC(input) {
     const regex = /^[A-Z]{4}\d{6}[A-Z0-9]{3}$/;
     if (!regex.test(input.value)) {
-        alerts.showNotification('top', 'right', 'El RFC no tiene el formato correcto', 'warning');
+        alerts.showNotification('top', 'right', `${_("formato-rfc")}`, 'warning');
     }
 }
 
 function validarCodigoPostal(input) {
     const regex = /^\d{5}$/;
     if (!regex.test(input.value)) {
-        alerts.showNotification('top', 'right', 'El código postal debe contener 5 dígitos numéricos.', 'warning');
+        alerts.showNotification('top', 'right', `${_("cp-digitos")}`, 'warning');
     }
 }
 
@@ -200,10 +353,10 @@ const validate = () => {
     $result.text('');
 
     if(validateEmail(email)){
-        $result.text('El correo es válido');
+        $result.text(`${_("correo-valido")}`);
         $result.css('color', 'rgb(26 159 10)');
     } else{
-        $result.text('El correo es inválido.');
+        $result.text(`${_("correo-invalido")}`);
         $result.css('color', 'red');
     }
     return false;
@@ -249,17 +402,46 @@ function historial() {
         const info = JSON.parse(data);
         if (info.length === 0) {
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification('top', 'right', 'No hay registro de movimientos', 'warning');
+            alerts.showNotification('top', 'right', `${_("no-hay-movimientos")}`, 'warning');
             return;
         }
         changeSizeModal('modal-md');
         appendBodyModal(historialCampoHtml(info));
 
-        appendFooterModal(`<button type="button" class="btn btn-danger btn-simple" onclick="hideModal()">Cerrar</button>`);
+        appendFooterModal(`<button type="button" class="btn btn-danger btn-simple" onclick="hideModal()" data-i18n="cerrar">Cerrar</button>`);
         showModal();
         $('#spiner-loader').addClass('hide');
 
     });
+}
+
+function cargarInputs() {
+    var inputs = document.getElementsByTagName("input");
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].name === "cantidad") {
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "costom2f") {
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "costoM2") {
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "importOferta"){
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "saldoDeposito"){
+            inputs[i].value = inputs[i].value;
+        }else if (inputs[i].name === "aportMensualOfer"){
+            inputs[i].value = inputs[i].value;
+        }
+    }
+}
+
+function guardarInputs() {
+  var button = document.getElementsByTagName("button");
+  var inputs = document.getElementsByTagName("input");
+  for (var i = 0; i < inputs.length; i++) {
+    if (button[i].type === "submit") {
+        inputs[i].value = inputs[i].value.replace(/\,/g, "");
+    }
+  }
 }
 
 $( ".letrasCaracteres" ).on( "focusout", function(){
@@ -289,8 +471,53 @@ $( ".espaciosOff" ).on( "focusout", function(){
     input.value = input.value.trim();
 });
 
+$("input[data-type='currency']").on({
+    keyup: function() {
+        formatCurrency($(this));
+    },
+});
+
+function formatCurrency(input, blur) {
+    var input_val = input.val();
+    if (input_val === "") { return; }
+    // original length
+    var original_len = input_val.length;
+
+    // initial caret position 
+    var caret_pos = input.prop("selectionStart");
+        
+    // check for decimal
+    if (input_val.indexOf(".") >= 0) {
+        var decimal_pos = input_val.indexOf(".");
+        var left_side = input_val.substring(0, decimal_pos);
+        var right_side = input_val.substring(decimal_pos);
+        left_side = formatNumber(left_side);
+        right_side = formatNumber(right_side);
+        if (blur === "blur") {
+            right_side += "00";
+        }
+        right_side = right_side.substring(0, 2);
+        input_val = "$" + left_side + "." + right_side;
+
+    } else {
+        input_val = formatNumber(input_val);
+        input_val = "$" + input_val;
+        if (blur === "blur") {
+        input_val += ".00";
+        }
+    }
+    input.val(input_val);
+    var updated_len = input_val.length;
+    caret_pos = updated_len - original_len + caret_pos;
+    input[0].setSelectionRange(caret_pos, caret_pos);
+}
+
+function formatNumber(n) {
+    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
 function historialCampoHtml(data) {
-    let dataTable = '<h5>HISTORIAL DE MOVIMIENTOS</h5>';
+    let dataTable = '<h5 data-i18n="historial-movimientos">HISTORIAL DE MOVIMIENTOS</h5>';
 
     dataTable += `
     <div class="container-fluid">
@@ -307,9 +534,9 @@ function historialCampoHtml(data) {
             dataTable += `<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-right"><a class="float-end">${cambio.fecha}</a></div>
             </div>
             </div>
-            <p class="m-0">USUARIO: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
-            <p class="m-0">CAMPO ANTERIOR:<b> ${(cambio.anterior != '') ? cambio.anterior : 'VACIO'} </b></p>
-            <p class="m-0">CAMPO NUEVO:<b> ${cambio.nuevo}</b></p>
+            <p class="m-0"> <span data-i18n="usuario">USUARIO</span>: <b>${(cambio.usuario) ? cambio.usuario : ''} </b></p>
+            <p class="m-0"><span data-i18n="campo-anterior">CAMPO ANTERIOR</span>:<b> ${(cambio.anterior != '') ? cambio.anterior : `${_("vacio")}`} </b></p>
+            <p class="m-0"><span data-i18n="campo-nuevo">CAMPO NUEVO</span>:<b> ${cambio.nuevo}</b></p>
         </li>`;
         });
     });
@@ -401,11 +628,11 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
      // }
 
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
-        alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
+        alerts.showNotification('top', 'right', `${_("tipo-vivienda")}`, 'danger');
         return;
     }
     if (!$("input[name='tipoNc_valor']").is(':checked')) {
-        alerts.showNotification('top', 'right', 'Debes seleccionar el tipo de residencia', 'danger');
+        alerts.showNotification('top', 'right', `${_("tipo-residencia")}`, 'danger');
         $('#tipoNc_valor').focus();
         $('#label1').addClass('hover_focus');
         $('#label2').addClass('hover_focus');
@@ -416,7 +643,7 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
         return;
     }
     if (!$("input[name='imprimePagare']").is(':checked')  && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
-            alerts.showNotification('top', 'right', 'Debes seleccionar la opción de pagares', 'danger');
+            alerts.showNotification('top', 'right', `${_("opcion-pagares")}`, 'danger');
             $('.imprimePagare').focus();
             $('#labelSi1').addClass('hover_focus');
             $('#labelNo1').addClass('hover_focus');
@@ -427,7 +654,7 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
             return;
     }
     if (!$("input[name='tipo_comprobante']").is(':checked') && ($('input[name=tipoNc_valor]:checked').val() == 1)) {
-        alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
+        alerts.showNotification('top', 'right', `${_("carta-domicilio")}`, 'danger');
         $('.tipo_comprobante').focus();
         $('#labelSi2').addClass('hover_focus');
         $('#labelNo2').addClass('hover_focus'); 
@@ -474,17 +701,17 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
             const res = JSON.parse(response);
             $('#depositoSeriedadGuardar').attr('disabled', false);
             if (res.code === 200) {
-                alerts.showNotification("top", "right", 'Datos guardados con éxito', "success");
+                alerts.showNotification("top", "right", `${_("guardado-exito")}`, "success");
             }
             if (res.code === 400) {
                 alerts.showNotification("top", "right", res.message, "warning");
             }
             if (res.code === 500) {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+                alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "warning");
             }
         }, error: function () {
             $('#depositoSeriedadGuardar').attr('disabled', false);
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
         }
     });
 });
@@ -507,7 +734,7 @@ function validateInputArray(input, campo) {
     const inputArr = document.getElementsByName(input);
     for (let i = 0; i < inputArr.length; i++) {
         if (inputArr[i].value.length === 0) {
-            alerts.showNotification('top', 'right', `El campo ${campo} del coopropietario ${i+1} es requerido`, 'danger');
+            alerts.showNotification('top', 'right', `${_("el-campo")} ${campo} ${_("del-coopropietario")} ${i+1} ${_("es-requerido")}`, 'danger');
             result = false;
         }
     }
@@ -521,7 +748,7 @@ $('#estado').change(function(){
         .done(function(data) {
             let options = data.length ? 
                 data.map(item => `<option value="${item.codigo_postal}" data-value="${item.codigo_postal}">${item.codigo_postal}</option>`)
-                : '<option selected="selected" disabled>No se han encontrado registros que mostrar</option>';
+                : `<option selected="selected" disabled>${_("no-se-han-encontrado-reg")}</option>`;
             $("#cp").html(options);
             $("#cp").selectpicker('refresh');
             let selectedCP = $("#cp").data("cp");

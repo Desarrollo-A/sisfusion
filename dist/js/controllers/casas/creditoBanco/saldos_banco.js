@@ -121,24 +121,26 @@ function avanceProcesoBanco(data){
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/setVoBoSaldos`,
+                url: `${general_base_url}casas/voboPaso6`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success : function(response){
+                    response = JSON.parse(response);
+                    console.log(response.avance);
                     if(response.result){
                         if(response.avance == 1){
                             avanceProceso(data, form);
                         }
                         else{
-                            alerts.showNotification("top", "right", response.message, "success")
+                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success")
 
                             table.reload()
                             form.hide()  
                         }                        
                     }
                     else{
-                        alerts.showNotification("top", "right", response.message, "danger")
+                        alerts.showNotification("top", "right", "Error al avanzar el proceso", "danger")
                     }                          
                 },
                 error: function(){
@@ -153,7 +155,6 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 7 }),
             new HiddenField({ id: 'tipoSaldo', value: tipoSaldo }),
             new HiddenField({ id: 'saldoAdmon', value: data.saldoAdmon }),
             new HiddenField({ id: 'saldoOOAM', value: data.saldoOOAM }),
@@ -171,7 +172,7 @@ function avanceProcesoBanco(data){
 function avanceProceso(data, form){
     $.ajax({
         type: 'POST',
-        url: `${general_base_url}casas/creditoBancoAvance`,
+        url: `${general_base_url}casas/avancePaso5_6`,
         data: data,
         contentType: false,
         processData: false,

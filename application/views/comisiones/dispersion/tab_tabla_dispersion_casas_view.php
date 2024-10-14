@@ -11,25 +11,25 @@
                 <div class="form-group">
                     <table class="table-striped table-hover" id="tabla_dispersion_casas" name="tabla_dispersion_casas">
                         <thead>
-                        <tr>
-                            <th></th>
-                            <th>PROYECTO</th>
-                            <th>CONDOMINIO</th>
-                            <th>LOTE</th>
-                            <th>ID LOTE</th>
-                            <th>CLIENTE</th>
-                            <th>TIPO CRÉDITO</th>
-                            <th>MODALIDAD</th>
-                            <th>CONTRATACIÓN</th>
-                            <th>PLAN DE VENTA</th>
-                            <th>COSTO CONSTRUCCIÓN</th>
-                            <th>% COMISION TOTAL</th>
-                            <th>IMPORTE COMISIÓN PAGADA</th>
-                            <th>IMPORTE COMISIÓN PENDIENTE</th>
-                            <th>DETALLES</th>
-                            <th>FECHA ACTUALIZACIÓN</th>
-                            <th>ACCIONES</th>
-                        </tr>
+                            <tr>
+                                <th>DETALLES</th>
+                                <th>PROYECTO</th>
+                                <th>CONDOMINIO</th>
+                                <th>LOTE</th>
+                                <th>ID LOTE</th>
+                                <th>CLIENTE</th>
+                                <th>TIPO CRÉDITO</th>
+                                <th>MODALIDAD</th>
+                                <th>CONTRATACIÓN</th>
+                                <th>PLAN DE VENTA</th>
+                                <th>COSTO CONSTRUCCIÓN</th>
+                                <th>% COMISION TOTAL</th>
+                                <th>IMPORTE COMISIÓN PAGADA</th>
+                                <th>IMPORTE COMISIÓN PENDIENTE</th>
+                                <th>DETALLES</th>
+                                <th>FECHA ACTUALIZACIÓN</th>
+                                <th>ACCIONES</th>
+                            </tr>
                         </thead>
                     </table>
                 </div>

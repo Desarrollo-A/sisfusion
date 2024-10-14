@@ -101,19 +101,24 @@
                                                     <tr>
                                                         <th>ID ANTICIPO</th>
                                                         <th>ID USUARIO</th>
+
                                                         <th>NOMBRE</th>
                                                         <th>PROCESO</th>
+                                                        
                                                         <th>COMENTARIO</th>
                                                         <th>PRIORIDAD</th>
                                                         
                                                         <th>IMPUESTO</th>
-                                                        <th>IMPUESTO</th>
+                                                        <th>DESCUENTO</th>
 
+                                                        <!-- <th>PARCIALIDAD</th>
+                                                        <th>MENSUALIDAD</th> -->
 
                                                         <th>SEDE</th>
                                                         <th>ESQUEMA</th>
+                                                        
                                                         <th>EMPRESA</th>
-                                                        <th>MONTO$$</th>
+                                                        <th>MONTO</th>
                                                         
                                                         <th>ACCIONES</th>
                                                     </tr>

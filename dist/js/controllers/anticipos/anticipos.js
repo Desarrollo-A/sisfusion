@@ -112,39 +112,71 @@ $("#tabla_anticipos").ready(function () {
             { data: 'nombreUsuario' },
             { data: 'puesto' },
 
-
-            
-        
             // { data: 'nombre_empresa' },
-            {    data: function( d ){
-                var mostrar = d.nombre_empresa == null ? 'SELECIONA LA EMPRESA' : d.nombre_empresa;
+            {    data: function( d ){                
+                var mostrar = d.nombre_empresa == null ?  (d.empresa ==  100 ? 'NO APLICA' :'SELECIONA LA EMPRESA')     : d.nombre_empresa;
                 return '<p class="m-0">'+mostrar+'</p>';
             } },
-
-            
             { data: 'comentario' },
+            
+
             { data: 'formaNombre' },
-
-
             {    data: function( d ){
                 return '<p class="m-0">'+formatMoney(d.monto)+'</p>';
             } },
-            {   
-                data: function( d ){
-                var total_impuesto_monto = d.forma_pago == 2 ?  0 :   d.forma_pago == 4  ?  0:  ((d.idsede == 6 ) ? (d.monto*0.04) : (d.monto*0.03)) ;    
-                return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
-            } 
-            },
 
+            //total descuento 
+            {   data: function( d ){
+
+                if(d.montoParcial1 != null ){
+
+                    var total_impuesto_monto = d.forma_pago == 2 ?  0 :   d.forma_pago == 4  ?  0:  ((d.idsede == 6 ) ? (d.montoParcial1*0.04) : (d.montoParcial1*0.03)) ;
+                }else{
+                    var total_impuesto_monto = d.forma_pago == 2 ?  0 :   d.forma_pago == 4  ?  0:  ((d.idsede == 6 ) ? (d.monto*0.04) : (d.monto*0.03)) ;                    
+                }
+ 
+                
+                return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
+            
+            } },
+            // descuento 
             {  data: function( d ){
-                var total_impuesto = d.forma_pago == 2 ?  0 :  (d.idsede == 6 ) ? 4 : 3;
+                var total_impuesto = d.forma_pago == 2 ?  0 :  d.forma_pago == 4  ?  0 :   (d.idsede == 6 ) ? 4 : 3;
                 return '<p class="m-0">'+total_impuesto+'%</p>';
-                } 
-            },
+                } },
             
+            {data: function( d ){
+                // parcialidades 
+                var regresar  = ''; 
+
+                if(d.montoParcial1 != null ){
+
+                    regresar = '<p class="m-0">'+ d.forma_pago == 2 ? d.montoParcial1 : (d.forma_pago == 4 ? d.montoParcial1: formatMoney((d.montoParcial1) - (d.montoParcial1*0.03))) + '</p>';
+                }else{
+                    regresar = '<p class="m-0">'+ d.forma_pago == 2 ? d.monto : (d.forma_pago == 4 ? d.monto: formatMoney((d.monto)-(d.monto*0.03))) + '</p>';
+                    // infoModal = d.montoParcial;
+                }
+                // regresar = '<p class="m-0">'+ d.forma_pago == 2 ? d.monto : (d.forma_pago == 4 ? d.monto: (d.monto*0.03)) + '</p>';
+                return  regresar;
+            }},
+            {data: function( d ){
+                var regresar  = ''; 
+
+                if(d.montoParcial1 != null ){
+
+                    regresar = '<p class="m-0">'+ d.mensualidades + '</p>';
+                }else{
+                    regresar = '<p class="m-0">'+ 1 + '</p>';
+                    // infoModal = d.montoParcial;
+                }
+                // regresar = '<p class="m-0">'+ d.forma_pago == 2 ? d.monto : (d.forma_pago == 4 ? d.monto: (d.monto*0.03)) + '</p>';
+                return  regresar;
+            }},
             { data: 'prioridad_nombre' },
-            { data: 'sede' },
             
+            
+            
+            { data: 'sede' },   
             {
                 data: function( d ){
                     var infoModal = '';
@@ -161,8 +193,9 @@ $("#tabla_anticipos").ready(function () {
                     return infoModal+  Mensualidades;
                 }
             },
-            {
-                data: function (d) {
+            // 14
+
+            {   data: function (d) {
                     var botonesModal = '';
             
                     if (d.evidencia != null) {
@@ -175,7 +208,7 @@ $("#tabla_anticipos").ready(function () {
                     }
 
 
-                    if (d.nombre_empresa == null) {
+                    if (d.nombre_empresa == null && d.empresa != 100) { 
                         botonesModal += `
                             <button href="#" id="empresasAgregar" name="empresasAgregar" 
                             data-anticipo="${d.id_anticipo}"  data-usuario="${d.id_usuario}"
@@ -198,7 +231,7 @@ $("#tabla_anticipos").ready(function () {
                                     <i class="fas fa-history"></i>
                                 </button>
                             </center>`;
-                    } else if( d.nombre_empresa != null)  {
+                    } else if( d.nombre_empresa != null || d.empresa == 100)  {
                         botonesModal += `
                             <center>
                                 <button class="btn-data btn-blueMaderas continuarParcialidad" data-monto="${d.monto}"
@@ -298,11 +331,13 @@ $("#tabla_anticipos").ready(function () {
         $.post(general_base_url + "/Anticipos/datosCatalogos", function (data) {
             // console.log(data);
             var len = data.length;
+            $("#empresaParcia").append($('<option>').val(100).text('No Aplica')); 
             for (var i = 0; i < len; i++) {
                 var id = data[i]['id_opcion'];
                 var name = data[i]['nombre'];
                 $("#empresaParcia").append($('<option>').val(id).text(name));     
             }
+            
             $("#empresaParcia").selectpicker('refresh');
         }, 'json');
         // mostrarOcultarCampos(proceso);
@@ -400,6 +435,7 @@ $("#tabla_anticipos").ready(function () {
         anticipoPData.append("id_usuario", id_usuario);
         anticipoPData.append("id_anticipo", id_anticipo);
         anticipoPData.append("procesoParcialidad", procesoParcialidad);
+        anticipoPData.append("comentario_A", procesoParcialidad);
 
         $.ajax({
             url: general_base_url + 'Anticipos/regresoInternomex',

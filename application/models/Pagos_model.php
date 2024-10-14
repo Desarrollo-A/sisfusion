@@ -242,7 +242,8 @@ class Pagos_model extends CI_Model {
     function consultaComisiones ($id_pago_is){
         $cmd = "SELECT id_pago_i FROM pago_comision_ind WHERE id_pago_i IN ($id_pago_is)";
         $query = $this->db->query($cmd);
-        return count($query->result()) > 0 ? $query->result_array() : 0 ; 
+        $resultado =  count($query->result()) > 0 ? $query->result_array() : 0 ; 
+        return $resultado;
     }
 
     public function report_empresa(){
@@ -632,7 +633,7 @@ class Pagos_model extends CI_Model {
 
     function getDatosNuevasExContraloria($proyecto,$condominio){
         if($this->session->userdata('id_rol') == 31) { // INTERNOMEX
-            $filtro = " pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
+            $filtro = $condominio==0 ? "pci1.estatus IN (8, 88) " : " pci1.estatus IN (8, 88) AND co.idCondominio = $condominio";
             $whereFiltro = "";
         } else { // CONTRALORÍA
             $filtro = " pci1.estatus IN (4)";

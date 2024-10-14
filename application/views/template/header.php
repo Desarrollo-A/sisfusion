@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es_mx"  ng-app="CRM">
+<html lang="es"  ng-app="CRM">
 <head>
 	<!-- <meta charset="utf-8" /> -->
 	 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />

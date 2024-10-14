@@ -2,17 +2,15 @@ var tr;
 var totaPagoBonos = 0;
 
 let titulosp = [];
-    $('#tabla_plaza_1_casas_intmex thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulosp.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+$('#tabla_plaza_1_casas_intmex thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    titulosp.push(title);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
 
-        if (i == 0){
-            $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllS(this)"/>');
-
-        }else{
+    if (i == 0){
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllS(this)"/>');
+    }else{
         $( 'input', this ).on('keyup change', function () {
-            
             if (plaza_intmex.column(i).search() !== this.value ) {
                 plaza_intmex.column(i).search(this.value).draw();
                 var total = 0;
@@ -26,10 +24,10 @@ let titulosp = [];
             }
         });
     }
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
     });
+});
 
 $("#tabla_plaza_1_casas_intmex").ready( function(){
     let c=0;
@@ -227,9 +225,6 @@ $("#tabla_plaza_1_casas_intmex").ready( function(){
         $("#seeInformationModal_casas_intmex").modal();
         $("#nameLote_casas_intmex").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON(general_base_url+"Pagos_casas/getCommentsBono/"+id_pago).done( function( data ){
-
-            console.log(data);(data);
-
             $.each( data, function(i, v){
                 $("#comments-list_casas_intmex").append('<li><div style="margin-right: 10px; class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento.split('.')[0]+'</a></div><div class="col-md-12"><p class="m-0"><small>Modificado por: </small><b> ' +v.nombre_usuario+ '</b></p></div><h6></h6></div></div></li>');
             });

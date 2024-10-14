@@ -29,6 +29,7 @@ capturaContratos = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new NumberField({  id: 'obra', value: data.obra, label: 'Contrato de obra a mano alzada', width: '12', required:true, mask: "#,##0.00" }),
             new NumberField({  id: 'tesoreria', value: data.tesoreria, label: 'Contrato de tesorería', width: '12', required:true, mask: "#,##0.00" }),
@@ -51,7 +52,7 @@ back_to_adeudos = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `creditoBancoAvance`,
+                url: `rechazoPaso10`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -72,7 +73,6 @@ back_to_adeudos = function(data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 4 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
@@ -91,7 +91,7 @@ pass_to_solicitud_contratos = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_solicitud_contratos`,
+                url: `avancePaso10`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -110,6 +110,7 @@ pass_to_solicitud_contratos = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

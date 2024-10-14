@@ -20,8 +20,8 @@ $('#proyectoAsimilados_casas').change(function(){
     $("#autorizarAsimilados_casas").html(formatMoney(0));
     $("#all_asimilado_casas").prop('checked', false);
 
-residencial = $('#proyectoAsimilados_casas').val();
-$("#condominioAsimilados_casas").empty().selectpicker('refresh');
+    residencial = $('#proyectoAsimilados_casas').val();
+    $("#condominioAsimilados_casas").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Pagos_casas/getCondominioDesc/'+residencial,
         type: 'post',
@@ -43,7 +43,6 @@ $('#proyectoAsimilados_casas').change(function(){
     $("#autorizarAsimilados_casas").html(formatMoney(0));
     $("#all_asimilado_casas").prop('checked', false);
 
-    // alert(4555545554);
     proyecto = $('#proyectoAsimilados_casas').val();
     condominio = $('#condominioAsimilados_casas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
@@ -522,48 +521,6 @@ $("#form_interes_casas").submit( function(e) {
         });
     }
 });
-
-
-// $("#formPausarAsimiladosCasas").submit( function(e) {
-//     e.preventDefault();
-//     $('#spiner-loader').removeClass('hide');
-
-// }).validate({
-
-//     submitHandler: function( form ) {
-//         var data = new FormData( $(form)[0] );
-//         data.append("id_pago_i", id_pago_i);
-//         $.ajax({
-//             url: general_base_url + "Pagos_casas/pausar_solicitudM/",
-//             data: data,
-//             cache: false,
-//             contentType: false,
-//             processData: false,
-//             dataType: 'json',
-//             method: 'POST',
-//             type: 'POST',
-//             success: function(data){
-//                 if( data[0] ){
-//                     $("#modalPausarAsimiladosCasas").modal('toggle' );
-//                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
-//                     setTimeout(function() {
-//                         tabla_asimilados_casas_2.ajax.reload();
-//                         $('#spiner-loader').addClass('hide');
-
-//                     }, 3000);
-//                 }else{
-//                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-//                     $('#spiner-loader').addClass('hide');
-
-//                 }
-//             },error: function( ){
-//                 $('#spiner-loader').addClass('hide');
-
-//                 alert("ERROR EN EL SISTEMA");
-//             }
-//         });
-//     }
-// });
     
 function select_all_casas(e) {
     totaPago_asimilados_casas = 0;

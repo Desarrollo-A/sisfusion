@@ -4,7 +4,9 @@ $(document).on('click', '.update_bandera', function(e){
     param = $(this).attr("data-param");
 
     $("#myUpdateBanderaModal .modal-body").html('');
+
     $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param"><h4 class="modal-title">¿Está seguro de regresar el lote <b>'+nombreLote+'</b> a comisiones por dispersar?</h4><center><img src="../static/images/backaw2.gif" width="100" height="100"></center>');
+
     $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
     $("#nombreLote").val(nombreLote);
@@ -21,6 +23,7 @@ $("#my_updatebandera_form").on('submit', function(e){
         cache: false,
         processData:false,
         beforeSend: function(){
+            // Actions before send post
         },
         success: function(data) {
             if (data == 1) {
@@ -200,11 +203,11 @@ $("#tabla_ingresar_9").ready(function () {
             if(d.fecha_modificacion == null ) {
                 lblStats ='';
             
-                lblStats ='<span class="label label-gray" style="background:#AFAFB0;">Sin especificar</span>';
+                lblStats ='<span class="label label-gray" style="color:gray;">Sin especificar</span>';
             
             }else{
 
-                lblStats ='<span class="label label-info" style="background:#11DFC6;">'+d.date_final +'</span>';
+                lblStats ='<span class="label label-info">'+d.date_final +'</span>';
             }
             return lblStats;
         }
@@ -213,19 +216,14 @@ $("#tabla_ingresar_9").ready(function () {
         "width": "8%",
         "data": function( d ){
             var lblStats;
-            var date_neodata
+
             if(d.fecha_modificacion <= '2021-01-01' || d.fecha_modificacion == null ) {
                 lblStats ='';
             }else if (d.registro_comision == 8){
                 lblStats ='<span class="label label-gray" style="color:gray;">Recisión Nueva Venta</span>';
             }
             else {
-                if(d.date_neodata == null){
-                    date_neodata = 'No definida';
-                }else{
-                    date_neodata = d.date_neodata;
-                }
-                lblStats ='<span class="label label-info" >'+date_neodata+'</span>';
+                lblStats ='<span class="label label-info">'+d.date_final+'</span>';
             }
             return lblStats;
         }
@@ -281,7 +279,7 @@ $("#tabla_ingresar_9").ready(function () {
             "targets": 0
         }],
         ajax: {
-            "url": url+'/getDataActivasPago',
+            "url": url+'/Comisiones/getActiveCommissions',
             "dataSrc": "",
             "type": "POST",
             cache: false,

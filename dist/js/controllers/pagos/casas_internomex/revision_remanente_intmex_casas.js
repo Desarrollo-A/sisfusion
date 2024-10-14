@@ -660,24 +660,6 @@ function vistapreviaInformacion(archivo){
     }
 }
 
-// $(document).on("click", ".individualCheck", function() {
-//     totaPen_intmex_casas = 0;
-//     tabla_remanente_casas.$('input[type="checkbox"]').each(function () {
-//         let totalChecados = tabla_remanente_casas.$('input[type="checkbox"]:checked') ;
-//         let totalCheckbox = tabla_remanente_casas.$('input[type="checkbox"]');
-//         if(this.checked){
-//             tr1 = this.closest('tr');
-//             row = tabla_remanente_casas.row(tr1).data();
-//             totaPen_intmex_casas += parseFloat(row.impuesto); 
-//         }
-//         if( totalChecados.length == totalCheckbox.length )
-//             $("#all").prop("checked", true);
-//         else 
-//             $("#all").prop("checked", false); 
-//     });
-//     $("#total_autorizar_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen_intmex_casas)));
-// });
-
 function selectAllIntmexCasas(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -720,7 +702,11 @@ $("#form_multiples_casas").submit( function(e) {
                 if( data == 1){
                     CloseModalDelete2Casas();
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
-                    tabla_remanente_casas.ajax.reload();
+                    if(tabla_remanente_casas!= undefined){
+                        tabla_remanente_casas.ajax.reload();
+                    }
+                    $("#total_autorizar_intmex_casas").html(formatMoney(0));
+                    $("#all_casas_intmex").prop('checked', false);
                 }else{
                     CloseModalDelete2Casas();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");

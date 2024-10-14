@@ -14,15 +14,13 @@ $(document).ready(function() {
         }
         $("#proyectoFactura_casas").selectpicker('refresh');
     }, 'json');
-
-
 });
 
 $('#proyectoFactura_casas').change(function(){
     $("#autorizarFactura_casas").html(formatMoney(0));
     $("#all_facturas").prop("checked", false);
-residencial = $('#proyectoFactura_casas').val();
-$("#condominioFactura_casas").empty().selectpicker('refresh');
+    residencial = $('#proyectoFactura_casas').val();
+    $("#condominioFactura_casas").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Pagos_casas/getCondominioDesc/'+residencial,
         type: 'post',
@@ -435,20 +433,6 @@ function getDataFacturaCasas(proyecto, condominio){
         });
     });
 
-    // $('#tabla_factura_casas').on('click', 'input', function() {
-    //     tr2 = $(this).closest('tr');
-    //     var row = tabla_factura_casas_2.row(tr2).data();
-    //     if (row.monto == 0) {
-    //         row.monto = row.impuesto;
-    //         totaPago_casas += parseFloat(row.monto);
-    //         tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-    //     } 
-    //     else {
-    //         totaPago_casas -= parseFloat(row.monto);
-    //         row.monto = 0;
-    //     }
-    //     $("#autorizarFactura_casas").html(formatMoney(numberTwoDecimal(totaPago_casas)));
-    // });
 
     $('#tabla_factura_casas').on("click", 'input', function() {
         totaPago_casas = 0;

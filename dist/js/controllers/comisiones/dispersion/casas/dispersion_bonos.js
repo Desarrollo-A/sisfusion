@@ -35,9 +35,9 @@ $('#tabla_dispersar_comisiones thead tr:eq(0) th').each(function (i) {
                 document.getElementById("myText_nuevas").textContent = formatMoney(total);
             }
         });
-    }else 
-    $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip_nuevas"  data-placement="top" title="SELECCIONAR"/>`);
-
+    }else {
+        $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip_nuevas"  data-placement="top" title="SELECCIONAR"/>`);
+    }
 });
 
 
@@ -77,8 +77,6 @@ $("#tabla_dispersar_comisiones").ready(function () {
                     if ($('input[name="idT[]"]:checked').length > 0) {
 
                         var data = tabla_nuevas.row().data();
-
-                        //$('#spiner-loader').removeClass('hide');
                         var idcomision = $(tabla_nuevas.$('input[name="idT[]"]:checked')).map(function () {
                             return this.value;
                         }).get();
@@ -282,58 +280,55 @@ $("#tabla_dispersar_comisiones").ready(function () {
 
 
     $("#tabla_dispersar_comisiones tbody").on("click", ".dispersarPago", function (e) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    const idPagoI = $(this).val(), nombreLote = $(this).attr("data-value"), monto = $(this).attr("data-monto"), idLote = $(this).attr("data-idLote"), idComision =  $(this).attr("data-idComision"),
-    totalNeto2 = $(this).attr("data-totalNeto2");
-        
-    $("#modalDispersion .modal-header").html("");
-    $("#modalDispersion .modal-body").html("");
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const idPagoI = $(this).val(), nombreLote = $(this).attr("data-value"), monto = $(this).attr("data-monto"), idLote = $(this).attr("data-idLote"), idComision =  $(this).attr("data-idComision"),
+        totalNeto2 = $(this).attr("data-totalNeto2");
+            
+        $("#modalDispersion .modal-header").html("");
+        $("#modalDispersion .modal-body").html("");
 
-    $("#modalDispersion .modal-header").append(`
-        <div class="row">
-            <div class="col-md-4">
-                <h5>Monto a dispersar: <b>${formatMoney(monto)}</b> </h5>
+        $("#modalDispersion .modal-header").append(`
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Monto a dispersar: <b>${formatMoney(monto)}</b> </h5>
+                </div>
+                <div class="col-md-4">
+                    <h5>Pago del lote: <b>${nombreLote}</b> </h5>
+                </div>
+                <div class="col-md-4">
+                    <h5>Id del pago: <b>${idPagoI}</b> </h5>
+                </div>
+            </div>    
+        `);
+        $("#modalDispersion .modal-body").append(`
+            <select class="selectpicker select-gral m-0" name="usuarioBono" 
+                    id="usuarioBono" data-style="btn" data-show-subtext="true" 
+                    title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+            </select>
+
+            <div class="form-group">
+                <label for="monto_dispersar">Asignar monto:</label>
+                <input type="number" step="any" class="form-control input-gral" onkeyup="handleKeyUp(event)" id="monto_dispersar" required placeholder="$" name="monto_dispersar">
+                <input type="hidden" class="form-control" value="${monto}" id="montoPago" name="montoPago" />
+                <input type="hidden" class="form-control" value="${idLote}" id="idLote" name="idLote" />
+                <input type="hidden" class="form-control" value="${idComision}" id="idComision" name="idComision" />
+                <input type="hidden" class="form-control" value="${idPagoI}" id="id_pago_i" name="id_pago_i" />
+                <input type="hidden" class="form-control" value="${totalNeto2}" id="totalNeto2" name="totalNeto2" />
             </div>
-            <div class="col-md-4">
-                <h5>Pago del lote: <b>${nombreLote}</b> </h5>
+            <div class="col-xs-12 col-sm-12 col-sm-12 col-md-12 col-lg-12 mt-1">
+                <p>Nota: El monto restante se asignará al usuario que no fue seleccionado.</p>
             </div>
-            <div class="col-md-4">
-                <h5>Id del pago: <b>${idPagoI}</b> </h5>
-            </div>
-        </div>    
-    `);
-    $("#modalDispersion .modal-body").append(`
-        <select class="selectpicker select-gral m-0" name="usuarioBono" 
-                id="usuarioBono" data-style="btn" data-show-subtext="true" 
-                title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
-        </select>
+        `);
 
-        <div class="form-group">
-            <label for="monto_dispersar">Asignar monto:</label>
-            <input type="number" step="any" class="form-control input-gral" onkeyup="handleKeyUp(event)" id="monto_dispersar" required placeholder="$" name="monto_dispersar">
-            <input type="hidden" class="form-control" value="${monto}" id="montoPago" name="montoPago" />
-            <input type="hidden" class="form-control" value="${idLote}" id="idLote" name="idLote" />
-            <input type="hidden" class="form-control" value="${idComision}" id="idComision" name="idComision" />
-            <input type="hidden" class="form-control" value="${idPagoI}" id="id_pago_i" name="id_pago_i" />
-            <input type="hidden" class="form-control" value="${totalNeto2}" id="totalNeto2" name="totalNeto2" />
-        </div>
-        <div class="col-xs-12 col-sm-12 col-sm-12 col-md-12 col-lg-12 mt-1">
-            <p>Nota: El monto restante se asignará al usuario que no fue seleccionado.</p>
-        </div>
-    `);
-
-    var len = dataUsuarios.length;
-    for (var i = 0; i < len; i++) {
-        var id = dataUsuarios[i]['id_usuario'];
-        var name = dataUsuarios[i]['nombre'];
-        $("#usuarioBono").append($('<option>').val(id).text(name.toUpperCase()));
-    }
-    $("#usuarioBono").selectpicker('refresh');
-
-
+        var len = dataUsuarios.length;
+        for (var i = 0; i < len; i++) {
+            var id = dataUsuarios[i]['id_usuario'];
+            var name = dataUsuarios[i]['nombre'];
+            $("#usuarioBono").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#usuarioBono").selectpicker('refresh');
         $("#modalDispersion").modal();
-
     });
 });
 //FIN TABLA NUEVA
@@ -377,7 +372,6 @@ $("#formDispersion").submit( function(e) {
             method: 'POST',
             type: 'POST', // For jQuery < 1.9
             success: function(respuesta){
-                console.log(respuesta);
                 if( respuesta.resultado == true){
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "La petición se ha realizado con éxito", "success");
@@ -404,7 +398,6 @@ $("#formDispersion").submit( function(e) {
 $("#formAsignacion").submit( function(e) {
     e.preventDefault();
     $('#btnsubA').prop('disabled', true);
-    //document.getElementById('btnsubA').disabled = true;
 }).validate({
     submitHandler: function( form ) {
         $('#spiner-loader').removeClass('hidden');
@@ -419,7 +412,6 @@ $("#formAsignacion").submit( function(e) {
             method: 'POST',
             type: 'POST', // For jQuery < 1.9
             success: function(respuesta){
-                console.log(respuesta);
                 if( respuesta.resultado == true){
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "La petición se ha realizado con éxito", "success");

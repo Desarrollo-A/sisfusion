@@ -25,19 +25,9 @@ sp = { // MJ: DATE PICKER
     }
 }
 
-let titulos = [];
-$('#tablaLista thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $('input', this).on('keyup change', function () {
-        if ($("#tablaLista").DataTable().column(i).search() !== this.value)
-            $("#tablaLista").DataTable().column(i).search(this.value).draw();
-    });
-});
-
 function filltablaLista(beginDate, endDate) {
-    tablaLista= $("#tablaLista").dataTable({
+    construirHead("tablaLista");
+    tabla_6= $("#tablaLista").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -46,13 +36,13 @@ function filltablaLista(beginDate, endDate) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'Tus ventas',
+                titleAttr: `${_("descargar-excel")}`,
+                title: `${_("tus-ventas")}`,
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -128,8 +118,12 @@ function filltablaLista(beginDate, endDate) {
             }
         }
     });
+    applySearch(tabla_6);
     $('#box-listaProspectos').removeClass('hide');
     $('#spiner-loader').addClass('hide');
+
+    applySearch(tabla_6);
+
 }
 
 $('#tablaLista').on('draw.dt', function () {
@@ -147,7 +141,7 @@ $(document).on("click", "#searchByDateRange", function () {
 $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
     if ($("#asesores").val() == '' || $("#gerentes").val() == '' || $("#subdirectores").val() == '')
-        alerts.showNotification("top", "right", "Asegúrate de llenar los campos mínimos requeridos <b>(*)</b>", "warning");
+        alerts.showNotification("top", "right", `${_("asegurate-campos")} <b>(*)</b>`, "warning");
     else {
         const TIPO_TRANSACCION = parseInt($("#tipoTransaccion").val());
         let idProspecto = 0;
@@ -183,7 +177,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
             }, error: function () {
                 $("#sendRequestButton").prop("disabled", false);
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
             }
         });
         $('#spiner-loader').addClass('hide');

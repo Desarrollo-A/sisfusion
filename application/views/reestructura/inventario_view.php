@@ -10,27 +10,27 @@
                         <div class="card">
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Inventario disponible</h3>
+                                    <h3 class="card-title center-align" data-i18n="inventario-disponible">Inventario disponible</h3>
                                     <p class="card-title pl-1"></p>
                                 </div>
                                 <div class="material-datatables">
                                     <table id="tablaInventario" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>ID LOTE</th>
-                                                <th>SUPERFICIE</th>
-                                                <th>PRECIO M2</th>
-                                                <th>TOTAL</th>
-                                                <th>TIPO LOTE</th>
-                                                <th>ESTATUS</th>
-                                                <th>ESTATUS LOTE</th>
-                                                <th>CONCEPTO</th>
-                                                <th>PROYECTO ORIGEN</th>
-                                                <th>CONDOMINIO ORIGEN</th>
-                                                <th>LOTE ORIGEN</th>
+                                                <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>id-lote</th>
+                                                <th>superficie</th>
+                                                <th>precio-m2</th>
+                                                <th>total</th>
+                                                <th>tipo-lote</th>
+                                                <th>estatus</th>
+                                                <th>estatus-lote</th>
+                                                <th>concepto</th>
+                                                <th>proyecto-origen</th>
+                                                <th>condominio-origen</th>
+                                                <th>lote-origen</th>
                                             </tr>
                                         </thead>
                                     </table>

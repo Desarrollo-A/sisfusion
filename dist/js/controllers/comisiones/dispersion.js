@@ -1,5 +1,8 @@
 
-//$(document).ready(function () {
+
+
+
+$(document).ready(function () {
     numerosDispersion();
     let titulos_intxt = [];
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -9,7 +12,7 @@
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
-        if (i != 0 ) {
+        // if (i != 0 ) {
             $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
             $( 'input', this ).on('keyup change', function () {
                 if ($('#tabla_dispersar_comisiones').DataTable().column(i).search() !== this.value ) {
@@ -21,7 +24,7 @@
                 }).indexes();
                 var data = $('#tabla_dispersar_comisiones').DataTable().rows(index).data();
             });
-        }
+        // }
     });
 
     dispersionDataTable = $('#tabla_dispersar_comisiones').dataTable({
@@ -64,7 +67,7 @@
             className: 'details-control',
             orderable: false,
             data : null,
-            defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+            defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i></div>'
             },
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
@@ -696,14 +699,12 @@
                                         if(parseInt(v.id_usuario) == 12841 && plan_comision == 56){ // MADERAS REWORDS
                                             comisionTotalRewards = v.comision_total;
                                             porcentajeReferido = ((comisionTotalRewards * 100) / total);
-
                                         }
                                         if(v.id_rol == 7){
                                             cuantosAsesores = cuantosAsesores + 1; 
                                         }if(v.id_rol == 9){
                                             cuantosCoor = cuantosCoor + 1; 
                                         }
-                                        
                                     });
                                     console.log(SumaComisionTotal);
                                     const busquedaPivote = pivoteMultiplicador.find((planes) => planes.id_plan == parseInt(plan_comision));
@@ -958,6 +959,15 @@
                             }
                             else{
                                 $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
+                                    var cuantosAsesores = 0;
+                                    var cuantosCoor = 0;
+                                    $.each( data1, function( i, v){
+                                        if(v.id_rol == 7){
+                                            cuantosAsesores = cuantosAsesores + 1; 
+                                        }if(v.id_rol == 9){
+                                            cuantosCoor = cuantosCoor + 1; 
+                                        }
+                                    });
                                     console.log('procesoReestructura '+procesoReestructura);
                                     console.log('abonadoAnterior '+abonadoAnterior);
                                     let total0 = [2,3,4,7].includes(parseInt(procesoReestructura)) ? parseFloat((data[0].Aplicado - abonadoAnterior)) : parseFloat((data[0].Aplicado));
@@ -1065,7 +1075,7 @@
                                                 console.log('procesoReestructura::'+procesoReestructura);
                                                 console.log('plan_comision::'+plan_comision);
                                                 console.log('idLote::'+idLote);
-                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || ([64,65,66,84,85,86,56].indexOf(plan_comision) >= 0 || [57154,48216,55933,52454,54261,63123,30499,40165,37107,40002,98054,98065,98066,98067,98068,98098,98104,98116,51295,56931,94223,98755,98756,98757,99924,100361,101117,102611,100059].indexOf(parseInt(idLote)) >= 0)) ? saldo : ( saldo-v.abono_pagado );
+                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || ([64,65,66,84,85,86,56].indexOf(plan_comision) >= 0 || [57154,48216,55933,52454,54261,63123,30499,40165,37107,40002,98054,98065,98066,98067,98068,98098,98104,98116,51295,56931,94223,98755,98756,98757,99924,100361,101117,102611,100059].indexOf(parseInt(idLote)) >= 0) || plan_comision == 56) ? saldo : ( saldo-v.abono_pagado );
                                                 console.log('RESTA'+resta_1);
                                                 if(parseFloat(resta_1) <= 0){
                                                     saldo = 0;
@@ -1077,7 +1087,7 @@
                                                     else{
                                                         console.log('entra hasta aca')
                                                         console.log(saldo)
-                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86,56].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933,52454,54261,63123,30499,40165,37107,40002,98054,98065,98066,98067,98068,98098,98104,98116,51295,56931,94223,98755,98756,98757,99924,100059,100361,101117,102611].indexOf(parseInt(idLote)) >= 0)) ? saldo : saldo-v.abono_pagado;
+                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86,56].indexOf(parseInt(plan_comision)) >= 0 || [57154,48216,55933,52454,54261,63123,30499,40165,37107,40002,98054,98065,98066,98067,98068,98098,98104,98116,51295,56931,94223,98755,98756,98757,99924,100059,100361,101117,102611].indexOf(parseInt(idLote)) >= 0) || plan_comision == 56) ? saldo : saldo-v.abono_pagado;
                                                         console.log(saldo)
                                                     }
                                                 }
@@ -1150,7 +1160,7 @@
             $("#modal_NEODATA").modal();
         }
     }); //FIN VERIFY_NEODATA
-//});
+});
 
 sp = {
     initFormExtendedDatetimepickers: function () {
@@ -1700,7 +1710,7 @@ function responsive(maxWidth) {
         $('.rowTitulos').removeClass('hide');
     }
 }
- 
+
 function function_totales(){
     $.getJSON( general_base_url + "Comisiones/getMontoDispersado").done( function( data ){
         $cadena = '<b>'+formatMoney(data[0].monto)+'</b>';

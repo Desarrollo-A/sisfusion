@@ -30,7 +30,7 @@ function select_tipo_proveedor(data) {
         },
         fields: [
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
-            new SelectField({ id: 'tipoProveedor', data: tipos, value: data.tipoProveedor }),
+            new SelectField({ id: 'tipoProveedor', placeholder: 'SELECCIONA UNA OPCIÓN',data: tipos, value: data.tipoProveedor }),
         ]
     })
 
@@ -46,7 +46,7 @@ function to_precierre_cifras(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/to_precierre_cifras`,
+                url: `${general_base_url}casas/avancePaso4`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -66,6 +66,7 @@ function to_precierre_cifras(data) {
         },
         fields: [
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -86,9 +87,10 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'nombreGerente' },
     { data: function (data) {
+        console.log(data.tipoProveedor)
         if(data.tipoProveedor == 1){
             return 'Persona moral'
-        }else if(data.tipoProveedor == 1){
+        }else if(data.tipoProveedor == 2){
             return 'Persona física'
         }else{
             return 'No seleccionado'

@@ -13,7 +13,7 @@
                             <i class="fas fa-address-book fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Listado general de prospectos</h3>
+                            <h3 class="card-title center-align" data-i18n="listado-prospectos">Listado general de prospectos</h3>
                             <div class="toolbar">
                                 <div class="row">
                                     <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -41,20 +41,20 @@
                                         <table id="prospects-datatable_dir"  class="table-striped table-hover" style="text-align:center;">
                                             <thead>
                                             <tr>
-                                                <th>ESTADO</th>
-                                                <th>ETAPA</th>
-                                                <th>PROSPECTO</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>LUGAR DE PROSPECCIÓN</th>
-                                                <th>CREACIÓN</th>
-                                                <th>VENCIMIENTO</th>
-                                                <th>CORREO</th>
-                                                <th>TELÉFONO</th>
+                                                <th>estado</th>
+                                                <th>etapa</th>
+                                                <th>prospecto</th>
+                                                <th>asesor</th>
+                                                <th>coordinador</th>
+                                                <th>gerente</th>
+                                                <th>lugar-prospeccion</th>
+                                                <th>creacion</th>
+                                                <th>vencimiento</th>
+                                                <th>correo</th>
+                                                <th>telefono</th>
                                                 <?php
                                                     if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5){?>
-                                                        <th>ACCIONES</th>
+                                                        <th>acciones</th>
                                                         <!-- <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 103px;">
                                                             <input  type="text"
                                                                     style="width:100%; background:#143860!important; color:white; border: 0; font-weight: 500;"

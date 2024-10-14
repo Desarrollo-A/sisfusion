@@ -1,14 +1,9 @@
+$(document).ready(function(){
+    construirHead('tablaResidenciales');    
+})
+
 $('#tablaResidenciales thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
-
-    $('input', this).on('keyup change', function () {
-        if ($('#tablaResidenciales').DataTable().column(i).search() !== this.value) {
-            $('#tablaResidenciales').DataTable().column(i).search(this.value).draw();
-        }
-    });
-
-    $('[data-toggle="tooltip"]').tooltip();
+    construirHead('tablaResidenciales'); 
 });
 
 $('#tablaResidenciales').DataTable({

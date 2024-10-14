@@ -14,7 +14,7 @@ function rechazoProcesoBanco(data){
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/rechazoPaso4`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -70,7 +70,7 @@ function to_precierre_cifras(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/to_precierre_cifras`,
+                url: `${general_base_url}casas/avancePaso4`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -90,6 +90,7 @@ function to_precierre_cifras(data) {
         },
         fields: [
             new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
             idCasaFinal,
             new HiddenField({ id: 'idCliente', value: data.id_cliente}),
@@ -190,7 +191,7 @@ function selectCasa(parentSelector, divId, idPropuestaCasa) {
             newDiv.className = `${divId} element-select`; 
             
             newDiv.innerHTML = `
-                <div id="checkDS" style="margin-bottom: 10px">
+                <div id="checkDS" style="margin-bottom: 0px; margin-top: 30px;">
                     <div class="container boxChecks p-0">
                         <label class="m-0 checkstyleDS">
                             <input type="radio" name="idPropuesta" id="idPropuesta-${index}" value="${item.idModelo}">

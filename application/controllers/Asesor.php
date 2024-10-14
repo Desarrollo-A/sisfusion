@@ -122,6 +122,8 @@ class Asesor extends CI_Controller {
         }
     }
     public function inventario() {
+        ini_set('memory_limit', '-1');
+        
         $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');

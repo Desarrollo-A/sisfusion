@@ -84,17 +84,21 @@ class Seguros extends CI_Controller
         echo json_encode($resolt);
       }
       public function acepto_comisiones_user(){
+        $diaActual = date('d'); 
         $formaPagoInvalida = [2,3,4,5];
         $id_user_Vl = $this->session->userdata('id_usuario');
         $formaPagoUsuario = $this->session->userdata('forma_pago');
         $sol=$this->input->post('idcomision');  
         $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i FROM pago_seguro_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
-        $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 WHEN tipo=4 THEN 4 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+        $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2  THEN 1 WHEN (tipo=4 OR id_usuario = 1980) THEN 4 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
     
+        $filtro =  $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" :  "AND Day(fechaInicio) >= 17";
+
+
         if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
           $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
           $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-          $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaFinGeneral)*/ AND mes = $mesActual")->result_array();
+          $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro")->result_array();
     
           $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
           

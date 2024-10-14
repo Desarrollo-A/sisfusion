@@ -14,14 +14,14 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Consulta contraseña</h3>
+                                    <h3 class="card-title center-align" data-i18n="consulta-contrasena">Consulta contraseña</h3>
                                 </div>
                                 <div class="">
                                     <table id="all_password_datatable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Usuario</th>
-                                                <th>Contraseña</th>
+                                                <th>usuario</th>
+                                                <th>contrasena</th>
                                             </tr>
                                         </thead>
                                     </table>

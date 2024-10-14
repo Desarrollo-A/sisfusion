@@ -129,15 +129,15 @@ function getAssimilatedCommissions_asimilados_casas(proyecto, condominio){
                                 var fecha = new Date();
                                 tabla_asimilados2_intmex_casas.ajax.reload();
                                 var mensaje = "Comisiones de esquema<b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
-                                modalInformation(data, mensaje);
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             } else {
                                 $('#spiner-loader').addClass('hide');
-                                modalInformation(2);
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                                 }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            modalInformation(2);
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }else{
@@ -160,7 +160,6 @@ function getAssimilatedCommissions_asimilados_casas(proyecto, condominio){
                 format: {
                     header: function (columnIdx, i) {
                         return titulos_intmex_casas[i-1];
-                        //return ' ' + titulos_intmex_casas[columnIdx-1] + ' ';
                     }
                 }
             }
@@ -579,65 +578,12 @@ $(document).on("click", ".PagarCasas", function() {
     });
 });
 
-// $("#form_refresh_seguros").submit( function(e) {
-//     e.preventDefault();
-// }).validate({
-//     submitHandler: function( form ) {
-//         var data = new FormData( $(form)[0] );
-//         data.append("id_pago_i", id_pago_i);
-//         $.ajax({
-//             url: general_base_url + "Pagos/refresh_solicitud/",
-//             data: data,
-//             cache: false,
-//             contentType: false,
-//             processData: false,
-//             dataType: 'json',
-//             method: 'POST',
-//             type: 'POST',
-//             success: function(data){
-
-//                 if( data[0] ){
-//                     $("#modal_refresh").modal('toggle' );
-//                     alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
-//                     setTimeout(function() {
-//                         tabla_asimilados2_intmex_casas.ajax.reload();
-//                     }, 3000);
-//                 }
-//                 else{
-//                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-//                 }
-//             },error: function( ){
-//                 alert("ERROR EN EL SISTEMA");
-//             }
-//         });
-//     }
-// });
-
 function cleanComments(){
     var myCommentsList = document.getElementById('documents');
     myCommentsList.innerHTML = '';
     var myFactura = document.getElementById('facturaInfo');
     myFactura.innerHTML = '';
 }
-
-// $(document).on("click", ".individualCheck_casas", function() {
-//     totaPen_casas = 0;
-//     tabla_asimilados2_intmex_casas.$('input[type="checkbox"]').each(function () {
-//         let totalChecados = tabla_asimilados2_intmex_casas.$('input[type="checkbox"]:checked') ;
-//         let totalCheckbox = tabla_asimilados2_intmex_casas.$('input[type="checkbox"]');
-//         if(this.checked){
-//             tr1 = this.closest('tr');
-//             row = tabla_asimilados2_intmex_casas.row(tr1).data();
-//             totaPen_casas += parseFloat(row.impuesto); 
-//         }
-
-//         if( totalChecados.length == totalCheckbox.length )
-//             $("#all_asimilados_intmex").prop("checked", true);
-//         else 
-//             $("#all_asimilados_intmex").prop("checked", false);
-//     });
-//     $("#totpagarPen_intmex_casas").html(formatMoney(numberTwoDecimal(totaPen_casas)));
-// });
 
 function selectAllIntmexCasas(e) {
     tota2 = 0;
@@ -692,9 +638,10 @@ $("#form_multiples_casas").submit( function(e) {
                     CloseModalDelete2Intmex_casas();
                     $("#all_asimilados_intmex").prop("checked", false);
                     $("#totpagarPen_intmex_casas").html(formatMoney(numberTwoDecimal(0)));
-
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
-                    tabla_asimilados2_intmex_casas.ajax.reload();
+                    if(tabla_asimilados2_intmex_casas != undefined){
+                        tabla_asimilados2_intmex_casas.ajax.reload();
+                    }
                 }else{
                     CloseModalDelete2Intmex_casas();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");

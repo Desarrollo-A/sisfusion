@@ -1,3 +1,12 @@
+<!-- <style>
+.details-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+</style> -->
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body class="">
@@ -62,7 +71,7 @@
                                                                 <table class="table-striped table-hover" id="tabla_dispersar_comisiones" name="tabla_dispersar_comisiones">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th></th>
+                                                                            <th>DETALLES</th>
                                                                             <th>PROYECTO</th>
                                                                             <th>CONDOMINIO</th>
                                                                             <th>LOTE</th>

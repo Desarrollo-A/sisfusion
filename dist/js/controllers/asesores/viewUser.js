@@ -1,17 +1,8 @@
 let titulos_intxt = [];
 $(document).ready(function () {
-    $('#all_password_datatable thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        titulos_intxt.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if ($('#all_password_datatable').DataTable().column(i).search() !== this.value) {
-                $('#all_password_datatable').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    });
+    construirHead("all_password_datatable");
 
-    $allUsersTable = $('#all_password_datatable').DataTable({
+    let allUsersTable = $('#all_password_datatable').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -25,10 +16,11 @@ $(document).ready(function () {
             exportOptions: {
                 columns: [0, 1],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
+
             }
         }],
         ordering: false,
@@ -61,4 +53,6 @@ $(document).ready(function () {
             trigger: "hover"
         });
     });
+
+    applySearch(allUsersTable);
 });

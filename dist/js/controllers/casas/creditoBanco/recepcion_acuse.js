@@ -44,9 +44,9 @@ let columns = [
     } },
     { data: function(data){
         let pass_button = new RowButton({icon: 'done', color: 'green', label: 'Finalizar', onClick: avance_proceso, data})
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data})
+        /* let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: rechazo_proceso, data}) */
 
-        return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}</div>`
     } },
 ]
 
@@ -107,7 +107,7 @@ rechazo_proceso = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoBancoAvance`,
+                url: `${general_base_url}casas/rechazoPaso19`,
                 data: data,
                 contentType: false,
                 processData: false,

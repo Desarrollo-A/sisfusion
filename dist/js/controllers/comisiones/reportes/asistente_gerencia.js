@@ -2,7 +2,7 @@ let tablaComisiones;
 
 $(document).ready(function () {
     $("#div-tabla").prop("hidden", true);
-    $.ajax({
+    $.ajax({ 
         url: `${general_base_url}Comisiones/getPuestoComisionesAsistentes`,
         type: 'GET',
         dataType: 'json',
@@ -109,7 +109,7 @@ $('#estatus').on('change', function () {
 });
 
 let titulos_intxt = [];
-$('#tabla-historial thead tr:eq(0) th').each( function (i) {
+/*$('#tabla-historial thead tr:eq(0) th').each( function (i) {
     const title = $(this).text();
     titulos_intxt.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
@@ -118,12 +118,14 @@ $('#tabla-historial thead tr:eq(0) th').each( function (i) {
             $('#tabla-historial').DataTable().column(i).search(this.value).draw();
         }
     });
-});
+});*/
+construirHead("tabla-historial");
 
 function loadTable(idUsuario, idProyecto, idEstatus) {
 
 
     $("#div-tabla").prop("hidden", false);
+    construirHead("tabla-historial");
 
     tablaComisiones = $('#tabla-historial').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -140,7 +142,7 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
                 columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -238,18 +240,18 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
+                    lblPenalizacion ='<p class="m-0" title="penalizacion-90" data-i18n-tooltip="penalizacion-90"><span class="label lbl-vividOrange"><span data-i18n="penalizacion-90"> + 90 DÍAS</span></span></p>';
                 }
 
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = '<p class="m-0" title="lotes-con-bonificacion" data-i18n-tooltip="lotes-con-bonificacion"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
                 }
 
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
+                    p2 = `<p class="m-0"  title="${_('lote-con-cancelacion')}" data-i18n-tooltip="lote-con-cancelacion"><span class="label lbl-warning"><span data-i18n="rescision">RECISIÓN</span></span></p>`;
                 }
                 else{
                     p2 = '';
@@ -269,7 +271,7 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
                 var etiqueta;
 
                     if(d.pago_neodata < 1){
-                        etiqueta = '<p class="m-1">'+'<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span>'+'</p>'+'<p class="m-1">'+'<span class="label lbl-green">IMPORTACIÓN</span></p>';
+                        etiqueta = '<p class="m-1">'+'<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span>'+'</p>'+'<p class="m-1">'+'<span class="label lbl-green"><span data-i18n="importacion">IMPORTACIÓN</span></span></p>';
                     }else{
                         etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color: '+d.color+'; ">'+d.estatus_actual+'</span></p>';
                     }
@@ -281,7 +283,7 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
             "orderable": false,
             "data": function( data ){
                 var BtnStats;
-                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" data-i18n-tooltip="detalles" title="detalles" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -304,6 +306,8 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
         },
         order: [[ 1, 'asc' ]]
     });
+    applySearch(tablaComisiones)
+
 
     $('#tabla-historial').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
@@ -340,13 +344,13 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><span data-i18n="cerrar">Cerrar</span></button>
         </div>`);
         showModal();
 
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
             $("#spiner-loader").addClass('hide');
-            $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+            $("#nameLote").append(`<p><h5><span>${_("historial-pago")}</span>: <b>${lote}</b></h5></p>`);
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });

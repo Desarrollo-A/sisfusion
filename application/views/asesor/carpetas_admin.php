@@ -12,16 +12,16 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content p-1" >
                     <div class="modal-header">
-                        <h5 >Editar carpeta</h5>
+                        <h5 data-i18n="editar-carpeta">Editar carpeta</h5>
                     </div>
                     <form  enctype="multipart/form-data" id="formAdminE">
                         <div class="form-group col-lg-12 m-0">
-                            <label for="nombreE">Nombre</label>
+                            <label for="nombreE"data-i18n="nombre-2">Nombre</label>
                             <input type="text" name="nombreE" class="form-control input-gral" id="nombreE" >
                             <p id="nom" style="color: red;"></p>
                         </div>
                         <div class="form-group col-lg-12 m-0">
-                            <label for="descripcionE">Descripción</label>
+                            <label for="descripcionE"data-i18n="descripcion">Descripción</label>
                             <textarea class="text-modal" rows="2" name="descripcionE" id="descripcionE" required=""></textarea>
                             <p id="des" style="color: red;"></p>
                         </div>
@@ -31,20 +31,20 @@
                                 <input class="d-none" type="hidden" id="filename" name="filename">
                                 <input class="file-name" id="file-uploadE" name="file-uploadE" accept=".pdf" type="file"/>
                                 <p id="archivoE" class="m-0 w-80 overflow-text"></p>
-                                <label for="file-uploadE" class="upload-btn m-0"><i class="fas fa-folder-open"></i> Subir archivo</label>
+                                <label for="file-uploadE" class="upload-btn m-0"><i class="fas fa-folder-open"></i> <span data-i18n="subir-archivo">Subir archivo</span></label>
                             </div>
                         </div>
                         <div class="form-group col-lg-12 m-0">
-                            <label for="estatus">Estatus</label>
+                            <label for="estatus"data-i18n="estatus-2">Estatus</label>
                             <select id="estatus" name="estatus" class="form-control input-gral">
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
+                                <option value="1"data-i18n="activo"> Activo</option>
+                                <option value="0"data-i18n="inactivo">Inactivo</option>
                             </select>
                         </div>
                     </form>
                     <div class="modal-footer"><br><br>
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" id="btnsave" onclick="update();" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" id="btnsave" onclick="update();" class="btn btn-primary" data-i18n="guardar">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>                                            
                     <div class="modal-footer"><br><br>
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"data-i18n="cerrar">Cerrar</button>
                     </div>
                 </div>
             </div>
@@ -67,16 +67,16 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content p-1" >
                     <div class="modal-header">
-                        <h5 >Agregar nueva carpeta</h5>
+                        <h5 data-i18n="agregar-carpeta">Agregar nueva carpeta</h5>
                     </div>
                     <form  enctype="multipart/form-data" id="formAdmin">
                         <div class="form-group col-lg-12 m-0">
-                            <label for="nombre">Nombre</label>
+                            <label for="nombre" data-i18n="nombre-2">Nombre</label>
                             <input name="nombre" class="form-control input-gral" id="nombre" required>
                             <p id="nom" style="color: red;"></p>
                         </div>
                         <div class="form-group col-lg-12 m-0">
-                            <label for="descripción">Descripción</label>
+                            <label for="descripción"data-i18n="descripcion">Descripción</label>
                             <textarea class="text-modal" rows="2" name="desc" id="desc" required></textarea>
                             <p id="des" style="color: red;"></p>
                         </div>
@@ -85,12 +85,12 @@
                                 <input class="d-none" type="hidden" id="filename" name="filename">
                                 <input class="file-name" id="file-upload" name="file-upload" accept=".pdf" type="file"/>
                                 <p id="archivo" class="m-0 w-80 overflow-text"></p>
-                                <label for="file-upload" class="upload-btn m-0"><i class="fas fa-folder-open"></i> Subir archivo</label>
+                                <label for="file-upload" class="upload-btn m-0"><i class="fas fa-folder-open"></i> <span data-i18n="subir-archivo">Subir archivo</span></label>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="btnsave1" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                            <button type="submit" id="btnsave1" class="btn btn-primary"data-i18n="guardar">Guardar</button>
                         </div>
                     </form>
                 </div>
@@ -106,13 +106,13 @@
                                 <i class="fas fa-folder-open fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Carpetas</h3>
+                                <h3 class="card-title center-align" data-i18n="carpeta-2">Carpetas</h3>
                                 <?php 
                                     if($this->session->userdata('id_rol')!=53){
                                 ?>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-4 com-md-4 col-lg-4">
-                                        <button class="btn-data-gral btn-s-blue mb-3" data-toggle="modal" data-target="#carpetas">Agregar carpeta</button>
+                                        <button class="btn-data-gral btn-s-blue mb-3" data-toggle="modal" data-target="#carpetas"data-i18n="agregar-carpeta">Agregar carpeta</button>
                                     </div>
                                 </div>
                                 <?php } ?>
@@ -120,12 +120,12 @@
                                     <table id="tableCarpetas" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>CARPETA</th>
-                                                <th>DESCRIPCIÓN</th>
-                                                <th>ESTATUS</th>
-                                                <th>FECHA DE CREACIÓN</th>
-                                                <th>ACCIONES</th>
+                                                <th>id</th>
+                                                <th>carpetas-2</th>
+                                                <th>descripcion</th>
+                                                <th>estatus</th>
+                                                <th>fecha-creacion</th>
+                                                <th>acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>

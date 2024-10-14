@@ -9,19 +9,19 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<div class="modal-header">
-						<h4 class="modal-title">Revisión Status (6. Corrida elaborada)</h4>
+						<h4 class="modal-title" data-i18n="revision-estatus">Revisión Status (6. Corrida elaborada)</h4>
 					</div>
 					<div class="modal-body">
 						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<label>Lote:</label>
+								<label data-i18n="lote2">Lote:</label>
 								<input type="text" class="form-control" id="nomLoteFakeenvARevCE" disabled>
 								<br><br>
-								<label>Status Contratación</label>
-								<select required="required" name="idStatusContratacion" id="idStatusContratacionenvARevCE" class="selectpicker" data-style="btn" title="Estatus contratación" data-size="7"><option value="6">  6. Corrida elaborada (Contraloría) </option></select>
+								<label data-i18n="estatus-contrato">Status Contratación</label>
+								<select required="required" name="idStatusContratacion" id="idStatusContratacionenvARevCE" class="selectpicker" data-style="btn" title="Estatus contratación" data-size="7"><option value="6" data-i18n="corrida-elaborada">  6. Corrida elaborada (Contraloría) </option></select>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-								<label>Comentario:</label>
+								<label data-i18n="comentario2">Comentario:</label>
 								<input type="text" class="form-control" name="comentario" id="comentarioenvARevCE">
 								<br><br>
 							</div>
@@ -33,8 +33,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="enviarenvARevCE" onClick="preguntaenvARevCE()" class="btn btn-primary"><span class="material-icons" >send</span> </i> Enviar a Revisión</button>
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+						<button type="button" id="enviarenvARevCE" onClick="preguntaenvARevCE()" class="btn btn-primary" data-i18n="enviar-revision"><span class="material-icons" >send</span> </i> Enviar a Revisión</button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
 					</div>
 				</div>
 			</div>
@@ -45,12 +45,12 @@
 				<div class="modal-content" >
 					<form id="my_authorization_form" name="my_authorization_form" method="post">
 						<div class="modal-header">
-							<h4 class="modal-title center-align">Solicitar autorización</h4>
+							<h4 class="modal-title center-align" data-i18n="solicitar-autorizacion">Solicitar autorización</h4>
 						</div>
 						<div class="modal-body">
 							<div class="row aligned-row">
 								<div class="col-sm-10 col-md-10 col-lg-10">
-									<label>Autoriza (<span class="isRequired">*</span>)</label>
+									<label><label data-i18n="autoriza">Autoriza</label> (<span class="isRequired">*</span>)</label>
 									<select name="id_aut" id="dirAutoriza" class="selectpicker select-gral m-0" data-style="btn btn-round" data-live-search="true" title="Selecciona una opción" data-size="7"></select>
 								</div>
 								<div class="col-sm-2 col-md-2 col-lg-2 d-flex align-end">
@@ -59,7 +59,7 @@
 							</div>
 							<div class="row">
 								<div id="functionAdd" class="col-sm-12 col-md-12 col-lg-12 mt-2">
-									<label>Observaciones: (<span class="isRequired">*</span>)</label>
+									<label><label data-i18n="observaciones">Observaciones:</label>(<span class="isRequired">*</span>)</label>
 								</div>
 								<div class="col-sm-12 col-md-12 col-lg-12">
 									<textarea	class="text-modal " id="comentario_0" name="comentario_0" rows="3" placeholder="Ingresa tu comentario" maxlength="100" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
@@ -77,7 +77,7 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button><a type="submit"class="btn btn-success hidden" style="margin: 0px;" onclick="validateEmptyFields()" id="btnSubmitEnviar" data-dismiss="modal">Enviar</a>
+							<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button><a type="submit"class="btn btn-success hidden" style="margin: 0px;" onclick="validateEmptyFields()" id="btnSubmitEnviar" data-dismiss="modal" data-i18n="enviar">Enviar</a>
 							<button type="submit"   ></button>
 						</div>
 					</form>
@@ -89,13 +89,13 @@
 			<div class="modal-dialog">
 				<div class="modal-content" >
 					<div class="modal-header">
-						<h4 class="modal-title">Ver autorizaciones en proceso</h4>
+						<h4 class="modal-title" data-i18n="autorizacion-proceso">Ver autorizaciones en proceso</h4>
 					</div>
 					<div class="modal-body pl-0 pr-0">
 						<div class="scroll-styles" id="auts-loads" style="max-height: 450px; overflow:auto; padding: 0 20px"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cierra">CERRAR</button>
 					</div>
 				</div>
 			</div>
@@ -106,58 +106,58 @@
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<ul class="nav nav-tabs nav-tabs-cm">
-							<li class="active"><a href="#soli" data-toggle="tab" onclick="javascript:$('#sol_aut').DataTable().ajax.reload();">Solicitud</a></li>
-							<li><a href="#aut" data-toggle="tab" onclick="javascript:$('#addExp').DataTable().ajax.reload();">Autorizaciones</a></li>
+							<li class="active"><a href="#soli" data-toggle="tab" onclick="javascript:$('#sol_aut').DataTable().ajax.reload();" data-i18n="solicitud">Solicitud</a></li>
+							<li><a href="#aut" data-toggle="tab" onclick="javascript:$('#addExp').DataTable().ajax.reload();" data-i18n="autorizaciones">Autorizaciones</a></li>
 						</ul>
 						<div class="card no-shadow m-0">
                             <div class="card-content p-0">
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
 										<div class="active tab-pane" id="soli">
-											<h3 class="card-title center-align">Solicitud</h3>
-											<p class="center-align">A través de este panel(Solicitud) podrás realizar lo siguiente; consulta de las solicitudes previas a su autorización, envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos (seleccionar usuario según sea el caso) con una solicitud de autorización (dependiendo del estatus de la misma), descarga de información en formatos: PDF y XLSX.</p>
+											<h3 class="card-title center-align" data-i18n="solicitud">Solicitud</h3>
+											<p class="center-align" data-i18n="texto-cabecera">A través de este panel(Solicitud) podrás realizar lo siguiente; consulta de las solicitudes previas a su autorización, envió de correo electrónico a usuarios con rol "Subdirector" que se encuentren activos (seleccionar usuario según sea el caso) con una solicitud de autorización (dependiendo del estatus de la misma), descarga de información en formatos: PDF y XLSX.</p>
 											<table id="sol_aut" class="table-striped table-hover">
 												<thead>
 													<tr>
-														<th>PROYECTO</th>
-														<th>CONDOMINIO</th>
-														<th>LOTE</th>
-														<th>CLIENTE</th>
-														<th>COORDINADOR</th>
-														<th>GERENTE</th>
-														<th>SUBDIRECTOR</th>
-														<th>DIRECTOR REGIONAL</th>
-														<th>DIRECTOR REGIONAL 2</th>
-														<th>FECHA DE APARTADO</th>
-														<th>ACCIONES</th>
+														<th>proyecto</th>
+														<th>condominio</th>
+														<th>lote</th>
+														<th>cliente</th>
+														<th>coordinador</th>
+														<th>gerente</th>
+														<th>subdirector</th>
+														<th>director-regional</th>
+														<th>director-regional-2</th>
+														<th>fecha-de-apartado</th>
+														<th>acciones</th>
 													</tr>
 												</thead>
 												<tbody></tbody>
 											</table>
 										</div>
 										<div class="tab-pane" id="aut">
-											<h3 class="card-title center-align">Autorizaciones</h3>
-											<p class="center-align">A través de este panel(Autorizaciones) podrás realizar lo siguiente; consulta de las solicitudes autorizadas, visualización de los estatus correspondientes por cada una de las autorizaciones en proceso, descarga de información en formatos: PDF y XLSX.<br></p>
+											<h3 class="card-title center-align" data-i18n="autorizaciones">Autorizaciones</h3>
+											<p class="center-align" data-i18n="texto-autorizacion">A través de este panel(Autorizaciones) podrás realizar lo siguiente; consulta de las solicitudes autorizadas, visualización de los estatus correspondientes por cada una de las autorizaciones en proceso, descarga de información en formatos: PDF y XLSX.<br></p>
 											<table id="addExp" class="table-striped table-hover">
 												<thead>
 													<tr>
-														<th>PROYECTO</th>
-														<th>CONDOMINIO</th>
-														<th>LOTE</th>
-														<th>CLIENTE</th>
-														<th>SOLICITANTE/ASESOR</th>
-														<th>COORDINADOR</th>
-														<th>GERENTE</th>
-														<th>SUBDIRECTOR</th>
-														<th>DIRECTOR REGIONAL</th>
-														<th>DIRECTOR REGIONAL 2</th>
-														<th>AUTORIZA</th>
-														<th>ACCIONES</th>
+														<th>proyecto</th>
+														<th>condominio</th>
+														<th>lote</th>
+														<th>cliente</th>
+														<th>solicitante-asesor</th>
+														<th>coordinador</th>
+														<th>gerente</th>
+														<th>subdirector</th>
+														<th>director-regional</th>
+														<th>director-regional-2</th>
+														<th>autoriza</th>
+														<th>acciones</th>
 													</tr>
 												</thead>
 												<tbody></tbody>
 											</table>
-										</div>	
+										</div>
 									</div>
 								</div>
 							</div>

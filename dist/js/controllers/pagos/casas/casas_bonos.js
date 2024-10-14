@@ -1,17 +1,16 @@
 var tr;
 var totaPagoBonos = 0;
 
-
 let titulosp = [];
-    $('#tabla_plaza_1_casas thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulosp.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+$('#tabla_plaza_1_casas thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    titulosp.push(title);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
 
-        if (i == 0){
-            $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllS(this)"/>');
+    if (i == 0){
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllS(this)"/>');
 
-        }else{
+    }else{
         $( 'input', this ).on('keyup change', function () {
             
             if (plaza_1.column(i).search() !== this.value ) {
@@ -27,10 +26,10 @@ let titulosp = [];
             }
         });
     }
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
     });
+});
 
 $("#tabla_plaza_1_casas").ready( function(){
     let c=0;
@@ -162,7 +161,6 @@ $("#tabla_plaza_1_casas").ready( function(){
         {
             "data": function( d ){
                 return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.descuento))+'</p>';
-                // verificar que dato pasara en esta linea
             }
         },
         {
@@ -306,7 +304,6 @@ $("#formPausarBono").submit( function(e) {
         });
     }
 });
-
 
 function cleanComments_casas() {
     var myCommentsList = document.getElementById('comments-list_casas');

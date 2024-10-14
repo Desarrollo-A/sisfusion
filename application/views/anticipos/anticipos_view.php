@@ -62,6 +62,11 @@
                                 <input type="hidden" id="id_usuario" name="id_usuario" value="">
                                 <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
                             </div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <label class="control-label">Comentario</label>
+                                        <textarea class="text-modal" id="comentario_A" name="comentario_A" rows="3"></textarea>
+                                    </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
@@ -104,6 +109,9 @@
                                     <input type="hidden" id="proceso" name="proceso" value="">
                                     <input type="hidden" id="monto" name="monto" value="">
                                     <input type="hidden" id="bandera_prestamo" name="bandera_prestamo" value="1">
+                                    
+
+
                                 </div>
                             </div>
 
@@ -181,10 +189,7 @@
                                                         <th>NOMBRE SOLICITANTE</th>
                                                         <th>PUESTO</th>
                                                         
-                                                        
-                                                        <th>EMPRESA</th>
-
-                                                        
+                                                        <th>EMPRESA</th>             
                                                         <th>COMENTARIO</th>
                                                         
                                                         <th>RÉGIMEN</th>
@@ -192,6 +197,10 @@
 
                                                         <th>TOTAL IMPUESTO</th>
                                                         <th>DESCUENTO</th>
+
+                                                        <th>PARCIALIDAD</th>
+                                                        <th>MENSUALIDAD</th>
+
 
                                                         <th>PRIORIDAD</th>                                                        
                                                         <th>SEDE</th>

@@ -11,7 +11,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title text-center">Autorizaciones</h3>
+                        <h3 class="modal-title text-center" data-i18n="autorizaciones">Autorizaciones</h3>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cerrar </button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar"> Cerrar </button>
                     </div>
                 </div>
             </div>
@@ -52,12 +52,12 @@
                             <div class="card-content">
                                 <?php if (!isset($tipoFiltro)) { ?>
                                     <div class="toolbar">
-                                        <h3 class="card-title center-align">Documentación por lote</h3>
+                                        <h3 class="card-title center-align" data-i18n="documentacion-lote">Documentación por lote</h3>
                                         <div class="row">
                                             <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group select-is-empty overflow-hidden">
-                                                    <label class="control-label">Proyecto</label>
-                                                    <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
+                                                    <label class="control-label" data-i18n="proyecto">Proyecto</label>
+                                                    <select name="idResidencial" data-i18n-label="selecciona-una-opcion" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required>
                                                         <?php
                                                         if ($residencial != NULL) :
                                                             foreach ($residencial as $fila) : ?>
@@ -71,14 +71,14 @@
                                             </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group select-is-empty overflow-hidden">
-                                                <label class="control-label">Condominio</label>
-                                                <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required></select>
+                                                <label class="control-label" data-i18n="condominio">Condominio</label>
+                                                <select id="idCondominio" data-i18n-label="selecciona-una-opcion" name="idCondominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required></select>
                                             </div>
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group select-is-empty overflow-hidden">
-                                                <label class="control-label">Lote</label>
-                                                <select id="idLote" name="idLote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required></select>
+                                                <label class="control-label" data-i18n="lote">Lote</label>
+                                                <select id="idLote" data-i18n-label="selecciona-una-opcion" name="idLote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container='body' required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -87,12 +87,12 @@
                                 <?php if (isset($tipoFiltro)) { ?>
                                 <?php if ($tipoFiltro == 1) { ?>
                                     <div class="toolbar">
-                                        <h3 class="card-title center-align">Documentación por lote</h3>
+                                        <h3 class="card-title center-align" data-i18n="documentacion-lote">Documentación por lote</h3>
                                         <div class="row">
                                             <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group select-is-empty">
-                                                    <label class="control-label">Proyecto</label>
-                                                    <select name="idResidencial" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" required>
+                                                    <label class="control-label" data-i18n="proyecto">Proyecto</label>
+                                                    <select name="idResidencial" data-i18n-label="selecciona-una-opcion" id="idResidencial" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un proyecto" data-size="7" required>
                                                         <?php
                                                         if ($residencial != NULL) :
                                                             foreach ($residencial as $fila) : ?>
@@ -106,20 +106,20 @@
                                             </div>
                                             <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group select-is-empty">
-                                                    <label class="control-label">Condominio</label>
-                                                    <select id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required></select>
+                                                    <label class="control-label" data-i18n="condominio">Condominio</label>
+                                                    <select data-i18n-label="selecciona-una-opcion" id="idCondominio" name="idCondominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un condominio" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group select-is-empty">
-                                                    <label class="control-label">Lote</label>
-                                                    <select id="idLote" name="idLote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" required></select>
+                                                    <label class="control-label" data-i18n="lote">Lote</label>
+                                                    <select id="idLote" data-i18n-label="selecciona-una-opcion" name="idLote" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un lote" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                                 <div class="form-group select-is-empty">
-                                                    <label class="control-label">Cliente</label>
-                                                    <select id="idCliente" name="idCliente" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un cliente" data-size="7" required></select>
+                                                    <label class="control-label" data-i18n="cliente">Cliente</label>
+                                                    <select id="idCliente" data-i18n-label="selecciona-una-opcion" name="idCliente" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un cliente" data-size="7" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -127,17 +127,17 @@
                                 <?php } ?>
                                 <?php if ($tipoFiltro == 2) { ?>
                                     <div class="toolbar">
-                                        <h3 class="card-title center-align">Documentación por lote</h3>
+                                        <h3 class="card-title center-align" data-i18n="documentacion-lote">Documentación por lote</h3>
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label class="control-label label-gral">ID lote</label>
+                                                    <label class="control-label label-gral" data-i18n="id-lote">ID lote</label>
                                                     <input id="inp_lote" name="inp_lote" class="form-control input-gral" type="number">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mt-3">
                                                 <div class="form-group">
-                                                    <button type="submit" class="btn-gral-data find_doc">Buscar</button>
+                                                    <button type="submit" class="btn-gral-data find_doc" data-i18n="buscar">Buscar</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,22 +146,22 @@
                                 <table id="tableDoct" class="table-striped table-hover hide">
                                     <thead>
                                         <tr>
-                                            <th>PROYECTO</th>
-                                            <th>CONDOMINIO</th>
-                                            <th>LOTE</th>
-                                            <th>ID LOTE</th>
-                                            <th>CLIENTE</th>
-                                            <th>ASESOR</th>
-                                            <th>COORDINADOR</th>
-                                            <th>GERENTE</th>
-                                            <th>SUBDIRECTOR</th>
-                                            <th>DIRECTOR REGIONAL</th>
-                                            <th>DIRECTOR REGIONAL 2</th>
-                                            <th>NOMBRE DE DOCUMENTO</th>
-                                            <th>HORA/FECHA</th>
-                                            <th>RESPONSABLE</th>
-                                            <th>UBICACIÓN</th>
-                                            <th>ACCIONES</th>
+                                            <th>proyecto</th>
+                                            <th>condominio</th>
+                                            <th>lote</th>
+                                            <th>id-lote</th>
+                                            <th>cliente</th>
+                                            <th>asesor</th>
+                                            <th>coordinador</th>
+                                            <th>gerente</th>
+                                            <th>subdirector</th>
+                                            <th>director-regional</th>
+                                            <th>director-regional2</th>
+                                            <th>nombre-documento</th>
+                                            <th>hora-fecha</th>
+                                            <th>responsable</th>
+                                            <th>ubicacion</th>
+                                            <th>acciones</th>
                                         </tr>
                                     </thead>
                                 </table>

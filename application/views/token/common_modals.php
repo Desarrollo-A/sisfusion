@@ -4,7 +4,7 @@
     <div class="modal-dialog">
         <div class="modal-content content_video">
             <div class="modal-header d-flex align-center justify-center mb-1">
-                <h3 class="modal-title text-center preview_title">Evidencia <span id="nombre_lote"></span></h3>
+                <h3 class="modal-title text-center preview_title"><span data-i18n="evidencia">Evidencia</span> <span id="nombre_lote"></span></h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -38,12 +38,12 @@
             <div class="modal-body card no-shadow">
                 <div class="card-content">
                     <div class="toolbar">
-                        <h3 class="card-title center-align">Selecciona un asesor</h3>
+                        <h3 class="card-title center-align" data-i18n="select-asesor">Selecciona un asesor</h3>
                         <div class="row aligned-row">
                             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-3">
                                 <div class="form-group label-floating select-is-empty m-0 p-0">
                                     <select id="asesoresList" name="asesoresList" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true"
-                                        title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                        title="SELECCIONA UNA OPCIÓN" data-i18n-label="selecciona-una-opcion" data-size="7" required>
                                     </select>
                                  </div>
                             </div>
@@ -51,9 +51,9 @@
                                 <div class="form-group label-floating select-is-empty m-0 p-0">
                                     <div class="file-gph">
                                         <input class="d-none" type="file" id="fileElm">
-                                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                                        <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" data-i18n-label="no-has-seleccionado" readonly="">
                                         <label class="upload-btn m-0" for="fileElm">
-                                            <span>Seleccionar</span>
+                                            <span data-i18n="seleccionar">Seleccionar</span>
                                             <i class="fas fa-folder-open"></i>
                                         </label>
                                     </div>
@@ -64,8 +64,8 @@
                 </div>  
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"    onclick="cleanSelects()">Cerrar</button>
-                <button class="btn btn-primary" onclick="generateToken()">Generar</button>
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar" onclick="cleanSelects()">Cerrar</button>
+                <button class="btn btn-primary" onclick="generateToken()" data-i18n="generar">Generar</button>
             </div>
         </div>
     </div>

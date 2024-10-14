@@ -74,19 +74,6 @@ $('#tabla_remanente_casas thead tr:eq(0) th').each(function (i) {
         $(this).html('<input id="all_casas" type="checkbox" style="width:20px; height:20px;" onchange="select_all_remanente_casas(this)"/>');
     }
 });
-// function obtenerModoSeleccionado() {
-//     var radioButtons = document.getElementsByName("modoSubida");
-//     var modoSeleccionado = "";
-
-//     for (var i = 0; i < radioButtons.length; i++) {
-//         if (radioButtons[i].checked) {
-//             modoSeleccionado = radioButtons[i].value;
-//             break;
-//         }
-//     }
-
-//     return modoSeleccionado;
-// }
 
 function getDataRemanente_casas(proyecto, condominio){
     
@@ -100,8 +87,6 @@ function getDataRemanente_casas(proyecto, condominio){
     });
 
     var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    // console.log("prueba");
-    // console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
 
     $("#tabla_remanente_casas").prop("hidden", false);
     tabla_remanente_casas = $("#tabla_remanente_casas").DataTable({
@@ -354,7 +339,6 @@ function getDataRemanente_casas(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                            // return '<input type="checkbox" name="idPagoRemanente_casas[]" class="checkPagosIndividual_casas" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                             return '<input type="checkbox" name="idPagoRemanente_casas[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
 
                     }else{
@@ -510,7 +494,6 @@ $("#form_pausar_casas").submit( function(e) {
                     setTimeout(function() {
                         tabla_remanente_casas.ajax.reload(null, false);
                         $('#spiner-loader').addClass('hide');
-
                     }, 3000);
                 }else{
                     $('#spiner-loader').addClass('hide');
