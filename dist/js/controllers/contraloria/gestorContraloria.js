@@ -40,9 +40,7 @@ $(document).ready(function () {
         }
         $('#selector').selectpicker('refresh');
     });  
-    $('#selectProyecto').append('<option value="opcion1">Opción 1</option>');
-    $('#selectProyecto').append('<option value="opcion2">Opción 2</option>');
-    $('#selectProyecto').append('<option value="opcion3">Opción 3</option>');
+
 });
 
 
@@ -80,9 +78,9 @@ $(document).on('change', '#selector', function () {
 function loadSelectOptions (){
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
-            $("#idResidencial").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
+            $("#selectProyecto").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
         }
-        $("#idResidencial").selectpicker('refresh');
+        $("#selectProyecto").selectpicker('refresh');
     }, 'json');
 
     $.post(`${general_base_url}Contratacion/lista_estatus`, function (data) {
@@ -92,6 +90,22 @@ function loadSelectOptions (){
         $("#idEstatus").selectpicker('refresh');
     }, 'json');
 }
+
+$('#selectProyecto').change(function () {
+    $('#spiner-loader').removeClass('hide');
+    $('#tablaInventario').removeClass('hide');
+    index_idResidencial = $(this).val();
+    $("#selectCondominio").html("");
+    $(document).ready(function () {        
+        $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#selectCondominio").append($('<option>').val(data[i]['selectCondominio']).text(data[i]['nombre']));
+            }
+            $("#selectCondominio").selectpicker('refresh');
+            $('#spiner-loader').addClass('hide');
+        }, 'json');
+    });
+});
 
 $('#idResidencial').change(function () {
     $('#spiner-loader').removeClass('hide');
@@ -110,6 +124,7 @@ $('#idResidencial').change(function () {
 });
 
    
+    
 
 function crearTablaTipoVenta() {
     $('#tipo-venta thead tr:eq(0) th').each(function (i) {
@@ -210,6 +225,9 @@ function crearTablaTipoVenta() {
         });
     });
 }
+
+
+
 
 // FUNCIóN PARA LLENAR TABLA CON REPRESENTANTES LEGALES
 function llenarTablaRl(tipoOperacion) {

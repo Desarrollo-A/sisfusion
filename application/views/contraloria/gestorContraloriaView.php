@@ -142,7 +142,7 @@
                                         </select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="condominio">
-                                        <label class="control-label" for="nombreLote">Condominio</label>
+                                        <label class="control-label" for="nombreLote" >Condominio</label>
                                         <select class="selectpicker select-gral" title="SELECCIONA UN CONDOMINIO" id="selectCondominio"></select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="divBusquedaLote">
