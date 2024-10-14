@@ -300,7 +300,7 @@
                                             <table class="table-striped table-hover hide" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th></th>
+                                                        <th>checkComisionesNuevas</th>
                                                         <th>id_pago</th>
                                                         <th>proyecto</th>
                                                         <th>lote</th>

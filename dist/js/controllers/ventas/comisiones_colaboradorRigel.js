@@ -247,7 +247,7 @@ $('#condominio_otras').change( function(){
 });
 
 construirHead("tabla_nuevas_comisiones");
-
+asignarValorColumnasDT("tabla_nuevas_comisiones");
 // $('#tabla_nuevas_comisiones thead tr:eq(0) th').each( function (i) {
 //     if(i != 0){
 //         var title = $(this).text();
