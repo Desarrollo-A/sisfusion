@@ -25,6 +25,12 @@ $(document).ready(function () {
                 } else if (data[i]['id_opcion'] == 3 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 }
+                else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));                    
+                } 
+                else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));                    
+                }                  
             }
         }
         $('#selector').selectpicker('refresh');
@@ -35,17 +41,31 @@ $(document).on('change', '#selector', function () {
     $("#divTablaRL, #divTablaIntercambio, #divmodelosTable").addClass("hide");
     if ($(this).val() == 1) {
         $("#divTablaIntercambio").addClass("hide");
+        $('#proyecto').addClass('hide');
+        $('#condominio').addClass('hide');
         $("#divTablaRL").removeClass("hide");
         llenarTablaRl($(this).val());
     } else if ($(this).val() == 2) {
         $("#divTablaIntercambio").removeClass("hide");
+        $('#proyecto').addClass('hide');
+        $('#condominio').addClass('hide');
         $("#divTablaRL").addClass("hide");
         llenarTablaIntercambios($(this).val());
     } else if ($(this).val() == 3) {
+        $('#proyecto').addClass('hide');
+        $('#condominio').addClass('hide');
         $("#divmodelosTable").removeClass("hide");
+    } 
+    else if ($(this).val() == 4) {
+        // $("#divmodelosTable").removeClass("hide");
+        $('#proyecto').removeClass('hide');
+        $('#condominio').removeClass('hide');
     } 
 });
 
+function crearTablaTipoVenta(){
+    
+}
 // FUNCIóN PARA LLENAR TABLA CON REPRESENTANTES LEGALES
 function llenarTablaRl(tipoOperacion) {
     $('#gestorContraloria thead tr:eq(0) th').each(function (i) {
