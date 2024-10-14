@@ -5,9 +5,8 @@ const rolesPermitidosContratoEspecial = [8];
 const rolesPermitidosEstatus7 = [15];
 const usuariosPermitidosContratoEspecial = [2762, 2747];
 const movimientosPermitidosContratoFirmado = [45];
-const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106, 45];
+const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106];
 const ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA = [17, 70, 71, 73];
-const rolesPermitidosEstatus6And15 = [17, 70];
 const movimientosPermitidosEstatus8 = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosEstatus8 = [5, 2, 6];
 const movimientosPermitidosEstatus2 = [31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111];
@@ -163,7 +162,7 @@ $('#idLote').change(function () {
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                     format: {
-                        header:  function (d, columnIdx) {
+                        header: function (d, columnIdx) {
                             return $(d).attr('placeholder').toUpperCase();
                         }
                     }
@@ -476,7 +475,7 @@ $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
 
     let pathUrl = $itself.attr("data-expediente");
-    if ($itself.attr("data-bucket") != 1) {
+    if($itself.attr("data-bucket") != 1){
         pathUrl = general_base_url + $itself.attr("data-expediente");
     }
 
@@ -502,13 +501,13 @@ $(document).on('click', '.verDocumento', function () {
     if ($itself.attr('data-tipoDocumento') === TipoDoc.PROSPECTO) {
         const urlProspecto = ($itself.attr('data-lp') == 6) ? 'printProspectInfoMktd' : 'printProspectInfo';
 
-        pathUrl = `${general_base_url}clientes/${urlProspecto}/` + $itself.attr('data-idProspeccion');
+        pathUrl = `${general_base_url}clientes/${urlProspecto}/`+$itself.attr('data-idProspeccion');
     }
 
-    if (screen.width > 480 && screen.width < 800) {
+    if ( screen.width > 480 && screen.width < 800 ){
         window.location.href = `${pathUrl}`;
     }
-    else {
+    else{
         fileExists(pathUrl);
         Shadowbox.open({
             content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
@@ -626,7 +625,6 @@ $(document).on("click", "#sendRequestButton", function () {
                 $('#uploadFileButton').prop('disabled', true);
             },
             success: function (response) {
-                console.log("response: ", response);
                 const res = JSON.parse(response);
 
                 if (res.code === 200) {
@@ -668,6 +666,7 @@ $(document).on("click", "#sendRequestButton", function () {
 
                 if (res.code === 200) {
                     alerts.showNotification("top", "right", `${_("el-documento")} ${nombreDocumento} ${_("eliminado-exito")}`, "success");
+
                     documentacionLoteTabla.ajax.reload();
                     $("#addDeleteFileModal").modal("hide");
                 }
