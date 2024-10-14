@@ -1,11 +1,5 @@
-onLoadTranslations(function () {
-    // Initial load of content
+$(document).ready(function () {
     loadSelectOptions();
-    construirHead("tablaInventario");
-    construirHead("tablaHistorialContratacion");
-    construirHead("tablaHistoriaLiberacion");
-    construirHead("tablaVentasCompartidas");
-
 });
 
 function loadSelectOptions() {
@@ -23,16 +17,15 @@ function loadSelectOptions() {
         $("#idEstatus").selectpicker('refresh');
     }, 'json');
 
-    // Load development locations
-    // $.post(`${general_base_url}Contratacion/sedesPorDesarrollos`, function (data) {
-    //     $("#sedes").empty(); // Clear existing options
-    //     $("#sedes").before($('<label>').text(_("third_title")).addClass('form-label'));
-        
-    //     for (var i = 0; i < data.length; i++) {
-    //         $("#sedes").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre'].toUpperCase()));
-    //     }
-    //     $("#sedes").selectpicker('refresh');
-    // }, 'json');
+    $.post(`${general_base_url}Contratacion/sedesPorDesarrollos`, function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_sede'];
+            var name = data[i]['nombre'];
+            $("#sedes").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#sedes").selectpicker('refresh');
+    }, 'json');
 }
 
 $('#idResidencial').change(function () {
@@ -57,6 +50,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
     ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
     ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
     ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
+    construirHead("tablaInventario");
     let tabla_6 = $("#tablaInventario").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -610,6 +604,7 @@ $(document).on("click", ".ver_historial", function () {
 
 
 function consultarHistoriaContratacion(idLote) {
+    tablaInventario("tablaHistorialContratacion");
     let tablaHistorialContratacion = $('#tablaHistorialContratacion').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [
@@ -667,6 +662,8 @@ function consultarHistoriaContratacion(idLote) {
 
 
 function consultarHistoriaLiberacion(idLote) {
+    construirHead("tablaHistoriaLiberacion");
+
     let tablaHistoriaLiberacion = $('#tablaHistoriaLiberacion').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
@@ -714,6 +711,7 @@ function consultarHistoriaLiberacion(idLote) {
 
 
 function consultarVentasCompartidas(idLote) {
+    construirHead("tablaVentasCompartidas");
     let tablaVentasCompartidas = $('#tablaVentasCompartidas').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
@@ -816,6 +814,7 @@ $(document).on('change', "#sedes", function () {
 
 
 function fillTableInventario(sede) {
+    construirHead("tabla_inventario_contraloria");
     let tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
