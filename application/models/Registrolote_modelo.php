@@ -3583,6 +3583,9 @@
 				} else if ($id_usuario == 10534) { // BRENDA PAOLA VEGA GUERRERO
 					$id_lider = $id_lider . ', 13549, 13549';
 					$sede = "";
+				} else if ($id_usuario == 18027) { // ALMA ADRIANA PEREZ DOMINGUEZ
+					$id_lider = $id_lider . ', 113';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes

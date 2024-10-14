@@ -538,6 +538,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 2080)";
             else if ($id_usuario == 15716) // ADRIAN TREJO GUTIERREZ
                 $where = "pr.id_gerente IN ($id_lider, 7944)";
+            else if ($id_usuario == 18027) // ALMA ADRIANA PEREZ DOMINGUEZ
+                $where = "pr.id_gerente IN ($id_lider, 113)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
