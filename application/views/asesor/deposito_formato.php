@@ -79,7 +79,7 @@
                 <!-- encabezados -->
                 <div class="row pt-2" id="radioDS">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <h6 class="label-on-left mb-0" data-i18n="desarrollo">DESARROLLO </h6>
+                        <h6 class="label-on-left mb-0" data-i18n="desarrollo">DESARROLLO</h6>
                         <div class="radio_container">
                             <?php
                             $inputRender = '';
@@ -328,7 +328,7 @@
                     </div>
                     <div class="col col-xs-12 col-sm-3 col-md-6 col-lg-6 <?php echo ($cliente[0]->especialistaEscuadron == 1) ?  '':  'd-none'; ?>" id="liderEscuadronDiv">
                         <h4 class="label-on-left m-0">LÍDER ESCUADRÓN RESCATE</h4>
-                        <select id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
+                        <select data-i18n-label="selecciona-una-opcion" id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
                                 data-size="7" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
                                 data-live-search="true" data-container="body" data-width="100%">
                             <?php

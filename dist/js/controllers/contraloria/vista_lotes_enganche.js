@@ -44,8 +44,11 @@ function llenarSelectPrincipal(){
             $('#modificacion').append('<option value="Ubicacion">Ubicación</option>');  
             document.getElementById('selects').innerHTML = ubicacion;      
         break;
-        case 1297: //María de Jesús
-        case 826: //Victor Hugo vista_lotes_apartados
+        case 1297: // María de Jesús
+        case 826: // Victor Hugo vista_lotes_apartados
+        case 2815: // Brenda sanchez
+        case 2875: // Margarita Ruiz
+        case 9775: // ZAIRA FLORES ALEGRIA
         subtitulo = "En esta vista podrás hacer la actualización del precio total con descuentos, enganche y ubicación de un lote apartado.";
         $('#modificacion').append('<option value="Ubicacion">Ubicación</option>');
         $('#modificacion').append('<option value="Precio">Precio total con descuento</option>');
