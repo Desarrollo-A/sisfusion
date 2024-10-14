@@ -439,6 +439,7 @@ class CasasModel extends CI_Model
         doc.idDocumento,
         vpc.*,
         cli.id_cliente,
+        cli.id_cliente AS idCliente,
         con.nombre AS condominio,
         resi.descripcion AS proyecto,
         CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,

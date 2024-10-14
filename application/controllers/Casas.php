@@ -768,6 +768,7 @@ class Casas extends BaseController
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario'),
             "pre_proceso_casas" => 1,
+            "plan_comision_c" =>0
         );
 
         $getGerente = $this->CasasModel->getGerente($idGerente);
@@ -808,7 +809,7 @@ class Casas extends BaseController
             "fecha_modificacion" => date("Y-m-d H:i:s"),
             "modificado_por" => $this->session->userdata('id_usuario'),
             "pre_proceso_casas" => null,
-            "plan_comision_c" => null
+            "plan_comision_c" => 0
         );
 
         $getSubdirector = $this->CasasModel->getGerente($idSubdirector);
@@ -855,6 +856,7 @@ class Casas extends BaseController
         $id_documento = $this->form('id_documento');
         $name_documento = $this->form('name_documento');
         $tipo_documento = $this->form('tipo_documento');
+        $idCliente = $this->form('idCliente');
 
         if (!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)) {
             http_response_code(400);
@@ -917,7 +919,7 @@ class Casas extends BaseController
 
                 if ($updated) {
                     $motivo = "Se subió archivo: $name_documento";
-                    $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo, 1); // se añade el numero de esquema 1 -proceso banco
+                    $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo, 1, $idCliente); // se añade el numero de esquema 1 -proceso banco
 
                     $this->json([]);
                 }
@@ -936,6 +938,9 @@ class Casas extends BaseController
         $adm = $this->form('adm');
         $ooam = $this->form('ooam');
         $idLote = $this->form('idLote');
+        $idCliente = $this->form('idCliente');
+        echo json_encode($idCliente);
+        exit();
         $responseTitulacion = $this->CasasModel->checkVoboEscrituracion($idLote);
 
         if (!isset($id) || !isset($tipo)) {
@@ -991,7 +996,7 @@ class Casas extends BaseController
             }
 
             if ($is_ok) {
-                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, "Se avanzó el proceso al paso 2 | Comentario: ".$comentario, 1); // se agrega esquema 1 - credito de banco
+                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, "Se avanzó el proceso al paso 2 | Comentario: ".$comentario, 1, $idCliente); // se agrega esquema 1 - credito de banco
             } else {
                 http_response_code(404);
             }
