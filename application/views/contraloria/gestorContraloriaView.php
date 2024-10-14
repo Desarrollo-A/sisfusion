@@ -136,12 +136,14 @@
                                         <select class="selectpicker select-gral" id="selector" title="SELECCIONA UNA OPCIÓN"></select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="proyecto">
-                                        <label class="control-label" for="nombreLote">Proyecto</label>
-                                        <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO"></select>
+                                        <label class="control-label" for="nombreLote" >Proyecto</label>
+                                        <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO" id="selectProyecto">
+                                            
+                                        </select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="condominio">
                                         <label class="control-label" for="nombreLote">Condominio</label>
-                                        <select class="selectpicker select-gral" title="SELECCIONA UN CONDOMINIO"></select>
+                                        <select class="selectpicker select-gral" title="SELECCIONA UN CONDOMINIO" id="selectCondominio"></select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="divBusquedaLote">
                                         <label class="control-label" for="nombreLote">Buscar Lote</label>

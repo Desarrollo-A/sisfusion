@@ -1987,6 +1987,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return $this->db->query("SELECT MAX(id_opcion) AS id_opcion FROM opcs_x_cats WHERE id_catalogo = 77")->row();
     }
 
+    
     // Función que retorna los registros de los lotes contratados por intercambio
     public function getRegistrosIntercambios() {
         return $this->db->query(
@@ -2008,6 +2009,46 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             WHERE
                 lo.status = 1
                 AND lo.idStatusLote IN (6)")->result();
+    }
+
+    // public function getRegistrosCambioTipoVenta($idCondominio) {
+    //     return $this->db->query(
+    //         "SELECT
+    //             re.nombreResidencial,
+    //             co.nombre nombreCondominio,
+    //             lo.nombreLote,
+    //             lo.idLote,
+    //             ISNULL(lo.referencia, '') referencia,
+    //             lo.idStatusLote,
+    //             lo.tipo_venta idTipoVenta
+    //             tv.tipo_venta nombreTipoVenta
+    //         FROM
+    //             lotes lo
+    //         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = 1
+    //         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+    //         INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
+    //         WHERE
+    //             lo.status = 1")->result();
+    // }
+
+    public function getRegistrosCambioTipoVenta($idCondominio) {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre AS nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') AS referencia,
+                lo.idStatusLote,
+                lo.tipo_venta AS idTipoVenta,
+                tv.tipo_venta AS nombreTipoVenta
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = 1
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
+            WHERE
+                lo.status = 1", array($idCondominio))->result();
     }
 
     // Función que retorna los registros de las opciones para el gestor de contraloría

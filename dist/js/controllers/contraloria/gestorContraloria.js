@@ -2,11 +2,11 @@ let titulosGestor = [];
 let titulosTablaIntercambios = [];
 let titulosTablaCambioRL = [];
 let titulos_principal = [];
-let num_colum_principal = [];  
+let num_colum_principal = [];
 let tipoTransaccion = '';
-let tipoTransaccionModelo =''; 
+let tipoTransaccionModelo = '';
 let id_opcion = '';
-let idopcion_modelo ='';
+let idopcion_modelo = '';
 let idLote = '';
 let usuariosPermitidosRL = [2815, 2875, 12276, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosIntercambio = [5342, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
@@ -26,16 +26,21 @@ $(document).ready(function () {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 }
                 else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
-                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));                    
-                } 
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                }
                 else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
-                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));                    
-                }                  
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                }
             }
         }
         $('#selector').selectpicker('refresh');
-    });
+    });  
+    $('#selectProyecto').append('<option value="opcion1">Opción 1</option>');
+    $('#selectProyecto').append('<option value="opcion2">Opción 2</option>');
+    $('#selectProyecto').append('<option value="opcion3">Opción 3</option>');
 });
+
+
 
 $(document).on('change', '#selector', function () {
     $("#divTablaRL, #divTablaIntercambio, #divmodelosTable").addClass("hide");
@@ -55,17 +60,114 @@ $(document).on('change', '#selector', function () {
         $('#proyecto').addClass('hide');
         $('#condominio').addClass('hide');
         $("#divmodelosTable").removeClass("hide");
-    } 
+    }
     else if ($(this).val() == 4) {
-        // $("#divmodelosTable").removeClass("hide");
+        // crearTablaTipoVenta();
         $('#proyecto').removeClass('hide');
         $('#condominio').removeClass('hide');
-    } 
+    }
 });
 
-function crearTablaTipoVenta(){
-    
+function crearTablaTipoVenta() {
+    $('#tipo-venta thead tr:eq(0) th').each(function (i) {
+        var title = $(this).text();
+        titulosGestor.push(title);
+        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        $('input', this).on('keyup change', function () {
+            if (tablaGestor.column(i).search() !== this.value)
+                tablaGestor.column(i).search(this.value).draw();
+        });
+    });
+    tablaGestor = $("#tipo-venta").DataTable({
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Exportar registros a Excel',
+                title: "Listado de representantes legales",
+                exportOptions: {
+                    columns: [0, 1, 2, 3],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulosGestor[columnIdx] + ' ';
+                        }
+                    }
+                }
+            },
+            {
+                text: '<i class="fa fa-plus" aria-hidden="true"></i>',
+                className: 'btn btn-azure agregar',
+                titleAttr: 'Agregar Representante Legal',
+                title: "Agregar Representante Legal",
+                attr: {
+                    'data-transaccion': 0
+                }
+            }
+        ],
+        language: {
+            url: `${general_base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        bAutoWidth: false,
+        fixedColumns: true,
+        ordering: false,
+        scrollX: true,
+        destroy: true,
+        columns: [
+            { data: 'id_opcion' },
+            { data: 'nombre' },
+            {
+                data: function (d) {
+                    if (d.estatus == 1) {
+                        return '<center><span class="label lbl-green">ACTIVO</span><center>';
+                    } else {
+                        return '<center><span class="label lbl-warning">INACTIVO</span><center>';
+                    }
+                }
+            },
+            { data: 'fecha_creacion' },
+            {
+                orderable: false,
+                data: function (d) {
+                    return `<div class="d-flex justify-center"><button href="#" class="btn-data agregar ${d.estatus == 0 ? 'btn-green' : 'btn-warning'}" data-nombre="${d.nombre}" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN" data-transaccion="${d.estatus == 0 ? '1' : '2'}" data-idopcion="${d.id_opcion}"><i class="${d.estatus == 0 ? 'fas fa-unlock' : 'fas fa-lock'}"></i></button></div>`;
+
+                }
+            }
+        ],
+        columnDefs: [
+            {
+                searchable: false,
+                orderable: false,
+                targets: 0
+            },
+        ],
+        ajax: {
+            url: `${general_base_url}Contraloria/getDatosTabla/${tipoOperacion}`,
+            dataSrc: "",
+            type: "POST",
+            cache: false,
+        },
+        order: [[1, 'asc']]
+    });
+
+    $('#tipo-venta').on('draw.dt', function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 }
+
 // FUNCIóN PARA LLENAR TABLA CON REPRESENTANTES LEGALES
 function llenarTablaRl(tipoOperacion) {
     $('#gestorContraloria thead tr:eq(0) th').each(function (i) {
@@ -472,13 +574,13 @@ $(document).on('click', '#btnActualizarRL', function (e) {
             cache: false,
             contentType: false,
             processData: false,
-            type: 'POST'           
+            type: 'POST'
         });
     }
 });
 
 // TABLA MODELOS CASA 
-$(document).ready(function() {     
+$(document).ready(function () {
     modelosTable = $('#modelosTable thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         titulos_principal.push(title);
@@ -498,7 +600,7 @@ $(document).ready(function() {
             type: "POST",
             cache: false
         },
-        initComplete: function() {
+        initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip();
         },
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -516,9 +618,9 @@ $(document).ready(function() {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title:'Listado-Modelos De Casas',
+                title: 'Listado-Modelos De Casas',
                 exportOptions: {
-                    columns: [0, 1, 2, 3,4],
+                    columns: [0, 1, 2, 3, 4],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos_principal[columnIdx] + ' ';
@@ -528,13 +630,13 @@ $(document).ready(function() {
             },
             {
                 text: '<i class="fa fa-plus" aria-hidden="true"></i>',
-                className: 'btn btn-azure agregarCasa', 
+                className: 'btn btn-azure agregarCasa',
                 titleAttr: 'Agregar un nuevo modelo de casa',
                 title: "Agrega un nuevo modelo de casa:",
                 attr: {
-                    'data-transaccionmodelo': 0  
+                    'data-transaccionmodelo': 0
                 }
-            }   
+            }
         ],
         language: {
             url: `${general_base_url}static/spanishLoader_v2.json`,
@@ -547,22 +649,24 @@ $(document).ready(function() {
             { data: "idModelo" },
             { data: "modelo" },
             { data: "sup" },
-            { data: 
-                function (d) {
-                    return `${formatMoney(d.costom2)}`;
-                }
+            {
+                data:
+                    function (d) {
+                        return `${formatMoney(d.costom2)}`;
+                    }
             },
-            {data: function (d) {
-            let statusEstado = '';
-                if(d['estatus'] == 1){
-                    statusEstado ="<span class='label lbl-green'> Activo</span>";
+            {
+                data: function (d) {
+                    let statusEstado = '';
+                    if (d['estatus'] == 1) {
+                        statusEstado = "<span class='label lbl-green'> Activo</span>";
 
+                    }
+                    else if (d['estatus'] == 2) {
+                        statusEstado = "<span class='label lbl-warning'>Inactivo</span>";
+                    }
+                    return statusEstado;
                 }
-                else if (d['estatus'] == 2){
-                    statusEstado="<span class='label lbl-warning'>Inactivo</span>";
-                }
-            return statusEstado;
-            }
             },
             {
                 orderable: false,
@@ -572,7 +676,7 @@ $(document).ready(function() {
             }
         ]
     });
-        // AGREGAR - ACTUALIZAR TABLA MODELOS CASA 
+    // AGREGAR - ACTUALIZAR TABLA MODELOS CASA 
     $(document).on('click', '.agregarCasa', function () {
         let tipoTm = $(this).data('transaccionmodelo');
         $('#modalmodelo').modal('show');
@@ -589,8 +693,8 @@ $(document).ready(function() {
             $("#divSuperficie").addClass("d-none");
             $("#divCosto").addClass("d-none");
             $("#divConfirmacionModelo").removeClass("d-none");
-            $("#divConfirmacionModelo").html(tipoTm == 1 
-                ? `¿Estás seguro de activar el modelo de casa?` 
+            $("#divConfirmacionModelo").html(tipoTm == 1
+                ? `¿Estás seguro de activar el modelo de casa?`
                 : `¿Estás seguro de desactivar el modelo de casa?`);
         }
 
@@ -626,7 +730,7 @@ $(document).ready(function() {
                 processData: false,
                 type: 'POST',
                 success: function (response) {
-                    var data = JSON.parse(response); 
+                    var data = JSON.parse(response);
                     if (data.success) {
                         alerts.showNotification('top', 'right', `Registro ${tipoTransaccionModelo == 0 ? 'insertado' : 'actualizado'} exitosamente.`, 'success');
                     } else {

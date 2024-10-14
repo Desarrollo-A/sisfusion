@@ -7,8 +7,8 @@ class Contraloria extends CI_Controller {
 		$this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions','Formatter','permisos_sidebar', 'email', 'Arcus', 'Salesforce'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
-		$this->validateSession();
-		$this->jwt_actions->authorize('2565', $_SERVER['HTTP_HOST']);
+		// $this->validateSession();
+		// $this->jwt_actions->authorize('2565', $_SERVER['HTTP_HOST']);
 		date_default_timezone_set('America/Mexico_City');
 		$val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
@@ -17,10 +17,10 @@ class Contraloria extends CI_Controller {
 	}
 
 	public function index() {
-		if($this->session->userdata('perfil') == FALSE || ($this->session->userdata('perfil') != 'contraloria' && $this->session->userdata('perfil') != 'contraloriaCorporativa' && $this->session->userdata('perfil') != 'subdirectorContraloria' && $this->session->userdata('perfil') != 'direccionFinanzas' && $this->session->userdata('perfil') != 'direccionFinanzas' && $this->session->userdata('perfil') != 'ejecutivoContraloriaJR'))
-		{
-			redirect(base_url().'login');
-		}
+		// if($this->session->userdata('perfil') == FALSE || ($this->session->userdata('perfil') != 'contraloria' && $this->session->userdata('perfil') != 'contraloriaCorporativa' && $this->session->userdata('perfil') != 'subdirectorContraloria' && $this->session->userdata('perfil') != 'direccionFinanzas' && $this->session->userdata('perfil') != 'direccionFinanzas' && $this->session->userdata('perfil') != 'ejecutivoContraloriaJR'))
+		// {
+		// 	redirect(base_url().'login');
+		// }
 		$this->load->view('template/header');
 		$this->load->view('template/home');
 		$this->load->view('template/footer');
@@ -4425,6 +4425,14 @@ public function return1(){
         }
         echo json_encode($data_response);
         exit;
+	}
+
+	// public function get_registros_tipo_venta($idCondominio) {
+	// 	echo json_encode($this->Contraloria_model->getRegistrosCambioTipoVenta($idCondominio));
+	// }
+
+	public function get_registros_tipo_venta($idCondominio=1) {
+		echo json_encode($this->Contraloria_model->getRegistrosCambioTipoVenta($idCondominio));
 	}
 
 	public function selectores() {
