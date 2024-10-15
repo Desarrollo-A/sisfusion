@@ -64,11 +64,11 @@
                                                         <tr>
                                                             <th>ID CLIENTE</th>
                                                             <th>ID PROCESO</th>
+                                                            <th>NOMBRE CLIENTE</th>
                                                             <th>PROYECTO</th>
                                                             <th>CONDOMINIO</th>
                                                             <th>NOMBRE LOTE</th>
                                                             <th>ID LOTE</th>
-                                                            <th>NOMBRE CLIENTE</th>
                                                             <th>GERENTE</th>
                                                             <th>ASESOR</th>
                                                             <th>DOCUMENTO</th>
@@ -89,11 +89,11 @@
                                                         <tr>
                                                             <th>ID CLIENTE</th>
                                                             <th>ID PROCESO</th>
+                                                            <th>NOMBRE CLIENTE</th>
                                                             <th>PROYECTO</th>
                                                             <th>CONDOMINIO</th>
                                                             <th>NOMBRE LOTE</th>
                                                             <th>ID LOTE</th>
-                                                            <th>NOMBRE CLIENTE</th>
                                                             <th>GERENTE</th>
                                                             <th>ASESOR</th>
                                                             <th>DOCUMENTO</th>

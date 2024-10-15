@@ -35,7 +35,6 @@ let columnsBanco = [
     { data: 'asesor' },
     { data: 'archivoBanco' },
     {data: function(data) {
-        console.log("visualizarZIP: ", data.visualizarZIP);
         let view_button = '';
         let download_button = '';
 
@@ -50,7 +49,7 @@ let columnsBanco = [
 ]
 
 let columnsDirecto = [
-    { data: 'idProcesoCasas'},
+    { data: 'idProceso'},
     { data: 'idProceso'},
     { data: 'proyecto'},
     { data: 'condominio'},
@@ -70,13 +69,13 @@ let columnsDirecto = [
 ];
 
 let columnsPagos = [
+    { data: 'idCliente'},
     { data: 'idProcesoCasas'},
-    { data: 'idProcesoCasas'},
+    { data: 'nombreCliente'},   
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
     { data: 'idLote' },
-    { data: 'nombreCliente'},
     { data: 'gerente' },
     { data: 'asesor' },
     { data: 'documento' },
@@ -111,7 +110,7 @@ function dataFunction(value) {
     } else if (valueTab == 3) {
         tableConfig = {
             id: '#tablePagos',
-            url: 'casas/lista_toda_documentacion_casas_pagos',
+            url: 'casas/documentacion_clientes_pago',
             buttons: buttons,
             columns: columnsPagos
         };
@@ -123,14 +122,27 @@ function dataFunction(value) {
 }
 
 function show_preview(data) {
-    let url = `${general_base_url}casas/archivo/${data.archivo}`
-
+    let url = "";
+    let documento = '';
+    if(valueTab == 1) {
+        url = `${general_base_url}casas/archivo/${data.archivoBanco}`;
+        documento = data.documentoBanco;
+    }
+    if(valueTab == 2) {
+        url = `${general_base_url}casas/archivo/${data.archivoDirecto}`;
+        documento = data.documentoDirecto;
+    }
+    if(valueTab == 3) {
+        url = `${general_base_url}casas/archivo/${data.archivo}`;
+        documento = data.documento;
+    }
+    
     Shadowbox.init();
 
     Shadowbox.open({
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
         player: "html",
-        title: `Visualizando archivo: ${data.documento}`,
+        title: `Visualizando archivo: ${documento}`,
         width: 985,
         height: 660
     });
@@ -202,8 +214,6 @@ filtro_condominios_banco.onChange(function(option){
 });
 
 filtro_lotes_banco.onChange(function(option){
-    console.log("option: ", option);
-    console.log("valueTab: ", valueTab);
     table.setParams({lote: option.value, valueTab: valueTab})
     table.reload()
 })

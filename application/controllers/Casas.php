@@ -5571,4 +5571,26 @@ class Casas extends BaseController
        }
        exit();
     }
+
+    public function documentacion_clientes_pago () {
+        $lote = $this->get('lote');
+
+        if(!isset($lote)) {
+            return $this->json([]);
+        }
+
+        $documentos_clientes_pdf = $this->CasasModel->getDocumentacionPagosClientePDF($lote);
+        $documentos_clientes_xml = $this->CasasModel->getDocumentacionPagosClienteXML($lote);
+
+        $merged_documents = array_merge(
+            $documentos_clientes_pdf, 
+            $documentos_clientes_xml
+        );
+
+        usort($merged_documents, function($a, $b) {
+            return $a->idProcesoCasas <=> $b->idProcesoCasas;
+        });
+
+        return $this->json($merged_documents);
+    }
 }

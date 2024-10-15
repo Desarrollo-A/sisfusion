@@ -2777,12 +2777,57 @@ AND vb.proyectos != 1";
                 SELECT id_cliente, idProcesoCasas, proyecto, condominio, nombreLote, idLote, gerente, asesor, idProceso, nombreCliente, documentoBanco, documentoDirecto, archivoBanco, archivoDirecto, visualizarZIP
                 FROM dataBanco
                 WHERE  (gerente != '' AND asesor != '')
-                GROUP BY id_cliente, idProcesoCasas, condominio, nombreLote, idLote, gerente, asesor, proyecto, idProceso, nombreCliente, documentoBanco, documentoDirecto, archivoBanco, archivoDirecto, visualizarZIP";
+                GROUP BY id_cliente, idProcesoCasas, condominio, nombreLote, idLote, gerente, asesor, proyecto, idProceso, nombreCliente, documentoBanco, documentoDirecto, archivoBanco, archivoDirecto, visualizarZIP
+                ORDER BY nombreCliente
+                ";
         return $this->db->query($query)->result();
     }
 
-    public function getModeloCasaEsquemaCliente($idCliente) {
-        $query = "SELECT idPropuestaCasa, esquemaCreditoCasas FROM clientes WHERE id_cliente = $idCliente";
-        return $this->db->query($query)->row();
+    public function getDocumentacionPagosClientePDF($idLote) {
+        $query = "SELECT cl.id_cliente AS idCliente, lo.nombreLote, lo.idLote,
+        CASE WHEN CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END AS nombreCliente,
+        CASE WHEN CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR' ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) END AS gerente,
+        CASE WHEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR' ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) END AS asesor,
+        CONCAT('COMPLEMENTO PDF AVANCE', app.avance, '%') AS documento, app.complementoPDF AS archivo,
+        pcb.idProcesoCasas,resi.nombreResidencial as proyecto, con.nombre as condominio
+
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote 
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = pp.idProcesoCasas  
+        LEFT JOIN proceso_casas_directo dpc ON dpc.idProceso = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        left join clientes cl on cl.idLote = pp.idLote 
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente_c
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = cl.id_asesor_c
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos
+        WHERE lo.idLote = $idLote AND (app.complementoXML IS NOT NULL) 
+        AND (pcb.status = 1 OR pcb.estatus = 1) AND (cl.status = 1)
+        ";
+        return $this->db->query($query)->result();
+    }
+
+    public function getDocumentacionPagosClienteXML($idLote) {
+        $query = "SELECT cl.id_cliente AS idCliente, lo.nombreLote, lo.idLote,
+        CASE WHEN CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END AS nombreCliente,
+        CASE WHEN CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR' ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) END AS gerente,
+        CASE WHEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR' ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) END AS asesor,
+        CONCAT('COMPLEMENTO XML AVANCE', app.avance, '%') AS documento, app.complementoXML AS archivo,
+        pcb.idProcesoCasas,resi.nombreResidencial as proyecto, con.nombre as condominio
+
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote 
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = pp.idProcesoCasas  
+        LEFT JOIN proceso_casas_directo dpc ON dpc.idProceso = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        left join clientes cl on cl.idLote = pp.idLote 
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = cl.id_gerente_c
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = cl.id_asesor_c
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos
+        WHERE lo.idLote = $idLote AND (app.complementoXML IS NOT NULL) 
+        AND (pcb.status = 1 OR pcb.estatus = 1) AND (cl.status = 1)
+        ";
+        return $this->db->query($query)->result();
     }
 }
