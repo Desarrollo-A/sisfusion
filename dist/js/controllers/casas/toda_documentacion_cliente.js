@@ -25,13 +25,15 @@ let buttons = [
 
 let columnsBanco = [
     { data: 'idProcesoCasas'},
+    { data: 'idProcesoCasas'},
+    { data: 'nombreCliente'},
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
     { data: 'idLote' },
     { data: 'gerente' },
     { data: 'asesor' },
-    { data: 'documento' },
+    { data: 'archivoBanco' },
     {data: function(data) {
         let view_button = '';
         let download_button = '';
@@ -48,9 +50,11 @@ let columnsBanco = [
 
 let columnsDirecto = [
     { data: 'idProceso'},
+    { data: 'idProceso'},
     { data: 'proyecto'},
     { data: 'condominio'},
     { data: 'nombreLote'},
+    { data: 'nombreCliente'},
     { data: 'idLote'},
     { data: 'gerente'},
     { data: 'asesor'},
@@ -65,7 +69,9 @@ let columnsDirecto = [
 ];
 
 let columnsPagos = [
+    { data: 'idCliente'},
     { data: 'idProcesoCasas'},
+    { data: 'nombreCliente'},   
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
@@ -90,21 +96,21 @@ function dataFunction(value) {
     if (valueTab == 1) {
         tableConfig = {
             id: '#tableBanco',
-            url: 'casas/lista_toda_documentacion_casas_banco',
+            url: 'casas/documentacion_clientes',
             buttons: buttons,
             columns: columnsBanco
         };
     } else if (valueTab == 2) {
         tableConfig = {
             id: '#tableDirecto',
-            url: 'casas/lista_toda_documentacion_casas_directo',
+            url: 'casas/documentacion_clientes',
             buttons: buttons,
             columns: columnsDirecto
         };
     } else if (valueTab == 3) {
         tableConfig = {
             id: '#tablePagos',
-            url: 'casas/lista_toda_documentacion_casas_pagos',
+            url: 'casas/documentacion_clientes_pago',
             buttons: buttons,
             columns: columnsPagos
         };
@@ -116,14 +122,27 @@ function dataFunction(value) {
 }
 
 function show_preview(data) {
-    let url = `${general_base_url}casas/archivo/${data.archivo}`
-
+    let url = "";
+    let documento = '';
+    if(valueTab == 1) {
+        url = `${general_base_url}casas/archivo/${data.archivoBanco}`;
+        documento = data.documentoBanco;
+    }
+    if(valueTab == 2) {
+        url = `${general_base_url}casas/archivo/${data.archivoDirecto}`;
+        documento = data.documentoDirecto;
+    }
+    if(valueTab == 3) {
+        url = `${general_base_url}casas/archivo/${data.archivo}`;
+        documento = data.documento;
+    }
+    
     Shadowbox.init();
 
     Shadowbox.open({
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
         player: "html",
-        title: `Visualizando archivo: ${data.documento}`,
+        title: `Visualizando archivo: ${documento}`,
         width: 985,
         height: 660
     });
@@ -195,15 +214,9 @@ filtro_condominios_banco.onChange(function(option){
 });
 
 filtro_lotes_banco.onChange(function(option){
-    table.setParams({lote: option.value})
+    table.setParams({lote: option.value, valueTab: valueTab})
     table.reload()
 })
-
-
-
-
-
-
 
 let filtro_proyectos_directo = new SelectFilter({ id: 'proyecto-directo', label: 'Proyecto', placeholder: 'Selecciona una opción' });
 let filtro_condominios_directo = new SelectFilter({ id: 'condominio-directo', label: 'Condominio', placeholder: 'Selecciona una opción' });
@@ -230,10 +243,6 @@ let filtros_pagos = new Filters({
         filtro_lotes_pagos,
     ],
 });
-
-
-
-
 
 filtro_proyectos_directo.onChange(function(option){
     $.ajax({

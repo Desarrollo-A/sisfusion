@@ -5437,6 +5437,8 @@ public function CancelarDescuento($id_pago,$motivo)
             $id_lider .= ", 2080";
         else if ($id_usuario == 15716) // ADRIAN TREJO GUTIERREZ
             $id_lider .= ", 7944";
+        else if ($id_usuario == 18027) // ALMA ADRIANA PEREZ DOMINGUEZ
+            $id_lider .= ", 113";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES

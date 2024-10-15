@@ -306,6 +306,11 @@ class Casas extends BaseController
         $this->load->view("casas/toda_documentacion");
     }
 
+    public function toda_documentacion_cliente($value = '' ) {
+        $this->load->view('template/header');
+        $this->load->view("casas/toda_documentacion_cliente");
+    }
+
     public function documentos_proveedor($proceso)
     {
         $lote = $this->CasasModel->getProceso($proceso);
@@ -720,49 +725,32 @@ class Casas extends BaseController
     public function back_to_asignacion()
     {
         $this->form();
-
-        $id = $this->form('id');
+        $idProceso = $this->form('idProceso');
         $idCliente = $this->form('idCliente');
         $comentario = $this->form('comentario');
-        $banderaSuccess = true;
 
-        if (!isset($id) || !isset($idCliente)) {
+        $this->db->trans_begin();
+
+        if(!isset($idProceso) || !isset($idCliente)) {
             http_response_code(400);
         }
-
-        $new_status = 0;
-
-        $proceso = $this->CasasModel->getProceso($id);
-
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
-        if ($is_ok) {
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso el proceso a asignación de asesor | Comentario: ' . $comentario, 1);
-        } else {
-            $banderaSuccess = false;
-        }
-
-        $updateDataClientes = array(
-            "pre_proceso_casas" => 2,
-            "idPropuestaCasa" => 0
-        );
-        $updateDataProceso = array(
+        $dataProceso = array(
+            "comentario" => $comentario,
             "tipoMovimiento" => 4,
-            "idPropuestaCasa" => 0,
-            "status" => 0,
 
         );
 
-        $update = $this->General_model->updateRecord("clientes", $updateDataClientes, "id_cliente", $idCliente);
-        $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $updateDataProceso, "id_cliente", $idCliente);
-        if (!$update) {
-            $banderaSuccess = false;
+        $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
+        
+        if($updateProceso) {
+            $response["result"] = true;
+            $this->db->trans_commit();
+        } else {
+            $this->db->trans_rollback();
+            $response["result"] = false;
         }
 
-        if ($banderaSuccess) {
-            $this->json([]);
-        } else {
-            http_response_code(404);
-        }
+        $this->output->set_output(json_encode($response));
     }
 
     public function generateFileName($documento, $lote, $proceso, $archivo)
@@ -2276,7 +2264,21 @@ class Casas extends BaseController
         $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
         $finalizado = "0, 1";
         $extraFields = "";
+        $extraValidation = "";
+        $idRol = $this->idRol;
+        $idUsuario = $this->idUsuario;
 
+        switch($this->idRol) {
+            case '3' :
+                $extraValidation = " AND (cli.id_gerente_c) = $idUsuario";
+                break;
+            case '7':
+                $extraValidation = "AND (cli.id_asesor_c) = $idUsuario";
+                break;
+            default: 
+                $extraValidation = "";
+                break;
+        }
         if ($opcion != -1 && $opcion != -2 && isset($opcion)) {
             $proceso = $opcion;
             $finalizado = "0";
@@ -2292,7 +2294,7 @@ class Casas extends BaseController
 
         }
 
-        $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado, $extraFields);
+        $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado, $extraFields, $extraValidation);
 
         $this->json($lotes);
     }
@@ -5519,6 +5521,76 @@ class Casas extends BaseController
         });
 
         return $this->json($merged_documents);
+    }
 
+    public function documentacion_clientes() {
+        $idLote = $this->get('lote');
+        $valueTab = $this->get('valueTab');
+        $tableName = '';
+        $extraWhere = '';
+
+        switch($valueTab) {
+            case '1':
+                $extraWhere = " AND (pcb.idProcesoCasas IS NOT NULL AND pcd.idProceso IS NULL)";
+                break;
+            case '2' :
+                $extraWhere = " AND (pcd.idProceso IS NOT NULL AND pcb.idProcesoCasas IS NULL)";
+                break;
+            default: 
+                break;
+        }
+
+        if(!isset($idLote)) {
+            return $this->json([]);
+        }
+
+        $documentos_cliente = $this->CasasModel->getListaDatosCliente($idLote, $extraWhere);
+
+        return $this->json($documentos_cliente);
+    }
+
+    public function actualizarPreProceso (){
+       //CHECK THE VALUES 
+       $idCliente = $this->form('idCliente');
+       $idProcesoCasas = $this->form('idProcesoCasas');
+       $idProcesoDirecto = $this->form('idProcesoCasasDirecto');
+       $comentario = $this->form('comentario');
+       $esqumeCreditoActual = $this->form('esquemaCreditoActual');
+       $esquemaCreditoNuevo = $this->form('esquemaCreditoNuevo');
+       $tabla = $esquemaCreditoNuevo == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
+       $banderaSuccess = true;
+
+       if($esqumeCreditoActual == $esquemaCreditoNuevo) {
+        echo json_encode("same");
+        echo json_encode($tabla);
+       }
+       else {
+        //DEACTIVATE RECORD ON OTHER TABLE
+        echo json_encode($tabla);
+        echo json_encode("change");
+       }
+       exit();
+    }
+
+    public function documentacion_clientes_pago () {
+        $lote = $this->get('lote');
+
+        if(!isset($lote)) {
+            return $this->json([]);
+        }
+
+        $documentos_clientes_pdf = $this->CasasModel->getDocumentacionPagosClientePDF($lote);
+        $documentos_clientes_xml = $this->CasasModel->getDocumentacionPagosClienteXML($lote);
+
+        $merged_documents = array_merge(
+            $documentos_clientes_pdf, 
+            $documentos_clientes_xml
+        );
+
+        usort($merged_documents, function($a, $b) {
+            return $a->idProcesoCasas <=> $b->idProcesoCasas;
+        });
+
+        return $this->json($merged_documents);
     }
 }

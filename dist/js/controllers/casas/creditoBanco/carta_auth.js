@@ -26,7 +26,7 @@ back_process = function (data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'idProceso', value: data.idProcesoCasas }),
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
