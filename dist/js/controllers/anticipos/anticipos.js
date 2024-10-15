@@ -435,6 +435,7 @@ $("#tabla_anticipos").ready(function () {
         anticipoPData.append("id_usuario", id_usuario);
         anticipoPData.append("id_anticipo", id_anticipo);
         anticipoPData.append("procesoParcialidad", procesoParcialidad);
+        anticipoPData.append("comentario_A", procesoParcialidad);
 
         $.ajax({
             url: general_base_url + 'Anticipos/regresoInternomex',
