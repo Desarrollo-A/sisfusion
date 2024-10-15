@@ -66,7 +66,7 @@ class Descuentos extends CI_Controller
     public function panel_prestamos(){
         $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
         $this->load->view('template/header');
-        $this->load->view("descuentos/panel_prestamos_view", $datos);
+        $this->load->view("f", $datos);
     }
     public function descuentos_historial()
     {
@@ -86,11 +86,14 @@ class Descuentos extends CI_Controller
             case '7':
             case '9':
             case '3':
-            // $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
-            $this->load->view("descuentos/anticipo/anticipo_descuento_view");
+            case '93':
+                // $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+                $this->load->view("descuentos/anticipo/anticipo_descuento_view");
             break;
             case '2':
             case '5':
+            case '86':
+            
                 // $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
                 $respuesta = $this->Descuentos_model->validar_permiso_a($this->session->userdata('id_usuario'));
                 
