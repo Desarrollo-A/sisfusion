@@ -133,7 +133,41 @@ rechazo_avance_proceso = function(data) {
     multipleSelect('modeloCasa');
 }
 
+back_process = function(data) {
+    let form = new Form({
+        title: 'Regresar proceso',
+        text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a asignación de cartera?`,
+        onSubmit: function (data) {
+            form.loading(true)
 
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/back_to_asignacion_cartera`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a asignación de cartera.`, "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idCliente', value: data.id_cliente }),
+            new HiddenField({ id: 'idGerente', value: data.idGerente }),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+        ],
+    })
+
+    form.show()
+}
 
 cancel_process = function (data) {
 
@@ -257,7 +291,8 @@ let columns = [
             }else{
                 asesor_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: rechazo_avance_proceso, data })            
             }
-            return `<div class="d-flex justify-center">${asesor_button}</div>`
+            let regresar_gerente_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_process, data })
+            return `<div class="d-flex justify-center">${asesor_button}${regresar_gerente_button}</div>`
         }
     },
 ]

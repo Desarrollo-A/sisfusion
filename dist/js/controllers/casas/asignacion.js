@@ -149,6 +149,41 @@ cancel_process = function (data) {
     form.show()
 }
 
+back_process = function(data) {
+    let form = new Form({
+        title: 'Regresar proceso',
+        text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a originación de cartera?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/back_to_originacion_cartera`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a originación de cartera.`, "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idCliente', value: data.id_cliente }),
+            new HiddenField({ id: 'idSubdirector', value: data.idSubdirector }),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+        ],
+    })
+
+    form.show()
+}
 
 let buttons = [
     {
@@ -235,13 +270,14 @@ let columns = [
     {
         data: function (data) {
             let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data })
+            let rechazo_avance_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_process, data })
 
             let pass_button = ''
             if (data.idAsesor) {
                 pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_asesor, data })
             }
 
-            return `<div class="d-flex justify-center">${asesor_button}${pass_button}</div>`
+            return `<div class="d-flex justify-center">${asesor_button}${pass_button}${rechazo_avance_button}</div>`
         }
     }
 ]
