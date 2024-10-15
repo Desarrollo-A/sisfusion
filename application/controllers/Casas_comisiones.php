@@ -1037,7 +1037,25 @@ class Casas_comisiones extends CI_Controller
   }
 
   public function selectTipo(){
-    echo json_encode($this->Casas_comisiones_model->selectTipo()->result_array());
+
+    $usuario=$this->session->userdata('id_usuario');
+
+    $opciones=$this->db->query("SELECT 
+    CASE 
+        WHEN m.id_multitipo IS NULL THEN CAST(u.tipo AS nvarchar(10)) 
+        ELSE CONCAT(CAST(u.tipo AS nvarchar(10)), ',', CAST(m.tipo AS nvarchar(10))) 
+      END 
+      AS opciones
+    FROM 
+        usuarios u
+    LEFT JOIN 
+        multitipo m ON m.id_usuario = u.id_usuario
+    WHERE 
+        u.id_usuario = $usuario")->result_array();
+
+    $result = $opciones[0]['opciones'];
+
+    echo json_encode($this->Casas_comisiones_model->selectTipo($result)->result_array());
   }
 
   public function cambiarEstatusComisiones(){
