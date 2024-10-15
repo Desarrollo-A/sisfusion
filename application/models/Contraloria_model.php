@@ -95,7 +95,8 @@ class Contraloria_model extends CI_Model {
 
 	public function updateSt($idLote, $arreglo, $arreglo2){
         $this->db->trans_begin();
-        $this->db->where("idLote",$idLote);
+        
+        $this->db->where("idLote",$idLote);        
         $this->db->update('lotes',$arreglo);
 
         $this->db->insert('historial_lotes',$arreglo2);

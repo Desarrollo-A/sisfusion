@@ -53,6 +53,28 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modalCambiotipoventa" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center">Confirmar cambio de tipo venta</h4>
+                    </div>
+                    <div class="modal-body">
+                        <row>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <h6 id="confirmarCambioEstatus"></h6>
+                                </div>
+                            </div>
+                        </row>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnConfirmarCambioTipoVenta" class="btn btn-primary">Actualizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="modalCambioRL" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -137,8 +159,7 @@
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="proyecto">
                                         <label class="control-label" for="nombreLote" >Proyecto</label>
-                                        <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO" id="selectProyecto">
-                                            
+                                        <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO" id="selectProyecto">                                            
                                         </select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="condominio">
@@ -223,8 +244,8 @@
                                                 <th>Nombre lote</th>
                                                 <th>Id lote</th>
                                                 <th>Referencia</th>
-                                                <th>Id estatus lote</th>
-                                                <th>Id tipo venta</th>
+                                                <!-- <th>Id estatus lote</th>
+                                                <th>Id tipo venta</th> -->
                                                 <th>Nombre tipo venta</th>
                                                 <th>Acciones</th>
                                             </tr>

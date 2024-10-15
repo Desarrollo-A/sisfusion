@@ -61,11 +61,10 @@ $(document).on('change', '#selector', function () {
         $("#divmodelosTable").removeClass("hide");       
     }
     else if ($(this).val() == 4) {   
-        $('#proyecto').val('');   
-        $('#condominio').val('');   
         $('#proyecto').removeClass('hide');
         $('#condominio').removeClass('hide'); 
-
+        $('#proyecto').val('');   
+        $('#condominio').val('');   
     }
 });
 
@@ -74,7 +73,7 @@ $('#selectCondominio').change(function(){
     crearTablaTipoVenta(idOpcionCondominio);
 });
 
-function crearTablaTipoVenta(idCondominio) {   
+function crearTablaTipoVenta(idCondominio) {
     $('#divTablaCambiarVenta').removeClass('hide');
     tablaTipoVenta = $('#tipo-venta').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -86,10 +85,10 @@ function crearTablaTipoVenta(idCondominio) {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Historial Contratación',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8], // 8 columnas (0 a 7)
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
-                            return $(d).text().toUpperCase(); // Usa el texto del encabezado como título
+                            return $(d).text().toUpperCase();
                         }
                     }
                 },
@@ -108,29 +107,169 @@ function crearTablaTipoVenta(idCondominio) {
         destroy: true,
         ordering: false,
         columns: [
-            { data: "nombreResidencial" },      // Columna 1: nombreResidencial
-            { data: "nombreCondominio" },       // Columna 2: nombreCondominio
-            { data: "nombreLote" },             // Columna 3: nombreLote
-            { data: "idLote" },                 // Columna 4: idLote
-            { data: "referencia" },             // Columna 5: referencia
-            { data: "idStatusLote" },           // Columna 6: idStatusLote
-            { data: "idTipoVenta" },            // Columna 7: idTipoVenta
-            { data: "nombreTipoVenta" },     // Columna 8: nombreTipoVenta
-            {data: "acciones"}
+            { data: "nombreResidencial" },
+            { data: "nombreCondominio" },
+            { data: "nombreLote" },
+            { data: "idLote" },
+            { data: "referencia" },
+            // { data: "idStatusLote" },
+            // { data: "idTipoVenta" },
+            { data: "nombreTipoVenta" },
+            {
+                // orderable: false,
+                data: function (d) {
+                    // return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-blueMaderas confirmarCambio" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button></div>`;
+                    return `
+                    <select> 
+                        <option value="">Tipo de venta</option>       
+                        <option value="1" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-toggle="tooltip" data-placement="top">Venta de particulares</option>
+                        <option value="2">Venta normal</option>
+                        <option value="3">Bono</option>
+                        <option value="4">Donación</option>
+                        <option value="5">Intercambio</option>
+                        <option value="6">Reubicación</option>
+                        <option value="7">Venta especial</option>
+                        <option value="8">Reestructura</option>
+                        <option value="9">Venta normal - Upgrade</option>
+                    </select>`;                
+                }
+            }
         ],
         ajax: {
             url: `${general_base_url}Contraloria/get_registros_tipo_venta/${idCondominio}`,
             dataSrc: "",
-            complete: function (response) {
-                console.log("Datos recibidos del servidor:", response.responseJSON); // Verifica si está devolviendo datos
-            }
+            // complete: function (response) {
+            //     console.log("Datos recibidos del servidor:", response.responseJSON);
+            // }
         },
         initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="tooltip"]').tooltip();  
+            $('#tipo-venta tbody').on('change', 'select', function() {
+                const valorSeleccionado = $(this).val();
+                // console.log("Valor seleccionado: ", valorSeleccionado);
+                $('#modalCambiotipoventa').modal('show');
+
+            });      
         }
     });
+
+    // Manejo del evento de cambio en el select de acciones
+    $('#tipo-venta tbody').on('change', '.action-select', function () {
+        var action = $(this).val(); // Obtener la acción seleccionada
+        var idLote = $(this).data('id'); // Obtener el idLote del select
+
+        if (action === 'edit') {
+            // Lógica para editar el registro correspondiente
+            console.log('Editando el registro con idLote:', idLote);
+            // Aquí puedes abrir un modal de edición o realizar otra acción
+        } else if (action === 'delete') {
+            // Lógica para eliminar el registro correspondiente
+            console.log('Eliminando el registro con idLote:', idLote);
+            // Aquí puedes mostrar un mensaje de confirmación o realizar otra acción
+        }
+
+        // Restablecer el select a la opción por defecto
+        $(this).val('');
+    });
+
     applySearch(tablaTipoVenta);
 }
+
+
+
+
+// function ConstruirTablaCAmbiarRepresentante(idCondominio){
+//     $("#divtablaCambiarRepresentanteLegal").removeClass("hide");
+        
+//     console.warn('ConstruirTablaCAmbiarRepresentante', idCondominio);
+//     if(idCondominio){
+//         $('#tablaCambiarRepresentanteLegal thead tr:eq(0) th').each(function (i) {
+//             var title = $(this).text();
+//             titulosTablaIntercambios.push(title);
+//             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//             $('input', this).on('keyup change', function () {
+//                 if (tablaCambiarRepresentanteLegal.column(i).search() !== this.value)
+//                     tablaCambiarRepresentanteLegal.column(i).search(this.value).draw();
+//             });
+//         });
+//         tablaCambiarRepresentanteLegal = $("#tablaCambiarRepresentanteLegal").DataTable({
+//             dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+//             width: '100%',
+//             buttons: [
+//                 {
+//                     extend: 'excelHtml5',
+//                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+//                     className: 'btn buttons-excel',
+//                     titleAttr: 'Exportar registros a Excel',
+//                     title: "Listado de lotes contratados por intercambio",
+//                     exportOptions: {
+//                         columns: [0, 1, 2, 3, 4, 5],
+//                         format: {
+//                             header: function (d, columnIdx) {
+//                                 return ' ' + titulosTablaIntercambios[columnIdx] + ' ';
+//                             }
+//                         }
+//                     }
+//                 }
+//             ],
+//             language: {
+//                 url: `${general_base_url}static/spanishLoader_v2.json`,
+//                 paginate: {
+//                     previous: "<i class='fa fa-angle-left'>",
+//                     next: "<i class='fa fa-angle-right'>"
+//                 }
+//             },
+//             pagingType: "full_numbers",
+//             lengthMenu: [
+//                 [10, 25, 50, -1],
+//                 [10, 25, 50, "Todos"]
+//             ],
+//             bAutoWidth: false,
+//             fixedColumns: true,
+//             ordering: false,
+//             scrollX: true,
+//             destroy: true,
+//             columns: [
+//                 { data: 'nombreResidencial' },
+//                 { data: 'nombreCondominio' },
+//                 { data: 'nombreLote' },
+//                 { data: 'idLote' },
+//                 { data: 'referencia' },
+//                 {
+//                     data: function (d) {
+//                         return `<span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.nombreEstatusLote}</span>`;
+//                     }
+//                 },
+//                 {
+//                     orderable: false,
+//                     data: function (d) {
+//                         return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-blueMaderas confirmarCambio" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button></div>`;
+//                     }
+//                 }
+//             ],
+//             columnDefs: [
+//                 {
+//                     searchable: false,
+//                     orderable: false,
+//                     targets: 0
+//                 },
+//             ],
+//             ajax: {
+//                 url: `${general_base_url}Contraloria/getDatosTablaRepresentanteLegal/${idCondominio}`,
+//                 dataSrc: "",
+//                 type: "POST",
+//                 cache: false,
+//             },
+//             order: [[1, 'asc']]
+//         });
+//         $('#tablaCambiarRepresentanteLegal').on('draw.dt', function () {
+//             $('[data-toggle="tooltip"]').tooltip({
+//                 trigger: "hover"
+//             });
+//         });
+//     }
+// }
+
 
 
 
@@ -591,6 +730,10 @@ $(document).ready(function () {
             if ($('#modelosTable').DataTable().column(i).search() !== this.value)
                 $('#modelosTable').DataTable().column(i).search(this.value).draw();
         });
+    });
+
+    $('#btnConfirmarCambioTipoVenta').on('click',function(){
+        console.log('asdfads');
     });
 
     $('#modelosTable').DataTable({
