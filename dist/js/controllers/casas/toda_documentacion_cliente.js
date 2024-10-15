@@ -26,15 +26,16 @@ let buttons = [
 let columnsBanco = [
     { data: 'idProcesoCasas'},
     { data: 'idProcesoCasas'},
+    { data: 'nombreCliente'},
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
     { data: 'idLote' },
-    { data: 'nombreCliente'},
     { data: 'gerente' },
     { data: 'asesor' },
-    { data: 'documento' },
+    { data: 'archivoBanco' },
     {data: function(data) {
+        console.log("visualizarZIP: ", data.visualizarZIP);
         let view_button = '';
         let download_button = '';
 
