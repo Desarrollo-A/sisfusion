@@ -177,6 +177,7 @@ $.ajax({
 let filtro_proyectos_banco = new SelectFilter({ id: 'proyecto-banco', label: 'Proyecto', placeholder: 'Selecciona una opción' });
 let filtro_condominios_banco = new SelectFilter({ id: 'condominio-banco', label: 'Condominio', placeholder: 'Selecciona una opción' });
 let filtro_lotes_banco = new SelectFilter({ id: 'lote-banco', label: 'Lotes', placeholder: 'Selecciona una opción' });
+let filtro_clientes_banco = new SelectFilter({ id: 'cliente-banco', label: 'Clientes', placeholder: 'Selecciona una opción' });
 
 let filtros_banco = new Filters({
     id: 'table-filters',
@@ -184,6 +185,7 @@ let filtros_banco = new Filters({
         filtro_proyectos_banco,
         filtro_condominios_banco,
         filtro_lotes_banco,
+        filtro_clientes_banco
     ],
 });
 
@@ -221,6 +223,7 @@ filtro_lotes_banco.onChange(function(option){
 let filtro_proyectos_directo = new SelectFilter({ id: 'proyecto-directo', label: 'Proyecto', placeholder: 'Selecciona una opción' });
 let filtro_condominios_directo = new SelectFilter({ id: 'condominio-directo', label: 'Condominio', placeholder: 'Selecciona una opción' });
 let filtro_lotes_directo = new SelectFilter({ id: 'lote-directo', label: 'Lotes', placeholder: 'Selecciona una opción' });
+let filtro_clientes_directo = new SelectFilter({ id: 'cliente-directo', label: 'Lotes', placeholder: 'Selecciona una opción' });
 
 let filtros_directo = new Filters({
     id: 'table-filters-directo',
@@ -228,12 +231,14 @@ let filtros_directo = new Filters({
         filtro_proyectos_directo,
         filtro_condominios_directo,
         filtro_lotes_directo,
+        filtro_clientes_directo
     ],
 });
 
 let filtro_proyectos_pagos = new SelectFilter({ id: 'proyecto-pagos', label: 'Proyecto', placeholder: 'Selecciona una opción' });
 let filtro_condominios_pagos = new SelectFilter({ id: 'condominio-pagos', label: 'Condominio', placeholder: 'Selecciona una opción' });
 let filtro_lotes_pagos = new SelectFilter({ id: 'lote-pagos', label: 'Lotes', placeholder: 'Selecciona una opción' });
+let filtro_clientes_pagos = new SelectFilter({ id: 'cliente-pagos', label: 'Clientes', placeholder: 'Selecciona una opción' });
 
 let filtros_pagos = new Filters({
     id: 'table-filters-pagos',
@@ -241,6 +246,7 @@ let filtros_pagos = new Filters({
         filtro_proyectos_pagos,
         filtro_condominios_pagos,
         filtro_lotes_pagos,
+        filtro_clientes_pagos
     ],
 });
 
@@ -302,7 +308,26 @@ filtro_condominios_pagos.onChange(function(option){
     });
 });
 
+/*
 filtro_lotes_pagos.onChange(function(option){
     table.setParams({lote: option.value})
     table.reload()
+})*/
+
+filtro_lotes_banco.onChange(function(option) {
+    $.ajax({
+        type: 'GET',
+        url: `${general_base_url}Casas/getClientesPorLote/${option.value}`,
+        success: function(response) {
+            filtro_clientes_banco.setOptions(response);
+        },
+        error: function() {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    })
+});
+
+filtro_clientes_banco.onChange(function(option) {
+    table.setParams({idCliente: option.value});
+    table.reload();
 })

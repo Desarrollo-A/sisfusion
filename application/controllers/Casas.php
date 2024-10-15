@@ -5615,7 +5615,7 @@ class Casas extends BaseController
     }
 
     public function documentacion_clientes() {
-        $idLote = $this->get('lote');
+        $idCliente = $this->get('idCliente');
         $valueTab = $this->get('valueTab');
         $tableName = '';
         $extraWhere = '';
@@ -5631,11 +5631,11 @@ class Casas extends BaseController
                 break;
         }
 
-        if(!isset($idLote)) {
+        if(!isset($idCliente)) {
             return $this->json([]);
         }
 
-        $documentos_cliente = $this->CasasModel->getListaDatosCliente($idLote, $extraWhere);
+        $documentos_cliente = $this->CasasModel->getListaDatosCliente($idCliente, $extraWhere);
 
         return $this->json($documentos_cliente);
     }
@@ -5791,5 +5791,15 @@ class Casas extends BaseController
         });
 
         return $this->json($merged_documents);
+    }
+
+    public function getClientesPorLote($idLote) {
+        if (!isset($idLote)) {
+            $this->json([]);
+        }
+
+        $clientes = $this->CasasModel->getClientesPorLote($idLote);
+
+        $this->json($clientes);
     }
 }

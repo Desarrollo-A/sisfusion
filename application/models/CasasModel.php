@@ -2755,7 +2755,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->result();
     }
 
-    public function getListaDatosCliente($idLote, $extraWhere) {
+    public function getListaDatosCliente($idCliente, $extraWhere) {
         $query = "WITH dataBanco AS (
                     SELECT cli.id_cliente, pcb.idProcesoCasas,pcd.idProceso,
                     dpc.documento AS documentoBanco, CASE WHEN dpc.documento = 'Titulo de propiedad' THEN 'ARCHIVO ZIP' ELSE dpc.archivo END AS archivoBanco,
@@ -2776,7 +2776,7 @@ AND vb.proyectos != 1";
                     LEFT JOIN usuarios asesor ON asesor.id_usuario  = cli.id_asesor_c 
                     LEFT JOIN documentos_proceso_casas dpc ON dpc.idProcesoCasas = pcb.idProcesoCasas
                     LEFT JOIN documentos_proceso_casas dpc2 ON dpc2.idProcesoCasas = pcd.idProceso
-                    WHERE  lo.idLote = $idLote $extraWhere
+                    WHERE cli.id_cliente = $idCliente $extraWhere
                     AND (dpc2.archivo IS NOT NULL OR dpc.archivo IS NOT NULL)
                     GROUP BY cli.id_cliente, pcb.idProcesoCasas, CAST(resi.descripcion AS VARCHAR(MAX)), CAST(con.nombre AS VARCHAR(MAX)), 
                     lo.nombreLote, lo.idLote, cli.id_gerente_c, CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
@@ -2838,6 +2838,15 @@ AND vb.proyectos != 1";
         WHERE lo.idLote = $idLote AND (app.complementoXML IS NOT NULL) 
         AND (pcb.status = 1 OR pcb.estatus = 1) AND (cl.status = 1)
         ";
+        return $this->db->query($query)->result();
+    }
+
+    public function getClientesPorLote($idLote) {
+        $query = "SELECT cl.id_cliente AS value, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS label, cl.status FROM clientes cl 
+        LEFT JOIN proceso_casas_banco pcb on pcb.idLote = cl.idLote AND pcb.idCliente = cl.id_cliente 
+        WHERE cl.idLote = $idLote 
+        AND isNULL(noRecibo, '') != 'CANCELADO' ORDER BY cl.status DESC";
+
         return $this->db->query($query)->result();
     }
 }
