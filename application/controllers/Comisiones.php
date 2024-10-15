@@ -5811,9 +5811,9 @@ public function resumenIndividual($idLote,$proceso){
 }
 
 
-public function porcentajesEspecial($idCliente){
-  echo json_encode($this->Comisiones_model->porcentajesEspecial($idCliente));
-}
+  public function porcentajesEspecial($idCliente){
+    echo json_encode($this->Comisiones_model->porcentajesEspecial($idCliente));
+  }
 
 
 }
