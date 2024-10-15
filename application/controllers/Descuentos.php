@@ -91,7 +91,7 @@ class Descuentos extends CI_Controller
                 $this->load->view("descuentos/anticipo/anticipo_descuento_view");
             break;
             case '2':
-            case '5':
+            case '5': 
             case '86':
             
                 // $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
