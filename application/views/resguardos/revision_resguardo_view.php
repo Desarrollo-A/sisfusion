@@ -89,8 +89,8 @@
                                                                 <th>PUESTO</th>
                                                                 <th>DETALLE</th>
                                                                 <th>ESTATUS</th>
-                                                                <th>ACCIONES</th>
                                                                 <th>FECHA DE ENVÍO</th>
+                                                                <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
