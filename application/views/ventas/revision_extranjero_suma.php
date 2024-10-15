@@ -2,7 +2,43 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
     <div class="wrapper">
-    <?php $this->load->view('template/sidebar'); ?>
+        <?php $this->load->view('template/sidebar'); ?>
+
+        <!-- Modals -->
+        <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons" onclick="cleanCommentsfactura()">clear</i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                                <div id="nameLote"></div>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content">
+                                                    <ul class="timeline timeline-simple" id="comments-list-factura"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsfactura()"><b>Cerrar</b></button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
@@ -14,6 +50,14 @@
             </div>
         </div>
 
+        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+        <!--END MODALS-->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -49,22 +93,22 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>ID PAGO</th>
-                                                    <th>REFERENCIA</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>SEDE</th>
-                                                    <th>TOTAL DE COMISIÓN</th>
-                                                    <th>IMPUESTO</th>
-                                                    <th>PORCENTAJE COMISIÓN</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
+                                            <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>ID PAGO</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>NOMBRE</th>
+                                                        <th>SEDE</th>
+                                                        <th>TOTAL DE COMISIÓN</th>
+                                                        <th>IMPUESTO</th>
+                                                        <th>% COMISIÓN</th>
+                                                        <th>ESTATUS</th>
+                                                        <th>MÁS</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                     </div>
                                 </div>
                             </div>
@@ -74,8 +118,8 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div>
+    </div><!--main-panel close-->
+    
     <?php $this->load->view('template/footer');?>
-    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/suma/revisionFacturaExtranjero.js"></script>
 </body>

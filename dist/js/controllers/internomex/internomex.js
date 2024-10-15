@@ -6,13 +6,15 @@ $(document).ready(function () {
         relatedTarget.val(fileName);
     });
     setInitialDates();
-    if( id_rol_global == 31 )
+    if( id_rol_global == 31 ){
         $('.generate').trigger('click');
-    else
+    }else{
         $('.find-results').trigger('click');
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({locale: 'es'});
+    $('.datepicker').datetimepicker({locale: 'en'});
+    }
 });
+
 
 sp = { 
     initFormExtendedDatetimepickers: function () {
@@ -52,21 +54,26 @@ function formatDate(date) {
 }
 
 let titulos = [];
-$('#tableLotificacion thead tr:eq(0) th').each(function (i) {
-    title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-    $( 'input', this).on('keyup change', function () {
-        if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
-            $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-});
+// $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
+//     title = $(this).text();
+//     titulos.push(title);
+//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+//     $( 'input', this).on('keyup change', function () {
+//         if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
+//             $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
+// });
+
+
+// onLoadTranslations(function(){
+
+construirHead("tableLotificacion");
 
 function fillTableLotificacion(fechaInicio, fechaFin) {
     $(".box-table").removeClass('hide');
-    generalDataTable = $('#tableLotificacion').dataTable({
+    generalDataTable = $('#tableLotificacion').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX:true,
@@ -74,13 +81,13 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title:'Consulta pago final' ,
+            titleAttr: _('descargar-excel'),
+            title: _('consulta-pago-final') ,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -88,7 +95,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         {
             text: '<i class="fas fa-play"></i>',
             className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
+            titleAttr: _('consultar-detalles-youtube'),
             action: function (e, dt, button, config) {
                 window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
@@ -162,11 +169,11 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             "visible": false,
             data: function (d) {
                 if (id_rol_global == 31) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
-                    '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="'+_('editar')+'" onclick=><i class="fas fa-pencil-alt"></i></button>'+
+                    '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="'+_('bitacora')+'"><i class="fas fa-eye"></i></button></div>';
                 }
                 else{
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="'+_('bitacora')+'"><i class="fas fa-eye"></i></button></div>';
                 }
             }
         }],
@@ -187,7 +194,11 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             $("#spiner-loader").addClass('hide');
         }
     });
+
+    applySearch(generalDataTable);
 }
+
+// });
 
 $(document).on('click', '.edit-monto-internomex', function(e){
     id_pago = $(this).attr("data-id-pago");
@@ -207,11 +218,13 @@ $(document).on('click', '.see-bitacora', function(e){
     });
 });
 
+
+
 function fillChangelogUsers(v) {
     var nombreMovimiento;
     var dataMovimiento;
     nombreMovimiento = v.col_afect;
-    dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
+    dataMovimiento = '<b>'+_('valor-anterior')+':</b> ' + v.anterior + '\n' +
         '            <br>\n' +
         '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
             $("#changelogUsers").append('<li class="timeline-inverted">\n' +
@@ -240,16 +253,16 @@ $(document).on('click', '#aceptarMonto', function(e){
         success: function (data) {
             if (data.status == 200) {
                 $("#editMontoInternomex").modal("hide");
-                alerts.showNotification("top", "right", "El registro ha sido actualizado de manera éxitosa.", "success");
+                alerts.showNotification("top", "right", _('registro-actualizado-exitosamente'), "success");
                 let fechaInicio = formatDate( $(".beginDate").val());
                 let fechaFin = formatDate( $(".endDate").val());
                 fillTableLotificacion(fechaInicio, fechaFin);
             } else {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+                alerts.showNotification("top", "right", _('algo-salio-mal'), "warning");
             }
         },
         error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -260,7 +273,7 @@ $(document).on('click', '.searchByDateRange', function(){
     if(fechaInicio <= fechaFin ){
         fillTableLotificacion(fechaInicio, fechaFin);
     }else{
-        alerts.showNotification("top", "right", "Fecha inicial no puede ser mas mayor a la fecha final", "warning");
+        alerts.showNotification("top", "right", _('fecha-inicial-no-mayor-final'), "warning");
     }
 });
 
@@ -322,10 +335,12 @@ $(document).on('click', '#downloadFile', function () {
         },
         error: function() {
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
+
+
 
 async function processFile(selectedFile) {
     try {
@@ -361,7 +376,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
     fileElm = document.getElementById("fileElm");
     file = fileElm.value;
     if (file == '')
-        alerts.showNotification("top", "right", "Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información.", "warning");
+        alerts.showNotification("top", "right", _('asegurate-cargar-archivo-para-informacion'), "warning");
     else {
         let extension = file.substring(file.lastIndexOf("."));
         let statusValidateExtension = validateExtension(extension, ".xlsx");
@@ -377,16 +392,16 @@ $(document).on('click', '#cargaCoincidencias', function () {
                         $('#uploadModal').modal('toggle');
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown){
-                        alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalo de nuevo.', "danger");
+                        alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? _('error-datos-ingresados'): _('algo-salio-mal'), "danger");
                         if (XMLHttpRequest.status == 301){
-                            alerts.showNotification("top", "right", 'intentas subir uno o varios regitros.' , "warning");
+                            alerts.showNotification("top", "right", _('intentas-subir-uno-varios-archivos') , "warning");
                         }
                         $('#uploadModal').modal('toggle');
                     }
                 });
             });
         } else
-            alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo <b>.xlsx</b>.", "warning");
+            alerts.showNotification("top", "right", _('archivo-extension')+ " <b>" + extension + "</b> "+_('no-valido')+ _('recuerda-archivo')+" <b>.xlsx</b>.", "warning");
     }
 });
 
@@ -432,3 +447,4 @@ function validaTipoPago(tipo_pago){
         $(".box-table").addClass("hide");
     }
 }
+

@@ -1,3 +1,4 @@
+
 <!--   Core JS Files   -->
 <script src="<?=base_url()?>dist/js/jquery-3.1.1.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/jquery-ui.min.js" type="text/javascript"></script>
@@ -65,14 +66,12 @@
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
-    let id_sede_general = '<?= (empty($this->session->userdata('id_sede')) ? 0 : $this->session->userdata('id_sede')) ?>';
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
+    let id_sede_general = '<?= (empty($this->session->userdata('id_sede')) ? 0 : $this->session->userdata('id_sede')) ?>';
     let tipoUsuarioGeneral =  <?=$this->session->userdata('tipo')?>;
     let sede_usuario_general_div = " <?= $this->session->userdata('id_sede') ?> ";
     let lider_general = "<?=$this->session->userdata('id_lider')?> ";
-
-    
-    let forma_de_pago_general = <?=$this->session->userdata('forma_pago');?>;
+    let forma_de_pago_general = "<?=$this->session->userdata('forma_pago')?> ";
 
 
     let sede_usuario_general_array = sede_usuario_general_div.split(",");
@@ -100,4 +99,17 @@
 <script src="<?= base_url() ?>dist/js/components/components.js"></script>
 <script src="<?= base_url() ?>dist/js/components/table.js"></script>
 <script src="<?= base_url() ?>dist/js/components/dialogs.js"></script>
-<script src="<?= base_url() ?>dist/js/components/forms.js?v=3"></script>
+<script src="<?= base_url() ?>dist/js/components/forms.js"></script>
+
+<!-- jquery.i18n -->
+
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.messagestore.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.fallbacks.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.parser.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.emitter.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/jquery.i18n.language.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/languages/he.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/languages/fi.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/languages/ml.js"></script>
+<script src="<?= base_url() ?>dist/js/jquery.i18n/load.js"></script>

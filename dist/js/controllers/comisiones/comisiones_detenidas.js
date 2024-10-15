@@ -1,20 +1,24 @@
 const usuariosContraloria = [2749, 2807, 2767, 11947, 11815];
 
+$(document).ready(function(){
+    construirHead("comisiones-detenidas-table");
+})
+
 $('#comisiones-detenidas-table').ready(function () {
 
-    let titulos = [];
-    $('#comisiones-detenidas-table thead tr:eq(0) th').each(function (i) {
-        if (i !== 0) {
-            const title = $(this).text();
-            titulos.push(title);
-            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if (comisionesDetenidasTabla.column(i).search() !== this.value) {
-                    comisionesDetenidasTabla.column(i).search(this.value).draw();
-                }
-            });
-        }
-    });
+    // let titulos = [];
+    // $('#comisiones-detenidas-table thead tr:eq(0) th').each(function (i) {
+    //     if (i !== 0) {
+    //         const title = $(this).text();
+    //         titulos.push(title);
+    //         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    //         $('input', this).on('keyup change', function () {
+    //             if (comisionesDetenidasTabla.column(i).search() !== this.value) {
+    //                 comisionesDetenidasTabla.column(i).search(this.value).draw();
+    //             }
+    //         });
+    //     }
+    // });
 
     let comisionesDetenidasTabla = $('#comisiones-detenidas-table').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -27,10 +31,10 @@ $('#comisiones-detenidas-table').ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE COMISIONES DETENIDAS',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                columns: [1,2,3,4,5,6,7,8,9,10,11],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx - 1] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -90,7 +94,7 @@ $('#comisiones-detenidas-table').ready(function () {
             if(d.compartida == null) {
                 labelCompartida ='<span class="label lbl-yellow">Individual</span>';
             } else{
-                labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
+                labelCompartida ='<span class="label lbl-orangeYellow" data-i18n="compartida">Compartida</span>';
             }
             return labelCompartida;
         }},
@@ -99,7 +103,7 @@ $('#comisiones-detenidas-table').ready(function () {
             var labelStatus;
 
             if(d.idStatusContratacion == 15) {
-                labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
+                labelStatus ='<span class="label lbl-violetBoots" data-i18n="contratado">Contratado</span>';
             }else {
                 labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
             }
@@ -110,18 +114,18 @@ $('#comisiones-detenidas-table').ready(function () {
             var labelEstatus;
 
             if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
-                labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
+                labelEstatus =`<p class="m-0"><b><span data-i18n="penalizacion"> Penalización </span> ${d.dias_atraso} <span data-i18n="dias"> días</span>  </b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
             }
             else{
                 if(d.totalNeto2 == null) {
                     labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                 }else if(d.registro_comision == 2){
-                    labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
+                    labelEstatus ='<span class="label lbl-cerulean" data-i18n="solicitado-mkt">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
                 }else {
                     if(d.plan_descripcion=="-")
-                        return '<p>SIN PLAN</p>';
+                        return '<p data-i18n="no-plan">SIN PLAN</p>';
                     else
-                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+                        labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top" data-i18n="ver-mas-detalles" title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                 }
             }
             return labelEstatus;
@@ -144,7 +148,7 @@ $('#comisiones-detenidas-table').ready(function () {
             var fechaActualizacion;
 
             if(d.fecha_sistema == null) {
-                fechaActualizacion ='<span class="label lbl-gray">Sin Definir</span>';
+                fechaActualizacion ='<span class="label lbl-gray" data-i18n="sin definir">Sin Definir</span>';
             }else {
                 fechaActualizacion = '<span class="label lbl-azure">'+d.fecha_sistema+'</span>';
             }
@@ -166,14 +170,14 @@ $('#comisiones-detenidas-table').ready(function () {
                 
                 if (id_rol_general != 63 && id_rol_general != 4) {
                     if (usuariosContraloria.includes(id_usuario_general)) {
-                        botton += `<div class="d-flex justify-center"><button value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-cambiar-estatus" data-toggle="tooltip" data-placement="top" title="REGRESAR A DISPERSIÓN"><i class="material-icons">undo</i></button></div>`;
+                        botton += `<div class="d-flex justify-center"><button value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-cambiar-estatus" data-toggle="tooltip" data-placement="top" data-i18n-label="regresar-dispersion" title="REGRESAR A DISPERSIÓN"><i class="material-icons">undo</i></button></div>`;
                     } else {
                         // botton += `NO APLICA`;
                     }
 
                     disparador = 0;
-                    if (d.pass == 1) {
-                        disparador = 1;
+                    if (d.pass == 1 || d.pass == 0) {
+                        disparador = d.pass;
                         totalLote = d.totalNeto2;
                         reubicadas = 0;
                         nombreLote = d.nombreLote;
@@ -184,7 +188,7 @@ $('#comisiones-detenidas-table').ready(function () {
                         nombreOtro = d.nombreOtro;
                     }
 
-                    if (disparador != 0) {
+                    if (disparador == 0 || disparador == 1) {
                         // BtnStats += `${disparador}`; 
                         d.abonadoAnterior = [2, 3, 4, 7].includes(parseInt(d.proceso)) ? parseFloat(d.sumComisionesReu) + parseFloat(d.abonadoAnterior) : d.abonadoAnterior;
                         botton += `<button href="#" 
@@ -231,7 +235,7 @@ $('#comisiones-detenidas-table').ready(function () {
             'type': 'GET',
             cache: false,
             'data': function (d) { }
-        },
+        }
     });
 
     $('#comisiones-detenidas-table').on('draw.dt', function() {
@@ -276,14 +280,14 @@ $('#comisiones-detenidas-table').ready(function () {
                 if (data) {
                     $('#estatus-modal').modal("hide");
                     $("#id-lote").val("");
-                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    alerts.showNotification("top", "right", _("registro-actualizado"), "success");
                     comisionesDetenidasTabla.ajax.reload();
                 } else {
-                    alerts.showNotification("top", "right", "Ocurrió un problema, vuelva a intentarlo más tarde.", "warning");
+                    alerts.showNotification("top", "right", _("ocurrio-problema"), "warning");
                 }
             },
             error: function () {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                alerts.showNotification("top", "right", _("algo-salio-mal"), "danger");
             }
         });
     });
@@ -295,7 +299,7 @@ $('#comisiones-detenidas-table').ready(function () {
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
         var tr = $(this).closest('tr');
-        var row = $('#tabla_dispersar_comisiones').DataTable().row(tr);
+        var row = $('#comisiones-detenidas-table').DataTable().row(tr);
         let cadena = '';
 
         idLote = $(this).val();
@@ -338,7 +342,7 @@ $('#comisiones-detenidas-table').ready(function () {
                             $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>En espera de próximo abono en NEODATA de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div></div>');
                         break;
                         case 1:
-                            if((disparador == 1 || disparador == 3)){
+                            if((disparador == 0)){
                                 //COMISION NUEVA
                                 let total0 = parseFloat(data[0].Aplicado-abonadoAnterior);
                                 let total = 0;
@@ -718,11 +722,11 @@ $('#comisiones-detenidas-table').ready(function () {
                                                 }
                                     });
                                     // responsive(maxWidth);
-                                    $("#modal_NEODATA .modal-footer").append('<div class="row"><input type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"><input type="submit" class="btn btn-primary mr-2" name="disper_btn"  id="dispersar" value="Dispersar"></div>');
+                                    $("#modal_NEODATA .modal-footer").append('<div class="row"><input type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"></div>');
                                 });
                             }
                             else{
-                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
+                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11Detenidas/"+idLote+"/"+0).done( function( data1 ){
                                     
                                     let total0 = [2,3,4,7].includes(parseInt(procesoReestructura)) ? parseFloat((data[0].Aplicado - abonadoAnterior)) : parseFloat((data[0].Aplicado));
                                     let total = 0;
@@ -736,7 +740,7 @@ $('#comisiones-detenidas-table').ready(function () {
                                     let labelPenalizacion = '';
                                     // data1[0].abonado
                                     if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">Lote con Penalización + 90 días</b>';}
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney([2,3,4,7].includes(parseInt(procesoReestructura)) ? total0 : (total0-(data1[0].abonado)))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
+                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney([2,3,4,7].includes(parseInt(procesoReestructura)) ? total0 : (total0))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
                                     $("#modal_NEODATA .modal-body").append(`
                                         <div class="row">
                                             <div class="col-md-4 pl-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div>
@@ -757,7 +761,7 @@ $('#comisiones-detenidas-table').ready(function () {
                                     <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                     </div><br>`);
 
-                                    $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion+"/"+data1[0].estructura).done( function( data ){
+                                    $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+0+"/"+data1[0].estructura).done( function( data ){
                                         $("#modal_NEODATA .modal-body").append(`
                                                         <div class="row">
                                                             <div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div>
@@ -856,13 +860,13 @@ $('#comisiones-detenidas-table').ready(function () {
                                             counts++
                                         });
                                     });
-                                    $("#modal_NEODATA .modal-footer").append('<div class="row"><input type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"><input type="submit" class="btn btn-primary mr-2" name="disper_btn"  id="dispersar" value="Dispersar"></div>');
+                                    $("#modal_NEODATA .modal-footer").append('<div class="row"><input type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"></div>');
 
                                     if(total < 1 ){
-                                        $('#dispersar').prop('disabled', true);
+                                    //    $('#dispersar').prop('disabled', true);
                                     }
                                     else{
-                                        $('#dispersar').prop('disabled', false);
+                                      //  $('#dispersar').prop('disabled', false);
                                     }
                                 });
                             }
@@ -893,4 +897,6 @@ $('#comisiones-detenidas-table').ready(function () {
             $("#modal_NEODATA").modal();
         }
     }); //FIN VERIFY_NEODATA
+
+    applySearch(comisionesDetenidasTabla);
 });

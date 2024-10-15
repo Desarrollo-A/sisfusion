@@ -138,7 +138,7 @@ tableDispersionCasas = $('#tabla_dispersion_casas').dataTable({
             var RegresaActiva = '';
 
             if(d.fecha_sistema != null && d.registroComision != 8 && d.registroComision != 0) {
-              //  RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
+                //RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
             }
 
             

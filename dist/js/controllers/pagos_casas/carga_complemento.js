@@ -49,6 +49,7 @@ show_upload = function(data) {
         fields: [
             new HiddenField({ id: 'id_proceso', value: data.idProcesoPagos }),
             new HiddenField({ id: 'id_avance',  value: data.idAvance }),
+            new HiddenField({ id: 'paso', value: 6}),
             new FileField({   id: 'file_pdf',   label: 'Archivo PDF', placeholder: 'Selecciona un archivo', accept: pdf, required: true }),
             new FileField({   id: 'file_xml',   label: 'Archivo XML', placeholder: 'Selecciona un archivo', accept: xml, required: true }),
         ],
@@ -57,7 +58,7 @@ show_upload = function(data) {
     form.show()
 }
 
-pass_to_validar_pago = function(data) {
+pass_to_next = function(data) {
     let form = new Form({
         title: 'Enviar a validar pago', 
         text: `¿Enviar el lote <b>${data.nombreLote}</b> para validar pago?`,
@@ -86,6 +87,7 @@ pass_to_validar_pago = function(data) {
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
             new HiddenField({ id: 'id_avance', value: data.idAvance }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'paso', value: 6}),
         ],
     })
 
@@ -144,10 +146,10 @@ let columns = [
 
         let pass_button = ''
         if(data.complementoPDF && data.complementoXML){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar pago', onClick: pass_to_validar_pago, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar pago', onClick: pass_to_next, data})
         }
 
-        return `<div class="d-flex justify-center">${view_button}${download_button}${docu_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${view_button}${download_button}${docu_button}</div>`
     } },
 ]
 

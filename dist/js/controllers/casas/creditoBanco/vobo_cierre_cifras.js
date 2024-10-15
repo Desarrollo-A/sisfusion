@@ -169,7 +169,7 @@ rechazo_proceso = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/RechazoVoboCierreCifras`,
+                url: `${general_base_url}casas/RechazoPaso13`,
                 data: data,
                 contentType: false,
                 processData: false,

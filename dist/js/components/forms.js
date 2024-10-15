@@ -225,9 +225,10 @@ class SelectField {
 }
 
 class FileField {
-    constructor({ id, label, placeholder, accept, required = false }) {
-        this.id = id
-        this.required = required
+    constructor({ id, label, placeholder, accept, required = false, maxSizeMB = 8 }) {
+        this.id = id;
+        this.required = required;
+        this.maxSizeMB = maxSizeMB;
 
         this.field = $('<div />')
             .addClass('col-md-12')
@@ -248,30 +249,34 @@ class FileField {
                             .attr('name', id)
                             .attr('type', 'file')
                             .attr('accept', accept)
-                            .change(function (e) {
-                                //console.log(e.target.files[0])
-
-                                let name = e.target.files[0].name
-                                let size = e.target.files[0].size / 1024
-                                let prefix = 'KB'
+                            .change((e) => {
+                                let file = e.target.files[0];
+                                let name = file.name;
+                                let size = file.size / 1024; // size in KB
+                                let prefix = 'KB';
 
                                 if (size > 1024) {
-                                    size = size / 1024
-                                    prefix = 'MB'
+                                    size = size / 1024; // size in MB
+                                    prefix = 'MB';
                                 }
 
-                                $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`)
+                                // Set the file name in the input field
+                                $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`);
 
-                                if (accept) {
-                                    // console.log(e.target.files[0].type)
-
-                                    if (!accept.includes(e.target.files[0].type)) {
-                                        alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger")
-                                        $(`#${id}-name`).val('')
-                                    }
+                                // File type validation
+                                if (accept && !accept.includes(file.type)) {
+                                    alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger");
+                                    $(`#${id}-name`).val(''); // Clear the file name
                                 }
+
+                                // File size validation
+                                if (file.size > this.maxSizeMB * 1024 * 1024) {
+                                    alerts.showNotification("top", "right", `El archivo no puede ser mayor a ${this.maxSizeMB}MB`, "danger");
+                                    $(`#${id}-name`).val(''); // Clear the file name
+                                }
+
+                                this.validate(); // Trigger validation
                             })
-                            .on('change', () => this.validate())
                     )
                     .append(
                         $('<input />')
@@ -287,12 +292,10 @@ class FileField {
                             .attr('for', id)
                             .attr('type', 'text')
                             .append(
-                                $('<span />')
-                                    .text('Seleccionar')
+                                $('<span />').text('Seleccionar')
                             )
                             .append(
-                                $('<i />')
-                                    .addClass('fas fa-folder-open')
+                                $('<i />').addClass('fas fa-folder-open')
                             )
                     )
             )
@@ -302,39 +305,38 @@ class FileField {
                     .addClass('text-danger h7 ml-1')
                     .text('Debes seleccionar un archivo')
                     .hide()
-            )
+            );
 
         this.value = () => {
-            return $(`#${id}`)[0].files[0]
-        }
-
+            return $(`#${id}`)[0].files[0];
+        };
     }
 
     validate() {
-        let pass = true
+        let pass = true;
 
         if (this.required) {
-            let val = $(`#${this.id}`)[0].files[0]
+            let val = $(`#${this.id}`)[0].files[0];
 
             if (!val) {
-                pass = false
+                pass = false;
             }
 
             if (pass) {
-                $(`#${this.id}_warning`).hide()
+                $(`#${this.id}_warning`).hide();
             } else {
-                $(`#${this.id}_warning`).show()
+                $(`#${this.id}_warning`).show();
             }
         }
 
-        return pass
+        return pass;
     }
 
     get() {
-        return this.field
+        return this.field;
     }
 
-    load() { }
+    load() {}
 }
 
 class TextField {
@@ -1048,7 +1050,7 @@ class title {
 class TimeLine {
     
 
-constructor({ title, back, next, description, date }) {
+constructor({title, back = '', next = '', description, date, processText = '', previousText = '', newText = ''}) {
 
 {/* <li>
     <div class="container-fluid">
@@ -1098,16 +1100,17 @@ constructor({ title, back, next, description, date }) {
                 )
                 .append(
                     $('<div />')
+                    
                         .addClass('col-md-12')
                         .append(
                             $('<p />')
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Proceso anterior: ')
+                                        .text(back != '' ? previousText: '')
                                         .append(
                                             $('<b />')
-                                                .text(back)
+                                                .text(back != '' ? back : '')
                                         )
                                 )
                         )
@@ -1120,7 +1123,7 @@ constructor({ title, back, next, description, date }) {
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Proceso nuevo: ')
+                                        .text(newText)
                                         .append(
                                             $('<b />')
                                                 .text(next)
@@ -1158,6 +1161,7 @@ constructor({ title, back, next, description, date }) {
 class HrTitle {
     constructor({ text }) {
         this.field = $('<div />')
+            .css('text-align', 'center')
             .append(
                 $('<strong/> ')
                     .addClass('control-label')
@@ -1340,10 +1344,6 @@ class FormConfirm {
         this.text = text || ''
         this.fields = fields || []
         this.onSubmit = onSubmit || undefined
-
-        /* if(!text){
-            $('#text-form-modal').hide()
-        } */
 
         $("#ok-button-form-modal3").prop('disabled', false)
     }

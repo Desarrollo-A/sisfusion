@@ -7,7 +7,7 @@
             <!-- Subdirector -->
             <?php if( $this->session->userdata('id_rol') == 2 ) { ?>
                 <div class="col-12 col-sm-4 col-md-4 col-lg-4 overflow-hidden pl-0">
-                    <label class="label-gral">Gerente</label>
+                    <label class="label-gral" data-i18n="gerente">Gerente</label>
                     <select class="selectpicker select-gral m-0" id="gerente" name="gerente" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un gerente" data-size="7" data-container="body"></select>
                 </div>
             <?php } ?>
@@ -18,7 +18,7 @@
                 <?php } else  { ?>
                 <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden pl-0" >
                 <?php } ?>
-                    <label class="label-gral" id="labelCoord" style="display:none">Coordinador</label>
+                    <label class="label-gral" id="labelCoord" style="display:none" data-i18n="coordinador">Coordinador</label>
                     <select class="selectpicker select-gral m-0" id="coordinador" name="coordinador" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un coordinador" data-size="7" data-container="body"></select>
                 </div>
                 <?php if( $this->session->userdata('id_rol') == 2 ) { ?>
@@ -26,14 +26,14 @@
                 <?php } else  { ?>
                 <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden pr-0">
                 <?php } ?>
-                    <label class="label-gral" id="labelAses" style="display:none">Asesor</label>
+                    <label class="label-gral" id="labelAses" style="display:none" data-i18n="asesor">Asesor</label>
                     <select class="selectpicker select-gral m-0" id="asesor" name="asesor" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un asesor" data-size="7" data-container="body"></select>
                 </div>
             <?php } ?>
             <!-- Coordinador -->
             <?php if( $this->session->userdata('id_rol') == 9 ) { ?>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden p-0 mb-1">
-                    <label class="label-gral">Asesor</label>
+                    <label class="label-gral" data-i18n="asesor">Asesor</label>
                     <select class="selectpicker select-gral m-0" id="asesor" name="asesor" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un asesor" data-size="7" data-container="body"></select>
                 </div>
             <?php } ?>
@@ -46,28 +46,28 @@
                     <div class="boxCodigos d-flex">
                         <div class="boxStatus d-flex">
                             <i class="fas fa-circle codeCancelada"></i>
-                            <p class="m-0">Cita cancelada</p>
+                            <p class="m-0" data-i18n="cita-cancelada">Cita cancelada</p>
                         </div>
                         <div class="boxStatus d-flex">
                             <i class="fas fa-circle codeAbierta"></i>
-                            <p class="m-0">Cita abierta</p>
+                            <p class="m-0" data-i18n="cita-abierta">Cita abierta</p>
                         </div>
                         <div class="boxStatus d-flex">
                             <i class="fas fa-circle codeSatisfactoria"></i>
-                            <p class="m-0">Cita satisfactoria</p>
+                            <p class="m-0" data-i18n="cita-satisfactoria">Cita satisfactoria</p>
                         </div>
                         <div class="boxStatus d-flex">
                             <i class="fas fa-circle codePocoSatisfactoria"></i>
-                            <p class="m-0">Cita poco satisfactoria</p>
+                            <p class="m-0" data-i18n="cita-poco-satisfactoria">Cita poco satisfactoria</p>
                         </div>
                         <?php if( $this->session->userdata('id_rol') != 7 ) { ?>
                             <div class="boxStatus d-flex">
                                 <i class="fas fa-square codeAdviser"></i>
-                                <p class="m-0">Evento de asesor de ventas</p>
+                                <p class="m-0" data-i18n="evento-asesor-ventas">Evento de asesor de ventas</p>
                             </div>
                             <div class="boxStatus d-flex">
                                 <i class="fas fa-square codeManager"></i>
-                                <p class="m-0">Evento de coordinador</p>
+                                <p class="m-0" data-i18n="evento-coordinador">Evento de coordinador</p>
                             </div>
                         <?php } ?>
                     </div>

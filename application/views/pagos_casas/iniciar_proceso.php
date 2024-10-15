@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Iniciar proceso de pagos</h3>
+                                    <h3 class="card-title center-align">Paso 1 - Carga de comprobante de pago</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -30,6 +30,7 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
+                                            <th>MONTO DEPOSITADO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

@@ -1,4 +1,4 @@
-back_to_carga_complementos = function(data) {
+back_to_previous = function(data) {
     let form = new Form({
         title: 'Regresar proceso', 
         text: `¿Regresar proceso del lote <b>${data.nombreLote}</b>?`,
@@ -32,7 +32,7 @@ back_to_carga_complementos = function(data) {
     form.show()
 }
 
-pass_to_solicitar_avance = function(data) {
+pass_to_next = function(data) {
     let form = new Form({
         title: 'Enviar a solicitar avance', 
         text: `¿Enviar el lote <b>${data.nombreLote}</b> a solicitar avance?`,
@@ -61,6 +61,7 @@ pass_to_solicitar_avance = function(data) {
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
             new HiddenField({ id: 'id_avance',  value: data.idAvance }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'paso', value: 7})
         ],
     })
 
@@ -165,13 +166,13 @@ let columns = [
 
         let download_button = new RowButton({icon: 'file_download', label: `Descargar complemento de pago XML`, onClick: download_file, data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar pago', onClick: pass_to_solicitar_avance, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar pago', onClick: pass_to_next, data})
 
         if(data.avanceObra >= 100){
             pass_button = new RowButton({icon: 'check', color: 'green', label: 'Validar y finalizar proceso', onClick: finalizar_proceso, data})
         }
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_carga_complementos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_previous, data})
         
         return `<div class="d-flex justify-center">${view_button}${download_button}${pass_button}${back_button}</div>`
     } },

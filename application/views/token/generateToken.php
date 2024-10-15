@@ -50,22 +50,22 @@
                         </div>
                         <div class="card-content">
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Generar token</h3>
+                                <h3 class="card-title center-align" data-i18n="generar-token">Generar token</h3>
                                 <div class="row pt-2 aligned-row">
                                     <div class="col-12 col-sm-11 col-md-11 col-lg-11">
                                         <div class="form-group d-flex">
                                             <span class="bckSpan w-100">
                                                 <span class="subSpan w-100 d-flex">
-                                                    <input class="form-control generated-token" id="generatedToken" placeholder="Aún no se ha generado ningún token" readonly/>
-                                                    <button id="copyToken" onclick="copyToClipBoard()" data-toggle="popover" data-content="Se ha copiado el contenido">
-                                                        <i class="fas fa-clone"  data-toggle="tooltip"  data-placement="top" title="COPIAR TOKEN"></i>
+                                                    <input class="form-control generated-token" id="generatedToken" placeholder="Aún no se ha generado ningún token" data-i18n-label="sin-token-generado" readonly/>
+                                                    <button id="copyToken" onclick="copyToClipBoard()" data-toggle="tooltip" data-placement="top" title="COPIAR TOKEN" data-i18n-tooltip="copiar-token">
+                                                        <i class="fas fa-clone"></i>
                                                     </button>
                                                 </span>
                                             </span>
                                         </div>
                                     </div>
                                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 d-flex align-center justify-evenly">
-                                        <button class="btn-rounded btn-s-greenLight" id="generateToken" data-toggle="tooltip"  data-placement="top" title="GENERAR TOKEN">
+                                        <button class="btn-rounded btn-s-greenLight" id="generateToken" data-toggle="tooltip" data-placement="top" title="GENERAR TOKEN" data-i18n-tooltip="generar-token">
                                             <i class="fas fa-plus" ></i>
                                         </button> <!-- GENERATE TOKEN -->
                                     </div>
@@ -74,16 +74,16 @@
                             <table id="evidenceTable" name="evidenceTable"class="table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>TIPO</th>
-                                        <th>ID LOTE</th>
-                                        <th>LOTE</th>
-                                        <th>CLIENTE</th>
-                                        <th>FECHA DE APARTADO</th>
-                                        <th>ASESOR</th>
-                                        <th>GERENTE</th>
-                                        <th>FECHA DE ALTA</th>
-                                        <th>ESTATUS</th>
-                                        <th>ACCIONES</th>
+                                        <th>tipo</th>
+                                        <th>id-lote</th>
+                                        <th>lote</th>
+                                        <th>cliente</th>
+                                        <th>fecha-apartado</th>
+                                        <th>asesor</th>
+                                        <th>gerente</th>
+                                        <th>fecha-de-alta</th>
+                                        <th>estatus</th>
+                                        <th>acciones</th>
                                     </tr>
                                 </thead>
                             </table>

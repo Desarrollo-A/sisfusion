@@ -2,22 +2,23 @@ let titulos_encabezado = [];
 let num_colum_encabezado = [];
 var typeTransaction = 1;
 
-$('#prospects-datatable_dir thead tr:eq(0) th').each(function (i) {
-    $(this).css('text-align', 'center');
-    const title = $(this).text();
-    titulos_encabezado.push(title);
-    num_colum_encabezado.push(i);
-    $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function () {
-        if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value) {
-            $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
+// $('#prospects-datatable_dir thead tr:eq(0) th').each(function (i) {
+//     $(this).css('text-align', 'center');
+//     const title = $(this).text();
+//     titulos_encabezado.push(title);
+//     num_colum_encabezado.push(i);
+//     $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
+//     $('input', this).on('keyup change', function () {
+//         if ($('#prospects-datatable_dir').DataTable().column(i).search() !== this.value) {
+//             $('#prospects-datatable_dir').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+// });
 
 //Eliminamos la ultima columna "ACCIONES" donde se encuentra un elemento de tipo boton (para omitir en excel o pdf).
-num_colum_encabezado.pop();
+// num_colum_encabezado.pop();
 $(document).ready(function () {
+    construirHead("prospects-datatable_dir");
 
     multirol();
 
@@ -47,22 +48,22 @@ function createFilters(rol){
     if(rol == 59){
         let div = `<div class="col-md-3 form-group">
                         <div id="div1" class="form-group label-floating select-is-empty">
-                            <label class="control-label">SUBDIRECTOR</label>
+                            <label class="control-label" data-i18n="subdirector">${_("subdirector")}</label>
                         </div>
                     </div>`;
         div += `<div class="col-md-3 form-group">
                     <div id="div2" class="form-group label-floating select-is-empty">
-                        <label class="control-label">GERENTE</label>
+                        <label class="control-label" data-i18n="gerente">${_("gerente")}</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-3 form-group">
                     <div id="div3" class="form-group label-floating select-is-empty">
-                        <label class="control-label">COORDINADOR</label>
+                        <label class="control-label" data-i18n="coordinador">${_("coordinador")}</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-3 form-group">
                     <div id="div4" class="form-group label-floating select-is-empty">
-                        <label class="control-label">ASESOR</label>
+                        <label class="control-label" data-i18n="asesor">${_("asesor")}</label>
                     </div>
                 </div>`;
         var $selectSub = 
@@ -73,7 +74,8 @@ function createFilters(rol){
                 'data-style':"btn btn-round",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'title':"Selecciona una opción"
+                'data-i18n-label': "select-predeterminado",
+                'title':`${_("select-predeterminado")}`
             });
         var $selectGer = 
             $('<select/>', {
@@ -83,7 +85,8 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'title':"Selecciona una opción"
+                'data-i18n-label': "select-predeterminado",
+                'title':`${_("select-predeterminado")}`
             });
         var $selectCoord = 
             $('<select/>', {
@@ -93,7 +96,8 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'title':"Selecciona una opción"
+                'data-i18n-label': "select-predeterminado",
+                'title':`${_("select-predeterminado")}`
             });
         var $selectAse =
             $('<select/>', {
@@ -103,7 +107,8 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'title':"Selecciona una opción"
+                'data-i18n-label': "select-predeterminado",
+                'title':`${_("select-predeterminado")}`
             });
         $('#filterContainer').append(div);
         $selectSub.appendTo('#div1').selectpicker('refresh');
@@ -115,17 +120,17 @@ function createFilters(rol){
     }else if(2){ 
         let div =   `<div class="col-md-4 form-group">
                         <div id="div2" class="form-group label-floating select-is-empty">
-                            <label class="control-label">GERENTE</label>
+                            <label class="control-label" data-i18n="gerente">${_("gerente")}</label>
                         </div>
                     </div>`;
         div += `<div class="col-md-4 form-group">
                     <div id="div3" class="form-group label-floating select-is-empty">
-                        <label class="control-label">COORDINADOR</label>
+                        <label class="control-label" data-i18n="coordinador">${_("coordinador")}</label>
                     </div>
                 </div>`;
         div += `<div class="col-md-4 form-group">
                     <div id="div4" class="form-group label-floating select-is-empty">
-                        <label class="control-label">ASESOR</label>
+                        <label class="control-label" data-i18n="asesor">${_("asesor")}</label>
                     </div>
                 </div>`;
         
@@ -137,7 +142,8 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'title':"Selecciona una opción"
+                'data-i18n-label': "select-predeterminado",
+                'title':`${_("select-predeterminado")}`
             });
         var $selectCoord =
             $('<select/>', {
@@ -147,7 +153,8 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'title':"Selecciona una opción"
+                'data-i18n-label': "select-predeterminado",
+                'title':`${_("select-predeterminado")}`
             });
         var $selectAse =
             $('<select/>', {
@@ -157,7 +164,8 @@ function createFilters(rol){
                 'data-style':"btn",
                 'data-show-subtext':"true",
                 'data-live-search':"true",
-                'title':"Selecciona una opción"
+                'data-i18n-label': "select-predeterminado",
+                'title':`${_("select-predeterminado")}`
             });
         $('#filterContainer').append(div);
         $selectGer.appendTo('#div2').selectpicker('refresh');
@@ -316,7 +324,13 @@ $(document).on("click", "#searchByDateRange", function () {
 
 function updateTable(url, typeTransaction, beginDate, endDate, where)
 {
-    var prospectsTable = $('#prospects-datatable_dir').dataTable({
+    $('#prospects-datatable_dir').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+
+    var prospectsTable = $('#prospects-datatable_dir').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         pagingType: "full_numbers",
         lengthMenu: [
@@ -330,10 +344,10 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             titleAttr: 'Listado general de prospectos',
             title:"Listado general de prospectos",
             exportOptions: {
-                columns: num_colum_encabezado,
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -350,30 +364,30 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
         columns: [
             { data: function (d) {
                 if (d.estatus == 1) {
-                    return '<center><span class="label lbl-green">Vigente</span><center>';
+                    return `<center><span class="label lbl-green" data-i18n="vigente">${_("vigente")}</span><center>`;
                 } else {
-                    return '<center><span class="label lbl-veryDarkRed">Sin vigencia</span><center>';
+                    return `<center><span class="label lbl-veryDarkRed" data-i18n="sin-vigencia">${_("sin-vigencia")}</span><center>`;
                 }
             }
             },
             {
                 data: function (d) {
                     if(d.estatus_particular == 1) { // DESCARTADO
-                        b = '<center><span class="label lbl-warning">Descartado</span><center>';
+                        b = `<center><span class="label lbl-warning" data-i18n="descartado">${_("descartado")}</span><center>`;
                     } else if(d.estatus_particular == 2) { // INTERESADO SIN CITA
-                        b = '<center><span class="label lbl-brown">Interesado sin cita</span><center>';
+                        b = `<center><span class="label lbl-brown" data-i18n="interesado-cita">${_("interesado-cita")}</span><center>`;
                     } else if (d.estatus_particular == 3){ // CON CITA
-                        b = '<center><span class="label lbl-darkCyan">Con cita</span><center>';
+                        b = `<center><span class="label lbl-darkCyan" data-i18n="con-cita">${_("con-cita")}</span><center>`;
                     } else if (d.estatus_particular == 4){ // SIN ESPECIFICAR
-                        b = '<center><span class="label lbl-purple">Sin especificar</span><center>';
+                        b = `<center><span class="label lbl-purple" data-i18n="sin-especificar2">${_("sin-especificar2")}</span><center>`;
                     } else if (d.estatus_particular == 5){ // PAUSADO
-                        b = '<center><span class="label lbl-violetBoots">Pausado</span><center>';
+                        b = `<center><span class="label lbl-violetBoots" data-i18n="pausado">${_("pausado")}</span><center>`;
                     } else if (d.estatus_particular == 6){ // PREVENTA
-                        b = '<center><span class="label lbl-azure">Preventa</span><center>';
+                        b = `<center><span class="label lbl-azure" data-i18n="preventas">${_("preventas")}</span><center>`;
                     } else if (d.estatus_particular == 7){ // CLIENTE
-                        b = '<span class="label lbl-green">Cliente</span>';
+                        b = `<span class="label lbl-green" data-i18n="cliente">${_("cliente")}</span>`;
                     }else{ // CLIENTE
-                        b = '<span class="label lbl-gray">Sin especificar</span>';
+                        b = `<span class="label lbl-gray" data-i18n="sin-especificar2">${_("sin-especificar2")}especificar</span>`;
                     }
                     return b;
                 }
@@ -425,6 +439,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                                                 style="margin-right: 3px;"
                                                 data-toggle="tooltip" 
                                                 data-placement="top"
+                                                data-i18n-tooltip="ver-informacion"
                                                 title="Ver información">
                                             <i class="material-icons">
                                                 remove_red_eye
@@ -452,8 +467,9 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             $('[data-toggle="tooltip"]').tooltip();
         }
     });
+    applySearch(prospectsTable);
+    $('body').i18n();
 }
-
 
 sp = { //  SELECT PICKER
     initFormExtendedDatetimepickers: function () {

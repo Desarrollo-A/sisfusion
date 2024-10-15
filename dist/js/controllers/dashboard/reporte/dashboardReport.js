@@ -1,9 +1,12 @@
 let chart, rolOnReport, idUserOnReport;
+let optionLanguage = '';
+let languageFreeze = Object.freeze({locale: localStorage.getItem('locale')});
 
 document.querySelector(".c-filter__toggle").addEventListener("click", function () {
     this.classList.toggle("c-filter__toggle--active");
     document.querySelector(".c-filter__ul").classList.toggle("c-filter__ul--active");
 });
+onChangeTranslations(initReport);
 
 function asDirector(userType){
     // 18: Fabián
@@ -116,6 +119,7 @@ function readyReport(){
     $('.datepicker').datetimepicker({locale: 'es'});
     setInitialValuesReporte();
     initReport();
+    changeSelects();
     chart = new ApexCharts(document.querySelector("#boxModalChart"), initialOptions);
     chart.render();
     $('[data-toggle="tooltip"]').tooltip();
@@ -123,28 +127,44 @@ function readyReport(){
 }
 
 async function initReport(){
+    $('body').i18n();
     asDirector(userType);
     filters = validateFilters();
     getLastSales(filters, rolOnReport);
     // let rol = userType == 2 ? await getRolDR(idUser): userType;
     
     let rolString;
-    if ( rolOnReport == '1' )
+    if ( rolOnReport == '1' ){
         rolString = 'director_regional';
-    else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888' || idUserOnReport != '29' || idUserOnReport != '7401')))
+        optionLanguage = "director_regional";
+    }
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888' || idUserOnReport != '29' || idUserOnReport != '7401'))) {
         rolString = 'gerente';
-    else if ( rolOnReport == '3' || rolOnReport == '6' )
+        optionLanguage = "gerente";
+    }
+        
+    else if ( rolOnReport == '3' || rolOnReport == '6' ) {
         rolString = 'coordinador';
-    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888' || idUserOnReport == '29' || idUserOnReport != '7401')))
+        optionLanguage = "coordinador";
+    }
+        
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888' || idUserOnReport == '29' || idUserOnReport != '7401'))) {
         rolString = 'subdirector';
-    else 
+        optionLanguage = "subdirector";
+    }
+        
+    else {
         rolString = 'asesor';
-    
+        optionLanguage = "asesor";
+    }
+        
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 1, [0, null, null, null, null, null, rolOnReport], filters);
+    construirHead("table"+rolString);
 }
 
 function validateFilters(fechaInicio = null, fechaFin = null){
     filters = [];
+    $('body').i18n();
     //Filtros con enganche / sin enganche
     let selector1 = $('#typeSale1')[0];
     let selector2 = $('#typeSale2')[0];
@@ -174,7 +194,7 @@ function validateFilters(fechaInicio = null, fechaFin = null){
 
 /* Función para cambiar icono y cerrar o abrir tabla*/
 
-function changeIcon(anchor) {
+function changeIcon2(anchor) {
     anchor.closest('.wrapper .boxTabla').classList.toggle('active');
     $(document).off('click', '.accordionToggle').on('click', '.accordionToggle', function () {
         $(this).parent().next().slideToggle(200);
@@ -182,13 +202,19 @@ function changeIcon(anchor) {
     });
 }
 
+function removeCardsLanguage(language) {
+    $(`[data-language="${language}"]`).remove();
+}
+
 function createAccordions(option, render, rol){
     let tittle = getTitle(option);
     let html = '';
-    html = `<div data-rol="${rol}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
+    let language = localStorage.getItem('locale');
+
+    html = `<div data-rol="${rol}" data-language="${language}" class="bk ${render == 1 ? 'parentTable': 'childTable'}">
                 <div class="d-flex justify-between align-center boxTabla">   
                     <div class="cursor-point accordionToggle">
-                        <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
+                        <a class="purple-head hover-black" onclick="changeIcon2(this)" id="myBtn">
                         <i class="less fas fa-angle-down "></i>
                         <i class="more fas fa-angle-up "></i>
                         </a>
@@ -204,30 +230,31 @@ function createAccordions(option, render, rol){
                 <table class="table-striped table-hover" id="table`+option+`" name="table`+option+`">
                     <thead>
                         <tr>
-                            <th class="detail">MÁS</th>
-                            <th class="encabezado text-center">`+option.toUpperCase()+`</th>
-                            <th>GRAN TOTAL</th>        
-                            <th>MONTO</th>
-                            <th>NÚMERO DE LOTES APARTADOS</th>
-                            <th>APARTADO</th>
-                            <th>SEDE APARTADOS</th>
-                            <th>CANCELADOS</th>
-                            <th>PORCENTAJE DE CANCELADOS</th>
-                            <th>NÚMERO DE LOTES CONTRATADOS</th>
-                            <th>CONTRATADOS</th>
-                            <th>SEDE CONTRATADOS</th>
-                            <th>CANCELADOS</th>
-                            <th>PORCENTAJE DE CANCELADOS</th>
-                            <th>ACCIONES</th>                            
+                            <th class="detail">${_("mas")}</th>
+                            <th>${(_(""+ option + "")).toUpperCase()}</th>        
+                            <th>${_("gran-total")}</th>        
+                            <th>${_("monto")}</th>
+                            <th>${_("numero-lotes-apartados")}</th>
+                            <th>${_("apartado")}</th>
+                            <th>${_("cancelados-apartados")}</th>
+                            <th>${_("porcentaje-cancelados")}</th>
+                            <th>${_("numero-lotes-contratados")}</th>
+                            <th>${_("contratados")}</th>
+                            <th>${_("cancelado-contratados")}</th>
+                            <th>${_("porcentaje-cancelados")}</th>
+                            <th>${_("acciones")}</th>                            
                         </tr>
                     </thead>
                 </table>
             </div>
         </div>`;
+    construirHead("table"+option);
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canConId = null, canApt = null){
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canApt = null, canConId = null){
+    $('body').i18n();
+    let currentLanguage = localStorage.getItem('locale');
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30 && idUser != 4888 && idUser != 29 && idUser != 7401))
@@ -244,6 +271,10 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
     $(".accordion-content").css("display", "block");
     if(render == 1){
         $("#chartButton").data('option', option);
+    }
+    if(languageFreeze.locale !== currentLanguage) {
+        removeCardsLanguage(languageFreeze.locale);
+        languageFreeze = Object.freeze({locale: currentLanguage});
     }
 
     $('#table'+option+' thead tr:eq(0) th').each(function (i) {
@@ -275,7 +306,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte de ventas por '+option ,
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -295,27 +326,21 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                                     return 'APARTADO';
                                     break;
                                 case 6:
-                                    return 'SEDE APARTADOS'
+                                    return 'CANCELADOS';
                                     break;
                                 case 7:
-                                    return 'CANCELADOS';
-                                    break;
-                                case 8:
                                     return 'PORCENTAJE DE CANCELADOS';
                                     break;
-                                case 9:
+                                case 8:
                                     return 'NÚMERO DE LOTES CONTRATADOS';
                                     break;
-                                case 10:
+                                case 9:
                                     return 'CONTRATADOS';
                                     break;
-                                case 11:
-                                    return 'SEDE CONTRATADOS';
-                                    break;
-                                case 12:
+                                case 10:
                                     return 'CANCELADOS';
                                     break;
-                                case 13:
+                                case 11:
                                     return 'PORCENTAJE DE CANCELADOS';
                                     break;
                             }
@@ -343,7 +368,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE" data-i18n-tooltip="desglose-a-detalle"><i class="fas fa-sitemap" ></i></button>`;
                    
                 }
             },
@@ -376,11 +401,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 }
             },
             {
-                data: function(d) {
-                    return d.apartadasSede;
-                }
-            },
-            {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-contId="${d.cont_arr}" data-aptid="${d.apt_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
@@ -404,11 +424,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             },
             {
                 data: function (d) {
-                    return d.contratadasSede;
-                }
-            },
-            {
-                data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
                 }
@@ -421,7 +436,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
-                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
+                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES " data-i18n-tooltip="acciones"><i class="fas fa-sign-in-alt"></i></button></div>`;
                 },
             },
         ],
@@ -456,6 +471,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
         
         initComplete: function() {
             $('[data-toggle="tooltip"]').tooltip();
+            changeButtonTooltips();
         }, 
     });
 }
@@ -493,11 +509,22 @@ function getLeadersLine (leadersList, id_usuario, id_lider) {
     }
     else if (leadersList[6] == 5 && (idUser != 28 || idUser != 30 || idUser != 4888 || idUser != 29 || idUser != 7401)) { 
         // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
-        if( idLider == 7092 )
+        if( idLider == 7092 || idLider == 15316 || idLider == 11)
             leadersList[5] = 3;
-        else if ( idLider == 681 || idLider == 9471 )
+        else if ( idLider == 681 || idLider == 9471  || idLider == 2411 || idLider == 9783 || idLider == 896)
             leadersList[5] = 607;
+        else if (idLider == 13549 || idLider == 13546 || idLider == 13589)
+            leadersList[5] = 13546;
+        else if( idLider == 5 || idLider == 7886)
+            leadersList[5] = 5;
+        else if( idLider == 11650)
+            leadersList[5] = 11650;
+        else if(idLider == 4 || idLider == 703 || idLider == 19) 
+            leadersList[5] = 4;
+        else if(idLider == 6626 || idLider == 690)
+            leadersList[5] = 6626;
         else leadersList[5] = 0;
+        
 
         leadersList[4] = idLider;
         leadersList[3] = id_usuario;
@@ -548,39 +575,48 @@ $(document).on('click', '.update-dataTable', function (e) {
     if (type == 2 ) { // MJ: #sub->ger->coord
         if (render == 1) {
             const table = "coordinador";
+            optionLanguage = "coordinador";
             fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); 
         } else {
             const table = "gerente";
+            optionLanguage = "gerente";
             fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS GERENTES
         }
     } else if (type == 3 || type == 6 ) { // MJ: #gerente->coord->asesor
         if (render == 1) {
             const table = "asesor";
+            optionLanguage = "asesor";
             fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid);
         } else {
             const table = "coordinador";
+            optionLanguage = "coordinador";
             fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS COORDINADORES
         }
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
         if (render == 1) {
         } else {
             const table = "asesor";
+            optionLanguage = "asesor";
             fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid, canaptid, cancontid); // VA POR LOS ASESORES
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         if (render == 1) {
             const table = "gerente";
+            optionLanguage = "gerente";
             fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid);
         } else {
-            const table = "subdirector";
+            const table = "subdirector"
+            optionLanguage = "subdirector";
             fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
     } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
         if (render == 1) {
             const table = "subdirector";
+            optionLanguage = "subdirector";
             fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES
         } else {
             const table = "regional";
+            optionLanguage = "regional";
             fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
         }
     }
@@ -588,10 +624,12 @@ $(document).on('click', '.update-dataTable', function (e) {
         if (render == 1) {
             if(idUser == 28 || idUser == 30 || idUser == 4888 || idUser == 29 || idUser == 7401){
                 const table = "gerente";
+                optionLanguage = "gerente";
                 fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
             }
             else{
                 const table = "coordinador";
+                optionLanguage = "coordinador";
                 fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS COORDINADORES
             }
         } 
@@ -714,10 +752,9 @@ $(document).on('click', '.btnSub', function () {
         gerente: $(this).data("ge"),
         subdirector: $(this).data("su"),
         regional: $(this).data("dr"),
-        sede:  $(this).data("sede"),
-        aptid : $(this).data('aptid'),
+        aptid: $(this).data('aptid'),
         contid: $(this).data('contid'),
-        canaptid : $(this).data('canaptid'),
+        canaptid: $(this).data('canaptid'),
         cancontid: $(this).data('cancontid')
     }
     //initDetailRow(data);
@@ -729,21 +766,40 @@ $(document).on('click', '#filterAction', async function (e) {
     e.stopImmediatePropagation();
     $(".boxAccordions").html('');
     loaderCharts();
+    let currentLanguage = localStorage.getItem('locale');
 
     filters = validateFilters();
 
     let rolString;
     if ( rolOnReport == '1' )
+    {
         rolString = 'director_regional';
+        optionLanguage = 'director_regional';
+    }
+        
     else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888' || idUserOnReport != '29' || idUserOnReport != '7401')))
+    {
         rolString = 'gerente';
-    else if ( rolOnReport == '3' || rolOnReport == '6' )
+        optionLanguage = 'gerente';
+    }
+        
+    else if ( rolOnReport == '3' || rolOnReport == '6' ) {
         rolString = 'coordinador';
-    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888' || idUserOnReport == '29' || idUserOnReport == '7401')))
+        optionLanguage = 'coordinador';
+    }
+        
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888' || idUserOnReport == '29' || idUserOnReport == '7401'))){
         rolString = 'subdirector';
-    else 
+        optionLanguage = 'subdirector';
+    }
+        
+    else {
         rolString = 'asesor';
-    
+        optionLanguage = 'asesor';
+    }
+    if(languageFreeze.locale !== currentLanguage) {
+        languageFreeze = Object.freeze({locale: currentLanguage});
+    }
     getLastSales(filters, rolOnReport);
     fillBoxAccordions(rolString, rolOnReport, idUserOnReport, 1, 2, [0, null, null, null, null, null, rolOnReport], filters);
 });
@@ -769,7 +825,7 @@ async function chartDetail(e, tipoChart){
     $("#modalChart #type").val('');
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
-    $(".boxModalTitle .title").append('<p class="mb-1">' + nameChart[0] + '<span class="enfatize"> '+ nameChart[1] +'</span></p>');
+    $(".boxModalTitle .title").append('<p class="mb-1">' + _(nameChart[0]) + '<span class="enfatize"> '+ _(nameChart[1]) +'</span></p>');
     let fecha_inicio = $('.moreMiniChart ').attr('data-fi');
     let fecha_fin    = $('.moreMiniChart ').attr('data-ft');
     if(fecha_inicio == undefined || fecha_fin==undefined){
@@ -961,9 +1017,11 @@ function orderedDataChart(data){
 }
 
 function buildSeries(series, nameSerie, totalMes){
-    nameSerie = titleCase(nameSerie.split(/(?=[A-Z])/).join(" "));
+    $('body').i18n();
+    let translateText = _(nameSerie);
+    translateText = titleCase(translateText.split(/(?=[A-Z])/).join(" "));
     series.push({
-        name: nameSerie,
+        name: translateText,
         data: totalMes
     });
 }
@@ -977,7 +1035,7 @@ function buildAllDataChart(allData, nameTypeChart, series, meses){
 }
 
 function monthName(mon){
-    var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
+    var monthName = [_('enero'),_('febrero'),_('marzo'),_('abril'),_('mayo'),_('junio'),_('julio'),_('agosto'),_('septiembre'),_('octubre'),_('noviembre'),_('diciembre')][mon - 1];
     return monthName;
 }
 
@@ -1029,19 +1087,19 @@ function getTitle(option){
     var title;
     switch (option) {
         case 'director_regional':
-          title = 'Reporte de ventas por dirección regional';
+          title = _("reporte-ventas-direccion-general"); // 'Reporte de ventas por dirección regional';
           break;
         case 'gerente':
-            title = 'Reporte de ventas por gerencia';
+            title = _("reporte-ventas-gerencia"); // 'Reporte de ventas por gerencia';
             break;
         case 'coordinador':
-            title = 'Reporte de ventas por coordinación';
+            title = _("reporte-ventas-coordinacion"); // 'Reporte de ventas por coordinación';
             break;
         case 'subdirector':
-            title = 'Reporte de ventas por subdirección';
+            title = _("reporte-ventas-subdireccion"); // 'Reporte de ventas por subdirección'; 
             break;
         case 'asesor':
-            title = 'Reporte de ventas por asesor';
+            title = _("reporte-ventas-asesor"); // 'Reporte de ventas por asesor';
             break;
         default:
             title = 'N/A';
@@ -1156,12 +1214,10 @@ function createDetailRow(row, tr, dataObj){
         subdirector: dataObj.subdirector,
         regional: dataObj.regional,
         filters: filters,
-        sede:dataObj.sede,
         contid: dataObj.contid,
         aptid: dataObj.aptid,
         canaptid: dataObj.canaptid,
         cancontid: dataObj.cancontid
-        
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
@@ -1176,18 +1232,19 @@ function createDetailRow(row, tr, dataObj){
 function buildTableDetail(data, dataObj) {
     var sedes = '<table class="table subBoxDetail">';
     sedes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
-    sedes += '<td>' + '<b>' + '# ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'SEDE ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'GRAN TOTAL ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'MONTO ' + '</b></td>';
-    sedes += '<td>' + '<b>' + '# DE LOTES APARTADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'APARTADO ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'CANCELADO APARTADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + '% CANCELADOS APARTADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + '# DE LOTES CONTRATADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'CONTRATADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + 'CANCELADOS CONTRATADOS ' + '</b></td>';
-    sedes += '<td>' + '<b>' + '% CANCELADOS CONTRATADOS ' + '</b></td>';
+
+    sedes += `<td><b>#</b></td>`;
+    sedes += `<td><b>${(_("sede"))}</b></td>`;
+    sedes += `<td><b>${(_("gran-total")).toUpperCase()}</b></td>`;
+    sedes += `<td><b>${(_("monto")).toUpperCase()}</b></td>`;
+    sedes += `<td><b># ${(_("numero-lotes-apartados")).toUpperCase()}</b></td>`;
+    sedes += `<td><b>${(_("apartado")).toUpperCase()}</b></td>`;
+    sedes += `<td><b>${(_("cancelados-apartados")).toUpperCase()}</b></td>`;
+    sedes += `<td><b>${(_("porcentaje-cancelados")).toUpperCase()}</b></td>`;
+    sedes += `<td><b>${(_("numero-lotes-contratados")).toUpperCase()}</b></td>`;
+    sedes += `<td><b>${(_("contratados")).toUpperCase()}</b></td>`;
+    sedes += `<td><b>${(_("cancelado-contratados")).toUpperCase()}</b></td>`;
+    sedes += `<td><b>${(_("porcentaje-cancelados")).toUpperCase()}</b></td>`;
     sedes += '</tr>';
     $.each(data, function (i, v) {
         //i es el indice y v son los valores de cada fila
@@ -1327,28 +1384,18 @@ $(document).on('click', '.btnModalDetails', function () {
         regional: $(this).data("dr")
     }
     fillTableReport(dataObject);
-    if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4)
+    if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4){
         $("#seeInformationModalReport").modal();
-    else
+    }
+    else {
         $("#seeInformationModalCancelados").modal();
+    }
 });
 
 function fillTableReport(dataObject) {
     filters = validateFilters();
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
-        $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
-            const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if(i != 0){
-                    if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
-                        $("#lotesInformationTable").DataTable().column(i).search(this.value).draw();
-                    }
-                }
-            });
-            $('[data-toggle="tooltip"]').tooltip();
-
-        });
+        construirHead("lotesInformationTable");
 
         generalDataTable = $('#lotesInformationTable').dataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -1360,7 +1407,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1489,12 +1536,16 @@ function fillTableReport(dataObject) {
                             return 'ESTÁNDAR';
                     }
                 },
+                { data: 'sedeNombre'},
                 {
                     data: function (d) {
-                        return d.modalidad;
+                        if (d.idClienteCompartida == null) {
+                            return 'NORMAL';
+                        } else {
+                            return 'COMPARTIDA';
                     }
                 }
-                
+                }
             ],
             columnDefs: [{
                 visible: false,
@@ -1507,10 +1558,8 @@ function fillTableReport(dataObject) {
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                    "aptid":dataObject.aptid,
-                    "contid":dataObject.contid,
-                  //  "canaptid":dataObject.canaptid,
-                    //"cancontid":dataObject.cancontid,
+                    "aptid": dataObject.aptid,
+                    "contid": dataObject.contid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1527,21 +1576,7 @@ function fillTableReport(dataObject) {
             }
         });
     } else{
-
-        $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
-            const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-
-            $('input', this).on('keyup change', function () {
-                if(i != 0){
-                    if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
-                        $("#lotesInformationTableCancelados").DataTable().column(i)
-                            .search(this.value).draw();
-                    }
-                }
-            });
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+        construirHead("lotesInformationTableCancelados");
 
         generalDataTable = $('#lotesInformationTableCancelados').dataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -1624,14 +1659,16 @@ function fillTableReport(dataObject) {
                                         return 'APARTADO';
                                         break;
                                     case 22:
+                                        return 'SEDE';
+                                        break;
+                                    case 23: 
                                         return 'MODALIDAD';
                                         break;
-                                    
+                                    }
                                 }
                             }
                         }
                     }
-                }
             ],
             pagingType: "full_numbers",
             lengthMenu: [
@@ -1776,8 +1813,17 @@ function fillTableReport(dataObject) {
                     }
                 },
                 {
-                    data: function(d) {
-                        return d.modalidad;
+                    data: function (d) {
+                        return d.sedeNombre;
+                    }
+                },
+                {
+                    data: function (d) {
+                        if (d.idClienteCompartida == null) {
+                            return 'NORMAL';
+                        } else {
+                            return 'COMPARTIDA';
+                        }
                     }
                 }
             ],
@@ -1793,10 +1839,6 @@ function fillTableReport(dataObject) {
                     
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                   // "aptid": dataObject.aptid,
-                    //"contid":dataObject.contid,
-                    "canaptid":dataObject.canaptid,
-                    "cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1839,6 +1881,7 @@ function formatMoney(n) {
 
 function setListEstatus(){
     $('#spiner-loader').removeClass('hide');
+    $('body').i18n();
     $.getJSON( base_url + "Reporte/getEstatusContratacionList").done( function( data ){
         $('#spiner-loader').addClass('hide');
         $.each( data, function( i, v){
@@ -1847,3 +1890,7 @@ function setListEstatus(){
         $("#estatusContratacion").selectpicker('refresh');
     });
 }
+
+$(window).resize(function(){
+    $(`#table${optionTable}`).DataTable().columns.adjust();
+});

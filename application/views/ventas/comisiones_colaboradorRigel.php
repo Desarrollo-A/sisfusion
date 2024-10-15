@@ -5,6 +5,7 @@
 <meta http-equiv="Last-Modified" content="0">
 <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
 <meta http-equiv="Pragma" content="no-cache">
+
 <body>
     <style>
 		.bs-searchbox .form-group{
@@ -20,11 +21,12 @@
         header("Cache-Control: post-check=0, pre-check=0", false);
         header("Pragma: no-cache");
         ?>
+
         <style>
             .abc {
                 z-index: 9999999;
             }
-        </style>
+        </style>3
 
         <div class="modal fade bd-example-modal-sm" id="ModalEnviar" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -144,22 +146,33 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas</a>
+                                <a href="#nuevas-1" role="tab"  data-toggle="tab">
+                                    <span data-i18n="nuevas">  Nuevas <span> 
+                                </a>
                             </li>
                             <li>
-                                <a href="#resguardo-1" role="tab" data-toggle="tab">RESGUARDO</a>
+                                <a href="#resguardo-1" role="tab" data-toggle="tab">
+                                    <span data-i18n="resguardo">Resguardo<span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#proceso-1" role="tab"  data-toggle="tab">EN REVISIÓN</a>
+                                <a href="#proceso-1" role="tab"  data-toggle="tab">
+                                    <span data-i18n="en-revision">En revision<span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#proceso-2" role="tab"  data-toggle="tab">Por pagar</a>
+                                <a href="#proceso-2" role="tab"  data-toggle="tab">
+                                    <span data-i18n="por-pagar">Por pagar<span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#otras-1" role="tab"  data-toggle="tab">Pausadas</a>
+                                <a href="#otras-1" role="tab"  data-toggle="tab">
+                                    <span data-i18n="otro">Otras<span>
+                                </a>
                             </li>
                             <li>
-                                <a href="#sin_pago_neodata" role="tab" data-toggle="tab">Sin pago en NEODATA</a>
+                                <a href="#sin_pago_neodata" role="tab" data-toggle="tab">
+                                    <span data-i18n="sn-pago-neo">Sin pago NEODATA<span></a>
                             </li>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -168,29 +181,69 @@
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
-                                                <p style="color:#0a548b;" id="leyendaImpts">                                                
+                                            <p class="card-title pl-2"><span data-i18n="texto-colaborador">texto-colaborador<span></a> <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                                <?php if($this->session->userdata('forma_pago') == 3){ ?>
+                                                <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Recuerda que el <b>impuesto estatal</b> sobre tu pago de comisiones es de 
+                                                <?php
+                                                switch($this->session->userdata('id_usuario')){
+                                                    case 2:
+                                                    case 3:
+                                                    case 1980:
+                                                    case 1981:
+                                                    case 1982:
+                                                        $sede = 2;
+                                                        break;
+                                                    case 4:
+                                                        $sede = 5;
+                                                        break;
+                                                    case 5:
+                                                        $sede = 3;
+                                                        break;
+                                                    case 607:
+                                                        $sede = 1;
+                                                        break;
+                                                default:
+                                                $sede = $this->session->userdata('id_sede');
+                                                        break;
+                                                    }
+                                                $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = ".$sede."");
+
+                                                foreach ($query->result() as $row)
+                                                {
+                                                    $number = $row->impuesto;
+                                                    echo '<b>' .number_format($number,2).'%</b> (PARA USUARIOS ASIMILADOS) y el impuesto varia segun el Estado en que te encuentres laborando.';
+                                                }
+                                                ?>
                                                 </p>
+                                                <?php } ?>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo total:</h4>
-                                                                <p class="input-tot pl-1" id="sumPagosNuevas">
+                                                                <h4 class="title-tot center-align m-0"><span data-i18n="saldo-total">Saldo total<span> </h4>
+                                                                <p class="input-tot pl-1">
+                                                                    <?php
+                                                                        $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (1) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                                        foreach ($query->result() as $row)
+                                                                        {
+                                                                            $number = $row->nuevo_general;
+                                                                            echo '$'. number_format(!$number?0:$number, 2).'';
+                                                                        }
+                                                                    ?>
                                                                 </p>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Disponible:</h4>
+                                                                <h4 class="title-tot center-align m-0" data-i18n="disponible">Disponible:</h4>
                                                                 <p class="input-tot pl-1" name="total_disponible" id="total_disponible">$0.00</p>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Solicitar:</h4>
+                                                                <h4 class="title-tot center-align m-0" data-i18n="solicitar">Solicitar:</h4>
                                                                 <p class="input-tot pl-1" name="total_solicitar" id="total_solicitar">$0.00</p>
                                                             </div>
                                                         </div>
@@ -198,53 +251,92 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
-                                                                <label  class="control-label" for="proyectosNueva">Proyecto</label>
-                                                                <select name="proyectosNueva" id="proyectosNueva" class="selectpicker select-gral proyecto" data-estatus="1" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                <label  class="control-label" for="catalogo_nuevas" data-i18n="proyecto" >Proyecto</label>
+                                                                <select name="catalogo_nuevas" id="catalogo_nuevas" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label class="control-label" for="condominioNuevas">Condominio</label>
-                                                                <select name="condominioNuevas" id="condominioNuevas" class="selectpicker select-gral condominio" data-estatus="1" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                <label class="control-label" for="condominio_nuevas" data-i18n="condominio" >Condominio</label>
+                                                                <select name="condominio_nuevas" id="condominio_nuevas" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
-                                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" id="opinion">                    
+                                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">                    
+                                                            <?php
+                                                            
+                                                            $query = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario = ".$this->session->userdata('id_usuario')."");
+
+                                                            foreach ($query->result() as $row)
+                                                            {
+                                                            $forma_pago = $row->forma_pago;
+
+                                                            if( $forma_pago  == 2 ||  $forma_pago == '2'){
+                                                                if(count($opn_cumplimiento) == 0){
+
+                                                            echo '<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
+                                                            } else{
+
+                                                                if($opn_cumplimiento[0]['estatus'] == 1){
+
+                                                                    echo '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+
+                                                                }else if($opn_cumplimiento[0]['estatus'] == 0){
+                                                                    echo '<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
+
+                                                                }else if($opn_cumplimiento[0]['estatus'] == 2){
+                                                                    echo '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+                                                                }
+                                                            }
+                                                                }
+                                                                else{
+                                                                    echo '';
+                                                                }
+                                                            }
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <table class="table-striped table-hover hide tablaPagos" data-id="nuevas" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
+                                            <table class="table-striped table-hover hide" id="tabla_nuevas_comisiones" name="tabla_nuevas_comisiones">
                                                 <thead>
                                                     <tr>
-                                                        <th></th>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>PAGADO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>PORCENTAJE COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>checkComisionesNuevas</th>
+                                                        <th>id_pago</th>
+                                                        <th>proyecto</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones enviadas a contraloría para su revisión antes de aplicar tu pago, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1 " data-i18n="comisiones-enviadas-contraloria" > <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo total:</h4>
-                                                                <p class="input-tot pl-1" id="sumPagosRevision">
-                                                                </p>
+                                                                <h4 class="title-tot center-align m-0"><span data-i18n="saldo-total">Saldo total<span></h4>
+                                                                <p class="input-tot pl-1">
+                                                            <?php
+                                                            $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (4) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                            foreach ($query->result() as $row)
+                                                            {
+                                                                $number = $row->nuevo_general;
+                                                                echo '$' . number_format(!$number?0:$number, 2).'';
+                                                            }
+                                                            ?>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -256,32 +348,31 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                            <label class="control-label" for="catalogo_revision">Proyecto</label>
-                                                            <select name="catalogo_revision" id="catalogo_revision" class="selectpicker select-gral proyecto" data-estatus="4" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="catalogo_revision" data-i18n="proyecto">Proyecto</label>
+                                                            <select name="catalogo_revision" id="catalogo_revision" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="control-label" for="condominio_revision">Condominio</label>
-                                                            <select name="condominio_revision" id="condominio_revision" class="selectpicker select-gral condominio" data-estatus="4" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="condominio_revision" data-i18n="condominio">Condominio</label>
+                                                            <select name="condominio_revision" id="condominio_revision" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <table class="table-striped table-hover hide tablaPagos" data-id="revision" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
+                                            <table class="table-striped table-hover hide" id="tabla_revision_comisiones" name="tabla_revision_comisiones">
                                                 <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>PAGADO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>PORCENTAJE COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                    <tr>    
+                                                        <th>id-pago</th>
+                                                        <th>preyecto</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>                 
                                                 </thead>
                                             </table>
@@ -289,7 +380,7 @@
                                         <div class="tab-pane" id="resguardo-1">
                                             <div class="encabezadoBox">
                                         
-                                            <p class="card-title pl-1">Comisiones en resguardo, si requieres ver más detalles como lo pagado y lo pendiente podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <span class="card-title pl-1" > <span data-i18n="comentario-resguardo-rigel"></span>  <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</span>
 
                                             </div>
                                             <div class="toolbar">
@@ -297,8 +388,17 @@
                                                     <div class="row">
                                                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo total:</h4>
-                                                                <p class="input-tot pl-1" id="sumPagosResguardo">
+                                                                <h4 class="title-tot center-align m-0"><span data-i18n="saldo-total">Saldo total<span></h4>
+                                                                <p class="input-tot pl-1">
+                                                                    <?php
+                                                                    $query = $this->db->query("SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (3) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+
+                                                                    foreach ($query->result() as $row)
+                                                                    {
+                                                                        $number = $row->nuevo_general;
+                                                                        echo '$' . number_format(!$number?0:$number, 2).'';
+                                                                    }
+                                                                    ?>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -312,50 +412,58 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
-                                                                <label class="control-label" for="catalogo_resguardo">Proyecto</label>
-                                                                <select name="catalogo_resguardo" id="catalogo_resguardo" class="selectpicker select-gral proyecto" data-estatus="3" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                <label class="control-label" for="catalogo_resguardo" data-i18n="proyecto">Proyecto</label>
+                                                                <select name="catalogo_resguardo" id="catalogo_resguardo" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label class="control-label" for="condominio_resguardo">Condominio</label>
-                                                                <select name="condominio_resguardo" id="condominio_resguardo" class="selectpicker select-gral condominio" data-estatus="3" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                <label class="control-label" for="condominio_resguardo" data-i18n="condominio">Condominio</label>
+                                                                <select name="condominio_resguardo" id="condominio_resguardo" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>                       
-                                            <table class="table-striped table-hover hide tablaPagos" id="tabla_resguardo_comisiones" name="tabla_resguardo_comisiones">
+                                            <table class="table-striped table-hover hide" id="tabla_resguardo_comisiones" name="tabla_resguardo_comisiones">
                                                 <thead>
                                                     <tr>
-                                                    <th></th>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>PAGADO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>PORCENTAJE COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>id-pago</th>
+                                                        <th>proyecto</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>                
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="proceso-2">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones en proceso de pago por parte de INTERNOMEX. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1" > <span data-i18n="comisiones-proceso-pago"></span> <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo total:</h4>
-                                                                <p class="input-tot pl-1" id="sumPagosIntmex">
+                                                                <h4 class="title-tot center-align m-0"><span data-i18n="saldo-total">Saldo total<span></h4>
+                                                                <p class="input-tot pl-1">
+                                                                    <?php
+                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (8) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+
+                                                                    foreach ($query->result() as $row)
+                                                                    {
+                                                                        $number = $row->nuevo_general;
+                                                                        echo '$' . number_format(!$number?0:$number, 2).'';
+                                                                    }
+                                                                    ?>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -368,48 +476,55 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">                      
-                                                            <label class="control-label" for="catalogo_pagar">Proyecto</label>
-                                                            <select name="catalogo_pagar" id="catalogo_pagar" class="selectpicker select-gral proyecto" data-estatus="8" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="catalogo_pagar" data-i18n="proyecto">Proyecto</label>
+                                                            <select name="catalogo_pagar" id="catalogo_pagar" data-i18n-label="selecciona-una-opcion"  class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="control-label" for="condominio_pagar">Condominio</label>
-                                                            <select name="condominio_pagar" id="condominio_pagar" class="selectpicker select-gral condominio" data-estatus="8" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="condominio_pagar" data-i18n="condominio">Condominio</label>
+                                                            <select name="condominio_pagar" id="condominio_pagar" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                                <table class="table-striped table-hover hide tablaPagos" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
+                                                <table class="table-striped table-hover hide" id="tabla_pagadas_comisiones" name="tabla_pagadas_comisiones">
                                                     <thead>
                                                         <tr>
-                                                        <th></th>
-                                                            <th>ID PAGO</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>LOTE</th>
-                                                            <th>PRECIO LOTE</th>
-                                                            <th>TOTAL COMISIÓN</th>
-                                                            <th>PAGADO CLIENTE</th>
-                                                            <th>DISPERSADO</th>
-                                                            <th>SALDO A COBRAR</th>
-                                                            <th>PORCENTAJE COMISIÓN</th>
-                                                            <th>DETALLE</th>
-                                                            <th>ESTATUS</th>
-                                                            <th>ACCIONES</th>
+                                                            <th>id-pago</th>
+                                                            <th>proyecto</th>
+                                                            <th>lote</th>
+                                                            <th>precio-de-lote</th>
+                                                            <th>total-comision</th>
+                                                            <th>pago-cliente</th>
+                                                            <th>dispersado</th>
+                                                            <th>saldo-cobrar</th>
+                                                            <th>porc-comision</th>
+                                                            <th>detalle</th>
+                                                            <th>estatus</th>
+                                                            <th>acciones</th>
                                                         </tr>                            
                                                     </thead>
                                                 </table>
-                                            </div>
+                                        </div>
 
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
-                                            <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
+                                            <p class="card-title pl-1" data-i18n="comisiones-pausadas" >. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
-                                                                <h4 class="title-tot center-align m-0">Saldo total:</h4>
-                                                                <p class="input-tot pl-1" id="sumPagosPausadas">
+                                                                <h4 class="title-tot center-align m-0"><span data-i18n="saldo-total">Saldo total<span></h4>
+                                                                <p class="input-tot pl-1">
+                                                                    <?php
+                                                                    $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                                    
+                                                                    foreach ($query->result() as $row){
+                                                                        $number = $row->nuevo_general;
+                                                                        echo '$' . number_format(!$number?0:$number, 2).'';
+                                                                    } 
+                                                                    ?>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -422,38 +537,74 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                            <label class="control-label" for="catalogo_otras">Proyecto</label>
-                                                            <select name="catalogo_otras" id="catalogo_otras" class="selectpicker select-gral proyecto" data-estatus="6" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="catalogo_otras" data-i18n="proyecto">Proyecto</label>
+                                                            <select name="catalogo_otras" id="catalogo_otras" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="control-label" for="condominio_otras">Condominio</label>
-                                                            <select name="condominio_otras" id="condominio_otras" class="selectpicker select-gral condominio" data-estatus="6" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="condominio_otras" data-i18n="condominio">Condominio</label>
+                                                            <select name="condominio_otras" id="condominio_otras" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <table class="table-striped table-hover hide tablaPagos" data-id="otras" id="tabla_otras_comisiones" name="tabla_otras_comisiones">
+                                            <table class="table-striped table-hover hide" id="tabla_otras_comisiones" name="tabla_otras_comisiones">
                                                 <thead>
                                                     <tr>
-                                                    <th></th>
-                                                        <th>ID PAGO</th>
-                                                        <th>PROYECTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>PRECIO LOTE</th>
-                                                        <th>TOTAL COMISIÓN</th>
-                                                        <th>PAGADO CLIENTE</th>
-                                                        <th>DISPERSADO</th>
-                                                        <th>SALDO A COBRAR</th>
-                                                        <th>PORCENTAJE COMISIÓN</th>
-                                                        <th>DETALLE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>id-pago</th>
+                                                        <th>proyecto</th>
+                                                        <th>lote</th>
+                                                        <th>precio-del-lote</th>
+                                                        <th>total-comision</th>
+                                                        <th>pago-cliente</th>
+                                                        <th>dispersado</th>
+                                                        <th>saldo-cobrar</th>
+                                                        <th>porc-comision</th>
+                                                        <th>detalles</th>
+                                                        <th>estatus</th>
+                                                        <th>acciones</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
                                         <div class="tab-pane" id="sin_pago_neodata">
-                                            <?php $this->load->view('comisiones/complementos/sin_pago_neodata_tabla_comple'); ?>
+                                            <div class="encabezadoBox">
+                                            <p class="card-title pl-1" data-i18n="sin-pago-neodata">.</p>
+                                            </div>
+                                            <div class="toolbar">
+                                                <div class="container-fluid p-0">
+                                                    <?php ?>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
+                                                                <div class="form-group">
+                                                                    <label class="control-label" for="catalogo_pago">Proyecto</label>
+                                                                    <select name="catalogo_pago" id="catalogo_pago" data-i18n-label="selecciona-una-opcion"  class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label" for="condominio_pago" data-i18n="condominio">Condominio</label>
+                                                                    <select name="condominio_pago" id="condominio_pago" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php  ?> 
+                                                </div>
+                                            </div>
+                                            <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
+                                                <thead>
+                                                    <tr>
+                                                        <th>id</th>
+                                                        <th>proyecto</th>
+                                                        <th>condominio</th>
+                                                        <th>lote</th>
+                                                        <th>clientes</th>
+                                                        <th>asesor</th>
+                                                        <th>coordinador</th>
+                                                        <th>gerente</th>
+                                                        <th>estatus</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -474,8 +625,5 @@
     </script>
     
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>                                                        
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisionesColaboradorSubDir.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/filtrosProCond.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/sinPagoNeodata.js"></script>
-
+    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaboradorRigel.js"></script>
 </body>

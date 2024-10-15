@@ -9,9 +9,9 @@ class Neodata_model extends CI_Model {
 
     public function addUpdateClienteNeoData($data) {
         $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
-        $response = $this->programacion2->query("EXEC [programacion2].[dbo].[CDM300ClientesNeoD]
+        $response = $this->programacion2->query("EXEC [programacion].[dbo].[CDM300ClientesNeoD]
         @accion = '" . $data['accion'] . "',
-        @Cliente = '" . $data['Cliente'] . "',
+        @Cliente = '" . ($data['Cliente'] == '' ? 'NULL' : $data['Cliente']) . "',
         @IdProyecto = " . $data['IdProyecto'] . ",
         @IdVivienda = " . $data['IdVivienda'] . ",
         @IdCredito = " . $data['IdCredito'] . ",
@@ -29,7 +29,7 @@ class Neodata_model extends CI_Model {
         @Telefono = '" . $data['Telefono'] . "',
         @Email = '" . $data['Email'] . "',
         @RFC = '" . $data['RFC'] . "',
-        @FechaNacimiento = '" . ($data['FechaNacimiento'] == '' ? 'NULL' : $data['FechaNacimiento']) . "',
+        @FechaNacimiento = " . ($data['FechaNacimiento'] == '' ? 'NULL' : "'" . $data['FechaNacimiento']) . "'" . ",
         @FechaIngreso = '" . $data['FechaIngreso'] . "',
         @NumOficial = " . ($data['NumOficial'] == '' ? 'NULL' : $data['NumOficial']) . ",
         @NumInterior = " . ($data['NumInterior'] == '' ? 'NULL' : $data['NumInterior']) . ",
@@ -52,7 +52,7 @@ class Neodata_model extends CI_Model {
         @EscrituradoReal = " . $data['EscrituradoReal'] . ",
         @IdTipoMoneda = " . ($data['IdTipoMoneda'] == '' ? 1 : $data['IdTipoMoneda']) . ",
         @Lada = " . ($data['Lada'] == '' ? 'NULL' : $data['Lada']) . ",
-        @Pais = " . $data['Pais'] . ",
+        @Pais = " . ($data['Pais'] == '' ? 'NULL' : $data['Pais']) . ",
         @MonedaSATDefault = '" . $data['MonedaSATDefault'] . "',
         @IdCodigoPostalSAT = " . ($data['IdCodigoPostalSAT'] == '' ? 'NULL' : $data['IdCodigoPostalSAT']) . ",
         @IdPaisSAT = " . $data['IdPaisSAT'] . ",

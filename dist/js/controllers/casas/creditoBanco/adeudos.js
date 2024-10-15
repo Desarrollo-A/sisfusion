@@ -25,7 +25,7 @@ pass_to_proyecto_ejecutivo = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_valida_comite`,
+                url: `avancePaso2`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -45,6 +45,7 @@ pass_to_proyecto_ejecutivo = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'documentos', value: data.documentos }),
         ],
@@ -64,7 +65,7 @@ back_to_carta_auth = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `back_to_carta_auth`,
+                url: `rechazoPaso2`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -83,6 +84,7 @@ back_to_carta_auth = function (data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -107,18 +109,8 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: function(data){
-        if(data.adeudoOOAM){
-            return formatter.format(data.adeudoOOAM)
-        }
-        return 'Sin ingresar'
-    } },
-    { data: function(data){
-        if(data.adeudoADM){
-            return formatter.format(data.adeudoADM)
-        }
-        return 'Sin ingresar'
-    } },
+    { data: 'adOOAM' },
+    { data: 'adADM'},
     {
         data: function (data) {
             let inicio = new Date(data.fechaProceso)

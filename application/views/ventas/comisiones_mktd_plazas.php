@@ -41,7 +41,7 @@
 
 
 
-	<!--<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+	<div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header bg-red">
@@ -53,16 +53,16 @@
 				</form>
 			</div>
 		</div>
-	</div>-->
+	</div>
 
 
-	<!--<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	<div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-body"></div>
 			</div>
 		</div>
-	</div>-->
+	</div>
 
 
 
@@ -158,7 +158,8 @@
 	<?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-</div>
+
+</div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
 <script>
