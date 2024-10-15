@@ -143,6 +143,7 @@ pass_to_adeudos = function (data) {
 }
 
 let columns = [
+    { data: 'idProcesoCasas' },
     { data: 'idLote' },
     { data: 'nombreLote' },
     { data: 'condominio' },

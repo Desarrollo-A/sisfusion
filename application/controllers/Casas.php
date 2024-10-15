@@ -505,7 +505,7 @@ class Casas extends BaseController
         $this->db->trans_begin();
 
         $getGerente = $this->CasasModel->getGerente($gerente);
-        $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $idLote", 0);
+        $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $idLote", 0, $idCliente);
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
@@ -555,7 +555,7 @@ class Casas extends BaseController
 
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
 
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote ", 0);
+        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote ", 0 , $idCliente);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -778,7 +778,7 @@ class Casas extends BaseController
 
         $getGerente = $this->CasasModel->getGerente($idGerente);
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
-        $this->CasasModel->addHistorial(0, 2, 1, "Pre proceso | se regresa a gerente $getGerente->nombre IDLOTE: $idLote ", 0);
+        $this->CasasModel->addHistorial(0, 2, 1, "Pre proceso | se regresa a gerente $getGerente->nombre IDLOTE: $idLote ", 0, $idCliente);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -819,7 +819,7 @@ class Casas extends BaseController
 
         $getSubdirector = $this->CasasModel->getGerente($idSubdirector);
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
-        $this->CasasModel->addHistorial(0, 1, '0', "Pre proceso | se regresa a subdirector: $getSubdirector->nombre IDLOTE: $idLote ", 0);
+        $this->CasasModel->addHistorial(0, 1, '0', "Pre proceso | se regresa a subdirector: $getSubdirector->nombre IDLOTE: $idLote ", 0, $idCliente);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -5050,7 +5050,7 @@ class Casas extends BaseController
         $getGerente = $this->CasasModel->getGerente($gerente);
         foreach ($idLote  as $lote) {
             foreach ($lote as $loteId) {
-                $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $loteId", 0);
+                $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $loteId", 0, $idCliente);
             }
         }
 
@@ -5103,7 +5103,7 @@ class Casas extends BaseController
 
         foreach($idLotes as $lote) {
             foreach($lote as $loteId) {
-                $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $loteId", 0);        
+                $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $loteId", 0, $idCliente);        
             }
         }
         
@@ -5335,7 +5335,8 @@ class Casas extends BaseController
             "idLote" => $idLote,
             "proceso" => 1,
             "comentario" => $comentario,
-            "creadoPor" => $this->session->userdata('id_usuario')
+            "creadoPor" => $this->session->userdata('id_usuario'),
+            "idCliente" => $idCliente
         );
 
         $this->db->trans_begin();
@@ -5344,7 +5345,7 @@ class Casas extends BaseController
         if (!$update) {
             $banderaSuccess = false;
         }
-        $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla);
+        $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla, $idCliente);
         if ($checkPreproceso != null) {
             $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
             $update = $this->General_model->updateRecord($tabla, $procesoData, "idProcesoCasas", $idProcesoCasas);
@@ -5687,13 +5688,13 @@ class Casas extends BaseController
                 'estatus' => 0
             );
 
-            $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tablaActual);
+            $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tablaActual, $idCliente);
             if ($checkPreproceso != null) {
                 $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
                 // actualizar estatus de tabla actual
                 $update = $this->General_model->updateRecord($tablaActual, $dataEsquemaActual, $esquemaCreditoActual == 1 ? "idProcesoCasas" : "idProceso", $idProcesoCasas);
 
-                $checkPreprocesoNuevo = $this->CasasModel->checkPreproceso($idLote, $tabla);
+                $checkPreprocesoNuevo = $this->CasasModel->checkPreproceso($idLote, $tabla, $idCliente);
                 // si existe un registro en la tabla nueva solo lo actualizamos
                 if($checkPreprocesoNuevo != null) {
                     $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
@@ -5708,7 +5709,7 @@ class Casas extends BaseController
             }
         } else {
             // solo cambia otro campo, actualizamos registro exitente
-            $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla);
+            $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla, $idCliente);
             if ($checkPreproceso != null) {
                 $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
                 $update = $this->General_model->updateRecord($tabla, $procesoData, $esquemaCreditoActual == 1 ? "idProcesoCasas" : "idProceso", $idProcesoCasas);
