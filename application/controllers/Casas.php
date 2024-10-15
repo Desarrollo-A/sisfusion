@@ -505,7 +505,7 @@ class Casas extends BaseController
         $this->db->trans_begin();
 
         $getGerente = $this->CasasModel->getGerente($gerente);
-        $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $idLote", 0, $idCliente, $idCliente);
+        $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $idLote", 0);
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
@@ -555,7 +555,7 @@ class Casas extends BaseController
 
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
 
-        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote ", 0, $idCliente);
+        $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se asigna el asesor: ' . $getAsesor->nombre . " IDLOTE: $idLote ", 0);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -618,7 +618,7 @@ class Casas extends BaseController
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
             if ($is_ok) {
-                $this->CasasModel->addHistorial($id, $proceso, $new_status, $comentario, 1, $idCliente);
+                $this->CasasModel->addHistorial($id, $proceso, $new_status, $comentario, 1);
             } else {
                 $banderaSuccess = false;
             }
@@ -778,7 +778,7 @@ class Casas extends BaseController
 
         $getGerente = $this->CasasModel->getGerente($idGerente);
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
-        $this->CasasModel->addHistorial(0, 2, 1, "Pre proceso | se regresa a gerente $getGerente->nombre IDLOTE: $idLote ", 0, $idCliente);
+        $this->CasasModel->addHistorial(0, 2, 1, "Pre proceso | se regresa a gerente $getGerente->nombre IDLOTE: $idLote ", 0);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -819,7 +819,7 @@ class Casas extends BaseController
 
         $getSubdirector = $this->CasasModel->getGerente($idSubdirector);
         $update = $this->General_model->updateRecord('clientes', $updateCliente, 'id_cliente', $idCliente);
-        $this->CasasModel->addHistorial(0, 1, '0', "Pre proceso | se regresa a subdirector: $getSubdirector->nombre IDLOTE: $idLote ", 0, $idCliente);
+        $this->CasasModel->addHistorial(0, 1, '0', "Pre proceso | se regresa a subdirector: $getSubdirector->nombre IDLOTE: $idLote ", 0);
 
         if (!$update) {
             $banderaSuccess = false;
@@ -924,7 +924,7 @@ class Casas extends BaseController
 
                 if ($updated) {
                     $motivo = "Se subió archivo: $name_documento";
-                    $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo, 1, $idCliente); // se añade el numero de esquema 1 -proceso banco
+                    $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo, 1); // se añade el numero de esquema 1 -proceso banco
 
                     $this->json([]);
                 }
@@ -944,8 +944,7 @@ class Casas extends BaseController
         $ooam = $this->form('ooam');
         $idLote = $this->form('idLote');
         $idCliente = $this->form('idCliente');
-        echo json_encode($idCliente);
-        exit();
+
         $responseTitulacion = $this->CasasModel->checkVoboEscrituracion($idLote);
 
         if (!isset($id) || !isset($tipo)) {
@@ -1001,7 +1000,7 @@ class Casas extends BaseController
             }
 
             if ($is_ok) {
-                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, "Se avanzó el proceso al paso 2 | Comentario: ".$comentario, 1, $idCliente); // se agrega esquema 1 - credito de banco
+                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, "Se avanzó el proceso al paso 2 | Comentario: ".$comentario, 1); // se agrega esquema 1 - credito de banco
             } else {
                 http_response_code(404);
             }
