@@ -21,11 +21,7 @@ $('#ano_historial').change(function () {
     });
 });
 
-$('#ano_historial').change(function () {
-    $("#tipo_historial").empty().selectpicker('refresh');
-    $("#tipo_historial").append($('<option>').val(1).text('NORMAL'));
-    $("#tipo_historial").append($('<option>').val(2).text('MADERAS UPGRADE'));
-    $("#tipo_historial").append($('<option>').val(3).text('CASAS'));
+$('#ano_historial').change(function(){
     $("#tipo_historial").selectpicker('refresh');
 });
 
@@ -1089,18 +1085,15 @@ $(document).on('click', '.consultarDetalleDelPago', function(e) {
     });
 });
 
-
-    function cargartabla(){
-        if(usuario_id !=3){
-            var enlace = 'Comisiones/getHistorialDescuentosPorUsuario';
-            $("#tablaHistorialDescuentos").removeClass('hide');
-            consultarHistorialDescuentos(enlace);
-        }
+function cargartabla(){
+    if(usuario_id !=3){
+        var enlace = 'Comisiones/getHistorialDescuentosPorUsuario'
+        $("#tablaHistorialDescuentos").removeClass('hide');
+        consultarHistorialDescuentos(enlace)
     }
+}
 
 $(document).ready(function () {
-
-    
 
     let titulosHistorialOOAM = [];
     $('#tablaHistorialOOAM thead tr:eq(0) th').each(function (i) {
@@ -1115,6 +1108,24 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
     consultarHistorialOOAM();
+
+    $.ajax({
+        url: general_base_url + 'Casas_comisiones/selectTipo',
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            const len = response.length;
+            for(let i = 0; i<len; i++){
+                const id = response[i]['id_opcion'];
+                const name = response[i]['nombre'];
+
+                if(id != 4){
+                    $("#tipo_historial").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+
+            }
+        }
+    });
 });
 
 function consultarHistorialOOAM() {

@@ -85,7 +85,7 @@
                                     <a href="#solicitudesSUMA" role="tab" data-toggle="tab" data-i18n="historial-suma">Historial SUMA</a>
                                 </li>
                                 <li>
-                                    <a href="#historialDescuentos" role="tab" data-toggle="tab" data-i18n="historial-descuentos" onclick="cargartabla()">Historial descuentos</a>
+                                    <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="cargartabla()">Historial descuentos</a>
                                 </li>
 
                             <?php } ?>
