@@ -217,14 +217,17 @@
                                     <div class="table-responsive">
                                         <table class="table-striped table-hover" id="tipo-venta" name="tipo-venta">
                                             <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>MODELO</th>
-                                                    <th>SUPERFICIE</th>
-                                                    <th>COSTO</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
+                                            <tr>
+                                                <th>Nombre residencia</th>
+                                                <th>Nombre condominio</th>
+                                                <th>Nombre lote</th>
+                                                <th>Id lote</th>
+                                                <th>Referencia</th>
+                                                <th>Id estatus lote</th>
+                                                <th>Id tipo venta</th>
+                                                <th>Nombre tipo venta</th>
+                                                <th>Acciones</th>
+                                            </tr>
                                             </thead>
                                         </table>
                                     </div>

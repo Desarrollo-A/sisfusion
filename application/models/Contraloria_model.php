@@ -2044,7 +2044,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 tv.tipo_venta AS nombreTipoVenta
             FROM
                 lotes lo
-            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = 1
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
             INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
             WHERE

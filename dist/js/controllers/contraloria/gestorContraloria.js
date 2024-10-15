@@ -11,7 +11,7 @@ let idLote = '';
 let usuariosPermitidosRL = [2815, 2875, 12276, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosIntercambio = [5342, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosModelosCasas = [2749];
-
+let tablaTipoVenta;
 
 $(document).ready(function () {
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
@@ -28,13 +28,7 @@ $(document).ready(function () {
                 }else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 }else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
-                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-                }
-                else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
-                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-                }
-                else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
-                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));                    
                 }
             }
         }
@@ -44,133 +38,100 @@ $(document).ready(function () {
 });
 
 
-
 $(document).on('change', '#selector', function () {
     $("#divTablaRL, #divTablaIntercambio, #divmodelosTable").addClass("hide");
-    console.log("$(this).val()", $(this).val());
     if ($(this).val() == 1) {
         $("#divTablaIntercambio").addClass("hide");
         $('#proyecto').addClass('hide');
         $('#condominio').addClass('hide');
         $("#divTablaRL").removeClass("hide");
+        $('#divTablaCambiarVenta').addClass('hide');
         llenarTablaRl($(this).val());
     } else if ($(this).val() == 2) {
         $("#divTablaIntercambio").removeClass("hide");
         $('#proyecto').addClass('hide');
         $('#condominio').addClass('hide');
         $("#divTablaRL").addClass("hide");
-        llenarTablaIntercambios($(this).val());
+        $('#divTablaCambiarVenta').addClass('hide');
+        llenarTablaIntercambios($(this).val());        
     } else if ($(this).val() == 3) {
         $('#proyecto').addClass('hide');
         $('#condominio').addClass('hide');
-        $("#divmodelosTable").removeClass("hide");
+        $('#divTablaCambiarVenta').addClass('hide');
+        $("#divmodelosTable").removeClass("hide");       
     }
-    else if ($(this).val() == 4) {
-        // crearTablaTipoVenta();
+    else if ($(this).val() == 4) {   
+        $('#proyecto').val('');   
+        $('#condominio').val('');   
         $('#proyecto').removeClass('hide');
-        $('#condominio').removeClass('hide');
+        $('#condominio').removeClass('hide'); 
+
     }
 });
 
-function crearTablaTipoVenta() {
-    $('#tipo-venta thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        titulosGestor.push(title);
-        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-        $('input', this).on('keyup change', function () {
-            if (tablaGestor.column(i).search() !== this.value)
-                tablaGestor.column(i).search(this.value).draw();
-        });
-    });
-    tablaGestor = $("#tipo-venta").DataTable({
+$('#selectCondominio').change(function(){    
+    idOpcionCondominio=$(this).val();
+    crearTablaTipoVenta(idOpcionCondominio);
+});
+
+function crearTablaTipoVenta(idCondominio) {   
+    $('#divTablaCambiarVenta').removeClass('hide');
+    tablaTipoVenta = $('#tipo-venta').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
         buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Exportar registros a Excel',
-                title: "Listado de representantes legales",
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'Historial Contratación',
                 exportOptions: {
-                    columns: [0, 1, 2, 3],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8], // 8 columnas (0 a 7)
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosGestor[columnIdx] + ' ';
+                            return $(d).text().toUpperCase(); // Usa el texto del encabezado como título
                         }
                     }
-                }
-            },
-            {
-                text: '<i class="fa fa-plus" aria-hidden="true"></i>',
-                className: 'btn btn-azure agregar',
-                titleAttr: 'Agregar Representante Legal',
-                title: "Agregar Representante Legal",
-                attr: {
-                    'data-transaccion': 0
-                }
+                },
             }
         ],
+        width: '100%',
+        scrollX: true,
+        pageLength: 10,
         language: {
             url: `${general_base_url}static/spanishLoader_v2.json`,
             paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
+                previous: "<i class='fa fa-angle-left'></i>",
+                next: "<i class='fa fa-angle-right'></i>"
             }
         },
-        pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        bAutoWidth: false,
-        fixedColumns: true,
-        ordering: false,
-        scrollX: true,
         destroy: true,
+        ordering: false,
         columns: [
-            { data: 'id_opcion' },
-            { data: 'nombre' },
-            {
-                data: function (d) {
-                    if (d.estatus == 1) {
-                        return '<center><span class="label lbl-green">ACTIVO</span><center>';
-                    } else {
-                        return '<center><span class="label lbl-warning">INACTIVO</span><center>';
-                    }
-                }
-            },
-            { data: 'fecha_creacion' },
-            {
-                orderable: false,
-                data: function (d) {
-                    return `<div class="d-flex justify-center"><button href="#" class="btn-data agregar ${d.estatus == 0 ? 'btn-green' : 'btn-warning'}" data-nombre="${d.nombre}" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN" data-transaccion="${d.estatus == 0 ? '1' : '2'}" data-idopcion="${d.id_opcion}"><i class="${d.estatus == 0 ? 'fas fa-unlock' : 'fas fa-lock'}"></i></button></div>`;
-
-                }
-            }
-        ],
-        columnDefs: [
-            {
-                searchable: false,
-                orderable: false,
-                targets: 0
-            },
+            { data: "nombreResidencial" },      // Columna 1: nombreResidencial
+            { data: "nombreCondominio" },       // Columna 2: nombreCondominio
+            { data: "nombreLote" },             // Columna 3: nombreLote
+            { data: "idLote" },                 // Columna 4: idLote
+            { data: "referencia" },             // Columna 5: referencia
+            { data: "idStatusLote" },           // Columna 6: idStatusLote
+            { data: "idTipoVenta" },            // Columna 7: idTipoVenta
+            { data: "nombreTipoVenta" },     // Columna 8: nombreTipoVenta
+            {data: "acciones"}
         ],
         ajax: {
-            url: `${general_base_url}Contraloria/getDatosTabla/${tipoOperacion}`,
+            url: `${general_base_url}Contraloria/get_registros_tipo_venta/${idCondominio}`,
             dataSrc: "",
-            type: "POST",
-            cache: false,
+            complete: function (response) {
+                console.log("Datos recibidos del servidor:", response.responseJSON); // Verifica si está devolviendo datos
+            }
         },
-        order: [[1, 'asc']]
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });
-
-    $('#tipo-venta').on('draw.dt', function () {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
+    applySearch(tablaTipoVenta);
 }
+
 
 
 function loadSelectOptions (){
@@ -197,7 +158,7 @@ $('#selectProyecto').change(function () {
     $(document).ready(function () {        
         $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
             for (var i = 0; i < data.length; i++) {
-                $("#selectCondominio").append($('<option>').val(data[i]['selectCondominio']).text(data[i]['nombre']));
+                $("#selectCondominio").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));
             }
             $("#selectCondominio").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');

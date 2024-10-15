@@ -4431,7 +4431,7 @@ public function return1(){
 	// 	echo json_encode($this->Contraloria_model->getRegistrosCambioTipoVenta($idCondominio));
 	// }
 
-	public function get_registros_tipo_venta($idCondominio=1) {
+	public function get_registros_tipo_venta($idCondominio) {
 		echo json_encode($this->Contraloria_model->getRegistrosCambioTipoVenta($idCondominio));
 	}
 
