@@ -98,7 +98,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion, $esquema, $idCliente = null){
+    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion, $esquema){
         $idMovimiento = $this->session->userdata('id_usuario');
 
         $query = "INSERT INTO historial_proceso_casas
@@ -109,8 +109,8 @@ class CasasModel extends CI_Model
             idMovimiento,
             creadoPor,
             descripcion,
-            esquemaCreditoProceso,
-            idCliente
+            esquemaCreditoProceso
+            
         )
         VALUES
         (
@@ -120,8 +120,8 @@ class CasasModel extends CI_Model
             $idMovimiento,
             $idMovimiento,
             '$descripcion',
-            $esquema,
-            $idCliente
+            $esquema
+            
         )";
 
         return $this->db->query($query);
