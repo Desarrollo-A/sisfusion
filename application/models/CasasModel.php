@@ -283,7 +283,7 @@ class CasasModel extends CI_Model
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
-        LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote
+        LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote AND pc.idCliente = cli.id_cliente
         LEFT JOIN proceso_casas_directo pcd ON pcd.idLote = lo.idLote
         LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
@@ -456,9 +456,9 @@ class CasasModel extends CI_Model
 
 		END AS gerente,
         oxc.nombre AS movimiento
-        FROM proceso_casas_banco pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        FROM clientes cli
+        LEFT JOIN lotes lo ON lo.idLote = cli.idLote
+        LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote AND pc.idCliente = cli.id_cliente
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
         LEFT JOIN usuarios us_asesor ON us_asesor.id_usuario = cli.id_asesor_c
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
@@ -471,7 +471,8 @@ class CasasModel extends CI_Model
         AND cli.status = 1
         AND cli.id_asesor_c != 0
         AND cli.id_gerente_c != 0
-        AND (pc.idProcesoCasas IS NOT NULL AND pc.tipoMovimiento != 4)";
+        AND (pc.idProcesoCasas IS NOT NULL AND pc.tipoMovimiento != 4)
+        AND (pc.estatus = 1)";
 
         return $this->db->query($query)->result();
     }
@@ -2497,9 +2498,9 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->row();
     }
 
-    public function checkPreproceso($idLote, $tableName) {
+    public function checkPreproceso($idLote, $tableName, $idCliente) {
         if($tableName == 'proceso_casas_banco'){
-            $query = "SELECT idProcesoCasas FROM $tableName WHERE idLote = $idLote";
+            $query = "SELECT idProcesoCasas FROM $tableName WHERE idLote = $idLote AND idCliente = $idCliente";
         }
         elseif($tableName == 'proceso_casas_directo') {
             $query = "SELECT idProceso AS idProcesoCasas FROM $tableName WHERE idLote = $idLote";
@@ -2555,6 +2556,7 @@ AND vb.proyectos != 1";
         LEFT JOIN clientes cl ON cl.idLote = lo.idLote
         WHERE lo.idCondominio = $idCondominio
         AND pcb.idProcesoCasas IS NOT NULL
+        AND (pcb.estatus = 1)
         $extraColumns
         GROUP BY lo.idLote, lo.nombreLote, cl.id_gerente_c, cl.id_asesor_c
         ORDER BY lo.idLote";
@@ -2593,7 +2595,7 @@ AND vb.proyectos != 1";
             LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
             LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
-            WHERE pcb.idLote = $idLote AND dpc.archivo IS NOT NULL 
+            WHERE pcb.idLote = $idLote AND dpc.archivo IS NOT NULL AND (dpc.estatus = 1)
         )
         SELECT idDocumento, idProcesoCasas, documento, archivo, proyecto, condominio, nombreLote,  idLote, gerente, asesor, descargar,visualizarZIP
         FROM fullData
@@ -2624,7 +2626,7 @@ AND vb.proyectos != 1";
                         LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
                         WHERE pcb.idLote = $idLote
                         AND cpc.status = 1
-                        AND cpc.archivo IS NOT NULL                
+                        AND cpc.archivo IS NOT NULL      
                     )
                     SELECT idDocumento, idProcesoCasas, archivo, proyecto, condominio, nombreLote, idLote, gerente,asesor, descargar, documento
                     FROM fullData
@@ -2654,6 +2656,7 @@ AND vb.proyectos != 1";
                     LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
                     WHERE pcb.idLote = $idLote
                     AND dpp.archivo IS NOT NULL 
+                    AND pcb.estatus = 1
                 )
 
                 SELECT documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, descargar, idProcesoCasas
@@ -2688,6 +2691,7 @@ AND vb.proyectos != 1";
                     LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
                     WHERE pcb.idLote = $idLote
                     AND app.complementoPDF IS NOT NULL
+                    AND pcb.estatus = 1
                 )
                 SELECT idAvance, idProcesoPagos, idProcesoCasas ,documento, archivo, condominio,nombreLote, idLote, gerente, asesor, descargar, proyecto
                 FROM fullData
@@ -2718,6 +2722,7 @@ AND vb.proyectos != 1";
                     LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
                     WHERE pcb.idLote = $idLote
                     AND app.complementoPDF IS NOT NULL
+                    AND pcb.estatus = 1
                     )
                     SELECT documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, descargar,idProcesoCasas
                     FROM fullData
@@ -2750,7 +2755,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->result();
     }
 
-    public function getListaDatosCliente($idLote, $extraWhere) {
+    public function getListaDatosCliente($idCliente, $extraWhere) {
         $query = "WITH dataBanco AS (
                     SELECT cli.id_cliente, pcb.idProcesoCasas,pcd.idProceso,
                     dpc.documento AS documentoBanco, CASE WHEN dpc.documento = 'Titulo de propiedad' THEN 'ARCHIVO ZIP' ELSE dpc.archivo END AS archivoBanco,
@@ -2771,7 +2776,7 @@ AND vb.proyectos != 1";
                     LEFT JOIN usuarios asesor ON asesor.id_usuario  = cli.id_asesor_c 
                     LEFT JOIN documentos_proceso_casas dpc ON dpc.idProcesoCasas = pcb.idProcesoCasas
                     LEFT JOIN documentos_proceso_casas dpc2 ON dpc2.idProcesoCasas = pcd.idProceso
-                    WHERE  lo.idLote = $idLote $extraWhere
+                    WHERE cli.id_cliente = $idCliente $extraWhere
                     AND (dpc2.archivo IS NOT NULL OR dpc.archivo IS NOT NULL)
                     GROUP BY cli.id_cliente, pcb.idProcesoCasas, CAST(resi.descripcion AS VARCHAR(MAX)), CAST(con.nombre AS VARCHAR(MAX)), 
                     lo.nombreLote, lo.idLote, cli.id_gerente_c, CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
@@ -2833,6 +2838,15 @@ AND vb.proyectos != 1";
         WHERE lo.idLote = $idLote AND (app.complementoXML IS NOT NULL) 
         AND (pcb.status = 1 OR pcb.estatus = 1) AND (cl.status = 1)
         ";
+        return $this->db->query($query)->result();
+    }
+
+    public function getClientesPorLote($idLote) {
+        $query = "SELECT cl.id_cliente AS value, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS label, cl.status FROM clientes cl 
+        LEFT JOIN proceso_casas_banco pcb on pcb.idLote = cl.idLote AND pcb.idCliente = cl.id_cliente 
+        WHERE cl.idLote = $idLote 
+        AND isNULL(noRecibo, '') != 'CANCELADO' ORDER BY cl.status DESC";
+
         return $this->db->query($query)->result();
     }
 }

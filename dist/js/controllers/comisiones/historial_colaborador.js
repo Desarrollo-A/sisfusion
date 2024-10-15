@@ -1115,6 +1115,24 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
     consultarHistorialOOAM();
+
+    $.ajax({
+        url: general_base_url + 'Casas_comisiones/selectTipo',
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            const len = response.length;
+            for(let i = 0; i<len; i++){
+                const id = response[i]['id_opcion'];
+                const name = response[i]['nombre'];
+
+                if(id != 4){
+                    $("#tipo_historial").append($('<option>').val(id).text(name.toUpperCase()));
+                }
+
+            }
+        }
+    });
 });
 
 function consultarHistorialOOAM() {
