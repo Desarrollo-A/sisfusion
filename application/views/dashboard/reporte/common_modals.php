@@ -213,6 +213,7 @@
                       <th>dias-apartado-a-estatus-9</th>
                       <th>estatus-lote</th>
                       <th>apartado</th>
+                      <th>sede</th>
                       <th>modalidad</th>
                     </tr>
                 </thead>
@@ -260,11 +261,12 @@
                         <th>dias-ultimo-estatus</th>
                         <th>estatus-contratacion</th>
                         <th>fecha-status-9</th>
-                      <th>dias-apartado-a-estatus-9</th>
+                        <th>dias-apartado-a-estatus-9</th>
                         <th>estatus-lote</th>
                         <th>fecha-liberacion</th>
                         <th>motivo</th>
                         <th>apartado</th>
+                        <th>sede</th>
                         <th>modalidad</th>
                     </tr>
                 </thead>

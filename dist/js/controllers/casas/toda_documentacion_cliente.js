@@ -25,14 +25,17 @@ let buttons = [
 
 let columnsBanco = [
     { data: 'idProcesoCasas'},
+    { data: 'idProcesoCasas'},
+    { data: 'nombreCliente'},
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
     { data: 'idLote' },
     { data: 'gerente' },
     { data: 'asesor' },
-    { data: 'documento' },
+    { data: 'archivoBanco' },
     {data: function(data) {
+        console.log("visualizarZIP: ", data.visualizarZIP);
         let view_button = '';
         let download_button = '';
 
@@ -47,10 +50,12 @@ let columnsBanco = [
 ]
 
 let columnsDirecto = [
+    { data: 'idProcesoCasas'},
     { data: 'idProceso'},
     { data: 'proyecto'},
     { data: 'condominio'},
     { data: 'nombreLote'},
+    { data: 'nombreCliente'},
     { data: 'idLote'},
     { data: 'gerente'},
     { data: 'asesor'},
@@ -66,10 +71,12 @@ let columnsDirecto = [
 
 let columnsPagos = [
     { data: 'idProcesoCasas'},
+    { data: 'idProcesoCasas'},
     { data: 'proyecto' },
     { data: 'condominio' },
     { data: 'nombreLote' },
     { data: 'idLote' },
+    { data: 'nombreCliente'},
     { data: 'gerente' },
     { data: 'asesor' },
     { data: 'documento' },
@@ -90,14 +97,14 @@ function dataFunction(value) {
     if (valueTab == 1) {
         tableConfig = {
             id: '#tableBanco',
-            url: 'casas/lista_toda_documentacion_casas_banco',
+            url: 'casas/documentacion_clientes',
             buttons: buttons,
             columns: columnsBanco
         };
     } else if (valueTab == 2) {
         tableConfig = {
             id: '#tableDirecto',
-            url: 'casas/lista_toda_documentacion_casas_directo',
+            url: 'casas/documentacion_clientes',
             buttons: buttons,
             columns: columnsDirecto
         };
@@ -195,15 +202,11 @@ filtro_condominios_banco.onChange(function(option){
 });
 
 filtro_lotes_banco.onChange(function(option){
-    table.setParams({lote: option.value})
+    console.log("option: ", option);
+    console.log("valueTab: ", valueTab);
+    table.setParams({lote: option.value, valueTab: valueTab})
     table.reload()
 })
-
-
-
-
-
-
 
 let filtro_proyectos_directo = new SelectFilter({ id: 'proyecto-directo', label: 'Proyecto', placeholder: 'Selecciona una opción' });
 let filtro_condominios_directo = new SelectFilter({ id: 'condominio-directo', label: 'Condominio', placeholder: 'Selecciona una opción' });
@@ -230,10 +233,6 @@ let filtros_pagos = new Filters({
         filtro_lotes_pagos,
     ],
 });
-
-
-
-
 
 filtro_proyectos_directo.onChange(function(option){
     $.ajax({

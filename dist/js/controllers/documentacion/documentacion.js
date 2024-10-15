@@ -72,6 +72,7 @@ Shadowbox.init();
 
 $(document).ready(function () {
     construirHead("tableDoct"); 
+    changeButtonTooltips();
     $('#addDeleteFileModal').on('hidden.bs.modal', function () {
         $('#fileElm').val(null);
         $('#file-name').val('');
@@ -139,22 +140,8 @@ $('#idLote').change(function () {
     const seleccion = $(this).val();
     const datos = seleccion.split(',');
     const valorSeleccionado = datos[0];
-    /* let titulos = [];
 
-    $('#tableDoct thead tr:eq(0) th').each(function (i) {
-        $(this).css('text-align', 'center');
-        const title = $(this).text();
-        titulos.push(title);
-
-        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" class="textoshead"  placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if ($('#tableDoct').DataTable().column(i).search() !== this.value) {
-                $('#tableDoct').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    }); */
-
-    tabla_6 = $('#tableDoct').DataTable({
+    let tabla_6 = $('#tableDoct').DataTable({
         destroy: true,
         ajax: {
             url: `${general_base_url}registroCliente/expedientesWS/${valorSeleccionado}`,
@@ -176,8 +163,8 @@ $('#idLote').change(function () {
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                     format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 },
@@ -479,6 +466,10 @@ $('#idLote').change(function () {
             });
         },
     });
+
+    applySearch(tabla_6);
+    changeButtonTooltips();
+    $('body').i18n();
 });
 
 $(document).on('click', '.verDocumento', function () {
@@ -522,7 +513,7 @@ $(document).on('click', '.verDocumento', function () {
         Shadowbox.open({
             content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
             player: "html",
-            title: `Visualizando archivo: ${$itself.attr('data-nombre')}`,
+            title: `${_('visualizando-archivo2')}: ${$itself.attr('data-nombre')}`,
             width: 985,
             height: 660
         });
@@ -559,10 +550,12 @@ $(document).on("click", ".addRemoveFile", function (e) {
 
         document.getElementById("secondaryLabelDetail").innerHTML =
             (accion === AccionDoc.DOC_NO_CARGADO)
-                ? `${_("el-documento-elegido")} <i data-i18n="guardar">Guardar</i>.`
+                ? `${_("el-documento-elegido")} <i data-i18n="guardar">${_('guardar')}</i>.`
                 : (accion === AccionDoc.DOC_CARGADO)
-                    ? `${_("el-documento-eliminar")} <i data-i18n="guardar">Guardar</i>.`
-                    : `${_("los-motivos")} <i data-i18n="guardar">Guardar</i>.`;
+                    ? `${_("el-documento-eliminar")} <i data-i18n="guardar">${_('guardar')}</i>.`
+                    : `${_("los-motivos")} <i data-i18n="guardar">${_('guardar')}</i>.`;
+
+        $('#file-name').attr('placeholder', _('archivo-no-selecionado'));
 
         if (accion === AccionDoc.DOC_NO_CARGADO) { // ADD FILE
             $("#selectFileSection").removeClass("hide");
@@ -623,7 +616,6 @@ $(document).on("click", "#sendRequestButton", function () {
         data.append('tituloDocumento', $('#tituloDocumento').val());
 
         $.ajax({
-            //url: "subirArchivo",
             url: `${general_base_url}Documentacion/subirArchivo`,
             data: data,
             cache: false,
@@ -639,9 +631,7 @@ $(document).on("click", "#sendRequestButton", function () {
 
                 if (res.code === 200) {
                     alerts.showNotification("top", "right", `${_("el-documento")} ${nombreDocumento} ${_("descarga-exito")}`, "success");
-                    console.log("documentacionTable: ", documentacionLoteTabla);
                     documentacionLoteTabla.ajax.reload();
-
                     $("#addDeleteFileModal").modal("hide");
                 }
 
@@ -665,7 +655,6 @@ $(document).on("click", "#sendRequestButton", function () {
         data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
 
         $.ajax({
-            //url: "eliminarArchivo",
             url: `${general_base_url}Documentacion/eliminarArchivo`,
             data: data,
             cache: false,
@@ -724,8 +713,8 @@ function abrirModalAutorizaciones(idLote) {
                         ${item["ultima_fecha"]}
                     </div>
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-7">
-                        <span style="font-weight:100; font-size: 12px">Solicitud de autorización: <b>${statusProceso}</b></span>
-                        <span style="font-weight:100; font-size: 12px">Autoriza:${item['nombreAUT'].split(":").shift()}</span>
+                        <span style="font-weight:100; font-size: 12px" data-i18n="solicitud-autorizacion">Solicitud de autorización<b>: ${statusProceso}</b></span>
+                        <span style="font-weight:100; font-size: 12px" data-i18n="autoriza">Autoriza<span>: ${item['nombreAUT'].split(":").shift()}</span></span>
                     </div>
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <p style="text-align: justify;">
@@ -775,7 +764,8 @@ function crearBotonAccion(type, data) {
         buttonClassColor,
         buttonClassAccion,
         buttonTipoAccion,
-        buttonIcono
+        buttonIcono,
+        buttonTooltip
     ] = getAtributos(type);
 
     const d = new Date();
@@ -786,6 +776,7 @@ function crearBotonAccion(type, data) {
 
     return `<button class="${buttonClassColor} ${buttonClassAccion}" 
                 title="${buttonTitulo}" 
+                data-i18n-tooltip="${buttonTooltip}"
                 data-expediente="${data.expediente}" 
                 data-bucket="${data.bucket}"
                 data-accion="${buttonTipoAccion}" 
@@ -816,6 +807,7 @@ function getAtributos(type) {
     let buttonClassAccion = '';
     let buttonIcono = '';
     let buttonTipoAccion = '';
+    let buttonTooltip = '';
 
     if (type === AccionDoc.DOC_NO_CARGADO) {
         buttonTitulo = _("documento-no-cargado");
@@ -824,6 +816,7 @@ function getAtributos(type) {
         buttonClassAccion = '';
         buttonIcono = 'fas fa-file';
         buttonTipoAccion = '';
+        buttonTooltip = 'documento-no-cargado';
     }
     if (type === AccionDoc.DOC_CARGADO) {
         buttonTitulo = _("ver-documento");
@@ -832,6 +825,7 @@ function getAtributos(type) {
         buttonClassAccion = 'verDocumento';
         buttonIcono = 'fas fa-eye';
         buttonTipoAccion = '3';
+        buttonTooltip = 'ver-documento';
     }
     if (type === AccionDoc.SUBIR_DOC) {
         buttonTitulo = _("subir-documento");
@@ -840,6 +834,7 @@ function getAtributos(type) {
         buttonClassAccion = 'addRemoveFile';
         buttonIcono = 'fas fa-upload';
         buttonTipoAccion = '1';
+        buttonTooltip = 'subir-documento';
     }
     if (type === AccionDoc.ELIMINAR_DOC) {
         buttonTitulo = _("eliminar-documento");
@@ -848,9 +843,10 @@ function getAtributos(type) {
         buttonClassAccion = 'addRemoveFile';
         buttonIcono = 'fas fa-trash';
         buttonTipoAccion = '2';
+        buttonTooltip = 'elimitar-document';
     }
 
-    return [buttonTitulo, buttonEstatus, buttonClassColor, buttonClassAccion, buttonTipoAccion, buttonIcono]
+    return [buttonTitulo, buttonEstatus, buttonClassColor, buttonClassAccion, buttonTipoAccion, buttonIcono, buttonTooltip]
 }
 
 /**

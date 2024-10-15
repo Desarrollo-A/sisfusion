@@ -17,9 +17,9 @@ $("#tabla_reporte_11").ready( function(){
                 columns: [0,1,2,3,4,5,6,7,8,9,10,11],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx]  + ' ';
-                        }
+                        return $(d).attr('placeholder').toUpperCase();
                     }
+                }
             }
         }],
         pagingType: "full_numbers",
@@ -111,6 +111,8 @@ $("#tabla_reporte_11").ready( function(){
             }
         },
     });
+
+    applySearch(tabla_6);
 
     $('#tabla_reporte_11').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({

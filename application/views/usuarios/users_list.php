@@ -55,7 +55,7 @@
                                     <div class="form-group">
                                         <label class="control-label" data-i18n="usuario">Usuario</label>
                                     </div>
-                                    <input  class="form-control input-gral pl-1 pr-1" readonly type="text" id="usuarioPC" name="usuarioPC" value="">
+                                    <input class="form-control input-gral pl-1 pr-1" readonly type="text" id="usuarioPC" name="usuarioPC" value="">
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger btn-simple"onclick="CloseModalBaja()" data-i18n="cancelar">Cancelar</button>
+                                <button type="button" class="btn btn-danger btn-simple" onclick="CloseModalBaja()" data-i18n="cancelar">Cancelar</button>
                                 <button type="submit" class="btn btn-primary" id="btnS" data-i18n="aceptar">Aceptar</button>
                             </div>
                         </form>
@@ -193,14 +193,14 @@
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <div class="form-group ">
-                                                <label class="control-label">RFC (<small class="isRequired">*</small>)</label>
+                                                <label class="control-label" data-i18n="rfc-numero">RFC (<small class="isRequired">*</small>)</label>
                                                 <input id="rfc" name="rfc" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" type="text" class="form-control input-gral" required maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label" data-i18n="forma-pago">Forma de pago (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral payment_method m-0" id="payment_method" name="payment_method" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required disabled></select>
+                                                <select class="selectpicker select-gral payment_method m-0" id="payment_method" name="payment_method" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required disabled></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
@@ -220,7 +220,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label" data-i18n="sede">Sede (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()"></select>
+                                                <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true"data-i18n-label="select-predeterminado" title=""data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()"></select>
                                             </div>
                                         </div>
                                         <div class="col-estructura">
@@ -230,8 +230,8 @@
                                     <div class="row">
                                         <div class="col-sm-3" id="tipoMiembro_column">
                                             <div class="form-group overflow-hidden">
-                                                <label class="control-label" data-i18n="tipo-miembro">Tipo de miembro (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
+                                                <label class="control-label"> <span data-i18n="tipo-miembro"> Tipo de miembro </span> (<small class="isRequired">*</small>)</label>
+                                                <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
                                             </div>
                                         </div>
                                         <div class="simbolico_column"></div>
@@ -241,8 +241,8 @@
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
                                                 <input type="hidden" name="rol_actual" id="rol_actual">
-                                                <label class="control-label" data-i18n="lider">Líder (<small class="isRequired">*</small>)</label>
-                                                <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <label class="control-label"> <span data-i18n="lider"> Líder </span> (<small class="isRequired">*</small>)</label>
+                                                <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6"></div>
@@ -257,12 +257,30 @@
                                     <div class="row aligned-row" id="multirol"></div>
                                 </div>
                                 <!------------->
+
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                            <label class="control-label" data-i18n="tipo">Tipo (<small class="isRequired">*</small>)</label>
+                                            <div class="radio_container">
+                                                <input class="d-none" type="radio" name="tipoUsuario" id="normal" value="1">
+                                                <label for="normal">NORMAL</label>
+                                                <input class="d-none" type="radio" name="tipoUsuario" id="mupgrade" value="2">
+                                                <label for="mupgrade">MADERAS UPGRADE</label>                                            
+                                                <input class="d-none" type="radio" name="tipoUsuario" id="casas" value="3">
+                                                <label for="casas" data-i18n="casas-m">CASAS</label>
+                                                <input class="d-none" type="radio" name="tipoUsuario" id="seguros" value="4">
+                                                <label for="seguros"data-i18n="seguros">SEGUROS</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
                                 <div class="container-fluid mt-1" id="ch">
                                     <div class="row">
-                                        <div class="col-md-12 d-flex justify-end">
-                                            <div class="boxIcon" data-html="true" data-toggle="tooltip" data-placement="bottom" data-i18n-label="sede-capital-info" title="Sede capital humano y sucursal capital humano.<br/><br/>Son información que se solicita de manera adicional para mantener actualizado tanto el sistema de Capital Humano como CRM actualizados.">
-                                                <i class="fas fa-info"></i>
-                                            </div>
+                                        <div class="col-md-12 d-flex justify-end" id="div-info">
+                                            
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
@@ -270,7 +288,7 @@
                                                 <div class="boxInfoEsp">
                                                     <i class="fas fa-info" data-toggle="tooltip" data-placement="bottom" title="Sede de asignación del asesor"></i>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select class="selectpicker select-gral m-0" id="sedech" name="sedech" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -279,7 +297,7 @@
                                                 <div class="boxInfoEsp" data-toggle="tooltip" data-placement="bottom" title="Oficina en la que se encuentra ubicado el asesor">
                                                     <i class="fas fa-info"></i>
                                                 </div>
-                                                <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select class="selectpicker select-gral m-0" id="sucursal" name="sucursal" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="select-predeterminado" title="" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -306,7 +324,7 @@
                                     </div>
                                     <div id="containerMenu" class="mb-1 hide">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5 mb-1">
-                                            <label class="control-label" data-i18n="menu-usuario">Menú del usuario (<span class="isRequired">*</span>)</label>
+                                            <label class="control-label"> <span data-i18n="menu-usuario"> Menú del usuario </span> (<span class="isRequired">*</span>)</label>
                                             <div id="listadoHTML"></div>
                                         </div>
                                     </div>
@@ -327,7 +345,7 @@
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h6>¿Esta seguro que que desea eliminar este rol?</h6>
+                        <h6 data-i18n="seguro-eliminar-rol">¿Esta seguro que que desea eliminar este rol?</h6>
                     </div>
                         <form id="deleteRol" name="deleteRol" method="post">
                             <div class="modal-body">
@@ -341,8 +359,8 @@
                             <div class="modal-footer">
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                        <button type="submit" class="btn btn-primary" id="btnS">Aceptar</button>
+                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary" id="btnS" data-i18n="aceptar">Aceptar</button>
                                     </div>
                                 </div>
                             </div>

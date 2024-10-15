@@ -46,20 +46,20 @@
                                 <div class="row">
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Proyecto</label>
-                                            <select name="proyecto" id="proyecto" data-i18n  ="selecciona-una-opcion" class="selectpicker select-gral m-0" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <label class="control-label" data-i18n="proyecto">Proyecto</label>
+                                            <select name="proyecto" id="proyecto" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral m-0" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Condominio</label>
-                                            <select name="condominio" id="condominio" data-i18n = "selecciona-una-opcion" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <label class="control-label" data-i18n="condominio">Condominio</label>
+                                            <select name="condominio" id="condominio" data-i18n-label = "selecciona-una-opcion" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <div class="form-group label-floating select-is-empty">
-                                            <label class="control-label">Lote</label>
-                                            <select name="lote" id="lote" data-i18n  ="selecciona-una-opcion" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                            <label class="control-label" data-i18n="lote">Lote</label>
+                                            <select name="lote" id="lote" data-i18n-label="selecciona-una-opcion" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                         </div>
                                     </div>
                                 </div>
