@@ -11,7 +11,7 @@ let idLote = '';
 let usuariosPermitidosRL = [2815, 2875, 12276, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosIntercambio = [5342, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosModelosCasas = [2749];
-let tablaTipoVenta;
+let tablaTipoVenta,idLot,tipoVenta;
 
 $(document).ready(function () {
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
@@ -85,7 +85,7 @@ function crearTablaTipoVenta(idCondominio) {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Historial Contratación',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                    columns: [0, 1, 2, 3, 4, 5],
                     format: {
                         header: function (d, columnIdx) {
                             return $(d).text().toUpperCase();
@@ -110,19 +110,17 @@ function crearTablaTipoVenta(idCondominio) {
             { data: "nombreResidencial" },
             { data: "nombreCondominio" },
             { data: "nombreLote" },
-            { data: "idLote" },
+            // { data: "idLote" },
             { data: "referencia" },
             // { data: "idStatusLote" },
             // { data: "idTipoVenta" },
             { data: "nombreTipoVenta" },
             {
-                // orderable: false,
                 data: function (d) {
-                    // return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-blueMaderas confirmarCambio" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button></div>`;
                     return `
-                    <select> 
+                    <select data-idlote="${d.idLote}"> 
                         <option value="">Tipo de venta</option>       
-                        <option value="1" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-toggle="tooltip" data-placement="top">Venta de particulares</option>
+                        <option value="1">Venta de particulares</option>
                         <option value="2">Venta normal</option>
                         <option value="3">Bono</option>
                         <option value="4">Donación</option>
@@ -131,9 +129,9 @@ function crearTablaTipoVenta(idCondominio) {
                         <option value="7">Venta especial</option>
                         <option value="8">Reestructura</option>
                         <option value="9">Venta normal - Upgrade</option>
-                    </select>`;                
+                    </select>`;
                 }
-            }
+            }            
         ],
         ajax: {
             url: `${general_base_url}Contraloria/get_registros_tipo_venta/${idCondominio}`,
@@ -145,12 +143,26 @@ function crearTablaTipoVenta(idCondominio) {
         initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip();  
             $('#tipo-venta tbody').on('change', 'select', function() {
-                const valorSeleccionado = $(this).val();
-                // console.log("Valor seleccionado: ", valorSeleccionado);
-                $('#modalCambiotipoventa').modal('show');
+                tipoVenta = $(this).val(); // Valor seleccionado del select
+                idLot = $(this).data('idlote'); // Valor del idLote asociado al select
+                $('#modalCambiotipoventa').modal('show');              
+                // Imprimir los valores en la consola
+                // console.log("Valor seleccionado: idVenta ->", tipoVenta);
+                // console.log("Valor de idLote ->", idLot);
 
             });      
         }
+    });
+
+    $('#btnConfirmarCambioTipoVenta').click(function(){        
+        $.post(`${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`, function (data) {
+            console.log(data);
+            $('#tipo-venta').DataTable().ajax.reload();
+            $("#idEstatus").selectpicker('refresh');
+        }, 'json');
+        $('#modalCambiotipoventa').modal('hide');
+        // console.log("Valor seleccionado: idVenta ->", tipoVenta);
+        // console.log("Valor de idLote ->", idLot);
     });
 
     // Manejo del evento de cambio en el select de acciones
@@ -732,9 +744,6 @@ $(document).ready(function () {
         });
     });
 
-    $('#btnConfirmarCambioTipoVenta').on('click',function(){
-        console.log('asdfads');
-    });
 
     $('#modelosTable').DataTable({
         destroy: true,

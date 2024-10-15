@@ -242,7 +242,7 @@
                                                 <th>Nombre residencia</th>
                                                 <th>Nombre condominio</th>
                                                 <th>Nombre lote</th>
-                                                <th>Id lote</th>
+                                                <!-- <th>Id lote</th> -->
                                                 <th>Referencia</th>
                                                 <!-- <th>Id estatus lote</th>
                                                 <th>Id tipo venta</th> -->
