@@ -175,11 +175,17 @@ class Reestructura extends CI_Controller{
 
     public function aplicarLiberacion() {
 		$dataPost = $_POST;
-
-        $data['modificado_por'] = $this->input->post('idCliente');
+        $id_usuario = $this->session->userdata('id_usuario');
+        if ($dataPost['accionSeleccionada'] == 1) { // INICIO DE CANCELACIÓN
+            $responseUpdateLotes = $this->General_model->updateRecord("lotes", array("usuario" => $id_usuario, "inicioCancelacionFlag" => 1, "comentarioLiberacion" => $dataPost['obsLiberacion']), "idLote", $dataPost['idLote']);
+            if ($responseUpdateLotes == TRUE)
+                echo json_encode(1);
+            else
+                echo json_encode(0);
+        } else { // CANCELACIÓN
+            $data['modificado_por'] = $id_usuario;
         $data['tipoCancelacion'] = isset($dataPost['tipoCancelacion']) ? $dataPost['tipoCancelacion'] : 1;
         $update1 = TRUE;
-
         if (isset($dataPost['idCliente']) )
             $update1 = $this->General_model->updateRecord("clientes", $data, "id_cliente", $dataPost['idCliente']);
         $update2 = $this->Reestructura_model->aplicaLiberacion($dataPost);
@@ -187,6 +193,7 @@ class Reestructura extends CI_Controller{
             echo json_encode(1);
         else
             echo json_encode(0);
+        }
 	}
 
     public function setReestructura(){
@@ -1899,7 +1906,9 @@ class Reestructura extends CI_Controller{
                         lo.observacionLiberacion AS observacion, CASE WHEN lo.liberaBandera = 1 THEN 'LIBERADO' ELSE 'SIN LIBERAR' END estatusLiberacion,
                         lo.liberaBandera, lo.idStatusLote, '1' as consulta, ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion, lo.solicitudCancelacion,
                         'SIN CANCELAR' AS estatusCancelacion,
-                        lo.solicitudCancelacion, lo.comentarioReubicacion, lo.comentarioLiberacion, 'SIN ESPECIFICAR' usuarioLiberacion
+                        lo.solicitudCancelacion, lo.comentarioReubicacion, lo.comentarioLiberacion, 'SIN ESPECIFICAR' usuarioLiberacion,
+                        lo.inicioCancelacionFlag, CASE lo.inicioCancelacionFlag WHEN 1 THEN 'lbl-blueMaderas' ELSE 'lbl-gray' END labelInicioCancelacion,
+                        CASE lo.inicioCancelacionFlag WHEN 1 THEN 'CANCELACIÓN EN PROCESO' ELSE 'NO APLICA' END textoInicioCancelacionFlag
                     FROM lotes lo 
                         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
                         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial

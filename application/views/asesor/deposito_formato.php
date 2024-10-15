@@ -15,7 +15,7 @@
 <body>
 <div class="wrapper">
     <?php
-        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655, 16679, 17043)) AND $onlyView==0){
+        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655, 16679, 17043, 5342)) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form id="deposito-seriedad-form">';
@@ -53,7 +53,7 @@
     <div class="container" id="mainBoxDS">
         <div class="card">
             <?php echo $html_action;?> 
-            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655, 16679, 17043)) AND $onlyView==0){?>
+            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532, 11655, 16679, 17043, 5342)) AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button data-i18n="guardar-cambios" type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction" onclick="validaTipoVivienda();">GUARDAR CAMBIOS</button>
                 </section>
@@ -328,7 +328,7 @@
                     </div>
                     <div class="col col-xs-12 col-sm-3 col-md-6 col-lg-6 <?php echo ($cliente[0]->especialistaEscuadron == 1) ?  '':  'd-none'; ?>" id="liderEscuadronDiv">
                         <h4 class="label-on-left m-0">LÍDER ESCUADRÓN RESCATE</h4>
-                        <select id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
+                        <select data-i18n-label="selecciona-una-opcion" id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
                                 data-size="7" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
                                 data-live-search="true" data-container="body" data-width="100%">
                             <?php
@@ -616,7 +616,7 @@
                                 <span data-i18n="nacionalidad">NACIONALIDAD</span> (<small style="color: red;">*</small>)</label>
                             <select data-i18n-label="selecciona-una-opcion" name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
-                                    for($p=0; $p < count($nacionalidades) ; $p++){
+                                                                for($p=0; $p < count($nacionalidades) ; $p++){
                                     if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
                                         echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
                                     }

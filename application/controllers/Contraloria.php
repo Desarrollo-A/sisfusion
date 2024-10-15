@@ -1336,10 +1336,10 @@ public function editar_registro_lote_contraloria_proceceso6() {
 				$id_asig = $data_asig->contador;
 
 				if ($id_asig == 6856)
-					$assigned_user = 2800;
-				else if ($id_asig == 2800)
 					$assigned_user = 12047;
 				else if ($id_asig == 12047)
+					$assigned_user = 18006;
+				else if ($id_asig == 18006)
 					$assigned_user = 6856;
 
 				$arreglo["asig_jur"] = $assigned_user;
@@ -1382,10 +1382,10 @@ public function editar_registro_lote_contraloria_proceceso6() {
 
                 $id_asig = $data_asig->contador;
                 
-                if ($id_asig == 15433)
+                if ($id_asig == 17118)
                     $assigned_user = 11468;
                 else if ($id_asig == 11468)
-                    $assigned_user = 15433;
+                    $assigned_user = 17118;
 
                 $arreglo["asig_jur"] = $assigned_user;
             }
@@ -3373,6 +3373,14 @@ public function return1(){
   }
 
 
+    public function getMsni($typeTransaction, $key){
+        $msni = $this->Contraloria_model->getMsni($typeTransaction, $key);
+        if ($msni != NULL){
+            echo json_encode($msni);
+        }else{
+            echo json_encode(array());
+        }
+    }
 	public function inventario_c() {
 		$this->validateSession();
 		$datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
@@ -3396,15 +3404,6 @@ public function return1(){
 	// 		echo json_encode();
 	// 	}
 	// }
-
-	public function getMsni($typeTransaction, $key){
-		$msni = $this->Contraloria_model->getMsni($typeTransaction, $key);
-		if ($msni != NULL){
-			echo json_encode($msni);
-		}else{
-			echo json_encode(array());
-		}
-	}
 
 	public function update_msni(){
         $typeTranscation = $this->input->post('typeTransaction');
@@ -4344,6 +4343,89 @@ public function return1(){
             echo json_encode(array("result" => false, "msg" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
         }
     }
+
+    public function activaMSIListos($id_autorizacion) {
+        //array  with the query data
+        $autorizacionData = $this->db->query("SELECT * FROM autorizaciones_msi WHERE id_autorizacion IN ($id_autorizacion)")->result_array();
+        $actualizar = array();
+        $insert_historial = array();
+        $update_lotes = array();
+
+        if (count($autorizacionData) > 0) {
+            foreach($autorizacionData as $autorizacion) {
+                $fecha_insercion = date('Y-M-d H:i:s');
+                if($autorizacion['modoActualizacion'] == 1) {
+                    $data_actualizar = array(
+                        "estatus_autorizacion" => 3,
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "fecha_modificacion" => $fecha_insercion,
+                        "modificado_por" => 1,
+                        "modoActualizacion" => $autorizacion['modoActualizacion']
+                    );
+
+                    $data_historial = array(
+                        "idAutorizacion" => $autorizacion['id_autorizacion'],
+                        "tipo" => 2,
+                        "id_usuario" => 1,
+                        "fecha_movimiento" => $fecha_insercion,
+                        "estatus" => 1,
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "modoActualizacion" => $autorizacion['modoActualizacion']
+                    );
+
+                    $table = 'autorizaciones_msi';
+                    $key = 'id_autorizacion';
+                    $table_historial = 'historial_autorizacionesPMSI';
+                    $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);
+                    $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+
+                    $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                    $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
+
+                }
+
+                else if($autorizacion['modoActualizacion'] == 2) {
+                    $fecha_insercion = date('Y-m-d H:i:s');
+
+                    $data_actualizar = array(
+                        "estatus_autorizacion" => 3,
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "fecha_modificacion" => $fecha_insercion,
+                        "modificado_por" => 1,
+                        "modoActualizacion" => $autorizacion['modoActualizacion']
+                    );
+                    $data_historial = array(
+                        "idAutorizacion" => $autorizacion['id_autorizacion'],
+                        "tipo" => 2,
+                        "id_usuario" => 1,
+                        "fecha_movimiento" => $fecha_insercion,
+                        "estatus" => 1,
+                        "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                        "estatus_autorizacion" => 3,
+                        "modoActualizacion" => $autorizacion['modoActualizacion']
+                    );
+
+                    $table = 'autorizaciones_msi';
+                    $key = 'id_autorizacion';
+                    $table_historial = 'historial_autorizacionesPMSI';
+                    $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);
+                    $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+
+                    $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                    $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');                    
+                }
+            }
+            if($actualizar && $insert_historial &&  $update_lotes) {
+                $data_response['message'] = 'OK';
+            }else {
+                $data_response['message'] = 'ERROR';
+            }
+        } else {
+            $data_response['message'] = 'Nada que actualizar';
+        }
+        echo json_encode($data_response);
+        exit;
+	}
 
 	public function selectores() {
         echo json_encode($this->Contraloria_model->selectores()->result_array());

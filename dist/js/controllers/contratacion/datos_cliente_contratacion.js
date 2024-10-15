@@ -43,31 +43,9 @@ $('#condominio').change(function () {
     $('#spiner-loader').addClass('hide');
 });
 
-
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 const excluir_column = ['ACCIONES', 'MÁS'];
-
-// $("#tabla_clientes").ready(function () {
-//     $('#tabla_clientes thead tr:eq(0) th').each(function (i) {
-//         var title = $(this).text();
-//         if (!excluir_column.includes(title) && title !== ''){
-//             titulos_encabezado.push(title);
-//             num_colum_encabezado.push(titulos_encabezado.length);
-//         }
-//         if(title !== ''){
-//             let readOnly = excluir_column.includes(title) ? 'readOnly': '';
-//             let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 57px;' : '');
-//             $(this).html(`<input type="text" style="${width}" class="textoshead " data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
-//             $('input', this).on('keyup change', function () {
-//                 if (tabla_valores_cliente.column(i).search() !== this.value) {
-//                     tabla_valores_cliente.column(i).search(this.value).draw();
-//                 }
-//             });
-//         }
-//     });
-// });
-
 
 function fillTable(index_proyecto, index_condominio) {
     let tabla_valores_cliente = $("#tabla_clientes").DataTable({
@@ -273,9 +251,7 @@ function fillTable(index_proyecto, index_condominio) {
             $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         }
     });
-    
 }
-
 
 var id_lote_global = 0;
 $(document).on('click', '.cop', function (e) {
@@ -290,7 +266,6 @@ $(document).on('click', '.cop', function (e) {
 
 let titulos_encabezado_detalle = [];
 let num_colum_encabezado_detalle = [];
-
 
 $(document).ready(function () {
     construirHead('tabla_clientes_detalles');
@@ -311,7 +286,6 @@ $(document).ready(function () {
                         return $(d).attr('placeholder').toUpperCase();
                     }
                 }
-
             }
         }],
         "scrollX": true,

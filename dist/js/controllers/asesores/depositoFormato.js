@@ -1,3 +1,22 @@
+window.onload = function () {
+    const selectElements = document.querySelectorAll('select[data-i18n-label]');
+
+    const updateTitle = (selectElement) => {
+        const selectedOption = selectElement.options[selectElement.selectedIndex]?.text || 'No option selected';
+        selectElement.setAttribute('title', selectedOption);
+    };
+
+    selectElements.forEach(selectElement => {
+        if (selectElement.options.length > 0) {
+            updateTitle(selectElement);
+        }
+
+        selectElement.addEventListener('change', function () {
+            updateTitle(selectElement);
+        });
+    });
+};
+
 let copropietarioCollapse = false;
 let usuariosContraloria = [2752, 2826, 2810, 5957, 6390, 4857, 2834, 11655];
 function validarMensaje(tipoMensaje) {

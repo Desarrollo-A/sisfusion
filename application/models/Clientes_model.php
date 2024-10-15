@@ -529,7 +529,7 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
                 $where = "pr.id_gerente IN ($id_lider, 7474)";
             else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
-                $where = "pr.id_gerente IN ($id_lider, 13821)";
+                $where = "pr.id_gerente IN ($id_lider, 13821, 234)";
             else if ($id_usuario == 16813) // Vanessa Castro Muñoz
                 $where = "pr.id_gerente IN ($id_lider, 11680)";
             else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
@@ -538,6 +538,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 2080)";
             else if ($id_usuario == 15716) // ADRIAN TREJO GUTIERREZ
                 $where = "pr.id_gerente IN ($id_lider, 7944)";
+            else if ($id_usuario == 18027) // ALMA ADRIANA PEREZ DOMINGUEZ
+                $where = "pr.id_gerente IN ($id_lider, 113)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

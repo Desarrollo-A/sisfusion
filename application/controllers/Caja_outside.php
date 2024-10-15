@@ -487,6 +487,7 @@ class Caja_outside extends CI_Controller {
 
         $data['lote'] = $id_lote;
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
+        $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
         $tipo_venta = $this->caja_model_outside->validarTipoVenta($id_lote);
        // $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
  
@@ -586,12 +587,13 @@ class Caja_outside extends CI_Controller {
         //exit;
 
         $dataInsertCliente = array(
+            'idClienteNeoData' => $responseInsertClienteNeoData['idCliente'],
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
             'id_gerente' => $datosView->id_gerente,
-            'id_subdirector' => $datosView->id_subdirector,
-            'id_regional' => $datosView->id_regional,
-            'id_regional_2' => $datosView->id_regional_2,
+            'id_subdirector' => $data['lider'][0]['id_subdirector'],
+            'id_regional' => $data['lider'][0]['id_regional'],
+            'id_regional_2' => $data['lider'][0]['id_regional_2'],
             'id_sede' => $datosView->id_sede,
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
@@ -1970,66 +1972,6 @@ class Caja_outside extends CI_Controller {
                         $arreglo = array();
 
                         $infoCliente = $this->caja_model_outside->getInformaciongGeneralPorLote($value->idLote);
-                        $Cliente = explode('-', $infoCliente->nombreLote);
-                        $Cliente[2] = 0 . $Cliente[2];
-                        $Cliente = implode('-', $Cliente);
-
-                        $dataNeoData = array (
-                            "accion" => "ins",
-                            "Cliente" => $Cliente,
-                            "IdProyecto" => $infoCliente->idProyectoNeoData,
-                            "IdVivienda" => $infoCliente->idViviendaNeoData,
-                            "IdCredito" => 2,
-                            "IdEstado" => NULL, // NO TENGO EL ESTADO SINO HASTA QUE SE REALIZA EL PRIMER GUARDADO DEL CLIENTE EN EL DS
-                            "IdEtapaCliente" => 1, // CvEtapasClientes default 1
-                            "IdMedio" => 11, // CvMedios default 11
-                            "Nombre" => $data->propietarios->nombre,
-                            "ApellidoPaterno" => $data->propietarios->apellido_paterno,
-                            "ApellidoMaterno" => $data->propietarios->apellido_materno,
-                            "Calle" => '',
-                            "Colonia" => '',
-                            "CodPost" => NULL,
-                            "MpioDeleg" => '',
-                            "Localidad" => '',
-                            "Telefono" => $data->propietarios->telefono,
-                            "Email" => $data->propietarios->correo_electronico,
-                            "RFC" => 'XAXX010101000', // SE MANDA RFC GENERICO CUANDO NO SE TIENE RFC DE CLIENTE
-                            "FechaNacimiento" => NULL, // AAAA-MM-DD NO TENGO FECHA DE NACIMIENTO HASTA QUE NO SE REALIZA EL PRIMER GUARDADO DEL DS
-                            "FechaIngreso" => date('Y-m-d'), // FECHA DE APARTADO
-                            "NumOficial" => '', // # EXTERIOR
-                            "NumInterior" => '', // # INTERIOR
-                            "Sexo" => NULL, // F / M NO TENGO EL GÉNERO DEL CLEINTE HASTA QUE NO SE REALIZA EL PRIMER GUARDADO DEL DS
-                            "Notas" => '', // VA VACÍO
-                            "IdCEtapa" => 7, // default 7
-                            "FechaAsignacionVivienda" => date('Y-m-d'), // FECHA DE APARTADO
-                            "Cancelado" => 0, // default 0 - 0 PARA EL ALTA (ACTIVO) / 1 PARA LA BAJA (EN EL UPDATE DE ESTATUS)
-                            "Escriturado" => 0, // default 0
-                            "TelefonoCelular" => NULL, // OTRO TELÉFONO
-                            "FechaRegistro" => date('Y-m-d'), // FECHA DE APARTADO
-                            "TelefonosConfirmados" => 1, // default 1
-                            "FechaUltimoContacto" => date('Y-m-d'), // FECHA DE APARTADO
-                            "Referencia" => $datosView->lotes[0]->referencia, // referencia del lote
-                            "FechaFichaRapApartado" => date('Y-m-d'), // FECHA DE APARTADO
-                            "IdSofolSolicitada" => 4, // CvSofoles default 4
-                            "IdCuentaMoratorios" => NULL, // 1198738, // van como vacío
-                            "IdCuentaIntereses" => NULL, // 1180884, // van como vacío
-                            "NoCuentaContable" => NULL, // van como vacío
-                            "EscrituradoReal" => 0, // default 0
-                            "IdTipoMoneda" => 1, // default 1
-                            "Lada" => NULL, // NO TENGO LADA HASTA QUE SE GUARDA EL DS
-                            "Pais" => 1142, // default México (1142)
-                            "MonedaSATDefault" => 'MXN', // default MXN
-                            "IdCodigoPostalSAT" => 167573, // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
-                            "IdPaisSAT" => 1142, // default México (1142)
-                            "IdCatRegimen" => 34, // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
-                            "CuentaClabeSTP" => NULL,
-                            "Prospecto" => 0
-                        );
-                
-                        $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
-                        echo json_encode($responseInsertClienteNeoData);
-                        //exit;
-
 
                         $arreglo["idLote"] = $value->idLote;
                         $arreglo["idCondominio"] = $value->idCondominio;
@@ -2526,7 +2468,7 @@ class Caja_outside extends CI_Controller {
 
         $dataNeoData = array (
             "accion" => "upd",
-            "Cliente" => "CDMAGS-JAZH-0014",
+            "Cliente" => $infoCliente->idClienteNeoData,
             "IdProyecto" => $infoCliente->idProyectoNeoData,
             "IdVivienda" => $infoCliente->idViviendaNeoData,
             "IdCredito" => 2,
