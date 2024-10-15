@@ -109,8 +109,8 @@ class CasasModel extends CI_Model
             idMovimiento,
             creadoPor,
             descripcion,
-            esquemaCreditoProceso,
-            idCliente
+            esquemaCreditoProceso
+            
         )
         VALUES
         (
@@ -120,8 +120,8 @@ class CasasModel extends CI_Model
             $idMovimiento,
             $idMovimiento,
             '$descripcion',
-            $esquema,
-            $idCliente
+            $esquema
+            
         )";
 
         return $this->db->query($query);
