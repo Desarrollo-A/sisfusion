@@ -73,26 +73,25 @@ class Contratacion_model extends CI_Model {
       if ($condominio != 0)
          $filtroCondominio = "AND con.idCondominio = $condominio";
       if ($estatus != 0)
-         $filtroEstatus = "AND lot.idStatusLote = $estatus";
+         $filtroEstatus = "OR (lot.idStatusLote = $estatus)";
 
-      /*if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $tipo == 1) { // NORMAL
-         $filtroEstatusLote = "AND lot.idStatusLote IN (2, 3, 8)";
+      if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $tipo == 1) { // NORMAL
+         $filtroEstatusLote = "AND ((lot.idStatusLote IN (3))";
          $unionCliente = "LEFT";
          $ventasCompartidasQuery = $this->getVentasCompartidasQuery($id_rol, $id_usuario, $id_lider, $prospectingPlaceDetail, $filtroProyecto, $filtroCondominio, $filtroEstatus, $idsGerente);
-      }*/
+      }
       else if (in_array($this->session->userdata('id_rol'), array(1, 2, 3, 4, 5, 6, 7, 9)) && $tipo == 3) // CASAS
-         $filtroEstatusLote = "AND lot.idStatusLote IN (2)";
+         $filtroEstatusLote = "AND ((lot.idStatusLote IN (2)))";
 
       if (in_array($id_rol, [7, 9, 3]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASESOR, COORDINADOR O GERENTE
-         $filtroClientesPropios = "AND (((cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario) AND lot.idStatusLote IN (2)) OR lot.idStatusLote IN (8, 3))";
+         $filtroClientesPropios = "OR (((cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario OR cl.id_gerente = $id_usuario) AND lot.idStatusLote IN (2)) OR lot.idStatusLote IN (8, 3)))";
       else if (in_array($id_rol, [6]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTNTE GERENTE
-         $filtroClientesPropios = "AND ((cl.id_gerente IN ($idsGerente) AND cl.id_sede = $id_sede AND lot.idStatusLote IN (2)) OR lot.idStatusLote IN (8, 3))";
+         $filtroClientesPropios = "OR ((cl.id_gerente IN ($idsGerente) AND cl.id_sede = $id_sede AND lot.idStatusLote IN (2)) OR lot.idStatusLote IN (8, 3)))";
       else if (in_array($id_rol, [1, 2, 4, 5]) && $tipo == 1) { // LO CONSULTA UN USUARIO TIPO SUBDIRECTOR
          if ($id_usuario == 16661) // Cinthia Guadalupe Vergara Martínez
-            $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3) AND cl.id_sede IN (4, 13, 13)";
+            $filtroClientesPropios = "OR lot.idStatusLote IN (2, 3) AND cl.id_sede IN (4, 13, 13))";
          else
-            $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3, 8)";
-
+         $filtroClientesPropios = "OR lot.idStatusLote IN (2, 3, 8))";
       }
       /*else if (in_array($id_rol, [5]) && $tipo == 1) // LO CONSULTA UN USUARIO TIPO ASISTENTE SUBDIRECTOR
          $filtroClientesPropios = "AND lot.idStatusLote IN (2, 3, 8)";*/
@@ -165,7 +164,8 @@ class Contratacion_model extends CI_Model {
      LEFT JOIN sedes sds ON sds.id_sede = res.sede_residencial
      LEFT JOIN sedes sds2 ON sds2.id_sede = cl.id_sede
       --nuevo 
-      WHERE lot.status = 1 $filtroEstatusLote $filtroEstatus $whereProceso $filtroClientesPropios
+      WHERE lot.status = 1 $whereProceso $filtroEstatusLote $filtroEstatus $filtroClientesPropios
+      $ventasCompartidasQuery
       ORDER BY lot.nombreLote
       ")->result_array();
    }
