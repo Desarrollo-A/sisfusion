@@ -2041,7 +2041,7 @@ AND vb.proyectos != 1";
             FROM proceso_casas_banco pc
             INNER JOIN lotes lo ON lo.idLote = pc.idLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+            LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = pc.idCliente
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
             INNER JOIN usuarios usA ON usA.id_usuario = cl.id_asesor_c
             INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente_c
@@ -2120,20 +2120,22 @@ AND vb.proyectos != 1";
 
     public function getDocumentosContratos($idProcesoCasas, $documentos){
         $query = "SELECT
-            idProcesoCasas,
-            idDocumento,
+            dpc.idProcesoCasas,
+            dpc.idDocumento,
             CASE
-                WHEN archivo IS NULL THEN 'Sin archivo'
-                ELSE archivo
+                WHEN dpc.archivo IS NULL THEN 'Sin archivo'
+                ELSE dpc.archivo
             END AS archivo,
-            documento,
-            tipo,
-            fechaModificacion
-        FROM documentos_proceso_casas
+            dpc.documento,
+            dpc.tipo,
+            dpc.fechaModificacion,
+            pcb.idCliente
+        FROM documentos_proceso_casas dpc
+        LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = dpc.idProcesoCasas
         WHERE
-            idProcesoCasas = $idProcesoCasas
-        AND tipo IN ($documentos)
-        AND proveedor = 0";
+            dpc.idProcesoCasas = $idProcesoCasas
+        AND dpc.tipo IN ($documentos)
+        AND dpc.proveedor = 0";
 
         return $this->db->query($query)->result();
     }
@@ -2480,13 +2482,13 @@ AND vb.proyectos != 1";
                 usG.nombre, ' ', usG.apellido_paterno, 
                 ' ', usG.apellido_materno
             ) AS nombreGerente, 
-            pc.tipoMovimiento 
-            cli.id_cliente AS idCliente
+            pc.tipoMovimiento,
+            cl.id_cliente AS idCliente
         FROM 
             proceso_casas_banco pc 
             INNER JOIN lotes lo ON lo.idLote = pc.idLote 
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente 
+            LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = pc.idCliente
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
             INNER JOIN usuarios usA ON usA.id_usuario = cl.id_asesor_c 
             INNER JOIN usuarios usG ON usG.id_usuario = cl.id_gerente_c 

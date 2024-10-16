@@ -1844,7 +1844,9 @@ class Casas extends BaseController
             // 1 es avance y 2 rechazo
             $bandera = 1;
 
-            $new_status = $this->CasasModel->getPasos($id, $bandera)->avance;
+            //$new_status = $this->CasasModel->getPasos($id, $bandera)->avance;
+
+            $new_status = 13;
 
             $movimiento = 0;
             if ($proceso->tipoMovimiento == 1) {
@@ -4049,6 +4051,8 @@ class Casas extends BaseController
         $idProcesoCasas = $form->idProcesoCasas;
         $idCliente = $this->form('idCliente');
 
+
+
         $tipo = $form->tipo;
         // $columna = '';
         // $avance = 0;
@@ -4096,7 +4100,8 @@ class Casas extends BaseController
             "idMovimiento"    => $this->idUsuario,
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => "Se da visto bueno | Comentario:".$comentario,
-            "esquemaCreditoProceso" => 1
+            "esquemaCreditoProceso" => 1,
+            "idCliente" => $idCliente
         );
 
         $this->General_model->addRecord("historial_proceso_casas", $insertData);
@@ -4128,7 +4133,7 @@ class Casas extends BaseController
                     }
                 }
 
-                $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $new_status, $comentario, 1, $idCliente);
+                $this->CasasModel->addHistorial($idProcesoCasas, $proceso->proceso, $new_status, "Se avanzó el proceso al paso 15 | Comentario: ".$comentario, 1, $idCliente);
 
             } else {
                 $response["result"] = false;
