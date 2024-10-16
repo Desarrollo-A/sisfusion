@@ -53,6 +53,7 @@ function show_propuestas(proceso) {
     form.fields = [
         new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
         new HiddenField({ id: 'idPropuesta', value: proceso.idPropuesta }),
+        new HiddenField({ id: 'idCliente', value: proceso.idCliente }),
         new title({ text: 'Cotizaciones' }),
         new OptionFieldAndView({ id: 'cotizacion', label: '', value: proceso.cotizacionElegida, data: cotizaciones, style: 'height: 45px', onClick: download_file, title: 'Descargar cotizaciones', required: true }),
         new title({ text: fechas.length == 1 ? 'Fecha de firma' : 'Fechas de firma' }),
@@ -95,6 +96,7 @@ pass_to_validacion_contraloria = function(data) {
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -152,6 +154,7 @@ back_to_propuesta_firma = function(data) {
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 

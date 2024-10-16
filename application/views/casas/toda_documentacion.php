@@ -28,7 +28,7 @@
                                         <div class="tab-pane active" id="procesoCasasBanco">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Documentación por proceso (banco)</h3>
+                                                    <h3 class="card-title center-align">Documentación por lote (banco)</h3>
                                                     <div id="table-filters" class="row mb-1"></div>
                                                 </div>
 
@@ -54,7 +54,7 @@
                                         <div class="tab-pane" id="procesoCasasDirecto">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Documentación por proceso (directo)</h3>
+                                                    <h3 class="card-title center-align">Documentación por lote (directo)</h3>
                                                     <div id="table-filters-directo" class="row mb-1"></div>
                                                 </div>
                                                 <table id="tableDirecto" class="table-striped table-hover">
@@ -77,7 +77,7 @@
                                         <div class="tab-pane" id="procesoPagos">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Documentación por proceso (pagos)</h3>
+                                                    <h3 class="card-title center-align">Documentación por lote (pagos)</h3>
                                                     <div id="table-filters-pagos" class="row mb-1"></div>
                                                 </div>
                                                 <table id="tablePagos" class="table-striped table-hover">

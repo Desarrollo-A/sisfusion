@@ -24,7 +24,7 @@ let buttons = [
 ]
 
 let columnsBanco = [
-    { data: 'idProcesoCasas'},
+    { data: 'id_cliente'},
     { data: 'idProcesoCasas'},
     { data: 'nombreCliente'},
     { data: 'proyecto' },
@@ -49,7 +49,7 @@ let columnsBanco = [
 ]
 
 let columnsDirecto = [
-    { data: 'idProceso'},
+    { data: 'id_cliente'},
     { data: 'idProceso'},
     { data: 'proyecto'},
     { data: 'condominio'},
@@ -69,7 +69,7 @@ let columnsDirecto = [
 ];
 
 let columnsPagos = [
-    { data: 'idCliente'},
+    { data: 'id_cliente'},
     { data: 'idProcesoCasas'},
     { data: 'nombreCliente'},   
     { data: 'proyecto' },
