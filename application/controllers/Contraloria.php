@@ -4437,7 +4437,12 @@ public function return1(){
 			'usuario' => $this->session->userdata('id_usuario')	
 		);
 		$result=$this->General_model->updateRecord('lotes',$data,'idLote',$idLote);
-		echo json_encode($result);
+		if($result){
+			$data_response['message']='OK';
+		}else{
+			$data_response['message']='ERROR';
+		}
+		echo json_encode($data_response);
 	}	
 
 	public function get_tipo_venta(){	

@@ -179,14 +179,23 @@ function crearTablaTipoVenta(idCondominio) {
             // });
             $.ajax({
                 url: `${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`,
-                method: 'GET',
+                type: 'GET',
                 dataType: 'json',
+                cache:false,
+                contentType:false,
+                processData:false,
                 success: function (data) {
-                    tablaTipoVenta.ajax.reload();
-                    $('#modalCambiotipoventa').modal('hide');
-                    alerts.showNotification("top", "right", 'Se ha actualizo correctamente', "success");
-                    tipoVenta = null;
-                    idLot = null;
+                    console.log(data);
+                    data=JSON.stringify(data);
+                    if(data.message==='OK'){
+                        tablaTipoVenta.ajax.reload();
+                        $('#modalCambiotipoventa').modal('hide');
+                        alerts.showNotification("top", "right", 'Se ha actualizo correctamente', "success");
+                        tipoVenta = null;
+                        idLot = null;
+                    }else{
+                        console.log('El update no se hizo correctamnete');
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error('Error al cargar las opciones:', error);
