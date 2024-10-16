@@ -146,7 +146,6 @@ $('#selectCondominio').change(function() {
 function ConstruirTablaCAmbiarRepresentante(idCondominio){
     $("#divtablaCambiarRepresentanteLegal").removeClass("hide");
         
-    console.warn('ConstruirTablaCAmbiarRepresentante', idCondominio);
     if(idCondominio){
         $('#tablaCambiarRepresentanteLegal thead tr:eq(0) th').each(function (i) {
             var title = $(this).text();
@@ -200,7 +199,6 @@ function ConstruirTablaCAmbiarRepresentante(idCondominio){
                 { data: 'nombreLote' },
                 { data: 'idLote' },
                 { data: function (d) { 
-                    console.warn('data', d);
                       
                     return `<span>${d.nombreRL!= null ?d.nombreRL : 'N/A'}</span>`
                 }
@@ -695,11 +693,8 @@ $(document).on('click', '.modalCambioRepresentanteB', function () {
     $('#modalCambioRepresentante').modal('show');
     document.getElementById("confirmarCambioEstatus").innerHTML = `¿Estás seguro de realizar el cambio de estatus del lote <b>${$(this).attr('data-nombreLote')}</b>?`;
     idLote = $(this).data('idlote');
-    console.log("idLote :",idLote);
     idRl = $(this).data('idrl');
-    console.log("idrl :",idRl);
     idCliente = $(this).data('cliente');
-    console.log("cliente :",idCliente);
 });
 
 $(document).on('click', '.confirmarCambio', function () {
@@ -773,15 +768,11 @@ $(document).on('click','#btnCambiarRL',function(e) {
     var representanteLegal = $(this).data('#cambiarrepresentante');
     var validarOpcionRl = ($("#cambiarrepresentante").val().length == 0) ? 0 : 1;
     var formData = new FormData();
-    console.warn("selectedRl",selectedRl);
-    console.warn("idRl",idRl);
-
+    
     formData.append("representanteLegal",representanteLegal);
     formData.append("idLote", idLote);
     formData.append("idRl", selectedRl);
     formData.append("idCliente", idCliente);
-    console.warn("btnCambiarRL");
-    console.warn("formData",formData);
     
     if(validarOpcionRl ==0){
         alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning'); 
