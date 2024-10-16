@@ -75,6 +75,7 @@ back_to_adeudos = function(data) {
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.id_cliente }),
         ],
     })
 
@@ -112,6 +113,7 @@ pass_to_solicitud_contratos = function(data) {
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -192,6 +194,7 @@ function upload(data) {
             new HiddenField({ id: 'tipo', value: 30 }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept : ['image/png','image/jpeg','application/pdf'], required: true }),
+            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
         ],
     })
 

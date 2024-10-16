@@ -206,7 +206,13 @@ let buttons = [
         className: 'btn-large btn-sky btn-asignar botonEnviar hide',
         titleAttr: 'Asignar lotes',
         title:"Asignar lotes",
-    }
+    },
+    // {
+    //     text: '<i class="fas fa-thumbs-down"></i>',
+    //     className: 'btn-large btn-warning botonRechazar hide',
+    //     titleAttr: 'Rechazar lotes',
+    //     title: "Rechazar lotes"
+    // }
 ]
 
 let columns = [
@@ -269,8 +275,8 @@ let columns = [
     { data: 'lugar_prospeccion' },
     {
         data: function (data) {
-            let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data })
-            let rechazo_avance_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_process, data })
+            let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', color: 'blueMaderas btnAsesor', onClick: choose_asesor, data })
+            let rechazo_avance_button = new RowButton({ icon: 'thumb_down', color: 'warning btn-rechazar', label: 'Rechazar', onClick: back_process, data })
 
             let pass_button = ''
             if (data.idAsesor) {
@@ -293,8 +299,10 @@ let table = new Table({
 function verificarCheck(valorActual){
     const tr = $(this).closest('tr');
         const row = $('#tablaAsignacionCartera').DataTable().row(tr);
+        let botonRechazar = document.getElementsByClassName('btn-rechazar');
         let botonEnviar = document.getElementsByClassName('botonEnviar');
-        let botonAsesor = document.getElementsByClassName('btn-blueMaderas');
+        let botonAsesor = document.getElementsByClassName('btnAsesor');
+        // let botonRechazarVarios = document.getElementsByClassName('botonRechazar');
         let arrayInterno = [];
         let arrayId_cliente = [];
         let arrayId_lotes = [];
@@ -323,15 +331,20 @@ function verificarCheck(valorActual){
         if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
          //se seleccionó más de uno, se habilita el botón para hacer el multiple
             botonEnviar[0].classList.remove('hide');
+            // botonRechazarVarios[0].classList.remove('hide');
             for(let i = 0; i < botonAsesor.length; i++) {
                 botonAsesor[i].classList.add('hide');
+                botonRechazar[i].classList.add('hide');
             }
             $('#btn_'+$(valorActual).val()).prop("disabled", true);        
         }
         else{
             botonEnviar[0].classList.add('hide');
+            // botonRechazarVarios[0].classList.add('hide');
+            
             for(let i = 0; i < botonAsesor.length; i++) {
                 botonAsesor[i].classList.remove('hide');
+                botonRechazar[i].classList.remove('hide');
             }
         }
 }
@@ -345,6 +358,66 @@ function buscarValor(valor, array) {
     }
     return null;
 }
+
+// $(document).on('click', '.botonRechazar', () => {
+//     let nombresLot = '';
+//     let separador = '';
+
+//     arrayValores.map((elemento, index) => {
+//         if(arrayValores.length == (index+1))
+//             separador = '';
+//         else
+//             separador = '<br>';
+//         nombresLot += elemento[0]+separador;
+//     });
+
+//     let form = new Form({
+//         title: 'Rechazar lotes',
+//         text: `¿Regresar los siguientes lotes a originacion de cartera?<br> <b>${nombresLot}</b>`,
+//         onSubmit: function(data){
+//             form.loading(true)
+//             data.append("idClientes", JSON.stringify(arrayIdClientes));
+//             data.append("idLotes", JSON.stringify(arrayIdLotes));
+//             formConfirm = new FormConfirm({
+//                 title: '¿Estás seguro de rechazar los lotes?',
+//                 onSubmit: function() {
+//                     formConfirm.loading(true);
+//                      $.ajax({
+//                         type: 'POST',
+//                         url: `${general_base_url}casas/back_to_originacion_varios`,
+//                         data: data,
+//                         contentType: false,
+//                         processData: false,
+//                         success: function (response) {
+//                             alerts.showNotification("top", "right", "Se han rechazado los lotes correctamente", "success");
+//                             table.reload();
+//                             form.hide();
+//                             formConfirm.hide();
+//                             arrayValores = [];
+//                             arrayIdClientes = [];
+//                             arrayIdLotes = [];
+//                             let btn = document.getElementsByClassName("btn-asignar")
+//                             btn[0].classList.add('hide');
+//                             formConfirm.loading(false);
+//                         },
+//                         error: function () {
+//                             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+//                             formConfirm.loading(false);
+//                             form.loading(false)
+//                             arrayValores = [];
+//                             arrayIdClientes = [];
+//                             arrayIdLotes = [];
+//                             formConfirm.hide();
+//                         }
+//                     })
+//                 }
+//             });
+//             formConfirm.show();
+//             form.loading(false);
+//         },
+//     })
+//     form.show()
+// })
 
 $(document).on('click', '.btn-asignar', () => {
     let nombresLot = '';

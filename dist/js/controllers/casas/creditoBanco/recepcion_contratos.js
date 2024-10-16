@@ -30,6 +30,7 @@ pass_to_solicitud_contratos = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -68,6 +69,7 @@ back_to_adeudos = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
         ],
     })
 

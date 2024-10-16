@@ -36,6 +36,7 @@ pass_to_propuestas = function(data) {
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'idRol', value: idRol }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: idCliente }),
         ],
     })
 
@@ -78,6 +79,7 @@ rechazar_proceso = function(data) {
             new HiddenField({ id: 'procesoNuevo', value: 4}),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCLiente}),
         ],
     })
 
@@ -386,6 +388,7 @@ function replace_upload(data) {
             new HiddenField({ id: 'tipo', value: idRol == 57 ? 17 : 28 }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
         ],
     })
 
@@ -475,6 +478,7 @@ function show_propuestas(data) {
             new DateDelete({ id: 'fechaFirma1', label: 'Primera propuesta de fecha para firma',  placeholder: 'Elige una fecha', value: data.fechaFirma1, width:'12', required:'required' }),
             new DateDelete({ id: 'fechaFirma2', label: 'Segunda propuesta de fecha para firma',  placeholder: 'Elige una fecha', value: data.fechaFirma2, width:'12' }),
             new DateDelete({ id: 'fechaFirma3', label: 'Tercera propuesta de fecha para firma',  placeholder: 'Elige una fecha', value: data.fechaFirma3, width:'12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
