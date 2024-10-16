@@ -5103,10 +5103,8 @@ class Casas extends BaseController
         $update = $this->General_model->updateBatch('clientes', $dataUpdate, 'id_cliente');
         $updateLotes = $this->General_model->updateBatch('lotes', $dataUpdateLotes, 'idLote');
         $getGerente = $this->CasasModel->getGerente($gerente);
-        foreach ($idLote  as $lote) {
-            foreach ($lote as $key=>$loteId) {
-                $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $loteId", 0, $idClientes[$key][0]);
-            }
+        foreach ($idLote as $key=>$lote) {
+            $this->CasasModel->addHistorial(0, '0', 1, "Pre proceso | se asigna el gerente: " . $getGerente->nombre . " IDLOTE: $lote[0]", 0, $idClientes[$key][0]);
         }
 
         if (!$update || !$updateLotes) {
@@ -5179,23 +5177,18 @@ class Casas extends BaseController
     public function back_to_originacion_varios()
     {
         $form = $this->form();
-        $subdirectores = $this->form('subdirectores');
         $idClientes = json_decode($this->form('idClientes'));
         $idLotes = json_decode($this->form('idLotes'));
-        
+        $idSubdirectores = json_decode($this->form('idSubdirectores'));
+
         $idUsuario = $this->session->userdata('id_usuario');
         $banderaSuccess = true;
 
-        if (!isset($idClientes) || !isset($asesor)) {
+        if (!isset($idClientes) || !isset($idSubdirectores)) {
             http_response_code(400);
         }
 
         $dataUpdate = array();
-        $arraySubdirectores = array();
-
-        foreach($subdirectores as $subdirector) {
-            array_push($arraySubdirectores, $this->CasasModel->getGerente($idSubdirector));
-        }
 
         $this->db->trans_begin();
 
@@ -5206,13 +5199,14 @@ class Casas extends BaseController
                     "id_gerente_c" => 0,
                     "plan_comision_c" => 0,
                     "modificado_por" => $idUsuario,
-                    "pre_proceso_casas" => 1
+                    "pre_proceso_casas" => 0
                 );
             }
         }
 
         foreach($idLotes as $key=>$lote) {
-            $this->CasasModel->addHistorial(0, 1, 2, 'Pre proceso | se regresa al subdirector: ' . $arraySubdirectores[$key] . " IDLOTE: " . $lote[0], 0, $idClientes[$key][0]);        
+            $subdirector = $this->CasasModel->getGerente($idSubdirectores[$key][0]);
+            $this->CasasModel->addHistorial(0, 1, 0, 'Pre proceso | se regresa al subdirector: ' . $subdirector->nombre . " IDLOTE: " . $lote[0], 0, $idClientes[$key][0]);        
         }
 
         $update = $this->General_model->updateBatch("clientes", $dataUpdate, "id_cliente");
