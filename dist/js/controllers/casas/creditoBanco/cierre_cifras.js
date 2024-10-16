@@ -103,6 +103,7 @@ pass_to_vobo_cifras = function (data) {
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCLiente', value: data.idCliente }),
         ],
     })
 
@@ -216,6 +217,7 @@ rechazar_proceso = function(data) {
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.id_cliente }),
         ],
     })
 

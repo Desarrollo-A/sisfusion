@@ -579,6 +579,7 @@ class CasasModel extends CI_Model
         doc.documentos, 
         CASE WHEN se.id_lote = lo.idLote THEN 0 ELSE 1 END AS cargaRequerida,
         COALESCE(doc2.cuentaDocumentos, 0) cuentaDocumentos, se.id_estatus, cli.escrituraFinalizada, cli.revisionEscrituracion,$tableSeparator
+        cli.id_cliente AS idCliente
         FROM $tableName pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -624,6 +625,7 @@ CASE
 END AS gerente,
 oxc.nombre AS movimiento,
 doc2.documentos
+cli.id_cliente AS idCliente
 FROM 
 proceso_casas_banco pc
 LEFT JOIN lotes lo ON lo.idLote = pc.idLote
@@ -715,6 +717,7 @@ AND vb.proyectos != 1";
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc.nombre AS movimiento
+        cli.id_cliente AS idCliente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
@@ -771,6 +774,7 @@ AND vb.proyectos != 1";
 			 WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente
+        cli.id_cliente AS idCliente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
@@ -823,6 +827,7 @@ AND vb.proyectos != 1";
              ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
         END AS gerente,
         oxc.nombre AS movimiento
+        cli.id_cliente AS idCliente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (16) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
@@ -888,6 +893,7 @@ AND vb.proyectos != 1";
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente,
         oxc2.nombre AS movimiento
+        cli.id_cliente AS idCliente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18 AND proveedor = 0
@@ -964,6 +970,7 @@ AND vb.proyectos != 1";
             oxc2.nombre AS nombreArchivo,
             coti.cotizacionCargada,
             u.*
+            cli.id_cliente AS idCliente
             FROM proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
             LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
@@ -1066,6 +1073,7 @@ AND vb.proyectos != 1";
         doc2.documento,
         doc2.archivo,
         oxc.nombre AS movimiento
+        cli.id_cliente AS idCLiente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1089,6 +1097,7 @@ AND vb.proyectos != 1";
         $query = " SELECT
         pc.*,
         cli.id_cliente,
+        cli.id_cliente AS idCliente
         cli.costo_construccion,
         lo.nombreLote,
         con.nombre AS condominio,
@@ -1171,6 +1180,7 @@ AND vb.proyectos != 1";
     			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
     		END AS gerente,
             oxc.nombre AS movimiento
+            cli.id_cliente AS idCliente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (19,20,21,22) AND archivo IS NOT NULL AND proveedor = 0 GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
@@ -1244,6 +1254,7 @@ AND vb.proyectos != 1";
             END AS gerente,
             oxc.nombre AS movimiento,
             doc.documentos
+            cli.id_user AS idCliente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1287,6 +1298,7 @@ AND vb.proyectos != 1";
             oxc.nombre AS movimiento,
             oxc2.nombre AS nombreArchivo,
             vb.comercializacion AS voboComercializacion
+            cli.id_cliente AS idCliente
             FROM proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
             INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1327,6 +1339,7 @@ AND vb.proyectos != 1";
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
             oxc.nombre AS movimiento
+            cli.id_cliente AS idCLiente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1359,6 +1372,7 @@ AND vb.proyectos != 1";
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
             oxc.nombre AS movimiento
+            cli.id_cliente AS idCLiente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1421,6 +1435,7 @@ AND vb.proyectos != 1";
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
             oxc.nombre AS movimiento
+            cli.id_cliente AS idCliente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1458,6 +1473,7 @@ AND vb.proyectos != 1";
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente,
             oxc.nombre AS movimiento
+            cli.id_cliente AS idCLiente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1491,6 +1507,7 @@ AND vb.proyectos != 1";
                  ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
             END AS gerente,
             oxc.nombre AS movimiento
+            cli.id_cliente AS idCliente
         FROM proceso_casas_banco pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -1550,13 +1567,18 @@ AND vb.proyectos != 1";
             cpc.idProcesoCasas,
             cpc.archivo,
             CASE
-                 WHEN cpc.nombre IS NULL THEN 'COTIZACIÓN NO SUBIDA'
-                 ELSE cpc.nombre
+                WHEN cpc.nombre IS NULL THEN 'COTIZACIÓN NO SUBIDA'
+                ELSE cpc.nombre
             END AS nombre
+            cl.id_cliente,
         FROM cotizacion_proceso_casas cpc
-        WHERE
-            cpc.idProcesoCasas = $idProcesoCasas
-        AND status = 1";
+        left join proceso_casas_banco pcb on pcb.idProcesoCasas = cpc.idProcesoCasas 
+        left join clientes cl on cl.idLote = pcb.idLote 
+        WHERE cpc.idProcesoCasas = $idProcesoCasas
+        AND cpc.idCotizacion IS NOT NULL
+        AND (pcb.idProcesoCasas IS NOT NULL)
+        AND (cl.status = 1)
+        AND cpc.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -1977,6 +1999,7 @@ AND vb.proyectos != 1";
             CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno) AS nombreAsesor,
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
             pc.tipoMovimiento
+            cli.id_cliente AS idCliente
         FROM proceso_casas_banco pc
         INNER JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -2391,7 +2414,8 @@ AND vb.proyectos != 1";
             CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS nombreGerente,
             pc.tipoMovimiento,
             doc.documentos, 
-            cli.idPropuestaCasa, cli.id_cliente
+            cli.idPropuestaCasa, cli.id_cliente,
+            cli.id_cliente AS idCliente
         FROM
             proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
@@ -2453,6 +2477,7 @@ AND vb.proyectos != 1";
                 ' ', usG.apellido_materno
             ) AS nombreGerente, 
             pc.tipoMovimiento 
+            cli.id_cliente AS idCliente
         FROM 
             proceso_casas_banco pc 
             INNER JOIN lotes lo ON lo.idLote = pc.idLote 

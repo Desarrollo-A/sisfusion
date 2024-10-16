@@ -7,6 +7,7 @@ let form = new Form({
 let arrayValores = []
 let arrayIdClientes = []
 let arrayIdLotes = [];
+let arrayIdSubdirectores = [];
 
 form.onSubmit = function (data) {
     form.loading(true);
@@ -206,6 +207,12 @@ let buttons = [
         className: 'btn-large btn-sky btn-asignar botonEnviar hide',
         titleAttr: 'Asignar lotes',
         title:"Asignar lotes",
+    },
+    {
+        text: '<i class="fas fa-thumbs-down"></i>',
+        className: 'btn-large btn-warning botonRechazar hide',
+        titleAttr: 'Rechazar lotes',
+        title: "Rechazar lotes"
     }
 ]
 
@@ -217,7 +224,7 @@ let columns = [
             if(!data.idAsesor){
                 check = `<div class="d-flex justify-center">
                         <label class="cont">
-                            <input type="checkbox" onChange="verificarCheck(this)" data-idCliente="${data.id_cliente}" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" name="lotesOrigen[]" value="${data.idLote}" required>
+                            <input type="checkbox" onChange="verificarCheck(this)" data-idCliente="${data.id_cliente}" data-nombreLote="${data.nombreLote}" data-idLote="${data.idLote}" data-idSubdirector="${data.idSubdirector}" name="lotesOrigen[]" value="${data.idLote}" required>
                             <span></span>
                         </label></div>`
             }
@@ -269,8 +276,8 @@ let columns = [
     { data: 'lugar_prospeccion' },
     {
         data: function (data) {
-            let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data })
-            let rechazo_avance_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_process, data })
+            let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', color: 'blueMaderas btnAsesor', onClick: choose_asesor, data })
+            let rechazo_avance_button = new RowButton({ icon: 'thumb_down', color: 'warning btn-rechazar', label: 'Rechazar', onClick: back_process, data })
 
             let pass_button = ''
             if (data.idAsesor) {
@@ -279,7 +286,7 @@ let columns = [
 
             return `<div class="d-flex justify-center">${asesor_button}${pass_button}${rechazo_avance_button}</div>`
         }
-    }
+    },
 ]
 
 let table = new Table({
@@ -293,45 +300,59 @@ let table = new Table({
 function verificarCheck(valorActual){
     const tr = $(this).closest('tr');
         const row = $('#tablaAsignacionCartera').DataTable().row(tr);
+        let botonRechazar = document.getElementsByClassName('btn-rechazar');
         let botonEnviar = document.getElementsByClassName('botonEnviar');
-        let botonAsesor = document.getElementsByClassName('btn-blueMaderas');
+        let botonAsesor = document.getElementsByClassName('btnAsesor');
+        let botonRechazarVarios = document.getElementsByClassName('botonRechazar');
         let arrayInterno = [];
         let arrayId_cliente = [];
         let arrayId_lotes = [];
+        let arrayId_subdirectores = [];
     
         if (valorActual.checked){
             arrayInterno.push($(valorActual).attr('data-nombreLote'));//[0]
             arrayInterno.push($(valorActual).attr('data-idLote'));//[1]
+            arrayInterno.push($(valorActual).attr('data-idSubdirector'))
 
             arrayId_cliente.push($(valorActual).attr('data-idCliente'));//[0]
             arrayId_lotes.push($(valorActual).attr('data-idLote'));//[1]
+            arrayId_subdirectores.push($(valorActual).attr('data-idSubdirector'))
     
             arrayValores.push(arrayInterno);
             arrayIdClientes.push(arrayId_cliente);
             arrayIdLotes.push(arrayId_lotes);
+            arrayIdSubdirectores.push(arrayId_subdirectores);
         }
         else{
             let indexDelete = buscarValor($(valorActual).val(),arrayValores);
             let indexDeleteId = buscarValor($(valorActual).val(),arrayIdClientes);
             let indexDeleteIdLote = buscarValor($(valorActual).val(),arrayIdLotes);
+            let indexDeleteIdSubdirector = buscarValor($(valorActual).val(),arrayIdSubdirectores);
 
             arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
             arrayIdClientes = arrayIdClientes.slice(0, indexDeleteId).concat(arrayIdClientes.slice(indexDeleteId + 1));
             arrayIdLotes = arrayIdLotes.slice(0, indexDeleteIdLote).concat(arrayIdLotes.slice(indexDeleteIdLote + 1));
+            arrayIdSubdirectores = arrayIdSubdirectores.slice(0, indexDeleteIdSubdirector).concat(arrayIdSubdirectores.slice(indexDeleteIdSubdirector + 1));
         }
 
         if(arrayValores.length > 1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
          //se seleccionó más de uno, se habilita el botón para hacer el multiple
             botonEnviar[0].classList.remove('hide');
+            botonRechazarVarios[0].classList.remove('hide');
+
             for(let i = 0; i < botonAsesor.length; i++) {
                 botonAsesor[i].classList.add('hide');
+                botonRechazar[i].classList.add('hide');
             }
             $('#btn_'+$(valorActual).val()).prop("disabled", true);        
         }
         else{
             botonEnviar[0].classList.add('hide');
+            botonRechazarVarios[0].classList.add('hide');
+            
             for(let i = 0; i < botonAsesor.length; i++) {
                 botonAsesor[i].classList.remove('hide');
+                botonRechazar[i].classList.remove('hide');
             }
         }
 }
@@ -345,6 +366,69 @@ function buscarValor(valor, array) {
     }
     return null;
 }
+
+$(document).on('click', '.botonRechazar', () => {
+    let nombresLot = '';
+    let separador = '';
+
+    arrayValores.map((elemento, index) => {
+        if(arrayValores.length == (index+1))
+            separador = '';
+        else
+            separador = '<br>';
+        nombresLot += elemento[0]+separador;
+    });
+
+    let form = new Form({
+        title: 'Rechazar lotes',
+        text: `¿Regresar los siguientes lotes a originacion de cartera?<br> <b>${nombresLot}</b>`,
+        onSubmit: function(data){
+            form.loading(true)
+            data.append("idClientes", JSON.stringify(arrayIdClientes));
+            data.append("idLotes", JSON.stringify(arrayIdLotes));
+            data.append("idSubdirectores", JSON.stringify(arrayIdSubdirectores));
+            formConfirm = new FormConfirm({
+                title: '¿Estás seguro de rechazar los lotes?',
+                onSubmit: function() {
+                    formConfirm.loading(true);
+                     $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}casas/back_to_originacion_varios`,
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            alerts.showNotification("top", "right", "Se han rechazado los lotes correctamente", "success");
+                            table.reload();
+                            form.hide();
+                            formConfirm.hide();
+                            arrayValores = [];
+                            arrayIdClientes = [];
+                            arrayIdLotes = [];
+                            arrayIdSubdirectores = [];
+                            let btn = document.getElementsByClassName("botonRechazar")
+                            btn[0].classList.add('hide');
+                            formConfirm.loading(false);
+                        },
+                        error: function () {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                            formConfirm.loading(false);
+                            form.loading(false)
+                            arrayValores = [];
+                            arrayIdClientes = [];
+                            arrayIdLotes = [];
+                            arrayIdSubdirectores = [];
+                            formConfirm.hide();
+                        }
+                    })
+                }
+            });
+            formConfirm.show();
+            form.loading(false);
+        },
+    })
+    form.show()
+})
 
 $(document).on('click', '.btn-asignar', () => {
     let nombresLot = '';

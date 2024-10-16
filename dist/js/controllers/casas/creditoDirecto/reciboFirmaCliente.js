@@ -67,6 +67,7 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
             new HiddenField({ id: 'procesoNuevo', value: 22 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
         ],
     })
 
@@ -125,6 +126,7 @@ nextProcess = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'procesoNuevo', value: 24 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
         ],
     })
 

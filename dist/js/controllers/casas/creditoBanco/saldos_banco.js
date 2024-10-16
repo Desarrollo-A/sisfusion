@@ -173,6 +173,7 @@ function avanceProcesoBanco(data){
             new HiddenField({ id: 'cierreContraloria', value: data.cierreContraloria }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -233,6 +234,7 @@ rechazo_proceso = function (data) {
             new HiddenField({ id: 'procesoNuevo', value: 12 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),       
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
