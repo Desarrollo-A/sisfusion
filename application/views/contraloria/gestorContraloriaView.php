@@ -60,13 +60,25 @@
                         <h4 class="modal-title text-center">Confirmar cambio de tipo venta</h4>
                     </div>
                     <div class="modal-body">
-                        <row>
+                        <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                                <div class="form-group m-0 overflow-hidden">
+                                <div class="form-group m-0">
                                     <h6 id="confirmarCambioEstatus"></h6>
+                                    <select class="selectpicker select-gral" name="tipoVentaModal" id="tipoVentaModal">
+                                        <option value="">Selecciona el tipo venta</option>
+                                        <!-- <option value="1">Venta de particulares</option>
+                                        <option value="2">Venta normal</option>
+                                        <option value="3">Bono</option>
+                                        <option value="4">Donación</option>
+                                        <option value="5">Intercambio</option>
+                                        <option value="6">Reubicación</option>
+                                        <option value="7">Venta especial</option>
+                                        <option value="8">Reestructura</option>
+                                        <option value="9">Venta normal - Upgrade</option> -->
+                                    </select>
                                 </div>
                             </div>
-                        </row>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

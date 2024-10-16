@@ -11,12 +11,12 @@ let idLote = '';
 let usuariosPermitidosRL = [2815, 2875, 12276, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosIntercambio = [5342, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosModelosCasas = [2749];
-let tablaTipoVenta,idLot,tipoVenta;
+let tablaTipoVenta, idLot, tipoVenta;
 
 $(document).ready(function () {
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
     $.getJSON("getOpcionesPorCatalogo").done(function (data) {
-        console.warn("data:",data);
+        console.warn("data:", data);
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 155) {
                 if (data[i]['id_opcion'] == 1 && usuariosPermitidosRL.includes(id_usuario_general)) {
@@ -25,15 +25,15 @@ $(document).ready(function () {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 } else if (data[i]['id_opcion'] == 3 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-                }else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                } else if (data[i]['id_opcion'] == 4 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-                }else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
-                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));                    
+                } else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 }
             }
         }
         $('#selector').selectpicker('refresh');
-    });  
+    });
 
 });
 
@@ -53,28 +53,32 @@ $(document).on('change', '#selector', function () {
         $('#condominio').addClass('hide');
         $("#divTablaRL").addClass("hide");
         $('#divTablaCambiarVenta').addClass('hide');
-        llenarTablaIntercambios($(this).val());        
+        llenarTablaIntercambios($(this).val());
     } else if ($(this).val() == 3) {
         $('#proyecto').addClass('hide');
         $('#condominio').addClass('hide');
         $('#divTablaCambiarVenta').addClass('hide');
-        $("#divmodelosTable").removeClass("hide");       
+        $("#divmodelosTable").removeClass("hide");
     }
-    else if ($(this).val() == 4) {   
+    else if ($(this).val() == 4) {
         $('#proyecto').removeClass('hide');
-        $('#condominio').removeClass('hide'); 
-        $('#proyecto').val('');   
-        $('#condominio').val('');   
+        $('#condominio').removeClass('hide');
+        $('#proyecto').val('');
+        $('#condominio').val('');
     }
 });
 
-$('#selectCondominio').change(function(){    
-    idOpcionCondominio=$(this).val();
+$('#selectCondominio').change(function () {
+    idOpcionCondominio = $(this).val();
     crearTablaTipoVenta(idOpcionCondominio);
 });
 
 function crearTablaTipoVenta(idCondominio) {
+    if ($.fn.DataTable.isDataTable('#tipo-venta')) {
+        tablaTipoVenta.destroy();        
+    }
     $('#divTablaCambiarVenta').removeClass('hide');
+    construirHead('tipo-venta');
     tablaTipoVenta = $('#tipo-venta').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [
@@ -85,7 +89,7 @@ function crearTablaTipoVenta(idCondominio) {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Historial Contratación',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5],
+                    columns: [0, 1, 2, 3, 4, 5,6],
                     format: {
                         header: function (d, columnIdx) {
                             return $(d).text().toUpperCase();
@@ -110,59 +114,97 @@ function crearTablaTipoVenta(idCondominio) {
             { data: "nombreResidencial" },
             { data: "nombreCondominio" },
             { data: "nombreLote" },
-            // { data: "idLote" },
             { data: "referencia" },
-            // { data: "idStatusLote" },
-            // { data: "idTipoVenta" },
             { data: "nombreTipoVenta" },
             {
                 data: function (d) {
+                    // return `
+                    // <select data-idlote="${d.idLote}"> 
+                    //     <option value="">Tipo de venta ${d.idLote}</option>       
+                    //     <option value="1">Venta de particulares</option>
+                    //     <option value="2">Venta normal</option>
+                    //     <option value="3">Bono</option>
+                    //     <option value="4">Donación</option>
+                    //     <option value="5">Intercambio</option>
+                    //     <option value="6">Reubicación</option>
+                    //     <option value="7">Venta especial</option>
+                    //     <option value="8">Reestructura</option>
+                    //     <option value="9">Venta normal - Upgrade</option>
+                    // </select>`;
                     return `
-                    <select data-idlote="${d.idLote}"> 
-                        <option value="">Tipo de venta</option>       
-                        <option value="1">Venta de particulares</option>
-                        <option value="2">Venta normal</option>
-                        <option value="3">Bono</option>
-                        <option value="4">Donación</option>
-                        <option value="5">Intercambio</option>
-                        <option value="6">Reubicación</option>
-                        <option value="7">Venta especial</option>
-                        <option value="8">Reestructura</option>
-                        <option value="9">Venta normal - Upgrade</option>
-                    </select>`;
+                        <div class="d-flex justify-center">
+                            <button href="#" id="btnEditarTipoVenta" class="btn-data btn-blueMaderas" data-idlote="${d.idLote}" title="EDITAR INFORMACIÓN">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                        </div>`;
                 }
-            }            
+            }
         ],
         ajax: {
             url: `${general_base_url}Contraloria/get_registros_tipo_venta/${idCondominio}`,
-            dataSrc: "",
-            // complete: function (response) {
-            //     console.log("Datos recibidos del servidor:", response.responseJSON);
-            // }
+            dataSrc: ""
         },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip();  
-            $('#tipo-venta tbody').on('change', 'select', function() {
-                tipoVenta = $(this).val(); // Valor seleccionado del select
-                idLot = $(this).data('idlote'); // Valor del idLote asociado al select
-                $('#modalCambiotipoventa').modal('show');              
-                // Imprimir los valores en la consola
-                // console.log("Valor seleccionado: idVenta ->", tipoVenta);
-                // console.log("Valor de idLote ->", idLot);
+        // drawCallback: function () {
+        //     $('#tipo-venta tbody').off('change', 'select').on('change', 'select', function () {
+        //         let tipoVenta = $(this).val();
+        //         let idLot = $(this).data('idlote');
+        //         $('#modalCambiotipoventa').modal('show');
+        //         console.log("Valor seleccionado: idVenta ->", tipoVenta);
+        //         console.log("Valor de idLote ->", idLot);
 
-            });      
-        }
+        //         // Almacenar los valores en el botón de confirmación
+        //         $('#btnConfirmarCambioTipoVenta').data('tipoVenta', tipoVenta).data('idLot', idLot);
+        //     });
+        // }
+        
     });
 
-    $('#btnConfirmarCambioTipoVenta').click(function(){        
-        $.post(`${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`, function (data) {
-            console.log(data);
-            $('#tipo-venta').DataTable().ajax.reload();
-            $("#idEstatus").selectpicker('refresh');
-        }, 'json');
-        $('#modalCambiotipoventa').modal('hide');
-        // console.log("Valor seleccionado: idVenta ->", tipoVenta);
-        // console.log("Valor de idLote ->", idLot);
+    $(document).on('click', '#btnEditarTipoVenta', function (e) {
+        e.preventDefault();
+        idLot = $(this).data('idlote');
+        console.log('idLote->'+idLot);
+        $.ajax({
+            url: `${general_base_url}Contraloria/get_tipo_venta`,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#tipoVentaModal').empty();
+                $('#tipoVentaModal').append('<option value="">Selecciona el tipo venta</option>');
+
+                $.each(data, function (index, opcion) {
+                    $('#tipoVentaModal').append('<option value="' + opcion.id_tventa + '">' + opcion.tipo_venta + '</option>');
+                });
+                $('#tipoVentaModal').selectpicker('refresh');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al cargar las opciones:', error);
+                $('#tipoVentaModal').empty();
+                $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
+            }
+        });
+        $('#modalCambiotipoventa').modal('show');
+    });
+
+    $(document).on('change','#tipoVentaModal',function(){
+        tipoVenta=$(this).val();        
+    });
+
+
+
+    $('#btnConfirmarCambioTipoVenta').off('click').on('click', function () {
+        if (tipoVenta && idLot) {
+            $.post(`${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`, function (data) {
+                tablaTipoVenta.ajax.reload(null, false);
+                $('#modalCambiotipoventa').modal('hide');
+                alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
+                tipoVenta=null;
+                idLot=null;
+            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                console.error("Error en la actualización:", textStatus, errorThrown);
+            });
+        } else {
+            console.error("No se han seleccionado valores válidos para la actualización");
+        }
     });
 
     // Manejo del evento de cambio en el select de acciones
@@ -192,7 +234,7 @@ function crearTablaTipoVenta(idCondominio) {
 
 // function ConstruirTablaCAmbiarRepresentante(idCondominio){
 //     $("#divtablaCambiarRepresentanteLegal").removeClass("hide");
-        
+
 //     console.warn('ConstruirTablaCAmbiarRepresentante', idCondominio);
 //     if(idCondominio){
 //         $('#tablaCambiarRepresentanteLegal thead tr:eq(0) th').each(function (i) {
@@ -285,7 +327,7 @@ function crearTablaTipoVenta(idCondominio) {
 
 
 
-function loadSelectOptions (){
+function loadSelectOptions() {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
             $("#selectProyecto").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion']));
@@ -306,7 +348,7 @@ $('#selectProyecto').change(function () {
     $('#tablaInventario').removeClass('hide');
     index_idResidencial = $(this).val();
     $("#selectCondominio").html("");
-    $(document).ready(function () {        
+    $(document).ready(function () {
         $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
             for (var i = 0; i < data.length; i++) {
                 $("#selectCondominio").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));

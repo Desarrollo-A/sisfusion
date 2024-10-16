@@ -2313,3 +2313,55 @@ table .boxSBtns {
   color: #FF0000;
 }
 
+.custom-select-container {
+  position: relative;
+  width: 100%;
+  max-width: 300px; /* Ajusta el ancho máximo */
+  margin: 10px 0;
+}
+
+.custom-select {
+  width: 100%; /* Se ajusta al contenedor */
+  padding: 12px;
+  color: #333;
+  background-color: #f0f0f0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.custom-select:hover {
+  background-color: #eaeaea;
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+}
+
+/* Icono de flecha personalizada */
+.custom-select-container::after {
+  content: "▼";
+  font-size: 0.8rem;
+  color: #333;
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Animación para la transición del select */
+.custom-select:focus::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select option {
+  padding: 10px;
+}

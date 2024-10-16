@@ -4438,6 +4438,10 @@ public function return1(){
 		);
 		$result=$this->General_model->updateRecord('lotes',$data,'idLote',$idLote);
 		echo json_encode($result);
+	}	
+
+	public function get_tipo_venta(){	
+		echo json_encode($this->Contraloria_model->getTipoVenta());
 	}
 
 	public function selectores() {
