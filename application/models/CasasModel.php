@@ -2573,6 +2573,7 @@ AND vb.proyectos != 1";
         LEFT JOIN proceso_casas_directo pcd ON pcd.idLote = lo.idLote AND pcd.estatus = 1
         WHERE lo.idCondominio = $idCondominio
         AND pcd.idProceso IS NOT NULL
+        AND (pcd.estatus = 1)
         GROUP BY lo.idLote, lo.nombreLote
         ORDER BY lo.idLote";
 
@@ -2595,7 +2596,7 @@ AND vb.proyectos != 1";
             LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
             LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
             LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
-            WHERE pcb.idLote = $idLote AND dpc.archivo IS NOT NULL AND (dpc.estatus = 1)
+            WHERE pcb.idLote = $idLote AND dpc.archivo IS NOT NULL AND (dpc.estatus = 1 AND pcb.estatus = 1) 
         )
         SELECT idDocumento, idProcesoCasas, documento, archivo, proyecto, condominio, nombreLote,  idLote, gerente, asesor, descargar,visualizarZIP
         FROM fullData
@@ -2710,10 +2711,11 @@ AND vb.proyectos != 1";
                     CAST(resi.descripcion AS VARCHAR(MAX)) AS proyecto, CAST(con.nombre AS VARCHAR(MAX)) AS condominio, lo.nombreLote ,lo.idLote,
                     CASE WHEN cli.id_gerente_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) END AS gerente,
                     CASE WHEN cli.id_asesor_c IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) END AS asesor,
-                    1 AS descargar, pcb.idProcesoCasas
+                    1 AS descargar, pcb.idProcesoCasas, pcd.idProceso
                     FROM avances_proceso_pagos app
                     LEFT JOIN proceso_pagos pp ON pp.idProcesoPagos = app.idProcesoPagos
                     LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = pp.idProcesoCasas
+                    LEFT JOIN proceso_casas_directo pcd ON pcd.idProceso = pp.idProcesoCasas
                     LEFT JOIN lotes lo ON lo.idLote = pcb.idLote
                     LEFT JOIN clientes cli ON cli.idLote = lo.idLote
                     LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
@@ -2722,7 +2724,7 @@ AND vb.proyectos != 1";
                     LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
                     WHERE pcb.idLote = $idLote
                     AND app.complementoPDF IS NOT NULL
-                    AND pcb.estatus = 1
+                    AND (pcb.estatus = 1 OR pcd.estatus = 1)
                     )
                     SELECT documento, archivo, proyecto, condominio, nombreLote, idLote, gerente, asesor, descargar,idProcesoCasas
                     FROM fullData
@@ -2768,7 +2770,7 @@ AND vb.proyectos != 1";
                     CASE WHEN CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR' ELSE CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) END AS nombreCliente
                     FROM clientes cli
                     LEFT JOIN lotes lo ON lo.idLote = cli.idLote 
-                    LEFT JOIN proceso_casas_banco pcb ON pcb.idLote = lo.idLote 
+                    LEFT JOIN proceso_casas_banco pcb ON pcb.idLote = lo.idLote AND cli.id_cliente = pcb.idCliente
                     LEFT JOIN proceso_casas_directo pcd ON pcd.idLote = lo.idLote
                     LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio 
                     LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
@@ -2845,7 +2847,9 @@ AND vb.proyectos != 1";
         $query = "SELECT cl.id_cliente AS value, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS label, cl.status FROM clientes cl 
         LEFT JOIN proceso_casas_banco pcb on pcb.idLote = cl.idLote AND pcb.idCliente = cl.id_cliente 
         WHERE cl.idLote = $idLote 
-        AND isNULL(noRecibo, '') != 'CANCELADO' ORDER BY cl.status DESC";
+        AND isNULL(noRecibo, '') != 'CANCELADO' 
+        AND pcb.estatus IN (0,1)
+        ORDER BY cl.status DESC";
 
         return $this->db->query($query)->result();
     }

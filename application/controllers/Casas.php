@@ -5622,10 +5622,10 @@ class Casas extends BaseController
 
         switch($valueTab) {
             case '1':
-                $extraWhere = " AND (pcb.idProcesoCasas IS NOT NULL AND pcd.idProceso IS NULL)";
+                $extraWhere = " AND (pcb.idProcesoCasas IS NOT NULL AND pcd.idProceso IS NULL) AND (pcb.estatus = 1)";
                 break;
             case '2' :
-                $extraWhere = " AND (pcd.idProceso IS NOT NULL AND pcb.idProcesoCasas IS NULL)";
+                $extraWhere = " AND (pcd.idProceso IS NOT NULL AND pcb.idProcesoCasas IS NULL) AND (pcd.estatus = 1)";
                 break;
             default: 
                 break;
