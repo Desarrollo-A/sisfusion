@@ -75,7 +75,7 @@ $('#selectCondominio').change(function () {
 
 function crearTablaTipoVenta(idCondominio) {
     if ($.fn.DataTable.isDataTable('#tipo-venta')) {
-        tablaTipoVenta.destroy();        
+        tablaTipoVenta.destroy();
     }
     $('#divTablaCambiarVenta').removeClass('hide');
     construirHead('tipo-venta');
@@ -89,7 +89,7 @@ function crearTablaTipoVenta(idCondominio) {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Historial Contratación',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5,6],
+                    columns: [0, 1, 2, 3, 4, 5, 6],
                     format: {
                         header: function (d, columnIdx) {
                             return $(d).text().toUpperCase();
@@ -118,19 +118,6 @@ function crearTablaTipoVenta(idCondominio) {
             { data: "nombreTipoVenta" },
             {
                 data: function (d) {
-                    // return `
-                    // <select data-idlote="${d.idLote}"> 
-                    //     <option value="">Tipo de venta ${d.idLote}</option>       
-                    //     <option value="1">Venta de particulares</option>
-                    //     <option value="2">Venta normal</option>
-                    //     <option value="3">Bono</option>
-                    //     <option value="4">Donación</option>
-                    //     <option value="5">Intercambio</option>
-                    //     <option value="6">Reubicación</option>
-                    //     <option value="7">Venta especial</option>
-                    //     <option value="8">Reestructura</option>
-                    //     <option value="9">Venta normal - Upgrade</option>
-                    // </select>`;
                     return `
                         <div class="d-flex justify-center">
                             <button href="#" id="btnEditarTipoVenta" class="btn-data btn-blueMaderas" data-idlote="${d.idLote}" title="EDITAR INFORMACIÓN">
@@ -144,25 +131,13 @@ function crearTablaTipoVenta(idCondominio) {
             url: `${general_base_url}Contraloria/get_registros_tipo_venta/${idCondominio}`,
             dataSrc: ""
         },
-        // drawCallback: function () {
-        //     $('#tipo-venta tbody').off('change', 'select').on('change', 'select', function () {
-        //         let tipoVenta = $(this).val();
-        //         let idLot = $(this).data('idlote');
-        //         $('#modalCambiotipoventa').modal('show');
-        //         console.log("Valor seleccionado: idVenta ->", tipoVenta);
-        //         console.log("Valor de idLote ->", idLot);
-
-        //         // Almacenar los valores en el botón de confirmación
-        //         $('#btnConfirmarCambioTipoVenta').data('tipoVenta', tipoVenta).data('idLot', idLot);
-        //     });
-        // }
-        
     });
 
     $(document).on('click', '#btnEditarTipoVenta', function (e) {
         e.preventDefault();
         idLot = $(this).data('idlote');
-        console.log('idLote->'+idLot);
+        console.log('idLote->' + idLot);
+        console.log('tipoVenta->',tipoVenta);
         $.ajax({
             url: `${general_base_url}Contraloria/get_tipo_venta`,
             method: 'GET',
@@ -185,23 +160,42 @@ function crearTablaTipoVenta(idCondominio) {
         $('#modalCambiotipoventa').modal('show');
     });
 
-    $(document).on('change','#tipoVentaModal',function(){
-        tipoVenta=$(this).val();        
+    $(document).on('change', '#tipoVentaModal', function () {
+        tipoVenta = $(this).val();
     });
 
 
 
     $('#btnConfirmarCambioTipoVenta').off('click').on('click', function () {
         if (tipoVenta && idLot) {
-            $.post(`${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`, function (data) {
-                tablaTipoVenta.ajax.reload(null, false);
-                $('#modalCambiotipoventa').modal('hide');
-                alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
-                tipoVenta=null;
-                idLot=null;
-            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-                console.error("Error en la actualización:", textStatus, errorThrown);
+            // $.get(`${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`, function (data) {
+            //     tablaTipoVenta.ajax.reload();
+            //     $('#modalCambiotipoventa').modal('hide');
+            //     alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
+            //     tipoVenta=null;
+            //     idLot=null;
+            // }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            //     console.error("Error en la actualización:", textStatus, errorThrown);
+            // });
+            $.ajax({
+                url: `${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    tablaTipoVenta.ajax.reload();
+                    $('#modalCambiotipoventa').modal('hide');
+                    alerts.showNotification("top", "right", 'Se ha actualizo correctamente', "success");
+                    tipoVenta = null;
+                    idLot = null;
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al cargar las opciones:', error);
+                    $('#tipoVentaModal').empty();
+                    $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
+                }
             });
+            console.log('desde el get tipoVenta->', tipoVenta);
+            console.log('desde el get idLot->', idLot);
         } else {
             console.error("No se han seleccionado valores válidos para la actualización");
         }
