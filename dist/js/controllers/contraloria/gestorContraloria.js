@@ -136,8 +136,7 @@ function crearTablaTipoVenta(idCondominio) {
     $(document).on('click', '#btnEditarTipoVenta', function (e) {
         e.preventDefault();
         idLot = $(this).data('idlote');
-        console.log('idLote->' + idLot);
-        console.log('tipoVenta->',tipoVenta);
+        console.log('idLote->' + idLot);        
         $.ajax({
             url: `${general_base_url}Contraloria/get_tipo_venta`,
             method: 'GET',
@@ -184,10 +183,9 @@ function crearTablaTipoVenta(idCondominio) {
                 cache:false,
                 contentType:false,
                 processData:false,
-                success: function (data) {
-                    console.log(data);
-                    data=JSON.stringify(data);
-                    if(data.message==='OK'){
+                success: function (response) {
+                    console.log(response);                    
+                    if(response.message==='OK'){
                         tablaTipoVenta.ajax.reload();
                         $('#modalCambiotipoventa').modal('hide');
                         alerts.showNotification("top", "right", 'Se ha actualizo correctamente', "success");

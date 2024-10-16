@@ -2057,8 +2057,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
             INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
-            WHERE
-                lo.status = 1", array($idCondominio))->result();
+            WHERE 
+                lo.status = 1 ORDER BY lo.idLote ASC", array($idCondominio))->result();
     }
 
     // Función que retorna los registros de las opciones para el gestor de contraloría
