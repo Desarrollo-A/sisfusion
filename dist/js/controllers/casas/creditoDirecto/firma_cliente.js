@@ -74,7 +74,7 @@ returnProcess = function(data){ // funcion para subir el archivo de adeudo
             new HiddenField({ id: 'voBoContrato', value: 0 }),
             new HiddenField({ id: 'voBoValidacionEnganche', value: 0 }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -115,7 +115,7 @@ nextProcess = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'procesoNuevo', value: 23 }),
             new HiddenField({ id: 'voBoContrato', value: 1 }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 

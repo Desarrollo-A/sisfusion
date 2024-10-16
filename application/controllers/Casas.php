@@ -925,7 +925,7 @@ class Casas extends BaseController
 
                 if ($updated) {
                     $motivo = "Se subió archivo: $name_documento";
-                    $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo, 1); // se añade el numero de esquema 1 -proceso banco
+                    $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo, 1, $idCliente); // se añade el numero de esquema 1 -proceso banco
 
                     $this->json([]);
                 }
@@ -1001,7 +1001,7 @@ class Casas extends BaseController
             }
 
             if ($is_ok) {
-                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, "Se avanzó el proceso al paso 2 | Comentario: ".$comentario, 1); // se agrega esquema 1 - credito de banco
+                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, "Se avanzó el proceso al paso 2 | Comentario: ".$comentario, 1, $idCliente); // se agrega esquema 1 - credito de banco
             } else {
                 http_response_code(404);
             }
@@ -1152,7 +1152,7 @@ class Casas extends BaseController
         $idProceso = $this->form('id');
         $procesoActual = $this->form('proceso');
         $comentario = $this->form('comentario');
-        $idCliente = $this->form('idCLiente');
+        $idCliente = $this->form('idCliente');
 
         $this->db->trans_begin();
 
@@ -1653,7 +1653,7 @@ class Casas extends BaseController
 
         $id = $this->form('id');
         $comentario = $this->form('comentario');
-        $idCliente = $this->form('idCLiente');
+        $idCliente = $this->form('idCliente');
 
         if (!isset($id)) {
             http_response_code(400);
@@ -1802,7 +1802,7 @@ class Casas extends BaseController
         $id = $this->form('id');
         $proceso = $this->CasasModel->getProceso($id);
         $comentario = $this->form('comentario');
-        $idCliente = $this->form('idCLiente');
+        $idCliente = $this->form('idCliente');
 
         if (!isset($id)) {
             http_response_code(400);
@@ -1883,7 +1883,7 @@ class Casas extends BaseController
 
         $id = $this->form('id');
         $comentario = $this->form('comentario');
-        $idCliente = $this->form('idCLiente');
+        $idCliente = $this->form('idCliente');
 
         if (!isset($id)) {
             http_response_code(400);
@@ -1912,7 +1912,7 @@ class Casas extends BaseController
 
         $id = $this->form('id');
         $comentario = $this->form('comentario');
-        $idCliente = $this->form('idCLiente');
+        $idCliente = $this->form('idCliente');
 
         if (!isset($id)) {
             http_response_code(400);
@@ -1978,7 +1978,7 @@ class Casas extends BaseController
 
         $id = $this->form('id');
         $comentario = $this->form('comentario');
-        $idCliente = $this->form('idCLiente');
+        $idCliente = $this->form('idCliente');
 
         if (!isset($id)) {
             http_response_code(400);
@@ -2221,11 +2221,11 @@ class Casas extends BaseController
         $form = $this->form();
         $idCliente = $this->form('idCliente');
 
-        if (!isset($form->id) || !isset($form->adeudo) || !isset($form->cantidad)) {
+        if (!isset($form->id) || !isset($form->adeudo) || !isset($form->cantidad) ||!isset( $form->idCliente)) {
             http_response_code(400);
             $this->json([]);
         }
-
+        
         $id_rol = 2;
 
         $proceso = $this->CasasModel->getProceso($form->id);
@@ -2243,10 +2243,12 @@ class Casas extends BaseController
 
                     $this->CasasModel->setProceso3($proceso->idProcesoCasas);
 
-                    $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, 3, "Se modificó adeudo", 1, $idCliente);
+                    $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, 3, "Se modificó adeudo", 1, $form->idCliente);
+                }else {
+                    $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se modificó adeudo", 1, $form->idCliente);
                 }
 
-                $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se modificó adeudo", 1, $idCliente);
+                
 
                 $this->json([]);
             } else {
@@ -3570,6 +3572,7 @@ class Casas extends BaseController
         $comentario = $form->comentario;
         $avance = 0;
         $idUsuario = $this->session->userdata("id_usuario");
+        $idCliente = $form->idCliente;
 
         $banderaSuccess = true;
 
@@ -3591,7 +3594,8 @@ class Casas extends BaseController
             "idMovimiento" => $idUsuario,
             "creadoPor"       => $idUsuario,
             "descripcion"     => "Se avanzó el proceso a validación de proyectos | Comentario: ".$comentario,
-            "esquemaCreditoProceso" => 1
+            "esquemaCreditoProceso" => 1,
+            "idCliente" => $idCliente
         );
 
         $this->db->trans_begin();
@@ -3705,6 +3709,7 @@ class Casas extends BaseController
         $idProceso = $form->idProcesoCasas;
         $procesoActual = $form->proceso;
         $comentario = $form->comentario;
+        $idCliente = $form->idCliente;
 
         $this->db->trans_begin();
 
@@ -3728,7 +3733,7 @@ class Casas extends BaseController
         $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
 
         // Insert historial
-        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanzó el proceso al paso 7 | Comentario: ' . $comentario, 1);
+        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanzó el proceso al paso 7 | Comentario: ' . $comentario, 1, $form->idCliente);
 
         // Verificar todas las operaciones
         if ($actualizarProceso && $agregarHistorial) {
@@ -3824,7 +3829,7 @@ class Casas extends BaseController
         $fechaModificacion = date("Y-m-d H:i:s");
 
         $dataVobo = [
-            $idRol = ($idRol == 101 || $idRol == 33) ? "gph" : "titulacion",
+            $idRol = ($idRol == 101 || $idRol == 33) ? "gph" : "titulacion" => 1,
             "modificadoPor" => $modificadoPor,
             "fechaModificacion" => $fechaModificacion,
         ];
@@ -3906,7 +3911,7 @@ class Casas extends BaseController
         $actualizarProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
 
         // Insert historial
-        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se rechazó proceso | Comentario: ' . $comentario, 1, $idCliente);
+        $agregarHistorial = $this->CasasModel->addHistorial($idProceso, $procesoActual, $nuevoEstado, 'Se avanzó proceso | Comentario: ' . $comentario, 1, $idCliente);
 
         // Verificar todas las operaciones
         if ($actualizarProceso && $agregarHistorial) {

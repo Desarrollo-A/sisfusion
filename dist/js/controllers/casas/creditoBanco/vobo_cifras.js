@@ -49,7 +49,7 @@ pass_to_expediente_cliente = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -89,7 +89,7 @@ back_to_cierre_cifras = function(data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
