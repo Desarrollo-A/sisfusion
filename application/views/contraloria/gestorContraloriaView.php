@@ -53,6 +53,27 @@
                 </div>
             </div>
         </div>
+        <div class  ="modal fade" id = "modalCambioRepresentante" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                    <h4 class="modal-title text-center" id="titulo">Cambiar Representante Legal</h4>
+                    </div>
+                    <div class = "modal-body">
+                        <row>
+                            <div class="col-12">
+                                        <label class="control-label" for="cambiarrepresentante">Representante Legal</label>
+                                        <select class="selectpicker select-gral" id="cambiarrepresentante" title="SELECCIONA UNA OPCIÓN"></select>
+                            </div>             
+                        </row>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnCambiarRL" class="btn btn-primary">Actualizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="modalCambioRL" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -138,7 +159,6 @@
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="proyecto">
                                         <label class="control-label" for="nombreLote" >Proyecto</label>
                                         <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO" id="selectProyecto">
-                                            
                                         </select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="condominio">
@@ -229,6 +249,22 @@
                                         </table>
                                     </div>
                                 </div>
+                                <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divtablaCambiarRepresentanteLegal">
+                                    <table id="tablaCambiarRepresentanteLegal" name="tablaCambiarRepresentanteLegal" class="table-striped table-hover nowrap">
+                                        <thead>
+                                            <tr>                                               
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE</th>
+                                                <th>REPRESENTANTE LEGAL</th>
+                                                <th>ESTATUS</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                
                             <!-- FIN TABLA MODELOS DE CASAS-->
                             </div>
                         </div>
