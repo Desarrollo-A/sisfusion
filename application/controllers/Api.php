@@ -29,7 +29,7 @@ class Api extends CI_Controller
             if ($data->id == "")
                 echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 2099, 7070, 9187, 6352, 5892)))
+                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 2099, 7070, 9187, 6352, 5892, 2000)))
                     echo json_encode(array("status" => -1, "message" => "Sistema no reconocido."), JSON_UNESCAPED_UNICODE);
                 else {
                     if ($data->id == 9860) // DRAGON
@@ -52,6 +52,8 @@ class Api extends CI_Controller
                         $arrayData = array("username" => "PV5VNT4MD2", "password" => "2IODKKLSN42--Q_WR2");
                     else if ($data->id == 5892) // OJIVA
                         $arrayData = array("username" => "OJVV4982392", "password" => "23984I30NFIN_32RE2-");
+                    else if ($data->id == 2000) // LEGALARIO
+                        $arrayData = array("username" => "legalario", "password" => "JExFR0FMQVJJTzIwMDAk");
                     $time = time();
                     $JwtSecretKey = $this->jwt_actions->getSecretKey($data->id);
                     $data = array(
@@ -2125,6 +2127,53 @@ class Api extends CI_Controller
                                 echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    function notificacionesLegalario() { 
+        if (!isset(apache_request_headers()["Authorization"])){
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        }else{
+            if (apache_request_headers()["Authorization"] == ""){
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            }else{
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(2000); 
+                $valida_token = json_decode($this->validateToken($token, 2000));
+                if ($valida_token->status !== 200){
+                    echo json_encode($valida_token);
+                }else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token)){
+                        $valida_token = true;
+                    }
+                    if(!empty($result->data) && $valida_token){
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    }else{
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        // $data = json_decode(file_get_contents("php://input"));
+                        // if (!isset($data->idResidencial))
+                        //     echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        // else {
+                        //     if ($data->idResidencial == '')
+                        //         echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                        //     else {
+                        //         echo json_encode(array("status" => 1, "message" => "¡Todo bien!"), JSON_UNESCAPED_UNICODE);
+                        //     }
+                        // }
+                        echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito"), JSON_UNESCAPED_UNICODE);
+                    } else
+                        echo json_encode($checkSingup);
                 }
             }
         }
