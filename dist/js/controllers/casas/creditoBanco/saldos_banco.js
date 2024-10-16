@@ -14,17 +14,14 @@ switch(idRol){
         if(idUsuario == 5107 || idRol == 11){ // yolanda 
             tipoSaldo = 1;
             campo = "saldoAdmon";
-            console.log("first");
         }
         else if(idUsuario == 4512){
             tipoSaldo = 3;
             campo = "saldoGPH";
-            console.log("second");
         }
         else{
             tipoSaldo = 4;
             campo = "saldoPV";
-            console.log("third");
         }
         break;
     

@@ -156,7 +156,6 @@ let columns = [
     } },
     {
         data: function (data) {
-            console.log("data: ", data);
 
             let pass_button = ''
             let back_button = ''

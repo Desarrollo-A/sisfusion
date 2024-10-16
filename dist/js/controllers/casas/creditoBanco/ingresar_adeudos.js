@@ -1,5 +1,4 @@
 function set_adeudo(data) {
-    console.log("data: ", data.idCliente);
     let form = new Form({
         title: 'Ingresar adeudo',
         //text: 'Descripcion del formulario',
@@ -349,7 +348,6 @@ let columns = [
             if(idRol == 11 || idRol == 33 || idRol == 57)  {
                 adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
                 if(data.revisionEscrituracion == 1 && data.escrituraFinalizada != 1){
-                    console.log("here");
                     upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
                 }
             }

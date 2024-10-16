@@ -60,7 +60,6 @@ go_to_documentos = function(data) {
 
 
 pass_to_vobo_cifras = function (data) {
-    console.log("here");
     let form = new Form({
         title: 'Avanzar proceso',
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,

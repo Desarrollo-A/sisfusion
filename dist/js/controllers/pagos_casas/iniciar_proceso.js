@@ -1,5 +1,4 @@
 function show_preview(data) {
-    console.log("data: ", data);
     let url = `${general_base_url}pagoscasas/archivo/${data.archivo}`
 
     Shadowbox.init();
