@@ -734,12 +734,14 @@ class Casas extends BaseController
         $dataProceso = array(
             "comentario" => $comentario,
             "tipoMovimiento" => 4,
+            "estatus" => 0
 
         );
 
         $updateProceso = $this->General_model->updateRecord("proceso_casas_banco", $dataProceso, "idProcesoCasas", $idProceso);
+        $updateDocumento = $this->General_model->updateRecord('documentos_proceso_casas', array("estatus" => 0), 'idProcesoCasas', $idProceso);
         
-        if($updateProceso) {
+        if($updateProceso && $updateDocumento) {
             $response["result"] = true;
             $this->db->trans_commit();
         } else {
