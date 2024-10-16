@@ -95,6 +95,7 @@ input[type="checkbox"]:checked::after {
                                             <th>TELÉFONO 3</th>
                                             <th>EMAIL</th>
                                             <th>LUGAR DE PROSPECCIÓN</th>
+                                            <th>ESTATUS</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

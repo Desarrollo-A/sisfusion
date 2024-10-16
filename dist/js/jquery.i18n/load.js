@@ -19,6 +19,12 @@ if(locale){
 }
 
 $(document).ready(function() {
+    if(!locale){
+        locale = 'es'
+        
+        localStorage.setItem('locale', locale)
+    }
+
     changeIcon(locale)
 })
 
@@ -316,8 +322,6 @@ function changeDivTooltips() {
     $('div').each(function (i) {
         let id = $(this).data('i18n-tooltip')
 
-        // console.log(id)
-
         if(id){
             let title = _(id)
 
@@ -327,6 +331,25 @@ function changeDivTooltips() {
             $(this).attr('data-original-title', title)
         }
     })
+}
+
+function changeTableButton() {
+    $('.dt-button').each(function (i) {
+        let is_excel = $(this).hasClass('buttons-excel')
+        let is_pdf = $(this).hasClass('buttons-pdf')
+        
+        if(is_excel){
+            $(this).attr('title', _('descargar-excel'))
+            $(this).children().children().removeAttr('title')
+        }
+
+        if(is_pdf){
+            $(this).attr('title', _('descargar-pdf'))
+            $(this).children().children().removeAttr('title')
+        }
+    })
+    
+    $('body').i18n()
 }
 
 onLoadTranslations(changeSelects)
@@ -343,3 +366,5 @@ onLoadTranslations(changeFontIconTooltips)
 onChangeTranslations(changeFontIconTooltips)
 onLoadTranslations(changeDivTooltips)
 onChangeTranslations(changeDivTooltips)
+onLoadTranslations(changeTableButton)
+onChangeTranslations(changeTableButton)

@@ -60,6 +60,7 @@ go_to_documentos = function(data) {
 
 
 pass_to_vobo_cifras = function (data) {
+    console.log("here");
     let form = new Form({
         title: 'Avanzar proceso',
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
@@ -89,6 +90,7 @@ pass_to_vobo_cifras = function (data) {
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -189,6 +191,7 @@ rechazo_proceso = function (data) {
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),    
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.id_cliente }),
         ],
     })
 

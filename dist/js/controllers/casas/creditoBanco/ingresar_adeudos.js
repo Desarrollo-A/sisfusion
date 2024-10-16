@@ -1,4 +1,5 @@
 function set_adeudo(data) {
+    console.log("data: ", data.idCliente);
     let form = new Form({
         title: 'Ingresar adeudo',
         //text: 'Descripcion del formulario',
@@ -48,13 +49,13 @@ function set_adeudo(data) {
             value = data.adeudoADM
             label = 'Adeudo administración'
             break
-
     }
 
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
         new HiddenField({ id: 'adeudo', value: adeudo }),
         new NumberField({ id: 'cantidad', value, label, placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
+        new HiddenField({ id: 'idCliente', value: data.idCliente }),
         // new NumberField({ id: 'adeudoAdm', value: data.adeudoADM, label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
         // new NumberField({ id: 'adeudoGph', value: data.adeudoGPH, label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12', required:true, mask: "#,##0.00" }),
     ]
@@ -98,6 +99,7 @@ back_to_carta_auth = function (data) {
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -209,6 +211,7 @@ function upload(data) {
             new HiddenField({ id: 'tipo', value: tipo }),
             new HiddenField({ id: 'name_documento', value: nameFile }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: accept, required: true }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -240,6 +243,7 @@ pass_to_proyecto_ejecutivo = function(data) {
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
         new HiddenField({ id: 'proceso', value: data.proceso }),
         new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        new HiddenField({ id: 'idCliente', value: data.idCliente }),
     ]
 
     let form = new Form({
@@ -331,22 +335,10 @@ let columns = [
             return `<span class="label lbl-green">ESCRITURADO</span>`;
         }
         if(data.escrituraFinalizada == 0 || data.escrituraFinalizada == 2) {
-            if(data.id_estatus != null)  {
-                if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null){
-                    return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;    
-                }else {
-                    return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
-                }
-                
-            }
-            
-            if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null) {
-                return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;
-            }
-
-            if(data.revisionEscrituracion == 1) {
-                return `<span class="label lbl-blueMaderas">EN PROCESO</span>`;
-            }
+            return `<span class="label lbl-warning">NO ESCRITURADO</span>`;
+        }
+        if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null) {
+            return `<span class="label lbl-orangeYellow">ESPERANDO AUTORIZACIÓN DE TITULACIÓN</span>`;
         }
     }},
     {data: function(data) {
@@ -354,10 +346,10 @@ let columns = [
         let upload_button = '';
         let pass_button = '';
         let back_button = '';
-        if(data.separator == 1) {
-            if(idRol == 11 || idRol == 33) {
+            if(idRol == 11 || idRol == 33 || idRol == 57)  {
                 adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data});
                 if(data.revisionEscrituracion == 1 && data.escrituraFinalizada != 1){
+                    console.log("here");
                     upload_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data});
                 }
             }
@@ -378,8 +370,6 @@ let columns = [
                     pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: pass_to_proyecto_ejecutivo, data})
                 }
             }
-           
-        }
         return `<div class="d-flex justify-center">${pass_button}${upload_button}${adeudo_button}${back_button}</div>`;
     }}
 ]

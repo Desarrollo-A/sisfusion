@@ -289,7 +289,11 @@ function dataTable(ruta) {
         }],
         columns: [
             { data: 'nombreResidencial' },
-            { data: 'nombreCondominio' },
+            {
+                data: function (d) {
+                    return parseInt(d.esRs) != 1 ? d.nombreCondominio : `${d.nombreCondominio}<br><span class='label lbl-violetBoots'>RS</span>`;
+                }
+            },
             { data: 'nombreLote' },
             {
                 data: function (d) {

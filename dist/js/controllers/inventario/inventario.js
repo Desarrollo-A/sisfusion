@@ -19,17 +19,6 @@ $(document).on('change', "#sedes", function () {
 });
 
 let titulos = [];
-// $('#tabla_inventario_contraloria thead tr:eq(0) th').each(function (i) {
-//     var title = $(this).text();
-//     titulos.push(title);
-//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-//     $('input', this).on('keyup change', function () {
-//         if ($('#tabla_inventario_contraloria').DataTable().column(i).search() !== this.value) {
-//             $('#tabla_inventario_contraloria').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-// 	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-// });
 
 function fillTableInventario(sede) {
 	tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
@@ -48,7 +37,7 @@ function fillTableInventario(sede) {
 				columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
 				format: {
 					header: function (d, columnIdx) {
-						return ' ' + titulos[columnIdx] + ' ';
+						return $(d).attr('placeholder').toUpperCase();
 					}
 				}
 			}
@@ -204,8 +193,7 @@ function fillTableInventario(sede) {
 						if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
 							return d.fechaAlta;
 						else
-							 return `<span class="label lbl-pink" data-i18n="no-aplica">${_("no-aplica")}</span>`;
-							
+							 return `<span class="label lbl-pink" data-i18n="no-aplica">${_("no-aplica")}</span>`;	
 					}
 				}
 			],
@@ -224,5 +212,4 @@ function fillTableInventario(sede) {
 		tabla_inventario.columns.adjust();
 	});
 	applySearch(tabla_inventario);
-    
 }

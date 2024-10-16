@@ -26,7 +26,7 @@ back_process = function (data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'idProceso', value: data.idProcesoCasas }),
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
@@ -80,6 +80,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_documento', value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
             new FileField({ id: 'file_uploaded', label: '', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente})
         ],
     })
 
@@ -101,6 +102,7 @@ $.ajax({
 })
 
 pass_to_adeudos = function (data) {
+    console.log("ghere");
     let form = new Form({
         title: 'Avanzar proceso', 
         text: `¿Deseas realizar el avance de proceso del lote <b>${data.nombreLote}</b>?`,
@@ -133,6 +135,7 @@ pass_to_adeudos = function (data) {
             new SelectField({ id: 'tipo', label: 'Tipo de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipos, required: true }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'idLote', value: data.idLote}),
+            new HiddenField({ id: 'idCliente', value: data.idCliente})
         ],
     })
 
@@ -140,6 +143,7 @@ pass_to_adeudos = function (data) {
 }
 
 let columns = [
+    { data: 'idProcesoCasas' },
     { data: 'idLote' },
     { data: 'nombreLote' },
     { data: 'condominio' },

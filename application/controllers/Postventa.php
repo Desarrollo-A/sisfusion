@@ -3737,11 +3737,7 @@ public $controller = 'Postventa';
 
     public function escrituraDisponible() 
     {
-        $idCondominio = $this->input->get('condominio');
-        if(!isset($idCondominio)) {
-            $this->json([]);
-        }
-        $lotesEscritura = $this->Postventa_model->getEscrituraDisponible($idCondominio);
+        $lotesEscritura = $this->Postventa_model->getEscrituraDisponible();
         
         $this->json($lotesEscritura);
     }

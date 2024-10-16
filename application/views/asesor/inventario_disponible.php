@@ -58,7 +58,7 @@
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group  ">
 													<label class="control-label" data-i18n="condominio-2">Condominio</label>
-													<select id="filtro4" name="filtro4" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" multiple data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required></select>
+													<select id="filtro4" name="filtro4[]" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" multiple data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">

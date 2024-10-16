@@ -9,6 +9,7 @@ class Neodata_model extends CI_Model {
 
     public function addUpdateClienteNeoData($data) {
         $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
+        $fechaNacimiento = "'" . $data['FechaNacimiento'] . "'";
         $response = $this->programacion2->query("EXEC [programacion].[dbo].[CDM300ClientesNeoD]
         @accion = '" . $data['accion'] . "',
         @Cliente = '" . ($data['Cliente'] == '' ? 'NULL' : $data['Cliente']) . "',
@@ -29,7 +30,7 @@ class Neodata_model extends CI_Model {
         @Telefono = '" . $data['Telefono'] . "',
         @Email = '" . $data['Email'] . "',
         @RFC = '" . $data['RFC'] . "',
-        @FechaNacimiento = " . ($data['FechaNacimiento'] == '' ? 'NULL' : "'" . $data['FechaNacimiento']) . "'" . ",
+        @FechaNacimiento = " . ($data['FechaNacimiento'] == '' ? 'NULL' : $fechaNacimiento) . ",
         @FechaIngreso = '" . $data['FechaIngreso'] . "',
         @NumOficial = " . ($data['NumOficial'] == '' ? 'NULL' : $data['NumOficial']) . ",
         @NumInterior = " . ($data['NumInterior'] == '' ? 'NULL' : $data['NumInterior']) . ",
@@ -72,16 +73,16 @@ class Neodata_model extends CI_Model {
         $numeroPlanLote = $data['numeroPlanLoteCancelado'];
 
 //        print_r($nombreLote);
-//        echo '<br>';
-//        print_r($numeroPlanLote);
-//        exit;
+////        echo '<br>';
+////        print_r($numeroPlanLote);
+////        exit;
 
 //        $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
-        /**/$response = $this->programacion2->query("
+        /**/$response = $this->db->query("
         EXEC [192.168.16.23].[programacion].[dbo].[CDM302CancelarPlanPago]
         @empresa = N'FRO2',
         @lote = N'$nombreLote',
-        @numPlanPagoCRM = $numeroPlanLote /* Numeración que se acordó con Erik para enlazar los planes de CRM con los de neodata*/
+        @numPlanPagoCRM = $numeroPlanLote 
         ")->result_array();
         return array("responseGeneral" => $response);
 

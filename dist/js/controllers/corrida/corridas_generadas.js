@@ -419,9 +419,151 @@ $(document).ready(function () {
         //                             button_action = '<button style="width: 100%;border-radius: 27px;border: none;padding: 10px 0;box-shadow: 0px 8px 15px rgb(0, 0, 0, 0.3);background-color: #a3a3a3; cursor:not-allowed;opacity: 0.6;" class="" disabled>Desactivar</button>';
 
 
-        //                         }
-        //                     } else {
+        $('#tableDoct').DataTable({
+            destroy: true,
+            lengthMenu: [[15, 25, 50, -1], [10, 25, 50, "All"]],
+            "ajax":
+                {
+                    "url": general_base_url+'Corrida/getCorridasByLote/'+valorSeleccionado,
+                    "dataSrc": ""
+                },
+            dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: "auto",
+            "ordering": false,
+            "buttons": [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    title: 'CORRIDAS FINANCIERAS',
+                    exportOptions: {
+                        columns: [ 0, 1, 2, 3,4,5, 7, 8 ],
+                        format: {
+                            header: function (d, columnIdx) {
+                                switch (columnIdx) {
+                                    case 0:
+                                        return 'ID CORRIDA';
+                                        break;
+                                    case 1:
+                                        return 'ESTATUS';
+                                        break;
+                                    case 2:
+                                        return 'PROYECTO';
+                                        break;
+                                    case 3:
+                                        return 'CONDOMINIO';
+                                        break;
+                                    case 4:
+                                        return 'ID LOTE';
+                                        break;
+                                    case 5:
+                                        return 'LOTE';
+                                        break;
+                                    case 7:
+                                        return 'CLIENTE';
+                                        break;
+                                    case 8:
+                                        return 'HORA/FECHA';
+                                        break;
+                                }
+                            }
+                        }
+                    },
+                }
+            ],
+            pagingType: "full_numbers",
+            language: {
+                url: `${general_base_url}/static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            columnDefs: [{
+                visible: false,
+                searchable: false
+            }],
+            "columns":
+                [
+                    {data: 'id_corrida'},
+                    {
+                        data: null,
+                        render: function ( data, type, row )
+                        {
+                            let label;
+                            if(data.status==1){
+                                label = '<span class="label lbl-green">Activa</span>';
+                            }else{
+                                label = '<span class="label lbl-warning">Inactiva</span>';
+                            }
+                            return label;
+                        },
+                    },
+                    {data: 'nombreResidencial'},
+                    {data: 'nombreCondominio'},
+                    {data: 'idLote'},
+                    {data: 'nombreLote'},
+                    {
+                        data: null,
+                        render: function ( data, type, row )
+                        {
+                            return data.nombreCliente;
+                        },
+                    },
+                    {
+                        data: null,
+                        render: function ( data, type, row )
+                        {
+                            let d = new Date(data.creacion_corrida);
+                            let month = (d.getMonth() + 1).toString().padStart(2, '0');
+                            let day = d.getDate().toString().padStart(2, '0');
+                            let year = d.getFullYear();
+                            let hr = d.getHours().toString().padStart(2, '0');;
+                            let min = d.getMinutes().toString().padStart(2, '0');;
+                            let segs = d.getSeconds().toString().padStart(2, '0');;
+                            let fecha = [year, month, day].join('-');
+                            let hrs = [hr, min, segs].join(':');
+                            return fecha+' '+hrs;
+                        },
+                    },
+                    {
+                        data: null,
+                        render: function ( data, type, row )
+                        {
+                            return data.nombreAsesor;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row){
+                            let container_btnc;
+                            if(id_rol_general == 17 || id_rol_general ==32 || id_rol_general==70){
+                                if((data.idStatusContratacion == 5 || data.idStatusContratacion==2) && (data.idMovimiento==35 || data.idMovimiento==22 || data.idMovimiento==62 || data.idMovimiento==75 || data.idMovimiento==94) && data.status==1){
+                                    container_btnc =  '<center><a href="'+general_base_url+'Corrida/editacf/'+ data.id_corrida +'" target="_blank" style="padding:10px 0px"><button class="btn-data btn-green ' +
+                                        'btn-fab btn-fab-mini"><i class="fas fa-money-check-alt"></i></button></a></center>';
+                                }else{
+                                    container_btnc =  '<center><button class="btn-data btn-green ' +
+                                        'btn-fab btn-fab-mini" disabled><i class="fas fa-money-check-alt"></i></button></center>';
+                                }
+                            }else{
+                                container_btnc =  '<center><a href="'+general_base_url+'Corrida/editacf/'+ data.id_corrida +'" target="_blank" style="padding:10px 0px"><button class="btn-data btn-green ' +
+                                    'btn-fab btn-fab-mini"><i class="fas fa-money-check-alt"></i></button></a></center>';
+                            }
+                            return container_btnc;
+                        }
+                    },
+                    {
+                        data: null,
+                        // visible: (id_rol_general==17 || id_rol_general==32) ? false:true,
+                        visible: true,
+                        render: function (data, type, row) {
+                            let button_action;
 
+                            /*if (data.status == 1) {
+                                if (data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82
+                                    || data.idMovimiento == 92 || data.idMovimiento == 96 || data.idMovimiento == 99 || data.idMovimiento == 102 || data.idMovimiento == 104 || data.idMovimiento == 104
+                                    || data.idMovimiento == 107 || data.idMovimiento == 108 || data.idMovimiento == 109 || data.idMovimiento == 111) {
 
         //                         if (data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82
         //                             || data.idMovimiento == 92 || data.idMovimiento == 96 || data.idMovimiento == 99 || data.idMovimiento == 102 || data.idMovimiento == 104 || data.idMovimiento == 104
@@ -443,6 +585,26 @@ $(document).ready(function () {
         //                 }
         //             },
 
+                                    button_action = '<button class="btn-data-gral btn-green activar_corrida" data-idCorrida="' + data.id_corrida + '" data-idLote="' + data.idLote + '">Activar</button>';
+                                } else {
+                                    button_action = '<button class="" disabled ' +
+                                        'style="width: 100%;\n' +
+                                        '    border-radius: 27px;\n' +
+                                        '    border: none;\n' +
+                                        '    padding: 10px 0;\n' +
+                                        '    box-shadow: 0px 8px 15px RGB(0, 0, 0, 0.3);background-color: #a3a3a3; cursor:not-allowed;opacity: 0.6;\n">Activar</button><br>' +
+                                        '<center><small>El lote no se encuentra en el estatus para asignación de CF</small></center>';
+                                }
+                            }*/
+
+                            if (data.status == 1) {
+                                button_action = '<button class="btn-data-gral btn-warning  desactivar_corrida" data-idCorrida="' + data.id_corrida + '" data-idLote="' + data.idLote + '">Desactivar</button>';
+                            }else{
+                                button_action = '<button class="btn-data-gral btn-green activar_corrida" data-idCorrida="' + data.id_corrida + '" data-idLote="' + data.idLote + '">Activar</button>';
+                            }
+                            return '<center>' + button_action + '</center>';
+                        }
+                    },
 
         //         ],
         //     initComplete: function () {
