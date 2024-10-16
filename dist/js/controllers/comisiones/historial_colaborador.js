@@ -283,8 +283,14 @@ function getAssimilatedCommissions(proyecto, condominio, tipo) {
                     p1 = '';
                 }
 
-                if (d.lugar_prospeccion == 0) {
-                    p2 = '<p class="m-0" title="' + _('lote-con-cancelacion') + '"><span class="label lbl-warning">' + _('rescision') + '</span></p>';
+                if(d.lugar_prospeccion == 0){
+                    if(d.registro_comision!=8){
+                        p2 = '<p class="m-0" title="Lote con apartado en linea"><span class="label lbl-sky">Apartado en línea</span></p>';
+
+                    }else{
+                        p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
+
+                    }
                 }
                 else {
                     p2 = '';
