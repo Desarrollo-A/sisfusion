@@ -23,13 +23,13 @@ $("#tabla_ingresar_14").ready(function () {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            filename:'Registro Estatus 14',
-            titleAttr: 'Descargar archivo de Excel',
+            filename:`${_("estatus-14")}`,
+            titleAttr: `${_("descargar-excel")}`,
             exportOptions: {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx - 1] + ' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -98,19 +98,19 @@ $("#tabla_ingresar_14").ready(function () {
                 if (id_rol_global != 53 && id_rol_global != 54 && id_rol_global != 63) { // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
                     var cntActions;
                     if (data.vl == '1') {
-                        cntActions = 'EN PROCESO DE LIBERACIÓN';
+                        cntActions = `${_("proceso-liberacion")}`;
                     }
                     else {
                         if (data.idStatusContratacion == 13 && data.idMovimiento == 43 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR STATUS">' +
+                                'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="'+_("registrar-estatus")+'" >' +
                                 '<i class="far fa-thumbs-up"></i></button>';
                         }
                         else if (data.idStatusContratacion == 13 && data.idMovimiento == 68 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
                             cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" ' +
-                                'class="revCont btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title= "REGISTRAR STATUS">' +
+                                'class="revCont btn-data btn-orangeYellow" data-toggle="tooltip" data-placement="top" title= "'+_("registrar-estatus")+'">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
                         }
                         else {
@@ -166,29 +166,29 @@ $("#tabla_ingresar_14").ready(function () {
             if (row.data().idStatusContratacion == 13 && row.data().idMovimiento == 43)
                 fechaVenc = row.data().fechaVenc;
             else if (row.data().idStatusContratacion == 13 && row.data().idMovimiento == 68)
-                fechaVenc = 'VENCIDO';
+                fechaVenc = `${_("vencido2")}`;
             else
                 status = "N/A";
 
             var informacion_adicional = 
             '<div class="container subBoxDetail"><div class="row">'+
                 '<div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">'+
-                    '<label><b>INFORMACIÓN ADICIONAL</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>' + status + '</label>'+
+                    '<label><b data-i18n = "informacion-adicional2">'+_("informacion-adicional2")+'</b>: </label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="estatus">'+_("estatus")+'</b>: ' + status + '</label>'+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Comentario: </b>' + row.data().comentario + '</label>'+
+                    '<label la><b data-i18n = "comentario">'+_("comentario")+'</b>: ' + row.data().comentario + '</label>'+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Fecha de vencimiento: </b>' + fechaVenc + '</label>'+
+                    '<label><span data-i18n ="fecha-vencimiento">'+_("fecha-vencimiento")+'</span>: ' + fechaVenc + '</label>'+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Fecha de realizado: </b>' + row.data().modificado + '</label>'+
+                    '<label><b data-i18n="fecha-realizado">'+_("fecha-realizado")+'</b>: ' + row.data().modificado + '</label>'+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Coordinador: </b>' + row.data().coordinador + '</label>'+
+                    '<label><b data-i18n ="coordinador"">'+_("coordinador")+'</b>: ' + row.data().coordinador + '</label>'+
                 '</div>'+
                 '<div class="col-12 col-sm-12 col-md-12 col-lg-12">'+
-                    '<label><b>Asesor: </b>' + row.data().asesor + '</label>'+
+                    '<label><b data-i18n = "asesor">'+_("asesor")+'</b>: ' + row.data().asesor + '</label>'+
                 '</div>'+
                 '</div></div>';
             row.child(informacion_adicional).show();
@@ -241,7 +241,7 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
     if (validaComent == 0)
-        alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
+        alerts.showNotification('top', 'right', `${_("ingresa-comentario")}`, 'danger');
     
     if (validaComent == 1) {
         $('#save1').prop('disabled', true);
@@ -258,24 +258,24 @@ $(document).on('click', '#save1', function (e) {
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');
                     $('#tabla_ingresar_14').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification("top", "right", `${_("estatus-enviado")}`, "success");
                 } else if (response.message == 'FALSE') {
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');
                     $('#tabla_ingresar_14').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    alerts.showNotification("top", "right", `${_("el-status-ya-fue-registrado")}`, "danger");
                 } else if (response.message == 'ERROR') {
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');
                     $('#tabla_ingresar_14').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", `${_("error-enviar-solicitud")}`, "danger");
                 }
             },
             error: function (data) {
                 $('#save1').prop('disabled', false);
                 $('#editReg').modal('hide');
                 $('#tabla_ingresar_14').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", `${_("error-enviar-solicitud")}`, "danger");
             }
         });
     }
@@ -295,8 +295,7 @@ $(document).on('click', '#save2', function (e) {
     dataExp2.append("comentario", comentario);
     dataExp2.append("fechaVenc", getInfo1[6]);
     if (validaComent == 0)
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
-    
+        alerts.showNotification("top", "right", `${_("ingresa-comentario")}`, "danger");
 
     if (validaComent == 1) {
         $('#save1').prop('disabled', true);
@@ -313,24 +312,24 @@ $(document).on('click', '#save2', function (e) {
                     $('#save2').prop('disabled', false);
                     $('#envARev2').modal('hide');
                     $('#tabla_ingresar_14').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification("top", "right", `${_("estatus-enviado")}`, "success");
                 } else if (response.message == 'FALSE') {
                     $('#save2').prop('disabled', false);
                     $('#envARev2').modal('hide');
                     $('#tabla_ingresar_14').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
+                    alerts.showNotification("top", "right", `${_("el-status-ya-fue-registrado")}`, "danger");
                 } else if (response.message == 'ERROR') {
                     $('#save2').prop('disabled', false);
                     $('#envARev2').modal('hide');
                     $('#tabla_ingresar_14').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                    alerts.showNotification("top", "right", `${_("error-enviar-solicitud")}`, "danger");
                 }
             },
             error: function (data) {
                 $('#save2').prop('disabled', false);
                 $('#envARev2').modal('hide');
                 $('#tabla_ingresar_14').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+                alerts.showNotification("top", "right", `${_("error-enviar-solicitud")}`, "danger");
             }
         });
     }

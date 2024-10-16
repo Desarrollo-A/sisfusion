@@ -75,7 +75,7 @@ return_process = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'procesoNuevo', value: 16 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 

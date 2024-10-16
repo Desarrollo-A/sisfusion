@@ -11,7 +11,7 @@ let buttons = [
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
         titleAttr: 'Descargar archivo excel',
-        title:"Originación de cartera",
+        title:"Documentación completa",
         exportOptions: {
             columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             format: {
@@ -21,12 +21,6 @@ let buttons = [
             }
         }
     },
-    {
-        text: '<i class="fas fa-user-plus"></i>',
-        className: 'btn-large btn-sky btn-asignar botonEnviar hide',
-        titleAttr: 'Asignar lotes',
-        title:"Asignar lotes",
-    }
 ]
 
 let columnsBanco = [
@@ -41,7 +35,6 @@ let columnsBanco = [
     {data: function(data) {
         let view_button = '';
         let download_button = '';
-        console.log("data: ", data.archivo);
 
         //if(data.descargar){
             download_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
@@ -89,19 +82,8 @@ let columnsPagos = [
     }}
 ]
 
-function cleanTable(tableId) {
-    if ($.fn.DataTable.isDataTable(tableId)) {
-        let table = $(tableId).DataTable();
-        table.clear().draw();
-        table.rows().remove().draw();
-    }
-}
-
 function dataFunction(value) {
     valueTab = value;
-    //cleanTable('#tableBanco');
-    //cleanTable('#tableDirecto');
-    //cleanTable('#tablePagos');
 
     let tableConfig;
 

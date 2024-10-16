@@ -21,7 +21,7 @@
                                 data-type="currency" maxlength="10" 
                                 oncopy="return false" 
                                 onpaste="return false"
-                                oninput="if(t<.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
                                 onkeypress="return onlyNumbers(event)"
                                 required>
                             </div>

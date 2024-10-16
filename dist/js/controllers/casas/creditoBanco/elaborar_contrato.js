@@ -257,7 +257,7 @@ function file_upload(data) {
             new HiddenField({ id: 'id_documento', value: documento }), // aqui se define con la variable dependiendo el tipo de rol
             new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
             new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
-            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ]
     })
 

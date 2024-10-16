@@ -83,7 +83,7 @@ class VentasAsistentes_model extends CI_Model {
                                         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
                                         LEFT JOIN usuarios coordinador ON asesor.id_lider = coordinador.id_usuario
                                         LEFT JOIN usuarios gerente ON coordinador.id_lider = gerente.id_usuario
-                                    WHERE  l.idStatusContratacion = '3' and l.idMovimiento  = '82' and cl.status = 1 
+                                    WHERE  l.idStatusContratacion = '3' and l.idMovimiento  = '82' and cl.status = 1
                                     GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
                                         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
                                         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -293,7 +293,7 @@ class VentasAsistentes_model extends CI_Model {
         $validacionMktd = $id_rol == 54 ? "AND cl.lugar_prospeccion IN (52, 42)" : "";
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
-            if (in_array($id_usuario, array(2815, 12931, 17043)))
+            if (in_array($id_usuario, array(2815, 12931, 17043, 9402)))
                 $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
             else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012, 16679))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
@@ -384,7 +384,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 7474) OR cl.id_asesor IN ($id_lider, 7474))";
                     $filtroSede = "";
 				} else if ($id_usuario == 16783) { // Mayra Alejandra Angulo Muñiz
-                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 13821) OR cl.id_asesor IN ($id_lider, 13821))";
+                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 13821, 234) OR cl.id_asesor IN ($id_lider, 13821, 234))";
                     $filtroSede = "";
 				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 11680) OR cl.id_asesor IN ($id_lider, 11680))";
@@ -397,6 +397,12 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "";
 				} else if ($id_usuario == 15716) { // ADRIAN TREJO GUTIERREZ
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 7944) OR cl.id_asesor IN ($id_lider, 7944))";
+                    $filtroSede = "";
+				} else if ($id_usuario == 10534) { // BRENDA PAOLA VEGA GUERRERO
+                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 13549, 13549) OR cl.id_asesor IN ($id_lider, 13549, 13549))";
+                    $filtroSede = "";
+				} else if ($id_usuario == 18027) { // ALMA ADRIANA PEREZ DOMINGUEZ
+                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 113) OR cl.id_asesor IN ($id_lider, 113))";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider)) AND cl.id_sede = $id_sede";

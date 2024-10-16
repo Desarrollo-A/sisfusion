@@ -39,7 +39,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
         titleAttr: 'Lotes para reubicar',
         title:"Lotes para reubicar",
         exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx - 1] + ' ';
@@ -56,7 +56,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx - 1] + ' ';
@@ -143,6 +143,11 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
             }
         },
         { data: "nombreAsesorAsignado"},
+        {
+            data: function (d) {
+                return `<span class='label ${d.labelInicioCancelacion}'>${d.textoInicioCancelacionFlag}</span>`;
+            }
+        },
         {
             visible: (ROLES_SIN_ACCIONES.includes(id_rol_general)) ? false : true,
             data: function (d) {

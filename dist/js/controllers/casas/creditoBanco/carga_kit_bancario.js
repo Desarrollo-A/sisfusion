@@ -30,7 +30,7 @@ pass_to_vobo_cifras = function (data) {
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'idVobo', value: data.idVobo }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'idCLiente', value: data.idCLiente }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -107,7 +107,7 @@ function upload(data) {
             new HiddenField({ id: 'tipo', value: 31 }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
-            new HiddenField({ id: 'idCliente', value: data.idCLiente }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 

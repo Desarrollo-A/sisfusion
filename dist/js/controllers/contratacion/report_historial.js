@@ -1,21 +1,4 @@
-let titulosEvidence = [];
-
-// $('#Jtabla thead tr:eq(0) th').each(function (i) {
-
-//
-//     let title = $(this).text();
-//     titulosEvidence.push(title);
-//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-//     $( 'input', this).on('keyup change', function () {
-//         if ($('#Jtabla').DataTable().column(i).search() !== this.value) {
-//             $('#Jtabla').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-// });
-
 $(document).ready(function () {
-  construirHead("Jtabla");
-
   sp.initFormExtendedDatetimepickers();
   $(".datepicker").datetimepicker({ locale: "es" });
   setIniDatesXMonth("#beginDate", "#endDate");
@@ -52,7 +35,8 @@ $(document).on("click", "#searchByDateRange", function () {
 });
 
 function fillTable(typeTransaction, beginDate, endDate, where) {
-  tabla_6 = $("#Jtabla").dataTable({
+ construirHead("Jtabla");
+ const tb_contratos_recibidos = $("#Jtabla").DataTable({
     dom:
       "Brt" +
       "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -64,13 +48,13 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         extend: "excelHtml5",
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: "btn buttons-excel",
-        filename: "Contratos Recibidos",
-        titleAttr: "Descargar archivo de Excel",
+        filename: `${_("contratos-recibidos")}`,
+        titleAttr: `${_("descargar-excel")}`,
         exportOptions: {
           columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
           format: {
             header: function (d, columnIdx) {
-              return " " + titulos[columnIdx] + " ";
+              return $(d).attr('placeholder').toUpperCase();
             },
           },
         },
@@ -174,6 +158,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
       },
     },
   });
+  applySearch(tb_contratos_recibidos);
 }
 
 $("#Jtabla").on("draw.dt", function () {

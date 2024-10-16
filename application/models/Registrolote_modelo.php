@@ -3566,7 +3566,7 @@
 					$id_lider = $id_lider . ', 7474';
 					$sede = "";
 				} else if ($id_usuario == 16783) { // Mayra Alejandra Angulo Muñiz
-					$id_lider = $id_lider . ', 13821';
+					$id_lider = $id_lider . ', 13821, 234';
 					$sede = "";
 				} else if ($id_usuario == 16813) { // Vanessa Castro Muñoz
 					$id_lider = $id_lider . ', 11680';
@@ -3579,6 +3579,12 @@
 					$sede = "";
 				} else if ($id_usuario == 15716) { // ADRIAN TREJO GUTIERREZ
 					$id_lider = $id_lider . ', 7944';
+					$sede = "";
+				} else if ($id_usuario == 10534) { // BRENDA PAOLA VEGA GUERRERO
+					$id_lider = $id_lider . ', 13549, 13549';
+					$sede = "";
+				} else if ($id_usuario == 18027) { // ALMA ADRIANA PEREZ DOMINGUEZ
+					$id_lider = $id_lider . ', 113';
 					$sede = "";
 				}
 

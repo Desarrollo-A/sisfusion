@@ -60,6 +60,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
             new HiddenField({ id: 'tipo_documento', value: data.tipo }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente}),
             new FileField({   id: 'file_uploaded',  label: 'Archivo', placeholder: 'Selecciona un archivo', accept, required: true }),
         ],
     })

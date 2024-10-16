@@ -19,11 +19,17 @@ if(locale){
 }
 
 $(document).ready(function() {
+    if(!locale){
+        locale = 'es'
+        
+        localStorage.setItem('locale', locale)
+    }
+
     changeIcon(locale)
 })
 
 function changeIcon(lang) {
-    console.log(lang);
+    // console.log(lang);
     $('#lang_icon').attr("src", `${general_base_url}static/images/langs/${lang}.png`);
 }
 
@@ -95,6 +101,8 @@ function applySearch(table) {
 
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
         $('input', this).on('keyup change', function () {
+            console.log(this)
+
             if (table.column(i).search() !== this.value) {
                 table.column(i).search(this.value).draw();
                 const searchTabla = datosTablasComisiones.find((idTables) => idTables.idTabla == id);
@@ -115,6 +123,12 @@ function applySearch(table) {
             }
         })
     })
+
+    $(`#${id}`).on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 }
 
 function construirHead(table){
@@ -129,11 +143,11 @@ function construirHead(table){
         if(id && idNoPermitidos.indexOf(id)){
             if(id){
                 title = _(id)
-                $(this).html(`<input id="th_${i}_${id}" class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+                $(this).html(`<input id="${table}_${i}_${id}" class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
                 
                 function translatePlaceholder(){
-                    $(`#th_${i}_${id}`).attr('placeholder', _(id))
-                    $(`#th_${i}_${id}`).attr('data-original-title', _(id))
+                    $(`#${table}_${i}_${id}`).attr('placeholder', _(id))
+                    $(`#${table}_${i}_${id}`).attr('data-original-title', _(id))
                 }
 
                 onLoadTranslations(translatePlaceholder)
@@ -149,6 +163,8 @@ function construirHead(table){
         $('.dt-button').each(function (i) {
             let is_excel = $(this).hasClass('buttons-excel')
             let is_pdf = $(this).hasClass('buttons-pdf')
+            let is_yt = $(this).hasClass('buttons-youtube')
+            
             
             if(is_excel){
                 $(this).attr('title', _('descargar-excel'))
@@ -157,6 +173,11 @@ function construirHead(table){
 
             if(is_pdf){
                 $(this).attr('title', _('descargar-pdf'))
+                $(this).children().children().removeAttr('title')
+            }
+
+            if(is_yt){
+                $(this).attr('title', _('video-tutorial'))
                 $(this).children().children().removeAttr('title')
             }
         })
@@ -174,6 +195,9 @@ function changeButtonTooltips() {
         if(id){
             let title = _(id)
 
+            if($(this).attr('title')){
+                $(this).attr('title', title)
+            }
             $(this).attr('data-original-title', title)
         }
     })
@@ -280,6 +304,54 @@ function changeSteps() {
     })
 }
 
+function changeFontIconTooltips() {
+
+    $('i').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        if(id){
+            let title = _(id)
+
+            $(this).attr('title', title)
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
+function changeDivTooltips() {
+    $('div').each(function (i) {
+        let id = $(this).data('i18n-tooltip')
+
+        if(id){
+            let title = _(id)
+
+            if($(this).attr('title')){
+                $(this).attr('title', title)
+            }
+            $(this).attr('data-original-title', title)
+        }
+    })
+}
+
+function changeTableButton() {
+    $('.dt-button').each(function (i) {
+        let is_excel = $(this).hasClass('buttons-excel')
+        let is_pdf = $(this).hasClass('buttons-pdf')
+        
+        if(is_excel){
+            $(this).attr('title', _('descargar-excel'))
+            $(this).children().children().removeAttr('title')
+        }
+
+        if(is_pdf){
+            $(this).attr('title', _('descargar-pdf'))
+            $(this).children().children().removeAttr('title')
+        }
+    })
+    
+    $('body').i18n()
+}
+
 onLoadTranslations(changeSelects)
 onChangeTranslations(changeSelects)
 onLoadTranslations(changeButtonTooltips)
@@ -290,3 +362,9 @@ onLoadTranslations(changeListTooltips)
 onChangeTranslations(changeListTooltips)
 onLoadTranslations(changeInputPlaceholder)
 onChangeTranslations(changeInputPlaceholder)
+onLoadTranslations(changeFontIconTooltips)
+onChangeTranslations(changeFontIconTooltips)
+onLoadTranslations(changeDivTooltips)
+onChangeTranslations(changeDivTooltips)
+onLoadTranslations(changeTableButton)
+onChangeTranslations(changeTableButton)

@@ -6,12 +6,13 @@ $(document).ready(function () {
         relatedTarget.val(fileName);
     });
     setInitialDates();
-    if( id_rol_global == 31 )
+    if( id_rol_global == 31 ){
         $('.generate').trigger('click');
-    else
+    }else{
         $('.find-results').trigger('click');
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({locale: 'es'});
+    $('.datepicker').datetimepicker({locale: 'en'});
+    }
 });
 
 
@@ -81,7 +82,7 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: _('descargar-excel'),
-            title: _('consulta pago final') ,
+            title: _('consulta-pago-final') ,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
@@ -252,7 +253,7 @@ $(document).on('click', '#aceptarMonto', function(e){
         success: function (data) {
             if (data.status == 200) {
                 $("#editMontoInternomex").modal("hide");
-                alerts.showNotification("top", "right", _('registro-actualizado-exitoso'), "success");
+                alerts.showNotification("top", "right", _('registro-actualizado-exitosamente'), "success");
                 let fechaInicio = formatDate( $(".beginDate").val());
                 let fechaFin = formatDate( $(".endDate").val());
                 fillTableLotificacion(fechaInicio, fechaFin);

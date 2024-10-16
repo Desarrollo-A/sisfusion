@@ -1,11 +1,15 @@
 $(document).ready(function() {
-    crearTabla();  
-})
+    
+    let titulos_encabezado = [];
+    let num_colum_encabezado = [];
 
+    onLoadTranslations(loadTable());
+});
 
-function crearTabla() {
-    construirHead("clients-datatable-nuevos");
-    var usersTable = $('#clients-datatable-nuevos').DataTable({
+function loadTable(){
+    construirHead('clients-datatable');
+
+    usersTable = $('#clients-datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -17,10 +21,10 @@ function crearTabla() {
             titleAttr: 'Lista nuevos clientes',
             title:'Lista nuevos clientes',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                columns: [0,1],
                 format: {
                     header: function (d, columnIdx) {
-                        return $(d).attr('placeholder');
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -99,7 +103,7 @@ function crearTabla() {
                     if (id_usuario_general != d.id_asesor && d.lugar_prospeccion == 6 && id_rol_general != 19 && id_rol_general != 20) { // NO ES ASESORY EL REGISTRO ES DE MKTD QUITO EL BOTÓN DE VER
                         return '';
                     } else {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas see-information" data-id-prospecto="${d.id_prospecto}" style="margin-right: 3px;" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN"><i class="fas fa-eye"></i></button></div>`;
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas see-information" data-id-prospecto="${d.id_prospecto}" style="margin-right: 3px;" data-toggle="tooltip" data-placement="top" title="${_("ver-informacion")}"><i class="fas fa-eye"></i></button></div>`;
                     }
                 }
             }
@@ -108,17 +112,21 @@ function crearTabla() {
             url: "getClientsList",
             type: "POST",
             cache: false,
-            data: function(d) {}
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip({ 
-                trigger: "hover",
-        });        
+            data: function(d) {}          
         }
     });
-    applySearch(usersTable);
-    $('body').i18n();
+
+
+    $('#clients-datatable').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
+    applySearch(usersTable)
 }
+
+
+
 function printProspectInfo() {
     id_prospecto = $("#prospecto_lbl").val();
     window.open("printProspectInfo/" + id_prospecto, "_blank")
@@ -210,20 +218,19 @@ function fillFields(v, type) {
 }
 
 function fillChangelog(v) {
-    console.log($(_("campo")));
     $("#changelog").append('<li>\n' +
         '    <div class="container-fluid">\n' +
         '       <div class="row">\n' +
         '           <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">\n' +
-        '               <a><small>'+ _("campo") +': </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
+        '               <a><small><span data-i18n="campo">Campo</span>: </small><b>' + v.parametro_modificado.toUpperCase() + '</b></a><br>\n' +
         '           </div>\n' +
         '           <div class="float-end text-right">\n' +
         '               <a>' + v.fecha_creacion + '</a>\n' +
         '           </div>\n' +
         '           <div class="col-md-12">\n' +
-        '               <p class="m-0"><small>' + _("usuario") +' : </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
-        '               <p class="m-0"><small>' + _("valor-anterior") +': </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
-        '               <p class="m-0"><small>' + _("valor-nuevo") +': </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
+        '               <p class="m-0"><small><span data-i18n="usuario">Usuario </span>: </small><b> ' + v.creador.toUpperCase() + '</b></p>\n'+
+        '               <p class="m-0"><small><span data-i18n="valor-anterior">Valor anterior</span>: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
+        '               <p class="m-0"><small><span data-i18n="valor-nuevo">Valor nuevo</span>: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
         '           </div>\n' +
         '        <h6>\n' +
         '        </h6>\n' +
@@ -281,6 +288,7 @@ $(document).on('click', '.see-information', function(e) {
     $.getJSON("getChangelog/" + id_prospecto).done(function(data) {
         $.each(data, function(i, v) {
             fillChangelog(v);
+            $('body').i18n();
         });
     });
 });

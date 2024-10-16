@@ -85,161 +85,43 @@ let num_colum_autorizaciones = [];
 });*/
 num_colum_autorizaciones.pop();
 
-$(document).ready (function() {
-    construirHead('addExp');
-    var table;
-    table = $('#addExp').DataTable( {
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
-        scrollX: true,
-        bAutoWidth: true,
-        initComplete: function () {
-            this.api().columns().every( function () {
-                var column = this;
-                var select = $('<select><option value=""></option></select>').appendTo( $(column.footer()).empty() ).on( 'change', function () {
-                var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                        column.search( val ? '^'+val+'$' : '', true, false ).draw();
-                    });
-                column.data().unique().sort().each( function ( d, j ) {
-                    select.append( '<option value="'+d+'">'+d+'</option>' )
-                } );
-            } );
+function apply() {
+    // let id = table.tables().nodes().to$().attr('id')
+
+    $(`table thead tr:eq(0) th`).each(function (i) {
+        $('input', this).on('keyup change', function () {
+            console.log(i)
             
-            $('[data-toggle="tooltip"]').tooltip();
-        },
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Autorizaciones' ,
-            exportOptions: {
-                columns: num_colum_autorizaciones,
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_autorizaciones[columnIdx] +' ';
-                    }
-                }
+            if (table.column(i).search() !== this.value) {
+                table.column(i).search(this.value).draw();
             }
-        },
-        {
-            extend: 'pdfHtml5',
-            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-            className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
-            title: 'Autorizaciones' ,
-            orientation: 'landscape',
-            exportOptions: {
-                columns: num_colum_autorizaciones,
-                format: {
-                    header:  function (d, columnIdx) {
-                        return ' '+titulos_autorizaciones[columnIdx] +' ';
-                    }
-                }
-            }
-        },
-        {
-            text: '<i class="fas fa-play"></i>',
-            className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de autorizaciones podrás visualizarlo en el siguiente tutorial',
-            action: function (e, dt, button, config) {
-                window.open('https://youtu.be/1zcshxE2nP4', '_blank');
-            }
-        }],
-        pagingType: "full_numbers",
-        language: {
-            url: `${general_base_url}static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [
-            { "data": "nombreResidencial" },
-            { "data": "nombreCondominio" },
-            { "data": "nombreLote" },
-            { "data": "nombreCliente"},
-            { "data": "sol" },
-            { "data": "coordinador"},
-            { "data": "gerente"},
-            { "data": "subdirector"},
-            { "data": "regional"},
-            { "data": "regional2"},
-            { "data": "aut" },
-            {
-                "data": function( d ){
-                    acciones = `<a  href="#" class="btn-data btn-blueMaderas seeAuts" data-id_autorizacion="${d.id_autorizacion}" data-idLote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="VISUALIZAR"><i class='fas fa-eye'></i></a></div>`;
-                    return '<div class="d-flex justify-center">'+acciones+'</div>';
-                }
-            }
-        ],
-        ajax: {
-            url: general_base_url+"asesor/getAutorizacionAs/",
-            type: "POST",
-            cache: false
-        },
-    });
-    applySearch(table);
-});
+        })
+    })
 
-$('#addExp').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});
+    // $(`#${id}`).on('draw.dt', function() {
+    //     $('[data-toggle="tooltip"]').tooltip({
+    //         trigger: "hover"
+    //     });
+    // });
+}
 
-let titulos_solicitud = [];
-let num_colum_solicitud = [];
-// $('#sol_aut thead tr:eq(0) th').each( function (i) {
-//     var title = $(this).text();
-//     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-//     titulos_solicitud.push(title);
-//     num_colum_solicitud.push(i);
-//     $( 'input', this ).on('keyup change', function () {
-//         if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
-//             $('#sol_aut').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-//     $('[data-toggle="tooltip"]').tooltip();
-// });
-num_colum_solicitud.pop();
-
-$(document).ready (function() {
+$(document).ready (function() {    
     construirHead('sol_aut');
-    var table2;
-    table2 = $('#sol_aut').DataTable( {
+    let table2 = $('#sol_aut').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
-        initComplete: function () {
-            this.api().columns().every( function () {
-                var column = this;
-                var select = $('<select><option value=""></option></select>').appendTo( $(column.footer()).empty() ).on( 'change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                        column.search( val ? '^'+val+'$' : '', true, false ).draw();
-                    } );
-                column.data().unique().sort().each( function ( d, j ) {
-                    select.append( '<option value="'+d+'">'+d+'</option>' )
-                } );
-            } );
-            
-            $('[data-toggle="tooltip"]').tooltip();
-        },
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Solicitud de autorizaciones' ,
+            titleAttr: `${_('descargar-excel')}`,
+            title: `${_('solicitud-autorizacion')}`,
             exportOptions: {
-                columns: num_colum_solicitud,
+                columns: [0,1,2,3,4,5,6,7,8,9],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_solicitud[columnIdx] +' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -248,14 +130,14 @@ $(document).ready (function() {
             extend: 'pdfHtml5',
             text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
             className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
-            title: 'Solicitud de autorizaciones' ,
+            titleAttr: `${_('descargar-pdf')}`,
+            title: `${_('solicitud-autorizacion')}`,
             orientation: 'landscape',
             exportOptions: {
-                columns: num_colum_solicitud,
+                columns: [0,1,2,3,4,5,6,7,8,9],
                 format: {
                     header:  function (d, columnIdx) {
-                        return ' '+titulos_solicitud[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -263,9 +145,9 @@ $(document).ready (function() {
         {
             text: '<i class="fas fa-play"></i>',
             className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de autorizaciones podrás visualizarlo en el siguiente tutorial',
+            titleAttr: _('video-tutorial'),
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/1zcshxE2nP4', '_blank');
+                window.open('https://youtu.be/2pvgEilVZrg', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -326,14 +208,127 @@ $(document).ready (function() {
             cache: false
         },
     });
-    applySearch(table2);
+    // applySearch(table2);
+
+    $(`#sol_aut thead tr:eq(0) th`).each(function (i) {
+        $('input', this).on('keyup change', function () {
+            console.log(i)
+            
+            if (table2.column(i).search() !== this.value) {
+                table2.column(i).search(this.value).draw();
+            }
+        })
+    })
+
+    construirHead('addExp');
+    let table = $('#addExp').DataTable( {
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
+        bAutoWidth: true,
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: `${_('descargar-excel')}`,
+            title: 'Autorizaciones' ,
+            exportOptions: {
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
+                format: {
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
+                    }
+                }
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: `${_('descargar-pdf')}`,
+            title: 'Autorizaciones' ,
+            orientation: 'landscape',
+            exportOptions: {
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
+                format: {
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
+                    }
+                }
+            }
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            // titleAttr: `${_("video-tutorial")}`,                                             
+            titleAttr: _("video-tutorial"), 
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/1zcshxE2nP4', '_blank');
+            }
+        }],
+        pagingType: "full_numbers",
+        language: {
+            url: `${general_base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        ordering: false,
+        columns: [
+            { "data": "nombreResidencial" },
+            { "data": "nombreCondominio" },
+            { "data": "nombreLote" },
+            { "data": "nombreCliente"},
+            { "data": "sol" },
+            { "data": "coordinador"},
+            { "data": "gerente"},
+            { "data": "subdirector"},
+            { "data": "regional"},
+            { "data": "regional2"},
+            { "data": "aut" },
+            {
+                "data": function( d ){
+                    acciones = `<a  href="#" class="btn-data btn-blueMaderas seeAuts" data-id_autorizacion="${d.id_autorizacion}" data-idLote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="VISUALIZAR"><i class='fas fa-eye'></i></a></div>`;
+                    return '<div class="d-flex justify-center">'+acciones+'</div>';
+                }
+            }
+        ],
+        ajax: {
+            url: general_base_url+"asesor/getAutorizacionAs/",
+            type: "POST",
+            cache: false
+        },
+    });    
+    // applySearch(table);
+
+    $(`#addExp thead tr:eq(0) th`).each(function (i) {
+        $('input', this).on('keyup change', function () {
+            console.log(i)
+            
+            if (table.column(i).search() !== this.value) {
+                table.column(i).search(this.value).draw();
+            }
+        })
+    })
 });
 
-$('#sol_aut').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});
+// let titulos_solicitud = [];
+// let num_colum_solicitud = [];
+// $('#sol_aut thead tr:eq(0) th').each( function (i) {
+//     var title = $(this).text();
+//     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+//     titulos_solicitud.push(title);
+//     num_colum_solicitud.push(i);
+//     $( 'input', this ).on('keyup change', function () {
+//         if ($('#sol_aut').DataTable().column(i).search() !== this.value ) {
+//             $('#sol_aut').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip();
+// });
+// num_colum_solicitud.pop();
 
 var contador=1;
 $(document).on('click', '.addAutorizacionAsesor', function(e) {
@@ -368,7 +363,7 @@ $(document).on('click', '.seeAuts', function (e) {
         $('#auts-loads').empty();
         var statusProceso;
         $.each(JSON.parse(data), function(i, item) {
-            if(item['estatus'] == 0){               
+            if(item['estatus'] == 0){
                 statusProceso = `<span class='label lbl-green'>${_('aceptada')}</span>`;
             }
             else if(item['estatus'] == 1){
@@ -440,14 +435,14 @@ function validateNumsOfAutorizacion(){
 }
 
 $(document).ready(function () {
-    validateNumsOfAutorizacion();    
+    validateNumsOfAutorizacion();
     if(id_usuario_general == 1){
         alerts.showNotification("top", "right", "Se enviaron las autorizaciones correctamente", "success");
     }
     else if( id_usuario_general == 99){
         alerts.showNotification("top", "right", "Ocurrio un error al enviar la autorización", "warning");
     }
-    
+
     $("#dirAutoriza").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'registroCliente/getActiveDirs/',
