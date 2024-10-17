@@ -2020,6 +2020,31 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 lo.status = 1
                 AND lo.idStatusLote IN (6)")->result();
     }
+    public function getRegistrosRLParaCambio($idCondominio) {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') referencia,
+                lo.idStatusLote,
+                sl.nombre nombreEstatusLote,
+                sl.background_sl,
+                sl.color,
+                cl.rl id_rl,
+				oxc.nombre nombreRL,
+                cl.id_cliente idCliente
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND  co.idCondominio = $idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1
+            INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.rl AND oxc.id_catalogo = 77
+            WHERE
+                lo.status = 1")->result();
+    }
 
     // public function getRegistrosCambioTipoVenta($idCondominio) {
     //     return $this->db->query(

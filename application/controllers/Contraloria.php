@@ -4056,6 +4056,36 @@ public function return1(){
         echo json_encode($data_response);
     }
 
+	function modificarRlLote(){
+		$representanteLegal = $this->input->post('representanteLegal');
+		$idLote = $this->input->post('idLote');
+		$idRl = $this->input->post('idRl');
+		$idCliente = $this->input->post('idCliente');
+		
+		$update_lotes = array();
+        $fecha_insercion = date('Y-M-d H:i:s');
+        
+		$update_cliente = array(
+			"rl"=>$idRl,
+			"modificado_por" => $this->session->userdata('id_usuario'),
+        	"fecha_modificacion" => $fecha_insercion,
+		);
+		
+		$actualizarRl  = $this->General_model->updateRecord('clientes',$update_cliente,"id_cliente",$idCliente);
+		// $update_lotes = array(
+		// 	'idCliente'=> $representanteLegal,
+		// 	"modificado_por" => $this->session->userdata('id_usuario'),
+        // );
+
+		if($actualizarRl){
+			$data_response['message'] = 'OK';
+		}else{
+			$data_response['message'] = 'ERROR';
+		}
+		echo json_encode($data_response);
+       
+	}
+
 	function actualizaAutMSI() {
         //$modo 1: LOTE 2:CONDOMINIO
         $id_autorizacion = $this->input->post('id_aut');
@@ -4471,6 +4501,25 @@ public function return1(){
             echo json_encode(array());
         }
     }
+	public function getDatosTablaRepresentanteLegal($idCondominio) {
+		// Verifica si $idCondominio está definido y no es nulo
+		if (isset($idCondominio) && !empty($idCondominio)) {
+			// Obtiene los datos de registros legales a través del modelo
+			$datos = $this->Contraloria_model->getRegistrosRLParaCambio($idCondominio);
+			// Verifica si se obtuvieron datos
+			if ($datos !== null) {
+				// Si se obtuvieron datos, los codifica en JSON y los retorna
+				echo json_encode($datos);
+			} else {
+				// Si no se obtuvieron datos, retorna un arreglo vacío
+				echo json_encode(array());
+			}
+		} else {
+			// Si $idCondominio no está definido o es vacío, retorna un arreglo vacío
+			echo json_encode(array());
+		}
+	}
+	
     // Agregar registros a la tabla Gestor Contraloría
     public function agregarRegistroGestorContraloria() {
         $nombre = $this->input->post("nombre");
