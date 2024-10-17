@@ -223,13 +223,23 @@ function changeSelects() {
 
             $(this).attr('title', title)
 
+            let some_selected = false
+
             $('option', this).each(function (x) {
                 let clase = $(this).attr('class')
+
+                if($(this).attr('selected') === 'selected'){
+                    some_selected = true
+                }
 
                 if(clase === 'bs-title-option'){
                     $(this).html(title)
                 }
             })
+
+            if(some_selected === false){
+                div.html(title)
+            }
         }
     })
 }
