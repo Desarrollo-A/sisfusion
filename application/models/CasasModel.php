@@ -1734,7 +1734,7 @@ AND vb.proyectos != 1";
         FROM HistorialCte hct
         FULL OUTER JOIN proceso_casas_banco pc ON pc.idLote = hct.idLote 
         LEFT JOIN lotes lo ON lo.idLote = COALESCE(pc.idLote, hct.idLote)
-        INNER JOIN clientes cli ON cli.idLote = lo.idLote
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote ON cli.id_cliente = pc.idCliente
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial

@@ -5853,7 +5853,7 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
         
-        $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tablaActual);
+        $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tablaActual, $idCliente);
         if ($checkPreproceso != null) {
             $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
             $this->General_model->updateRecord('documentos_proceso_casas', array("estatus" => 0), 'idProcesoCasas', $idProcesoCasas);
