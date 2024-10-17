@@ -1,5 +1,6 @@
 let titulosGestor = [];
 let titulosTablaIntercambios = [];
+let titulosCambioTipoVenta=[];
 let titulosTablaCambioRL = [];
 let titulos_principal = [];
 let num_colum_principal = [];
@@ -39,7 +40,6 @@ $(document).ready(function () {
     });
 
 });
-
 
 $(document).on('change', '#selector', function () {
     $('#selectCondominio').val('');
@@ -100,6 +100,15 @@ $('#selectCondominio').change(function () {
 });
 
 function crearTablaTipoVenta(idCondominio) {
+    $('#tipo-venta thead tr:eq(0) th').each(function (i) {
+        var title = $(this).text();
+        titulosCambioTipoVenta.push(title);
+        $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        $('input', this).on('keyup change', function () {
+            if (tablaTipoVenta.column(i).search() !== this.value)
+                tablaTipoVenta.column(i).search(this.value).draw();
+        });
+    });
     if ($.fn.DataTable.isDataTable('#tipo-venta')) {
         tablaTipoVenta.destroy();
     }
@@ -118,7 +127,7 @@ function crearTablaTipoVenta(idCondominio) {
                     columns: [0, 1, 2, 3, 4, 5],
                     format: {
                         header: function (d, columnIdx) {
-                            return $(d).text().toUpperCase();
+                            return ' ' + titulosCambioTipoVenta[columnIdx] + ' ';
                         }
                     }
                 },
