@@ -8,7 +8,8 @@ class Reestructura_model extends CI_Model
         $this->load->model(array('Comisiones_model', 'General_model'));
     }
 
-    public function getListaClientesReubicar() {
+    public function getListaClientesReubicar()
+    {
         $id_usuario = $this->session->userdata('id_usuario');
         $id_rol = $this->session->userdata('id_rol');
         $tipo = $this->session->userdata('tipo');
@@ -41,7 +42,7 @@ class Reestructura_model extends CI_Model
         else if ($id_rol == 5 && in_array($id_lider, [13589, 13549])) // SON LAS ASISTENTES DE SUBDIRECCIÓN
             $validacionAdicional = "AND (lo.id_gerente_asignado = $id_lider OR lo.id_subdirector_asignado = $id_lider)";
 
-       return $this->db->query("SELECT tbl.flagContraloriaFusion, tbl.flagJuridicoFusion, tbl.rescision, tbl.plan_comision, tbl.registro_comision, tbl.idLotePvOrigen, tbl.idFusion, tbl.origen, tbl.destino, tbl.id_dxc, tbl.rescisioncl, tbl.proceso, 
+        return $this->db->query("SELECT tbl.flagContraloriaFusion, tbl.flagJuridicoFusion, tbl.rescision, tbl.plan_comision, tbl.registro_comision, tbl.idLotePvOrigen, tbl.idFusion, tbl.origen, tbl.destino, tbl.id_dxc, tbl.rescisioncl, tbl.proceso, 
         tbl.idProyecto, tbl.idLote, tbl.nombreLote, tbl.idCliente, tbl.cliente, tbl.fechaApartado, tbl.nombreCondominio, tbl.nombreResidencial, tbl.nombreAsesor, tbl.nombreCoordinador, tbl.nombreGerente, tbl.nombreSubdirector, 
         tbl.nombreRegional, tbl.nombreRegional2, tbl.sup, tbl.costom2f, tbl.total, tbl.estatusPreproceso, tbl.id_estatus_preproceso, tbl.totalCorridasNumero, tbl.totalContratoNumero, tbl.totalPropuestas, tbl.totalCorridas, 
         tbl.totalContratos, tbl.totalRescision, tbl.idLoteXcliente, tbl.idLoteXclienteFusion, tbl.nombreAsesorAsignado, tbl.contratoFirmado, tbl.idContratoFirmado, tbl.idCondominio, tbl.totalContratoFirmado, tbl.totalContratoFirmadoFusion, 
@@ -603,7 +604,7 @@ class Reestructura_model extends CI_Model
                 INNER JOIN clientes as cl ON cl.id_cliente = hl.id_cliente
                 LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
                 LEFT JOIN usuarios u0 ON u0.id_usuario = CAST(hl.userLiberacion AS varchar(15))
-            WHERE hl.observacionLiberacion = 'CANCELACIÓN DE CONTRATO' ".$union
+            WHERE hl.observacionLiberacion = 'CANCELACIÓN DE CONTRATO' " . $union
         )->result();
     }
 
@@ -889,7 +890,7 @@ class Reestructura_model extends CI_Model
         ini_set('max_execution_time', '300'); //300 seconds = 5 minutes
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
-        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND (cl.id_gerente = $id_usuario OR cl.id_asesor = $id_usuario)" : ( $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
+        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND (cl.id_gerente = $id_usuario OR cl.id_asesor = $id_usuario)" : ($this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
 
         return $this->db->query(
             "WITH UltimoValor AS (
@@ -996,7 +997,8 @@ class Reestructura_model extends CI_Model
                 AND lo.registro_comision IN (9) THEN 2 WHEN clr.banderaComisionCl = 7 
                 AND lo.registro_comision IN (9) THEN 3 ELSE 0 END
               ) AS bandera_dispersion,
-              (CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas
+              (CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas,
+              cl.id_cliente_reubicacion_2 AS idClienteAnterior
             FROM 
               (
                 SELECT 
@@ -1139,7 +1141,8 @@ class Reestructura_model extends CI_Model
                 AND lo.registro_comision IN (9) THEN 2 WHEN clr.banderaComisionCl = 7 
                 AND lo.registro_comision IN (9) THEN 3 ELSE 0 END
               ) AS bandera_dispersion,
-              (CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas
+              (CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas,
+              cl.id_cliente_reubicacion_2 AS idClienteAnterior
             FROM
               lotes lo 
               INNER JOIN clientes cl ON cl.idLote = lo.idLote $validacionExtra
@@ -1207,10 +1210,11 @@ class Reestructura_model extends CI_Model
               AND cl.proceso IN (5, 6) 
             ORDER BY 
               lo.nombreLote"
-                    )->result_array();
+        )->result_array();
     }
 
-    public function checarDisponibleRe($idLote, $idProyecto) {
+    public function checarDisponibleRe($idLote, $idProyecto)
+    {
         return  $this->db->query("SELECT * FROM lotes WHERE idStatusLote IN (15, 1, 21, 2) AND idLote = $idLote")->result_array();
     }
 
@@ -1892,7 +1896,7 @@ class Reestructura_model extends CI_Model
             return true;
         }
     }
-    
+
 
     public function returnToRestructure($data)
     {
@@ -2026,7 +2030,8 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
 
-    public function getLotesOrigen($idLotePv){
+    public function getLotesOrigen($idLotePv)
+    {
         $query = $this->db->query("SELECT lf.idLote, lo.idCliente FROM lotesFusion lf INNER JOIN lotes lo ON lo.idLote = lf.idLote  where lf.idLotePvOrigen = ? AND lf.origen = 1", array($idLotePv));
 
         return $query;
@@ -2173,7 +2178,8 @@ class Reestructura_model extends CI_Model
 
         return $query;
     }
-    public function checkFechaApartado02($idLote){
+    public function checkFechaApartado02($idLote)
+    {
         $query = $this->db->query("SELECT 
         pxl.id_lotep idLoteDestino,
         re.nombreResidencial,
@@ -2192,7 +2198,8 @@ class Reestructura_model extends CI_Model
         WHERE pxl.idLote IN ($idLote)");
         return $query->result_array();
     }
-    public function buscarPagos($idLoteActual,$idClienteActual,$idClienteReubicacion){
+    public function buscarPagos($idLoteActual, $idClienteActual, $idClienteReubicacion)
+    {
         return $this->db->query("SELECT COUNT(*) pagadasGeneral,
 		(SELECT COUNT(*) Nuevas FROM pago_comision_ind pci
         INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.estatus=1
@@ -2211,55 +2218,63 @@ class Reestructura_model extends CI_Model
         WHERE co.id_lote=$idLoteActual AND pci.estatus NOT IN(6,1)")->result_array();
     }
 
-    public function pausarPagos($idLote,$idCliente,$idUser){
+    public function pausarPagos($idLote, $idCliente, $idUser)
+    {
         $sql = "UPDATE pago_comision_ind SET estatus = 6, modificado_por = ? WHERE id_comision IN(SELECT id_comision FROM comisiones WHERE id_lote = ? AND idCliente = ? AND estatus = 1)";
-        return $this->db->query($sql, [$idUser,$idLote, $idCliente]);  
+        return $this->db->query($sql, [$idUser, $idLote, $idCliente]);
     }
 
-    public function getDataClienteAnterior($idClienteReubicacion){
+    public function getDataClienteAnterior($idClienteReubicacion)
+    {
         $query = "SELECT hrr.idLoteOrigen idLote,hrr.idClienteOrigen idCliente,hrr.planComision,hrr.estatusComisiones,cl2.totalNeto2Cl precioOrigen
         FROM historial_regreso_reestructura hrr
         INNER JOIN clientes cl2 ON cl2.id_cliente = hrr.clienteReubicacion2
         WHERE hrr.clienteReubicacion2 = ? ;";
-        return json_encode($this->db->query($query,[$idClienteReubicacion])->row(),JSON_NUMERIC_CHECK);
+        return json_encode($this->db->query($query, [$idClienteReubicacion])->row(), JSON_NUMERIC_CHECK);
     }
 
-    public function getDataClienteActual($idLoteActual){
+    public function getDataClienteActual($idLoteActual)
+    {
         $query = "SELECT lo.idLote,lo.nombreLote,lo.idCliente,cl.plan_comision,lo.totalNeto2 precioDestino,cl.id_cliente_reubicacion_2,clOrigen.totalNeto2Cl precioOrigen,cl.total8P
         FROM lotes lo 
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente and cl.status=1
         INNER JOIN clientes clOrigen ON clOrigen.id_cliente = cl.id_cliente_reubicacion_2
         WHERE lo.idLote = ? ;";
-        return json_encode($this->db->query($query,[$idLoteActual])->row(),JSON_NUMERIC_CHECK);
+        return json_encode($this->db->query($query, [$idLoteActual])->row(), JSON_NUMERIC_CHECK);
     }
 
-    public function trasposoComisionesReu($idLoteOriginal,$idClienteOriginal,$idLoteActual,$user){
+    public function trasposoComisionesReu($idLoteOriginal, $idClienteOriginal, $idLoteActual, $user)
+    {
         $sql = "UPDATE comisiones SET id_lote = ?,modificado_por = ? WHERE id_lote = ? AND idCliente = ? ";
-        return $this->db->query($sql, [$idLoteActual,$user,$idLoteOriginal, $idClienteOriginal]);  
+        return $this->db->query($sql, [$idLoteActual, $user, $idLoteOriginal, $idClienteOriginal]);
     }
 
-    public function actualizarRegistroComision($idLote,$idUser){
+    public function actualizarRegistroComision($idLote, $idUser)
+    {
         $sql = "UPDATE lotes SET registro_comision=1,usuario = ? WHERE idLote= ? ;";
-        return $this->db->query($sql, [$idUser,$idLote]);
+        return $this->db->query($sql, [$idUser, $idLote]);
     }
 
-    public function actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$idComisionista,$comisionTotal,$creadoPor){
+    public function actualizarComisiones($idLoteAnterior, $idClieteAnterior, $idLoteNuevoDestino, $idClienteNuevoDestino, $idComisionista, $comisionTotal, $creadoPor)
+    {
         $sql = "UPDATE comisones SET comision_total= ?,id_lote = ? , idCliente = ? , modificado_por= ? WHERE id_lote = ? AND idCliente = ? AND id_usuario  = ?";
-        return $this->db->query($sql, [$comisionTotal,$idLoteNuevoDestino,$idClienteNuevoDestino,$creadoPor, $idLoteAnterior,$idClieteAnterior,$idComisionista]); 
+        return $this->db->query($sql, [$comisionTotal, $idLoteNuevoDestino, $idClienteNuevoDestino, $creadoPor, $idLoteAnterior, $idClieteAnterior, $idComisionista]);
     }
 
-    public function toparComisiones($idLoteNuevoOrigen,$idClienteNuevoOrigen,$rolesATopar){
+    public function toparComisiones($idLoteNuevoOrigen, $idClienteNuevoOrigen, $rolesATopar)
+    {
         $query = "SELECT * FROM comisiones WHERE id_lote= ?  AND idCliente = ? AND rol_generado IN(?);";
-        $idsComisiones = $this->db->query($query,[$idLoteNuevoOrigen,$idClienteNuevoOrigen,$rolesATopar])->result_array();
-        for ($i=0; $i < count($idsComisiones) ; $i++) { 
+        $idsComisiones = $this->db->query($query, [$idLoteNuevoOrigen, $idClienteNuevoOrigen, $rolesATopar])->result_array();
+        for ($i = 0; $i < count($idsComisiones); $i++) {
             $comentario = 'SE CANCELA LA REUBICACIÓN EXCEDENTE';
-            $this->Comisiones_model->ToparComision($idsComisiones[$i]['id_comision'],$comentario);
+            $this->Comisiones_model->ToparComision($idsComisiones[$i]['id_comision'], $comentario);
         }
-
     }
 
-    public function getDocumentosRe($idLote){
-        $query = $this->db->query("SELECT nombreLote, documento, nombreDocumento 
+    public function getDocumentosRe($idLote)
+    {
+        $query = $this->db->query(
+            "SELECT nombreLote, documento, nombreDocumento 
             FROM (SELECT lo.nombreLote, pxl.contrato, pxl.corrida, rescision = null
                     FROM propuestas_x_lote pxl
                     inner JOIN lotes lo ON lo.idLote = pxl.id_lotep
@@ -2273,50 +2288,59 @@ class Reestructura_model extends CI_Model
 					LEFT JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote
                     WHERE pxl.idLote = ?) pv1
             unpivot (documento for nombreDocumento in (contrato, corrida, rescision)) unpiv 
-            ORDER BY nombreLote", 
-        array($idLote, $idLote));
+            ORDER BY nombreLote",
+            array($idLote, $idLote)
+        );
 
         return $query;
     }
 
-    public function getDocumentosFusion($idLote){
-        $query = $this->db->query("SELECT nombreLote, documento, nombreDocumento 
+    public function getDocumentosFusion($idLote)
+    {
+        $query = $this->db->query(
+            "SELECT nombreLote, documento, nombreDocumento 
             FROM (SELECT nombreLote, lf.*
                     FROM lotesFusion lf
                     INNER JOIN lotes lo ON lo.idLote = lf.idLote
                     WHERE idLotePvOrigen in ?) pv1
             unpivot (documento for nombreDocumento in (contrato, corrida, rescision)) unpiv 
-            ORDER BY nombreLote", 
-        array($idLote));
+            ORDER BY nombreLote",
+            array($idLote)
+        );
 
         return $query;
     }
 
-    public function getLote($idLote){
+    public function getLote($idLote)
+    {
         $query = $this->db->query("SELECT *FROM lotes WHERE idLote = ?", $idLote);
 
         return $query;
     }
 
-    public function deleteLoteFusion($idLote){
+    public function deleteLoteFusion($idLote)
+    {
         $query = $this->db->query("DELETE FROM lotesFusion WHERE idLote = ?", $idLote);
 
         return $query;
     }
-    
-    public function checkOpcion($idLoteOriginal){
+
+    public function checkOpcion($idLoteOriginal)
+    {
         $query = $this->db->query("SELECT MAX(noOpcion) AS noOpcion FROM lotesFusion WHERE idLotePvOrigen = ?", $idLoteOriginal);
 
         return $query;
     }
 
-    public function getOpciones($idLoteOriginal){
+    public function getOpciones($idLoteOriginal)
+    {
         $query = $this->db->query("SELECT noOpcion FROM lotesFusion lf WHERE destino = ? AND lf.idLotePvOrigen = ? group by noOpcion", array(1, $idLoteOriginal));
 
         return $query;
     }
 
-    public function checkDestinos($idLote){
+    public function checkDestinos($idLote)
+    {
         $query = $this->db->query("SELECT idFusion FROM lotesFusion WHERE idLotePvOrigen = ? AND destino = ?", array($idLote, 1));
 
         return $query;
@@ -2328,14 +2352,283 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
 
-    public function eliminarFusion($pvLote){
+    public function eliminarFusion($pvLote)
+    {
         $query = $this->db->query("DELETE FROM lotesFusion WHERE idLotePvOrigen = ?", $pvLote);
         return $query;
     }
 
-    public function checkRescision($idLote){
+    public function checkRescision($idLote)
+    {
         $query = $this->db->query("SELECT *FROM historial_documento WHERE idLote = ? AND status = ? AND tipo_doc IN(?, ?)", array($idLote, 1, 33, 35));
 
         return $query;
+    }
+
+    public function getTotalNeto2($loteAnterior)
+    {
+        $query = $this->db->query("WITH UltimoValor AS (
+              SELECT 
+                anterior, 
+                aud.fecha_creacion, 
+                id_parametro, 
+                ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+              FROM auditoria aud 
+              WHERE col_afect = 'totalNeto2') 
+
+              SELECT lo.idLote, uv.anterior 
+                FROM lotes lo
+                INNER JOIN ultimoValor uv ON uv.id_parametro = lo.idLote AND uv.rn = 1  
+                WHERE lo.idLote = ?", $loteAnterior);
+
+        return $query->row();
+    }
+
+    public function getComisionCliente($idClienteAnterior)
+    {
+        $query = $this->db->query("WITH UltimoValor AS (
+              SELECT 
+                anterior, 
+                aud.fecha_creacion, 
+                id_parametro, 
+                ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+              FROM auditoria aud 
+              WHERE col_afect = 'plan_comision') 
+
+              SELECT cl.id_cliente, uv.anterior 
+                FROM clientes cl
+                INNER JOIN ultimoValor uv ON uv.id_parametro = cl.id_cliente AND uv.rn = 1  
+                WHERE cl.id_cliente = ?", $idClienteAnterior);
+
+        return $query->row();
+    }
+
+    public function getComisionesLote($idLoteAnterior)
+    {
+        $query = $this->db->query("WITH UltimoValor AS (
+              SELECT 
+                anterior, 
+                aud.fecha_creacion, 
+                id_parametro, 
+                ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+              FROM auditoria aud 
+              WHERE col_afect = 'registro_comision') 
+
+              SELECT lo.idLote, uv.anterior 
+                FROM lotes lo
+                INNER JOIN ultimoValor uv ON uv.id_parametro = lo.idLote AND uv.rn = 1  
+                WHERE lo.idLote = ?", $idLoteAnterior);
+
+        return $query->row();
+    }
+
+    // public function getLastValues($idLoteAnterior, $fechaLiberacion)
+    // {
+    //     $query = $this->db->query("WITH asesor AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'id_usuario_asignado' AND fecha_creacion <= ?),
+
+    // 		  gerente AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'id_gerente_asignado' AND fecha_creacion <= ?),
+
+    // 		  subdirector AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'id_subdirector_asignado' AND fecha_creacion <= ?),
+
+    //           statusLote AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'idStatusLote' AND fecha_creacion <= ?),
+
+    //           totalNeto2 AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'totalNeto2' AND fecha_creacion <= ?),
+
+    //           ubicacion AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'ubicacion' AND fecha_creacion <= ?),
+
+    //           totalNeto AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'totalNeto' AND fecha_creacion <= ?),
+
+    //           totalValidado AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'totalValidado' AND fecha_creacion <= ?),
+
+    //           validacionEnganche AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'validacionEnganche' AND fecha_creacion <= ?),
+
+    //           firmaRL AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'firmaRL' AND fecha_creacion <= ?),
+
+    //           tipoVenta AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'tipo_venta' AND fecha_creacion <= ?),
+
+    //           registroComision AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'registro_comision' AND fecha_creacion <= ?),
+
+    //           status8Flag AS (
+    //           SELECT 
+    //             anterior, 
+    //             aud.fecha_creacion, 
+    //             id_parametro, 
+    //             ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn 
+    //           FROM auditoria aud 
+    //           WHERE col_afect = 'status8Flag' AND fecha_creacion <= ?)
+
+    //           SELECT lo.idLote, usA.anterior AS asesor, usG.anterior AS gerente, usS.anterior AS subdirector, 
+    //                 st.anterior AS statusLote, tn2.anterior AS totalNeto2, ub.anterior AS ubicacion,
+    //                 tn.anterior AS totalNeto, tva.anterior AS totalValidado, ve.anterior AS validacionEnganche,
+    //                 rl.anterior AS firmaRL, tv.anterior AS tipoVenta, rc.anterior AS registroComision,
+    //                 sf.anterior AS status8Flag
+    //             FROM lotes lo
+    //             LEFT JOIN asesor usA ON usA.id_parametro = lo.idLote AND usA.rn = 1
+    // 			LEFT JOIN gerente usG ON usG.id_parametro = lo.idLote AND usG.rn = 1
+    // 			LEFT JOIN subdirector usS ON usS.id_parametro = lo.idLote AND usS.rn = 1
+    //             LEFT JOIN statusLote st ON st.id_parametro = lo.idLote AND st.rn = 1
+    //             LEFT JOIN totalNeto2 tn2 ON tn2.id_parametro = lo.idLote AND tn2.rn = 1
+    //             LEFT JOIN ubicacion ub ON ub.id_parametro = lo.idLote AND ub.rn = 1
+    //             LEFT JOIN totalNeto tn ON tn.id_parametro = lo.idLote AND tn.rn = 1
+    //             LEFT JOIN totalValidado tva ON tva.id_parametro = lo.idLote AND tva.rn = 1
+    //             LEFT JOIN validacionEnganche ve ON ve.id_parametro = lo.idLote AND ve.rn = 1
+    //             LEFT JOIN firmaRL rl ON rl.id_parametro = lo.idLote AND rl.rn = 1
+    //             LEFT JOIN tipoVenta tv ON tv.id_parametro = lo.idLote AND tv.rn = 1
+    //             LEFT JOIN registroComision rc ON rc.id_parametro = lo.idLote AND rc.rn = 1
+    //             LEFT JOIN status8Flag sf ON sf.id_parametro = lo.idLote AND sf.rn = 1
+    //             WHERE lo.idLote = ?",
+    //             array($fechaLiberacion, $fechaLiberacion, $fechaLiberacion, 
+    //                   $fechaLiberacion, $fechaLiberacion, $fechaLiberacion,
+    //                   $fechaLiberacion, $fechaLiberacion, $fechaLiberacion, 
+    //                   $fechaLiberacion, $fechaLiberacion, $fechaLiberacion,
+    //                   $fechaLiberacion, $idLoteAnterior));
+
+    //     return $query->row();
+    // }
+
+    public function getLastValues($loteAnterior, $fechaLiberacion)
+    {
+        $query = $this->db->query("WITH combinedCTE AS 
+        (SELECT
+            anterior,
+            aud.fecha_creacion,
+            id_parametro,
+            col_afect,
+            ROW_NUMBER() OVER (PARTITION BY id_parametro, col_afect ORDER BY fecha_creacion DESC) AS rn
+                FROM auditoria aud
+                WHERE col_afect 
+                IN ('id_usuario_asignado', 
+			    'id_gerente_asignado', 
+			    'id_subdirector_asignado', 
+			    'idStatusLote', 
+			    'totalNeto2', 
+			    'ubicacion', 
+			    'totalNeto', 
+			    'totalValidado', 
+			    'validacionEnganche', 
+			    'firmaRL', 
+			    'tipo_venta', 
+			    'registro_comision', 
+			    'status8Flag') $fechaLiberacion)
+
+        SELECT lo.idLote, 
+            MAX(CASE WHEN col_afect = 'id_usuario_asignado' THEN anterior END) AS asesor,
+            MAX(CASE WHEN col_afect = 'id_gerente_asignado' THEN anterior END) AS gerente,
+	        MAX(CASE WHEN col_afect = 'id_subdirector_asignado' THEN anterior END) AS subdirector,
+	        MAX(CASE WHEN col_afect = 'idStatusLote' THEN anterior END) AS statusLote,
+	        MAX(CASE WHEN col_afect = 'totalNeto2' THEN anterior END) AS totalNeto2,
+	        MAX(CASE WHEN col_afect = 'ubicacion' THEN anterior END) AS ubicacion,
+	        MAX(CASE WHEN col_afect = 'totalNeto' THEN anterior END) AS totalNeto,
+	        MAX(CASE WHEN col_afect = 'totalValidado' THEN anterior END) AS totalValidado,
+	        MAX(CASE WHEN col_afect = 'validacionEnganche' THEN anterior END) AS validacionEnganche,
+	        MAX(CASE WHEN col_afect = 'firmaRL' THEN anterior END) AS firmaRL,
+	        MAX(CASE WHEN col_afect = 'tipo_venta' THEN anterior END) AS tipoVenta,
+	        MAX(CASE WHEN col_afect = 'registro_comision' THEN anterior END) AS registroComision,
+	        MAX(CASE WHEN col_afect = 'status8Flag' THEN anterior END) AS status8Flag
+                FROM lotes lo
+                LEFT JOIN combinedCTE rc ON rc.id_parametro = lo.idLote AND rc.rn = 1
+                WHERE lo.idLote = ?
+            GROUP BY lo.idLote", $loteAnterior);
+
+        return $query->row();
+    }
+
+    public function getFechaLiberacion($idLoteAnterior){
+        $query = $this->db->query("WITH fechaLiberacion AS(
+            SELECT 
+                modificado AS fechaLiberacion,
+                idLote,
+                ROW_NUMBER() OVER ( PARTITION BY idLote ORDER BY fechaLiberacion DESC ) AS rn
+                FROM historial_liberacion hl 
+                WHERE idLote = ?
+            )
+
+        SELECT *FROM fechaLiberacion WHERE rn = 1", $idLoteAnterior);
+        
+        return $query->row();
     }
 }

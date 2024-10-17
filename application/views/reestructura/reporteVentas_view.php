@@ -1,6 +1,103 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
+<style>
+        #clienteConsulta .form-group {
+            margin: 0px !important;
+        }
+
+        #checkDS .boxChecks {
+            background-color: #eeeeee;
+            width: 100%;
+            border-radius: 27px;
+            box-shadow: none;
+            padding: 5px !important;
+        }
+
+        #checkDS .boxChecks .checkstyleDS {
+            cursor: pointer;
+            user-select: none;
+            display: block;
+        }
+
+        #checkDS .boxChecks .checkstyleDS span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 31px;
+            border-radius: 9999px;
+            overflow: hidden;
+            transition: linear 0.3s;
+            margin: 0;
+            font-weight: 100;
+        }
+
+        #checkDS .boxChecks .checkstyleDS span:nth-child(2) {
+            margin: 0 3px;
+        }
+
+        #checkDS .boxChecks .checkstyleDS span:hover {
+            box-shadow: none;
+        }
+
+        #checkDS .boxChecks .checkstyleDS input {
+            pointer-events: none;
+            display: none;
+        }
+
+        #checkDS .boxChecks .checkstyleDS input:checked+span {
+            transition: 0.3s;
+            font-weight: 400;
+            color: #0a548b;
+        }
+
+        #checkDS .boxChecks .checkstyleDS input:checked+span:before {
+            font-family: FontAwesome !important;
+            content: "\f00c";
+            color: #0a548b;
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .tituloDeshacer {
+            font-weight: 500;
+            font-size: 1.4em;
+
+        }
+
+        .textoDeshacer {
+            font-size: 1.5rem;
+        }
+
+        .accordion {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            transition: 0.4s;
+        }
+
+        .accordion:hover {
+            background-color: #ccc;
+        }
+
+        .panel {
+            padding: 0 18px;
+            display: none;
+            background-color: white;
+            overflow: hidden;
+        }
+
+        .coop {
+            display: 'none'
+        }
+    </style>
+    
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
         <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -81,6 +178,32 @@
                     <div class="modal-body">
                         <textarea class="text-modal scroll-styles" id="comentarioRe" rows="3" placeholder="Comentario"></textarea>
                         <br>
+                        <div class="container-fluid">
+                            <div class="row" id="opcionesRegreso"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="saveRegreso" class="btn btn-primary">ACEPTAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="regresoPreproceso" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <div class="modal-body text-center pt-0">
+                        <h4 id="tituloRegreso" class="tituloDeshacer"></h4>
+                        <h4 id="preProcesoActual" class="textoDeshacer"></h4>
+                        <div class="col-md-12">
+                            <label class="control-label">Motivo del rechazo (opcional)</label>
+                            <input class="text-modal mb-1" id="comentarioRe" name="comentarioRe" autocomplete="off">
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row" id="opcionesRegreso"></div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
