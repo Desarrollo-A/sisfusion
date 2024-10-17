@@ -2342,7 +2342,7 @@ AND vb.proyectos != 1";
         FROM
             proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-            INNER JOIN clientes cli ON cli.idLote = lo.idLote AND cli.id_cliente = pc.idCliente
+            LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.id_cliente = pc.idCliente
             INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
             INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
             INNER JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
