@@ -213,9 +213,13 @@ function changeSelects() {
 
             let parent = $(this).parent()
 
-            let div = parent.children('button').children('span.filter-option')
+            let button = parent.children('button')
 
-            div.html(title)
+            let div = button.children('span.filter-option')
+
+            if(button.attr('tabindex') === undefined){
+                div.html(title)
+            }
 
             $(this).attr('title', title)
 
