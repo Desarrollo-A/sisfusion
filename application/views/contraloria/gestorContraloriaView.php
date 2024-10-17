@@ -54,6 +54,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="modal fade" id="modalCambiotipoventa" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -61,17 +62,14 @@
                         <h4 class="modal-title text-center">Cambiar tipo de venta</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="form-group m-0">
-                                <h6 id="confirmarCambioEstatus"></h6>
-                                <div class="col-12">
-                                    <label class="control-label" for="">Tipo de venta</label>
+                        <row>
+                            <div class="col-12">
+                            <label class="control-label" for="">Tipo de venta</label>
                                     <select data-live-search="true" class="selectpicker select-gral"
                                         name="tipoVentaModal" id="tipoVentaModal" title="SELECCIONA UNA OPCIÓN">                
                                     </select>
-                                </div>
                             </div>
-                        </div>
+                        </row>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -81,11 +79,21 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="modalConfirmacionCambiotipoventa" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title text-center" id="mensajeConfirmacion"></h4> 
+                                             
+                    </div>
+                    <div class="modal-body">
+                        <row>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <h4 class="modal-title text-center" id="mensajeConfirmacion"></h4> 
+                                </div>
+                            </div>
+                        </row>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" id="cancelarConfirmacionTipoVenta" data-dismiss="modal">Cancelar</button>
@@ -210,13 +218,13 @@
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="proyecto">
                                         <label class="control-label" for="nombreLote">Proyecto</label>
                                         <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO"
-                                            id="selectProyecto">
+                                            id="selectProyecto" data-live-search="true">
                                         </select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="condominio">
                                         <label class="control-label" for="nombreLote">Condominio</label>
                                         <select class="selectpicker select-gral" title="SELECCIONA UN CONDOMINIO"
-                                            id="selectCondominio"></select>
+                                            id="selectCondominio" data-live-search="true"></select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="divBusquedaLote">
                                         <label class="control-label" for="nombreLote">Buscar Lote</label>
