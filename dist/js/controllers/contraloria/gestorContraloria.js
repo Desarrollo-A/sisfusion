@@ -15,11 +15,11 @@ let tablaTipoVenta, idLot, tipoVenta;
 let idRl = "";
 let idCliente   = "";
 let selectedRl = "";
+let selectedOpcion = "";
 
 $(document).ready(function () {
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
     $.getJSON("getOpcionesPorCatalogo").done(function (data) {
-        console.warn("data:", data);
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 155) {
                 if (data[i]['id_opcion'] == 1 && usuariosPermitidosRL.includes(id_usuario_general)) {
@@ -43,6 +43,7 @@ $(document).ready(function () {
 
 $(document).on('change', '#selector', function () {
     $("#divTablaRL, #divTablaIntercambio, #divmodelosTable").addClass("hide");
+    selectedOpcion = $(this).val();
     if ($(this).val() == 1) {
         $("#divTablaIntercambio").addClass("hide");
         $('#proyecto').addClass('hide');
@@ -84,7 +85,13 @@ $(document).on('change', '#selector', function () {
 
 $('#selectCondominio').change(function () {
     idOpcionCondominio = $(this).val();
-    crearTablaTipoVenta(idOpcionCondominio);
+    if(idOpcionCondominio!== null && idOpcionCondominio !== '' && idOpcionCondominio !== undefined){
+        if(selectedOpcion  == 4){
+            crearTablaTipoVenta(idOpcionCondominio);
+        }else  if(selectedOpcion  == 5){
+            ConstruirTablaCAmbiarRepresentante(idOpcionCondominio);
+        }
+    }
 });
 
 function crearTablaTipoVenta(idCondominio) {
@@ -260,6 +267,12 @@ function loadSelectOptions() {
             $("#idEstatus").append($('<option>').val(data[i]['idStatusLote']).text(data[i]['nombre']));
         }
         $("#idEstatus").selectpicker('refresh');
+    }, 'json');
+    $.post(`${general_base_url}OperacionesPorCatalogo/listacatalogo`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+        }
+        $("#cambiarrepresentante").selectpicker('refresh');
     }, 'json');
 }
 
@@ -873,7 +886,6 @@ $("#cambiarrepresentante").change(function () {
 
 function ConstruirTablaCAmbiarRepresentante(idCondominio){
     $("#divtablaCambiarRepresentanteLegal").removeClass("hide");
-        
     if(idCondominio){
         $('#tablaCambiarRepresentanteLegal thead tr:eq(0) th').each(function (i) {
             var title = $(this).text();
