@@ -42,6 +42,11 @@ $(document).ready(function () {
 
 
 $(document).on('change', '#selector', function () {
+    $('#selectCondominio').val('');
+    $('#selectCondominio').selectpicker('refresh');   
+    $('#selectProyecto').val('');
+    $('#selectProyecto').selectpicker('refresh');   
+
     $("#divTablaRL, #divTablaIntercambio, #divmodelosTable").addClass("hide");
     selectedOpcion = $(this).val();
     if ($(this).val() == 1) {
@@ -110,7 +115,7 @@ function crearTablaTipoVenta(idCondominio) {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Historial Contratación',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    columns: [0, 1, 2, 3, 4, 5],
                     format: {
                         header: function (d, columnIdx) {
                             return $(d).text().toUpperCase();
