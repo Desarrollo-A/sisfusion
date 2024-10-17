@@ -2,7 +2,7 @@ back_process = function (data) {
 
     let form = new Form({
         title: 'Regresar proceso',
-        text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a asignación de cartera?`,
+        text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a asignación de esquema y modelo de casa?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -13,7 +13,7 @@ back_process = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a asignación de cartera.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a de esquema y modelo de casa.`, "success");
         
                     table.reload()
                     form.hide();
