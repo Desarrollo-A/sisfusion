@@ -1734,7 +1734,7 @@ AND vb.proyectos != 1";
         FROM HistorialCte hct
         FULL OUTER JOIN proceso_casas_banco pc ON pc.idLote = hct.idLote 
         LEFT JOIN lotes lo ON lo.idLote = COALESCE(pc.idLote, hct.idLote)
-        LEFT JOIN clientes cli ON cli.idLote = lo.idLote ON cli.id_cliente = pc.idCliente
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.id_cliente = pc.idCliente
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
@@ -2566,7 +2566,7 @@ AND vb.proyectos != 1";
         if($idProceso == null) {
             return null;
         }
-        $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND estatus = 1";
+        $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND estatus IN (0, 1)";
         return $this->db->query($query)->row();
     }
 
@@ -2589,7 +2589,7 @@ AND vb.proyectos != 1";
         AND pcb.idProcesoCasas IS NOT NULL
         AND (pcb.estatus = 1)
         $extraColumns
-        GROUP BY lo.idLote, lo.nombreLote, cl.id_gerente_c, cl.id_asesor_c
+        GROUP BY lo.idLote, lo.nombreLote--, cl.id_gerente_c, cl.id_asesor_c
         ORDER BY lo.idLote";
 
         return $this->db->query($query)->result();
@@ -2622,7 +2622,7 @@ AND vb.proyectos != 1";
             FROM documentos_proceso_casas dpc
             LEFT JOIN proceso_casas_banco pcb ON pcb.idProcesoCasas = dpc.idProcesoCasas
             LEFT JOIN lotes lo ON lo.idLote = pcb.idLote
-            LEFT JOIN clientes cli ON cli.idLote = lo.idLote
+            LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.id_cliente = pcb.idCliente
             LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
             LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
             LEFT JOIN usuarios gerente ON gerente.id_usuario = cli.id_gerente_c
