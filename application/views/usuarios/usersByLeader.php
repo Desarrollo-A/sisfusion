@@ -19,14 +19,14 @@
                                         <table class="table-striped table-hover" id="users_datatable" name="users_datatable">
                                             <thead>
                                                 <tr>
-                                                <th> <span  data-i18n="estatus"> ESTATUS </span > </th>
-                                                    <th>ID</th>
-                                                    <th> <span data-i18n="nombre"  >NOMBRE  </span></th>
-                                                    <th> <span data-i18n="correo"  >CORREO  </span></th>
-                                                    <th> <span data-i18n="telefono">TELÉFONO</span></th>
-                                                    <th> <span data-i18n="tipo"  > TIPO</th>
-                                                    <th> <span data-i18n="jefe-directo">JEFE DIRECTO</span> </th>
-                                                    <th> <span data-i18n="sede"  > SEDE</th>
+                                                    <th>estatus</th>
+                                                    <th>id</th>
+                                                    <th>nombre</th>
+                                                    <th>correo</th>
+                                                    <th>telefono</th>
+                                                    <th>tipo</th>
+                                                    <th>jefe-directo</th>
+                                                    <th>sede</th>
                                                 </tr>
                                             </thead>
                                         </table>

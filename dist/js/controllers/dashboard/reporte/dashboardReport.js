@@ -138,7 +138,6 @@ async function initReport(){
         rolString = 'director_regional';
         optionLanguage = "director_regional";
     }
-        
     else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888' || idUserOnReport != '29' || idUserOnReport != '7401'))) {
         rolString = 'gerente';
         optionLanguage = "gerente";
@@ -253,7 +252,7 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canConId = null, canApt = null){
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canApt = null, canConId = null){
     $('body').i18n();
     let currentLanguage = localStorage.getItem('locale');
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
@@ -307,7 +306,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte de ventas por '+option ,
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -327,27 +326,21 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                                     return 'APARTADO';
                                     break;
                                 case 6:
-                                    return 'SEDE APARTADOS'
+                                    return 'CANCELADOS';
                                     break;
                                 case 7:
-                                    return 'CANCELADOS';
-                                    break;
-                                case 8:
                                     return 'PORCENTAJE DE CANCELADOS';
                                     break;
-                                case 9:
+                                case 8:
                                     return 'NÚMERO DE LOTES CONTRATADOS';
                                     break;
-                                case 10:
+                                case 9:
                                     return 'CONTRATADOS';
                                     break;
-                                case 11:
-                                    return 'SEDE CONTRATADOS';
-                                    break;
-                                case 12:
+                                case 10:
                                     return 'CANCELADOS';
                                     break;
-                                case 13:
+                                case 11:
                                     return 'PORCENTAJE DE CANCELADOS';
                                     break;
                             }
@@ -516,11 +509,22 @@ function getLeadersLine (leadersList, id_usuario, id_lider) {
     }
     else if (leadersList[6] == 5 && (idUser != 28 || idUser != 30 || idUser != 4888 || idUser != 29 || idUser != 7401)) { 
         // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
-        if( idLider == 7092 )
+        if( idLider == 7092 || idLider == 15316 || idLider == 11)
             leadersList[5] = 3;
-        else if ( idLider == 681 || idLider == 9471 )
+        else if ( idLider == 681 || idLider == 9471  || idLider == 2411 || idLider == 9783 || idLider == 896)
             leadersList[5] = 607;
+        else if (idLider == 13549 || idLider == 13546 || idLider == 13589)
+            leadersList[5] = 13546;
+        else if( idLider == 5 || idLider == 7886)
+            leadersList[5] = 5;
+        else if( idLider == 11650)
+            leadersList[5] = 11650;
+        else if(idLider == 4 || idLider == 703 || idLider == 19) 
+            leadersList[5] = 4;
+        else if(idLider == 6626 || idLider == 690)
+            leadersList[5] = 6626;
         else leadersList[5] = 0;
+        
 
         leadersList[4] = idLider;
         leadersList[3] = id_usuario;
@@ -748,10 +752,9 @@ $(document).on('click', '.btnSub', function () {
         gerente: $(this).data("ge"),
         subdirector: $(this).data("su"),
         regional: $(this).data("dr"),
-        sede:  $(this).data("sede"),
-        aptid : $(this).data('aptid'),
+        aptid: $(this).data('aptid'),
         contid: $(this).data('contid'),
-        canaptid : $(this).data('canaptid'),
+        canaptid: $(this).data('canaptid'),
         cancontid: $(this).data('cancontid')
     }
     //initDetailRow(data);
@@ -822,7 +825,6 @@ async function chartDetail(e, tipoChart){
     $("#modalChart #type").val('');
 
     var nameChart = (titleCase($(e).data("name").replace(/_/g, " "))).split(" ");
-    console.log("nameChart: ", nameChart);
     $(".boxModalTitle .title").append('<p class="mb-1">' + _(nameChart[0]) + '<span class="enfatize"> '+ _(nameChart[1]) +'</span></p>');
     let fecha_inicio = $('.moreMiniChart ').attr('data-fi');
     let fecha_fin    = $('.moreMiniChart ').attr('data-ft');
@@ -976,7 +978,6 @@ function loaderCharts(){
 };
 
 function orderedDataChart(data){
-    console.log("data: ", data);
     let allData = [], totalMes = [], meses = [], series = [];
     for( i=0; i<data.length; i++){
         let { tipo, rol, total, mes, año } = data[i];
@@ -1034,7 +1035,6 @@ function buildAllDataChart(allData, nameTypeChart, series, meses){
 }
 
 function monthName(mon){
-    //var monthName = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mon - 1];
     var monthName = [_('enero'),_('febrero'),_('marzo'),_('abril'),_('mayo'),_('junio'),_('julio'),_('agosto'),_('septiembre'),_('octubre'),_('noviembre'),_('diciembre')][mon - 1];
     return monthName;
 }
@@ -1214,12 +1214,10 @@ function createDetailRow(row, tr, dataObj){
         subdirector: dataObj.subdirector,
         regional: dataObj.regional,
         filters: filters,
-        sede:dataObj.sede,
         contid: dataObj.contid,
         aptid: dataObj.aptid,
         canaptid: dataObj.canaptid,
         cancontid: dataObj.cancontid
-        
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
@@ -1386,31 +1384,17 @@ $(document).on('click', '.btnModalDetails', function () {
         regional: $(this).data("dr")
     }
     fillTableReport(dataObject);
-    if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
+    if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4){
         $("#seeInformationModalReport").modal();
     }
     else {
         $("#seeInformationModalCancelados").modal();
     }
-        
 });
 
 function fillTableReport(dataObject) {
     filters = validateFilters();
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
-        /*$('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
-            const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-            $('input', this).on('keyup change', function () {
-                if(i != 0){
-                    if ($("#lotesInformationTable").DataTable().column(i).search() !== this.value) {
-                        $("#lotesInformationTable").DataTable().column(i).search(this.value).draw();
-                    }
-                }
-            });
-            $('[data-toggle="tooltip"]').tooltip();
-
-        });*/
         construirHead("lotesInformationTable");
 
         generalDataTable = $('#lotesInformationTable').dataTable({
@@ -1423,7 +1407,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1552,12 +1536,16 @@ function fillTableReport(dataObject) {
                             return 'ESTÁNDAR';
                     }
                 },
+                { data: 'sedeNombre'},
                 {
                     data: function (d) {
-                        return d.modalidad;
+                        if (d.idClienteCompartida == null) {
+                            return 'NORMAL';
+                        } else {
+                            return 'COMPARTIDA';
                     }
                 }
-                
+                }
             ],
             columnDefs: [{
                 visible: false,
@@ -1570,10 +1558,8 @@ function fillTableReport(dataObject) {
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                    "aptid":dataObject.aptid,
-                    "contid":dataObject.contid,
-                  //  "canaptid":dataObject.canaptid,
-                    //"cancontid":dataObject.cancontid,
+                    "aptid": dataObject.aptid,
+                    "contid": dataObject.contid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1590,23 +1576,6 @@ function fillTableReport(dataObject) {
             }
         });
     } else{
-
-        /*$('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
-            const title = $(this).text();
-            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-
-            $('input', this).on('keyup change', function () {
-                if(i != 0){
-                    if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
-                        $("#lotesInformationTableCancelados").DataTable().column(i)
-                            .search(this.value).draw();
-                    }
-                }
-            });
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-        */
-        
         construirHead("lotesInformationTableCancelados");
 
         generalDataTable = $('#lotesInformationTableCancelados').dataTable({
@@ -1690,14 +1659,16 @@ function fillTableReport(dataObject) {
                                         return 'APARTADO';
                                         break;
                                     case 22:
+                                        return 'SEDE';
+                                        break;
+                                    case 23: 
                                         return 'MODALIDAD';
                                         break;
-                                    
+                                    }
                                 }
                             }
                         }
                     }
-                }
             ],
             pagingType: "full_numbers",
             lengthMenu: [
@@ -1842,8 +1813,17 @@ function fillTableReport(dataObject) {
                     }
                 },
                 {
-                    data: function(d) {
-                        return d.modalidad;
+                    data: function (d) {
+                        return d.sedeNombre;
+                    }
+                },
+                {
+                    data: function (d) {
+                        if (d.idClienteCompartida == null) {
+                            return 'NORMAL';
+                        } else {
+                            return 'COMPARTIDA';
+                        }
                     }
                 }
             ],
@@ -1859,10 +1839,6 @@ function fillTableReport(dataObject) {
                     
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                   // "aptid": dataObject.aptid,
-                    //"contid":dataObject.contid,
-                    "canaptid":dataObject.canaptid,
-                    "cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1914,3 +1890,7 @@ function setListEstatus(){
         $("#estatusContratacion").selectpicker('refresh');
     });
 }
+
+$(window).resize(function(){
+    $(`#table${optionTable}`).DataTable().columns.adjust();
+});

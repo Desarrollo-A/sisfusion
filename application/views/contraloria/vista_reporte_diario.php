@@ -1,8 +1,9 @@
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
 <body class="">
     <div class="wrapper ">
-        <?php  $this->load->view('template/sidebar'); ?>
+        <?php $this->load->view('template/sidebar'); ?>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -16,17 +17,17 @@
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" data-i18n="registro-diario">Registro diario </h3>
                                 </div>
-                                <div  class="toolbar">
+                                <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 col-md-offset-9 col-lg-offset-9 p-0">
-                                            <div class="form-group  select-is-empty">
-                                                <input  id="calendarioDay" name="calendarioDay" type="date" class="form-control input-gral" />
+                                        <div class="col-xs-12 col-sm-12 w-100">
+                                            <div class="form-group select-is-empty">
+                                                <input id="calendarioDay" name="calendarioDay" type="date" class="form-control input-gral" style="float: right;" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <table  id="tabla_ingresar_6" name="tabla_ingresar_6" class="table-striped table-hover">
+                                    <table id="tabla_ingresar_6" name="tabla_ingresar_6" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>proyecto</th>
@@ -47,13 +48,12 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+        <?php $this->load->view('template/footer_legend'); ?>
     </div>
-</div>
-</div>
+    </div>
+    </div>
 </body>
-<?php $this->load->view('template/footer');?>
+<?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/vista_reporte_diario.js"></script>
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-

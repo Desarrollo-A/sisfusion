@@ -70,7 +70,7 @@ const formatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
 });
 
-
+/*
 let titulosInventario = [];
 $('#tableLotificacionNeodata thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
@@ -81,10 +81,11 @@ $('#tableLotificacionNeodata thead tr:eq(0) th').each(function (i) {
             $('#tableLotificacionNeodata').DataTable().column(i).search(this.value).draw();
         }
     });
-});
+});*/
 
 function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, fechaFin, dates) {
-    generalDataTableNeoData = $('#tableLotificacionNeodata').dataTable({
+    construirHead("tableLotificacionNeodata");
+        var generalDataTableNeoData= $('#tableLotificacionNeodata').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -93,12 +94,12 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
+            titleAttr: `${_('descargar-excel')}`,
             exportOptions: {
                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
                 format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx] + ' ';
+                    header:  function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -255,7 +256,10 @@ function fillTableLotificacionNeoData(empresa, idProyecto, idCliente, fechaIni, 
             $("#spiner-loader").addClass('hide');
             $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
         }
+
     });
+    applySearch(generalDataTableNeoData);
+
 }
 
 $(document).on('change', "#empresas", function () {

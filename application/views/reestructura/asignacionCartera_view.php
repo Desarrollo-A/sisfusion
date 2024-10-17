@@ -179,6 +179,7 @@
                                                 <th>COSTO M2 FINAL</th>
                                                 <th>TOTAL</th>
                                                 <th>ASIGNADO A</th>
+                                                <th>ESTATUS CANCELACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

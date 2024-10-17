@@ -32,9 +32,11 @@ $(document).ready(function () {
                     $('#spiner-loader').addClass('hide');
                 }, 1500);
             });
+
+            $('#msg').prop('hidden', true);
         }
         else {
-            $('#msg').append(`<center><h2 style="color: #a0a0a0;font-weight: 100" data-i18n="no-files-available">No hay Carpetas disponibles</h2></center>`);
+            $('#msg').removeAttr('hidden');
         }
     }, 'json');
 });

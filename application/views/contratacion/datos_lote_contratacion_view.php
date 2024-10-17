@@ -4,19 +4,23 @@
     .open{
         max-width: -webkit-fill-available;
     }
+
+    .notAllowedClass:hover {
+        cursor: not-allowed;
+    }
 </style>
 <body>
-<?php
-if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
-    $statusInput = '';
-    $classAllowed = '';
-    $classWidth = 'w-50';
-}else{
-    $statusInput = 'disabled';
-    $classAllowed = 'notAllowedClass';
-    $classWidth = 'w-100';
-}
-?>
+    <?php
+        if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73)) || in_array($this->session->userdata('id_usuario'), array(9897))) {
+            $statusInput = '';
+            $classAllowed = '';
+            $classWidth = 'w-50';
+        }else{
+            $statusInput = 'disabled';
+            $classAllowed = 'notAllowedClass';
+            $classWidth = 'w-100';
+        }
+    ?>
 <div class="wrapper">
     <?php $this->load->view('template/sidebar'); ?>
 
@@ -62,7 +66,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                         <th>estatus</th>
                                                         <th>detalles</th>
                                                         <th>comentario</th>
-                                                        <th>fecha-estatus</th>
+                                                        <th>fecha-de-estatus</th>
                                                         <th>usuario</th>
                                                     </tr>
                                                     </thead>
@@ -179,9 +183,15 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <input class="d-none generate" type="radio" name="tipoVista"
                                                        id="condominioM" checked value="1">
                                                 <label for="condominioM" class="w-50" data-i18n="inventario-lotes">Inventario Lotes</label>
-                                                <input class="d-none find-results" type="radio" name="tipoVista"
-                                                       id="loteM" value="0">
-                                                <label for="loteM" class="w-50" data-i18n="descargar-inventario-sede">Descargar inventario sede</label>
+                                                <?php
+
+                                                if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73)) || in_array($this->session->userdata('id_usuario'), array(9897))) {
+                                                            echo '
+                                                            <input class="d-none find-results" type="radio" name="tipoVista"
+                                                       id="loteM" value="0"  '.$statusInput.'  >
+                                                        <label for="loteM" class="w-50" data-i18n="descargar-inventario-sede'.$classAllowed.'">Descargar inventario sede</label>';
+                                                }
+                                                ?>
                                             </div>
                                         </div>
                                     </div>
@@ -220,6 +230,13 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                             <thead>
                                             <tr>
                                                 <th>proyecto</th>
+                                                <th>condominio</th>
+                                                <th>lote</th>
+                                                <th>id-lote</th>
+                                                <th>superficie</th>
+                                                <th>precio-lista</th>
+                                                <th>total-con-descuentos</th>
+                                                <th>m2</th>
                                                 <th>referencia</th>
                                                 <th>meses-sin-intereses</th>
                                                 <th>asesor</th>
@@ -246,7 +263,6 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>ubicacion</th>
                                                 <th>tipo-proceso</th>
                                                 <th>sede</th>
-                                                <!--solo para popea y el otro sujeto-->
                                                 <th>folio</th>
                                                 <th>documentacion-entregada</th>
                                                 <th>nom-cliente</th>
@@ -274,18 +290,16 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>costo-m2-final</th>
                                                 <th>en-el-municipio-de</th>
                                                 <th>importe-de-la-oferta</th>
-                                                <th>importe-en-letra</th><!--60-->
+                                                <th>importe-en-letra</th>
                                                 <th>saldo-del-posito</th>
                                                 <th>aportacion-mensual</th>
                                                 <th>fecha-1-aportacion</th>
                                                 <th>fecha-liquidacion</th>
                                                 <th>fecha-2da-liquidacion</th>
                                                 <th>referencias-personales</th>
-                                                <th>observaciones-2</th>
-                                                <!--solo para popea y el otro sujeto end-->
+                                                <th>observaciones</th>
                                                 <th>porcentaje-enganche</th>
-                                                <th>acciones</th><!--69-->
-
+                                                <th>acciones</th>
                                             </tr>
                                             </thead>
                                         </table>
@@ -296,7 +310,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                             <div class="row hide" id="card2">
                                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="encabezadoBox">
-                                        <h3 class="card-title center-align" data-i18n="Descargar-inventario-lote-sede">Descargar inventario de lotes por sede</h3>
+                                        <h3 class="card-title center-align" data-i18n="descarga-inventario-lotes-sede">Descargar inventario de lotes por sede</h3>
                                         <p class="card-title pl-1"></p>
                                     </div>
                                     <div  class="toolbar">
@@ -306,8 +320,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                     <div class="form-group select-is-empty">
                                                         <label class="control-label" data-i18n="sedes-por-proyectos">Sedes por proyecto</label>
                                                         <select name="sedes" id="sedes" class="selectpicker select-gral m-0"
-                                                                data-style="btn" data-show-subtext="true"  data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN"                                                                
-                                                                data-size="7" data-live-search="true" required>
+                                                                data-style="btn" data-show-subtext="true"  data-i18n-label="selecciona-una-opcion" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" required>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -340,9 +353,10 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>comentario</th>
                                                 <th>lugar-prospeccion</th>
                                                 <th>fecha-de-validacion-del-enganche</th>
-                                                <th>fecha-apertura</th>
                                                 <th>CANTIDAD DEL ENGANCHE PAGADO</th>
+                                                <th>estatus-de-la-contratacion</th>
                                                 <th>cliente</th>
+                                                <th>copropietario</th>
                                                 <th>cpmentario-neodata</th>
                                                 <th>fecha-apertura</th>
                                                 <th>apartado-de-reubicacion</th>

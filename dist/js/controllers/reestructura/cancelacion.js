@@ -13,13 +13,16 @@ $(document).ready(function () {
         $('#spiner-loader').addClass('hide');
     }, 'json');
 
-     //OBTIENE LOS TIPOS DE CANCELACIONES
-     $.post(`${general_base_url}General/getOpcionesPorCatalogo/117`, function (data) {
-        for (var i = 0; i < data.length; i++) {
+    $.getJSON("getOpcionesModuloCancelacion").done(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i]['id_catalogo'] == 117)
             $("#tipoCancelacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            if (data[i]['id_catalogo'] == 160)
+                $("#accionCancelacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
         }
-        $("#tipoCancelacion").selectpicker('refresh');
-    }, 'json');
+        $('#tipoCancelacion').selectpicker('refresh');
+        $('#accionCancelacion').selectpicker('refresh');
+    });
 });
 
 $('#proyecto').change(function () {
@@ -46,22 +49,30 @@ $(document).on('click', '.cancel', function () {
     $('#idCliente').val($(this).attr('data-idCliente'));
     $('#obsSolicitudCancel').val('');
     $('#tipoCancelacion').val('').selectpicker('refresh');
+    $('#accionCancelacion').val('').selectpicker('refresh');
+    $("#divTipoCancelacion").addClass("hide");
     $('#cancelarLote').modal();
 });
 
-$(document).on('click', '#saveCancel', function () {
+$(document).on('click', '#save', function () {
     const idLote = $("#idLote").val();
     const idCliente = $("#idCliente").val();
     const obsSolicitudCancel = $("#obsSolicitudCancel").val();
     const tipoCancelacion = $("#tipoCancelacion").val();
     const tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
-    if (obsSolicitudCancel.trim() == '' || tipoCancelacion == '') {
-        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación..", "warning");
+    const accionSeleccionada = $("#accionCancelacion").val();
+    console.log(accionSeleccionada);
+    if (accionSeleccionada == '') {
+        alerts.showNotification("top", "right", "Para continuar asegúrate de seleccionar la acción.", "warning");
+        return false;
+    } else if (accionSeleccionada == 1 && obsSolicitudCancel.trim() == '') {
+        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación.", "warning");
+        return false;
+    } else if (accionSeleccionada == 2 && (obsSolicitudCancel.trim() == '' || tipoCancelacion == '')) {
+        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación.", "warning");
         return false;
     }
-    
     $("#spiner-loader").removeClass('hide');
-    
     const datos = new FormData();
     datos.append("idLote", idLote);
     datos.append("idCliente", idCliente);
@@ -69,6 +80,7 @@ $(document).on('click', '#saveCancel', function () {
     datos.append("tipoCancelacionNombre", tipoCancelacionNombre);
     datos.append("obsLiberacion", obsSolicitudCancel);
     datos.append("tipoLiberacion", 3);
+    datos.append("accionSeleccionada", accionSeleccionada);
     $.ajax({
         method: 'POST',
         url: `${general_base_url}Reestructura/aplicarLiberacion`,
@@ -80,13 +92,13 @@ $(document).on('click', '#saveCancel', function () {
                 $('#tabla_lotes').DataTable().ajax.reload(null, false);
                 $("#spiner-loader").addClass('hide');
                 $('#cancelarLote').modal('hide');
-                alerts.showNotification("top", "right", "Opción editada correctamente.", "success");
+                alerts.showNotification("top", "right", "Proceso ejecutado de manera correcta.", "success");
                 $('#idLote').val('');
                 $('#nombreLote').val('');
                 $('#idCliente').val('');
                 $('#obsSolicitudCancel').val('');
             }
-            else{
+            else {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         },
@@ -110,7 +122,7 @@ function fillTable(index_proyecto) {
                 titleAttr: 'Reestructuración',
                 title: 'Reestructuración',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -159,6 +171,11 @@ function fillTable(index_proyecto) {
             { data: 'usuarioLiberacion' },
             {
                 data: function (d) {
+                    return `<span class='label ${d.labelInicioCancelacion}'>${d.textoInicioCancelacionFlag}</span>`;
+                }
+            },
+            {
+                data: function (d) {
                     if (d.consulta == 1) {
                         return `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELACIÓN DE CONTRATO" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-nombreLote="${d.nombreLote}"><i class="fas fa-times"></i></button>`;
                     }
@@ -191,5 +208,13 @@ function fillTable(index_proyecto) {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
+    });
+
+    $('#accionCancelacion').change(function () {
+        $("#accionSeleccionada").val($(this).val());
+        if ($(this).val() == 1) // INICIO DE CANCELACIÓN
+            $("#divTipoCancelacion").addClass("hide");
+        else // CANCELAR
+            $("#divTipoCancelacion").removeClass("hide");
     });
 }

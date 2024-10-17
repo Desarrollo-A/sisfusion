@@ -12,12 +12,12 @@
 						<h2>ERROR</h2>
 						<h2 class="enfasis">&nbsp;404</h2>
 					</div>
-					<h3 class="m-0">No encontramos la página a la que quieres acceder</h3>
+					<h3 class="m-0" data-i18n="pagina-no-encontrada" data-i18n="pagina-no-encontrada">No encontramos la página a la que quieres acceder</h3>
 					<br>
 					<br>
 					<br>
 <!--					<a href="--><?//=base_url()?><!--" class="enfasis"> <i class="fa fa-chevron-left"></i> Regresar </a>-->
-					<a onClick="validateFunction(); backAction();" class="enfasis hide" id="backHistory"> <i class="fa fa-chevron-left" style="cursor: pointer"></i> Regresar </a>
+					<a onClick="validateFunction(); backAction();" class="enfasis hide" id="backHistory"> <i class="fa fa-chevron-left" style="cursor: pointer"></i> <span data-i18n="regresar-404">Regresar</span> </a>
 				</div>
 			</div>
 		</div>
@@ -35,11 +35,11 @@
             let palabrasCoincidencia = 'documentos/cliente/expediente/';
             // let palabrasCoincidencia = 'Documentacion/archivo/';
 
-            console.log(
-                `La palabra "${palabrasCoincidencia}" ${
-                    rutaActual.includes(palabrasCoincidencia) ? 'si está' : 'NO está'
-                } en el string`,
-            );
+            // console.log(
+            //     `La palabra "${palabrasCoincidencia}" ${
+            //         rutaActual.includes(palabrasCoincidencia) ? 'si está' : 'NO está'
+            //     } en el string`,
+            // );
 
             if(!rutaActual.includes(palabrasCoincidencia)){
                 $('#backHistory').removeClass('hide');

@@ -2089,10 +2089,10 @@ class Api extends CI_Controller
                     echo json_encode(array("status" => -1, "message" => "Token inválido, verifica el valor proporcionado."), JSON_UNESCAPED_UNICODE);
                 else {
                     $data = json_decode(file_get_contents("php://input"));
-                    if (!isset($data->nombre) || !isset($data->correo) || !isset($data->telefono) || !isset($data->lugar_prospeccion) || !isset($data->avisos))
+                    if (!isset($data->nombre) || !isset($data->correo) || !isset($data->telefono) || !isset($data->origen) || !isset($data->ciudad) || !isset($data->anuncios))
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
                     else {
-                        if ($data->nombre == "" || $data->correo == "" || $data->telefono == "" || $data->lugar_prospeccion == "" || $data->avisos == "")
+                        if ($data->nombre == "" || $data->correo == "" || $data->telefono == "" || $data->origen == "" || $data->ciudad == "" || $data->anuncios == "")
                             echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
                         else {
                             $dataArray = array(
@@ -2109,14 +2109,14 @@ class Api extends CI_Controller
                                 "correo" => $data->correo,
                                 "telefono" => $data->telefono,
                                 "lugar_prospeccion" => 62, 
-                                "otro_lugar" => $data->lugar_prospeccion,
+                                "otro_lugar" => '0',
                                 "plaza_venta" => 0,
                                 "fecha_creacion" => date("Y-m-d H:i:s"),
                                 "creado_por" => 1,
                                 "fecha_modificacion" => date("Y-m-d H:i:s"),
                                 "modificado_por" => 1,
                                 "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
-                                "observaciones" => $data->avisos
+                                "observaciones" => $data->anuncios
                             );
                             $dbTransaction = $this->General_model->addRecord("prospectos", $dataArray); // MJ: LLEVA 2 PARÁMETROS $table, $data
                             if ($dbTransaction) // SUCCESS TRANSACTION

@@ -127,6 +127,7 @@ let columns = [
         data: function (data) {
             switch (data.tipoMovimiento) {
                 case 1:
+                case 4:
                     clase = 'warning'
                     break
                 case 2:

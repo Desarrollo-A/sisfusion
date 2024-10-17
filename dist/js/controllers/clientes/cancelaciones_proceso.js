@@ -1,5 +1,5 @@
 let titulosTabla = [];
-let tablaCancelaciones;
+// let tabla_6;
 
 const ESTATUS_CANCELACIONES = Object.freeze({
     CANCELACION: 1,
@@ -31,22 +31,11 @@ $(document).ready(function () {
     setIniDatesXYear('#beginDate', '#endDate');
     fillTable(convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val()), convertDateDDMMYYYYToYYYYMMDD($('#endDate').val()));
 });
-// $('#cancelacionesTabla thead tr:eq(0) th').each(function (i) {
-//     const title = $(this).text();
-//     titulosTabla.push(title);
-//     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-//     $('input', this).on('keyup change', function () {
-//         if ($('#cancelacionesTabla').DataTable().column(i).search() !== this.value) {
-//             $('#cancelacionesTabla').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-//     $('[data-toggle="tooltip"]').tooltip();
-// });
 
 function fillTable(fechaInicio, fechaFin) {
     construirHead('cancelacionesTabla');
-    tablaCancelaciones = $('#cancelacionesTabla').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+    tabla_6 = $('#cancelacionesTabla').DataTable({
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
         buttons: [
@@ -54,13 +43,14 @@ function fillTable(fechaInicio, fechaFin) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Lotes cancelados en proceso',
-                title:"Lotes cancelados en proceso",
+                titleAttr:`${_('descargar-excel')}`,
+                filename:`${_('lotes-cacelados-en-proceso')}`,
+                title: `${_('lotes-cacelados-en-proceso')}`,
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosTabla[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -69,15 +59,16 @@ function fillTable(fechaInicio, fechaFin) {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
-                titleAttr: 'Lotes cancelados en proceso',
-                title:"Lotes cancelados en proceso",
+                titleAttr:`${_('descargar-pdf')}`,
+                filename:`${_('lotes-cacelados-en-proceso')}`,
+                title: `${_('lotes-cacelados-en-proceso')}`,
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    columns: [0,1,2,3,4,5,6,7,8,9,10,11],
                     format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulosTabla[columnIdx] + ' ';
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -94,7 +85,7 @@ function fillTable(fechaInicio, fechaFin) {
         fixedColumns: true,
         ordering: false,
         language: {
-            url: general_base_url+"static/spanishLoader_v2.json",
+            url: general_base_url + "static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -127,7 +118,7 @@ function fillTable(fechaInicio, fechaFin) {
                         <button class="btn-data btn-warning btn-cancelar"
                                 data-toggle="tooltip" 
                                 data-placement="left"
-                                title="CANCELAR LOTE"
+                                title="${_("cancelar-lote")}"
                                 data-idCliente="${d.idCliente}">
                             <i class="fa fa-close"></i>
                         </button>
@@ -151,7 +142,7 @@ function fillTable(fechaInicio, fechaFin) {
             });
         },
     });
-    applySearch();
+    applySearch(tabla_6);
 }
 $(document).on('click', '#filtrarPorFecha', function () {
     const fechaInicio = convertDateDDMMYYYYToYYYYMMDD($('#beginDate').val());
@@ -196,7 +187,7 @@ function guardarCancelacion(idCliente) {
             $('#spiner-loader').addClass('hide');
             if (res.code === 200) {
                 alerts.showNotification("top", "right", `${_('registro-actualizado')}`, "success");
-                tablaCancelaciones.ajax.reload();
+                tabla_6.ajax.reload();
             }
             if (res.code === 400) {
                 alerts.showNotification("top", "right", res.message, "warning");

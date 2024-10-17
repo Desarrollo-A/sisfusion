@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    construirHead("tablaLista");
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({ locale: 'es' });
     setIniDatesXYear("#beginDate", "#endDate");
@@ -27,6 +26,7 @@ sp = { // MJ: DATE PICKER
 }
 
 function filltablaLista(beginDate, endDate) {
+    construirHead("tablaLista");
     tabla_6= $("#tablaLista").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
@@ -42,7 +42,7 @@ function filltablaLista(beginDate, endDate) {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -118,8 +118,12 @@ function filltablaLista(beginDate, endDate) {
             }
         }
     });
+    applySearch(tabla_6);
     $('#box-listaProspectos').removeClass('hide');
     $('#spiner-loader').addClass('hide');
+
+    applySearch(tabla_6);
+
 }
 
 $('#tablaLista').on('draw.dt', function () {

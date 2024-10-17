@@ -131,7 +131,7 @@ $('#catalogo_nuevas').change( function(){
 function modalHistorial(){
     changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-header">
-                    <h5 ><b> data-i18n="${ _("bitacora-cambios") }"  </b></h5>
+                    <h5 ><b> ${ _('bitacora-cambios') }  </b></h5>
                 </div>
                 <div class="modal-body">
                     <div role="tabpanel">
@@ -801,7 +801,7 @@ function comisionesTableResguardo(proyecto,condominio){
         {
             "orderable": false,
             "data": function(d) {
-                return '<p class="m-0"><span class="label lbl-green">RESGUARDO PERSONAL</span></p>';
+                return '<p class="m-0"><span class="label lbl-green">'+ _("") +'</span></p>';
             }
         },
         {

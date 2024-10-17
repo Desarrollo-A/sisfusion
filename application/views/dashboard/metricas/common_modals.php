@@ -55,7 +55,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Desglose de lotes</h4>
+				<h4 class="modal-title" data-i18n="desglose-lotes">Desglose de lotes</h4>
 			</div>
 			<div class="modal-body" style="padding-botom:0px">
         <div class="row">
@@ -63,18 +63,18 @@
             <table id="lotesDetailTableMetricas" class="table-striped table-hover w-100 dataTable no-footer">
                 <thead>
                     <tr>
-                        <th>PROYECTO</th>
-                        <th>CONDOMINIO</th>
-                        <th>LOTE</th>
-                        <th>CLIENTE</th>
-                        <th>ASESOR</th>
-                        <th>COORDINADOR</th>
-                        <th>GERENTE</th>
-                        <th>SUBDIRECTOR</th>
-                        <th>DIRECTOR REGIONAL</th>
-                        <th>FECHA DE APARTADO</th>
-                        <th>SUPERFICIE</th>
-                        <th>TOTAL</th>
+                        <th>proyecto</th>
+                        <th>condominio</th>
+                        <th>lote</th>
+                        <th>cliente</th>
+                        <th>asesor</th>
+                        <th>coordinador</th>
+                        <th>gerente</th>
+                        <th>subdirector</th>
+                        <th>director-regional</th>
+                        <th>fecha-apartado</th>
+                        <th>superficie</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
             </table>
@@ -82,7 +82,7 @@
         </div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+				<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar</button>
 			</div>
 		</div>
 	</div>

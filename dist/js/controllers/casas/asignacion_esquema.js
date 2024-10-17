@@ -72,9 +72,9 @@ avanzar_proceso = function(data) {
             new HiddenField({ id: 'idCliente', value: data.id_cliente }),
             new HiddenField({ id: 'idGerente', value: data.id_gerente_c}),
             new HiddenField({id: 'idSubdirector', value: data.id_subdirector_c}),
-            new SelectField({ id: 'esquemaCredito', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true}),
-            new MultiSelectField({ id: 'modeloCasa', label: 'Propuestas de casas', data: modeloCasa, placeholder: 'Seleccciona una opción', width: '12', required: true}),
-            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
+            new SelectField({ id: 'esquemaCredito', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema, required: true, value: data.esquemaCreditoCasas}),
+            new MultiSelectField({ id: 'modeloCasa', label: 'Propuestas de casas', data: modeloCasa, placeholder: 'Seleccciona una opción', width: '12', required: true, value: data.idPropuestaCasa}),
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' })
         ],
     })
 
@@ -82,7 +82,92 @@ avanzar_proceso = function(data) {
     multipleSelect('modeloCasa');
 }
 
+rechazo_avance_proceso = function(data) {
 
+    let form = new Form({
+        title: 'Continuar proceso',
+        text: `Para continuar el proceso del lote <b>${data.nombreLote}</b> se debe asignar  un esquema de crédito y seleccionar un modelo de casa`,
+        onSubmit: function (data) {
+            form.loading(true);
+            let form2 = new FormConfirm({
+                title: '¿Estás seguro de continuar el proceso?',
+                onSubmit: function(){
+                    form2.loading(true);
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}casas/actualizarPreProceso`,
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        success: function (resp){
+                            alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente", "success"),
+                            table.reload();
+                            form2.hide();
+                            form.hide();
+                            form2.loading(false);
+                        },
+                        error: function() {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                            form.loading(false);
+                            form2.loading(false);
+                            form2.hide();
+                        }
+                    })
+                }
+            });
+            form2.show();
+            form.loading(false);
+        },
+        fields: [
+            new HiddenField({ id: 'idLote', value: data.idLote}),
+            new HiddenField({ id: 'idCliente', value: data.id_cliente}),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas}),
+            new HiddenField({ id: 'idProcesoDirecto', value: data.idProcesoDirecto}),
+            new HiddenField({ id: 'esquemaCreditoActual', value: data.esquemaCreditoCasas}),
+            new SelectField({ id: 'esquemaCreditoNuevo', label: 'Esquema de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipoEsquema,required: true}),
+            new MultiSelectField({id: 'modeloCasa', label: 'Propuestas de casas', data: modeloCasa, placeholder: 'Selecciona una opción', width: 12, required: true}),
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12'})
+        ]
+    })
+    form.show();
+    multipleSelect('modeloCasa');
+}
+
+back_process = function(data) {
+    let form = new Form({
+        title: 'Regresar proceso',
+        text: `¿Deseas regresar el proceso del lote <b>${data.nombreLote}</b> a asignación de cartera?`,
+        onSubmit: function (data) {
+            form.loading(true)
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/back_to_asignacion_cartera`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a asignación de cartera.`, "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'idCliente', value: data.id_cliente }),
+            new HiddenField({ id: 'idGerente', value: data.idGerente }),
+            new HiddenField({ id: 'idLote', value: data.idLote }),
+        ],
+    })
+
+    form.show()
+}
 
 cancel_process = function (data) {
 
@@ -182,14 +267,32 @@ let columns = [
     },
     { data: 'correo' },
     { data: 'lugar_prospeccion' },
+    { data: function (data) {
+        let clase = '';
+
+        switch(data.tipoMovimiento){
+            case 4 :
+                clase = "warning";
+                break;
+            default :
+                clase = "blueMaderas";
+                break;
+        }
+
+        return `<span class="label lbl-${clase}">${data.nombreMovimiento}</span>`;
+    }},
+    
     {
         data: function (data) {
-            let asesor_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanzar_proceso, data })            
-
-            // let cancel_button = new RowButton({ icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data })
-
-            // return `<div class="d-flex justify-center">${asesor_button}${cancel_button}</div>`
-            return `<div class="d-flex justify-center">${asesor_button}</div>`
+            let asesor_button = '';
+            let rechazo_avance_button = '';
+            if(data.idProcesoCasas == null || data.idProcesoCasas == ''){
+                asesor_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: avanzar_proceso, data })            
+            }else{
+                asesor_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: rechazo_avance_proceso, data })            
+            }
+            let regresar_gerente_button = new RowButton({ icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: back_process, data })
+            return `<div class="d-flex justify-center">${asesor_button}${regresar_gerente_button}</div>`
         }
     },
 ]

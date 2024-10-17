@@ -20,7 +20,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th id="nomeclatura" style="font-weight: normal; font-size: 10px">nomeclatura</th>
+                                                    <th id="nomeclatura" style="font-weight: normal; font-size: 10px">nomenclature</th>
                                                     <th id="nombre" style="font-weight: normal; font-size: 10px">nombre</th>
                                                     <th id="empresa" style="font-weight: normal; font-size: 10px">empresa</th>
                                                 </tr>

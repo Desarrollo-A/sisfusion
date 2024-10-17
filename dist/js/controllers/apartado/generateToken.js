@@ -1,7 +1,6 @@
 let evidenceTable;
 
 $(document).ready(function () {
-
     fillevidenceTable();
     getAsesoresList();
     $("input:file").on("change", function () {
@@ -12,8 +11,6 @@ $(document).ready(function () {
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
-
-let titulos = [];
 
 function fillevidenceTable() {
     construirHead('evidenceTable');
@@ -63,7 +60,7 @@ function fillevidenceTable() {
                     if(d.id_lote != null){
                         lote = d.id_lote;
                     }else{
-                        lote = "SIN ESPECIFICAR";
+                        lote = _("sin-especificar");
                     }
                     return lote;
                 }
@@ -74,7 +71,7 @@ function fillevidenceTable() {
                     if(d.nombreLote != null){
                         nombreLote = d.nombreLote;
                     }else{
-                        nombreLote = "SIN ESPECIFICAR";
+                        nombreLote = _("sin-especificar");
                     }
                     return nombreLote;
                 }
@@ -85,7 +82,7 @@ function fillevidenceTable() {
                     if(d.nombreCliente != "  "){
                         cliente = d.nombreCliente;
                     }else{
-                        cliente = "SIN ESPECIFICAR";
+                        cliente = _("sin-especificar");
                     }
                     return cliente;
                 }
@@ -96,7 +93,7 @@ function fillevidenceTable() {
                     if(d.fechaApartado != null){
                         fecha_apartado = d.fechaApartado;
                     }else{
-                        fecha_apartado = "SIN ESPECIFICAR";
+                        fecha_apartado = _("sin-especificar");
                     }
                     return fecha_apartado;
                 }
@@ -121,13 +118,13 @@ function fillevidenceTable() {
                     let estatus;
                     switch (d.estatus) {
                         case 0:
-                            estatus = `<span class="label lbl-deepGray">No validada</span>`;
+                            estatus = `<span class="label lbl-deepGray">${_("no-validada")}</span>`;
                             break;
                         case 1:
-                            estatus = `<span class="label lbl-green">Aceptada</span>`;
+                            estatus = `<span class="label lbl-green">${_("aceptada-2")}</span>`;
                             break;
                         case 2:
-                            estatus = `<span class="label lbl-warning">Rechazada</span>`;
+                            estatus = `<span class="label lbl-warning"${_("rechazada")}Rechazada</span>`;
                             break;
                     }
                     return estatus;
@@ -136,14 +133,14 @@ function fillevidenceTable() {
             {
                 data: function (d) {
                     let btns = `<div class="d-flex align-center justify-center">`;
-                    btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-eye"></i></button>`;
+                    btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-type="${d.type}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="${_("ver-evidencia-2")}"></body><i class="fas fa-eye"></i></button>`;
                     if (d.currentRol == 3 && d.type == 1)
-                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" data-toggle="tooltip"  data-placement="top" title="COPIAR TOKEN"><i class="fas fa-copy"></i></button>`;
+                        btns += `<button class="btn-data btn-green setToken" data-token-name="${d.token}" data-toggle="tooltip"  data-placement="top" title="${_("copiar-token")}"><i class="fas fa-copy"></i></button>`;
                     if (d.currentRol != 3){
                         if (d.estatus == 1 || d.estatus == 0)
-                            btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="RECHAZAR"><i class="fas fa-minus"></i></button>`;
+                            btns += `<button class="btn-data btn-warning validateEvidence" data-type="${d.type}" data-action="2" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="${_("rechazar-2")}"><i class="fas fa-minus"></i></button>`;
                         if (d.estatus == 2 || d.estatus == 0)
-                            btns += `<button class="btn-data btn-green validateEvidence" data-type="${d.type}" data-action="1" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="ACEPTAR"><i class="fas fa-check"></i></button>`;
+                            btns += `<button class="btn-data btn-green validateEvidence" data-type="${d.type}" data-action="1" data-id="${d.id}" data-toggle="tooltip"  data-placement="top" title="${_("aceptar-2")}"><i class="fas fa-check"></i></button>`;
                     }
                     btns += '</div>';
                     return btns;
