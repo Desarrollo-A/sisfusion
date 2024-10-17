@@ -5770,8 +5770,8 @@ class Casas extends BaseController
         $tablaActual = $esquemaCreditoActual == 1 ? 'proceso_casas_banco' : 'proceso_casas_directo';
         $modeloCasa = $this->form('modeloCasa');
         $idUsuario = $this->session->userdata('id_usuario');
+        $idHistorial = "";
         $banderaSuccess = true;
-        $insert = '';
 
         if (!isset($idLote) || !isset($idCliente) || !isset($esquemaCreditoActual) || !isset($esquemaCreditoNuevo)) {
             http_response_code(400);
@@ -5790,7 +5790,8 @@ class Casas extends BaseController
             "proceso" => 1,
             "tipoMovimiento" => 0,
             "comentario" => $comentario,
-            "creadoPor" => $this->session->userdata('id_usuario')
+            "creadoPor" => $this->session->userdata('id_usuario'),
+            "estatus" => 1
         );
 
         $this->db->trans_begin();
@@ -5821,6 +5822,30 @@ class Casas extends BaseController
                     $insert = $checkPreproceso->idProcesoCasas;
                 } else { // si no existe lo creamos
                     $insert = $this->CasasModel->insertProceso($procesoData, $tabla); // valor del id de casas que se inserta en el momento
+                    if ($esquemaCreditoNuevo == 1) {
+                        $idProcesoCasas = $this->CasasModel->checkPreproceso($idLote, $tablaActual, $idCliente);
+                        $documentoData = array(
+                            "idProcesoCasas" => $insert,
+                            "documento" => "Carta de autorización",
+                            "archivo" => NULL,
+                            "tipo" => 1,
+                            "creadoPor" => $idUsuario,
+                            "modificadoPor" => $idUsuario,
+                            "estatus" => 1,
+                            "idCliente" => $idCliente
+                        );
+                        $idProcesoCasas = $this->CasasModel->checkPreproceso($idLote, $tablaActual, $idCliente);
+                        $checkDocumento = $this->CasasModel->checkDocument($idProcesoCasas->idProcesoCasas);
+                        
+                        if ($checkDocumento == null) {
+                            $insertDocumento = $this->General_model->addRecord("documentos_proceso_casas", $documentoData);
+                            if (!$insertDocumento) {
+                                $banderaSuccess = false;
+                            }
+                        } else {
+                            //$this->General_model->updateRecord('documentos_proceso_casas', $documentoData, 'idProcesoCasas', $documentoData->idProcesoCasas);
+                        }
+                    }
                     if (!$insert) {
                         $banderaSuccess = false;
                     }
@@ -5829,15 +5854,22 @@ class Casas extends BaseController
         } else {
             // solo cambia otro campo, actualizamos registro exitente
             $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tabla, $idCliente);
+            $checkDocumento = $this->CasasModel->checkDocument($checkPreproceso->idProcesoCasas);
+    
             if ($checkPreproceso != null) {
                 $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
                 $update = $this->General_model->updateRecord($tabla, $procesoData, $esquemaCreditoActual == 1 ? "idProcesoCasas" : "idProceso", $idProcesoCasas);
                 $insert = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
+                $idHistorial = $insert;
+
+                if($checkDocumento != null){
+                    $this->General_model->updateRecord('documentos_proceso_casas', array("estatus" => 1), 'idDocumento', $checkDocumento->idDocumento);
+                }
             }
         }
 
         $dataHistorial = array(
-            "idProcesoCasas" => $insert,
+            "idProcesoCasas" => $idHistorial,
             "procesoAnterior" => 2,
             "procesoNuevo" => 1,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
@@ -5853,34 +5885,7 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
         
-        $checkPreproceso = $this->CasasModel->checkPreproceso($idLote, $tablaActual);
-        if ($checkPreproceso != null) {
-            $idProcesoCasas = $checkPreproceso->idProcesoCasas ?? $checkPreproceso->idProceso;
-            $this->General_model->updateRecord('documentos_proceso_casas', array("estatus" => 0), 'idProcesoCasas', $idProcesoCasas);
-        }
-
-        if ($esquemaCreditoNuevo == 1) {
-            $documentoData = array(
-                "idProcesoCasas" => $insert,
-                "documento" => "Carta de autorización",
-                "archivo" => NULL,
-                "tipo" => 1,
-                "creadoPor" => $idUsuario,
-                "modificadoPor" => $idUsuario,
-                "estatus" => 1,
-                "idCliente" => $idCliente
-            );
-
-            $checkDocumento = $this->CasasModel->checkDocument($insert);
-            if ($checkDocumento == null) {
-                $insertDocumento = $this->General_model->addRecord("documentos_proceso_casas", $documentoData);
-                if (!$insertDocumento) {
-                    $banderaSuccess = false;
-                }
-            } else {
-                $this->Geneal_model->updateRecord('documentos_proceso_casas', $documentoData, 'idProcesoCasas', $documentoData->idProcesoCasas);
-            }
-        }
+        
 
         if ($banderaSuccess) {
             $this->db->trans_commit();
