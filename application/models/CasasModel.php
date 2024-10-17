@@ -1708,7 +1708,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query);
     }
 
-    public function getListaReporteCasas($proceso, $finalizado, $extraFields){
+    public function getListaReporteCasas($proceso, $finalizado, $extraFields, $extraValidation){
         $query = " 
         WITH HistorialCte AS (
             SELECT CAST(SUBSTRING(hpc.descripcion, PATINDEX('%IDLOTE%', hpc.descripcion) + 7, LEN(hpc.descripcion)) AS INT) AS idLote,
@@ -1734,7 +1734,7 @@ AND vb.proyectos != 1";
         FROM HistorialCte hct
         FULL OUTER JOIN proceso_casas_banco pc ON pc.idLote = hct.idLote 
         LEFT JOIN lotes lo ON lo.idLote = COALESCE(pc.idLote, hct.idLote)
-        LEFT JOIN clientes cli ON cli.idLote = lo.idLote ON cli.id_cliente = pc.idCliente
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.id_cliente = pc.idCliente
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial
@@ -1746,6 +1746,7 @@ AND vb.proyectos != 1";
         AND (cli.status = 1)
         --AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
         $extraFields
+        $extraValidation
         AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
         GROUP BY hct.idLote ,lo.nombreLote, pc.idLote, con.nombre, CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno),
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), us.nombre, cli.id_gerente_c,
