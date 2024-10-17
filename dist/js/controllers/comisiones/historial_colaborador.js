@@ -1093,9 +1093,9 @@ $(document).ready(function () {
                 const id = response[i]['id_opcion'];
                 const name = response[i]['nombre'];
 
-                if(id != 4){
+                // if(id != 4){
                     $("#tipo_historial").append($('<option>').val(id).text(name.toUpperCase()));
-                }
+                // }
 
             }
         }
