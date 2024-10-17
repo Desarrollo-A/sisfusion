@@ -2,7 +2,7 @@
 //    require_once 'static/autoload.php';//linea debe descomentarse en PROD
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-    require '../../vendor/autoload.php'; //linea debe descomentarse en local
+    require 'vendor/autoload.php'; //linea debe descomentarse en local
 
     require_once(APPPATH . "libraries/http/IClient.php");
     require_once(APPPATH . "libraries/http/IRequest.php");

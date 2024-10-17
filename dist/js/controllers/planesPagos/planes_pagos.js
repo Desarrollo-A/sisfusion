@@ -17,6 +17,8 @@ $(document).ready(function () {
         $("#idResidencial").selectpicker('refresh');
     }, 'json');
 
+    showHistorial()
+
 });
 
 $('#idResidencial').change(function () {
@@ -1396,4 +1398,97 @@ function cancelaPlanCRM(idPlanPago){
             $('#tablaPlanPagos').DataTable().ajax.reload();
         }
     });
+}
+
+function buildEvento(evento) {
+    field = $('<li /><div />')
+        .addClass('container-fluid')
+        .append(
+            $('<div />')
+                .addClass('row')
+                .append(
+                    $('<div />')
+                        .addClass('col-xs-12 col-sm-6 col-md-6 col-lg-6')
+                        .append(
+                            $('<a />')
+                                .append(
+                                    $('<b />')
+                                        .addClass('m-0')
+                                        .text('title')
+                                )
+                        )
+                )
+                .append(
+                    $('<div />')
+                        .addClass('float-end text-right')
+                        .append(
+
+                            $('<a />')
+                                .addClass('m-0')
+                                .text('date')
+                        )
+                )
+                .append(
+                    $('<div />')
+                    
+                        .addClass('col-md-12')
+                        .append(
+                            $('<p />')
+                                .addClass('m-0')
+                                .append(
+                                    $('<small />')
+                                        .text('back')
+                                        .append(
+                                            $('<b />')
+                                                .text('back')
+                                        )
+                                )
+                        )
+                )
+                .append(
+                    $('<div />')
+                        .addClass('col-md-12')
+                        .append(
+                            $('<p />')
+                                .addClass('m-0')
+                                .append(
+                                    $('<small />')
+                                        .text('Proceso nuevo: ')
+                                        .append(
+                                            $('<b />')
+                                                .text('next')
+                                        )
+                                )
+                        )
+                )
+                .append(
+                    $('<div />')
+                        .addClass('col-md-12')
+                        .append(
+                            $('<p />')
+                                .addClass('m-0')
+                                .append(
+                                    $('<small />')
+                                        .text('Descripción: ')
+                                        .append(
+                                            $('<b />')
+                                                .text('description')
+                                        )
+                                )
+                        )
+                )
+        )
+
+    return field.prop('outerHTML')
+}
+
+function showHistorial() {
+    $('#historialModal').modal('show');
+
+    event = buildEvento()
+
+    $('#historialActual').append(event)
+    $('#historialActual').append(event)
+    $('#historialActual').append(event)
+    $('#historialActual').append(event)
 }
