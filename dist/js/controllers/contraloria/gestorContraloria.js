@@ -261,9 +261,6 @@ function crearTablaTipoVenta(idCondominio) {
     applySearch(tablaTipoVenta);
 }
 
-
-
-
 function loadSelectOptions() {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         for (var i = 0; i < data.length; i++) {
