@@ -89,7 +89,7 @@ function crearTablaTipoVenta(idCondominio) {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Historial Contratación',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    columns: [0, 1, 2, 3, 4, 5],
                     format: {
                         header: function (d, columnIdx) {
                             return $(d).text().toUpperCase();
@@ -132,6 +132,7 @@ function crearTablaTipoVenta(idCondominio) {
             dataSrc: ""
         },
     });
+    applySearch(tablaTipoVenta);
 
     $(document).on('click', '#btnEditarTipoVenta', function (e) {
         e.preventDefault();
@@ -229,101 +230,6 @@ function crearTablaTipoVenta(idCondominio) {
 
     applySearch(tablaTipoVenta);
 }
-
-
-
-
-// function ConstruirTablaCAmbiarRepresentante(idCondominio){
-//     $("#divtablaCambiarRepresentanteLegal").removeClass("hide");
-
-//     console.warn('ConstruirTablaCAmbiarRepresentante', idCondominio);
-//     if(idCondominio){
-//         $('#tablaCambiarRepresentanteLegal thead tr:eq(0) th').each(function (i) {
-//             var title = $(this).text();
-//             titulosTablaIntercambios.push(title);
-//             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-//             $('input', this).on('keyup change', function () {
-//                 if (tablaCambiarRepresentanteLegal.column(i).search() !== this.value)
-//                     tablaCambiarRepresentanteLegal.column(i).search(this.value).draw();
-//             });
-//         });
-//         tablaCambiarRepresentanteLegal = $("#tablaCambiarRepresentanteLegal").DataTable({
-//             dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-//             width: '100%',
-//             buttons: [
-//                 {
-//                     extend: 'excelHtml5',
-//                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-//                     className: 'btn buttons-excel',
-//                     titleAttr: 'Exportar registros a Excel',
-//                     title: "Listado de lotes contratados por intercambio",
-//                     exportOptions: {
-//                         columns: [0, 1, 2, 3, 4, 5],
-//                         format: {
-//                             header: function (d, columnIdx) {
-//                                 return ' ' + titulosTablaIntercambios[columnIdx] + ' ';
-//                             }
-//                         }
-//                     }
-//                 }
-//             ],
-//             language: {
-//                 url: `${general_base_url}static/spanishLoader_v2.json`,
-//                 paginate: {
-//                     previous: "<i class='fa fa-angle-left'>",
-//                     next: "<i class='fa fa-angle-right'>"
-//                 }
-//             },
-//             pagingType: "full_numbers",
-//             lengthMenu: [
-//                 [10, 25, 50, -1],
-//                 [10, 25, 50, "Todos"]
-//             ],
-//             bAutoWidth: false,
-//             fixedColumns: true,
-//             ordering: false,
-//             scrollX: true,
-//             destroy: true,
-//             columns: [
-//                 { data: 'nombreResidencial' },
-//                 { data: 'nombreCondominio' },
-//                 { data: 'nombreLote' },
-//                 { data: 'idLote' },
-//                 { data: 'referencia' },
-//                 {
-//                     data: function (d) {
-//                         return `<span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.nombreEstatusLote}</span>`;
-//                     }
-//                 },
-//                 {
-//                     orderable: false,
-//                     data: function (d) {
-//                         return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-blueMaderas confirmarCambio" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-toggle="tooltip" data-placement="top" title="EDITAR INFORMACIÓN"><i class="fas fa-pencil-alt"></i></button></div>`;
-//                     }
-//                 }
-//             ],
-//             columnDefs: [
-//                 {
-//                     searchable: false,
-//                     orderable: false,
-//                     targets: 0
-//                 },
-//             ],
-//             ajax: {
-//                 url: `${general_base_url}Contraloria/getDatosTablaRepresentanteLegal/${idCondominio}`,
-//                 dataSrc: "",
-//                 type: "POST",
-//                 cache: false,
-//             },
-//             order: [[1, 'asc']]
-//         });
-//         $('#tablaCambiarRepresentanteLegal').on('draw.dt', function () {
-//             $('[data-toggle="tooltip"]').tooltip({
-//                 trigger: "hover"
-//             });
-//         });
-//     }
-// }
 
 
 
