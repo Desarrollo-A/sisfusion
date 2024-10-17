@@ -217,8 +217,8 @@ $('#idLote').change(function () {
 
                     if (
                         data.tipo_doc == TipoDoc.CONTRATO &&
-                        (includesArray(rolesPermitidosContratoEspecial, id_rol_general) ||
-                            includesArray(usuariosPermitidosContratoEspecial,id_usuario_general) || includesArray(rolMaster, id_rol_general))
+                        (includesArray(rolesPermitidosContratoEspecial, id_rol_general) || includesArray(usuariosPermitidosContratoEspecial,id_usuario_general))
+                            || includesArray(rolMaster, id_rol_general)
                     ) {
                         if (data.expediente == null || data.expediente === "") {
                             // NO HAY DOCUMENTO CARGADO
@@ -258,7 +258,7 @@ $('#idLote').change(function () {
                     // VALIDACIÓN ANEXO 1 PARA JURÍDICO
                     if (data.tipo_doc == TipoDoc.ANEXO_1) { // ANEXO 1 PARA JURÍDICO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(rolesPermitidosAnexo1, id_rol_general) || includesArray(rolMaster, id_rol_general)) ? crearBotonAccion(AccionDoc.SUBIR_DOC, data) : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+                            buttonMain = ((includesArray(rolesPermitidosAnexo1, id_rol_general)) || includesArray(rolMaster, id_rol_general)) ? crearBotonAccion(AccionDoc.SUBIR_DOC, data) : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
                             return `<div class="d-flex justify-center">${buttonMain}</div>`;
                         }
                         // LA RAMA TIENE UN DOCUMENTO CARGADO
