@@ -170,8 +170,7 @@ function crearTablaTipoVenta(idCondominio) {
 
     $(document).on('click', '#btnEditarTipoVenta', function (e) {
         e.preventDefault();
-        idLot = $(this).data('idlote');
-        console.log('idLote->' + idLot);        
+        idLot = $(this).data('idlote');               
         $.ajax({
             url: `${general_base_url}Contraloria/get_tipo_venta`,
             method: 'GET',
@@ -218,8 +217,7 @@ function crearTablaTipoVenta(idCondominio) {
                 cache:false,
                 contentType:false,
                 processData:false,
-                success: function (response) {
-                    console.log(response);                    
+                success: function (response) {                                       
                     if(response.message==='OK'){
                         tablaTipoVenta.ajax.reload();
                         $('#modalCambiotipoventa').modal('hide');
@@ -236,8 +234,6 @@ function crearTablaTipoVenta(idCondominio) {
                     $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
                 }
             });
-            console.log('desde el get tipoVenta->', tipoVenta);
-            console.log('desde el get idLot->', idLot);
         } else {
             console.error("No se han seleccionado valores válidos para la actualización");
         }
