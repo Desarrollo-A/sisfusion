@@ -235,7 +235,8 @@ function crearTablaTipoVenta(idCondominio) {
                 error: function (xhr, status, error) {
                     console.error('Error al cargar las opciones:', error);
                     $('#tipoVentaModal').empty();
-                    $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
+                    $('#tipoVentaModal').
+                    append('<option value="">Error al cargar opciones</option>');
                 }
             });
         } else {
@@ -1190,7 +1191,6 @@ $(document).on('click', '.modalCambioRepresentanteB', function () {
     $('#modalCambioRepresentante').modal('show');
     idLote = $(this).data('idlote');
     nombreLoteText = $(this).data('nombrelotetext');
-    console.warn("modalCambioRepresentanteB",nombreLoteText);
     idRl = $(this).data('idrl');
     idCliente = $(this).data('cliente');
     nombreRl = $(this).data('nombrerl');
@@ -1205,9 +1205,6 @@ $(document).on('click','#btnCambiarRL',function(e) {
     e.preventDefault();
     var representanteLegal = $(this).data('#cambiarrepresentante');
     var validarOpcionRl = ($("#cambiarrepresentante").val().length == 0) ? 0 : 1;
-    console.warn("representanteLegal",representanteLegal);
-    console.warn("selectedRl",selectedRl);
-    console.warn("idRl",idRl);
     
     if(validarOpcionRl ==0){
         alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un valor.', 'warning'); 
