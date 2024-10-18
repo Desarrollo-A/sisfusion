@@ -509,9 +509,9 @@ class Casas extends BaseController
         $this->General_model->updateRecord('clientes', $dataUpdate, 'id_cliente', $idCliente);
 
         $update = $this->General_model->updateRecord("clientes", $dataUpdate, "id_cliente", $idCliente);
-        $updateLotes = $this->General_model->updateRecord("lotes", array('idCliente' => $idCliente), 'idLote', $idLote);
+        //$updateLotes = $this->General_model->updateRecord("lotes", array('idCliente' => $idCliente), 'idLote', $idLote);
 
-        if (!$update || !$updateLotes) {
+        if (!$update) {
             $banderaSuccess = false;
         }
 

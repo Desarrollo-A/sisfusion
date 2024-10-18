@@ -1338,4 +1338,89 @@ class Usuarios_modelo extends CI_Model
         $query = $this->db->query("SELECT * FROM menu_usuario WHERE id_usuario=".$id_usuario);
         return $query->result_array();
     }
+
+    public function getBitacoraUsuarios() {
+        $query = "WITH ultimoCambio AS (
+                    SELECT aud.id_parametro, aud.col_afect, aud.anterior, aud.nuevo, aud.fecha_creacion, 
+                        ROW_NUMBER() OVER (PARTITION BY aud.id_parametro ORDER BY aud.fecha_creacion DESC) AS rn, aud.tabla
+                    FROM auditoria aud
+                    WHERE aud.col_afect IN ('estatus', 'id_rol', 'id_sede', 'id_lider') 
+                    AND aud.tabla = 'usuarios'
+                ),
+                sede_anterior AS (
+                    SELECT us.id_usuario, TRIM(value) AS id_sede
+                    FROM usuarios us
+                    JOIN ultimoCambio aud ON aud.id_parametro = us.id_usuario AND aud.rn = 1
+                    CROSS APPLY STRING_SPLIT(TRY_CAST(aud.anterior AS VARCHAR), ',')
+                    WHERE aud.col_afect = 'id_sede'
+                ),
+                sede_nuevo AS (
+                    SELECT us.id_usuario, TRIM(value) AS id_sede
+                    FROM usuarios us
+                    JOIN ultimoCambio aud ON aud.id_parametro = us.id_usuario AND aud.rn = 1
+                    CROSS APPLY STRING_SPLIT(TRY_CAST(aud.nuevo AS VARCHAR), ')')
+                    WHERE aud.col_afect = 'id_sede'
+                ),
+
+                sede_anterior_names AS (
+                    SELECT sa.id_usuario, STRING_AGG(s.nombre, ',') AS sedes_anterior_nombres
+                    FROM sede_anterior sa 
+                    LEFT JOIN sedes s ON s.id_sede = TRY_CAST(sa.id_sede AS INT)
+                    GROUP BY sa.id_usuario
+                ),
+                sede_nuevo_names AS (
+                    SELECT sn.id_usuario, STRING_AGG(s.nombre, ', ') AS sedes_nuevos_nombres
+                    FROM sede_nuevo sn
+                    LEFT JOIN sedes s ON s.id_sede = TRY_CAST(sn.id_sede AS INT)
+                    GROUP BY sn.id_usuario
+                )
+
+                SELECT UPPER(opc.nombre) AS estatus, us.id_usuario AS ID, us.nombre AS nombreUsuario, CONCAT(us.apellido_paterno, ' ', us.apellido_materno) AS usApellidos, us.correo,us.telefono,
+                CONCAT(jefe.nombre, ' ', jefe.apellido_paterno, ' ', jefe.apellido_materno) AS jefeDirecto,opc2.nombre AS puesto,us.fecha_creacion AS fechaUsuario,
+                UPPER(  COALESCE(CASE WHEN aud.col_afect = 'estatus' AND TRY_CAST(aud.anterior AS VARCHAR) != TRY_CAST(aud.nuevo AS VARCHAR) 
+                THEN CONCAT(FORMAT(aud.fecha_creacion, 'dd MMMMM', 'es-ES'), ' estatus (',estatusAnterior.nombre, ' - ', estatusNuevo.nombre,')')            
+                WHEN aud.col_afect = 'id_rol' and aud.anterior != aud.nuevo 
+                THEN CONCAT(FORMAT(aud.fecha_creacion, 'dd MMMMM', 'es-ES'), ' rol (',TRY_CAST(lastRol.nombre AS VARCHAR), ' - ',TRY_CAST(newRol.nombre AS VARCHAR), ')')            
+                WHEN aud.col_afect = 'id_sede' AND aud.anterior != aud.nuevo
+                THEN CONCAT(FORMAT(aud.fecha_creacion, 'dd MMMM', 'es-ES'), 'sede (', COALESCE(san.sedes_anterior_nombres, 'SIN SEDE'), ' - ', COALESCE(snn.sedes_nuevos_nombres, 'SIN SEDES'), ')')                
+                WHEN aud.col_afect = 'id_lider' AND TRY_CAST(aud.anterior AS INT) != TRY_CAST(aud.nuevo AS INT) 
+                THEN CONCAT(FORMAT(aud.fecha_creacion, 'dd MMMM', 'es-ES'), ' lider (', TRY_CAST(CASE WHEN concat(anteriorName.nombre, ' ', anteriorName.apellido_paterno, ' ', anteriorName.apellido_materno)
+                = '  ' then 'SIN ESPECIFICAR' ELSE upper(concat(anteriorName.nombre, ' ', anteriorName.apellido_paterno, ' ', anteriorName.apellido_materno))END 
+                AS VARCHAR(MAX)), ' - ', 
+                TRY_CAST(CASE WHEN CONCAT(nuevoName.nombre, ' ', nuevoName.apellido_paterno, ' ', nuevoName.apellido_materno) = '  ' THEN 'SIN ESPECIFICAR'
+                ELSE UPPER(CONCAT(nuevoName.nombre, ' ', nuevoName.apellido_paterno, ' ', nuevoName.apellido_materno)) END AS VARCHAR(MAX)), ')') END, 'SIN CAMBIOS')) AS cambiosRealizados, 
+                CASE WHEN aud.fecha_creacion IS NULL THEN GETDATE() ELSE aud.fecha_creacion END AS fecha_creacion
+                        
+                FROM usuarios us
+                LEFT JOIN opcs_x_cats opc ON opc.id_opcion = us.estatus AND opc.id_catalogo = 3
+                LEFT JOIN opcs_x_cats  opc2 ON opc2.id_opcion = us.id_rol  AND opc2.id_catalogo = 1
+                LEFT JOIN usuarios jefe ON jefe.id_usuario  = us.id_lider
+                LEFT JOIN ultimoCambio aud ON aud.id_parametro = us.id_usuario AND aud.rn = 1
+
+                --CAMBIO ESTATUS
+                LEFT JOIN opcs_x_cats estatusAnterior ON estatusAnterior.id_opcion = TRY_CAST(aud.anterior AS INT) AND estatusAnterior.id_catalogo = 3 
+                LEFT JOIN opcs_x_cats estatusNuevo ON estatusNuevo.id_opcion = TRY_CAST(aud.nuevo AS INT) AND estatusNuevo.id_catalogo = 3
+
+                --CAMBIO LIDER
+                LEFT JOIN usuarios anteriorName ON CASE WHEN aud.col_afect = 'id_lider' THEN TRY_CAST(aud.anterior AS INT) ELSE NULL END = anteriorName.id_usuario AND aud.col_afect = 'id_lider'
+                LEFT JOIN usuarios nuevoName ON CASE when aud.col_afect = 'id_lider' THEN TRY_CAST(aud.nuevo AS INT ) ELSE NULL END = nuevoName.id_usuario AND aud.col_afect = 'id_lider'
+
+                --CAMBIO ID ROL
+                LEFT JOIN opcs_x_cats lastRol on case when aud.col_afect = 'id_rol' then try_cast(aud.anterior as int) else null end = lastRol.id_opcion and aud.col_afect = 'id_rol' AND lastRol.id_catalogo = 1
+                LEFT JOIN opcs_x_cats newRol on case when aud.col_afect = 'id_rol' then try_cast(aud.nuevo as int) else null end = newRol.id_opcion and aud.col_afect = 'id_rol' AND newRol.id_catalogo = 1
+
+                --CAMBIO SEDES
+                LEFT JOIN sede_anterior_names san ON san.id_usuario = us.id_usuario
+                LEFT JOIN sede_nuevo_names snn ON snn.id_usuario = us.id_usuario
+
+                WHERE us.id_rol IN (7,9,3,2) AND aud.rn = 1
+                GROUP BY opc.nombre, us.id_usuario, us.nombre, ,us.fecha_creacion,CONCAT(us.apellido_paterno, ' ', us.apellido_materno), us.correo,
+                CONCAT(jefe.nombre, ' ', jefe.apellido_paterno, ' ', jefe.apellido_materno), opc2.nombre, aud.col_afect, aud.anterior, aud.nuevo, aud.fecha_creacion, estatusAnterior.nombre, 
+                estatusNuevo.nombre, aud.fecha_creacion, lastRol.nombre, newRol.nombre, concat(anteriorName.nombre, ' ', anteriorName.apellido_paterno, ' ', anteriorName.apellido_materno) ,
+                concat(nuevoName.nombre, ' ', nuevoName.apellido_paterno, ' ', nuevoName.apellido_materno),us.telefono, san.sedes_anterior_nombres, snn.sedes_nuevos_nombres";
+
+                return $query->result_array();
+    }
+
+
 }
