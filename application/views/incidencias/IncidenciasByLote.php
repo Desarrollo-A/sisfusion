@@ -381,6 +381,8 @@ hr {
                                         <option value="1">Cliente</option>
                                         <option value="2">Venta compartida</option>
                                         <option value="3">Cambiar roles (Con comisiones)</option>
+                                        <option value="4">Cambiar tipo de venta</option>
+
                                     </select>
                                     <input type="hidden" class="form-control"
                                     id="lotes1" name="lotes1">

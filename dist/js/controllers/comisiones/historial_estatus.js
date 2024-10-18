@@ -181,6 +181,8 @@ function getAssimilatedCommissions(proyecto, condominio, usuario){
                         options = optNueva;
                     } else if (estatus === '8') {
                         options = optPagado;
+                    }else if (estatus === '5') {
+                        options = optNueva;
                     }
                     const titlePagos = (idComisiones.length > 1) ? `<b>${idComisiones.length}</b> pagos seleccionados` : `<b>${idComisiones.length}</b> pago seleccionado`;
                     $('#total-pagos').html('').html('('+titlePagos+')');
@@ -363,8 +365,18 @@ function getAssimilatedCommissions(proyecto, condominio, usuario){
                     } else {
                         return '';
                     }
-                } else {
-                    if(id_rol_general == 17 && full.recision != '1'){
+                } else if($('#estatus_general').val() == 5 && id_rol_general == 17){
+                    var array=[0,1,4,8,9,10,11,12,7,5,2,17];
+
+                   if(array.includes(full.estatus)){
+                       return '';
+                   }else {
+                       return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+
+                   }
+                }
+                else {
+                    if(id_rol_general == 17 && full.recision != '1' && full.estatus != 11 ){
                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';

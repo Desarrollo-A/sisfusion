@@ -1431,7 +1431,7 @@ class Casas_comisiones_model extends CI_Model {
 
     function selectTipo($opciones){
         if($this->session->userdata('id_rol')==17){
-            $opciones = '1,2,3';
+            $opciones = '1,2,3,4';
         }
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 124 and id_opcion in ($opciones)");
 
