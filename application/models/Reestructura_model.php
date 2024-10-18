@@ -2076,7 +2076,24 @@ class Reestructura_model extends CI_Model
 
     public function getLotesDestinoRe($idLotePv)
     {
-        $query = $this->db->query("SELECT pxl.*, lo.tipo_estatus_regreso FROM propuestas_x_lote pxl INNER JOIN lotes lo ON lo.idLote = pxl.idLote where lo.idLote = ?", $idLotePv);
+        $query = $this->db->query("WITH UltimoValor AS (
+              SELECT 
+                anterior, 
+                aud.fecha_creacion, 
+                id_parametro, 
+				col_afect,
+                ROW_NUMBER() OVER ( PARTITION BY id_parametro, col_afect ORDER BY fecha_creacion DESC) AS rn 
+              FROM auditoria aud 
+              WHERE col_afect IN ('idStatusLote', 'registro_comision'))
+
+            SELECT pxl.id_lotep,
+                    MAX(CASE WHEN col_afect = 'idStatusLote' THEN anterior END) AS idStatusLote,
+                    MAX(CASE WHEN col_afect = 'registro_comision' THEN anterior END) AS registroComision
+	            FROM propuestas_x_lote pxl
+	            INNER JOIN lotes lo ON lo.idLote = pxl.idLote
+	            LEFT JOIN UltimoValor uv ON uv.id_parametro = pxl.id_lotep AND uv.rn = 1
+	            WHERE lo.idLote = ?
+				 GROUP BY pxl.id_lotep", $idLotePv);
 
         return $query;
     }
@@ -2104,16 +2121,26 @@ class Reestructura_model extends CI_Model
 
     public function getClienteAnterior($idLote, $idCliente)
     {
-        $query = $this->db->query("SELECT cl1.id_cliente AS clienteNuevo, cl1.idLote AS loteNuevo, cl2.id_cliente AS clienteAnterior, cl2.idLote AS loteAnterior,
-                                    lo.idStatusContratacion statusAnterior, lo2.idStatusContratacion statusNuevo, lo.idStatusLote statusAnterior2, lo.estatus_preproceso preprocesoAnterior, lo.nombreLote AS nombreLoteAnterior, lo2.nombreLote AS nombreLoteNuevo,
-                                    lo.precio AS precioAnterior, cl1.proceso AS procesoDestino, cl1.plan_comision comisionNuevo, cl1.id_cliente_reubicacion_2,lo.idStatusContratacion
-                                    FROM clientes cl1
-                                    INNER JOIN clientes cl2 ON cl2.id_cliente = cl1.id_cliente_reubicacion_2
-                                    INNER JOIN lotes lo ON lo.idLote = cl2.idLote
-                                    INNER JOIN lotes lo2 ON lo2.idLote = cl1.idLote
-                                    LEFT JOIN datos_x_cliente dxc ON dxc.idLote = cl1.idLote
-                                    LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = cl2.idLote                                
-                                    WHERE cl1.idLote = ? AND cl1.id_cliente = ? ", array($idLote, $idCliente));
+        $query = $this->db->query("WITH UltimoValor AS (
+              SELECT
+                anterior,
+                aud.fecha_creacion,
+                id_parametro,
+                ROW_NUMBER() OVER ( PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn
+              FROM auditoria aud
+              WHERE col_afect = 'plan_comision')
+              
+              SELECT cl1.id_cliente AS clienteNuevo, cl1.idLote AS loteNuevo, cl2.id_cliente AS clienteAnterior, cl2.idLote AS loteAnterior,
+                    lo.idStatusContratacion statusAnterior, lo2.idStatusContratacion statusNuevo, lo.idStatusLote statusAnterior2, lo.estatus_preproceso preprocesoAnterior, lo.nombreLote AS nombreLoteAnterior, lo2.nombreLote AS nombreLoteNuevo,
+                    lo.precio AS precioAnterior, cl1.proceso AS procesoDestino, cl1.plan_comision comisionNuevo, cl1.id_cliente_reubicacion_2,lo.idStatusContratacion, uv.anterior
+                    FROM clientes cl1
+                    INNER JOIN clientes cl2 ON cl2.id_cliente = cl1.id_cliente_reubicacion_2
+                    INNER JOIN lotes lo ON lo.idLote = cl2.idLote
+                    INNER JOIN lotes lo2 ON lo2.idLote = cl1.idLote
+                    LEFT JOIN datos_x_cliente dxc ON dxc.idLote = cl1.idLote
+                    LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = cl2.idLote
+                    LEFT JOIN UltimoValor uv ON uv.id_parametro = cl2.id_cliente                            
+                    WHERE cl1.idLote = ? AND cl1.id_cliente = ?", array($idLote, $idCliente));
         return $query;
     }
 
@@ -2617,7 +2644,8 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function getFechaLiberacion($idLoteAnterior){
+    public function getFechaLiberacion($idLoteAnterior)
+    {
         $query = $this->db->query("WITH fechaLiberacion AS(
             SELECT 
                 modificado AS fechaLiberacion,
@@ -2628,7 +2656,7 @@ class Reestructura_model extends CI_Model
             )
 
         SELECT *FROM fechaLiberacion WHERE rn = 1", $idLoteAnterior);
-        
+
         return $query->row();
     }
 }

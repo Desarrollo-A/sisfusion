@@ -1064,6 +1064,8 @@ class Reestructura extends CI_Controller{
                 return;
             }
             
+                var_dump($proceso);
+                var_dump($total8P);
             if($esquemaAnterior){
                 $planComision = $proceso == 3 ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66);
             }
@@ -1072,10 +1074,14 @@ class Reestructura extends CI_Controller{
             }
             if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
                 $this->db->trans_rollback();
+
+                var_dump($proceso);
+                var_dump($total8P);
+
                 echo json_encode(array(
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
-                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas 2',
                     'color' => 'danger'
                 ));
                 return;
@@ -3898,11 +3904,11 @@ class Reestructura extends CI_Controller{
     {
         $getLotesDestino = $this->Reestructura_model->getLotesDestinoRe($loteAnterior);
         $destinos = $getLotesDestino->result();
-        $flag = true;
+        $flag = true; // se movio a false
 
         foreach ($destinos as $destino) {
             $loteNuevoUpdate[] = array(
-                'idLote' => $destino->idLote,
+                'idLote' => $destino->id_lotep,
                 'idCliente' => $loteNuevo == $loteAnterior ? $clienteAnterior : 0,
                 'idStatusContratacion' => $loteNuevo == $loteAnterior ? 15 : 0,
                 'idMovimiento' => $loteNuevo == $loteAnterior ? 45 : 0,
@@ -3914,11 +3920,12 @@ class Reestructura extends CI_Controller{
                 'tipo_venta' => 0,
                 'status8Flag' => 0,
                 'totalNeto' => 0,
-                'registro_comision' => 9,
+                'registro_comision' => $destino->registroComision,
                 'firmaRL' => null,
                 'fechaLiberacion' => date('Y-m-d H:i:s'),
                 'userLiberacion' => $this->session->userdata('id_usuario'),
-                'solicitudCancelacion' => 0
+                'solicitudCancelacion' => 0,
+                'idStatusLote' => $destino->idStatusLote
             );
         }
 
@@ -3949,7 +3956,7 @@ class Reestructura extends CI_Controller{
             'idStatusLote' => $loteNuevo == $loteAnterior ? $getLastValues->statusLote : 2, // si es reestructura se toma el statusLote anterior
             'idStatusContratacion' => 15,
             'idMovimiento' => 45,
-            'totalNeto2' => $getLastValues->totalNeto2
+            'registro_comision' => $getLastValues->registroComision
         );
 
         $lotesOrigenInsert = array(
@@ -3967,6 +3974,7 @@ class Reestructura extends CI_Controller{
                 $flag = false;
             }
             
+            $updateLoteOrigen['totalNeto2'] = $getLastValues->totalNeto2;
             $updateLoteOrigen['id_usuario_asignado'] = $getLastValues->asesor;
             $updateLoteOrigen['id_gerente_asignado'] = $getLastValues->gerente;
             $updateLoteOrigen['id_subdirector_asignado'] = $getLastValues->subdirector;
@@ -3975,7 +3983,6 @@ class Reestructura extends CI_Controller{
             $updateLoteOrigen['totalValidado'] = $getLastValues->totalValidado;
             $updateLoteOrigen['validacionEnganche'] = $getLastValues->validacionEnganche;
             $updateLoteOrigen['firmaRL'] = $getLastValues->firmaRL;
-            $updateLoteOrigen['registro_comision'] = $getLastValues->registroComision;
             $updateLoteOrigen['status8Flag'] = $getLastValues->status8Flag;
 
             if($statusNuevo > 6){

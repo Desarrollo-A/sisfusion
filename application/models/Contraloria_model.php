@@ -732,8 +732,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return true;
     }
 
-
-
     public function val_ub($idLote){
         $this->db->select('ubicacion');
         $this->db->where("idLote",$idLote);
