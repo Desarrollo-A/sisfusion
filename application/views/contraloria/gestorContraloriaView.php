@@ -53,6 +53,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modalConfimarCambioRl" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center">Confirmar cambio de Representante legal</h4>
+                    </div>
+                    <div class="modal-body">
+                        <row>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <h6 id="confirmarCambioEstatusRepresentanteLegal"></h6>
+                                </div>
+                            </div>
+                        </row>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnConfirmarCambioRl" class="btn btn-primary">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="modalCambiotipoventa" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -162,7 +185,7 @@
                         <row>
                             <div class="col-12">
                                         <label class="control-label" for="cambiarrepresentante">Representante Legal</label>
-                                        <select class="selectpicker select-gral" id="cambiarrepresentante" title="SELECCIONA UNA OPCIÓN"></select>
+                                        <select class="selectpicker select-gral" id="cambiarrepresentante" title="SELECCIONA UNA OPCIÓN" data-live-search="true"></select>
                             </div>             
                         </row>
                     </div>
@@ -189,16 +212,16 @@
                                 <div class="row">
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                                         <label class="control-label" for="nombreLote">Opciones</label>
-                                        <select class="selectpicker select-gral" id="selector" title="SELECCIONA UNA OPCIÓN"></select>
+                                        <select class="selectpicker select-gral" id="selector" title="SELECCIONA UNA OPCIÓN" data-live-search="true"></select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="proyecto">
                                         <label class="control-label" for="nombreLote" >Proyecto</label>
-                                        <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO" id="selectProyecto">                                            
+                                        <select class="selectpicker select-gral" title="SELECCIONA UNA OPCIÓN" id="selectProyecto" data-live-search="true">                                            
                                         </select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="condominio">
                                         <label class="control-label" for="nombreLote" >Condominio</label>
-                                        <select class="selectpicker select-gral" title="SELECCIONA UN CONDOMINIO" id="selectCondominio"></select>
+                                        <select class="selectpicker select-gral" title="SELECCIONA UNA OPCIÓN" id="selectCondominio" data-live-search="true"></select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="divBusquedaLote">
                                         <label class="control-label" for="nombreLote">Buscar Lote</label>
@@ -295,8 +318,8 @@
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>ID LOTE</th>
+                                                <th>REFERENCIA</th>
                                                 <th>REPRESENTANTE LEGAL</th>
-                                                <th>ESTATUS</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

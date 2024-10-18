@@ -17,6 +17,10 @@ let idRl = "";
 let idCliente   = "";
 let selectedRl = "";
 let selectedOpcion = "";
+let nombreRl  = "";
+let representanteLegal  ="";
+let nombreLoteText  ="";
+let selectedLabelC = "";
 
 $(document).ready(function () {
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
@@ -221,7 +225,7 @@ function crearTablaTipoVenta(idCondominio) {
                     if(response.message==='OK'){
                         tablaTipoVenta.ajax.reload();
                         $('#modalCambiotipoventa').modal('hide');
-                        alerts.showNotification("top", "right", 'Se ha actualizo correctamente', "success");
+                        alerts.showNotification("top", "right", 'Se ha actualizo correctamente.', "success");
                         tipoVenta = null;
                         idLot = null;
                     }else{
@@ -280,7 +284,7 @@ function loadSelectOptions() {
     }, 'json');
     $.post(`${general_base_url}OperacionesPorCatalogo/listacatalogo`, function (data) {
         for (var i = 0; i < data.length; i++) {
-            $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'].toUpperCase()));
         }
         $("#cambiarrepresentante").selectpicker('refresh');
     }, 'json');
@@ -702,7 +706,7 @@ $(document).on('click', '#btnActualizarRL', function (e) {
     var dataExp1 = new FormData();
     dataExp1.append("opcionNombreRl", opcionNombreRl);
     if (validarOpcionNombre == 0) {
-        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar una opción', 'warning')
+        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar una opción.', 'warning')
     } else {
         $('#btnActualizarRL').prop('disabled', true);
         $.ajax({
@@ -892,6 +896,10 @@ $(document).ready(function () {
 
 $("#cambiarrepresentante").change(function () {
     selectedRl = $(this).val();
+    selectedLabelC = $("#cambiarrepresentante option:selected").text(); 
+    console.warn("selectedRl: " + selectedRl);
+    console.warn("selectedLabel (texto): " + selectedLabelC);
+
 });
 
 function ConstruirTablaCAmbiarRepresentante(idCondominio){
@@ -948,20 +956,16 @@ function ConstruirTablaCAmbiarRepresentante(idCondominio){
                 { data: 'nombreCondominio' },
                 { data: 'nombreLote' },
                 { data: 'idLote' },
-                { data: function (d) { 
-                      
+                { data: 'referencia' },
+                { 
+                    data: function (d) { 
                     return `<span>${d.nombreRL!= null ?d.nombreRL : 'N/A'}</span>`
-                }
-                },
-                {
-                    data: function (d) {
-                        return `<span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.nombreEstatusLote}</span>`;
                     }
                 },
                 {
                     orderable: false,
                     data: function (d) {
-                        return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-blueMaderas modalCambioRepresentanteB" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-cliente="${d.idCliente}" data-idrl="${d.id_rl}" data-toggle="tooltip" data-placement="top" title="${_("editar")}"><i class="fas fa-pencil-alt"></i></button></div>`;
+                        return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-blueMaderas modalCambioRepresentanteB"  data-nombreLoteText="${d.nombreLote}" data-idlote="${d.idLote}" data-cliente="${d.idCliente}" data-nombrerl="${d.nombreRL}" data-idrl="${d.id_rl}" data-toggle="tooltip" data-placement="top" title="${_("editar")}"><i class="fas fa-pencil-alt"></i></button></div>`;
                     }
                 }
             ],
@@ -1184,10 +1188,13 @@ function llenarTablaCambioRL(tipoOperacion) {
 // MODAL PARA REALIZAR EL CAMBIO DE LOTES CONTRATADOS POR INTERCAMBIO
 $(document).on('click', '.modalCambioRepresentanteB', function () {
     $('#modalCambioRepresentante').modal('show');
-    document.getElementById("confirmarCambioEstatus").innerHTML = `¿Estás seguro de realizar el cambio de estatus del lote <b>${$(this).attr('data-nombreLote')}</b>?`;
     idLote = $(this).data('idlote');
+    nombreLoteText = $(this).data('nombrelotetext');
+    console.warn("modalCambioRepresentanteB",nombreLoteText);
     idRl = $(this).data('idrl');
     idCliente = $(this).data('cliente');
+    nombreRl = $(this).data('nombrerl');
+    
 });
 
 $(document).on('click', '.cambiarRlLote', function () {
@@ -1198,55 +1205,84 @@ $(document).on('click','#btnCambiarRL',function(e) {
     e.preventDefault();
     var representanteLegal = $(this).data('#cambiarrepresentante');
     var validarOpcionRl = ($("#cambiarrepresentante").val().length == 0) ? 0 : 1;
-    var formData = new FormData();
+    console.warn("representanteLegal",representanteLegal);
+    console.warn("selectedRl",selectedRl);
+    console.warn("idRl",idRl);
     
+    if(validarOpcionRl ==0){
+        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal.', 'warning'); 
+    }else{
+        if(selectedRl === idRl){
+            alerts.showNotification('top', 'right', 'Estas seleccionando al mismo representante legal.', 'warning'); 
+    
+        }else{
+            
+            // abrir modal para validar el ingreso 
+            $('#modalConfimarCambioRl').modal('show');
+            document.getElementById("confirmarCambioEstatusRepresentanteLegal").innerHTML = `¿Estás seguro de cambiar el representante legal del lote <b>${nombreLoteText}</b> de <b>${nombreRl}</b> a <b>${selectedLabelC}</b>?`;
+            $('#modalCambioRepresentante').modal('hide');
+        }
+        
+        
+    }
+});
+
+
+$(document).on('click','#btnConfirmarCambioRl', function(e){
+    e.preventDefault();
+    var formData = new FormData();
     formData.append("representanteLegal",representanteLegal);
     formData.append("idLote", idLote);
     formData.append("idRl", selectedRl);
     formData.append("idCliente", idCliente);
-    
-    if(validarOpcionRl ==0){
-        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning'); 
-    }else{
-        if(selectedRl !== 0){
-            $('#btnCambiarRL').prop('disabled', true);
-    
-                $.ajax({
-            url: `${general_base_url}Contraloria/modificarRlLote`,
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            beforeSend: function(){
-                $('#spiner-loader').removeClass('hide');
-            },
-            success: function(data){
-                data = JSON.parse(data);
-                if(data.message == 'OK'){
-                    $('#btnCambiarRL').prop('disabled', false);
+    // console.log(
+    //     `representanteLegal: ${representanteLegal},
+    //     idLote: ${idLote},
+    //     idRl(nuevo selecionado): ${selectedRl},
+    //     idCliente: ${idCliente},
+    //     nombreLoteText: ${nombreLoteText},
+    //     nombreRl: ${nombreRl},
+    //     selectedLabelC: ${selectedLabelC}`
+    // );
+    if(selectedRl !== 0){
+                $('#btnCambiarRL').prop('disabled', true);
         
+                    $.ajax({
+                url: `${general_base_url}Contraloria/modificarRlLote`,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                beforeSend: function(){
+                    $('#spiner-loader').removeClass('hide');
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+                    if(data.message == 'OK'){
+                        $('#btnCambiarRL').prop('disabled', false);
+            
+                        $('#spiner-loader').addClass('hide');
+                        $('#tablaCambiarRepresentanteLegal').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
+                        // modalConfimarCambioRl
+                        $('#modalConfimarCambioRl').modal('hide');
+                    }else{
+                        $('#btnCambiarRL').prop('disabled', false);
+            
+                        $('#spiner-loader').addClass('hide');
+                        alerts.showNotification("top", "right",'Ha ocurrido un error al avanzar' +
+                            ' el registro, intentalo nuevamente', "danger");
+                    }   
+                },error: function() {
                     $('#spiner-loader').addClass('hide');
-                    $('#tablaCambiarRepresentanteLegal').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
-                    // modalCambioRepresentante
-                    $('#modalCambioRepresentante').modal('hide');
-                }else{
-                    $('#btnCambiarRL').prop('disabled', false);
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+                
+            });
         
-                    $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right",'Ha ocurrido un error al avanzar' +
-                        ' el registro, intentalo nuevamente', "danger");
-                }   
-            },error: function() {
-                $('#spiner-loader').addClass('hide');
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }else{
+                alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning');
             }
-               
-        });
-    
-        }else{
-            alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning');
-        }
-    }
+    console.warn("btnConfirmarCambioRl modal");
 });
