@@ -37,6 +37,7 @@
                                                     <th>TIPO DE TRÁMITE</th>
                                                     <th>COMENTARIO</th>
                                                     <th>FECHA ÚLTIMO ESTATUS</th>
+                                                    <th>TOTAL CON DESCUENTOS</th>
                                                 </tr>
                                             </thead>
                                         </table>
