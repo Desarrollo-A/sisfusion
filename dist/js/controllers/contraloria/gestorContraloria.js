@@ -1421,7 +1421,7 @@ function crearTablaReasignarProspecto(idCondominio) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Exportar registros a Excel',
-                title: "Listado de lotes contratados por intercambio",
+                title: "Listado reasignar prospectos - Clientes",
                 exportOptions: {
                     columns: [0,1,2,3,4,5,6,7],
                     format: {
@@ -1537,7 +1537,7 @@ function crearTablaReasignarProspecto(idCondominio) {
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Exportar registros a Excel',
-                    title: "Listado de lotes contratados por intercambio",
+                    title: "Listado reasignar prospectos - Prospectos",
                     exportOptions: {
                         columns: [0,1,2,3,4,5],
                         format: {
