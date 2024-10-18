@@ -1,6 +1,6 @@
 let titulosGestor = [];
 let titulosTablaIntercambios = [];
-let titulosCambioTipoVenta=[];
+let titulosCambioTipoVenta = [];
 let titulosTablaCambioRL = [];
 let titulos_principal = [];
 let num_colum_principal = [];
@@ -12,11 +12,15 @@ let idLote = '';
 let usuariosPermitidosRL = [2815, 2875, 12276, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosIntercambio = [5342, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosModelosCasas = [2749];
-let tablaTipoVenta, idLot, tipoVenta;
+let tablaTipoVenta, idLot, tipoVenta,nameLote,idTipoVentaRowSelected;
 let idRl = "";
-let idCliente   = "";
+let idCliente = "";
 let selectedRl = "";
 let selectedOpcion = "";
+let nombreRl  = "";
+let representanteLegal  ="";
+let nombreLoteText  ="";
+let selectedLabelC = "";
 
 $(document).ready(function () {
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
@@ -39,13 +43,85 @@ $(document).ready(function () {
         $('#selector').selectpicker('refresh');
     });
 
+    $(document).on('click', '#btnEditarTipoVenta', function (e) {
+        e.preventDefault();
+        idLot = $(this).data('idlote');
+        nameLote=$(this).data('nombrelote');
+        idTipoVentaRowSelected=$(this).data('idtipoventa');
+        // console.log('Valor del tipo venta desde el onchange del icono->',idTipoVentaRowSelected);
+        $.ajax({
+            url: `${general_base_url}Contraloria/get_tipo_venta`,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#tipoVentaModal').val('');
+                $('#tipoVentaModal').selectpicker('refresh');
+                $.each(data, function (index, opcion) {
+                    $('#tipoVentaModal').append('<option value="' + opcion.id_tventa + '">' + opcion.tipo_venta + '</option>');
+                });
+                $('#tipoVentaModal').selectpicker('refresh');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al cargar las opciones:', error);
+                $('#tipoVentaModal').empty();
+                $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
+            }
+        });
+        $('#modalCambiotipoventa').modal('show');
+    });
+
+    $(document).on('change', '#tipoVentaModal', function () {        
+        tipoVenta = $(this).val();  
+        // console.log('idVenta desde el onchange->',tipoVenta);    
+    });
+    $(document).on('click','#btnAceptarCambioTipoVenta', function(){
+        $.ajax({
+            url: `${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`,
+            type: 'GET',
+            dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response.message === 'OK') {                   
+                    $('#tipo-venta').DataTable().ajax.reload();
+                    $('#modalConfirmacionCambiotipoventa').modal('hide');
+                    alerts.showNotification("top", "right", 'Se ha actualizo correctamente.', "success");
+                    tipoVenta = null;
+                    idLot = null;
+                } else {
+                    alerts.showNotification('top', 'right', `Registro no actualizado.`, 'danger');
+                }
+            },
+            error: function (xhr, status, error) {
+                alerts.showNotification('top', 'right', `Error al enviar la solicitud.`, 'danger');
+            }
+        });
+    });
+   
+    $('#btnConfirmarCambioTipoVenta').on('click', function (e) {
+        e.preventDefault();       
+        if (!tipoVenta) {
+            alerts.showNotification('top', 'right', 'Asegúrate de seleccionar una opción.', 'warning');
+            return;
+        }
+        if(idTipoVentaRowSelected == tipoVenta){
+            alerts.showNotification('top', 'right', 'Estás seleccionando el mismo tipo de venta.', 'warning');
+            return;
+        }
+        if (tipoVenta && idLot) {
+            $('#modalCambiotipoventa').modal('hide');
+            $('#mensajeConfirmacion').html(`¿Estás seguro de cambiar el tipo de venta del lote <strong>${nameLote}</strong>?`);
+            $('#modalConfirmacionCambiotipoventa').modal('show');
+        }
+    });
 });
 
 $(document).on('change', '#selector', function () {
     $('#selectCondominio').val('');
-    $('#selectCondominio').selectpicker('refresh');   
+    $('#selectCondominio').selectpicker('refresh');
     $('#selectProyecto').val('');
-    $('#selectProyecto').selectpicker('refresh');   
+    $('#selectProyecto').selectpicker('refresh');
 
     $("#divTablaRL, #divTablaIntercambio, #divmodelosTable").addClass("hide");
     selectedOpcion = $(this).val();
@@ -55,7 +131,7 @@ $(document).on('change', '#selector', function () {
         $('#condominio').addClass('hide');
         $("#divTablaRL").removeClass("hide");
         $('#divTablaCambiarVenta').addClass('hide');
-         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
+        $("#divtablaCambiarRepresentanteLegal").addClass("hide");
         llenarTablaRl($(this).val());
     } else if ($(this).val() == 2) {
         $("#divTablaIntercambio").removeClass("hide");
@@ -63,42 +139,40 @@ $(document).on('change', '#selector', function () {
         $('#condominio').addClass('hide');
         $("#divTablaRL").addClass("hide");
         $('#divTablaCambiarVenta').addClass('hide');
-         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
+        $("#divtablaCambiarRepresentanteLegal").addClass("hide");
         llenarTablaIntercambios($(this).val());
     } else if ($(this).val() == 3) {
         $('#proyecto').addClass('hide');
         $('#condominio').addClass('hide');
         $('#divTablaCambiarVenta').addClass('hide');
-         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
+        $("#divtablaCambiarRepresentanteLegal").addClass("hide");
         $("#divmodelosTable").removeClass("hide");
     }
     else if ($(this).val() == 4) {
         $('#proyecto').removeClass('hide');
         $('#condominio').removeClass('hide');
-        $('#proyecto').val('');
-        $('#condominio').val('');
         $('#divTablaCambiarVenta').addClass('hide');
         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
-    }else if ($(this).val() == 5) {
+    } else if ($(this).val() == 5) {
         // LLEAR EL SELECT DE PROYECTO
         $('#proyecto').removeClass('hide');
         $('#condominio').removeClass('hide');
         $('#divTablaCambiarVenta').addClass('hide');
         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
-    } 
+    }
 });
 
 $('#selectCondominio').change(function () {
     idOpcionCondominio = $(this).val();
-    if(idOpcionCondominio!== null && idOpcionCondominio !== '' && idOpcionCondominio !== undefined){
-        if(selectedOpcion  == 4){
+    if (idOpcionCondominio !== null && idOpcionCondominio !== '' && idOpcionCondominio !== undefined) {
+        if (selectedOpcion == 4) {
             crearTablaTipoVenta(idOpcionCondominio);
-        }else  if(selectedOpcion  == 5){
+        } else if (selectedOpcion == 5) {
             ConstruirTablaCAmbiarRepresentante(idOpcionCondominio);
         }
     }
 });
-
+// FUNCION PARA LLENAR LA TABLA DE LOTES DISPONIBLES PARA CAMBIO DE TIPO DE VENTA
 function crearTablaTipoVenta(idCondominio) {
     $('#tipo-venta thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
@@ -109,9 +183,7 @@ function crearTablaTipoVenta(idCondominio) {
                 tablaTipoVenta.column(i).search(this.value).draw();
         });
     });
-    if ($.fn.DataTable.isDataTable('#tipo-venta')) {
-        tablaTipoVenta.destroy();
-    }
+    titulosCambioTipoVenta.pop();
     $('#divTablaCambiarVenta').removeClass('hide');
     construirHead('tipo-venta');
     tablaTipoVenta = $('#tipo-venta').DataTable({
@@ -122,9 +194,9 @@ function crearTablaTipoVenta(idCondominio) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title: 'Historial Contratación',
+                title: 'Listado de lotes por tipo de venta',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5],
+                    columns: [0, 1, 2, 3, 4],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosCambioTipoVenta[columnIdx] + ' ';
@@ -155,7 +227,7 @@ function crearTablaTipoVenta(idCondominio) {
                 data: function (d) {
                     return `
                         <div class="d-flex justify-center">
-                            <button href="#" id="btnEditarTipoVenta" class="btn-data btn-blueMaderas" data-idlote="${d.idLote}" title="EDITAR INFORMACIÓN">
+                            <button href="#" id="btnEditarTipoVenta" class="btn-data btn-blueMaderas" data-idlote="${d.idLote}" data-nombrelote="${d.nombreLote}" data-idtipoventa="${d.idTipoVenta}"  data-toggle="tooltip" data-placement="top" title="EDITAR">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
                         </div>`;
@@ -221,7 +293,7 @@ function crearTablaTipoVenta(idCondominio) {
                     if(response.message==='OK'){
                         tablaTipoVenta.ajax.reload();
                         $('#modalCambiotipoventa').modal('hide');
-                        alerts.showNotification("top", "right", 'Se ha actualizo correctamente', "success");
+                        alerts.showNotification("top", "right", 'Se ha actualizo correctamente.', "success");
                         tipoVenta = null;
                         idLot = null;
                     }else{
@@ -231,11 +303,14 @@ function crearTablaTipoVenta(idCondominio) {
                 error: function (xhr, status, error) {
                     console.error('Error al cargar las opciones:', error);
                     $('#tipoVentaModal').empty();
-                    $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
+                    $('#tipoVentaModal').
+                    append('<option value="">Error al cargar opciones</option>');
                 }
             });
         } else {
             console.error("No se han seleccionado valores válidos para la actualización");
+            alerts.showNotification('top', 'right', 'Asegúrate de ingresar un valor.', 'warning')
+   
         }
     });
 
@@ -259,6 +334,11 @@ function crearTablaTipoVenta(idCondominio) {
     });
 
     applySearch(tablaTipoVenta);
+    $('#tipo-venta').on('draw.dt', function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 }
 
 function loadSelectOptions() {
@@ -277,11 +357,32 @@ function loadSelectOptions() {
     }, 'json');
     $.post(`${general_base_url}OperacionesPorCatalogo/listacatalogo`, function (data) {
         for (var i = 0; i < data.length; i++) {
-            $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'].toUpperCase()));
         }
         $("#cambiarrepresentante").selectpicker('refresh');
     }, 'json');
 }
+
+    // $.getJSON(`${general_base_url}Contraloria/get_registros_tipo_venta/2`).done(function(data) {
+    //     // for (let i = 0; i < data.length; i++) {
+
+    //     //     if (data[i]['id_catalogo'] == 16){
+    //     //         $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+    //     //         }
+
+    //     //     if (data[i]['id_catalogo'] == 1)
+    //     //         $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+
+    //     //     if (data[i]['id_catalogo'] == 0){
+    //     //         $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+    //     //     }
+    //     // }
+    //     // $('#payment_method').selectpicker('refresh');
+    //     // $('#headquarter').selectpicker('refresh');
+    //     // $('#member_type').selectpicker('refresh');  
+    //     console.log('Respuesta desde el getJSON');      
+    //     console.log(data);        
+    // });
 
 $('#selectProyecto').change(function () {
     $('#spiner-loader').removeClass('hide');
@@ -699,7 +800,7 @@ $(document).on('click', '#btnActualizarRL', function (e) {
     var dataExp1 = new FormData();
     dataExp1.append("opcionNombreRl", opcionNombreRl);
     if (validarOpcionNombre == 0) {
-        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar una opción', 'warning')
+        alerts.showNotification('top', 'right',  'Asegúrate de ingresar un valor.', 'warning')
     } else {
         $('#btnActualizarRL').prop('disabled', true);
         $.ajax({
@@ -889,11 +990,15 @@ $(document).ready(function () {
 
 $("#cambiarrepresentante").change(function () {
     selectedRl = $(this).val();
+    selectedLabelC = $("#cambiarrepresentante option:selected").text(); 
+    console.warn("selectedRl: " + selectedRl);
+    console.warn("selectedLabel (texto): " + selectedLabelC);
+
 });
 
-function ConstruirTablaCAmbiarRepresentante(idCondominio){
+function ConstruirTablaCAmbiarRepresentante(idCondominio) {
     $("#divtablaCambiarRepresentanteLegal").removeClass("hide");
-    if(idCondominio){
+    if (idCondominio) {
         $('#tablaCambiarRepresentanteLegal thead tr:eq(0) th').each(function (i) {
             var title = $(this).text();
             titulosTablaIntercambios.push(title);
@@ -945,20 +1050,16 @@ function ConstruirTablaCAmbiarRepresentante(idCondominio){
                 { data: 'nombreCondominio' },
                 { data: 'nombreLote' },
                 { data: 'idLote' },
-                { data: function (d) { 
-                      
+                { data: 'referencia' },
+                { 
+                    data: function (d) { 
                     return `<span>${d.nombreRL!= null ?d.nombreRL : 'N/A'}</span>`
-                }
-                },
-                {
-                    data: function (d) {
-                        return `<span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.nombreEstatusLote}</span>`;
                     }
                 },
                 {
                     orderable: false,
                     data: function (d) {
-                        return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-blueMaderas modalCambioRepresentanteB" data-nombreLote="${d.nombreLote}" data-idlote="${d.idLote}" data-cliente="${d.idCliente}" data-idrl="${d.id_rl}" data-toggle="tooltip" data-placement="top" title="${_("editar")}"><i class="fas fa-pencil-alt"></i></button></div>`;
+                        return `<div class="d-flex justify-center"><button href="#" class="btn-data btn-blueMaderas modalCambioRepresentanteB"  data-nombreLoteText="${d.nombreLote}" data-idlote="${d.idLote}" data-cliente="${d.idCliente}" data-nombrerl="${d.nombreRL}" data-idrl="${d.id_rl}" data-toggle="tooltip" data-placement="top" title="${_("editar")}"><i class="fas fa-pencil-alt"></i></button></div>`;
                     }
                 }
             ],
@@ -1181,69 +1282,97 @@ function llenarTablaCambioRL(tipoOperacion) {
 // MODAL PARA REALIZAR EL CAMBIO DE LOTES CONTRATADOS POR INTERCAMBIO
 $(document).on('click', '.modalCambioRepresentanteB', function () {
     $('#modalCambioRepresentante').modal('show');
-    document.getElementById("confirmarCambioEstatus").innerHTML = `¿Estás seguro de realizar el cambio de estatus del lote <b>${$(this).attr('data-nombreLote')}</b>?`;
     idLote = $(this).data('idlote');
+    nombreLoteText = $(this).data('nombrelotetext');
     idRl = $(this).data('idrl');
     idCliente = $(this).data('cliente');
+    nombreRl = $(this).data('nombrerl');
+    
 });
 
 $(document).on('click', '.cambiarRlLote', function () {
     $('#modalCambioRL').modal('show');
 });
 
-$(document).on('click','#btnCambiarRL',function(e) {
+$(document).on('click', '#btnCambiarRL', function (e) {
     e.preventDefault();
     var representanteLegal = $(this).data('#cambiarrepresentante');
     var validarOpcionRl = ($("#cambiarrepresentante").val().length == 0) ? 0 : 1;
-    var formData = new FormData();
+    if(validarOpcionRl ==0){
+        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un valor.', 'warning'); 
+    }else{
+        if(selectedRl == idRl){
+            alerts.showNotification('top', 'right', 'Estas seleccionando el mismo valor.', 'warning'); 
     
+        }else{
+            
+            // abrir modal para validar el ingreso 
+            $('#modalConfimarCambioRl').modal('show');
+            document.getElementById("confirmarCambioEstatusRepresentanteLegal").innerHTML = `¿Estás seguro de cambiar el representante legal del lote <b>${nombreLoteText}</b> de <b>${nombreRl}</b> a <b>${selectedLabelC}</b>?`;
+            $('#modalCambioRepresentante').modal('hide');
+        }
+        
+        
+    }
+});
+$(document).on('click','#btnConfirmarCambioRl', function(e){
+    e.preventDefault();
+    var formData = new FormData();
     formData.append("representanteLegal",representanteLegal);
     formData.append("idLote", idLote);
     formData.append("idRl", selectedRl);
     formData.append("idCliente", idCliente);
-    
-    if(validarOpcionRl ==0){
-        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning'); 
-    }else{
-        if(selectedRl !== 0){
-            $('#btnCambiarRL').prop('disabled', true);
-    
-                $.ajax({
-            url: `${general_base_url}Contraloria/modificarRlLote`,
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            beforeSend: function(){
-                $('#spiner-loader').removeClass('hide');
-            },
-            success: function(data){
-                data = JSON.parse(data);
-                if(data.message == 'OK'){
-                    $('#btnCambiarRL').prop('disabled', false);
+    // console.log(
+    //     `representanteLegal: ${representanteLegal},
+    //     idLote: ${idLote},
+    //     idRl(nuevo selecionado): ${selectedRl},
+    //     idCliente: ${idCliente},
+    //     nombreLoteText: ${nombreLoteText},
+    //     nombreRl: ${nombreRl},
+    //     selectedLabelC: ${selectedLabelC}`
+    // );
+    if(selectedRl !== 0){
+                $('#btnCambiarRL').prop('disabled', true);
         
+                    $.ajax({
+                url: `${general_base_url}Contraloria/modificarRlLote`,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                beforeSend: function(){
+                    $('#spiner-loader').removeClass('hide');
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+                    if(data.message == 'OK'){
+                        $('#btnCambiarRL').prop('disabled', false);
+            
+                        $('#spiner-loader').addClass('hide');
+                        $('#tablaCambiarRepresentanteLegal').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
+                        // modalConfimarCambioRl
+                        $('#modalConfimarCambioRl').modal('hide');
+                        // idRl  = selectedRl;
+                        // nombreLoteText = selectedLabelC;
+                        $('#cambiarrepresentante').val('').selectpicker('refresh');
+                    }else{
+                        $('#btnCambiarRL').prop('disabled', false);
+            
+                        $('#spiner-loader').addClass('hide');
+                        alerts.showNotification("top", "right",'Ha ocurrido un error al avanzar' +
+                            ' el registro, intentalo nuevamente', "danger");
+                    }   
+                },error: function() {
                     $('#spiner-loader').addClass('hide');
-                    $('#tablaCambiarRepresentanteLegal').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
-                    // modalCambioRepresentante
-                    $('#modalCambioRepresentante').modal('hide');
-                }else{
-                    $('#btnCambiarRL').prop('disabled', false);
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+                
+            });
         
-                    $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right",'Ha ocurrido un error al avanzar' +
-                        ' el registro, intentalo nuevamente', "danger");
-                }   
-            },error: function() {
-                $('#spiner-loader').addClass('hide');
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }else{
+                alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning');
             }
-               
-        });
-    
-        }else{
-            alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning');
-        }
-    }
+    console.warn("btnConfirmarCambioRl modal");
 });

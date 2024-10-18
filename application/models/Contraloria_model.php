@@ -2046,26 +2046,23 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 lo.status = 1")->result();
     }
 
-    // public function getRegistrosCambioTipoVenta($idCondominio) {
-    //     return $this->db->query(
-    //         "SELECT
-    //             re.nombreResidencial,
-    //             co.nombre nombreCondominio,
-    //             lo.nombreLote,
-    //             lo.idLote,
-    //             ISNULL(lo.referencia, '') referencia,
-    //             lo.idStatusLote,
-    //             lo.tipo_venta idTipoVenta
-    //             tv.tipo_venta nombreTipoVenta
-    //         FROM
-    //             lotes lo
-    //         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = 1
-    //         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-    //         INNER JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
-    //         WHERE
-    //             lo.status = 1")->result();
-    // }
+    public function get_catalogox_contraloria(){
+        $sql = "
+        SELECT CAST(id_catalogo AS varchar(2)) AS id_catalogo, id_opcion, nombre
+        FROM opcs_x_cats 
+        WHERE id_catalogo IN (77) 
+        AND estatus = 1
+        UNION ALL
+        SELECT 'tv' AS id_catalogo, id_tventa AS id_opcion, tipo_venta AS nombre 
+        FROM tipo_venta
+        UNION ALL
+        SELECT 'sl' AS id_catalogo, idStatusLote AS id_opcion, nombre AS nombre 
+        FROM statuslote
+        ";
 
+        $query = $this->db->query($sql);
+        return $query->result(); 
+    }
     public function getRegistrosCambioTipoVenta($idCondominio) {
         return $this->db->query(
             "SELECT
