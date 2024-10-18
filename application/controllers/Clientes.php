@@ -164,7 +164,7 @@ public function getStatusMktdPreventa(){
         public function consultProspects_dir()
     {
         $this->load->view('template/header');
-        $this->load->view("clientes/consulta_prospecto_dir.php");
+        $this->load->view("clientes/consulta_prospecto_dir");
     }
     public function consultProspects_sbdir()
     {
@@ -1857,28 +1857,21 @@ public function getStatusMktdPreventa(){
         exit;
     }
 
-    public function getProspectsListByAsesor($id_asesor)
-    {
+    public function getProspectsListByAsesor($id_asesor) {
         $typeTransaction = $this->input->post("typeTransaction");
-        if($this->input->post("beginDate") != 0 && $this->input->post("endDate") != 0){
-            $fechaInicio = explode('/', $this->input->post("beginDate"));
-            $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-            $where = $this->input->post("where");
-            $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
-        }
-        else{
-            $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, 0, 0, 0);
-        }
-        if($data != null) {
+        $fechaInicio = explode('/', $this->input->post("beginDate"));
+        $fechaFin = explode('/', $this->input->post("endDate"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+        $where = $this->input->post("where");
+        $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
+        if($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
         exit;
     }
-    /********************/
+    
     function getResultsProspectsSerch()
     {
 

@@ -49,17 +49,17 @@ $("#EditarPerfilForm").one('submit', function (e) {
                 $("#addFile").modal('hide');
                 // $("#Aviso .msj").append('Una vez que haya cargado sus factura, ya no podrá modificar su opinión de cumplimiento en caso de ser errónea. por favor revise si el archivo seleccionado fue el correcto.');
                 setTimeout('document.location.reload()', 10);
-                alerts.showNotification("top", "right", "Opinión de cumplimiento cargada con éxito.", "success");
+                alerts.showNotification("top", "right", _('opinion-cargada-exito'), "success");
 
             } else {
                 $("#addFile").modal('hide');
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('asegurate-llenado-campos'), "warning");
             }
         },
         error: function () {
             $('#spiner-loader').addClass('hide');
             $("#addFile").modal('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 });
@@ -71,7 +71,7 @@ $(document).on('click', '.verPDF', function () {
         /*verPDF*/
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${general_base_url}static/documentos/cumplimiento/${$itself.attr('data-nombreArchivo')}"></iframe></div>`,
         player: "html",
-        title: "Visualizando archivo de cumplimiento: " + $itself.attr('data-nombreArchivo'),
+        title: _('visualizando-archivo-cumplimiento')+ $itself.attr('data-nombreArchivo'),
         width: 985,
         height: 660
 
@@ -96,15 +96,15 @@ $("#formDelete").on('submit', function (e) {
             if (data == 1) {
                 $("#Aviso2").modal('hide');
                 setTimeout('document.location.reload()', 10);
-                alerts.showNotification("top", "right", "El archivo se eliminó exitosamente.", "success");
+                alerts.showNotification("top", "right", _('archivo-elimino-exitosamente'), "success");
             } else {
                 $("#addFile").modal('hide');
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
+                alerts.showNotification("top", "right", _('asegurate-llenado-campos'), "warning");
             }
         },
         error: function () {
             $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", _('algo-salio-mal'), "danger");
         }
     });
 

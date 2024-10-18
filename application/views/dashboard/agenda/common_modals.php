@@ -250,18 +250,18 @@
                             <table id="appointments-datatable" class="table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>ID Evento</th>
-                                        <th>Nombre</th>
-                                        <th class="text-center">Estatus&nbsp;&nbsp;&nbsp;<i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" title="Positivo.<br/>Se identifica como estatus positivo a: la cita, llamada o recorrido con un prospecto, el cual sigue interesado y se encuentra más cerca del cierre de la venta.<br/><br/>Negativo.<br/>Se identifica como estatus negativo a: la cita, llamada o recorrido con un prospecto, el cual NO sigue interesado y No desea seguimiento para concretar la compra."></i></th>
-                                        <th class="text-center">Comentarios</th>
-                                        <th class="text-center">Fecha de cita</th>
+                                        <th data-i18n="id-evento">ID Evento</th>
+                                        <th data-i18n="nombre">Nombre</th>
+                                        <th class="text-center"><span data-i18n="estatus">Estatus</span><i class="fas fa-info-circle" data-html="true" data-toggle="tooltip" data-placement="bottom" data-i18n-tooltip="leyenda-calendario" ></i></th>
+                                        <th class="text-center" data-i18n="comentarios">Comentarios</th>
+                                        <th class="text-center" data-i18n="fecha-cita">Fecha de cita</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 </tbody>
                             </table>
                             <div class="d-flex justify-end">
-                                <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS">Guardar</button>
+                                <button type="submit" class="btn btn-primary no-shadow rounded-circle finishS" data-i18n="guardar">Guardar</button>
                             </div>
                         </form>
                     </div>
@@ -277,14 +277,14 @@
                     <div class="material-datatables">
                         <form name="" id="" method="post">
                             <div>
-                                <h3 class="m-0 text-center">Eliminar evento</h3>
-                                <p class="text-center">Estás a punto de remover el evento seleccionado ¿Deseas continuar?</p>
+                                <h3 class="m-0 text-center" data-i18n="eliminar-evento">Eliminar evento</h3>
+                                <p class="text-center" data-i18n="remover-elemento-seleccionado">Estás a punto de remover el evento seleccionado ¿Deseas continuar?</p>
                                 <input type="hidden" name="idAgenda" class="idAgenda2">
                                 <input type="hidden" name="idGoogle" class="idGoogle">
                             </div>
                             <div class="d-flex justify-end">
-                                <button type="button" class="btn btn-danger btn-simple" onclick="backFromDelete()" style="background-color:white;">Regresar</button>
-                                <button type="button" class="btn btn-primary no-shadow rounded-circle" onclick="deleteCita()">Confirmar</button>
+                                <button type="button" class="btn btn-danger btn-simple" onclick="backFromDelete()" style="background-color:white;" data-i18n="regresar">Regresar</button>
+                                <button type="button" class="btn btn-primary no-shadow rounded-circle" onclick="deleteCita()" data-i18n="btn-confirm">Confirmar</button>
                             </div>
                         </form>
                     </div>
@@ -327,12 +327,12 @@
                 <div class="material-datatables">
                     <div class="row">
                         <div class="col-lg-12">
-                            <h3 class="m-0 text-center">Tiempo de sesión expirada</h3>
-                            <p class="text-center mt-2">
+                            <h3 class="m-0 text-center" data-i18n="tiempo-sesion-expirada">Tiempo de sesión expirada</h3>
+                            <p class="text-center mt-2" data-i18n="iniciar-sesion-cuenta-google">
                                 ¿Desea iniciar sesión con una cuenta de Google para la sincronización del calendario?
                             </p>
                             <p class="text-center mt-2">
-                                <strong>Nota:</strong> En caso de responder "No", los eventos se guardarán únicamente en el CRM.
+                                <strong><span data-i18n="nota-2">Nota</span>: </strong><span data-i18n="en-caso-no-calendar"> En caso de responder "No", los eventos se guardarán únicamente en el CRM.</span>
                             </p>
                         </div>
                         <div class="col-lg-12">
@@ -347,7 +347,7 @@
                                 <button type="button"
                                         id="withGoogleBtn"
                                         class="btn btn-primary"
-                                        onclick="conGoogleAuth()">
+                                        onclick="conGoogleAuth()" data-i18n="si">
                                     Sí
                                 </button>
                             </div>

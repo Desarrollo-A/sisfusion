@@ -74,13 +74,14 @@ tabla_6 = $("#tabla_autorizaciones_ventas").DataTable({
                     extend: 'excelHtml5',
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
-                    titleAttr: 'Autorizaciones por ingresar',
+                    titleAttr: `${_("descargar-excel")}`,
                     title:'Autorizaciones por ingresar',
+                    fileName : `${"autorizacion-por-ingresar"}`,
                     exportOptions: {
                         columns: [0,1,2,3],
                         format: {
                             header: function (d, columnIdx) {
-                                return ' '+titulos[columnIdx] +' ';
+                                return $(d).attr('placeholder').toUpperCase();
                             }
                         }
                     },
@@ -138,7 +139,9 @@ tabla_6 = $("#tabla_autorizaciones_ventas").DataTable({
             ]
 
     });
+    
 
+    applySearch(tabla_6);
     $('#tabla_autorizaciones_ventas').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
@@ -199,12 +202,12 @@ $(document).on("submit", "#envioAutorizacion", function (e) {
         $("#sendRequestButton").prop("disabled", false);
 
         if (res.message === "OK") {
-            alerts.showNotification("top", "right", `El documento se ha subido con éxito.`, "success");
+            alerts.showNotification("top", "right", `${_("documento-subido")}`, "success");
             $("#modal_autorizacion").modal("hide");
         }
         
       },error: function () {
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        alerts.showNotification("top", "right", `${_("algo-salio-mal")}`, "danger");
       }
     });
 });

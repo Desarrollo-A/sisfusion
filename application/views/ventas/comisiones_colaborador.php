@@ -30,7 +30,7 @@
                 } else if($opn_cumplimiento[0]['estatus'] == 0) {
                     $cadena = '<button type="button" class="btn btn-info subir-archivo"><span data-i18n="doc-fiscal">SUBIR DOCUMENTO FISCAL</span></button>';
                 } else if ($opn_cumplimiento[0]['estatus'] == 1) {
-                    $cadena = '<p><b>Documento fiscal cargado con éxito</b>
+                    $cadena = '<p><b><span data-i18n="doc-fiscal-cargado">Documento fiscal cargado con éxito</span></b>
                                 <a href="#" class="verPDFExtranjero" title="Documento fiscal" data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" style="cursor: pointer;"><u data-i18n="ver-doc">Ver documento</u></a>
                             </p>';
                 } else if($opn_cumplimiento[0]['estatus'] == 2) {

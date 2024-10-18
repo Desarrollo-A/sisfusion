@@ -138,7 +138,7 @@
 										<div class="tab-pane" id="aut">
 											<h3 class="card-title center-align" data-i18n="autorizaciones">Autorizaciones</h3>
 											<p class="center-align" data-i18n="texto-autorizacion">A través de este panel(Autorizaciones) podrás realizar lo siguiente; consulta de las solicitudes autorizadas, visualización de los estatus correspondientes por cada una de las autorizaciones en proceso, descarga de información en formatos: PDF y XLSX.<br></p>
-											<table id="addExp" class="table-striped table-hover">												
+											<table id="addExp" class="table-striped table-hover">
 												<thead>
 													<tr>
 														<th>proyecto</th>
@@ -157,7 +157,7 @@
 												</thead>
 												<tbody></tbody>
 											</table>
-										</div>	
+										</div>
 									</div>
 								</div>
 							</div>

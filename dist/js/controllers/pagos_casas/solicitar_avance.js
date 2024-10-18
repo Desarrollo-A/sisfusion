@@ -101,7 +101,6 @@ let columns = [
         return `${data.avanceObra} %`
     } },
     { data: function(data){
-        console.log("data: ", data);
         if(data.nuevo_avance){
             return `${data.nuevo_avance} %`
         }

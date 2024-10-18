@@ -1602,7 +1602,8 @@
                 cl.regimen_fac,
                 cl.cp_fac, 
                 cl.colonia,
-                cl.pais
+                cl.pais,
+                cl.idClienteNeoData
             FROM
                 clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente

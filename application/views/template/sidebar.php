@@ -45,7 +45,7 @@
                         {
             ?>
                             <li class="nav-item <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { echo 'active'; }elseif($url == base_url().$datos->pagina  && $datos->nombre == "Asesores / Coordinadores"){echo 'active';}elseif($url == base_url().$datos->pagina && ($datos->nombre == "Revisión evidencia" || $datos->nombre == "Evidencias clientes" || $datos->nombre == "Eliminados de la lista" || $datos->nombre == "Carga de folios" || $datos->nombre == "Gestor general")){echo 'active';}elseif($url == base_url().$datos->pagina  && $datos->nombre == "Dashboard"){echo 'active';}?>">
-                                <a class="nav-link" href="<?php if(in_array($datos->nombre, array('Aparta en línea', 'Pago de enganche'))){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if(in_array($datos->nombre, array('Aparta en línea', 'Pago de enganche'))){ echo ' target="_blank"';   } ?>>
+                                <a class="nav-link" <?php if ($url == $url2 && $datos->nombre == "Inicio" ) { ?> onclick="borrarFlashdata();" <?php } ?> href="<?php if($datos->nombre == "Aparta en línea"){ echo $datos->pagina; } elseif($datos->nombre == "Pago de enganche"){ echo $datos->pagina; } elseif($datos->nombre == "Asesores / Coordinadores"){echo base_url().$datos->pagina;}else {echo base_url().$datos->pagina;}?>" <?php if($datos->nombre == "Aparta en línea" || $datos->nombre == "Pago de enganche"){ echo ' target="_blank"';   } ?>>
                                     <i class="material-icons"><?=$datos->icono?></i>
                                     <p><?=$datos->nombre?></p>
                                 </a>
@@ -234,7 +234,7 @@
                     <?php
                     if( in_array($this->session->userdata('id_rol'), [1,2,3,4,5,6,7,9])){
                     ?>
-                        <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Idioma">
+                        <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Idioma" data-i18n-tooltip="idioma">
                             <a onClick="changeLanguaje()">
                                 <img id="lang_icon" src="<?= base_url() ?>static/images/langs/es.png" width="20" height="20">
                             </a>
@@ -242,7 +242,7 @@
                     <?php
                     }
                     ?>
-                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes">
+                    <li class="icoNav noResponsive" rel="tooltip" data-placement="bottom" title="Ajustes" data-i18n-tooltip="ajustes">
 						<a href="<?=base_url()?>index.php/Usuarios/configureProfile">
                             <span class="material-icons">settings</span>
 						</a>

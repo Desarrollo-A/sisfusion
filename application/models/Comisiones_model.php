@@ -5428,7 +5428,7 @@ public function CancelarDescuento($id_pago,$motivo)
         else if ($id_usuario == 14946) // MELANI BECERRIL FLORES
             $id_lider .= ", 7474";
         else if ($id_usuario == 16783) // Mayra Alejandra Angulo Muñiz
-            $id_lider .= ", 13821";
+            $id_lider .= ", 13821, 234";
         else if ($id_usuario == 16813) // Vanessa Castro Muñoz
             $id_lider .= ", 11680";
         else if ($id_usuario == 2987) // Alan Michell Alba Sánchez
@@ -5437,6 +5437,8 @@ public function CancelarDescuento($id_pago,$motivo)
             $id_lider .= ", 2080";
         else if ($id_usuario == 15716) // ADRIAN TREJO GUTIERREZ
             $id_lider .= ", 7944";
+        else if ($id_usuario == 18027) // ALMA ADRIANA PEREZ DOMINGUEZ
+            $id_lider .= ", 113";
         if ($puesto === '3') // CONSULTA GERENTES
             $puestoWhereClause = "id_usuario IN ($id_lider)";
         else if ($puesto === '9') // CONSULTA COORDINADORES

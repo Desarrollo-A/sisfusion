@@ -36,7 +36,7 @@ class Resguardos extends CI_Controller
         redirect(base_url());
         $this->load->view('template/header');
         $this->load->view("resguardos/retiros-view");
-      }
+  }
 
   public function getRetiros($user,$opc)
   {

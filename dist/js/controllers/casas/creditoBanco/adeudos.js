@@ -48,6 +48,7 @@ pass_to_proyecto_ejecutivo = function(data) {
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'documentos', value: data.documentos }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 
@@ -86,6 +87,7 @@ back_to_carta_auth = function (data) {
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 

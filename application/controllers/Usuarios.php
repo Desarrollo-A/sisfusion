@@ -794,4 +794,14 @@ class Usuarios extends CI_Controller
         $opciones = $this->Usuarios_modelo->getOptionByIdRol($id_rol);
         print_r(json_encode($opciones));
     }
+
+    public function getBitacoraUsuarios() {
+        $dataUsuarios = $this->Usuarios_modelo->getBitacoraUsuarios()->result_array();
+        echo json_encode($dataUsuarios);
+    }
+
+    public function bitacoraCompleta() {
+        $this->load->view('template/header');
+        $this->load->view('usuarios/bitacoraCompleta');
+    }
 }

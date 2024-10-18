@@ -201,7 +201,7 @@ class Documentacion extends CI_Controller {
     }
 
 
-    function actualizarRamaDeDocumento($file, string $folder, string $documentName, $idDocumento): array {
+    function actualizarRamaDeDocumento($file, string $folder, string $documentName, $idDocumento, $flagSoporte = null): array {
         //$movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
         $input = ['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ä', 'ë', 'ï', 'ö', 'ü', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'â', 'ã', 'ä', 'å', 'ā', 'ă', 'ą', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ā', 'Ă', 'Ą', 'è', 'é', 'é', 'ê', 'ë', 'ē', 'ĕ', 'ė', 'ę', 'ě', 'Ē', 'Ĕ', 'Ė', 'Ę', 'Ě', 'ì', 'í', 'î', 'ï', 'ì', 'ĩ', 'ī', 'ĭ', 'Ì', 'Í', 'Î', 'Ï', 'Ì', 'Ĩ', 'Ī', 'Ĭ', 'ó', 'ô', 'õ', 'ö', 'ō', 'ŏ', 'ő', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ō', 'Ŏ', 'Ő', 'ù', 'ú', 'û', 'ü', 'ũ', 'ū', 'ŭ', 'ů', 'Ù', 'Ú', 'Û', 'Ü', 'Ũ', 'Ū', 'Ŭ', 'Ů', '(', ')'];
         $output = '';
@@ -221,7 +221,7 @@ class Documentacion extends CI_Controller {
             $updateDocumentData = array(
                 "expediente" => $documentName,
                 "modificado" => date('Y-m-d H:i:s'),
-                "idUser" => $this->session->userdata('id_usuario'),
+                "idUser" => $flagSoporte == 1 ? 1 : $this->session->userdata('id_usuario'),
                 "bucket" => 1
             );
 
@@ -238,12 +238,14 @@ class Documentacion extends CI_Controller {
     public function eliminarArchivo() {
         $idDocumento = $this->input->post('idDocumento');
         $tipoDocumento = $this->input->post('tipoDocumento');
+
         $updateDocumentData = array(
             "expediente" => NULL,
             "modificado" => date('Y-m-d H:i:s'),
-            "idUser" => $this->session->userdata('id_usuario'),
+            "idUser" => $this->session->userdata('id_rol') == 8 ? 1: $this->session->userdata('id_usuario'),
             "bucket" => 0
         );
+        
 
         $nombreExp = $this->Registrolote_modelo->getNomExp($idDocumento);
         $infoLote = $this->Registrolote_modelo->getNameLote($nombreExp->idLote);
@@ -551,6 +553,7 @@ class Documentacion extends CI_Controller {
         $idDocumento = $this->input->post('idDocumento');
         $tipoDocumento = $this->input->post('tipoDocumento');
         $documentName = "{$this->input->post('tituloDocumento')}.$fileExt";
+        $flagSoporte = $this->session->userdata('id_rol') == 8 ? 1: 0;
 
         $folder = $this->Documentacion_model->getCarpetaArchivo($tipoDocumento, $lote->proceso, $lote->nombreLote);
 
@@ -564,7 +567,7 @@ class Documentacion extends CI_Controller {
             //termina la validación
 
 
-            $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
+            $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento, $flagSoporte);
             echo json_encode($res);
             return;
         }
@@ -577,7 +580,7 @@ class Documentacion extends CI_Controller {
         }
 
 
-        $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
+        $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento, $flagSoporte);
         echo json_encode($res);
     }
 

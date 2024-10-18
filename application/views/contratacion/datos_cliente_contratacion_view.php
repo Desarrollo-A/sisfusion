@@ -8,7 +8,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title"><b data-i18n="rechazar">Rechazar</b> <span data-i18n="estatus"> estatus. </span></h4>
+                        <h4 class="modal-title"><b data-i18n="rechazar">Rechazar</b> <span data-i18n="estatus"> estatus </span></h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h5 class=""></h5>
                     </div>
@@ -35,7 +35,7 @@
                                             <th>asesor</th>
                                             <th>coordinador</th>
                                             <th>gerente</th>
-                                            <th>subdirectos</th>
+                                            <th>subdirector</th>
                                             <th>director-regional</th>
                                             <th>director-regional-2</th>
                                             <th>fecha-alta</th>
@@ -64,19 +64,19 @@
                                 <i class="fas fa-user-friends fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align" data-i18n = "registro-cliente">Registro de clientes</h3>
+                                <h3 class="card-title center-align" data-i18n="registro-cliente">Registro de clientes</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
                                                 <label class="control-label overflow-hidden" for="proyecto" data-i18n="proyecto">Proyecto</label>
-                                                <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label" for="proyecto" data-i18n="condominio">Condominio</label>
-                                                <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                <select name="condominio" id="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" data-i18n-label="selecciona-una-opcion" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>

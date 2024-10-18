@@ -27,11 +27,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <p class="p-0 text-center">Tienes que seleccionar al menos un valor para el campo <i><b>Empresa</b></i>.
-                    </p>
+                <p class="p-0 text-center" data-i18n="seleccionar-uno-valor">Tienes que seleccionar al menos un valor para el campo<i><b data-i18n='empresa'>Empresa</b></i>.
+                </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span data-i18n="cerrar">CERRAR</span></button>
                 </div>
             </div>
         </div>
@@ -47,36 +47,36 @@
                         </div>
                         <div class="card-content">
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Reporte por lotes (NeoData)</h3>
+                                <h3 class="card-title center-align" data-i18n="reporte-lotes">Reporte por lotes (NeoData)</h3>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
-                                        <div class="form-group select-is-empty">
+                                    <div class="form-group select-is-empty">
                                             <label class="control-label">Empresa</label>
-                                            <select id="empresas" name="empresas" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                            <select id="empresas" name="empresas" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="" data-i18n-label="selecciona-una-opcion"data-size="7" data-container="body" required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
                                         <div class="form-group select-is-empty">
-                                            <label class="control-label">Proyecto</label>
-                                            <select id="proyectos" name="proyectos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                            <label class="control-label" data-i18n="proyecto">Proyecto</label>
+                                            <select id="proyectos" name="proyectos" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body" required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 overflow-hidden">
                                         <div class="form-group select-is-empty">
-                                            <label class="control-label">Cliente</label>
-                                            <select id="clientes" name="clientes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                            <label class="control-label" data-i18n="clientes">Cliente</label>
+                                            <select id="clientes" name="clientes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="" data-i18n-label="selecciona-una-opcion" data-size="7" data-container="body" required></select>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group" style="margin-top: 50px;">
-                                            <button class="btn-gral-data mb-3" id="searchInfo">Buscar</button>
+                                            <button class="btn-gral-data mb-3" id="searchInfo"><span data-i18n="buscar">Buscar</span></button>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                         <div class="form-group m-0">
                                             <label class="m-0 check-style">
                                                 <input type="checkbox" id="dates" onClick="toggleSelect2()">
-                                                <span><i class="fas fa-calendar-alt fa-lg m-1"></i>Filtro por fecha</span>
+                                                <span><i class="fas fa-calendar-alt fa-lg m-1"></i><span data-i18n="filtro-por-fecha" style="box-shadow: none;">Filtro por fecha</span></span>
                                             </label>
                                         </div>
                                     </div>
@@ -91,29 +91,29 @@
                             <table id="tableLotificacionNeodata" name="tableLotificacionNeodata" class="table-striped table-hover hide">
                                 <thead>
                                     <tr>
-                                        <th>CÓDIGO CLIENTE</th>
-                                        <th>CUENTA 2170</th>
-                                        <th>CUENTA 1150</th>
-                                        <th>VIVIENDA</th>
-                                        <th>CONTRATO</th>
-                                        <th>CLIENTE</th>
-                                        <th>SUPERFICIE CONTRATO</th>
-                                        <th>PRECIO DE VENTA</th>
-                                        <th>FECHA DE CONTRATO</th>
-                                        <th>FECHA DE RECONOCIMIENTO</th>
-                                        <th>FOLIO FISCAL</th>
-                                        <th>INTERMEDIARIO</th>
-                                        <th>PAGO A CAPITAL 2170</th>
-                                        <th>PAGO A CAPITAL 1150</th>
-                                        <th>BONIFICACIÓN</th>
-                                        <th>ESCRITURA INDIVIDUAL</th>
-                                        <th>FECHA ESCRITURA</th>
-                                        <th>SIN INTERESES</th>
-                                        <th>CON INTERESES</th>
-                                        <th>MONTO CAPITAL</th>
-                                        <th>INTERESES MORATORIOS</th>
-                                        <th>INTERESES ORDINARIOS</th>
-                                        <th>TOTAL DE VENTA</th>
+                                        <th>codigo-cliente</th>
+                                        <th>cuenta-2170</th>
+                                        <th>cuenta-1150</th>
+                                        <th>vivienda</th>
+                                        <th>contrato</th>
+                                        <th>cliente</th>
+                                        <th>superficie-contrato</th>
+                                        <th>precio-venta</th>
+                                        <th>fecha-contrato</th>
+                                        <th>fecha-reconocimiento</th>
+                                        <th>folio-fiscal</th>
+                                        <th>intermediario</th>
+                                        <th>pago-capital-2170</th>
+                                        <th>pago-capital-1150</th>
+                                        <th>bonificacion</th>
+                                        <th>escritura-individual</th>
+                                        <th>fecha-escritura</th>
+                                        <th>sin-intereses</th>
+                                        <th>con-inteseses</th>
+                                        <th>monto-capital</th>
+                                        <th>intereses-moratorios</th>
+                                        <th>intereses-ordinarios</th>
+                                        <th>total-ventas</th>
                                     </tr>
                                 </thead>
                             </table>

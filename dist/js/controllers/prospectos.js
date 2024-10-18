@@ -41,7 +41,7 @@ $("#my-form").on('submit', function(e) {
             if (data == 1) {
                 //reloadPage();
                 alerts.showNotification("top", "right", `${_("registro-exitosamente")}`, "success");
-                var myDataHTML = `<center><b style="color:green">${_("guardado-correctamente")}</b></center>`;
+                var myDataHTML = `<center><b style="color:green">${_("guardado-exito")}</b></center>`;
                 $('#savingProspect').html(myDataHTML);
                 setTimeout(function() {
                     document.location.reload()

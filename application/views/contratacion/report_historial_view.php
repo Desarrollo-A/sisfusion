@@ -13,7 +13,7 @@
 								<i class="fas fa-bookmark fa-2x"></i>
                             </div>
 							<div class="card-content">
-								<h3 class="card-title center-align" data-i18n  = "contratos-recibidos" id="showDate">Contratos recibidos</h3>
+								<h3 class="card-title center-align" data-i18n= "contratos-recibidos" id="showDate">Contratos recibidos</h3>
 								<div class="toolbar">
 									<div class="row">
 										<div class="col-12 col-sm-6 col-md-6 col-lg-6">

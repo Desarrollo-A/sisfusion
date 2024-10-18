@@ -11,7 +11,10 @@ function sendToAdeudos(data) {
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
+        },
+        fields: [
+            new HiddenField({ id: 'idCliente', value: data.idCliente })
+        ],
     })
 }
 

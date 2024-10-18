@@ -39,6 +39,7 @@ function rechazoProcesoBanco(data){
             new HiddenField({ id: 'procesoNuevo', value: 3 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 

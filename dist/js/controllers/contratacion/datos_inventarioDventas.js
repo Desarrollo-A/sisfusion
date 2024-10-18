@@ -1,7 +1,6 @@
 
 $('#filtro3').change(function(){
     var entra = 0;
-    var ruta;
     var residencial = $('#filtro3').val();
 
     if(residencial == 'InventarioCompleto')
@@ -34,44 +33,20 @@ $('#filtro3').change(function(){
 
     if(entra == 1)
     {
-        table_6 = $('#tableTerrenos').DataTable({
+        let tabla_6 = $('#tableTerrenos').DataTable({
             dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             buttons: [{
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 fileName: 'Registros de Terrenos',
-                titleAttr: 'Registros de terrenos',
+                titleAttr: `${_("descargar-excel")}`,
                 title:'Registros de terrenos',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7],
                     format: {
                         header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 0:
-                                    return 'PROYECTO';
-                                    break;
-                                case 1:
-                                    return 'CONDOMINO';
-                                    break;
-                                case 2:
-                                    return 'LOTE';
-                                case 3:
-                                    return 'SUPERFICIE';
-                                    break;
-                                case 4:
-                                    return 'TOTAL';
-                                    break;
-                                case 5:
-                                    return 'ENGANCHE';
-                                    break;
-                                case 6:
-                                    return 'A FINANCIAR';
-                                    break;
-                                case 7:
-                                    return 'MESES S/I';
-                                    break;
-                            }
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -130,10 +105,9 @@ $('#filtro3').change(function(){
                 }
             },
         });
+        applySearch(tabla_6);
     }
 });
-
-let titulos_encabezado = [];
 
 $(document).ready(function() {
     construirHead("tableTerrenos");
@@ -143,7 +117,7 @@ $('#filtro4').change(function()
 {
     var residencial = $('#filtro3').val();
     var valorSeleccionado = $('#filtro4').val();
-    table_6 = $('#tableTerrenos').DataTable({
+    let tabla_6 = $('#tableTerrenos').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         ordering: false,
         buttons: [{
@@ -156,7 +130,7 @@ $('#filtro4').change(function()
                 columns: [0, 1, 2, 3, 4, 5, 6, 7],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+ titulos_encabezado[columnIdx] +' ';
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -215,6 +189,8 @@ $('#filtro4').change(function()
             }
         },
     });
+
+    applySearch(tabla_6);
 });
 
 $('#tableTerrenos').on('draw.dt', function() {

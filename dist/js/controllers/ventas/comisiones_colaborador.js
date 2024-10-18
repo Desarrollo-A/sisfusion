@@ -1711,7 +1711,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                         $("#desarrolloSelect").append($('<option>').val(id).attr('data-value', id).text(name));
                     }
                     if (len <= 0) {
-                        $("#desarrolloSelect").append('<option selected="selected" disabled><span data-i18n="no-se-han-encontrado-reg">No se han encontrado registros que mostrar</span></option>');
+                        $("#desarrolloSelect").append(`<option selected="selected" disabled >${_("no-se-han-encontrado-reg")}</option>`);
                     }
                     $("#desarrolloSelect").val(0);
                     $("#desarrolloSelect").selectpicker('refresh');
@@ -1743,7 +1743,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                         '<div class="row"><div class="col-lg-3 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" data-i18n-label="emisor" placeholder="Emisor" value="" required></div>' +
                         '<div class="col-lg-3 form-group"><label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcemisor" name="rfcemisor" data-i18n-label="rfc-emisor" placeholder="RFC Emisor" value="" required></div><div class="col-lg-3 form-group"><label for="receptor">Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>' +
                         '<div class="col-lg-3 form-group"><label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" data-i18n-label="rfc-receptor" placeholder="RFC Receptor" value="" required></div>' +
-                        '<div class="col-lg-3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" data-i18n-label="regimen-fiscal"  placeholder="Regimen Fiscal" value="" required></div>' +
+                        '<div class="col-lg    -3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" data-i18n-label="regimen-fiscal"  placeholder="Regimen Fiscal" value="" required></div>' +
                         '<div class="col-lg-3 form-group"><label for="total">Monto:<span class="text-danger">*</span></label><input type="text" class="form-control" id="total" name="total" data-i18n-label="total" placeholder="Total" value="" required></div>' +
                         '<div class="col-lg-3 form-group"><label for="formaPago">Forma Pago:</label><input type="text" class="form-control" data-i18n-label="forma-pago" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>' +
                         '<div class="col-lg-3 form-group"><label for="cfdi">Uso del CFDI:</label><input type="text" class="form-control" data-i18n-label="uso-cfdi" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>' +

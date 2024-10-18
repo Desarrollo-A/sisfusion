@@ -28,7 +28,7 @@
 								<?php
                                     if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 2, 1, 6, 5, 4))) {
                                 ?>
-                                    <a href="https://youtu.be/cfRUmAdELkU" class="align-center justify-center u2be" target="_blank">
+                                    <a href="https://youtu.be/JPlj1Zy_qDs" class="align-center justify-center u2be" target="_blank">
                                         <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                                     </a>
                                 <?php
@@ -58,7 +58,7 @@
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
 												<div class="form-group  ">
 													<label class="control-label" data-i18n="condominio-2">Condominio</label>
-													<select id="filtro4" name="filtro4" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" multiple data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required></select>
+													<select id="filtro4" name="filtro4[]" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  data-live-search="true" multiple data-size="7" data-container="body" data-i18n-label="selecciona-una-opcion" required></select>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 overflow-hidden">
@@ -124,5 +124,7 @@
 	</div>
 	</div>
 	<?php $this->load->view('template/footer');?>
+	<script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
+	<!--script of the page-->
 	<script src="<?=base_url()?>dist/js/controllers/asesores/inventario_disponible.js"></script>
 </body>
