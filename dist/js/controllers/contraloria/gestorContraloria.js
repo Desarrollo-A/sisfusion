@@ -1460,8 +1460,8 @@ function crearTablaReasignarProspecto(idCondominio) {
             { data: 'nombreGerente' },
             {
                 data: function (d) {
-                    const botonVerDocumento = new RowButton({icon: 'visibility', data: d, onClick: verDocumento})
-                    const botonModal = new RowButton({icon: 'sync', data: d, onClick: modalProspecto})
+                    const botonVerDocumento = new RowButton({icon: 'visibility', data: d, onClick: verDocumento, label: "Ver documento"})
+                    const botonModal = new RowButton({icon: 'sync', data: d, onClick: modalProspecto, label: "Reasignar prospecto"})
 
                     return `<div class="d-flex justify-center">${botonModal}${botonVerDocumento}</div>`;
                 }
@@ -1574,7 +1574,7 @@ function crearTablaReasignarProspecto(idCondominio) {
                 { data: 'nombreLugarP' },
                 { data: 'otro_lugar' },
                 { data: function (d) {
-                    const botonReasignar = new RowButton({icon: 'sync', data: {...d, id_lote: data.idLote}, onClick: reasignarProspecto})
+                    const botonReasignar = new RowButton({icon: 'sync', data: {...d, id_lote: data.idLote}, onClick: reasignarProspecto, label: "Reasignar prospecto"})
                     return `<div class="d-flex justify-center">${botonReasignar}</div>`;
                 }}
             ],
