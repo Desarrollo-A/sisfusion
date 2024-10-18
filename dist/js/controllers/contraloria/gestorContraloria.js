@@ -1313,3 +1313,64 @@ $(document).on('click', '#btnCambiarRL', function (e) {
         
     }
 });
+$(document).on('click','#btnConfirmarCambioRl', function(e){
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("representanteLegal",representanteLegal);
+    formData.append("idLote", idLote);
+    formData.append("idRl", selectedRl);
+    formData.append("idCliente", idCliente);
+    // console.log(
+    //     `representanteLegal: ${representanteLegal},
+    //     idLote: ${idLote},
+    //     idRl(nuevo selecionado): ${selectedRl},
+    //     idCliente: ${idCliente},
+    //     nombreLoteText: ${nombreLoteText},
+    //     nombreRl: ${nombreRl},
+    //     selectedLabelC: ${selectedLabelC}`
+    // );
+    if(selectedRl !== 0){
+                $('#btnCambiarRL').prop('disabled', true);
+        
+                    $.ajax({
+                url: `${general_base_url}Contraloria/modificarRlLote`,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                beforeSend: function(){
+                    $('#spiner-loader').removeClass('hide');
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+                    if(data.message == 'OK'){
+                        $('#btnCambiarRL').prop('disabled', false);
+            
+                        $('#spiner-loader').addClass('hide');
+                        $('#tablaCambiarRepresentanteLegal').DataTable().ajax.reload();
+                        alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
+                        // modalConfimarCambioRl
+                        $('#modalConfimarCambioRl').modal('hide');
+                        // idRl  = selectedRl;
+                        // nombreLoteText = selectedLabelC;
+                        $('#cambiarrepresentante').val('').selectpicker('refresh');
+                    }else{
+                        $('#btnCambiarRL').prop('disabled', false);
+            
+                        $('#spiner-loader').addClass('hide');
+                        alerts.showNotification("top", "right",'Ha ocurrido un error al avanzar' +
+                            ' el registro, intentalo nuevamente', "danger");
+                    }   
+                },error: function() {
+                    $('#spiner-loader').addClass('hide');
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+                
+            });
+        
+            }else{
+                alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning');
+            }
+    console.warn("btnConfirmarCambioRl modal");
+});
