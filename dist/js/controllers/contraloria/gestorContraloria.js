@@ -12,7 +12,7 @@ let idLote = '';
 let usuariosPermitidosRL = [2815, 2875, 12276, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosIntercambio = [5342, 2767, 11947, 2807, 9775, 14342, 2749, 11815];
 let usuariosPermitidosModelosCasas = [2749];
-let tablaTipoVenta, idLot, tipoVenta,nameLote;
+let tablaTipoVenta, idLot, tipoVenta,nameLote,idTipoVentaRowSelected;
 let idRl = "";
 let idCliente = "";
 let selectedRl = "";
@@ -43,6 +43,8 @@ $(document).ready(function () {
         e.preventDefault();
         idLot = $(this).data('idlote');
         nameLote=$(this).data('nombrelote');
+        idTipoVentaRowSelected=$(this).data('idtipoventa');
+        // console.log('Valor del tipo venta desde el onchange del icono->',idTipoVentaRowSelected);
         $.ajax({
             url: `${general_base_url}Contraloria/get_tipo_venta`,
             method: 'GET',
@@ -65,7 +67,8 @@ $(document).ready(function () {
     });
 
     $(document).on('change', '#tipoVentaModal', function () {        
-        tipoVenta = $(this).val();
+        tipoVenta = $(this).val();  
+        // console.log('idVenta desde el onchange->',tipoVenta);    
     });
     $(document).on('click','#btnAceptarCambioTipoVenta', function(){
         $.ajax({
@@ -93,12 +96,16 @@ $(document).ready(function () {
     });
    
     $('#btnConfirmarCambioTipoVenta').on('click', function (e) {
-        e.preventDefault();
-        valorSelectipoventaModal=$('#tipoVentaModal').val();
-        if (! valorSelectipoventaModal) {
+        e.preventDefault();       
+        if (!tipoVenta) {
             alerts.showNotification('top', 'right', 'Asegúrate de seleccionar una opción.', 'warning');
+            return;
         }
-        if (tipoVenta && idLot && valorSelectipoventaModal) {
+        if(idTipoVentaRowSelected == tipoVenta){
+            alerts.showNotification('top', 'right', 'Estas seleccionando el mismo tipo de venta.', 'warning');
+            return;
+        }
+        if (tipoVenta && idLot) {
             $('#modalCambiotipoventa').modal('hide');
             $('#mensajeConfirmacion').html(`¿Estás seguro de cambiar el tipo de venta del lote <strong>${nameLote}</strong>?`);
             $('#modalConfirmacionCambiotipoventa').modal('show');
@@ -140,8 +147,6 @@ $(document).on('change', '#selector', function () {
     else if ($(this).val() == 4) {
         $('#proyecto').removeClass('hide');
         $('#condominio').removeClass('hide');
-        // $('#proyecto').val('');
-        // $('#condominio').val('');
         $('#divTablaCambiarVenta').addClass('hide');
         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
     } else if ($(this).val() == 5) {
@@ -163,7 +168,7 @@ $('#selectCondominio').change(function () {
         }
     }
 });
-
+// FUNCION PARA LLENAR LA TABLA DE LOTES DISPONIBLES PARA CAMBIO DE TIPO DE VENTA
 function crearTablaTipoVenta(idCondominio) {
     $('#tipo-venta thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
@@ -218,7 +223,7 @@ function crearTablaTipoVenta(idCondominio) {
                 data: function (d) {
                     return `
                         <div class="d-flex justify-center">
-                            <button href="#" id="btnEditarTipoVenta" class="btn-data btn-blueMaderas" data-idlote="${d.idLote}" data-nombrelote="${d.nombreLote}"  data-toggle="tooltip" data-placement="top" title="EDITAR">
+                            <button href="#" id="btnEditarTipoVenta" class="btn-data btn-blueMaderas" data-idlote="${d.idLote}" data-nombrelote="${d.nombreLote}" data-idtipoventa="${d.idTipoVenta}"  data-toggle="tooltip" data-placement="top" title="EDITAR">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
                         </div>`;
