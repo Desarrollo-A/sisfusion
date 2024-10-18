@@ -605,7 +605,6 @@ $(document).on("click", "#sendRequestButton", function () {
         data.append("uploadedDocument", archivo);
         data.append("accion", accion);
         data.append('tituloDocumento', $('#tituloDocumento').val());
-        data.append("flagSoporte", parseInt(id_rol_general) == 8 ? 1: 0);
 
         $.ajax({
             url: `${general_base_url}Documentacion/subirArchivo`,
@@ -645,7 +644,6 @@ $(document).on("click", "#sendRequestButton", function () {
         let data = new FormData();
         data.append("idDocumento", $("#idDocumento").val());
         data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
-        data.append("flagSoporte", parseInt(id_rol_general) == 8 ? 1: 0);
 
         $.ajax({
             url: `${general_base_url}Documentacion/eliminarArchivo`,
