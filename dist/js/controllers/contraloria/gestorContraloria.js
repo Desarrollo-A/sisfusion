@@ -23,6 +23,19 @@ let nombreLoteText  ="";
 let selectedLabelC = "";
 
 $(document).ready(function () {
+    $.getJSON("getCatalogoxContraloria").done(function (data) {
+        for (var i = 0; i < data.length; i++) {
+            console.warn("dataget", data[i]);
+            if(data[i]['id_catalogo'] == '77'){
+                $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'].toUpperCase()));
+            }else if (data[i]['id_catalogo'] == 'tv'){
+                $("#tipoVentaModal").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'].toUpperCase()));    
+            }
+        }
+        $("#cambiarrepresentante").selectpicker('refresh');
+        $("#tipoVentaModal").selectpicker('refresh');
+       
+    });
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
     $.getJSON("getOpcionesPorCatalogo").done(function (data) {
         for (let i = 0; i < data.length; i++) {
@@ -48,25 +61,7 @@ $(document).ready(function () {
         idLot = $(this).data('idlote');
         nameLote=$(this).data('nombrelote');
         idTipoVentaRowSelected=$(this).data('idtipoventa');
-        // console.log('Valor del tipo venta desde el onchange del icono->',idTipoVentaRowSelected);
-        $.ajax({
-            url: `${general_base_url}Contraloria/get_tipo_venta`,
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                $('#tipoVentaModal').val('');
-                $('#tipoVentaModal').selectpicker('refresh');
-                $.each(data, function (index, opcion) {
-                    $('#tipoVentaModal').append('<option value="' + opcion.id_tventa + '">' + opcion.tipo_venta + '</option>');
-                });
-                $('#tipoVentaModal').selectpicker('refresh');
-            },
-            error: function (xhr, status, error) {
-                console.error('Error al cargar las opciones:', error);
-                $('#tipoVentaModal').empty();
-                $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
-            }
-        });
+       
         $('#modalCambiotipoventa').modal('show');
     });
 
@@ -243,25 +238,25 @@ function crearTablaTipoVenta(idCondominio) {
     $(document).on('click', '#btnEditarTipoVenta', function (e) {
         e.preventDefault();
         idLot = $(this).data('idlote');               
-        $.ajax({
-            url: `${general_base_url}Contraloria/get_tipo_venta`,
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                $('#tipoVentaModal').empty();
-                $('#tipoVentaModal').append('<option value="">Selecciona el tipo venta</option>');
+        // $.ajax({
+        //     url: `${general_base_url}Contraloria/get_tipo_venta`,
+        //     method: 'GET',
+        //     dataType: 'json',
+        //     success: function (data) {
+        //         $('#tipoVentaModal').empty();
+        //         $('#tipoVentaModal').append('<option value="">Selecciona el tipo venta</option>');
 
-                $.each(data, function (index, opcion) {
-                    $('#tipoVentaModal').append('<option value="' + opcion.id_tventa + '">' + opcion.tipo_venta + '</option>');
-                });
-                $('#tipoVentaModal').selectpicker('refresh');
-            },
-            error: function (xhr, status, error) {
-                console.error('Error al cargar las opciones:', error);
-                $('#tipoVentaModal').empty();
-                $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
-            }
-        });
+        //         $.each(data, function (index, opcion) {
+        //             $('#tipoVentaModal').append('<option value="' + opcion.id_tventa + '">' + opcion.tipo_venta + '</option>');
+        //         });
+        //         $('#tipoVentaModal').selectpicker('refresh');
+        //     },
+        //     error: function (xhr, status, error) {
+        //         console.error('Error al cargar las opciones:', error);
+        //         $('#tipoVentaModal').empty();
+        //         $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
+        //     }
+        // });
         $('#modalCambiotipoventa').modal('show');
     });
 
@@ -355,41 +350,20 @@ function loadSelectOptions() {
         }
         $("#idEstatus").selectpicker('refresh');
     }, 'json');
-    $.post(`${general_base_url}OperacionesPorCatalogo/listacatalogo`, function (data) {
-        for (var i = 0; i < data.length; i++) {
-            $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'].toUpperCase()));
-        }
-        $("#cambiarrepresentante").selectpicker('refresh');
-    }, 'json');
+    // $.post(`${general_base_url}OperacionesPorCatalogo/listacatalogo`, function (data) {
+    //     for (var i = 0; i < data.length; i++) {
+    //         $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'].toUpperCase()));
+    //     }
+    //     $("#cambiarrepresentante").selectpicker('refresh');
+    // }, 'json');
+    
 }
-
-    // $.getJSON(`${general_base_url}Contraloria/get_registros_tipo_venta/2`).done(function(data) {
-    //     // for (let i = 0; i < data.length; i++) {
-
-    //     //     if (data[i]['id_catalogo'] == 16){
-    //     //         $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-    //     //         }
-
-    //     //     if (data[i]['id_catalogo'] == 1)
-    //     //         $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-
-    //     //     if (data[i]['id_catalogo'] == 0){
-    //     //         $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-    //     //     }
-    //     // }
-    //     // $('#payment_method').selectpicker('refresh');
-    //     // $('#headquarter').selectpicker('refresh');
-    //     // $('#member_type').selectpicker('refresh');  
-    //     console.log('Respuesta desde el getJSON');      
-    //     console.log(data);        
-    // });
 
 $('#selectProyecto').change(function () {
     $('#spiner-loader').removeClass('hide');
     $('#tablaInventario').removeClass('hide');
     index_idResidencial = $(this).val();
     $("#selectCondominio").html("");
-    $(document).ready(function () {
         $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
             for (var i = 0; i < data.length; i++) {
                 $("#selectCondominio").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));
@@ -397,7 +371,6 @@ $('#selectProyecto').change(function () {
             $("#selectCondominio").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
         }, 'json');
-    });
 });
 
 // FUNCIóN PARA LLENAR TABLA CON REPRESENTANTES LEGALES
