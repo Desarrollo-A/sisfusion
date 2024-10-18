@@ -4644,6 +4644,11 @@ legend {
 
     public function regPlanPagoCompleto()
     {
+        print(json_encode([
+            'msj' => 'Mensaje'
+        ]));
+        exit;
+
         $data = json_decode(file_get_contents("php://input"));
 
         #http://192.168.16.20/neodata_reps/back/index.php
@@ -4658,5 +4663,23 @@ legend {
         print_r(json_encode(json_decode($response->getParsedResponse())));
 
         exit;
+    }
+
+    public function saveHistorial($idPlanPago){
+        $data = json_decode(file_get_contents("php://input"));
+
+        $payload = [
+            'idPlanPago' => $idPlanPago,
+            'idLote' => $data->idLote,
+            'tipoRegistro' => $data->tipoRegistro,
+            'respuesta' => $data->respuesta,
+            'respuestaNeodata' => $data->respuestaNeodata,
+            'fechaCreacion' => date('Y-m-d H:i:s'),
+            'idCreacion' => $this->session->userdata('id_usuario'),
+        ];
+
+        $this->General_model->addRecord('historial_envios_planes_pago', $payload);
+
+        print_r([]);
     }
 }

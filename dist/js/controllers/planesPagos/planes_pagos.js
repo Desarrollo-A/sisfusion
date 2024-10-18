@@ -1081,7 +1081,6 @@ $(document).on('click', '#aceptarEnvioPP2', function(){
                 console.log('response:', response);
                 servicioNeoData(response);
                 $('#spiner-loader').addClass('hide');//PRUEBA
-
             }
             else if(response.respuesta == -1){
                 alerts.showNotification('top', 'right', 'No hay registro de plan de pagos para enviar o ya se enviaron a Neodata anteriormente.', 'danger');
@@ -1185,7 +1184,7 @@ function servicioNeoData(response){
 
     $.ajax({
         data:JSON.stringify(response.planServicio),
-        url: 'https://bi-maderas.gphsis.com/reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
+        url: 'regPlanPagoCompleto',
         type: 'POST',
         success: function (response) {
             console.log('RESPUES NEODATA:'+response);
@@ -1217,7 +1216,6 @@ function servicioNeoData(response){
                                             statusAviso = 'danger';
                                         }
                                         alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
-
                                     }
                                 });
                             }
@@ -1228,6 +1226,7 @@ function servicioNeoData(response){
                         avisoCRM = ' [CRM] Registro no actualizado PLAN PAGO '+elemento.numPlan;
                     }
                     alerts.showNotification('top', 'right', '[NEODATA] '+elemento.msj+avisoCRM, statusAviso);
+
                 });
 
                 // if(response.data.length == banderaActualizado){
@@ -1265,7 +1264,21 @@ function servicioNeoData(response){
                 $('#aceptarPlanPagoPP').modal('hide');
                 $('#spiner-loader').addClass('hide');
                 $('#tablaPlanPagos').DataTable().ajax.reload();
+
+                $.ajax({
+                    data: {
+                        tipoRegistro: 0,
+                        respuesta: response.msj,
+                        respuestaNeodata: 'elemento.msj',
+                    },
+                    url: `saveHistorial/${idPlanPago}`,
+                    type: 'POST',
+                    success: function (response) {
+                        console.log(response)
+                    }
+                })
             }
+
         }
 
     });/**/
