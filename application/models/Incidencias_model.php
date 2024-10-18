@@ -85,7 +85,7 @@ class Incidencias_model extends CI_Model {
 
         if(count($comisionesEmpresa) == 0 && count($comisiones) > 0){
         return $this->db->query("INSERT INTO comisiones
-                ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente]) VALUES (".$idLote.",$id_usuario,".$comision.", 1, 'SE AGREGÓ COMISIONISTA', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(),$porcentaje, GETDATE(), $id_rol,$id_cliente)");
+                ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente],[modificado_por]) VALUES (".$idLote.",$id_usuario,".$comision.", 1, 'SE AGREGÓ COMISIONISTA', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(),$porcentaje, GETDATE(), $id_rol,$id_cliente,".$this->session->userdata('id_usuario').")");
         } else{
             return 0;
         }

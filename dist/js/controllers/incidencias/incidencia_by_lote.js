@@ -1279,9 +1279,9 @@ $(".find_doc").click( function() {
 
                 var BtnStats ='';
                 if(data.totalNeto2==null && data.idStatusContratacion > 8 ) {
-                    if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
-                        BtnStats += '<button data-toggle="tooltip" data-placement="top" href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
-                    }
+                    // if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
+                        // BtnStats += '<button data-toggle="tooltip" data-placement="top" href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
+                    // }
                   
                 }
                 else {
@@ -1307,6 +1307,9 @@ $(".find_doc").click( function() {
 
                     BtnStats += '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-proceso="'+data.proceso+'" data-ventaCompartida="'+saberCompartida+'"><i class="fas fa-user-edit"></i></button>';
                 }
+
+                BtnStats += '<button data-toggle="tooltip" data-placement="top" href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
+
                 BtnStats += data.registro_comision != 1 ? '' : `<button data-toggle="tooltip" data-placement="top"href="#" value="${data.idLote}" data-estatus="${data.idStatusContratacion}" data-tipo="I" data-precioAnt="${data.totalNeto2}"  data-value="${data.registro_comision}" data-cliente="${data.id_cliente}" data-lote="${data.idLote}" data-code="${data.cbbtton}" class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button>`;
 
                // BtnStats += data.estatus == 1 ? `<button data-toggle="tooltip" data-placement="top"data-lote="${data.idLote}" data-cliente="${data.id_cliente}" data-precioLote ="${data.totalNeto2}" class=" btn-data btn-sky agregar_usuario"  title="Agregar usuario" ><i class="fas fa-user-plus"></i></button>` : '';
@@ -1365,11 +1368,8 @@ $(".find_doc").click( function() {
         $("#modal_pagadas .modal-body").append(`<input type="hidden" name="idLote" id="idLote" readonly="true" value="${idLote}"><input type="hidden" name="precioAnt" id="precioAnt" readonly="true" value="">
         `);
         $("#modal_pagadas .modal-body").append(`
-        <div class="form-group">
-        <label  class="label">Seleccionar tipo de venta</label>
-        
-        <select class="form-control select-gral tipo_v" id="tipo_v" name="tipo_v"
-        title="SELECCIONA UNA OPCIÓN" required data-live-search="true" style="background-color: #f2f2f2; background-image: none; border-radius: 25px; padding: 0 15px;">
+        <div class="form-group">        
+        <select class="selectpicker tipo_v" id="tipo_v" name="tipo_v" title="SELECCIONA UNA OPCIÓN" >
             <option value="1">Venta de particulares</option>
             <option value="2">Venta normal</option>
         </select>
