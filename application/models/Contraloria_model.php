@@ -2054,12 +2054,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         UNION ALL
         SELECT 'tv' AS id_catalogo, id_tventa AS id_opcion, tipo_venta AS nombre 
         FROM tipo_venta
-        UNION ALL
-        SELECT 'sl' AS id_catalogo, idStatusLote AS id_opcion, nombre 
-        FROM statuslote
-    ");
-    
-    return $query->result();
+        ";
+
+        $query = $this->db->query($sql);
+        return $query->result(); 
     }
     public function getRegistrosCambioTipoVenta($idCondominio) {
         return $this->db->query(
