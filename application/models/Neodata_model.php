@@ -10,9 +10,10 @@ class Neodata_model extends CI_Model {
     public function addUpdateClienteNeoData($data) {
         $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
         $fechaNacimiento = "'" . $data['FechaNacimiento'] . "'";
+        $Cliente = "'" . $data['Cliente'] . "'";
         $response = $this->programacion2->query("EXEC [programacion].[dbo].[CDM300ClientesNeoD]
         @accion = '" . $data['accion'] . "',
-        @Cliente = '" . ($data['Cliente'] == '' ? 'NULL' : $data['Cliente']) . "',
+        @Cliente = " . ($data['Cliente'] == '' ? 'NULL' : $data['Cliente']) . ",
         @IdProyecto = " . $data['IdProyecto'] . ",
         @IdVivienda = " . $data['IdVivienda'] . ",
         @IdCredito = " . $data['IdCredito'] . ",
@@ -62,9 +63,13 @@ class Neodata_model extends CI_Model {
         @Prospecto = " . $data['Prospecto'] . "")->result_array();
         
         if (isset($response[0]['idCliente']))
-            return array("status" => 1, "message" => "Registro $messageDetail con éxito - " . $response[0]['idCliente'] . ".");
-        else
-            return array("status" => -1, "message" => $response[0]['ErrorNumber'] . " - " . $response[0]['ErrorMessage']);
+            return array("status" => 1, "message" => "Registro $messageDetail con éxito.", "idCliente" => $response[0]['idCliente'], "Cliente" => $response[0]['Cliente']);
+        else {
+            if (!isset($response[0]['ErrorNumber']))
+                return array("status" => -1, "message" => $response[0]['msj'], "idCliente" => 0, "Cliente" => 0);
+            else
+                return array("status" => -1, "message" => $response[0]['ErrorNumber'] . " - " . $response[0]['ErrorMessage'], "idCliente" => 0, "Cliente" => 0);
+        }
     }
 
     public function cancelaPlanPagoNeo($data){
