@@ -1423,10 +1423,10 @@ function crearTablaReasignarProspecto(idCondominio) {
                 titleAttr: 'Exportar registros a Excel',
                 title: "Listado de lotes contratados por intercambio",
                 exportOptions: {
-                    columns: [0],
+                    columns: [0,1,2,3,4,5,6,7],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosTablaIntercambios[columnIdx] + ' ';
+                            return ' ' + titulosReasignarProspecto[columnIdx] + ' ';
                         }
                     }
                 }
@@ -1540,10 +1540,10 @@ function crearTablaReasignarProspecto(idCondominio) {
                     titleAttr: 'Exportar registros a Excel',
                     title: "Listado de lotes contratados por intercambio",
                     exportOptions: {
-                        columns: [0],
+                        columns: [0,1,2,3,4,5],
                         format: {
                             header: function (d, columnIdx) {
-                                return ' ' + titulosTablaIntercambios[columnIdx] + ' ';
+                                return ' ' + titulosProspecto[columnIdx] + ' ';
                             }
                         }
                     }
