@@ -2047,21 +2047,19 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function get_catalogox_contraloria(){
-        $sql = "
-        SELECT CAST(id_catalogo AS varchar(2)) AS id_catalogo, id_opcion, nombre
+        $query = $this->db->query("
+        SELECT CAST(id_catalogo AS varchar(2)) AS id_catalogo, id_opcion, nombre 
         FROM opcs_x_cats 
-        WHERE id_catalogo IN (77) 
-        AND estatus = 1
+        WHERE id_catalogo IN (77) AND estatus = 1
         UNION ALL
         SELECT 'tv' AS id_catalogo, id_tventa AS id_opcion, tipo_venta AS nombre 
         FROM tipo_venta
         UNION ALL
-        SELECT 'sl' AS id_catalogo, idStatusLote AS id_opcion, nombre AS nombre 
+        SELECT 'sl' AS id_catalogo, idStatusLote AS id_opcion, nombre 
         FROM statuslote
-        ";
-
-        $query = $this->db->query($sql);
-        return $query->result(); 
+    ");
+    
+    return $query->result();
     }
     public function getRegistrosCambioTipoVenta($idCondominio) {
         return $this->db->query(
