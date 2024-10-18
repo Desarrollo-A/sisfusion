@@ -173,6 +173,37 @@
                 </div>
             </div>
         </div>
+        <!-- modal tabla reasignar prospectos -->
+        <div class="modal fade" id="modalReasignarProspecto" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Prospectos</h4>
+                    </div>
+                    <div class="modal-body">
+                <div class="row" id="divModalProspectos">
+                    <table id="tablaProspectos" class="table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>NOMBRE CLIENTE</th>
+                                <th>ASESOR</th>
+                                <th>COORDINADOR</th>
+                                <th>GERENTE</th>
+                                <th>LUGAR PROSPECCION</th>
+                                <th>OTRO</th>
+                                <th>ACCIONES</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cerrar">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--INICIO DEL CONTENIDO DE LA PÁGINA -->
         <div class="content boxContent">
             <div class="container-fluid">
@@ -302,6 +333,23 @@
                                         </thead>
                                     </table>
                                 </div>
+                                <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaReasignarProspectos">
+                                    <table id="tablaReasignarProspectos" name="tablaProspectos" class="table-striped table-hover nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>REFERENCIA</th>
+                                                <th>NOMBRE CLIENTE</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             <!-- FIN TABLA MODELOS DE CASAS-->
                             </div>
                         </div>
@@ -313,4 +361,5 @@
     </div>
 </body>
 <?php $this->load->view('template/footer'); ?>
+<?php $this->load->view('template/modals');?>
 <script src="<?= base_url() ?>dist/js/controllers/contraloria/gestorContraloria.js"></script>
