@@ -76,40 +76,34 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (response) {
-                if (response.message === 'OK') {
-                    tablaTipoVenta.ajax.reload();
+                if (response.message === 'OK') {                   
+                    $('#tipo-venta').DataTable().ajax.reload();
                     $('#modalConfirmacionCambiotipoventa').modal('hide');
                     alerts.showNotification("top", "right", 'Se ha actualizo correctamente.', "success");
                     tipoVenta = null;
                     idLot = null;
                 } else {
-                    console.log('El update no se hizo correctamnete');
+                    alerts.showNotification('top', 'right', `Registro no actualizado.`, 'danger');
                 }
             },
             error: function (xhr, status, error) {
-                console.error('Error al cargar las opciones:', error);
-                $('#tipoVentaModal').empty();
-                $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
+                alerts.showNotification('top', 'right', `Error al enviar la solicitud.`, 'danger');
             }
         });
     });
    
-
-    $('#btnConfirmarCambioTipoVenta').off('click').on('click', function (e) {
+    $('#btnConfirmarCambioTipoVenta').on('click', function (e) {
         e.preventDefault();
-        if (!$('#tipoVentaModal').val()) {
+        valorSelectipoventaModal=$('#tipoVentaModal').val();
+        if (! valorSelectipoventaModal) {
             alerts.showNotification('top', 'right', 'Asegúrate de seleccionar una opción.', 'warning');
         }
-        if (tipoVenta && idLot) {
+        if (tipoVenta && idLot && valorSelectipoventaModal) {
             $('#modalCambiotipoventa').modal('hide');
             $('#mensajeConfirmacion').html(`¿Estás seguro de cambiar el tipo de venta del lote <strong>${nameLote}</strong>?`);
             $('#modalConfirmacionCambiotipoventa').modal('show');
-        } else {
-            console.error("No se han seleccionado valores válidos para la actualización");
         }
     });
-
-
 });
 
 $(document).on('change', '#selector', function () {
@@ -237,25 +231,10 @@ function crearTablaTipoVenta(idCondominio) {
         },
     });
     applySearch(tablaTipoVenta);
-
-    
-    // Manejo del evento de cambio en el select de acciones
-    $('#tipo-venta tbody').on('change', '.action-select', function () {
-        var action = $(this).val(); // Obtener la acción seleccionada
-        var idLote = $(this).data('id'); // Obtener el idLote del select
-
-        if (action === 'edit') {
-            // Lógica para editar el registro correspondiente
-            console.log('Editando el registro con idLote:', idLote);
-            // Aquí puedes abrir un modal de edición o realizar otra acción
-        } else if (action === 'delete') {
-            // Lógica para eliminar el registro correspondiente
-            console.log('Eliminando el registro con idLote:', idLote);
-            // Aquí puedes mostrar un mensaje de confirmación o realizar otra acción
-        }
-
-        // Restablecer el select a la opción por defecto
-        $(this).val('');
+    $('#tipo-venta').on('draw.dt', function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 }
 
