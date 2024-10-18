@@ -1210,10 +1210,10 @@ $(document).on('click','#btnCambiarRL',function(e) {
     console.warn("idRl",idRl);
     
     if(validarOpcionRl ==0){
-        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal.', 'warning'); 
+        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un valor.', 'warning'); 
     }else{
-        if(selectedRl === idRl){
-            alerts.showNotification('top', 'right', 'Estas seleccionando al mismo representante legal.', 'warning'); 
+        if(selectedRl == idRl){
+            alerts.showNotification('top', 'right', 'Estas seleccionando el mismo valor.', 'warning'); 
     
         }else{
             
@@ -1267,6 +1267,9 @@ $(document).on('click','#btnConfirmarCambioRl', function(e){
                         alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
                         // modalConfimarCambioRl
                         $('#modalConfimarCambioRl').modal('hide');
+                        // idRl  = selectedRl;
+                        // nombreLoteText = selectedLabelC;
+                        $('#cambiarrepresentante').val('').selectpicker('refresh');
                     }else{
                         $('#btnCambiarRL').prop('disabled', false);
             
