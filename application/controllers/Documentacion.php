@@ -238,10 +238,11 @@ class Documentacion extends CI_Controller {
     public function eliminarArchivo() {
         $idDocumento = $this->input->post('idDocumento');
         $tipoDocumento = $this->input->post('tipoDocumento');
+
         $updateDocumentData = array(
             "expediente" => NULL,
             "modificado" => date('Y-m-d H:i:s'),
-            "idUser" => $this->input->post('flagSoporte') == 1 ? 1 : $this->session->userdata('id_usuario'),
+            "idUser" => $this->session->userdata('id_rol') == 8 ? 1: $this->session->userdata('id_usuario'),
             "bucket" => 0
         );
         
@@ -552,7 +553,7 @@ class Documentacion extends CI_Controller {
         $idDocumento = $this->input->post('idDocumento');
         $tipoDocumento = $this->input->post('tipoDocumento');
         $documentName = "{$this->input->post('tituloDocumento')}.$fileExt";
-        $flagSoporte = $this->input->post('flagSoporte') == 1 ? 1 : 0;
+        $flagSoporte = $this->session->userdata('id_rol') == 8 ? 1: 0;
 
         $folder = $this->Documentacion_model->getCarpetaArchivo($tipoDocumento, $lote->proceso, $lote->nombreLote);
 
