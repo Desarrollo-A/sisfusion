@@ -146,8 +146,8 @@ $(document).on('change', '#selector', function () {
     else if ($(this).val() == 4) {
         $('#proyecto').removeClass('hide');
         $('#condominio').removeClass('hide');
-        $('#proyecto').val('');
-        $('#condominio').val('');
+        // $('#proyecto').val('');
+        // $('#condominio').val('');
         $('#divTablaCambiarVenta').addClass('hide');
         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
     } else if ($(this).val() == 5) {
@@ -191,7 +191,7 @@ function crearTablaTipoVenta(idCondominio) {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title: 'Gestor Contraloría',
+                title: 'Listado de lotes por tipo de venta',
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4],
                     format: {
@@ -257,11 +257,7 @@ function crearTablaTipoVenta(idCondominio) {
         // Restablecer el select a la opción por defecto
         $(this).val('');
     });
-
 }
-
-
-
 
 function loadSelectOptions() {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
@@ -284,6 +280,27 @@ function loadSelectOptions() {
         $("#cambiarrepresentante").selectpicker('refresh');
     }, 'json');
 }
+
+    // $.getJSON(`${general_base_url}Contraloria/get_registros_tipo_venta/2`).done(function(data) {
+    //     // for (let i = 0; i < data.length; i++) {
+
+    //     //     if (data[i]['id_catalogo'] == 16){
+    //     //         $("#payment_method").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+    //     //         }
+
+    //     //     if (data[i]['id_catalogo'] == 1)
+    //     //         $("#member_type").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+
+    //     //     if (data[i]['id_catalogo'] == 0){
+    //     //         $("#headquarter").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+    //     //     }
+    //     // }
+    //     // $('#payment_method').selectpicker('refresh');
+    //     // $('#headquarter').selectpicker('refresh');
+    //     // $('#member_type').selectpicker('refresh');  
+    //     console.log('Respuesta desde el getJSON');      
+    //     console.log(data);        
+    // });
 
 $('#selectProyecto').change(function () {
     $('#spiner-loader').removeClass('hide');

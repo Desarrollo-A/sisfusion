@@ -217,13 +217,13 @@
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="proyecto">
                                         <label class="control-label" for="nombreLote">Proyecto</label>
-                                        <select class="selectpicker select-gral" title="SELECCIONA UNA PROYECTO"
+                                        <select class="selectpicker select-gral" title="SELECCIONA UNA OPCIÓN"
                                             id="selectProyecto" data-live-search="true">
                                         </select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="condominio">
                                         <label class="control-label" for="nombreLote">Condominio</label>
-                                        <select class="selectpicker select-gral" title="SELECCIONA UN CONDOMINIO"
+                                        <select class="selectpicker select-gral" title="SELECCIONA UNA OPCIÓN"
                                             id="selectCondominio" data-live-search="true"></select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 hide" id="divBusquedaLote">
@@ -313,9 +313,9 @@
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
-                                                    <th>Referencia</th>
-                                                    <th>Tipo venta</th>
-                                                    <th>Acciones</th>
+                                                    <th>REFERENCIA</th>
+                                                    <th>TIPO DE VENTA</th>
+                                                    <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
                                         </table>
