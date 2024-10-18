@@ -1396,19 +1396,19 @@ $(document).on('click','#btnConfirmarCambioRl', function(e){
 function crearTablaReasignarProspecto(idCondominio) {
     Shadowbox.init()
 
-    if (! $.fn.DataTable.isDataTable('#tablaReasignarProspectos')) {
-        $('#divTablaReasignarProspectos thead tr:eq(0) th').each(function (i) {
+    $('#divTablaReasignarProspectos thead tr:eq(0) th').each(function (i) {
+        if ($(this).text()) {
             let title = $(this).text();
             
             titulosReasignarProspecto.push(title);
             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        }
 
-            $('input', this).on('keyup change', function () {
-                if (tablaReasignarProspecto.column(i).search() !== this.value)
-                    tablaReasignarProspecto.column(i).search(this.value).draw();
-            });
-        }) 
-    }
+        $('input', this).on('keyup change', function () {
+            if (tablaReasignarProspecto.column(i).search() !== this.value)
+                tablaReasignarProspecto.column(i).search(this.value).draw();
+        });
+    }) 
 
     $('#divTablaReasignarProspectos').removeClass('hide');
 
@@ -1469,7 +1469,6 @@ function crearTablaReasignarProspecto(idCondominio) {
         ],
         columnDefs: [
             {
-                searchable: false,
                 orderable: false,
                 targets: 0
             }
@@ -1580,7 +1579,6 @@ function crearTablaReasignarProspecto(idCondominio) {
             ],
             columnDefs: [
                 {
-                    searchable: false,
                     orderable: false,
                     targets: 0
                 }
