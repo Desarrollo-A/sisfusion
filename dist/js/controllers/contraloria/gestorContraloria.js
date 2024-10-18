@@ -102,7 +102,7 @@ $(document).ready(function () {
             return;
         }
         if(idTipoVentaRowSelected == tipoVenta){
-            alerts.showNotification('top', 'right', 'Estas seleccionando el mismo tipo de venta.', 'warning');
+            alerts.showNotification('top', 'right', 'Estás seleccionando el mismo tipo de venta.', 'warning');
             return;
         }
         if (tipoVenta && idLot) {
