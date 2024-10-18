@@ -196,7 +196,6 @@ $(document).ready(function () {
     
     $.getJSON("getCatalogoxContraloria").done(function (data) {
         for (var i = 0; i < data.length; i++) {
-            console.warn("dataget", data[i]);
             if(data[i]['id_catalogo'] == '77'){
                 $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'].toUpperCase()));
             }else if (data[i]['id_catalogo'] == 'tv'){
@@ -238,7 +237,6 @@ $(document).ready(function () {
 
     $(document).on('change', '#tipoVentaModal', function () {
         tipoVenta = $(this).val();
-        // console.log('idVenta desde el onchange->',tipoVenta);    
     });
     $(document).on('click', '#btnAceptarCambioTipoVenta', function () {
         $.ajax({
@@ -418,50 +416,12 @@ function crearTablaTipoVenta(idCondominio) {
     $(document).on('click', '#btnEditarTipoVenta', function (e) {
         e.preventDefault();
         idLot = $(this).data('idlote');               
-        // $.ajax({
-        //     url: `${general_base_url}Contraloria/get_tipo_venta`,
-        //     method: 'GET',
-        //     dataType: 'json',
-        //     success: function (data) {
-        //         $('#tipoVentaModal').empty();
-        //         $('#tipoVentaModal').append('<option value="">Selecciona el tipo venta</option>');
-
-        //         $.each(data, function (index, opcion) {
-        //             $('#tipoVentaModal').append('<option value="' + opcion.id_tventa + '">' + opcion.tipo_venta + '</option>');
-        //         });
-        //         $('#tipoVentaModal').selectpicker('refresh');
-        //     },
-        //     error: function (xhr, status, error) {
-        //         console.error('Error al cargar las opciones:', error);
-        //         $('#tipoVentaModal').empty();
-        //         $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
-        //     }
-        // });
         $('#modalCambiotipoventa').modal('show');
     });
 
     $(document).on('change', '#tipoVentaModal', function () {
         tipoVenta = $(this).val();
     });
-
-    // Manejo del evento de cambio en el select de acciones
-    // $('#tipo-venta tbody').on('change', '.action-select', function () {
-    //     var action = $(this).val(); // Obtener la acción seleccionada
-    //     var idLote = $(this).data('id'); // Obtener el idLote del select
-
-    //     if (action === 'edit') {
-    //         // Lógica para editar el registro correspondiente
-    //         console.log('Editando el registro con idLote:', idLote);
-    //         // Aquí puedes abrir un modal de edición o realizar otra acción
-    //     } else if (action === 'delete') {
-    //         // Lógica para eliminar el registro correspondiente
-    //         console.log('Eliminando el registro con idLote:', idLote);
-    //         // Aquí puedes mostrar un mensaje de confirmación o realizar otra acción
-    //     }
-
-    //     // Restablecer el select a la opción por defecto
-    //     $(this).val('');
-    // });
 
     applySearch(tablaTipoVenta);
     $('#tipo-venta').on('draw.dt', function () {
@@ -471,32 +431,7 @@ function crearTablaTipoVenta(idCondominio) {
     });
 }
 
-// $(document).on('click', '#btnEditarTipoVenta', function (e) {
-//     e.preventDefault();
-//     idLot = $(this).data('idlote');
-//     nameLote = $(this).data('nombrelote');
-//     idTipoVentaRowSelected = $(this).data('idtipoventa');
-//     // console.log('Valor del tipo venta desde el onchange del icono->',idTipoVentaRowSelected);
-//     $.ajax({
-//         url: `${general_base_url}Contraloria/get_tipo_venta`,
-//         method: 'GET',
-//         dataType: 'json',
-//         success: function (data) {
-//             $('#tipoVentaModal').val('');
-//             $('#tipoVentaModal').selectpicker('refresh');
-//             $.each(data, function (index, opcion) {
-//                 $('#tipoVentaModal').append('<option value="' + opcion.id_tventa + '">' + opcion.tipo_venta + '</option>');
-//             });
-//             $('#tipoVentaModal').selectpicker('refresh');
-//         },
-//         error: function (xhr, status, error) {
-//             console.error('Error al cargar las opciones:', error);
-//             $('#tipoVentaModal').empty();
-//             $('#tipoVentaModal').append('<option value="">Error al cargar opciones</option>');
-//         }
-//     });
-//     $('#modalCambiotipoventa').modal('show');
-// });
+
 
 function loadSelectOptions() {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
@@ -512,31 +447,8 @@ function loadSelectOptions() {
         }
         $("#idEstatus").selectpicker('refresh');
     }, 'json');
-    // $.post(`${general_base_url}OperacionesPorCatalogo/listacatalogo`, function (data) {
-    //     for (var i = 0; i < data.length; i++) {
-    //         $("#cambiarrepresentante").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre'].toUpperCase()));
-    //     }
-    //     $("#cambiarrepresentante").selectpicker('refresh');
-    // }, 'json');
-    // $.post(`${general_base_url}Contraloria/get_tipo_venta`, function (data) {
-    //     $('#tipoVentaModal').selectpicker('refresh');
-    //     for (var i = 0; i < data.length; i++) {
-    //         $("#tipoVentaModal").append($('<option>').val(data[i]['id_tventa']).text(data[i]['tipo_venta'].toUpperCase()));
-    //     }
-    //     $("#tipoVentaModal").selectpicker('refresh');
-    // }, 'json');
-}
 
-// $.getJSON(`${general_base_url}Contraloria/getCatalogoxContraloria`).done(function (data) {
-//     for (let i = 0; i < data.length; i++) {
-//         if (data[i]['id_catalogo'] == 'tv'){
-//             $("#tipoVentaModal").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-//         }            
-//     }
-//     $('#tipoVentaModal').selectpicker('refresh');
-//     console.log('Respuesta desde el getJSON');
-//     console.log(data);
-// });
+}
 
 $('#selectProyecto').change(function () {
     $('#spiner-loader').removeClass('hide');
@@ -1302,15 +1214,7 @@ $(document).on('click', '#btnConfirmarCambioRl', function (e) {
     formData.append("idLote", idLote);
     formData.append("idRl", selectedRl);
     formData.append("idCliente", idCliente);
-    // console.log(
-    //     `representanteLegal: ${representanteLegal},
-    //     idLote: ${idLote},
-    //     idRl(nuevo selecionado): ${selectedRl},
-    //     idCliente: ${idCliente},
-    //     nombreLoteText: ${nombreLoteText},
-    //     nombreRl: ${nombreRl},
-    //     selectedLabelC: ${selectedLabelC}`
-    // );
+  
     if (selectedRl !== 0) {
         $('#btnCambiarRL').prop('disabled', true);
 
