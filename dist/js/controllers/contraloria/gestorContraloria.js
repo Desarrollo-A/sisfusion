@@ -271,67 +271,67 @@ function crearTablaTipoVenta(idCondominio) {
 
 
 
-    $('#btnConfirmarCambioTipoVenta').off('click').on('click', function () {
-        if (tipoVenta && idLot) {
-            // $.get(`${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`, function (data) {
-            //     tablaTipoVenta.ajax.reload();
-            //     $('#modalCambiotipoventa').modal('hide');
-            //     alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
-            //     tipoVenta=null;
-            //     idLot=null;
-            // }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            //     console.error("Error en la actualización:", textStatus, errorThrown);
-            // });
-            $.ajax({
-                url: `${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`,
-                type: 'GET',
-                dataType: 'json',
-                cache:false,
-                contentType:false,
-                processData:false,
-                success: function (response) {                                       
-                    if(response.message==='OK'){
-                        tablaTipoVenta.ajax.reload();
-                        $('#modalCambiotipoventa').modal('hide');
-                        alerts.showNotification("top", "right", 'Se ha actualizo correctamente.', "success");
-                        tipoVenta = null;
-                        idLot = null;
-                    }else{
-                        console.log('El update no se hizo correctamnete');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al cargar las opciones:', error);
-                    $('#tipoVentaModal').empty();
-                    $('#tipoVentaModal').
-                    append('<option value="">Error al cargar opciones</option>');
-                }
-            });
-        } else {
-            console.error("No se han seleccionado valores válidos para la actualización");
-            alerts.showNotification('top', 'right', 'Asegúrate de ingresar un valor.', 'warning')
+    // $('#btnConfirmarCambioTipoVenta').off('click').on('click', function () {
+    //     if (tipoVenta && idLot) {
+    //         // $.get(`${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`, function (data) {
+    //         //     tablaTipoVenta.ajax.reload();
+    //         //     $('#modalCambiotipoventa').modal('hide');
+    //         //     alerts.showNotification("top", "right",'Se ha actualizo correctamente', "success");
+    //         //     tipoVenta=null;
+    //         //     idLot=null;
+    //         // }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+    //         //     console.error("Error en la actualización:", textStatus, errorThrown);
+    //         // });
+    //         $.ajax({
+    //             url: `${general_base_url}Contraloria/actualizar_tipo_venta/${tipoVenta}/${idLot}`,
+    //             type: 'GET',
+    //             dataType: 'json',
+    //             cache:false,
+    //             contentType:false,
+    //             processData:false,
+    //             success: function (response) {                                       
+    //                 if(response.message==='OK'){
+    //                     tablaTipoVenta.ajax.reload();
+    //                     $('#modalCambiotipoventa').modal('hide');
+    //                     alerts.showNotification("top", "right", 'Se ha actualizo correctamente.', "success");
+    //                     tipoVenta = null;
+    //                     idLot = null;
+    //                 }else{
+    //                     console.log('El update no se hizo correctamnete');
+    //                 }
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 console.error('Error al cargar las opciones:', error);
+    //                 $('#tipoVentaModal').empty();
+    //                 $('#tipoVentaModal').
+    //                 append('<option value="">Error al cargar opciones</option>');
+    //             }
+    //         });
+    //     } else {
+    //         console.error("No se han seleccionado valores válidos para la actualización");
+    //         alerts.showNotification('top', 'right', 'Asegúrate de ingresar un valor.', 'warning')
    
-        }
-    });
+    //     }
+    // });
 
     // Manejo del evento de cambio en el select de acciones
-    $('#tipo-venta tbody').on('change', '.action-select', function () {
-        var action = $(this).val(); // Obtener la acción seleccionada
-        var idLote = $(this).data('id'); // Obtener el idLote del select
+    // $('#tipo-venta tbody').on('change', '.action-select', function () {
+    //     var action = $(this).val(); // Obtener la acción seleccionada
+    //     var idLote = $(this).data('id'); // Obtener el idLote del select
 
-        if (action === 'edit') {
-            // Lógica para editar el registro correspondiente
-            console.log('Editando el registro con idLote:', idLote);
-            // Aquí puedes abrir un modal de edición o realizar otra acción
-        } else if (action === 'delete') {
-            // Lógica para eliminar el registro correspondiente
-            console.log('Eliminando el registro con idLote:', idLote);
-            // Aquí puedes mostrar un mensaje de confirmación o realizar otra acción
-        }
+    //     if (action === 'edit') {
+    //         // Lógica para editar el registro correspondiente
+    //         console.log('Editando el registro con idLote:', idLote);
+    //         // Aquí puedes abrir un modal de edición o realizar otra acción
+    //     } else if (action === 'delete') {
+    //         // Lógica para eliminar el registro correspondiente
+    //         console.log('Eliminando el registro con idLote:', idLote);
+    //         // Aquí puedes mostrar un mensaje de confirmación o realizar otra acción
+    //     }
 
-        // Restablecer el select a la opción por defecto
-        $(this).val('');
-    });
+    //     // Restablecer el select a la opción por defecto
+    //     $(this).val('');
+    // });
 
     applySearch(tablaTipoVenta);
     $('#tipo-venta').on('draw.dt', function () {
@@ -991,8 +991,7 @@ $(document).ready(function () {
 $("#cambiarrepresentante").change(function () {
     selectedRl = $(this).val();
     selectedLabelC = $("#cambiarrepresentante option:selected").text(); 
-    console.warn("selectedRl: " + selectedRl);
-    console.warn("selectedLabel (texto): " + selectedLabelC);
+  
 
 });
 
@@ -1374,5 +1373,4 @@ $(document).on('click','#btnConfirmarCambioRl', function(e){
             }else{
                 alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning');
             }
-    console.warn("btnConfirmarCambioRl modal");
 });
