@@ -106,7 +106,7 @@ $(document).ready(function () {
             return;
         }
         if(idTipoVentaRowSelected == tipoVenta){
-            alerts.showNotification('top', 'right', 'Estas seleccionando el mismo tipo de venta.', 'warning');
+            alerts.showNotification('top', 'right', 'Estás seleccionando el mismo tipo de venta.', 'warning');
             return;
         }
         if (tipoVenta && idLot) {
@@ -309,6 +309,8 @@ function crearTablaTipoVenta(idCondominio) {
             });
         } else {
             console.error("No se han seleccionado valores válidos para la actualización");
+            alerts.showNotification('top', 'right', 'Asegúrate de ingresar un valor.', 'warning')
+   
         }
     });
 
@@ -798,7 +800,7 @@ $(document).on('click', '#btnActualizarRL', function (e) {
     var dataExp1 = new FormData();
     dataExp1.append("opcionNombreRl", opcionNombreRl);
     if (validarOpcionNombre == 0) {
-        alerts.showNotification('top', 'right', 'Asegúrate de seleccionar una opción.', 'warning')
+        alerts.showNotification('top', 'right',  'Asegúrate de ingresar un valor.', 'warning')
     } else {
         $('#btnActualizarRL').prop('disabled', true);
         $.ajax({
