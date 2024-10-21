@@ -414,10 +414,12 @@ $(document).on("submit", "#formPlanPago", function (e) {
                         cerrarModalAddPlan();
                         alerts.showNotification("top", "right", dto.mensaje, "success");
                         $('#tablaPlanPagos').DataTable().ajax.reload();
-                    }
-                    else
-                        alerts.showNotification("top", "right", dto.mensaje, "danger");
 
+                        saveHistorial(dto.idPlanPago, 3, dto.mensaje, dto.mensaje)
+                    }
+                    else{
+                        alerts.showNotification("top", "right", dto.mensaje, "danger");
+                    }
 
                 } catch (error) {
                     if (error instanceof SyntaxError) {
@@ -1437,6 +1439,9 @@ function buildEvento(evento) {
             break
         case 1:
             text_tipo = 'Cancelacion de plan'
+            break
+        case 3:
+            text_tipo = 'Plan creado'
             break
     }
 

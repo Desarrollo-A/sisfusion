@@ -4275,8 +4275,9 @@ legend {
             /*print_r($dumpPlanPago);
             exit;*/
             $insertPlanDB = $this->General_model->addRecord('planes_pago', $insert_plan);
+
             if ( $insertPlanDB ) {
-                $response = array( "status" => 1, "mensaje"=>"Se actualizó el enganche correctamente");
+                $response = array( "status" => 1, "idPlanPago" => $this->db->insert_id(), "mensaje"=>"Se actualizó el enganche correctamente");
             } else  {
                 $response = array( "status" => 0, "mensaje"=>"Error al insertar el enganche, inténtalo nuevamente");
             }
