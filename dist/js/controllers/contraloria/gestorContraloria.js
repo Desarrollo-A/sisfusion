@@ -1601,8 +1601,6 @@ function crearTablaReasignarProspecto(idCondominio) {
         $("#modalReasignarProspecto").modal();
 
         reasignarProspecto = function (data) {
-            console.log(data);
-            
             let form = new FormConfirm({
                 title: '¿Estás seguro de reasignar el prospecto?',
                 onSubmit: function() {
@@ -1612,8 +1610,6 @@ function crearTablaReasignarProspecto(idCondominio) {
                         url: `${general_base_url}Contraloria/reasignar_prospecto`,
                         data: data,
                         success: function (response) {
-                            console.log(response);
-                            
                             response = JSON.parse(response)
                             
                             if (response.resultado === 1) {
