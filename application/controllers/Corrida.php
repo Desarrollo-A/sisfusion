@@ -4666,14 +4666,17 @@ legend {
     }
 
     public function saveHistorial($idPlanPago){
-        $data = json_decode(file_get_contents("php://input"));
+        $idLote = $this->input->post('idLote');
+        $tipoRegistro = $this->input->post('tipoRegistro');
+        $respuesta = $this->input->post('respuesta');
+        $respuestaNeodata = $this->input->post('respuestaNeodata');
 
         $payload = [
             'idPlanPago' => $idPlanPago,
-            'idLote' => $data->idLote,
-            'tipoRegistro' => $data->tipoRegistro,
-            'respuesta' => $data->respuesta,
-            'respuestaNeodata' => $data->respuestaNeodata,
+            'idLote' => $idLote,
+            'tipoRegistro' => $tipoRegistro,
+            'respuesta' => $respuesta,
+            'respuestaNeodata' => $respuestaNeodata,
             'fechaCreacion' => date('Y-m-d H:i:s'),
             'idCreacion' => $this->session->userdata('id_usuario'),
         ];

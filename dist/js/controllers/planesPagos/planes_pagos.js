@@ -1264,20 +1264,9 @@ function servicioNeoData(response){
                 $('#aceptarPlanPagoPP').modal('hide');
                 $('#spiner-loader').addClass('hide');
                 $('#tablaPlanPagos').DataTable().ajax.reload();
-
-                $.ajax({
-                    data: {
-                        tipoRegistro: 0,
-                        respuesta: response.msj,
-                        respuestaNeodata: 'elemento.msj',
-                    },
-                    url: `saveHistorial/${idPlanPago}`,
-                    type: 'POST',
-                    success: function (response) {
-                        console.log(response)
-                    }
-                })
             }
+
+            saveHistorial(planesDePagoIds[0].idPlanPago, response.msj, response.msj)
 
         }
 
@@ -1496,7 +1485,7 @@ function buildEvento(evento) {
 }
 
 function showHistorial() {
-    $('#historialModal').modal('show');
+    // $('#historialModal').modal('show');
 
     event = buildEvento()
 
@@ -1504,4 +1493,20 @@ function showHistorial() {
     $('#historialActual').append(event)
     $('#historialActual').append(event)
     $('#historialActual').append(event)
+}
+
+function saveHistorial(idPlanPago, respuesta, respuestaNeodata){
+    $.ajax({
+        data: {
+            idLote,
+            tipoRegistro: 0,
+            respuesta: respuesta,
+            respuestaNeodata: respuestaNeodata,
+        },
+        url: `saveHistorial/${idPlanPago}`,
+        type: 'POST',
+        success: function (response) {
+            console.log(response)
+        }
+    })
 }
