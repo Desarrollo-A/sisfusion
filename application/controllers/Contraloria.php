@@ -4561,5 +4561,52 @@ public function return1(){
 
 	public function getModeloCasas() {
 		echo json_encode($this->Contraloria_model->getModelosdeCasa()->result_array());
-   }
+	}
+
+	public function lista_reasignar_prospecto($idCondominio) {
+		echo json_encode($this->Contraloria_model->getListaReasignarProspecto($idCondominio));
+	}
+
+	public function lista_prospectos($idAsesor) {
+		echo json_encode($this->Contraloria_model->getListaProspectos($idAsesor));
+	}
+
+	public function reasignar_prospecto() {
+		$id_prospecto = $this->input->post('id_prospecto');
+		$lugar_prospeccion = $this->input->post('idLugarP');
+		$otro_lugar = $this->input->post('otro_lugar');
+		$id_sede = $this->input->post('id_sede');
+		$id_lote = $this->input->post('id_lote');
+		$id_asesor = $this->input->post('id_asesor');
+		$id_coordinador = $this->input->post('id_coordinador');
+		$id_gerente = $this->input->post('id_gerente');
+
+		if (!isset($id_prospecto) || !isset($lugar_prospeccion) || !isset($otro_lugar)
+		 || !isset($id_sede) || !isset($id_lote) || !isset($id_asesor)
+		 || !isset($id_coordinador) || !isset($id_gerente)) {
+			http_response_code(400);
+		}
+
+		$prospectoAnterior = $this->Contraloria_model->validarProspecto($id_lote, $id_asesor, $id_coordinador, $id_gerente);	
+		if($prospectoAnterior != null) {
+        	$this->db->trans_begin();
+
+			$modificarAnterior = $this->Contraloria_model->actualizarProspecto($prospectoAnterior->id_prospecto, 0, 0, 4);
+			$modificarNuevo = $this->Contraloria_model->actualizarProspecto($id_prospecto, 1, 1, 7);
+			$modificarCliente = $this->Contraloria_model->modificarClienteProspecto($id_prospecto, $lugar_prospeccion, $otro_lugar, $id_sede, $id_lote);
+
+			if (!isset($modificarAnterior) || !isset($modificarNuevo) || !isset($modificarCliente)) {
+				$this->db->trans_rollback();
+				http_response_code(400);
+			} else {
+				$this->db->trans_commit();
+				$response['resultado'] = 1;
+				$this->output->set_output(json_encode($response));
+			}
+		} else {
+			$response['resultado'] = 0;
+			$this->output->set_output(json_encode($response));
+		}
+
+	}
 }

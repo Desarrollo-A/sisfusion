@@ -2130,5 +2130,112 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $this->db->where('idModelo', $idopcion_modelo);
         return $this->db->update('modelos_casas'); 
     }
+
+    public function getListaReasignarProspecto($idCondominio) {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                ISNULL(lo.referencia, '') referencia,
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+                cl.id_asesor, 
+                UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+                cl.id_coordinador, 
+                CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+                cl.id_gerente,
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+            	pr.id_prospecto,
+                pr.lugar_prospeccion
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+            INNER JOIN prospectos pr ON cl.id_prospecto = pr.id_prospecto
+            INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+            WHERE
+                lo.status = 1"
+        )->result();
+    }
+
+    public function getListaProspectos($idAsesor) {
+        return $this->db->query(
+            "SELECT 
+                id_prospecto, 
+                UPPER(CONCAT(pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno)) nombreCliente,
+                pr.id_asesor, 
+                UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor,
+                pr.id_coordinador, 
+                CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+                pr.id_gerente,
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+                pr.id_sede, 
+                lugar_prospeccion idLugarP, 
+                oxc.nombre nombreLugarP,
+                CASE WHEN pr.otro_lugar = '0' THEN 'N/A' ELSE pr.otro_lugar END otro_lugar 
+            FROM 
+                prospectos pr
+            INNER JOIN usuarios u0 ON u0.id_usuario = pr.id_asesor
+            LEFT JOIN usuarios u1 ON u1.id_usuario = pr.id_coordinador
+            LEFT JOIN usuarios u2 ON u2.id_usuario = pr.id_gerente
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.lugar_prospeccion AND oxc.id_catalogo = 9
+            WHERE 
+                id_asesor = $idAsesor 
+            ORDER BY 
+                CONCAT(pr.nombre, ' ', pr.apellido_paterno, ' ', pr.apellido_materno)
+            "
+        )->result();
+    }
+
+    public function validarProspecto($id_lote, $id_asesor, $id_coordinador, $id_gerente) {
+        return $this->db->query(
+            "SELECT
+                id_prospecto
+            FROM
+                clientes
+            WHERE
+                idLote = $id_lote
+                AND id_asesor = $id_asesor
+                AND id_coordinador = $id_coordinador
+                AND id_gerente = $id_gerente"
+        )->row();
+    }
+
+    public function actualizarProspecto($prospecto, $tipo, $becameClient, $estatus) {
+        $fecha = ($becameClient == 1) ? 'GETDATE()' : 'NULL';
+
+        return $this->db->query(
+            "UPDATE
+                prospectos
+            SET
+                tipo = $tipo,
+                becameClient = $fecha,
+                estatus_particular = $estatus,
+                modificado_por = 1,
+                fecha_modificacion = GETDATE()
+            WHERE id_prospecto = $prospecto"
+        );
+    }
+
+    public function modificarClienteProspecto($prospecto, $lugar_prospeccion, $otro_lugar, $id_sede, $id_lote) {
+        return $this->db->query(
+            "UPDATE
+                clientes
+            SET
+                id_prospecto = $prospecto,
+                modificado_por = 1,
+                fecha_modificacion = GETDATE(),
+                lugar_prospeccion = $lugar_prospeccion,
+                otro_lugar = '$otro_lugar',
+                id_sede = $id_sede
+            WHERE
+                idLote = $id_lote
+                AND status = 1"
+        );
+    }
 }
 

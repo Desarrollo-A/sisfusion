@@ -3,6 +3,8 @@ let titulosTablaIntercambios = [];
 let titulosCambioTipoVenta = [];
 let titulosTablaCambioRL = [];
 let titulos_principal = [];
+let titulosReasignarProspecto = [];
+let titulosProspecto = [];
 let num_colum_principal = [];
 let tipoTransaccion = '';
 let tipoTransaccionModelo = '';
@@ -220,6 +222,8 @@ $(document).ready(function () {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 } else if (data[i]['id_opcion'] == 5 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
                     $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+                } else if (data[i]['id_opcion'] == 6 && usuariosPermitidosModelosCasas.includes(id_usuario_general)) {
+                    $("#selector").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
                 }
             }
         }
@@ -304,7 +308,8 @@ $(document).on('change', '#selector', function () {
         $('#condominio').addClass('hide');
         $("#divTablaRL").removeClass("hide");
         $('#divTablaCambiarVenta').addClass('hide');
-        $("#divtablaCambiarRepresentanteLegal").addClass("hide");
+         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
+        $("#divTablaReasignarProspectos").addClass("hide");
         llenarTablaRl($(this).val());
     } else if ($(this).val() == 2) {
         $("#divTablaIntercambio").removeClass("hide");
@@ -312,7 +317,8 @@ $(document).on('change', '#selector', function () {
         $('#condominio').addClass('hide');
         $("#divTablaRL").addClass("hide");
         $('#divTablaCambiarVenta').addClass('hide');
-        $("#divtablaCambiarRepresentanteLegal").addClass("hide");
+         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
+        $("#divTablaReasignarProspectos").addClass("hide");
         llenarTablaIntercambios($(this).val());
     } else if ($(this).val() == 3) {
         $('#proyecto').addClass('hide');
@@ -320,19 +326,27 @@ $(document).on('change', '#selector', function () {
         $('#divTablaCambiarVenta').addClass('hide');
         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
         $("#divmodelosTable").removeClass("hide");
+        $("#divTablaReasignarProspectos").addClass("hide");
     }
     else if ($(this).val() == 4) {
         $('#proyecto').removeClass('hide');
         $('#condominio').removeClass('hide');
         $('#divTablaCambiarVenta').addClass('hide');
         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
-    } else if ($(this).val() == 5) {
+        $("#divTablaReasignarProspectos").addClass("hide");
+    }else if ($(this).val() == 5) {
         // LLEAR EL SELECT DE PROYECTO
         $('#proyecto').removeClass('hide');
         $('#condominio').removeClass('hide');
         $('#divTablaCambiarVenta').addClass('hide');
         $("#divtablaCambiarRepresentanteLegal").addClass("hide");
-    }
+        $("#divTablaReasignarProspectos").addClass("hide");
+    } else if ($(this).val() == 6) {
+        $('#proyecto').removeClass('hide');
+        $('#condominio').removeClass('hide');
+        $('#divTablaCambiarVenta').addClass('hide');
+        $("#divtablaCambiarRepresentanteLegal").addClass("hide");
+    } 
 });
 
 $('#selectCondominio').change(function () {
@@ -342,6 +356,8 @@ $('#selectCondominio').change(function () {
             crearTablaTipoVenta(idOpcionCondominio);
         } else if (selectedOpcion == 5) {
             ConstruirTablaCAmbiarRepresentante(idOpcionCondominio);
+        } else if(selectedOpcion == 6) {
+            crearTablaReasignarProspecto(idOpcionCondominio);
         }
     }
 });
@@ -1259,3 +1275,246 @@ $(document).on('click', '#btnConfirmarCambioRl', function (e) {
         alerts.showNotification('top', 'right', 'Asegúrate de seleccionar un representante legal', 'warning');
     }
 });
+
+
+function crearTablaReasignarProspecto(idCondominio) {
+    Shadowbox.init()
+
+    $('#divTablaReasignarProspectos thead tr:eq(0) th').each(function (i) {
+        if ($(this).text()) {
+            let title = $(this).text();
+            
+            titulosReasignarProspecto.push(title);
+            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+        }
+
+        $('input', this).on('keyup change', function () {
+            if (tablaReasignarProspecto.column(i).search() !== this.value)
+                tablaReasignarProspecto.column(i).search(this.value).draw();
+        });
+    }) 
+
+    $('#divTablaReasignarProspectos').removeClass('hide');
+
+    let tablaReasignarProspecto = $('#tablaReasignarProspectos').DataTable({
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Exportar registros a Excel',
+                title: "Listado reasignar prospectos - Clientes",
+                exportOptions: {
+                    columns: [0,1,2,3,4,5,6,7],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulosReasignarProspecto[columnIdx] + ' ';
+                        }
+                    }
+                }
+            }
+        ],
+        language: {
+            url: `${general_base_url}static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        bAutoWidth: false,
+        fixedColumns: true,
+        ordering: false,
+        scrollX: true,
+        destroy: true,
+        columns: [
+            { data: 'nombreResidencial' },
+            { data: 'nombreCondominio' },
+            { data: 'nombreLote' },
+            { data: 'referencia' },
+            { data: 'nombreCliente' },
+            { data: 'nombreAsesor' },
+            { data: 'nombreCoordinador' },
+            { data: 'nombreGerente' },
+            {
+                data: function (d) {
+                    const botonVerDocumento = new RowButton({icon: 'visibility', data: d, onClick: verDocumento, label: "Ver documento"})
+                    const botonModal = new RowButton({icon: 'sync', data: d, onClick: modalProspecto, label: "Reasignar prospecto"})
+
+                    return `<div class="d-flex justify-center">${botonModal}${botonVerDocumento}</div>`;
+                }
+            }
+        ],
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 0
+            }
+        ],
+        ajax: {
+            url: `${general_base_url}Contraloria/lista_reasignar_prospecto/${idCondominio}`,
+            dataSrc: "",
+            type: "POST",
+            cache: false
+        },
+        order: [[0, 'asc']]
+    })
+
+    $('#tablaReasignarProspectos').on('draw.dt', function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        })
+    })
+
+    verDocumento = function (data) {
+        const urlProspecto = (data.lugar_prospeccion == 6) ? 'printProspectInfoMktd' : 'printProspectInfo';
+        pathUrl = `${general_base_url}clientes/${urlProspecto}/` + data.id_prospecto;
+
+        if (screen.width > 480 && screen.width < 800) {
+            window.location.href = `${pathUrl}`;
+        }
+
+        else {
+            Shadowbox.open({
+                content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
+                player: "html",
+                title: `${_('visualizando-archivo2')}: PROSPECTO`,
+                width: 985,
+                height: 660
+            });
+        }
+    }
+
+    modalProspecto = function (data) {
+        if (! $.fn.DataTable.isDataTable('#tablaProspectos')) {
+            $('#divModalProspectos thead tr:eq(0) th').each(function (i) {
+                let title = $(this).text();
+                
+                titulosProspecto.push(title);
+                $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+
+                $('input', this).on('keyup change', function () {
+                    if (tablaProspecto.column(i).search() !== this.value)
+                        tablaProspecto.column(i).search(this.value).draw();
+                });
+            }) 
+        }
+
+        if ($.fn.DataTable.isDataTable('#tablaProspectos')) {
+            tablaProspecto.destroy();
+        }
+
+        $('#divModalProspectos').removeClass('hide');
+
+        tablaProspecto = $('#tablaProspectos').DataTable({
+            dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Exportar registros a Excel',
+                    title: "Listado reasignar prospectos - Prospectos",
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5],
+                        format: {
+                            header: function (d, columnIdx) {
+                                return ' ' + titulosProspecto[columnIdx] + ' ';
+                            }
+                        }
+                    }
+                }
+            ],
+            language: {
+                url: `${general_base_url}static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            pagingType: "full_numbers",
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "Todos"]
+            ],
+            bAutoWidth: false,
+            fixedColumns: true,
+            ordering: false,
+            scrollX: true,
+            destroy: true,
+            columns: [
+                { data: 'nombreCliente' },
+                { data: 'nombreAsesor' },
+                { data: 'nombreCoordinador' },
+                { data: 'nombreGerente' },
+                { data: 'nombreLugarP' },
+                { data: 'otro_lugar' },
+                { data: function (d) {
+                    const botonReasignar = new RowButton({icon: 'sync', data: {...d, id_lote: data.idLote}, onClick: reasignarProspecto, label: "Reasignar prospecto"})
+                    return `<div class="d-flex justify-center">${botonReasignar}</div>`;
+                }}
+            ],
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: 0
+                }
+            ],
+            ajax: {
+                url: `${general_base_url}Contraloria/lista_prospectos/${data.id_asesor}`,
+                dataSrc: "",
+                type: "POST",
+                cache: false
+            },
+            order: [[0, 'asc']]
+        })
+
+        $('#tablaProspectos').on('draw.dt', function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            })
+        })
+
+        $("#modalReasignarProspecto").modal();
+
+        reasignarProspecto = function (data) {
+            let form = new FormConfirm({
+                title: '¿Estás seguro de reasignar el prospecto?',
+                onSubmit: function() {
+                    form.loading(true)
+                    $.ajax({
+                        type: 'POST',
+                        url: `${general_base_url}Contraloria/reasignar_prospecto`,
+                        data: data,
+                        success: function (response) {
+                            response = JSON.parse(response)
+                            
+                            if (response.resultado === 1) {
+                                alerts.showNotification("top", "right", "Se ha reasignado el prospecto", "success")
+                                form.hide()
+                                form.loading(false)
+                                tablaReasignarProspecto.ajax.reload()
+                            } else {
+                                alerts.showNotification("top", "right", "Por favor revisa que el Asesor, Coordinador y Gerente coincidan con el cliente", "danger")
+                                form.hide()
+                            }
+                        },
+                        error: function () {
+                            alerts.showNotification("top", "right", "Oops, algo salió mal", "danger")
+                        }
+
+                    })
+                }
+            })
+
+            form.show()
+        }
+    };
+}
