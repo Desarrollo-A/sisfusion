@@ -84,16 +84,11 @@ hr {
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header ">
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        <i class="material-icons">clear</i>
-                    </button>    -->
-                    <!-- <button type="button" class="close" aria-hidden="true" data-dismiss="modal" style="margin-top: -10px;"><i class="material-icons">clear</i></button> -->
                     </div>
                     <form method="post" id="form_tipo_venta">
                         <div class="modal-body">
                             <div class="form-group select-gral overflow-hidden">
                                 <label className="m-0" for="catalogo_resguardo">Seleccionar tipo de venta</label>
-                                <!-- <select class="selectpicker" id="catalogo_resguardo" name="catalogo_resguardo[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select> -->
                                 <select class="selectpicker tipo_v" id="tipo_v" name="tipo_v" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" data-container="body">
                                     <option value="1">VENTA DE PARTICULARES</option>
                                     <option value="2">VENTA NORMAL</option>

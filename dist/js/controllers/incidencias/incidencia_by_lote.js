@@ -1367,14 +1367,6 @@ $(".find_doc").click( function() {
         $("#modal_tipo_venta .modal-header").append(`<button type="button" class="close" aria-hidden="true" data-dismiss="modal" style="margin-top: -10px;"><i class="material-icons">clear</i></button>`);
         $("#modal_tipo_venta .modal-header").append(`<p class="modal-title">El lote <b>${row.data().nombreLote}</b>, tiene un tipo de venta actual "<b>${ (tipo == 'null' || tipo == 'undefined') ? 'Sin tipo de venta' : tipo }</b>". Seleccione el nuevo tipo de venta en caso de querer modificarlo.</p>`);
         $("#modal_tipo_venta .modal-header").append(`<input type="hidden" name="idLote" id="idLote" readonly="true" value="${idLote}"><input type="hidden" name="precioAnt" id="precioAnt" readonly="true" value="">`);
-        // $("#modal_tipo_venta .modal-body").append(`
-        // <div class="form-group">
-        
-        // <select class="form-control select-gral ng-invalid tipo_v" id="tipo_v" name="tipo_v" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" style="background-color: #f2f2f2; background-image: none; border-radius: 25px; padding: 0 15px;">
-        //     <option value="1">Venta de particulares</option>
-        //     <option value="2">Venta normal</option>
-        // </select>
-        // </div> ` );
 
         $("#modal_tipo_venta .modal-footer").append( ` 
             <div class="col-md-12">
