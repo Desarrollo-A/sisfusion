@@ -3809,8 +3809,8 @@ class Reestructura extends CI_Controller{
         if($estatusComisiones == 0){ $flagOk = false; $msg = 'Error  al pausar pagos de comisiones'; }
 
         // paso 1 - insert en tabla de regreso
-        // $insertRegresoLote = $this->insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion,$estatusComisiones);
-        // if(!$insertRegresoLote){ $flagOk = false; $msg = 'guardar, el lote de origen ya ha sido ocupado';}
+        $insertRegresoLote = $this->insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion,$estatusComisiones);
+        if(!$insertRegresoLote){ $flagOk = false; $msg = 'guardar, el lote de origen ya ha sido ocupado';}
         
         // paso 2 - actualizar datos en historial documento
         $updateHistorialDocumento = $this->updateHistorialDocumento($clienteNuevo, $loteNuevo, $clienteAnterior, $loteAnterior);
@@ -3828,12 +3828,12 @@ class Reestructura extends CI_Controller{
         // $upadateEnganche = $this->updateEnganche($clienteNuevo, $loteNuevo); // verificar de nuevo
 
         // paso 6 - update clausulas 
-        // $updateClausulas = $this->updateClausulas($loteNuevo);
-        // if(!$updateClausulas) { $flagOk = false; $msg = 'guardar el registro de clausulas';}
+        $updateClausulas = $this->updateClausulas($loteNuevo);
+        if(!$updateClausulas) { $flagOk = false; $msg = 'guardar el registro de clausulas';}
 
         // paso 7 - insertar en historial_liberacion
-        // $updateLiberacion = $this->updateLiberacion($clienteNuevo, $loteNuevo, $nombreLoteNuevo, $precioNuevo);
-        // if(!$updateLiberacion) { $flagOk = false; $msg = 'guardar el registro de liberación';}
+        $updateLiberacion = $this->updateLiberacion($clienteNuevo, $loteNuevo, $nombreLoteNuevo, $precioNuevo);
+        if(!$updateLiberacion) { $flagOk = false; $msg = 'guardar el registro de liberación';}
 
         // paso 8 - regresar lote detino a pre proceso        
         $updateLoteDestino = $this->updateDestinosProceso($loteNuevo, $loteAnterior, $clienteAnterior);
@@ -3920,13 +3920,16 @@ class Reestructura extends CI_Controller{
                 'tipo_venta' => 0,
                 'status8Flag' => 0,
                 'totalNeto' => 0,
-                'registro_comision' => $destino->registroComision,
                 'firmaRL' => null,
                 'fechaLiberacion' => date('Y-m-d H:i:s'),
                 'userLiberacion' => $this->session->userdata('id_usuario'),
-                'solicitudCancelacion' => 0,
-                'idStatusLote' => $destino->idStatusLote
+                'solicitudCancelacion' => 0                
             );
+        }
+
+        if($loteNuevo != $loteAnterior){
+            $loteNuevoUpdate['idStatusLote'] = $destino->idStatusLote;
+            $loteNuevoUpdate['registro_comision'] = $destino->registroComision;
         }
 
         $updateDestinoSelect = $this->General_model->updateBatch('lotes', $loteNuevoUpdate, 'idLote');
@@ -3955,8 +3958,7 @@ class Reestructura extends CI_Controller{
             'idCliente' => $clienteAnterior,
             'idStatusLote' => $loteNuevo == $loteAnterior ? $getLastValues->statusLote : 2, // si es reestructura se toma el statusLote anterior
             'idStatusContratacion' => 15,
-            'idMovimiento' => 45,
-            'registro_comision' => $getLastValues->registroComision
+            'idMovimiento' => 45            
         );
 
         $lotesOrigenInsert = array(
@@ -3984,6 +3986,7 @@ class Reestructura extends CI_Controller{
             $updateLoteOrigen['validacionEnganche'] = $getLastValues->validacionEnganche;
             $updateLoteOrigen['firmaRL'] = $getLastValues->firmaRL;
             $updateLoteOrigen['status8Flag'] = $getLastValues->status8Flag;
+            $updateLoteOrigen['registro_comision'] = $getLastValues->registroComision; // registro comision u
 
             if($statusNuevo > 6){
                 $updateLoteOrigen['tipo_venta'] = $getLastValues->tipoVenta;
@@ -4016,20 +4019,20 @@ class Reestructura extends CI_Controller{
         );
 
         $update = $this->General_model->addRecord('historial_liberacion', $insertData);
-
-       /* $this->email
+                
+        $this->email
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista34@ciudadmaderas.com')
-            //->to('postventa@ciudadmaderas.com')
+            // ->to('postventa@ciudadmaderas.com')
             ->subject('Notificación de solicitud de cancelación reestructura')
             ->view($this->load->view('mail/reestructura/mailSolicitudCancelacion', [
                 'lote' => $nombreLoteNuevo,
                 'Observaciones' => 'Observacion de prueba',
                 'tipoCancelacion' => 1 // $tipoCancelacionNombre
             ], true));
-
-        $this->email->send();*/
+            
+        $this->email->send();
 
         return $update;
     }
