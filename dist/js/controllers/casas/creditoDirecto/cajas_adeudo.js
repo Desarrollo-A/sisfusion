@@ -34,7 +34,7 @@ let table = new Table({
 return_lote = function(data){ // funcion para el avance del lote
     let form = new Form({
         title: '¿Rechazar lote?', 
-        text: `¿Deseas realizar rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
+        text: `¿Deseas rechazar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             form.loading(true)
 
@@ -144,6 +144,6 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
-
+    
     form.show()
 }
