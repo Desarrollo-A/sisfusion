@@ -123,14 +123,6 @@ class Contraloria_model extends CI_Model {
         return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (104, 103) AND estatus = 1 ORDER BY id_catalogo");
     }
 
-    function getTipoVenta(){
-        $this->db->select('id_tventa, tipo_venta');
-        $this->db->from('tipo_venta');
-        $this->db->where('status', 1);
-        $query = $this->db->get();
-
-        return $query->result();
-    }
 
     public function registroStatusContratacion6 () {
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,

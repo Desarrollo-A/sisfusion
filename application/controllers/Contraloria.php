@@ -4475,9 +4475,6 @@ public function return1(){
 		echo json_encode($data_response);
 	}	
 
-	public function get_tipo_venta(){	
-		echo json_encode($this->Contraloria_model->getTipoVenta());
-	}
 	public function getCatalogoxContraloria(){
 		echo json_encode($this->Contraloria_model->get_catalogox_contraloria());
 	}
