@@ -206,7 +206,6 @@ $(document).ready(function () {
         }
         $("#cambiarrepresentante").selectpicker('refresh');
         $("#tipoVentaModal").selectpicker('refresh');
-       
     });
     $("#divTablaRL, #divTablaIntercambio, #divTablaCambioRL, #divmodelosTable").addClass("hide");
     $.getJSON("getOpcionesPorCatalogo").done(function (data) {
