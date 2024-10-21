@@ -4645,7 +4645,15 @@ legend {
     public function regPlanPagoCompleto()
     {
         print(json_encode([
-            'msj' => 'Mensaje'
+            'msj' => 'Mensaje de prueba de regreso de NEODATA',
+            'status' => true,
+            'data' => [
+                0 => [
+                    'status' => true,
+                    'numPlan' => 1,
+                    'msj' => 'Test de respuesa plan Neodata'
+                ]
+            ]
         ]));
         exit;
 

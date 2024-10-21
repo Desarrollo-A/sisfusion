@@ -1186,6 +1186,10 @@ function servicioNeoData(response){
         success: function (response) {
             console.log('RESPUES NEODATA:'+response);
             response = JSON.parse(response);
+
+            let response_crm = ''
+            let response_neodata = ''
+
             let statusAviso;
             if(response.status === true){//resultado general de la consulta
                 statusAviso = 'success';
@@ -1193,6 +1197,7 @@ function servicioNeoData(response){
                 let banderaActualizado = 0;
                 response.data.map((elemento, index)=>{//se recorre la respuesta del servidor de NEODATA
                     console.log('elemento', elemento);
+
                     let avisoCRM = '';
                     if(elemento.status === true){//revisa el estado de la transacción interna de los planes
                         statusAviso = 'success';
@@ -1204,6 +1209,7 @@ function servicioNeoData(response){
                                     url: 'actualizaPlanPagoIndividual',
                                     type: 'POST',
                                     success: function (response) {
+
                                         response = JSON.parse(response);
                                         let statusAviso;
                                         if(response.status === true){//status de la transacción general
@@ -1213,6 +1219,11 @@ function servicioNeoData(response){
                                             statusAviso = 'danger';
                                         }
                                         alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
+
+                                        response_crm = response.msj
+                                        response_neodata = elemento.msj
+
+                                        saveHistorial(planesDePagoIds[0].idPlanPago, 0, response_crm, response_neodata)
                                     }
                                 });
                             }
@@ -1221,6 +1232,11 @@ function servicioNeoData(response){
                     else{
                         statusAviso = 'danger';
                         avisoCRM = ' [CRM] Registro no actualizado PLAN PAGO '+elemento.numPlan;
+
+                        response_crm = `Registro no actualizado PLAN PAGO ${elemento.numPlan}`
+                        response_neodata = elemento.msj
+
+                        saveHistorial(planesDePagoIds[0].idPlanPago, 0, response_crm, response_neodata)
                     }
                     alerts.showNotification('top', 'right', '[NEODATA] '+elemento.msj+avisoCRM, statusAviso);
 
@@ -1261,11 +1277,14 @@ function servicioNeoData(response){
                 $('#aceptarPlanPagoPP').modal('hide');
                 $('#spiner-loader').addClass('hide');
                 $('#tablaPlanPagos').DataTable().ajax.reload();
+
+                response_neodata = response.msj
+
+                saveHistorial(planesDePagoIds[0].idPlanPago, 0, response_crm, response_neodata)
             }
-
-            saveHistorial(planesDePagoIds[0].idPlanPago, response.msj, response.msj)
-
+        
         }
+        
 
     });/**/
     setTimeout(()=>{
@@ -1342,6 +1361,10 @@ $(document).on('click', '.cancelarPlanPago', function(){
             }
             alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
 
+            // response_crm = response.msj
+            // response_neodata = response.msj
+
+            // saveHistorial(idPlanPago, 1, response_crm, response_neodata)
         }
     });
 });
@@ -1373,6 +1396,12 @@ $(document).on('click', '#cancelarPP', ()=>{
                 }
             }
             alerts.showNotification('top', 'right', "[NEODATA] "+response.msj, statusAviso);
+
+            response_crm = response.msj
+            response_neodata = response.msj
+
+            saveHistorial(idPlanPago, 1, response_crm, response_neodata)
+
             $('#cancelarPlanPago').modal('toggle');
         }
     });
@@ -1405,6 +1434,9 @@ function buildEvento(evento) {
     switch(evento.tipoRegistro){
         case 0:
             text_tipo = 'Envio de plan'
+            break
+        case 1:
+            text_tipo = 'Cancelacion de plan'
             break
     }
 
@@ -1460,7 +1492,7 @@ function buildEvento(evento) {
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Re4spuesta [NEODATA]: ')
+                                        .text('Respuesta [NEODATA]: ')
                                         .append(
                                             $('<b />')
                                                 .text(evento.respuestaNeodata)
@@ -1475,6 +1507,7 @@ function buildEvento(evento) {
 
 function showHistorial(historial) {
     // console.log(historial)
+    $('#historialActual').html('')
 
     for(let historia of historial){
         // console.log(historia)
@@ -1487,13 +1520,13 @@ function showHistorial(historial) {
     $('#historialModal').modal('show');
 }
 
-function saveHistorial(idPlanPago, respuesta, respuestaNeodata){
+function saveHistorial(idPlanPago, tipoRegistro, respuesta, respuestaNeodata){
     $.ajax({
         data: {
             idLote,
-            tipoRegistro: 0,
-            respuesta: respuesta,
-            respuestaNeodata: respuestaNeodata,
+            tipoRegistro,
+            respuesta,
+            respuestaNeodata,
         },
         url: `saveHistorial/${idPlanPago}`,
         type: 'POST',
