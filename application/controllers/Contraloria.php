@@ -4056,6 +4056,36 @@ public function return1(){
         echo json_encode($data_response);
     }
 
+	function modificarRlLote(){
+		$representanteLegal = $this->input->post('representanteLegal');
+		$idLote = $this->input->post('idLote');
+		$idRl = $this->input->post('idRl');
+		$idCliente = $this->input->post('idCliente');
+		
+		$update_lotes = array();
+        $fecha_insercion = date('Y-M-d H:i:s');
+        
+		$update_cliente = array(
+			"rl"=>$idRl,
+			"modificado_por" => $this->session->userdata('id_usuario'),
+        	"fecha_modificacion" => $fecha_insercion,
+		);
+		
+		$actualizarRl  = $this->General_model->updateRecord('clientes',$update_cliente,"id_cliente",$idCliente);
+		// $update_lotes = array(
+		// 	'idCliente'=> $representanteLegal,
+		// 	"modificado_por" => $this->session->userdata('id_usuario'),
+        // );
+
+		if($actualizarRl){
+			$data_response['message'] = 'OK';
+		}else{
+			$data_response['message'] = 'ERROR';
+		}
+		echo json_encode($data_response);
+       
+	}
+
 	function actualizaAutMSI() {
         //$modo 1: LOTE 2:CONDOMINIO
         $id_autorizacion = $this->input->post('id_aut');
@@ -4427,6 +4457,27 @@ public function return1(){
         exit;
 	}
 
+	public function get_registros_tipo_venta($idCondominio) {
+		echo json_encode($this->Contraloria_model->getRegistrosCambioTipoVenta($idCondominio));
+	}	
+
+	public function actualizar_tipo_venta($tipoVenta,$idLote){
+		$data = array(
+			'tipo_venta' => $tipoVenta,								
+			'usuario' => $this->session->userdata('id_usuario')	
+		);
+		$result=$this->General_model->updateRecord('lotes',$data,'idLote',$idLote);
+		if($result){
+			$data_response['message']='OK';
+		}else{
+			$data_response['message']='ERROR';
+		}
+		echo json_encode($data_response);
+	}	
+
+	public function getCatalogoxContraloria(){
+		echo json_encode($this->Contraloria_model->get_catalogox_contraloria());
+	}
 	public function selectores() {
         echo json_encode($this->Contraloria_model->selectores()->result_array());
     }
@@ -4449,6 +4500,25 @@ public function return1(){
             echo json_encode(array());
         }
     }
+	public function getDatosTablaRepresentanteLegal($idCondominio) {
+		// Verifica si $idCondominio está definido y no es nulo
+		if (isset($idCondominio) && !empty($idCondominio)) {
+			// Obtiene los datos de registros legales a través del modelo
+			$datos = $this->Contraloria_model->getRegistrosRLParaCambio($idCondominio);
+			// Verifica si se obtuvieron datos
+			if ($datos !== null) {
+				// Si se obtuvieron datos, los codifica en JSON y los retorna
+				echo json_encode($datos);
+			} else {
+				// Si no se obtuvieron datos, retorna un arreglo vacío
+				echo json_encode(array());
+			}
+		} else {
+			// Si $idCondominio no está definido o es vacío, retorna un arreglo vacío
+			echo json_encode(array());
+		}
+	}
+	
     // Agregar registros a la tabla Gestor Contraloría
     public function agregarRegistroGestorContraloria() {
         $nombre = $this->input->post("nombre");
@@ -4488,5 +4558,52 @@ public function return1(){
 
 	public function getModeloCasas() {
 		echo json_encode($this->Contraloria_model->getModelosdeCasa()->result_array());
-   }
+	}
+
+	public function lista_reasignar_prospecto($idCondominio) {
+		echo json_encode($this->Contraloria_model->getListaReasignarProspecto($idCondominio));
+	}
+
+	public function lista_prospectos($idAsesor) {
+		echo json_encode($this->Contraloria_model->getListaProspectos($idAsesor));
+	}
+
+	public function reasignar_prospecto() {
+		$id_prospecto = $this->input->post('id_prospecto');
+		$lugar_prospeccion = $this->input->post('idLugarP');
+		$otro_lugar = $this->input->post('otro_lugar');
+		$id_sede = $this->input->post('id_sede');
+		$id_lote = $this->input->post('id_lote');
+		$id_asesor = $this->input->post('id_asesor');
+		$id_coordinador = $this->input->post('id_coordinador');
+		$id_gerente = $this->input->post('id_gerente');
+
+		if (!isset($id_prospecto) || !isset($lugar_prospeccion) || !isset($otro_lugar)
+		 || !isset($id_sede) || !isset($id_lote) || !isset($id_asesor)
+		 || !isset($id_coordinador) || !isset($id_gerente)) {
+			http_response_code(400);
+		}
+
+		$prospectoAnterior = $this->Contraloria_model->validarProspecto($id_lote, $id_asesor, $id_coordinador, $id_gerente);	
+		if($prospectoAnterior != null) {
+        	$this->db->trans_begin();
+
+			$modificarAnterior = $this->Contraloria_model->actualizarProspecto($prospectoAnterior->id_prospecto, 0, 0, 4);
+			$modificarNuevo = $this->Contraloria_model->actualizarProspecto($id_prospecto, 1, 1, 7);
+			$modificarCliente = $this->Contraloria_model->modificarClienteProspecto($id_prospecto, $lugar_prospeccion, $otro_lugar, $id_sede, $id_lote);
+
+			if (!isset($modificarAnterior) || !isset($modificarNuevo) || !isset($modificarCliente)) {
+				$this->db->trans_rollback();
+				http_response_code(400);
+			} else {
+				$this->db->trans_commit();
+				$response['resultado'] = 1;
+				$this->output->set_output(json_encode($response));
+			}
+		} else {
+			$response['resultado'] = 0;
+			$this->output->set_output(json_encode($response));
+		}
+
+	}
 }
