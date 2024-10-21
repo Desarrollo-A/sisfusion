@@ -2,7 +2,7 @@ let columns = [
     {
         data: (d) => {
             return `<span class="label" 
-                style="color: ${d.color}; background: ${d.color}18;}">
+                style="color: ${d.color}; background: ${d.color}18;">
                 ${d.nombreMovimiento}
             </span>`;
         }
@@ -21,10 +21,10 @@ let columns = [
             let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: return_process, data})
             let view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
 
-            if(data.documento == null && data.voBoOrdenCompra == 0){
+            if(data.documento == null && data.ordenCompra == 0){
                 return '<div class="d-flex justify-center">' + upload_button + return_button + '</div>'
             }
-            else if (data.documento != null && data.voBoOrdenCompra == 0){
+            else if (data.documento != null && data.ordenCompra == 0){
                 return '<div class="d-flex justify-center">' + pass_button + upload_button + view_button + return_button + '</div>'
             }
             else {
@@ -56,7 +56,6 @@ return_process = function(data){ // funcion para el avance del lote
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente.", "success");
                     return_flags(data);
     
                     form.hide();
@@ -169,8 +168,8 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 18 }),
-            new HiddenField({ id: 'voBoOrdenCompra', value: 1 }),
-            new HiddenField({ id: 'voBoAdeudoTerreno', value: data.voBoAdeudoTerreno }),
+            new HiddenField({ id: 'ordenCompra', value: 1 }),
+            new HiddenField({ id: 'adeudoTerreno', value: data.adeudoTerreno }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],

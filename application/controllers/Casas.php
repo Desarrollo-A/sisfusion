@@ -2729,8 +2729,8 @@ class Casas extends BaseController
         $proceso = $form->proceso;
         $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
-        $voBoOrdenCompra = $form->voBoOrdenCompra;
-        $voBoAdeudoTerreno = $form->voBoAdeudoTerreno;
+        $voBoOrdenCompra = $form->ordenCompra;
+        $voBoAdeudoTerreno = $form->adeudoTerreno;
         $banderaSuccess = true;
 
         if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno)) {
@@ -2751,8 +2751,12 @@ class Casas extends BaseController
 
         $updateData = array(
             "comentario" => $comentario,
-            "voBoOrdenCompra" => 1,
             "proceso" => $voBoAdeudoTerreno == 1 ? $procesoNuevo : $proceso,
+        );
+
+        $updateVobo = array(
+            "ordenCompra" => 1,
+            "paso" => ($voBoAdeudoTerreno == 1) ? $procesoNuevo : $proceso
         );
 
         $this->db->trans_begin();
@@ -2766,6 +2770,12 @@ class Casas extends BaseController
         // insert en historial
         $add = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
         if (!$add) {
+            $banderaSuccess = false;
+        }
+
+        // actualizar vobo
+        $vobo = $this->CasasModel->updateVobosDirecto($idProceso, $proceso, $updateVobo);
+        if (!$vobo) {
             $banderaSuccess = false;
         }
 
@@ -2789,8 +2799,8 @@ class Casas extends BaseController
         $proceso = $form->proceso;
         $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
-        $voBoOrdenCompra = $form->voBoOrdenCompra;
-        $voBoAdeudoTerreno = $form->voBoAdeudoTerreno;
+        $voBoOrdenCompra = $form->ordenCompra;
+        $voBoAdeudoTerreno = $form->adeudoTerreno;
         $banderaSuccess = true;
 
         if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno)) {
@@ -2811,8 +2821,12 @@ class Casas extends BaseController
 
         $updateData = array(
             "comentario" => $comentario,
-            "voBoAdeudoTerreno" => 1,
             "proceso" => $voBoOrdenCompra == 1 ? $procesoNuevo : $proceso,
+        );
+
+        $updateVobo = array(
+            "adeudoTerreno" => 1,
+            "paso" => ($voBoOrdenCompra == 1) ? $procesoNuevo : $proceso
         );
 
         $this->db->trans_begin();
@@ -2826,6 +2840,12 @@ class Casas extends BaseController
         // insert en historial
         $add = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
         if (!$add) {
+            $banderaSuccess = false;
+        }
+
+        // actualizar vobo
+        $vobo = $this->CasasModel->updateVobosDirecto($idProceso, $proceso, $updateVobo);
+        if (!$vobo) {
             $banderaSuccess = false;
         }
 
@@ -3008,21 +3028,29 @@ class Casas extends BaseController
 
     public function returnFlagsPaso17()
     {
-        $idLote = $this->input->post("idLote");
+        $proceso = $this->input->post("proceso");
         $idProceso = $this->input->post("idProceso");
 
-        $updateData = array(
-            "voBoOrdenCompra"   => 0,
-            "voBoAdeudoTerreno" => 0,
+        $updateProceso = array(
             "adeudo"            => 0,
             "fechaAvance"       => date("Y-m-d H:i:s"),
         );
 
-        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
+        $updateVobo = array(
+            "ordenCompra" => 0,
+            "adeudoTerreno" => 0
+        );
 
-        if ($update) {
+        $this->db->trans_begin();
+
+        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateProceso, "idProceso", $idProceso);
+        $vobos = $this->CasasModel->updateVobosDirecto($idProceso, $proceso, $updateVobo);
+
+        if ($update && $vobos) {
+            $this->db->trans_commit();
             $this->json([]);
         } else {
+            $this->db->trans_rollback();
             http_response_code(400);
             $this->json([]);
         }
@@ -5443,6 +5471,7 @@ class Casas extends BaseController
         $banderaSuccess = true;
         $idGerente = $this->form('idGerente');
         $idSubdirector = $this->form('idSubdirector');
+        $procesoData = [];
 
         if (!isset($idLote) || !isset($idCliente) || !isset($esquemaCredito)) {
             http_response_code(400);
@@ -5457,13 +5486,23 @@ class Casas extends BaseController
             "modificado_por" => $this->session->userdata('id_usuario')
         );
 
-        $procesoData = array(
-            "idLote" => $idLote,
-            "proceso" => 1,
-            "comentario" => $comentario,
-            "creadoPor" => $this->session->userdata('id_usuario'),
-            "idCliente" => $idCliente
-        );
+        if ($esquemaCredito == 1) {
+            $procesoData = array(
+                "idLote" => $idLote,
+                "proceso" => 1,
+                "comentario" => $comentario,
+                "creadoPor" => $this->session->userdata('id_usuario'),
+                "idCliente" => $idCliente
+            );
+        } else {
+            $procesoData = array(
+                "idLote" => $idLote,
+                "proceso" => 16,
+                "comentario" => $comentario,
+                "creadoPor" => $this->session->userdata('id_usuario'),
+                "idCliente" => $idCliente
+            );
+        }
 
         $this->db->trans_begin();
 

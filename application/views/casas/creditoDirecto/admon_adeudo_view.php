@@ -72,5 +72,5 @@
     <?php $this->load->view('template/footer'); ?>
     <?php $this->load->view('template/modals'); ?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/admon_adeudo.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/creditoDirecto/admon_adeudo.js"></script>
 </body>
