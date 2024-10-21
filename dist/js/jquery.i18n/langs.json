@@ -617,7 +617,7 @@
 		"numero-identificacion": "Tax identification number, or its equivalent, of the issuer.",
 		"numero-lotes-apartados": "Number of reserved lots",
 		"numero-lotes-contratados": "Number of contracted lots",
-		"numero-mesualidades": "Número de mensualidades",
+		"numero-mesualidades": "Number of installments",
 		"numero-pagos-parcialidad": "Number of Partial Payments",
 		"num-recibo": "RECEIPT NUMBER",
 		"observacion": "OBSERVATION",
@@ -1511,7 +1511,9 @@
 		"detalle-total-comisiones": "Total detail of commissions",
 		"con-cita-2": "With appointment",
 		"pausado-2": "Paused",
-		"preventa-2": "Pre-sale"
+		"preventa-2": "Pre-sale",
+		"calcular-datos":"Calculate data"
+
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -3020,6 +3022,7 @@
 		"con-cita-2": "Con cita",
 		"pausado-2": "Pausado",
 		"preventa-2": "Preventa",
-		"lote-origen": "Lote origen"		
+		"lote-origen": "Lote origen",
+		"calcular-datos":"Calcular datos"
 	}
 }

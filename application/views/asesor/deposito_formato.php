@@ -284,7 +284,7 @@
                     </div>
                     <div class="col col-xs-12 col-sm-3 col-md-6 col-lg-6 <?php echo ($cliente[0]->especialistaEscuadron == 1) ?  '':  'd-none'; ?>" id="liderEscuadronDiv">
                         <h4 class="label-on-left m-0">LÍDER ESCUADRÓN RESCATE</h4>
-                        <select id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
+                        <select data-i18n-label="selecciona-una-opcion" id="liderEscuadronSelect" name="liderEscuadron" title="SELECCIONA UNA OPCIÓN"  class=" selectpicker m-0 select-gral"
                                 data-size="7" <?php echo $readOnly; ?> <?php echo $statsInput; ?>
                                 data-live-search="true" data-container="body" data-width="100%">
                             <?php
@@ -572,7 +572,7 @@
                                 <span data-i18n="nacionalidad">NACIONALIDAD</span> (<small style="color: red;">*</small>)</label>
                             <select data-i18n-label="selecciona-una-opcion" name="nacionalidad" required="true" title="SELECCIONA UNA OPCIÓN" id="nacionalidad" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
                                 <?php
-                                    for($p=0; $p < count($nacionalidades) ; $p++){
+                                                                for($p=0; $p < count($nacionalidades) ; $p++){
                                     if($nacionalidades[$p]['id_opcion'] == $cliente[0]->nacionalidad){
                                         echo '<option value="'.$nacionalidades[$p]['id_opcion'].'" selected>'.$nacionalidades[$p]['nombre'].'</option>';
                                     }

@@ -377,7 +377,7 @@
 		$(document).on('click', '.pdfLink', function () {
 			var $itself = $(this);
 			Shadowbox.open({
-				content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>static/documentos/cliente/expediente/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+				content:    '<div style="height: 100%"><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="'+$itself.attr('data-Pdf')+'"></iframe></div>',
 				player:     "html",
 				title:      _("visualizando-archivo2") + ": " + $itself.attr('data-nomExp'),
 				width:      985,
@@ -388,7 +388,7 @@
 		$(document).on('click', '.pdfLink2', function () {
 			var $itself = $(this);
 			Shadowbox.open({
-				content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>asesor/deposito_seriedad/'+$itself.attr('data-idc')+'/1/"></iframe></div>',
+				content:    '<div style="height: 100%"><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>asesor/deposito_seriedad/'+$itself.attr('data-idc')+'/1/"></iframe></div>',
 				player:     "html",
 				title:      _("visualizando-archivo2") + ": " + $itself.attr('data-nomExp'),
 				width:      1600,
@@ -400,7 +400,7 @@
 		$(document).on('click', '.pdfLink3', function () {
 			var $itself = $(this);
 			Shadowbox.open({
-				content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>static/documentos/cliente/contrato/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+				content:    '<div style="height: 100%"><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="'+$itself.attr('data-Pdf')+'"></iframe></div>',
 				player:     "html",
 				title:      _("visualizando-archivo2") + ": " + $itself.attr('data-nomExp'),
 				width:      985,
@@ -411,7 +411,7 @@
 		$(document).on('click', '.verProspectos', function () {
 			var $itself = $(this);
 			Shadowbox.open({
-				content:    '<div><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>clientes/printProspectInfo/'+$itself.attr('data-id-prospeccion')+'"></iframe></div>',
+				content:    '<div style="height: 100%"><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="<?=base_url()?>clientes/printProspectInfo/'+$itself.attr('data-id-prospeccion')+'"></iframe></div>',
 				player:     "html",
 				title:      _("visualizando-prospecto") + ": " + $itself.attr('data-nombreProspecto'),
 				width:      985,

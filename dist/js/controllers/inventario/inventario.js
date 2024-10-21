@@ -19,17 +19,6 @@ $(document).on('change', "#sedes", function () {
 });
 
 let titulos = [];
-// $('#tabla_inventario_contraloria thead tr:eq(0) th').each(function (i) {
-//     var title = $(this).text();
-//     titulos.push(title);
-//     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
-//     $('input', this).on('keyup change', function () {
-//         if ($('#tabla_inventario_contraloria').DataTable().column(i).search() !== this.value) {
-//             $('#tabla_inventario_contraloria').DataTable().column(i).search(this.value).draw();
-//         }
-//     });
-// 	$('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
-// });
 
 function fillTableInventario(sede) {
 	tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
@@ -204,8 +193,7 @@ function fillTableInventario(sede) {
 						if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
 							return d.fechaAlta;
 						else
-							 return `<span class="label lbl-pink" data-i18n="no-aplica">${_("no-aplica")}</span>`;
-							
+							 return `<span class="label lbl-pink" data-i18n="no-aplica">${_("no-aplica")}</span>`;	
 					}
 				}
 			],
@@ -224,5 +212,4 @@ function fillTableInventario(sede) {
 		tabla_inventario.columns.adjust();
 	});
 	applySearch(tabla_inventario);
-    
 }
