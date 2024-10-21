@@ -357,7 +357,7 @@ function DescuentosxDirectivos(user) {
             orderable: false,
             className: 'select-checkbox',
             targets: 0,
-            'searchable': false,
+            'searchable': true,
             'className': 'dt-body-center'
         }],
 

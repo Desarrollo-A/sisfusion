@@ -28,14 +28,16 @@
                                         <div class="tab-pane active" id="procesoCasasBanco">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Documentación por lote (banco)</h3>
+                                                    <h3 class="card-title center-align">Documentación por cliente (banco)</h3>
                                                     <div id="table-filters" class="row mb-1"></div>
                                                 </div>
 
                                                <table id="tableBanco" class="table-striped table-hover">
                                                     <thead>
                                                         <tr>
+                                                            <th>ID CLIENTE</th>
                                                             <th>ID PROCESO</th>
+                                                            <th>NOMBRE CLIENTE </th>
                                                             <th>PROYECTO</th>
                                                             <th>CONDOMINIO</th>
                                                             <th>NOMBRE LOTE</th>
@@ -54,13 +56,15 @@
                                         <div class="tab-pane" id="procesoCasasDirecto">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Documentación por lote (directo)</h3>
+                                                    <h3 class="card-title center-align">Documentación por cliente (directo)</h3>
                                                     <div id="table-filters-directo" class="row mb-1"></div>
                                                 </div>
                                                 <table id="tableDirecto" class="table-striped table-hover">
                                                     <thead>
                                                         <tr>
+                                                            <th>ID CLIENTE</th>
                                                             <th>ID PROCESO</th>
+                                                            <th>NOMBRE CLIENTE</th>
                                                             <th>PROYECTO</th>
                                                             <th>CONDOMINIO</th>
                                                             <th>NOMBRE LOTE</th>
@@ -77,13 +81,15 @@
                                         <div class="tab-pane" id="procesoPagos">
                                             <div class="card-content">
                                                 <div class="toolbar">
-                                                    <h3 class="card-title center-align">Documentación por lote (pagos)</h3>
+                                                    <h3 class="card-title center-align">Documentación por cliente (pagos)</h3>
                                                     <div id="table-filters-pagos" class="row mb-1"></div>
                                                 </div>
                                                 <table id="tablePagos" class="table-striped table-hover">
                                                     <thead>
                                                         <tr>
+                                                            <th>ID CLIENTE</th>
                                                             <th>ID PROCESO</th>
+                                                            <th>NOMBRE CLIENTE</th>
                                                             <th>PROYECTO</th>
                                                             <th>CONDOMINIO</th>
                                                             <th>NOMBRE LOTE</th>
@@ -112,5 +118,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/toda_documentacion.js?=v2"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/toda_documentacion_cliente.js?=v2"></script>
 </body>

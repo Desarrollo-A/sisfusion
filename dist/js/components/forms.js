@@ -1412,18 +1412,24 @@ class FormConfirm {
 }
 
 class MultiSelectField {
-    constructor({ id, label, placeholder, data = [], value = [], width, required = false }) {
+    constructor({ id, label, placeholder, data = [], value = "", width, required = false }) {
         this.id = id;
         this.required = required;
-        let options = [];
-        this.value = value;
 
+        // Force value to be treated as a string and then split it into an array
+        this.value = value ? String(value).split(',') : []; 
+
+        let options = [];
+
+        // Create options for the select element
         for (let item of data) {
             let option = $('<option>', {
                 value: item.value,
                 text: item.label
             });
-            if (this.value.includes(item.value)) {
+
+            // Select the option if it's in the value array
+            if (this.value.includes(String(item.value))) {
                 option.attr("selected", true);
             }
             options.push(option);
@@ -1452,7 +1458,6 @@ class MultiSelectField {
                             .data('container', 'body')
                             .attr('title', placeholder)
                             .append(options)
-                            //.on('change', () => this.validate())
                     )
                     .append(
                         $('<span />')
@@ -1462,14 +1467,18 @@ class MultiSelectField {
                             .hide()
                     )
             );
+
         this.value = () => {
             return $(`#${this.id}`).val();
         }
+
+        // Validate on select change
         this.field.find('select').on('selected.bs.select', () => {
             this.validate();
         });
+
+        // Initialize select picker
         $(document).ready(() => this.initializeSelectPicker());
-        
     }
 
     initializeSelectPicker() {

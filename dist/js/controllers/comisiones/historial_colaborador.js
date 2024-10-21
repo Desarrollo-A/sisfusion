@@ -287,8 +287,14 @@ function getAssimilatedCommissions(proyecto, condominio, tipo) {
                     p1 = '';
                 }
 
-                if (d.lugar_prospeccion == 0) {
-                    p2 = '<p class="m-0" title="' + _('lote-con-cancelacion') + '"><span class="label lbl-warning">' + _('rescision') + '</span></p>';
+                if(d.lugar_prospeccion == 0){
+                    if(d.registro_comision!=8){
+                        p2 = '<p class="m-0" title="Lote con apartado en linea"><span class="label lbl-sky">Apartado en línea</span></p>';
+
+                    }else{
+                        p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
+
+                    }
                 }
                 else {
                     p2 = '';
@@ -1115,6 +1121,24 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
     consultarHistorialOOAM();
+
+    $.ajax({
+        url: general_base_url + 'Casas_comisiones/selectTipo',
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            const len = response.length;
+            for(let i = 0; i<len; i++){
+                const id = response[i]['id_opcion'];
+                const name = response[i]['nombre'];
+
+                // if(id != 4){
+                    $("#tipo_historial").append($('<option>').val(id).text(name.toUpperCase()));
+                // }
+
+            }
+        }
+    });
 });
 
 function consultarHistorialOOAM() {

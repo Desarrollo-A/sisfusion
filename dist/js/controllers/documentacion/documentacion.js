@@ -16,6 +16,7 @@ const rolesPermitidosAsesorInactivo = [6];
 const rolesPermitidosAnexo1 = [15];
 const usuariosPermitidosEstatus3 = [12271];
 const movimientosPermitidosEstatus3 = [98, 100, 102, 105, 107, 110, 113, 114];
+const rolMaster = [8];
 
 
 const AccionDoc = {
@@ -216,11 +217,8 @@ $('#idLote').change(function () {
 
                     if (
                         data.tipo_doc == TipoDoc.CONTRATO &&
-                        (includesArray(rolesPermitidosContratoEspecial, id_rol_general) ||
-                            includesArray(
-                                usuariosPermitidosContratoEspecial,
-                                id_usuario_general
-                            ))
+                        (includesArray(rolesPermitidosContratoEspecial, id_rol_general) || includesArray(usuariosPermitidosContratoEspecial,id_usuario_general))
+                            || includesArray(rolMaster, id_rol_general)
                     ) {
                         if (data.expediente == null || data.expediente === "") {
                             // NO HAY DOCUMENTO CARGADO
@@ -238,7 +236,7 @@ $('#idLote').change(function () {
 
                     if (data.tipo_doc == TipoDoc.CONTRATO || data.tipo_doc == TipoDoc.DOCUMENTO_REESTRUCTURA) { // CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(movimientosPermitidosEstatus7, data.idMovimiento) && includesArray(rolesPermitidosEstatus7, id_rol_general))
+                            buttonMain = ((includesArray(movimientosPermitidosEstatus7, data.idMovimiento) && includesArray(rolesPermitidosEstatus7, id_rol_general)) || includesArray(rolMaster, id_rol_general))                                                
                                 // ESTÁ EN ESTATUS 7 Y ES JURÍDICO EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
                                 // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -250,7 +248,7 @@ $('#idLote').change(function () {
                         // LA RAMA TIENE UN DOCUMENTO CARGADO
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
 
-                        if (includesArray(movimientosPermitidosEstatus7, data.idMovimiento) && includesArray(rolesPermitidosEstatus7, id_rol_general)) {
+                        if ((includesArray(movimientosPermitidosEstatus7, data.idMovimiento) && includesArray(rolesPermitidosEstatus7, id_rol_general)) || includesArray(rolMaster, id_rol_general)) {
                             buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         }
 
@@ -260,19 +258,19 @@ $('#idLote').change(function () {
                     // VALIDACIÓN ANEXO 1 PARA JURÍDICO
                     if (data.tipo_doc == TipoDoc.ANEXO_1) { // ANEXO 1 PARA JURÍDICO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = includesArray(rolesPermitidosAnexo1, id_rol_general) ? crearBotonAccion(AccionDoc.SUBIR_DOC, data) : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+                            buttonMain = ((includesArray(rolesPermitidosAnexo1, id_rol_general)) || includesArray(rolMaster, id_rol_general)) ? crearBotonAccion(AccionDoc.SUBIR_DOC, data) : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
                             return `<div class="d-flex justify-center">${buttonMain}</div>`;
                         }
                         // LA RAMA TIENE UN DOCUMENTO CARGADO
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
-                        if (includesArray(rolesPermitidosAnexo1, id_rol_general))
+                        if (includesArray(rolesPermitidosAnexo1, id_rol_general) || includesArray(rolMaster, id_rol_general))
                             buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
 
                     if (data.tipo_doc == TipoDoc.CORRIDA) { // CORRIDA
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(movimientosPermitidosEstatus6, data.idMovimiento) && includesArray(ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA, id_rol_general))
+                            buttonMain = ((includesArray(movimientosPermitidosEstatus6, data.idMovimiento) && includesArray(ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA, id_rol_general)) || includesArray(rolMaster, id_rol_general))
                                 // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
                                 // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -285,7 +283,7 @@ $('#idLote').change(function () {
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
 
                         // ESTÁ EN ESTATUS 6 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
-                        if (includesArray(movimientosPermitidosEstatus6, data.idMovimiento) && includesArray(ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA, id_rol_general)) {
+                        if ((includesArray(movimientosPermitidosEstatus6, data.idMovimiento) && includesArray(ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA, id_rol_general)) || includesArray(rolMaster, id_rol_general)) {
                             buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         }
 
@@ -295,8 +293,9 @@ $('#idLote').change(function () {
                     if (data.tipo_doc == TipoDoc.CARTA_DOMICILIO || data.tipo_doc == TipoDoc.APOSTILLDO_CONTRATO || data.tipo_doc == TipoDoc.COMPLEMENTO_DE_PAGO) { // CARTA DOMICILIO || APOSTILLADO CONTRATO
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
                             buttonMain = (
-                                includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
-                                includesArray(rolesPermitidosEstatus8, id_rol_general) &&
+                                (includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
+                                includesArray(rolesPermitidosEstatus8, id_rol_general) ) 
+                                ||(includesArray(rolMaster, id_rol_general))&&
                                 parseInt(data.status8Flag) !== status8Flag
                             )
                                 // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
@@ -312,8 +311,9 @@ $('#idLote').change(function () {
 
                         // ESTÁ EN ESTATUS 8 Y ES ASISTENTES GERENTES EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
                         if (
-                            includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
-                            includesArray(rolesPermitidosEstatus8, id_rol_general) &&
+                            ((includesArray(movimientosPermitidosEstatus8, data.idMovimiento) &&
+                            includesArray(rolesPermitidosEstatus8, id_rol_general) )
+                            || includesArray(rolMaster, id_rol_general))&&
                             parseInt(data.status8Flag) !== status8Flag
                         ) {
                             buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
@@ -337,7 +337,7 @@ $('#idLote').change(function () {
                         data.tipo_doc == TipoDoc.RESCISION_CONTRATO_FIRMADO
                     ) { // LOS DOCUMENTOS QUE VA A CARGAR CONTRALORÍA DEL PROYECTO DE REESTRUCTURA
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA, id_rol_general))
+                            buttonMain = (includesArray(ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA, id_rol_general) || includesArray(rolMaster, id_rol_general))
                                 // ESTÁ EN ESTATUS 15 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
                                 // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -347,7 +347,7 @@ $('#idLote').change(function () {
                         // LA RAMA TIENE UN DOCUMENTO CARGADO
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         // ESTÁ EN ESTATUS 8 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
-                        if (includesArray(ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA, id_rol_general))
+                        if (includesArray(ROLES_PERMITIDOS_DOCUMENTOS_CONTRALORIA, id_rol_general) || includesArray(rolMaster, id_rol_general))
                             buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
@@ -355,7 +355,7 @@ $('#idLote').change(function () {
                     // ANEXO VENTA DE PARTICUALES
                     if (data.tipo_doc == TipoDoc.ANEXO_VENTA_DE_PARTICULARES) { // ANEXO VENTAS DE PARTICULAES
                         if (data.expediente == null || data.expediente === "") { // NO HAY DOCUMENTO CARGADO
-                            buttonMain = (includesArray(movimientosPermitidosEstatus3, data.idMovimiento) && includesArray(usuariosPermitidosEstatus3, id_usuario_general))
+                            buttonMain = ((includesArray(movimientosPermitidosEstatus3, data.idMovimiento) && includesArray(usuariosPermitidosEstatus3, id_usuario_general)) || includesArray(rolMaster, id_rol_general))
                                 // ESTÁ EN ESTATUS 15 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 ? crearBotonAccion(AccionDoc.SUBIR_DOC, data)
                                 // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES JURÍDICO QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
@@ -365,7 +365,7 @@ $('#idLote').change(function () {
                         // LA RAMA TIENE UN DOCUMENTO CARGADO
                         buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                         // ESTÁ EN ESTATUS 8 Y ES CONTRALORÍA EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
-                        if (includesArray(movimientosPermitidosEstatus3, data.idMovimiento) && includesArray(usuariosPermitidosEstatus3, id_usuario_general))
+                        if ((includesArray(movimientosPermitidosEstatus3, data.idMovimiento) && includesArray(usuariosPermitidosEstatus3, id_usuario_general)) || includesArray(rolMaster, id_rol_general))
                             buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                         return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;
                     }
@@ -418,42 +418,33 @@ $('#idLote').change(function () {
                     // ES EL RESTO DEL EXPEDIENTE (HISTORIAL DOCUMENTOS)
                     if (data.expediente == null || data.expediente === "") {
                         // NO HAY DOCUMENTO CARGADO
-                        buttonMain =
-                            includesArray(
-                                movimientosPermitidosEstatus2,
-                                parseInt(data.idMovimiento)
-                            ) &&
-                                ((includesArray(
-                                    rolesPermitidosEstatus2,
-                                    parseInt(id_rol_general)
-                                ) &&
-                                    parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
-                                    parseInt(data.estatusAsesor) === 1) ||
-                                    (includesArray(rolesPermitidosAsesorInactivo, id_rol_general) &&
-                                        parseInt(data.estatusAsesor) !== 1))
+                        buttonMain =(includesArray(movimientosPermitidosEstatus2,parseInt(data.idMovimiento)) &&
+                                ((includesArray(rolesPermitidosEstatus2,parseInt(id_rol_general)) &&
+                                parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
+                                parseInt(data.estatusAsesor) === 1) ||(includesArray(rolesPermitidosAsesorInactivo, id_rol_general)
+                                && parseInt(data.estatusAsesor) !== 1)))
+
+                                //MASTER ROL
+                                || includesArray(rolMaster, id_rol_general)
+                                
                                 ? // ESTÁ EN ESTATUS 2 Y ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR EL QUE CONSULTA, SE VEA A MONSTRAR ENABLED EL BOTÓN PARA CARGAR EL ARCHIVO
                                 crearBotonAccion(AccionDoc.SUBIR_DOC, data)
                                 : // ESTÁ EN CUALQUIER OTRO ESTATUS O NO ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR QUIEN CONSULTA, SE VA A MOSTRAR EL BOTÓN DISABLED
                                 crearBotonAccion(AccionDoc.DOC_NO_CARGADO, data);
+
+
                         return `<div class="d-flex justify-center">${buttonMain}</div>`;
                     }
                     // LA RAMA TIENE UN DOCUMENTO CARGADO
                     buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, data); // SE VE A MONSTRAR ENABLED EL BOTÓN PARA VER EL ARCHIVO
                     // ESTÁ EN ESTATUS 2 Y ES ASESOR, COORDINADOR, GERENTE O SUBDIRECTOR EL QUE CONSULTA, SE VEA A MONSTRAR EL BOTÓN PARA ELIMINAR EL ARCHIVO
-                    if (
-                        includesArray(
-                            movimientosPermitidosEstatus2,
-                            parseInt(data.idMovimiento)
-                        ) &&
-                        ((includesArray(
-                            rolesPermitidosEstatus2,
-                            parseInt(id_rol_general)
-                        ) &&
-                            parseInt(data.id_asesor) === parseInt(id_usuario_general) &&
-                            parseInt(data.estatusAsesor) === 1) ||
-                            (includesArray(rolesPermitidosAsesorInactivo, id_rol_general) &&
-                                parseInt(data.estatusAsesor) !== 1))
-                    ) {
+                    if ((includesArray(movimientosPermitidosEstatus2,parseInt(data.idMovimiento)) &&((includesArray(rolesPermitidosEstatus2,parseInt(id_rol_general))  
+                            && parseInt(data.id_asesor) === parseInt(id_usuario_general) && parseInt(data.estatusAsesor) === 1) 
+                            ||(includesArray(rolesPermitidosAsesorInactivo, id_rol_general)  &&parseInt(data.estatusAsesor) !== 1))
+                        ) || includesArray(rolMaster, id_rol_general)
+                    ) 
+
+                    {
                         buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
                     }
                     return `<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`;

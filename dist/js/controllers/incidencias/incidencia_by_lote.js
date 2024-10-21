@@ -936,17 +936,15 @@ function saveTipo(id){
             method: 'POST',
             type: 'POST', // For jQuery < 1.9
             success:function(data){
-                if(data == 1){
-                    $('#modal_pagadas .modal-body').html('');
-                
-                    $("#modal_pagadas").modal('toggle');
+                if(data == 1){                
+                    $("#modal_tipo_venta").modal('toggle');
                     $('#tabla_inventario_contraloria').DataTable().ajax.reload();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Tipo de venta actualizado", "success");
                 }
                 else{
-                    $('#modal_pagadas .modal-body').html('');
-                    $("#modal_pagadas").modal('toggle');
+                    $('#modal_tipo_venta .modal-body').html('');
+                    $("#modal_tipo_venta").modal('toggle');
                     $('#tabla_inventario_contraloria').DataTable().ajax.reload();
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "Algo salio mal", "danger");
@@ -1279,9 +1277,9 @@ $(".find_doc").click( function() {
 
                 var BtnStats ='';
                 if(data.totalNeto2==null && data.idStatusContratacion > 8 ) {
-                    if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
-                        BtnStats += '<button data-toggle="tooltip" data-placement="top" href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
-                    }
+                    // if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
+                        // BtnStats += '<button data-toggle="tooltip" data-placement="top" href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
+                    // }
                   
                 }
                 else {
@@ -1307,6 +1305,11 @@ $(".find_doc").click( function() {
 
                     BtnStats += '<button data-toggle="tooltip" data-placement="top"class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-proceso="'+data.proceso+'" data-ventaCompartida="'+saberCompartida+'"><i class="fas fa-user-edit"></i></button>';
                 }
+                if(usuario_id_contraloria== 2807){
+                    BtnStats += '<button data-toggle="tooltip" data-placement="top" href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
+
+                }
+
                 BtnStats += data.registro_comision != 1 ? '' : `<button data-toggle="tooltip" data-placement="top"href="#" value="${data.idLote}" data-estatus="${data.idStatusContratacion}" data-tipo="I" data-precioAnt="${data.totalNeto2}"  data-value="${data.registro_comision}" data-cliente="${data.id_cliente}" data-lote="${data.idLote}" data-code="${data.cbbtton}" class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button>`;
 
                // BtnStats += data.estatus == 1 ? `<button data-toggle="tooltip" data-placement="top"data-lote="${data.idLote}" data-cliente="${data.id_cliente}" data-precioLote ="${data.totalNeto2}" class=" btn-data btn-sky agregar_usuario"  title="Agregar usuario" ><i class="fas fa-user-plus"></i></button>` : '';
@@ -1359,23 +1362,13 @@ $(".find_doc").click( function() {
         idLote = $(this).val();
         tipo = $(this).attr("data-tipo");
 
-        $("#modal_pagadas .modal-body").html("");
-        $("#modal_pagadas .modal-footer").html("");
-        $("#modal_pagadas .modal-body").append(`<p class="modal-title">El lote <b>${row.data().nombreLote}</b>, tiene un tipo de venta actual "<b>${ (tipo == 'null' || tipo == 'undefined') ? 'Sin tipo de venta' : tipo }</b>". Seleccione el nuevo tipo de venta en caso de querer modificarlo.</p>`);
-        $("#modal_pagadas .modal-body").append(`<input type="hidden" name="idLote" id="idLote" readonly="true" value="${idLote}"><input type="hidden" name="precioAnt" id="precioAnt" readonly="true" value="">
-        `);
-        $("#modal_pagadas .modal-body").append(`
-        <div class="form-group">
-        <label  class="label">Seleccionar tipo de venta</label>
-        
-        <select class="form-control select-gral tipo_v" id="tipo_v" name="tipo_v"
-        title="SELECCIONA UNA OPCIÓN" required data-live-search="true" style="background-color: #f2f2f2; background-image: none; border-radius: 25px; padding: 0 15px;">
-            <option value="1">Venta de particulares</option>
-            <option value="2">Venta normal</option>
-        </select>
-        </div> ` );
+        $("#modal_tipo_venta .modal-header").html("");
+        $("#modal_tipo_venta .modal-footer").html("");
+        $("#modal_tipo_venta .modal-header").append(`<button type="button" class="close" aria-hidden="true" data-dismiss="modal" style="margin-top: -10px;"><i class="material-icons">clear</i></button>`);
+        $("#modal_tipo_venta .modal-header").append(`<p class="modal-title">El lote <b>${row.data().nombreLote}</b>, tiene un tipo de venta actual "<b>${ (tipo == 'null' || tipo == 'undefined') ? 'Sin tipo de venta' : tipo }</b>". Seleccione el nuevo tipo de venta en caso de querer modificarlo.</p>`);
+        $("#modal_tipo_venta .modal-header").append(`<input type="hidden" name="idLote" id="idLote" readonly="true" value="${idLote}"><input type="hidden" name="precioAnt" id="precioAnt" readonly="true" value="">`);
 
-        $("#modal_pagadas .modal-footer").append( ` 
+        $("#modal_tipo_venta .modal-footer").append( ` 
             <div class="col-md-12">
                 <button data-toggle="tooltip" data-placement="top"type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" >
                 CANCELAR
@@ -1384,7 +1377,7 @@ $(".find_doc").click( function() {
                 GUARDAR
                 </button> 
             </div>`);
-        $("#modal_pagadas").modal();
+        $("#modal_tipo_venta").modal();
     });
 
     $("#tabla_inventario_contraloria tbody").on("click", ".cambiar_plan_comision", function(e){

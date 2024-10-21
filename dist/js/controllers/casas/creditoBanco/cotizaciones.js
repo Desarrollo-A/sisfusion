@@ -54,6 +54,7 @@ function edit_cotizacion(cotizacion) {
         new HiddenField({ id: 'idProcesoCasas', value: cotizacion.idProcesoCasas }),
         new TextField({ id: 'nombre',           value: cotizacion.nombre, label: 'Nombre de la cotización', placeholder: 'Ingresa la nombre', width:'12', required: true }),
         new FileField({ id: 'archivo',          label: 'Archivo', placeholder: 'Selecciona un archivo', accept, required: true }),
+        new HiddenField({ id: 'idCliente',   value: cotizacion.idCliente }),
     ]
 
     form.show();

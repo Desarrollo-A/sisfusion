@@ -587,14 +587,14 @@ class Caja_outside extends CI_Controller {
         //exit;
 
         $dataInsertCliente = array(
-            'idClienteNeoData' => $responseInsertClienteNeoData['idCliente'],
+            'idClienteNeoData' => $responseInsertClienteNeoData['Cliente'],
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
             'id_gerente' => $datosView->id_gerente,
             'id_subdirector' => $data['lider'][0]['id_subdirector'],
             'id_regional' => $data['lider'][0]['id_regional'],
             'id_regional_2' => $data['lider'][0]['id_regional_2'],
-            'id_sede' => $datosView->id_sede,
+            'id_sede' => $data['lider'][0]['id_sede'],
             'nombre' => $data['prospecto'][0]['nombre'],
             'apellido_paterno' => $data['prospecto'][0]['apellido_paterno'],
             'apellido_materno' => $data['prospecto'][0]['apellido_materno'],

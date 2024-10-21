@@ -1,9 +1,17 @@
-let locale = localStorage.getItem('locale');
-let languajeTable = general_base_url + "static/spanishLoader_v2.json";
+if(typeof locale === 'undefined'){
+    let locale = 'es'
+}
+
+locale = localStorage.getItem('locale');
+languajeTable = general_base_url + "static/spanishLoader_v2.json";
 
 $.i18n().load(`${general_base_url}dist/js/jquery.i18n/langs.json`)
 .done(function() {
-    $('body').i18n()
+    try {
+        $('body').i18n()
+    }catch(err) {
+        // console.log(err)
+    }
     //changeLanguaje()
 
     triggerLoadFunctions()
@@ -19,7 +27,19 @@ if(locale){
 }
 
 $(document).ready(function() {
+    if(!locale){
+        locale = 'es'
+        
+        localStorage.setItem('locale', locale)
+    }
+
     changeIcon(locale)
+
+    try {
+        $('body').i18n()
+    }catch(err) {
+        // console.log(err)
+    }
 })
 
 function changeIcon(lang) {
@@ -40,7 +60,7 @@ function changeLanguaje() {
     localStorage.setItem('locale', new_locale)
     changeIcon(new_locale)
 
-    $('body').i18n()
+    // $('body').i18n()
 
     triggerChangeFunctions()
 
@@ -49,8 +69,16 @@ function changeLanguaje() {
 
 _ = $.i18n
 
-let load_functions = []
-let change_functions = []
+if(typeof load_functions === 'undefined'){
+    let load_functions = []
+}
+
+if(typeof change_functions === 'undefined'){
+    let change_functions = []
+}
+
+load_functions = []
+change_functions = []
 
 function onLoadTranslations(callback){
     if (typeof callback === 'function') {
@@ -66,6 +94,8 @@ function onChangeTranslations(callback){
 
 function triggerLoadFunctions() {
     for (let callback of load_functions) {
+        // console.log(callback)
+        
         callback()
     }
 }
@@ -75,7 +105,12 @@ function triggerChangeFunctions() {
         callback()
     }
 }
-const datosTablasComisiones = [
+
+if(typeof datosTablasComisiones === 'undefined'){
+    const datosTablasComisiones = []
+}
+
+datosTablasComisiones = [
     {
         idTabla : 'tabla_nuevas_comisiones',
         idText: 'myText_nuevas'
@@ -206,19 +241,33 @@ function changeSelects() {
 
             let parent = $(this).parent()
 
-            let div = parent.children('button').children('span.filter-option')
+            let button = parent.children('button')
 
-            div.html(title)
+            let div = button.children('span.filter-option')
+
+            if(button.attr('tabindex') === undefined){
+                div.html(title)
+            }
 
             $(this).attr('title', title)
 
+            let some_selected = false
+
             $('option', this).each(function (x) {
                 let clase = $(this).attr('class')
+
+                if($(this).attr('selected') === 'selected'){
+                    some_selected = true
+                }
 
                 if(clase === 'bs-title-option'){
                     $(this).html(title)
                 }
             })
+
+            if(some_selected === false){
+                div.html(title)
+            }
         }
     })
 }
@@ -343,7 +392,11 @@ function changeTableButton() {
         }
     })
     
-    $('body').i18n()
+    try {
+        $('body').i18n()
+    }catch(err) {
+        // console.log(err)
+    }
 }
 
 onLoadTranslations(changeSelects)
