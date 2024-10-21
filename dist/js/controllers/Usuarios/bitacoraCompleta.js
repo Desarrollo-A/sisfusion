@@ -72,12 +72,42 @@ $(document).ready(function() {
             },
             {
                 data: function(d) {
-                    return d.tipo
+                    return d.tipoUsuario
                 }
             },
             {
                 data: function(d) {
-                    return d.sede
+                    return d.sedeNombre
+                }
+            },
+            {
+                data: function(d) {
+                    return d.coordinador
+                }
+            },
+            {
+                data: function(d) {
+                    return d.gerente
+                }
+            },
+            {
+                data: function(d) {
+                    return d.subdirector
+                }
+            },
+            {
+                data: function(d) {
+                    return d.jefeDirecto
+                }
+            },
+            {
+                data: function(d) {
+                    return d.sedeNombre
+                }
+            },
+            {
+                data: function(d) {
+                    return d.sedeNombre
                 }
             },
         ],
