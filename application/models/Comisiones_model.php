@@ -352,6 +352,7 @@ class Comisiones_model extends CI_Model {
 
     function getDatosHistorialPago($anio,$proyecto,$tipo) {
         ini_set('memory_limit', -1);
+        
         if($this->session->userdata('id_usuario') == 2){
             $tipo = "AND u.tipo IN (1)";
 

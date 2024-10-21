@@ -1453,6 +1453,7 @@ class Casas_comisiones_model extends CI_Model {
     }
 
     function selectTipo($opciones){
+        
         if($this->session->userdata('id_rol')==17){
             $opciones = '1,2,3,4';
         }

@@ -21,6 +21,7 @@ $('#ano_historial').change(function(){
     });
 });
 
+
 $('#ano_historial').change(function(){
     $("#tipo_historial").selectpicker('refresh');
 });
