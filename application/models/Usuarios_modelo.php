@@ -1372,7 +1372,7 @@ class Usuarios_modelo extends CI_Model
                         LEFT JOIN sedes s ON s.id_sede = TRY_CAST(sn.id_sede AS INT)
                         GROUP BY sn.id_usuario
                     )
-                    SELECT UPPER(opc.nombre) AS estatus, us.id_usuario AS ID, us.nombre AS nombreUsuario, CONCAT(us.apellido_paterno, ' ', us.apellido_materno) AS usApellidos, us.correo,
+                    SELECT UPPER(opc.nombre) AS estatus, us.estatus AS idEstatus,us.id_usuario AS ID, us.nombre AS nombreUsuario, CONCAT(us.apellido_paterno, ' ', us.apellido_materno) AS usApellidos, us.correo,
                     us.telefono, COALESCE(STRING_AGG(UPPER(sede.nombre), ', '), 'SIN ESPECIFICAR') AS sedeNombre, tipoUser.nombre AS tipoUsuario,
                     CASE WHEN us.id_rol = 7 THEN CASE WHEN CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno) = '  ' THEN 'SIN COORDINADOR' ELSE CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno) END
                     WHEN us.id_rol = 9 THEN 'NO APLICA'
@@ -1455,9 +1455,10 @@ class Usuarios_modelo extends CI_Model
                 concat(nuevoName.nombre, ' ', nuevoName.apellido_paterno, ' ', nuevoName.apellido_materno),us.telefono, us.fecha_creacion,san.sedes_anterior_nombres,
                 snn.sedes_nuevo_nombres, us.id_rol,CONCAT(coord.nombre, ' ', coord.apellido_paterno, ' ', coord.apellido_materno),gerente.id_usuario,
                 CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno), CONCAT(subdirector.nombre, ' ', subdirector.apellido_paterno, ' ', subdirector.apellido_materno),
-                subdirector.id_usuario,tipoUser.nombre, us.fac_humano";
+                subdirector.id_usuario,tipoUser.nombre, us.fac_humano, us.estatus ORDER BY opc2.nombre";
 
-                return $query->result_array();
+                $response = $this->db->query($query);
+                return $response;
     }
 
 

@@ -18,29 +18,32 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table id="users_datatable" class="table-striped table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th>ESTATUS</th>
-                                                    <th>ID</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>APELLIDOS</th>
-                                                    <th>CORREO</th>
-                                                    <th>TELÉFONO</th>
-                                                    <th>TIPO</th>
-                                                    <th>SEDE</th>
-                                                    <th>COORDINADOR</th>
-                                                    <th>GERENTE</th>
-                                                    <th>SUBDIRECTOR</th>            
-                                                    <th>ID JEFE DIRECTO</th>
-                                                    <th>FECHA DE REGISTRO A CRM</th>
-                                                    <th>FECHA DE ÚLTIMA ACTIVACIÓN A CRM</th>
-                                                    <th>FECHA DE ÚLTIMO CAMBIO DE PUESTO</th>
-                                                    <th>ETIQUETA FACTOR HUMANO</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
+                                        <div class="material-datatables">
+                                            <div class="form-group">
+                                                 <table id="users_datatable" class="table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ESTATUS</th>
+                                                            <th>ID</th>
+                                                            <th>NOMBRE</th>
+                                                            <th>APELLIDOS</th>
+                                                            <th>CORREO</th>
+                                                            <th>TELÉFONO</th>
+                                                            <th>PUESTO</th>
+                                                            <th>TIPO</th>
+                                                            <th>SEDE</th>
+                                                            <th>COORDINADOR</th>
+                                                            <th>GERENTE</th>
+                                                            <th>SUBDIRECTOR</th>            
+                                                            <th>ID JEFE DIRECTO</th>
+                                                            <th>FECHA DE REGISTRO A CRM</th>
+                                                            <th>FECHA DE ÚLTIMA ACTIVACIÓN A CRM</th>
+                                                            <th>FECHA DE ÚLTIMO CAMBIO DE PUESTO</th>
+                                                            <th>ETIQUETA FACTOR HUMANO</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

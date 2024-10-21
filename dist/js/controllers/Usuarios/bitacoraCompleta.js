@@ -1,6 +1,20 @@
 $(document).ready(function() {
+    let titulos = [];
     $('[data-toggle="tooltip"').tooltip();
-    let usersTable = $('#users_datatable').DataTable({
+    $('#users_datatable thead tr:eq(0) th').each( function (i) {
+                var title = $(this).text();
+                
+                $(this).html('<input type="text" class="textoshead" placeholder="'+title+'"/>' );
+                $( 'input', this ).on('keyup change', function (){
+                    if (usersTable.column(i).search() !== this.value ) {
+                        usersTable
+                        .column(i)
+                        .search(this.value)
+                        .draw();
+                    }
+                });
+            });
+     usersTable = $('#users_datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -11,7 +25,7 @@ $(document).ready(function() {
             titleAttr: 'Listado de usuarios',
             title: _("lista-usuarios"),
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8],
+                columns: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
                 format: {
                     header:  function (d, columnIdx) {
                         return $(d).attr('placeholder').toUpperCase();
@@ -35,86 +49,52 @@ $(document).ready(function() {
         },
         destroy: true,
         columns: [
-            {
-                data: function(d){
-                return d.estatus;
+            { data: function (d) {
+                if (d.idEstatus == 1) {
+                    return '<center><span class="label lbl-green" data-i18n="activo">ACTIVO</span><center>';
+                } else if (d.idEstatus == 3) {
+                    return '<center><span class="label lbl-orangeYellow" data-i18n="inactivo-comisionado">INACTIVO COMISIONADO</span><center>';
+                } else {
+                    return '<center><span class="label lbl-warning" data-i18n="inactivo">INACTIVO</span><center>';
                 }
-            },
+            }},
+            { data: 'ID' },
+            { data: 'nombreUsuario' },
+            { data: 'usApellidos' },
+            { data: 'correo' },
+            { data: 'telefono' },
+            { data: 'puesto' },
+            { data: 'tipoUsuario' },
+            { data: 'sedeNombre' },
+            { data: 'coordinador' },
+            { data: 'gerente' },
+            { data: 'subdirector' },
+            { data: 'jefeDirecto' },
+            { data: 'fechaUsuario' },
+            { data: 'fechaActivacion' },
+            { data: 'cambiosRealizados' },
             {
                 data: function(d) {
-                    return d.ID;
-                }
-            },
-            {
-                data: function(d) {
-                    return d.nombreUsuario;
-                }
-            },
-            {
-                data: function(d) {
-                    return d.usApellidos
-                }
-            },
-            {
-                data: function(d) {
-                    return d.correo
-                }
-            },
-            {
-                data: function(d) {
-                    return d.telefono
-                }
-            },
-            {
-                data: function(d) {
-                    return d.puesto
-                }
-            },
-            {
-                data: function(d) {
-                    return d.tipoUsuario
-                }
-            },
-            {
-                data: function(d) {
-                    return d.sedeNombre
-                }
-            },
-            {
-                data: function(d) {
-                    return d.coordinador
-                }
-            },
-            {
-                data: function(d) {
-                    return d.gerente
-                }
-            },
-            {
-                data: function(d) {
-                    return d.subdirector
-                }
-            },
-            {
-                data: function(d) {
-                    return d.jefeDirecto
-                }
-            },
-            {
-                data: function(d) {
-                    return d.sedeNombre
-                }
-            },
-            {
-                data: function(d) {
-                    return d.sedeNombre
+                    let factorEstatus = '';
+                    if(d.fac_humano == 1) {
+                        console.log("here: ", d.ID);
+                        factorEstatus = '<center><span class="label lbl-violetBoots">SI</span><center>'
+                    } 
+                    else if(d.fac_humano == 0) {
+                        factorEstatus = '<center><span class="label lbl-warning" >NO</span><center>'
+                    } 
+                    else {
+                        factorEstatus = '<center><span class="label lbl-orangeYellow" >SIN ESPECIFICAR</span><center>'
+                    }
+                    return factorEstatus;
                 }
             },
         ],
         ajax: {
-            url: "getBitacora",
+            url: `${general_base_url}/Usuarios/getBitacoraUsuarios`,
             type: "POST",
-            cache: false
+            cache: false,
+            dataSrc: ''
         }
-    })
-})
+    });
+});
