@@ -64,19 +64,47 @@ hr {
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header ">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         <i class="material-icons">clear</i>
-                    </button>   
+                    </button>    -->
+                    <button type="button" class="close" aria-hidden="true" data-dismiss="modal" style="margin-top: -10px;"><i class="material-icons">clear</i></button>
                     </div>
                     <form method="post" id="form_pagadas">
-                        <div class="modal-body"></div>
+                        <div class="modal-body">
+                        </div>
                         <div class="modal-footer">  
-            				</div>
+            			</div>
                     </form>
                 
                 </div>
             </div>
         </div>
+
+        <div class="modal fade modal-alertas" id="modal_tipo_venta" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header ">
+                    </div>
+                    <form method="post" id="form_tipo_venta">
+                        <div class="modal-body">
+                            <div class="form-group select-gral overflow-hidden">
+                                <label className="m-0" for="catalogo_resguardo">Seleccionar tipo de venta</label>
+                                <select class="selectpicker tipo_v" id="tipo_v" name="tipo_v" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" data-container="body">
+                                    <option value="1">VENTA DE PARTICULARES</option>
+                                    <option value="2">VENTA NORMAL</option>
+                                    <option value="7">VENTA ESPECIAL</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">  
+            			</div>
+                    </form>
+                
+                </div>
+            </div>
+        </div>
+
 
         <!-- Modal cambio de plan de comision -->
 
@@ -953,4 +981,7 @@ hr {
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/incidencias/incidencia_by_lote.js"></script>
+    <script>
+        usuario_id_contraloria =  <?=$this->session->userdata('id_usuario')?>;
+    </script>
 </body>
