@@ -4641,7 +4641,7 @@ legend {
         }
     }
 
-
+    /*
     public function regPlanPagoCompleto()
     {
         print(json_encode([
@@ -4672,6 +4672,7 @@ legend {
 
         exit;
     }
+    */
 
     public function saveHistorial($idPlanPago){
         $idLote = $this->input->post('idLote');

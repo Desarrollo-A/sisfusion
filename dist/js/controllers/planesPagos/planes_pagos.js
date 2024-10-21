@@ -1181,7 +1181,7 @@ function servicioNeoData(response){
 
     $.ajax({
         data:JSON.stringify(response.planServicio),
-        url: 'regPlanPagoCompleto',
+        url: 'https://bi-maderas.gphsis.com/reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
         type: 'POST',
         success: function (response) {
             console.log('RESPUES NEODATA:'+response);

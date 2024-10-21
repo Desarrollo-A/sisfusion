@@ -77,22 +77,13 @@ class Neodata_model extends CI_Model {
 ////        exit;
 
 //        $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
-        // /**/$response = $this->db->query("
-        // EXEC [192.168.16.23].[programacion2].[dbo].[CDM302CancelarPlanPago]
-        // @empresa = N'FRO2',
-        // @lote = N'$nombreLote',
-        // @numPlanPagoCRM = $numeroPlanLote 
-        // ")->result_array();
-        // return array("responseGeneral" => $response);
-
-        return [
-            "responseGeneral" => [
-                0 => [
-                    "status" => 1,
-                    'msj' => 'Test cancelacion plan pago',
-                ]
-            ]
-        ];
+        /**/$response = $this->db->query("
+        EXEC [192.168.16.23].[programacion2].[dbo].[CDM302CancelarPlanPago]
+        @empresa = N'FRO2',
+        @lote = N'$nombreLote',
+        @numPlanPagoCRM = $numeroPlanLote 
+        ")->result_array();
+        return array("responseGeneral" => $response);
 
 //        if (isset($response[0]['idCliente']))
 //            return array("status" => 1, "message" => "Registro $messageDetail con éxito - " . $response[0]['idCliente'] . ".");
