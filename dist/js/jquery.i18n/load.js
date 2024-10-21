@@ -130,7 +130,7 @@ function applySearch(table) {
 
     $(`#${id} thead tr:eq(0) th`).each(function (i) {
         $('input', this).on('keyup change', function () {
-            console.log(this)
+            // console.log(this)
 
             if (table.column(i).search() !== this.value) {
                 table.column(i).search(this.value).draw();
@@ -144,7 +144,7 @@ function applySearch(table) {
                     }).indexes();
                     var data = table.rows(index).data();
                     $.each(data, function (i, v) {
-                        console.log(v)
+                        // console.log(v)
                         total += parseFloat(v.pago_cliente);
                     });
                     document.getElementById(`${searchTabla.idText}`).textContent = '$' + formatMoney(total);
