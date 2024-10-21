@@ -2321,23 +2321,7 @@ public function getStatusMktdPreventa(){
 
     public function clientsReport(){
         $this->load->view('template/header');
-        switch ($this->session->userdata('id_rol')) {
-
-            case '18': // SUBDIRECTOR MKTD & TI
-            case '19': // SUBDIRECTOR MKTD
-            case '20': // GERENTE MKTD
-            case '28': // GERENTE MKTD
-                $this->load->view("clientes/clients_report");
-            break;
-            case '4': // ASISTENTE GERENTE
-            case '53': // ANALISTA COMISIONES
-            case '13': // CONTRALORÍA
-            case '17': // CONTRALORÍA
-            case '63': // CONTROL INTERNO
-            case '70': // EJECUTIVO CONTRALORIA JR
-                $this->load->view("clientes/clients_report");
-            break;
-        }
+        $this->load->view("clientes/clients_report");
     }
     
     public function getClientsReportMktd(){

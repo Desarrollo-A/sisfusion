@@ -46,13 +46,13 @@
 														<th>cliente</th>
 														<th>telefono</th>
 														<th>medio</th>
-														<th>Plaza</th>
+														<th>plaza</th>
 														<th>asesor</th>
 														<th>coordinador</th>
 														<th>gerente</th>
 														<th>subdirector</th>
 														<th>director-regional</th>
-														<th>director-regional2</th>
+														<th>director-regional-2</th>
 														<th>total</th>
 														<th>enganche</th>
 														<th>plan-enganche</th>
