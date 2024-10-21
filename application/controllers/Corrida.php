@@ -4685,4 +4685,10 @@ legend {
 
         print_r([]);
     }
+
+    public function getHistorial($idPlanPago){
+        $historial = $this->Corrida_model->getHistorialPlan($idPlanPago);
+
+        print_r(json_encode($historial));
+    }
 }

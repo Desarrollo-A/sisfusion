@@ -17,8 +17,6 @@ $(document).ready(function () {
         $("#idResidencial").selectpicker('refresh');
     }, 'json');
 
-    showHistorial()
-
 });
 
 $('#idResidencial').change(function () {
@@ -245,13 +243,12 @@ $('#idLote').change(function () {
                             break;
                     }
 
-
-
-
-
+                    BTN_HISTORIAL = `<button class="btn-data btn-blueMaderas verHistorial" title="HISTORIAL" data-idplanPago="${d.idPlanPago}">
+                        <i class="fas fa-list"></i>
+                    </button>`
 
                     let buttonValidado =  BTN_SEND + BTN_DELETE;//(d.tipoPlanPago == 1) ? BTN_SEND + BTN_DELETE: ''
-                    return `<center>${BTN_VER} ${BTN_EDIT} ${buttonValidado}</center>`;
+                    return `<center>${BTN_VER} ${BTN_EDIT} ${buttonValidado} ${BTN_HISTORIAL}</center>`;
                 }
             }],
         initComplete: function() {
@@ -1403,6 +1400,14 @@ function cancelaPlanCRM(idPlanPago){
 }
 
 function buildEvento(evento) {
+
+    let text_tipo = ''
+    switch(evento.tipoRegistro){
+        case 0:
+            text_tipo = 'Envio de plan'
+            break
+    }
+
     field = $('<li /><div />')
         .addClass('container-fluid')
         .append(
@@ -1416,7 +1421,7 @@ function buildEvento(evento) {
                                 .append(
                                     $('<b />')
                                         .addClass('m-0')
-                                        .text('title')
+                                        .text(text_tipo)
                                 )
                         )
                 )
@@ -1427,7 +1432,7 @@ function buildEvento(evento) {
 
                             $('<a />')
                                 .addClass('m-0')
-                                .text('date')
+                                .text(evento.fechaCreacion)
                         )
                 )
                 .append(
@@ -1439,10 +1444,10 @@ function buildEvento(evento) {
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('back')
+                                        .text('Respuesta [CRM]: ')
                                         .append(
                                             $('<b />')
-                                                .text('back')
+                                                .text(evento.respuesta)
                                         )
                                 )
                         )
@@ -1455,26 +1460,10 @@ function buildEvento(evento) {
                                 .addClass('m-0')
                                 .append(
                                     $('<small />')
-                                        .text('Proceso nuevo: ')
+                                        .text('Re4spuesta [NEODATA]: ')
                                         .append(
                                             $('<b />')
-                                                .text('next')
-                                        )
-                                )
-                        )
-                )
-                .append(
-                    $('<div />')
-                        .addClass('col-md-12')
-                        .append(
-                            $('<p />')
-                                .addClass('m-0')
-                                .append(
-                                    $('<small />')
-                                        .text('Descripción: ')
-                                        .append(
-                                            $('<b />')
-                                                .text('description')
+                                                .text(evento.respuestaNeodata)
                                         )
                                 )
                         )
@@ -1484,15 +1473,18 @@ function buildEvento(evento) {
     return field.prop('outerHTML')
 }
 
-function showHistorial() {
-    // $('#historialModal').modal('show');
+function showHistorial(historial) {
+    // console.log(historial)
 
-    event = buildEvento()
+    for(let historia of historial){
+        // console.log(historia)
 
-    $('#historialActual').append(event)
-    $('#historialActual').append(event)
-    $('#historialActual').append(event)
-    $('#historialActual').append(event)
+        event = buildEvento(historia)
+
+        $('#historialActual').append(event)
+    }
+
+    $('#historialModal').modal('show');
 }
 
 function saveHistorial(idPlanPago, respuesta, respuestaNeodata){
@@ -1510,3 +1502,15 @@ function saveHistorial(idPlanPago, respuesta, respuestaNeodata){
         }
     })
 }
+
+$(document).on('click', '.verHistorial', function(){
+    let idPlanPago = $(this).attr('data-idplanPago');
+
+    $.ajax({
+        url: `getHistorial/${idPlanPago}`,
+        type: 'GET',
+        success: function (response) {
+            showHistorial(JSON.parse(response))
+        }
+    })
+})
