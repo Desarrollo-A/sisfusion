@@ -4023,8 +4023,7 @@ class Reestructura extends CI_Controller{
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('programador.analista34@ciudadmaderas.com')
-            // ->to('postventa@ciudadmaderas.com')
+            ->to('postventa@ciudadmaderas.com')
             ->subject('Notificación de solicitud de cancelación reestructura')
             ->view($this->load->view('mail/reestructura/mailSolicitudCancelacion', [
                 'lote' => $nombreLoteNuevo,
