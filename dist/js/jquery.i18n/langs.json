@@ -617,7 +617,7 @@
 		"numero-identificacion": "Tax identification number, or its equivalent, of the issuer.",
 		"numero-lotes-apartados": "Number of reserved lots",
 		"numero-lotes-contratados": "Number of contracted lots",
-		"numero-mesualidades": "Número de mensualidades",
+		"numero-mesualidades": "Number of installments",
 		"numero-pagos-parcialidad": "Number of Partial Payments",
 		"num-recibo": "RECEIPT NUMBER",
 		"observacion": "OBSERVATION",
@@ -1482,9 +1482,38 @@
 		"mensaje-oferta-vigencia127": "period not exceeding",
 		"lote-origen": "Source batch",
 		"informacion-adicional2": "ADDITIONAL INFORMATION",
+		"cantidad-del-enganche-pagado": "Amount of down payment paid",
+		"inventario-Lotes": "Inventory Lots",
+		"documentacion": "Documentation",
+		"nombre-documento2": "Document Name",
+		"guardar-documento": "Save document",
+		"eliminar-archivo2": "Delete file!",
+		"seguro-eliminar-archivo": "Are you sure you want to permanently delete this file",
+		"accion-no-deshacer": "This action cannot be undone",
+		"si-borrar": "Yes, delete",
+		"documento": "Document",
+		"seleccionar-archivo": "You must select a file.",
+		"expediente-enviado": "File sent.",
+		"error-al-enviar-expediente": "Error sending file and/or invalid format",
+		"archivo-eliminado": "File deleted",
+		"ver-archivo": "View file.",
+		"contrato-inhabilitado": "Contract disabled",
+		"adjuntar-archivo": "Attach file",
+		"no-se-permite-adjuntar": "Attaching files is not allowed.",
+		"en-progreso": "In progress",
+		"vencido2": "EXPIRED",
+		"status-13-listo-contraloria": "STATUS 13 READY (COMPTROLLER)",
+		"status-14-rechazo-contraloria": "STATUS 14 REJECTED (CONTRALORÍA)",
+		"el-status-ya-fue-registrado": "The status has already been entered",
+		"mensaje-oferta-vigencia128": "5 (five) days.",
+		"descartado-2": "Discarded",
+		"este-listado-todos-descuentos-aplicados": "This is a list of all the discounts that have been applied to you.",
+		"detalle-total-comisiones": "Total detail of commissions",
 		"con-cita-2": "With appointment",
 		"pausado-2": "Paused",
-		"preventa-2": "Pre-sale"
+		"preventa-2": "Pre-sale",
+		"calcular-datos":"Calculate data"
+
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -2993,6 +3022,8 @@
 		"con-cita-2": "Con cita",
 		"pausado-2": "Pausado",
 		"preventa-2": "Preventa",
-		"lote-origen": "Lote origen"
+		"lote-origen": "Lote origen",
+		"calcular-datos":"Calcular datos"
+
 	}
 }
