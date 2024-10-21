@@ -419,9 +419,9 @@ function crearTablaTipoVenta(idCondominio) {
         $('#modalCambiotipoventa').modal('show');
     });
 
-    $(document).on('change', '#tipoVentaModal', function () {
-        tipoVenta = $(this).val();
-    });
+    // $(document).on('change', '#tipoVentaModal', function () {
+    //     tipoVenta = $(this).val();
+    // });
 
     applySearch(tablaTipoVenta);
     $('#tipo-venta').on('draw.dt', function () {
