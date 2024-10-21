@@ -506,7 +506,8 @@ class Casas_comisiones extends CI_Controller
     echo json_encode($this->Contratacion_model->getNombreTipo()->result_array());
   }
 
-  public function getDatosHistorialPago($proyecto = null,$condominio = null, $tipo= null ) {      
+  public function getDatosHistorialPago($proyecto = null,$condominio = null, $tipo= null ) {    
+
     $dat =  $this->Casas_comisiones_model->getDatosHistorialPago($proyecto,$condominio,$tipo)->result_array();
     echo json_encode( array( "data" => $dat));
   }
@@ -1037,6 +1038,7 @@ class Casas_comisiones extends CI_Controller
   }
 
   public function selectTipo(){
+    
 
     $usuario=$this->session->userdata('id_usuario');
 
