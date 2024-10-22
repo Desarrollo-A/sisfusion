@@ -387,14 +387,21 @@ function activarIva(checkboxElem) {
 
 $(document).on("submit", "#formPlanPago", function (e) {
     e.preventDefault();
+    $('#tipoPP').attr('disabled', false);
 
     generarPlanPagoFunction();
+
     let formulario =  new FormData(this);
     formulario.append("dumpPlanPago", dumpPlanPago);
     console.log('JSON.parse(dumpPlanPago).length', JSON.parse(dumpPlanPago).length);
     console.log('dumpPlanPago', dumpPlanPago);
     // formulario.append("noPeriodosPP", JSON.parse(dumpPlanPago).length);
     // console.log('dumpPlanPago', dumpPlanPago);
+
+    for (const value of formulario.entries()) {
+        console.log(value);
+    }
+    
     $.ajax({
         type: 'POST',
         url: `${general_base_url}Corrida/guardaPlanPago`,
@@ -437,6 +444,7 @@ $(document).on("submit", "#formPlanPago", function (e) {
             alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los catálogos de enganche.", "danger");
         }
     })
+
 });
 
 function validateInputs(){
@@ -934,6 +942,7 @@ function fillPlanPagoGral(data){
     console.log('data', data);
     let interesesSSI = $('#interesesSSI');
     let ivaPP = $('#ivaPP');
+
     $('#planPago').val(data.ordenPago);
     $('#planPago').attr('readonly', true);
     $('#descripcionPlanPago').val(data.descripcion);
@@ -976,14 +985,18 @@ function fillPlanPagoGral(data){
     planesPagoCatalogo.forEach((planesPagoData)=>{
         const id = planesPagoData.id_opcion;
         const name = planesPagoData.nombre;
-        if (id === parseInt(data.tipoPlanPago)){
-            $("#tipoPP").append($('<option selected>').val(id).text(name.toUpperCase()));
-        } else {
-            $("#tipoPP").append($('<option>').val(id).text(name.toUpperCase()));
-        }
+        // if (id === parseInt(data.tipoPlanPago)){
+        //     $("#tipoPP").append($('<option selected>').val(id).text(name.toUpperCase()));
+        // } else {
+        //     $("#tipoPP").append($('<option>').val(id).text(name.toUpperCase()));
+        // }
+        $("#tipoPP").append($('<option>').val(id).text(name.toUpperCase()));
     });
     $('#tipoPP').attr('disabled', true);
-    $("#tipoPP").selectpicker('refresh');
+    // $('#tipoPP').attr("readonly", "readonly")
+    // $("#tipoPP").selectpicker('refresh');
+
+    $('select[name=tipoPP]').val(data.tipoPlanPago).selectpicker('refresh')
 
     periodicidadCatalogo.forEach((periodicidadData)=>{
         const id = periodicidadData.id_opcion;
