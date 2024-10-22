@@ -260,14 +260,14 @@ class Contraloria_model extends CI_Model {
                     AND l.validacionEnganche != 'NULL' 
                     AND l.validacionEnganche IS NOT NULL 
                     --AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL) 
-                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (0, 1) $filtroSede 
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (0, 1, 8) $filtroSede 
                 ) 
                 OR
                 (
                     l.status = 1 
                     AND l.idMovimiento IN (36, 41) 
                     --AND ISNULL(l.totalNeto, 0.00) > 0.00
-                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1 $filtroSede 
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (2, 3, 4, 5, 6, 7) $filtroSede 
                 )
             GROUP BY 
                 l.idLote, 
@@ -1388,7 +1388,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
         LEFT JOIN (SELECT idCliente FROM comisiones GROUP BY idCliente) com ON com.idCliente=cl.id_cliente
-        WHERE lot.c = 1 $filter
+        WHERE lot.status = 1 $filter
         ORDER BY lot.nombreLote");
         return $query->result_array();
      }

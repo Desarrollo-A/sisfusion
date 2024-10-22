@@ -83,7 +83,7 @@ class VentasAsistentes_model extends CI_Model {
                                         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
                                         LEFT JOIN usuarios coordinador ON asesor.id_lider = coordinador.id_usuario
                                         LEFT JOIN usuarios gerente ON coordinador.id_lider = gerente.id_usuario
-                                    WHERE  l.idStatusContratacion = '3' and l.idMovimiento  = '82' and cl.status = 1 
+                                    WHERE  l.idStatusContratacion = '3' and l.idMovimiento  = '82' and cl.status = 1
                                     GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
                                         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
                                         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -378,7 +378,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 654, 697, 5604, 10251, 12688) OR cl.id_asesor IN ($id_lider, 654, 697, 5604, 10251, 12688))";
                     $filtroSede = "";
 				} else if ($id_usuario == 14556) { // KATTYA GUADALUPE CADENA CRUZ
-                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 24, 10) OR cl.id_asesor IN ($id_lider, 24, 10))";
+                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 113, 24) OR cl.id_asesor IN ($id_lider, 113, 24))";
                     $filtroSede = "";
 				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 7474) OR cl.id_asesor IN ($id_lider, 7474))";
@@ -393,7 +393,10 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 6661) OR cl.id_asesor IN ($id_lider, 6661))";
                     $filtroSede = "";
 				} else if ($id_usuario == 17029) { // Karen Ariadna Vazquez Muñoz
-                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 13067) OR cl.id_asesor IN ($id_lider, 13067))";
+                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 2080) OR cl.id_asesor IN ($id_lider, 2080))";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15716) { // ADRIAN TREJO GUTIERREZ
+                    $filtroGerente = "AND (cl.id_gerente IN ($id_lider, 7944) OR cl.id_asesor IN ($id_lider, 7944))";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider)) AND cl.id_sede = $id_sede";

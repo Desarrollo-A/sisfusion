@@ -1645,20 +1645,41 @@ function checkBudgetInfo($idSolicitud){
 
     public function getEscrituraDisponible($idCondominio) 
     {
-        return $this->db->query("SELECT lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente, 
-        cond.nombre nombreCondominio, lo.nombreLote, lo.sup , re.nombreResidencial, cl.id_cliente AS idCliente
-        FROM lotes lo
-        LEFT JOIN solicitudes_escrituracion se ON se.id_lote = lo.idLote
-        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
-        INNER JOIN condominios cond ON cond.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = cond.idResidencial
-        WHERE lo.status = 1 AND lo.idStatusLote = 2
-        AND cl.status = 1 AND lo.idLote NOT IN (SELECT se.id_lote  FROM solicitudes_escrituracion se)
-        AND cl.escrituraFinalizada = 0
-        AND cond.idCondominio = $idCondominio
-        GROUP BY lo.idLote, cl.escrituraFinalizada, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), cond.nombre, lo.nombreLote, lo.sup,
-        re.nombreResidencial, cl.id_cliente
+        return $this->db->query("SELECT 
+        lo.idLote, 
+        lo.nombreLote, 
+        lo.sup,
+        co.nombre nombreCondominio, 
+        re.descripcion nombreResidencial, 
+        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) END nombreCliente, 
+        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
+        CASE WHEN cl.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.telefono1 END telefono1,
+        CASE WHEN cl.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cl.correo END correo,
+        ISNULL(cl.id_cliente, 0) idCliente, CASE WHEN cl.id_cliente IS NULL THEN 0 ELSE 1 END AS clienteExistente, 
+        CASE WHEN cl.id_cliente IS NOT NULL THEN CASE WHEN cl.id_cliente = lo.idCliente THEN '1' ELSE '0' END END AS clienteNuevoEditar, 
+        cl.apellido_paterno  AS apePaterno, cl.apellido_materno AS apeMaterno, cl.domicilio_particular,
+        cl.estado_civil, cl.ocupacion, cl.escrituraFinalizada
+
+        FROM lotes lo 
+        LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente_c 
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $idCondominio 
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote
+        LEFT JOIN solicitudes_escrituracion se ON se.id_lote  = lo.idLote  
+        WHERE lo.status = 1 AND lo.idStatusLote = 2 AND (cl.revisionEscrituracion = 0 OR  cl.revisionEscrituracion IS NULL)
+        AND (se.id_estatus IS NULL OR se.id_estatus != 49)
+        AND (cl.escrituraFinalizada != 1)
+        ORDER BY lo.idLote
         ")->result_array();
     }
-    
+  
+    public function checkDocument($idProceso) {
+        if($idProceso == null) {
+            return null;
+        }
+        $query = "SELECT idDocumento FROM documentos_proceso_casas WHERE idProcesoCasas = $idProceso AND tipo = 11";
+        return $this->db->query($query)->row();
+    }
+  
 }

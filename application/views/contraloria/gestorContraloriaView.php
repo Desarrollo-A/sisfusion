@@ -3,7 +3,6 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
-        <!-- INICIO MODAL DEL REPRESENTANTE LEGAL -->
         <div class="modal fade" id="modal" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -32,8 +31,6 @@
                 </div>
             </div>
         </div>
-        <!-- FIN MODAL DEL REPRESENTANTE LEGAL -->
-        <!-- INICIO MODAL INTERCAMBIOS -->
         <div class="modal fade" id="modalConfirmarCambio" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -56,8 +53,6 @@
                 </div>
             </div>
         </div>
-        <!-- FIN MODAL INTERCAMBIOS -->
-         <!-- INICIO MODAL CAMBIO REPRESENTANTE LEGAL POR LOTE -->
         <div class="modal fade" id="modalCambioRL" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -81,8 +76,6 @@
                 </div>
             </div>
         </div>
-        <!-- FIN MODAL CAMBIO REPRESENTANTE LEGAL POR LOTE -->
-        <!-- INICIO Agrega modelos casa-->
         <div class="modal fade" id="modalmodelo" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -150,7 +143,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- INICIO TABLA REPRESENTANTE LEGAL -->
                                 <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaRL">
                                     <table id="gestorContraloria" name="gestorContraloria" class="table-striped table-hover nowrap">
                                         <thead>
@@ -164,8 +156,6 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <!-- FIN TABLA REPRESENTANTE LEGAL -->
-                                <!-- INICIO TABLA INTERCAMBIOS -->
                                 <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaIntercambio">
                                     <table id="tablaIntercambios" name="tablaIntercambios" class="table-striped table-hover nowrap">
                                         <thead>
@@ -181,8 +171,6 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <!-- FIN TABLA INTERCAMBIOS -->
-                                <!-- INICIO TABLA CAMBIO DE REPRESENTANTE LEGAL POR LOTE -->
                                 <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaCambioRL">
                                     <table id="tablaCambioRL" name="tablaCambioRL" class="table-striped table-hover nowrap">
                                         <thead>
@@ -198,8 +186,6 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <!-- FIN TABLA TABLA CAMBIO DE REPRESENTANTE LEGAL POR LOTE -->
-                                 <!-- INICIO TABLA MODELOS DE CASAS  -->
                                 <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divmodelosTable">
                                     <div class="table-responsive">
                                         <table class="table-striped table-hover" id="modelosTable" name="modelosTable">
@@ -223,7 +209,6 @@
                 </div>
             </div>
         </div>
-        <!-- FIN DEL CONTENIDO DE LA PÁGINA -->
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
 </body>

@@ -13,20 +13,20 @@
                                 <i class="material-icons">list</i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Plantilla activa.</h3>
+                                <h3 class="card-title center-align" data-i18n="plantilla-activa">Plantilla activa.</h3>
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="users_datatable" name="users_datatable">
                                             <thead>
                                                 <tr>
-                                                    <th>ESTATUS</th>
-                                                    <th>ID</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>CORREO</th>
-                                                    <th>TELÉFONO</th>
-                                                    <th>TIPO</th>
-                                                    <th>JEFE DIRECTO</th>
-                                                    <th>SEDE</th>
+                                                    <th>estatus</th>
+                                                    <th>id</th>
+                                                    <th>nombre</th>
+                                                    <th>correo</th>
+                                                    <th>telefono</th>
+                                                    <th>tipo</th>
+                                                    <th>jefe-directo</th>
+                                                    <th>sede</th>
                                                 </tr>
                                             </thead>
                                         </table>

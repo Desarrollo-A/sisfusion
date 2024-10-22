@@ -50,13 +50,13 @@
                     <h4 class="modal-title text-center"><b id="title-form-modal"></b></h4>
                 </div>
                 <div class="modal-body scroll-styles" style="max-height:450px; padding:0 20px; overflow:auto">
-                    <span id="text-form-modal"></span>
+                    <span id="text-form-modal" class="text-center d-block"></span>
                     <div id="fields-form-modal" class="row">
 
                     </div>
                     <div class="mt-4"></div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer mt-2">
                     <button id="cancel-button-form-modal" type="button" class="btn btn-danger btn-simple" data-dismiss="modal">cerrar</button>
                     <button id="ok-button-form-modal" type="submit" class="btn btn-primary">
                         aceptar

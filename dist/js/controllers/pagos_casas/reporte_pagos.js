@@ -68,7 +68,7 @@ $.ajax({
     type: 'GET',
     url: 'options_procesos',
     success: function (response) {
-        // console.log(response)
+         console.log(response)
         let status_option = [
             {value: -1, label: 'Todos'},
             ...response,

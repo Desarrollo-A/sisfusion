@@ -1,17 +1,7 @@
-let titulos_intxt = [];
-
 $("#Jtabla").ready( function(){
-    $('#Jtabla thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos_intxt.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-        $( 'input', this ).on('keyup change', function () {
-            if (tabla_6.column(i).search() !== this.value ) {
-                tabla_6.column(i).search(this.value).draw();
-            }
-        });
-    });
-
+    
+    construirHead("Jtabla");
+    
     tabla_6 = $("#Jtabla").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -21,13 +11,13 @@ $("#Jtabla").ready( function(){
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Rechazos Jurídico',
+            titleAttr: `${_('descargar-excel')}`,
+            title: _("rechazo-juridico"),
             exportOptions: {
                 columns: [1,2,3,4,5,6],
                 format: {
-                    header:  function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+                    header: function (d, columnIdx) {
+                        return $(d).attr('placeholder').toUpperCase();
                     }
                 }
             }
@@ -44,6 +34,7 @@ $("#Jtabla").ready( function(){
         destroy: true,
         ordering: false,
         columns: [{
+            "width": "3%",
             "className": 'details-control',
             "orderable": false,
             "data" : null,
@@ -51,31 +42,36 @@ $("#Jtabla").ready( function(){
         },
         {
             "data": function( d ){
-                var lblStats = '<span class="label lbl-warning">Rechazo</span>';
+                var lblStats = `<span class="label label-danger">${_("rechazo")}</span>`;
                 return lblStats;
             }
         },
         {
+            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombreResidencial+'</p>';
             }
         },
         {
+            "width": "10%",
             "data": function( d ){
                 return '<p class="m-0">'+(d.nombreCondominio).toUpperCase();+'</p>';
             }
         },
         {
+            "width": "15%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombreLote+'</p>';
             }
         },
         {
+            "width": "20%",
             "data": function( d ){
                 return '<p class="m-0">'+d.gerente+'</p>';
             }
         },
         {
+            "width": "20%",
             "data": function( d ){
                 return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
             }
@@ -93,8 +89,16 @@ $("#Jtabla").ready( function(){
             "data": function( d ){
             }
         },
-        "order": [[ 1, 'asc' ]]
+        "order": [[ 1, 'asc' ]],
+        initComplete: function() {
+            onLoadTranslations(function(){
+                $('body').i18n()
+            })
+            
+        },
     });
+
+    applySearch(tabla_6);
 
     $('#Jtabla tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
@@ -105,9 +109,9 @@ $("#Jtabla").ready( function(){
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
         } 
         else {
-            var status = 'RECHAZO (JURÍDICO)';
-            var fechaVenc = 'VENCIDO';
-            var informacion_adicional = '<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>Información adicional</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Estatus: </b>'+status+'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Comentario: </b>'+ row.data().comentario +'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha de vencimiento: </b>' + fechaVenc + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Fecha de realizado: </b>' + row.data().modificado.split('.')[0] + '</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Coordinador: </b>'+row.data().coordinador+'</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b>Asesor: </b>'+row.data().asesor+'</label></div></div></div>';
+            var status = `<span data-i18n="rechazo-juridico-2"> ${_("rechazo-juridico-2")}</span>`;
+            var fechaVenc = `<span data-i18n="vencido"> ${_("vencido")}</span>`;
+            var informacion_adicional = `<div class="container subBoxDetail"><div class="row"><div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b data-i18n="informacion-adicional">${_("informacion-adicional")}</b></label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="estatus-2">${_("estatus-2")}</b>: ${status}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="comentario">${_("comentario")}</b>: ${row.data().comentario}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="fecha-vencimiento-2">${_("fecha-vencimiento-2")}</b>: ${fechaVenc}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="fecha-realizado">${_("fecha-realizado")}</b>: ${row.data().modificado}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="coordinador">${_("coordinador")}</b>: ${row.data().coordinador}</label></div><div class="col-12 col-sm-12 col-md-12 col-lg-12"><label><b data-i18n="asesor">${_("asesor")}</b>: ${row.data().asesor}</label></div></div></div>`;
             row.child(informacion_adicional).show();
             tr.addClass('shown');
             $(this).parent().find('.animacion').removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");

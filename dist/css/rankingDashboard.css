@@ -1776,7 +1776,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   align-items: center;
   height: 100%;
   border: none;
-  background-color: transparent;
+  /*background-color: transparent;*/
   z-index: 9;
 }
 
@@ -1794,6 +1794,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   padding: 0;
   z-index: 9999;
 }
+
 
 #ranking .card .col-chart .actions .btn-charts:hover {
   background-color: #D1EEFF;
@@ -1821,7 +1822,7 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   background-color: #143860;
 }
 
-#ranking .card .col-datatable table thead tr th {
+#ranking .card .col-datatable table thead tr th input  {
   padding: 0px !important;
   text-align: center;
   margin: 4px;
@@ -1832,6 +1833,10 @@ Etiquetas dentro de DataTable en la vista "Historial Solicitudes"
   font-size: 10px;
   background-color: #143860;
   text-transform: uppercase;
+}
+
+#ranking .card .col-datatable table thead input::placeholder {
+    color: #FFF;
 }
 
 @media (min-width: 1025px) and (max-width: 1280px) {

@@ -14,13 +14,13 @@
             <form id="formEditOffice">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <label>Ingresa la nueva dirección a editar</label>
+                        <label data-i18n="ingresa-direccion-editar">Ingresa la nueva dirección a editar</label>
                         <input class="form-control input-gral" name="direccionOffice" id="direccionOffice" type="text" placeholder="Tu dirección" required/>
                         <input class="form-control input-gral d-none" name="idDireccion" id="idDireccion" type="text"/>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                     </div>
                 </div>
             </form>
@@ -35,8 +35,8 @@
                     <input class="input-gral d-none" name="idDireccionS" id="idDireccionS" type="text"/>
                     <input class="input-gral d-none" name="status" id="status" type="text"/>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                     </div>
                 </div>
             </form>
@@ -48,28 +48,28 @@
             <form id="formAddOffice">
                 <div class="modal-content" >
                     <div class="modal-header">
-                        <h4 class="modal-title text-center">Añadir nueva oficina de comercialización</h4>
+                        <h4 class="modal-title text-center" data-i18n="anadir-oficina">Añadir nueva oficina de comercialización</h4>
                     </div>
                     <div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden p-0 mb-1">
-                            <label class="control-label">Sede a la que pertenece</label>
-                            <select name="idSede" id="idSede" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" >
+                            <label class="control-label" data-i18n="sede-pertenece">Sede a la que pertenece</label>
+                            <select name="idSede" id="idSede" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-i18n-label="select-predeterminado" data-size="7" data-live-search="true" data-container="body">
                             </select>
                         </div>
-                        <label class="control-label">Dirección</label>
+                        <label class="control-label" data-i18n="direccion">Dirección</label>
                         <input class="form-control input-gral m-0" name="newOffice" id="newOffice" type="text" placeholder="Carranza #36, Col. Centro CP. 76000 Querétaro, Qro. Col." required/> 
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 pl-0">
-                            <label class="control-label">Hora inicio (am)</label>
+                            <label class="control-label" data-i18n="hora-inicio">Hora inicio (am)</label>
                             <input class="form-control input-gral m-0" name="inicio" id="inicio" type="number" max='12' required/>
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 pr-0">
-                            <label class="control-label">Hora fin (pm)</label>
+                            <label class="control-label" data-i18n="hora-fin">Hora fin (pm)</label>
                             <input class="form-control input-gral m-0" name="fin" id="fin" type="number" max='12' required/> 
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-i18n="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="aceptar">Aceptar</button>
                     </div>
                 </div>
             </form>
@@ -85,13 +85,13 @@
                                 <i class="far fa-building p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Listado de oficinas de comercialización Ciudad Maderas</h3>
+                                <h3 class="card-title center-align" data-i18n="listado-oficinas-comercializacion">Listado de oficinas de comercialización Ciudad Maderas</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-md-10">
                                         </div>
                                         <div class="col-md-2">
-                                            <button type="button" data-toggle="modal" id="btnAgregarOffice" class="btn-azure w-100" rel="tooltip" data-placement="top" title="AGREGAR OFICINA">Agregar</button>
+                                            <button type="button" data-toggle="modal" id="btnAgregarOffice" class="btn-azure w-100" rel="tooltip" title="AGREGAR OFICINA" data-i18n-tooltip="agregar" data-placement="top" data-i18n="agregar">Agregar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -99,12 +99,12 @@
                                     <table class="table-striped table-hover" id="tablaOficinas">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>SEDE</th>
-                                                <th>DIRECCIÓN</th>
-                                                <th>HORARIO</th>
-                                                <th>ESTATUS</th>
-                                                <th>ACCIONES</th>
+                                                <th>id</th>
+                                                <th>sede</th>
+                                                <th>direccion</th>
+                                                <th>horario</th>
+                                                <th>estatus</th>
+                                                <th>acciones</th>
                                             </tr>
                                         </thead>
                                     </table>

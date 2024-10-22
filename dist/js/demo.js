@@ -327,19 +327,27 @@ demo = {
             },
             onInit : function(tab, navigation, index){
 
-              //check number of tabs and fill the entire row
-              var $total = navigation.find('li').length;
-              $width = 100/$total;
-              var $wizard = navigation.closest('.wizard-card');
-              //var $wizard = navigation.closest('#wiz-nav');
-              $display_width = $(document).width();
+               //check number of tabs and fill the entire row
+               var $total = navigation.find('li').length;
+               $width = 100/$total;
+               var $wizard = navigation.closest('.wizard-card');
+               //var $wizard = navigation.closest('#wiz-nav');
+               $display_width = $(document).width();
               
-              if($display_width < 600 && $total > 3){
+               if($display_width < 600 && $total > 3){
                   $width = 50;
-              }
+               }
                navigation.find('li').css('width',$width + '%');
+               
+               let key = navigation.find('li:first-child a').data('i18n')
+               
+               if(key){
+                 navigation.find('li:first-child a').i18n()
+               }
+
                $first_li = navigation.find('li:first-child a').html();
-               $moving_div = $('<div class="moving-tab">' + $first_li + '</div>');
+               $moving_div = $(`<div class="moving-tab" data-i18n="${key}">${$first_li}</div>`);
+
                $('.wizard-card .wizard-navigation').append($moving_div);
                refreshAnimation($wizard, index);
                $('.moving-tab').css('transition','transform 0s');

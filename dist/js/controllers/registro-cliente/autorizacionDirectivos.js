@@ -1,7 +1,5 @@
 let titulosAu = [];
 let titulosAutCliente = [];
-let tablaAut = null;
-let tablaAutClientes = null;
 
 const TIPO_AUTORIZACION = Object.freeze({
     NORMAL: 1,
@@ -34,35 +32,35 @@ $(document).on('change', '.btn-file :file', function() {
     input.trigger('fileselect', [numFiles, label]);
 });
 
-$('#addExp thead tr:eq(0) th').each( function (i) {
-    const title = $(this).text();
-    titulosAu.push(title);
+// $('#addExp thead tr:eq(0) th').each( function (i) {
+//     const title = $(this).text();
+//     titulosAu.push(title);
 
-    $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#addExp').DataTable().column(i).search() !== this.value ) {
-            $('#addExp').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
+//     $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
+//     $( 'input', this ).on('keyup change', function () {
+//         if ($('#addExp').DataTable().column(i).search() !== this.value ) {
+//             $('#addExp').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+// });
 
-$('#aut-verificacion thead tr:eq(0) th').each( function (i) {
-    const title = $(this).text();
-    titulosAutCliente.push(title);
+// $('#aut-verificacion thead tr:eq(0) th').each( function (i) {
+//     const title = $(this).text();
+//     titulosAutCliente.push(title);
 
-    $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#aut-verificacion').DataTable().column(i).search() !== this.value ) {
-            $('#aut-verificacion').DataTable().column(i).search(this.value).draw();
-        }
-    });
-    $('[data-toggle="tooltip"]').tooltip();
-});
+//     $(this).html('<input  class="textoshead" placeholder="'+title+'" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
+//     $( 'input', this ).on('keyup change', function () {
+//         if ($('#aut-verificacion').DataTable().column(i).search() !== this.value ) {
+//             $('#aut-verificacion').DataTable().column(i).search(this.value).draw();
+//         }
+//     });
+//     $('[data-toggle="tooltip"]').tooltip();
+// });
 
 $(document).ready (function() {
     const funcionToGetData = (id_rol_general == 1) ? 'autsByDC' : 'tableAut';
-
-    tablaAut = $('#addExp').DataTable( {
+    construirHead('addExp');
+    let tablaAut = $('#addExp').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [
@@ -70,15 +68,13 @@ $(document).ready (function() {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
+                titleAttr: `${_('descargar-excel')}`,
                 title: 'Tus autorizaciones',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
-                        header: function (d, columnIdx) {
-                            if (columnIdx <= 4) {
-                                return ' ' + titulosAu[columnIdx] + ' ';
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -87,17 +83,15 @@ $(document).ready (function() {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
-                titleAttr: 'Descargar archivo PDF',
+                titleAttr: `${_('descargar-pdf')}`,
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 title:'Tus autorizaciones',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
-                        header: function (d, columnIdx) {
-                            if (columnIdx <= 4) {
-                                return ' ' + titulosAu[columnIdx] + ' ';
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -138,7 +132,7 @@ $(document).ready (function() {
                 "data": function( d ){
                     return `
                         <div class="d-flex justify-center">
-                            <a href="" class="btn-data btn-blueMaderas getInfo" data-id_autorizacion="${d.id_autorizacion}" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}"data-toggle="tooltip" data-placement="top" title="VER AUTORIZACIONES">
+                            <a href="" class="btn-data btn-blueMaderas getInfo" data-id_autorizacion="${d.id_autorizacion}" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}"data-toggle="tooltip" data-placement="top"  title="${_('ver-autorizaciones')}">
                             <i class="fas fa-key"></i>
                             </a>
                         </div>
@@ -146,14 +140,14 @@ $(document).ready (function() {
                 }
             }]
     });
-
+    applySearch(tablaAut);
     $('#addExp').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
-
-    tablaAutClientes = $('#aut-verificacion').DataTable( {
+    construirHead('aut-verificacion');
+    let tablaAutClientes = $('#aut-verificacion').DataTable( {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width:'100%',
         buttons: [
@@ -161,15 +155,13 @@ $(document).ready (function() {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
+                titleAttr: `${_('descargar-excel')}`,
                 title: 'Tus autorizaciones de verificación',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
-                        header: function (d, columnIdx) {
-                            if (columnIdx <= 4) {
-                                return ' ' + titulosAutCliente[columnIdx] + ' ';
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -178,17 +170,15 @@ $(document).ready (function() {
                 extend: 'pdfHtml5',
                 text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
                 className: 'btn buttons-pdf',
-                titleAttr: 'Descargar archivo PDF',
+                titleAttr: `${_('descargar-pdf')}`,
                 title: 'Tus autorizaciones de verificación',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
                     columns: [0,1,2,3,4],
                     format: {
-                        header: function (d, columnIdx) {
-                            if (columnIdx <= 4) {
-                                return ' ' + titulosAutCliente[columnIdx] + ' ';
-                            }
+                        header:  function (d, columnIdx) {
+                            return $(d).attr('placeholder').toUpperCase();
                         }
                     }
                 }
@@ -229,7 +219,7 @@ $(document).ready (function() {
                 "data": function( d ){
                     return `
                         <div class="d-flex justify-center">
-                            <a href="" class="btn-data btn-blueMaderas infoAut" data-id_autorizacion="${d.id_autorizacion}" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}"data-toggle="tooltip" data-placement="top" title="VER AUTORIZACIONES">
+                            <a href="" class="btn-data btn-blueMaderas infoAut" data-id_autorizacion="${d.id_autorizacion}" data-idCliente="${d.id_cliente}" data-nombreResidencial="${d.nombreResidencial}" data-nombreCondominio="${d.nombreCondominio}" data-nombreLote="${d.nombreLote}" data-idCondominio="${d.idCondominio}" data-idLote="${d.idLote}"data-toggle="tooltip" data-placement="top" title="${_('ver-autorizaciones')}">
                             <i class="fas fa-key"></i>
                             </a>
                         </div>
@@ -238,7 +228,7 @@ $(document).ready (function() {
             }
         ]
     });
-
+    applySearch(tablaAutClientes);
     $('#aut-verificacion').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
@@ -288,7 +278,7 @@ $(document).ready (function() {
                             <div class="w-80">
                                 <small>
                                     <label class="m-0" style="font-size: 11px; font-weight: 100;">
-                                        Solicitud asesor ( ${ item['fecha_creacion'].substr(0,10) })
+                                        ${_('solicitud-asesor')} ( ${ item['fecha_creacion'].substr(0,10) })
                                     </label>
                                 </small>
                             </div>
@@ -314,14 +304,14 @@ $(document).ready (function() {
                         <label>${ item['autorizacion'] }</label>
                         <div class="file-gph">
                             <input class="d-none" type="file" id="expediente${i}" name="docArchivo${i}" onchange="changeName(this)">
-                            <input class="file-name" type="text" placeholder="No has seleccionada nada aún" >
+                            <input class="file-name" type="text" placeholder="${_('nada-seleccionado')}" >
                             <label class="upload-btn m-0" for="expediente${i}">
-                                <span>Buscar</span>
+                                <span>${_('buscar')}</span>
                                 <i class="fas fa-search"></i>
                             </label>
                         </div>
                         <div class="form-group label-floating is-empty">
-                            <label class="control-label">Comentario</label>
+                            <label class="control-label">${_('comentario2')}</label>
                             <input type="text" name="observaciones${i}" class="form-control" style="border-radius:27px; border: 1px solid #cdcdcd; background-image: none; padding: 0 20px;">
                         </div>
                         <input type="hidden" name="idAutorizacion${i}"  value="${item['id_autorizacion']}">
@@ -443,7 +433,7 @@ $("#sendAutsFromD").on('submit', function(e){
     e.preventDefault();
 
     if (parseInt($('#numeroDeRow').val()) !== $('#autClienteForm input:radio:checked').length) {
-        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR o ENVIAR A DC todas las solicitudes.", "warning");
+        alerts.showNotification("top", "right", `${_('aprobar-todas-solicitudes')}`, "warning");
         return;
     }
 
@@ -475,7 +465,7 @@ $('#autClienteForm').on('submit', function (e) {
     e.preventDefault();
 
     if (parseInt($('#numeroDeRowAut').val()) !== $('#autClienteForm input:radio:checked').length) {
-        alerts.showNotification("top", "right", "Debe APROBAR o RECHAZAR todas las solicitudes.", "warning");
+        alerts.showNotification("top", "right", `${_('debe-solicitudes')}`, "warning");
         return;
     }
 
