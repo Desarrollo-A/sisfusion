@@ -219,7 +219,7 @@ $("#tabla_ingresar_5").ready(function () {
                 '" data-ubic="' +
                 data.ubicacion +
                 '" data-data=\'' +
-                JSON.stringify(data) +
+                JSON.stringify(data).replace(/'/g, "&apos;") +
                 '\' title="REGISTRAR STATUS" ' +
                 'data-tipo-venta="' +
                 data.tipo_venta +
@@ -242,7 +242,7 @@ $("#tabla_ingresar_5").ready(function () {
                 '" data-ubic="' +
                 data.ubicacion +
                 '" data-data=\'' +
-                JSON.stringify(data) +
+                JSON.stringify(data).replace(/'/g, "&apos;") +
                 '\' class="rechazarStatus btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
                 '<i class="fas fa-thumbs-down"></i></button>';
             } else if (
@@ -264,7 +264,7 @@ $("#tabla_ingresar_5").ready(function () {
                 '" data-ubic="' +
                 data.ubicacion +
                 '" data-data=\'' +
-                JSON.stringify(data) +
+                JSON.stringify(data).replace(/'/g, "&apos;") +
                 '\' class="revCont6 btn-data btn-green" data-toggle="tooltip" data-placement="top" title= "REGISTRAR ESTATUS">' +
                 '<i class="fas fa-thumbs-up"></i></button>';
 
@@ -283,7 +283,7 @@ $("#tabla_ingresar_5").ready(function () {
                 '" data-ubic="' +
                 data.ubicacion +
                 '" data-data=\'' +
-                JSON.stringify(data) +
+                JSON.stringify(data).replace(/'/g, "&apos;") +
                 '\' class="edit2 btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="RECHAZAR ESTATUS">' +
                 '<i class="fas fa-thumbs-down"></i></button>';
             }
