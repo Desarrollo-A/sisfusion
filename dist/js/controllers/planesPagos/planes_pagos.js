@@ -415,7 +415,7 @@ $(document).on("submit", "#formPlanPago", function (e) {
                         alerts.showNotification("top", "right", dto.mensaje, "success");
                         $('#tablaPlanPagos').DataTable().ajax.reload();
 
-                        saveHistorial(dto.idPlanPago, 3, dto.mensaje, dto.mensaje)
+                        saveHistorial(dto.idPlanPago, 0, dto.mensaje, dto.mensaje)
                     }
                     else{
                         alerts.showNotification("top", "right", dto.mensaje, "danger");
@@ -1225,7 +1225,7 @@ function servicioNeoData(response){
                                         response_crm = response.msj
                                         response_neodata = elemento.msj
 
-                                        saveHistorial(planesDePagoIds[0].idPlanPago, 0, response_crm, response_neodata)
+                                        saveHistorial(planesDePagoIds[0].idPlanPago, 1, response_crm, response_neodata)
                                     }
                                 });
                             }
@@ -1238,7 +1238,7 @@ function servicioNeoData(response){
                         response_crm = `Registro no actualizado PLAN PAGO ${elemento.numPlan}`
                         response_neodata = elemento.msj
 
-                        saveHistorial(planesDePagoIds[0].idPlanPago, 0, response_crm, response_neodata)
+                        saveHistorial(planesDePagoIds[0].idPlanPago, 1, response_crm, response_neodata)
                     }
                     alerts.showNotification('top', 'right', '[NEODATA] '+elemento.msj+avisoCRM, statusAviso);
 
@@ -1282,7 +1282,7 @@ function servicioNeoData(response){
 
                 response_neodata = response.msj
 
-                saveHistorial(planesDePagoIds[0].idPlanPago, 0, response_crm, response_neodata)
+                saveHistorial(planesDePagoIds[0].idPlanPago, 1, response_crm, response_neodata)
             }
         
         }
@@ -1402,7 +1402,7 @@ $(document).on('click', '#cancelarPP', ()=>{
             response_crm = response.msj
             response_neodata = response.msj
 
-            saveHistorial(idPlanPago, 1, response_crm, response_neodata)
+            saveHistorial(idPlanPago, 2, response_crm, response_neodata)
 
             $('#cancelarPlanPago').modal('toggle');
         }
