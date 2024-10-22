@@ -298,6 +298,18 @@ class PlanesPago extends CI_Controller {
 
         }
     }
+
+    public function registrarEnganche()
+    {
+        // Leemos lo que envia maricruz
+
+
+    }
+
+    public function registrarMensualidad()
+    {
+        // code...
+    }
 }
 
 ?>
