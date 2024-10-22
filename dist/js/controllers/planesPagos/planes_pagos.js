@@ -398,9 +398,9 @@ $(document).on("submit", "#formPlanPago", function (e) {
     // formulario.append("noPeriodosPP", JSON.parse(dumpPlanPago).length);
     // console.log('dumpPlanPago', dumpPlanPago);
 
-    for (const value of formulario.entries()) {
-        console.log(value);
-    }
+    // for (const value of formulario.entries()) {
+    //     console.log(value);
+    // }
     
     $.ajax({
         type: 'POST',
