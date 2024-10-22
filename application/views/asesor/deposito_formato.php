@@ -1257,7 +1257,7 @@
                                <span>Cláusulas</span>
                                 (<small style="color: red;">*</small>)
                             </label>
-                            <select data-i18n-label="selecciona-una-opcion" name="clausula" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" multiple>
+                            <select data-i18n-label="selecciona-una-opcion" name="clausula" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
                             <option value="1">Condiciones de pago</option>
                             <option value="2">Devolución de depósito</option>
                             <option value="3">Penalización por incumplimiento</option>
