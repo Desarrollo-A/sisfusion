@@ -151,7 +151,12 @@ function loadTable(tipoDescuento) {
         },
         destroy: true,
         ordering: false,
-        columns:[{
+        columns:[
+            {
+                "data": function (d) {
+                return `<p style="font-size: 1em;">${d.id_descuento}</p>`;
+            }},
+            {
                 "data": function (d) {
                 return `<p style="font-size: 1em;">${d.id_usuario}</p>`;
             }},
