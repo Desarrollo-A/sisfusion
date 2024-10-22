@@ -36,7 +36,6 @@ function show_upload(data) {
     let form = new Form({
         title: 'Subir ' + data.documento.toLowerCase(),
         onSubmit: function(data){
-            //console.log(data)
             form.loading(true);
 
             $.ajax({
@@ -110,7 +109,13 @@ let buttons = [
 
 let columns = [
     { data: 'idDocumento' },
-    { data: 'documento' },
+    { data: function(data){
+        if(data.tipo != 11) {
+            return data.documento;
+        } else {
+            return 'ARCHIVO ZIP';
+        }
+    }},
     { data: 'archivo' },
     { data: function(data){
         if(data.fechaModificacion){
@@ -122,18 +127,23 @@ let columns = [
         let view_button = '';
         let parts = data.archivo.split('.');
         let extension = parts.pop();
+        let upload_button = '';
 
         if(data.archivo != 'Sin archivo'){
 
-            if(extension == 'xlsx'){
+            if(extension == 'xlsx' || data.tipo == 11){
                 view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
-            }else{
+            }else if(data.tipo != 11 && extension != 'xlsx'){
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})
             }
 
         }
-
-        let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
+        if(data.tipo != 11){
+            upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
+        }
+        else {
+            upload_button = new RowButton({icon: 'file_upload', label: 'Cargar archivo zip', onClick: cargarZip, data});
+        }
         
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },
@@ -145,3 +155,42 @@ let table = new Table({
     buttons: buttons,
     columns,
 })
+
+
+function cargarZip (data) {
+    console.log("data: ", data.idCliente);
+    let accept = ['application/zip', 'application/x-zip-compressed', 'application/x-rar-compressed', 'application/x-7z-compressed', 'application/octet-stream'];
+    let form = new Form({
+        title: 'Carga el archivo zip',
+        text: 'Recuerda que el archivo zip no puede ser mayor a 8MB',
+        onSubmit: function(data) {
+            let file = data.get('file_uploaded');
+            form.loading(false);
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}/casas/upload_documento`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Documento cargado con éxito", "success");
+                    table.reload();
+                    form.hide();
+                },
+                error: function() {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    form.loading(false);
+                }
+            })
+        }, 
+        fields: [
+            new HiddenField({id: 'id_proceso', value: data.idProcesoCasas}),
+            new HiddenField({id: 'id_documento', value: data.idDocumento}),
+            new HiddenField({id: 'name_documento', value: data.documento}),
+            new HiddenField({id: 'tipo_documento', value: 17}),
+            new FileField({id: 'file_uploaded', label: 'Carga el archivo .zip', placeholder: 'No has seleccionado un archivo', accept: accept, required: true, maxSizeMB: 2}),
+            new HiddenField({ id: 'idCliente', value: data.idCliente})  
+        ],
+    });
+    form.show();
+}
