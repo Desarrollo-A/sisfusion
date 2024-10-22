@@ -86,7 +86,7 @@
                                                 <option value="4">Conglomerado</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div>  
                                 </div>
                             </div>
                             <div class="material-datatables">
@@ -94,7 +94,8 @@
                                     <table class="table-striped table-hover" id="tabla-general" name="tabla-general">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                <th>ID DESCUENTO</th>
+                                                <th>ID USUARIO</th>
                                                 <th>USUARIO</th>
                                                 <th>PUESTO</th>
                                                 <th>SEDE</th>
