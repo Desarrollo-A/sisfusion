@@ -458,12 +458,13 @@ class Casas extends BaseController
         $proceso = $data["proceso"];
 
         $tipoDocumento = isset($data["tipoDocumento"]) ? $data["tipoDocumento"] : 0;
+        $nombreDocumento = isset($data["nombreDocumento"]) ? $data["nombreDocumento"] : '';
 
         if (!isset($proceso)) {
             $proceso = 0; // se asigna esta variable para saber de que proceso se van a mostrar
         }
 
-        $lotes = $this->CasasModel->lotesCreditoDirecto($proceso, $tipoDocumento)->result();
+        $lotes = $this->CasasModel->lotesCreditoDirecto($proceso, $tipoDocumento, $nombreDocumento)->result();
 
         $this->json($lotes);
     }
@@ -2525,6 +2526,7 @@ class Casas extends BaseController
         $nombre_lote = $this->form('nombre_lote');
         $tipoDocumento = $this->form('tipoDocumento') ? $this->form('tipoDocumento') : 0;
         $id_documento = $this->form('id_documento');
+        $idCliente = $this->form('idCliente');
         $file = $this->file('file_uploaded');
 
         if (!isset($proceso) || !isset($nombre_lote) || !isset($id_documento)) {
@@ -2553,7 +2555,7 @@ class Casas extends BaseController
 
                 if ($created) {
                     $motivo = "Se subió archivo: $name_documento";
-                    $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2);
+                    $this->CasasModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2, $idCliente);
 
                     $this->json([]);
                 }
@@ -2731,6 +2733,7 @@ class Casas extends BaseController
         $comentario = $form->comentario;
         $voBoOrdenCompra = $form->ordenCompra;
         $voBoAdeudoTerreno = $form->adeudoTerreno;
+        $idCliente = $form->idCliente;
         $banderaSuccess = true;
 
         if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno)) {
@@ -2779,6 +2782,25 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
+        if ($voBoAdeudoTerreno == 1) {
+            $persona = $this->CasasModel->getTipoPersona($idCliente)->personalidad_juridica ;
+            if ($persona == '1') {
+                # Persona moral 10,11,12,7,8,17,29,30,22,23,24,25
+                $documentos = [10,11,12,7,8,17,29,30,22,23,24,25];
+                foreach($documentos as $documento) {
+                    $name_documento = $this->CasasModel->getDocumentoPersonaMoral($documento)->nombre;
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, 'NULL', $documento, 0);
+                }
+            } else if ($persona == '2') {
+                # Persona fisica 2,3,4,7,8,20,26,27,28,29,30
+                $documentos = [2,3,4,7,8,20,26,27,28,29,30];
+                foreach($documentos as $documento) {
+                    $name_documento = $this->CasasModel->getDocumentoPersonaFisica($documento)->nombre;
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, 'NULL', $documento, 0);
+                }
+            }
+        }
+
         if ($banderaSuccess) {
             $this->db->trans_commit();
             $this->json([]);
@@ -2801,6 +2823,8 @@ class Casas extends BaseController
         $comentario = $form->comentario;
         $voBoOrdenCompra = $form->ordenCompra;
         $voBoAdeudoTerreno = $form->adeudoTerreno;
+        $idCliente = $form->idCliente;
+        $tipoDocumento = $form->tipoMovimiento;
         $banderaSuccess = true;
 
         if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno)) {
@@ -2847,6 +2871,25 @@ class Casas extends BaseController
         $vobo = $this->CasasModel->updateVobosDirecto($idProceso, $proceso, $updateVobo);
         if (!$vobo) {
             $banderaSuccess = false;
+        }
+
+        if ($voBoOrdenCompra == 1) {
+            $persona = $this->CasasModel->getTipoPersona($idCliente)->personalidad_juridica ;
+            if ($persona == '1') {
+                # Persona moral
+                $documentos = [10,11,12,7,8,17,29,30,22,23,24,25];
+                foreach($documentos as $documento) {
+                    $name_documento = $this->CasasModel->getDocumentoPersonaMoral($documento)->nombre;
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, 'NULL', $documento, 0);
+                }
+            } else if ($persona == '2') {
+                # Persona fisica
+                $documentos = [2,3,4,7,8,20,26,27,28,29,30];
+                foreach($documentos as $documento) {
+                    $name_documento = $this->CasasModel->getDocumentoPersonaFisica($documento)->nombre;
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, 'NULL', $documento, 0);
+                }
+            }
         }
 
         if ($banderaSuccess) {
@@ -2909,10 +2952,14 @@ class Casas extends BaseController
         $updateData = array(
             "comentario"         => $comentario,
             "proceso"            => $procesoNuevo,
-            "voBoOrdenCompra"    => 0,
-            "voBoAdeudoTerreno"  => 0,
             "fechaModificacion"  => date("Y-m-d H:i:s"),
             "tipoMovimiento"     => 2
+        );
+
+        $updateVobo = array(
+            "ordenCompra" => 0,
+            "adedudoTerreno" => 0,
+            "paso" => 17
         );
 
         // paso 1: hacer update del proceso
@@ -2924,6 +2971,12 @@ class Casas extends BaseController
         // paso 2: guardar registro del movimiento
         $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
         if (!$addHistorial) {
+            $banderaSuccess = false;
+        }
+
+        // actualizar vobo
+        $vobo = $this->CasasModel->updateVobosDirecto($idProceso, $proceso, $updateVobo);
+        if (!$vobo) {
             $banderaSuccess = false;
         }
 
@@ -5486,13 +5539,13 @@ class Casas extends BaseController
             "modificado_por" => $this->session->userdata('id_usuario')
         );
 
-            $procesoData = array(
-                "idLote" => $idLote,
-                "proceso" => 1,
-                "comentario" => $comentario,
-                "creadoPor" => $this->session->userdata('id_usuario'),
-                "idCliente" => $idCliente
-            );
+        $procesoData = array(
+            "idLote" => $idLote,
+            "proceso" => 1,
+            "comentario" => $comentario,
+            "creadoPor" => $this->session->userdata('id_usuario'),
+            "idCliente" => $idCliente
+        );
 
         $this->db->trans_begin();
 

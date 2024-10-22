@@ -150,6 +150,7 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'ordenCompra', value: data.ordenCompra }),
             new HiddenField({ id: 'adeudoTerreno', value: data.adeudoTerreno }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
