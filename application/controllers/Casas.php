@@ -2500,7 +2500,7 @@ class Casas extends BaseController
             $banderaSuccess = false;
         }
 
-        if ($proceso == 16) {
+        if ($proceso == 1) {
             $crearVobo = $this->CasasModel->insertVoboDirecto($idProceso, $procesoNuevo);
             if (!$crearVobo) {
                 $banderaSuccess = false;
