@@ -1435,13 +1435,13 @@ function buildEvento(evento) {
     let text_tipo = ''
     switch(evento.tipoRegistro){
         case 0:
-            text_tipo = 'Envio de plan'
+            text_tipo = 'Plan creado'
             break
         case 1:
-            text_tipo = 'Cancelacion de plan'
+            text_tipo = 'Plan enviado'
             break
         case 3:
-            text_tipo = 'Plan creado'
+            text_tipo = 'Plan cancelado'
             break
     }
 
