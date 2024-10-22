@@ -132,7 +132,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- radios 1 -->
+                <!-- radios 1 -->                
                 <div class="row pt-1 persona-fisica-div" id="checkDS">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <h4 class="label-on-left m-0" data-i18n="persona-fisica">PERSONA FÍSICA</h4>
@@ -577,11 +577,11 @@
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="row">
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                <label class="label-on-left m-0">
+                                <label class="label-on-left m-0">                               
                                     <span data-i18n="codigo-postal">CÓDIGO POSTAL</span>(<small style="color: red;">*</small>)</label>
                                    <select data-i18n-label="selecciona-una-opcion" name="cp" required="true" title="SELECCIONA UNA OPCIÓN" id="cp" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-cp="<?=$cliente[0]->cp ?>" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
-                                            <?php 
-                                                for($i = 0; $i < count($cp); $i++) {
+                                            <?php                                                                                                                                                                                                                      
+                                                for($i = 0; $i < count($cp); $i++) {                                                    
                                                     if($cp[$i]['codigo_postal'] == $cliente[0]->cp){
                                                         echo '<option value="'.$cp[$i]['codigo_postal'].'" selected>'.$cp[$i]['codigo_postal'].'</option>';
                                                     }
@@ -1248,6 +1248,49 @@
                         </div>
                     </div>
                 </div>
+                <!-- APARTADO CLAUSULAS ESPECIALES -->
+                <h4 class="text-center m-0 pt-3">Cláusulas especiales</h4>
+                <div class="row pt-2">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">
+                            <label class="label-on-left m-0">
+                               <span>Cláusulas</span>
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <select data-i18n-label="selecciona-una-opcion" name="clausula" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" multiple>
+                            <option value="1">Condiciones de pago</option>
+                            <option value="2">Devolución de depósito</option>
+                            <option value="3">Penalización por incumplimiento</option>
+                            <option value="4">Plazos de entrega</option>
+                            <option value="5">Uso exclusivo del bien</option>
+                            <option value="6">Vigencia del contrato</option>
+                            <option value="7">Devolución parcial del depósito</option>
+                            <option value="8">Aplicación del depósito al contrato final</option>
+                            <option value="9">Pérdida del depósito por cancelación</option>
+                            <option value="10">Excepciones por causas de fuerza mayor</option>
+                            <option value="11">Reembolso por incumplimiento del vendedor</option>
+                            </select>                        
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">
+                            <label class="label-on-left m-0">
+                                <span>Tipo contrato</span>
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <select data-i18n-label="selecciona-una-opcion" name="tipo-contrato" required="true" title="SELECCIONA UNA OPCIÓN" id="tipo-contrato" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
+                                <option value="1">Contrato de compraventa</option>
+                                <option value="2">Contrato de arrendamiento</option>
+                                <option value="3">Contrato de promesa de compraventa</option>
+                                <option value="4">Contrato de prestación de servicios</option>
+                                <option value="5">Contrato de crédito</option>
+                                <option value="6">Contrato indefinido</option>
+                                <option value="7">Contrato temporal</option>
+                            </select>                        
+                        </div>
+                    </div>                               
+                </div>
+                <!-- FIN DE CLAUSULAS ESPECIALES -->
                 <div class="row pt-3">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">
                         <label style="font-size: 0.7em;" id = "lablespan"></label>

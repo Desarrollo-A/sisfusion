@@ -23,7 +23,6 @@ let nombreRl = "";
 let representanteLegal = "";
 let nombreLoteText = "";
 let selectedLabelC = "";
-
 $(document).ready(function () {
     modelosTable = $('#modelosTable thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();

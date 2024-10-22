@@ -404,23 +404,6 @@
                                         </thead>
                                     </table>
                                 </div>
-                                <div class="material-datatables col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="divTablaReasignarProspectos">
-                                    <table id="tablaReasignarProspectos" name="tablaProspectos" class="table-striped table-hover nowrap">
-                                        <thead>
-                                            <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
-                                                <th>REFERENCIA</th>
-                                                <th>NOMBRE CLIENTE</th>
-                                                <th>ASESOR</th>
-                                                <th>COORDINADOR</th>
-                                                <th>GERENTE</th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
                             <!-- FIN TABLA MODELOS DE CASAS-->
                             </div>
                         </div>
