@@ -5486,7 +5486,6 @@ class Casas extends BaseController
             "modificado_por" => $this->session->userdata('id_usuario')
         );
 
-        if ($esquemaCredito == 1) {
             $procesoData = array(
                 "idLote" => $idLote,
                 "proceso" => 1,
@@ -5494,15 +5493,6 @@ class Casas extends BaseController
                 "creadoPor" => $this->session->userdata('id_usuario'),
                 "idCliente" => $idCliente
             );
-        } else {
-            $procesoData = array(
-                "idLote" => $idLote,
-                "proceso" => 16,
-                "comentario" => $comentario,
-                "creadoPor" => $this->session->userdata('id_usuario'),
-                "idCliente" => $idCliente
-            );
-        }
 
         $this->db->trans_begin();
 

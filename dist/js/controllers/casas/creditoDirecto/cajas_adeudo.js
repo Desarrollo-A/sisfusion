@@ -27,7 +27,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
-    params: { proceso: 16 },
+    params: { proceso: 1 },
     columns
 });
 
@@ -138,7 +138,7 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 17 }),
+            new HiddenField({ id: 'procesoNuevo', value: 2 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),

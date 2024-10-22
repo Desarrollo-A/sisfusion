@@ -37,7 +37,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
-    params: { proceso: 17, tipoDocumento: 2 },
+    params: { proceso: 2, tipoDocumento: 2 },
     columns,
     // button: buttons
 });
@@ -71,7 +71,7 @@ return_process = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 16 }),
+            new HiddenField({ id: 'procesoNuevo', value: 1 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
@@ -167,7 +167,7 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 18 }),
+            new HiddenField({ id: 'procesoNuevo', value: 3 }),
             new HiddenField({ id: 'ordenCompra', value: 1 }),
             new HiddenField({ id: 'adeudoTerreno', value: data.adeudoTerreno }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
