@@ -823,6 +823,8 @@
         $this->db->query("DELETE FROM planes_pago WHERE idLote = ".$idLote);
     }
 
-
+    public function getHistorialPlan($idPlanPago){
+        return $this->db->query("SELECT * FROM historial_envios_planes_pago WHERE idPlanPago = $idPlanPago")->result();
+    }
 
 }

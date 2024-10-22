@@ -4276,8 +4276,9 @@ legend {
             /*print_r($dumpPlanPago);
             exit;*/
             $insertPlanDB = $this->General_model->addRecord('planes_pago', $insert_plan);
+
             if ( $insertPlanDB ) {
-                $response = array( "status" => 1, "mensaje"=>"Se actualizó el enganche correctamente");
+                $response = array( "status" => 1, "idPlanPago" => $this->db->insert_id(), "mensaje"=>"Se actualizó el enganche correctamente");
             } else  {
                 $response = array( "status" => 0, "mensaje"=>"Error al insertar el enganche, inténtalo nuevamente");
             }
@@ -4642,9 +4643,22 @@ legend {
         }
     }
 
-
+    /*
     public function regPlanPagoCompleto()
     {
+        print(json_encode([
+            'msj' => 'Mensaje de prueba de regreso de NEODATA',
+            'status' => true,
+            'data' => [
+                0 => [
+                    'status' => true,
+                    'numPlan' => 1,
+                    'msj' => 'Test de respuesa plan Neodata'
+                ]
+            ]
+        ]));
+        exit;
+
         $data = json_decode(file_get_contents("php://input"));
 
         #http://192.168.16.20/neodata_reps/back/index.php
@@ -4659,5 +4673,33 @@ legend {
         print_r(json_encode(json_decode($response->getParsedResponse())));
 
         exit;
+    }
+    */
+
+    public function saveHistorial($idPlanPago){
+        $idLote = $this->input->post('idLote');
+        $tipoRegistro = $this->input->post('tipoRegistro');
+        $respuesta = $this->input->post('respuesta');
+        $respuestaNeodata = $this->input->post('respuestaNeodata');
+
+        $payload = [
+            'idPlanPago' => $idPlanPago,
+            'idLote' => $idLote,
+            'tipoRegistro' => $tipoRegistro,
+            'respuesta' => $respuesta,
+            'respuestaNeodata' => $respuestaNeodata,
+            'fechaCreacion' => date('Y-m-d H:i:s'),
+            'idCreacion' => $this->session->userdata('id_usuario'),
+        ];
+
+        $this->General_model->addRecord('historial_envios_planes_pago', $payload);
+
+        print_r([]);
+    }
+
+    public function getHistorial($idPlanPago){
+        $historial = $this->Corrida_model->getHistorialPlan($idPlanPago);
+
+        print_r(json_encode($historial));
     }
 }

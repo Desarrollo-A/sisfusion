@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class Comisiones extends CI_Controller
 {
   private $gph;
+  
   public function __construct()
   {
     parent::__construct();
