@@ -102,7 +102,7 @@ $(document).ready(function () {
                     }
                     else {
                         if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
+                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data).replace(/'/g, "&apos;")}' ` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS" data-i18n-tooltip="registrar-estatus">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
@@ -121,7 +121,7 @@ $(document).ready(function () {
                         }
                         else if ((data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15 || data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15)
                             || (data.idStatusContratacion == 11 && data.idMovimiento == 41)) {
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
+                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data).replace(/'/g, "&apos;")}' ` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS" data-i18n-tooltip="registrar-estatus">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
@@ -139,7 +139,7 @@ $(document).ready(function () {
                             cntActions += `${datatableButtons(data, 2)}`;
                         }
                         else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) { //RECHAZO
-                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data)}'` +
+                            cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + ` data-data='${JSON.stringify(data).replace(/'/g, "&apos;")}' ` +
                                 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' + '" data-nombreResidencial="' + data.nombreResidencial + '" ' + '" data-nombreCondominio="' + data.nombreCondominio.toUpperCase() + '" ' +
                                 'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" data-i18n-tooltip="estatus-8" title="REGISTRAR ESTATUS" data-i18n-tooltip="registrar-estatus">' +
                                 '<i class="far fa-thumbs-up"></i></button>';
@@ -914,10 +914,11 @@ const newButton = (btnClass, title, action = '', data, icon) => {
   const CUSTOM_BTN = `<button class='${btnClass}'
       data-toggle='tooltip' 
       data-placement='top'
-      title='${_(title).toUpperCase()}'
-      data-i18n-tooltip="${title}"
       data-accion='${action}'
-      data-data='${JSON.stringify(data)}'>
+      data-data='${JSON.stringify(data).replace(/'/g, "&apos;")}' 
+    title='${_(title).toUpperCase()}'
+      data-i18n-tooltip="${title}"
+      >
           <i class='${icon}'></i>
       </button>`;
 
