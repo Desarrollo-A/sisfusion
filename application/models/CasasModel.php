@@ -2583,10 +2583,10 @@ AND vb.proyectos != 1";
 
         $query = "SELECT
         idProceso, 
-        idDocumento
-        CASE WHEN archivo IS NULL THEN 'Sin archivo' ELSE archivo, END AS archivo, documento,
+        idDocumento,
+        CASE WHEN archivo IS NULL THEN 'Sin archivo' ELSE archivo END AS archivo, documento,
         tipo, fechaModificacion
-        FROM documentos_proceso_casas_directo
+        FROM documentos_proceso_credito_directo
         WHERE idProceso = $idProceso
         AND tipo IN ($in)
         ";

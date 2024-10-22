@@ -2564,6 +2564,28 @@ class Casas extends BaseController
 
         http_response_code(404);
     }
+
+    public function uploadDocumentoPersonaFisica() {
+
+        $idProceso = $this->form('idProceso');
+        $idDocumento = $this->form('idDocumento');
+        $nombreDocumento = $this->form('nombreDocumento');
+        $file = $this->file('file_uploaded');
+
+        if (!isset($idProceso) || !isset($idDocumento) || !isset($nameDocumento) || ! $file) {
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        //  Nombre del archivo          
+        $filename = $this->generateFileName($nombreDocumento, $nombre_lote, $idProceso, $file->name);
+
+        // Se sube archivo al buket
+        $uploaded = $this->upload($file->tmp_name, $filename);
+
+        if ($uploaded) {}
+    }
+
     public function ordenCompra()
     {
         $this->load->view("template/header");
@@ -5751,13 +5773,24 @@ class Casas extends BaseController
 
     public function lista_documentos_cliente_directo($proceso)
     {
+        $idCliente = $this->CasasModel->getProcesoDirecto($proceso)->idCliente;
         $documentos = [];
+        $persona = $this->CasasModel->getTipoPersona($idCliente)->personalidad_juridica ;
+        $tipos = [];
 
-        switch ($this->idRol) {
-            case '12':
-                $documentos = $this->CasasModel->getListaDocumentosClienteDirecto($proceso, [2]);
-                break;
+        if ($persona == 1) {
+            # Persona moral 10,11,12,7,8,17,29,30,22,23,24,25
+            $tipos = [10,11,12,7,8,17,29,30,22,23,24,25];
+        } else if ($persona == 2) {
+            # Persona fisica 2,3,4,7,8,20,26,27,28,29,30
+            $tipos = [2,3,4,7,8,20,26,27,28,29,30];
         }
+
+        // switch ($this->idRol) {
+            // case '12':
+                $documentos = $this->CasasModel->getListaDocumentosClienteDirecto($proceso, $tipos);
+                // break;
+        // }
         $this->json($documentos);
     }
 
