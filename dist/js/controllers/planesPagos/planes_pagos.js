@@ -243,13 +243,12 @@ $('#idLote').change(function () {
                             break;
                     }
 
-
-
-
-
+                    BTN_HISTORIAL = `<button class="btn-data btn-blueMaderas verHistorial" title="HISTORIAL" data-idplanPago="${d.idPlanPago}">
+                        <i class="fas fa-list"></i>
+                    </button>`
 
                     let buttonValidado =  BTN_SEND + BTN_DELETE;//(d.tipoPlanPago == 1) ? BTN_SEND + BTN_DELETE: ''
-                    return `<center>${BTN_VER} ${BTN_EDIT} ${buttonValidado}</center>`;
+                    return `<center>${BTN_VER} ${BTN_EDIT} ${buttonValidado} ${BTN_HISTORIAL}</center>`;
                 }
             }],
         initComplete: function() {
@@ -415,10 +414,12 @@ $(document).on("submit", "#formPlanPago", function (e) {
                         cerrarModalAddPlan();
                         alerts.showNotification("top", "right", dto.mensaje, "success");
                         $('#tablaPlanPagos').DataTable().ajax.reload();
-                    }
-                    else
-                        alerts.showNotification("top", "right", dto.mensaje, "danger");
 
+                        saveHistorial(dto.idPlanPago, 0, dto.mensaje, dto.mensaje)
+                    }
+                    else{
+                        alerts.showNotification("top", "right", dto.mensaje, "danger");
+                    }
 
                 } catch (error) {
                     if (error instanceof SyntaxError) {
@@ -1079,7 +1080,6 @@ $(document).on('click', '#aceptarEnvioPP2', function(){
                 console.log('response:', response);
                 servicioNeoData(response);
                 $('#spiner-loader').addClass('hide');//PRUEBA
-
             }
             else if(response.respuesta == -1){
                 alerts.showNotification('top', 'right', 'No hay registro de plan de pagos para enviar o ya se enviaron a Neodata anteriormente.', 'danger');
@@ -1188,6 +1188,10 @@ function servicioNeoData(response){
         success: function (response) {
             console.log('RESPUES NEODATA:'+response);
             response = JSON.parse(response);
+
+            let response_crm = ''
+            let response_neodata = ''
+
             let statusAviso;
             if(response.status === true){//resultado general de la consulta
                 statusAviso = 'success';
@@ -1195,6 +1199,7 @@ function servicioNeoData(response){
                 let banderaActualizado = 0;
                 response.data.map((elemento, index)=>{//se recorre la respuesta del servidor de NEODATA
                     console.log('elemento', elemento);
+
                     let avisoCRM = '';
                     if(elemento.status === true){//revisa el estado de la transacción interna de los planes
                         statusAviso = 'success';
@@ -1206,6 +1211,7 @@ function servicioNeoData(response){
                                     url: 'actualizaPlanPagoIndividual',
                                     type: 'POST',
                                     success: function (response) {
+
                                         response = JSON.parse(response);
                                         let statusAviso;
                                         if(response.status === true){//status de la transacción general
@@ -1216,6 +1222,10 @@ function servicioNeoData(response){
                                         }
                                         alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
 
+                                        response_crm = response.msj
+                                        response_neodata = elemento.msj
+
+                                        saveHistorial(planesDePagoIds[0].idPlanPago, 1, response_crm, response_neodata)
                                     }
                                 });
                             }
@@ -1224,8 +1234,14 @@ function servicioNeoData(response){
                     else{
                         statusAviso = 'danger';
                         avisoCRM = ' [CRM] Registro no actualizado PLAN PAGO '+elemento.numPlan;
+
+                        response_crm = `Registro no actualizado PLAN PAGO ${elemento.numPlan}`
+                        response_neodata = elemento.msj
+
+                        saveHistorial(planesDePagoIds[0].idPlanPago, 1, response_crm, response_neodata)
                     }
                     alerts.showNotification('top', 'right', '[NEODATA] '+elemento.msj+avisoCRM, statusAviso);
+
                 });
 
                 // if(response.data.length == banderaActualizado){
@@ -1263,8 +1279,14 @@ function servicioNeoData(response){
                 $('#aceptarPlanPagoPP').modal('hide');
                 $('#spiner-loader').addClass('hide');
                 $('#tablaPlanPagos').DataTable().ajax.reload();
+
+                response_neodata = response.msj
+
+                saveHistorial(planesDePagoIds[0].idPlanPago, 1, response_crm, response_neodata)
             }
+        
         }
+        
 
     });/**/
     setTimeout(()=>{
@@ -1341,6 +1363,10 @@ $(document).on('click', '.cancelarPlanPago', function(){
             }
             alerts.showNotification('top', 'right', "[CRM] "+response.msj, statusAviso);
 
+            // response_crm = response.msj
+            // response_neodata = response.msj
+
+            // saveHistorial(idPlanPago, 1, response_crm, response_neodata)
         }
     });
 });
@@ -1372,6 +1398,12 @@ $(document).on('click', '#cancelarPP', ()=>{
                 }
             }
             alerts.showNotification('top', 'right', "[NEODATA] "+response.msj, statusAviso);
+
+            response_crm = response.msj
+            response_neodata = response.msj
+
+            saveHistorial(idPlanPago, 2, response_crm, response_neodata)
+
             $('#cancelarPlanPago').modal('toggle');
         }
     });
@@ -1397,3 +1429,126 @@ function cancelaPlanCRM(idPlanPago){
         }
     });
 }
+
+function buildEvento(evento) {
+
+    let text_tipo = ''
+    switch(evento.tipoRegistro){
+        case 0:
+            text_tipo = 'Plan creado'
+            break
+        case 1:
+            text_tipo = 'Plan enviado'
+            break
+        case 3:
+            text_tipo = 'Plan cancelado'
+            break
+    }
+
+    field = $('<li /><div />')
+        .addClass('container-fluid')
+        .append(
+            $('<div />')
+                .addClass('row')
+                .append(
+                    $('<div />')
+                        .addClass('col-xs-12 col-sm-6 col-md-6 col-lg-6')
+                        .append(
+                            $('<a />')
+                                .append(
+                                    $('<b />')
+                                        .addClass('m-0')
+                                        .text(text_tipo)
+                                )
+                        )
+                )
+                .append(
+                    $('<div />')
+                        .addClass('float-end text-right')
+                        .append(
+
+                            $('<a />')
+                                .addClass('m-0')
+                                .text(evento.fechaCreacion)
+                        )
+                )
+                .append(
+                    $('<div />')
+                    
+                        .addClass('col-md-12')
+                        .append(
+                            $('<p />')
+                                .addClass('m-0')
+                                .append(
+                                    $('<small />')
+                                        .text('Respuesta [CRM]: ')
+                                        .append(
+                                            $('<b />')
+                                                .text(evento.respuesta)
+                                        )
+                                )
+                        )
+                )
+                .append(
+                    $('<div />')
+                        .addClass('col-md-12')
+                        .append(
+                            $('<p />')
+                                .addClass('m-0')
+                                .append(
+                                    $('<small />')
+                                        .text('Respuesta [NEODATA]: ')
+                                        .append(
+                                            $('<b />')
+                                                .text(evento.respuestaNeodata)
+                                        )
+                                )
+                        )
+                )
+        )
+
+    return field.prop('outerHTML')
+}
+
+function showHistorial(historial) {
+    // console.log(historial)
+    $('#historialActual').html('')
+
+    for(let historia of historial){
+        // console.log(historia)
+
+        event = buildEvento(historia)
+
+        $('#historialActual').append(event)
+    }
+
+    $('#historialModal').modal('show');
+}
+
+function saveHistorial(idPlanPago, tipoRegistro, respuesta, respuestaNeodata){
+    $.ajax({
+        data: {
+            idLote,
+            tipoRegistro,
+            respuesta,
+            respuestaNeodata,
+        },
+        url: `saveHistorial/${idPlanPago}`,
+        type: 'POST',
+        success: function (response) {
+            console.log(response)
+        }
+    })
+}
+
+$(document).on('click', '.verHistorial', function(){
+    let idPlanPago = $(this).attr('data-idplanPago');
+
+    $.ajax({
+        url: `getHistorial/${idPlanPago}`,
+        type: 'GET',
+        success: function (response) {
+            showHistorial(JSON.parse(response))
+        }
+    })
+})

@@ -9,6 +9,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 class Comisiones extends CI_Controller
 {
   private $gph;
+  
   public function __construct()
   {
     parent::__construct();
@@ -588,9 +589,6 @@ function update_estatus(){
       $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND mes = $mesActual  $filtro")->result_array();
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
       
-      // var_dump($consultaFechasCorte);
-
-
       if( $consulta_comisiones->num_rows() > 0 && $consultaFechasCorte ){
         $validar_sede = $this->session->userdata('id_sede');
         $fecha_actual = strtotime($obtenerFechaSql);
@@ -2278,8 +2276,7 @@ public function getDatosHistorialPagoRP($id_usuario){
   echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosHistorialPago($proyecto = null,$condominio = null, $tipo= null ) {   
-     
+public function getDatosHistorialPago($proyecto = null,$condominio = null, $tipo= null ) {
   $dat =  $this->Comisiones_model->getDatosHistorialPago($proyecto,$condominio,$tipo)->result_array();
   echo json_encode( array( "data" => $dat));
 }

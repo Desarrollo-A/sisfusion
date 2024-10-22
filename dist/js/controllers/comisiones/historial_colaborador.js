@@ -287,7 +287,6 @@ function getAssimilatedCommissions(proyecto, condominio, tipo) {
                 if(d.lugar_prospeccion == 0){
                     if(d.registro_comision!=8){
                         p2 = '<p class="m-0" title="Lote con apartado en linea"><span class="label lbl-sky">Apartado en línea</span></p>';
-
                     }else{
                         p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
 
