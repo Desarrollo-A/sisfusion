@@ -3096,7 +3096,8 @@ class Casas extends BaseController
                     "creadoPor" => $this->session->userdata('id_usuario'),
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                     "modificadoPor" => $this->session->userdata('id_usuario'),
-                    "idCliente" => $idCliente
+                    "idCliente" => $idCliente,
+                    "estatus" => 1
                 );
 
                 $add = $this->General_model->addRecord('documentos_proceso_casas', $insertData);
