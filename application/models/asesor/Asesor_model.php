@@ -1818,4 +1818,20 @@ class Asesor_model extends CI_Model {
         $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario IN(11728, 2807, 2809)");
         return $query->result_array();
     }
+    function getClausulas(){
+        $this->db->select('id_opcion, id_catalogo, nombre');
+        $this->db->from('opcs_x_cats');
+        $this->db->where('id_catalogo', 159);
+        $this->db->where('estatus', 1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    function getTipoContrato(){
+        $this->db->select('id_opcion, id_catalogo, nombre');
+        $this->db->from('opcs_x_cats');
+        $this->db->where('id_catalogo', 160);
+        $this->db->where('estatus', 1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }

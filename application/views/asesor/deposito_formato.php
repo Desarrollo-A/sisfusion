@@ -1251,24 +1251,20 @@
                 <!-- APARTADO CLAUSULAS ESPECIALES -->
                 <h4 class="text-center m-0 pt-3">Cláusulas especiales</h4>
                 <div class="row pt-2">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">                        
                         <div class="form-group m-0">
                             <label class="label-on-left m-0">
                                <span>Cláusulas</span>
                                 (<small style="color: red;">*</small>)
                             </label>
-                            <select data-i18n-label="selecciona-una-opcion" name="clausula" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
-                            <option value="1">Condiciones de pago</option>
-                            <option value="2">Devolución de depósito</option>
-                            <option value="3">Penalización por incumplimiento</option>
-                            <option value="4">Plazos de entrega</option>
-                            <option value="5">Uso exclusivo del bien</option>
-                            <option value="6">Vigencia del contrato</option>
-                            <option value="7">Devolución parcial del depósito</option>
-                            <option value="8">Aplicación del depósito al contrato final</option>
-                            <option value="9">Pérdida del depósito por cancelación</option>
-                            <option value="10">Excepciones por causas de fuerza mayor</option>
-                            <option value="11">Reembolso por incumplimiento del vendedor</option>
+                            <select data-i18n-label="selecciona-una-opcion" name="clausula" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" multiple>
+                                <?php if(!empty($clausulas)): ?>
+                                <?php
+                                    foreach($clausulas as $clausula){
+                                        echo '<option value="'.$clausula['id_opcion'].'">'.$clausula['nombre'].'</option>';                                      
+                                    }
+                                ?>
+                                <?php endif;?>
                             </select>                        
                         </div>
                     </div>
@@ -1279,13 +1275,13 @@
                                 (<small style="color: red;">*</small>)
                             </label>
                             <select data-i18n-label="selecciona-una-opcion" name="tipo-contrato" required="true" title="SELECCIONA UNA OPCIÓN" id="tipo-contrato" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
-                                <option value="1">Contrato de compraventa</option>
-                                <option value="2">Contrato de arrendamiento</option>
-                                <option value="3">Contrato de promesa de compraventa</option>
-                                <option value="4">Contrato de prestación de servicios</option>
-                                <option value="5">Contrato de crédito</option>
-                                <option value="6">Contrato indefinido</option>
-                                <option value="7">Contrato temporal</option>
+                                <?php if(!empty($tipoContrato)): ?>
+                                <?php 
+                                    foreach($tipoContrato as $contrato){
+                                        echo '<option value="'.$contrato['id_opcion'].'">'.$contrato['nombre'].'</option>';
+                                    }
+                                ?>
+                                <?php endif;?>
                             </select>                        
                         </div>
                     </div>                               

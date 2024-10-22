@@ -1073,7 +1073,8 @@ class Asesor extends CI_Controller {
         $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
         $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
         $datos['lideresRescateLista'] = $this->Asesor_model->getLideresRescates();
-
+        $datos['clausulas']=$this->Asesor_model->getClausulas();
+        $datos['tipoContrato']=$this->Asesor_model->getTipoContrato();
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
             return $item['id_catalogo'] == 11;
