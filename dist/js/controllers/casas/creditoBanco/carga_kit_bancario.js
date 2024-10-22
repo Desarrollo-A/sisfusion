@@ -69,6 +69,7 @@ function replace_upload(data ) {
             new HiddenField({ id: 'id_documento', value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.nombreArchivo }),
             new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
     })
 

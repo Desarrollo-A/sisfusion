@@ -34,7 +34,8 @@
                                 <table class="table-striped table-hover" id="tablaLotes">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>    
+                                            <th>IDLOTE</th>    
+                                            <th>ID PROCESO</th>    
                                             <th>SUPERFICIE</th>
                                             <th>PROYECTO</th>
                                             <th>CONDOMINIO</th>

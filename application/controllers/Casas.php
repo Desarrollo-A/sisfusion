@@ -923,7 +923,7 @@ class Casas extends BaseController
             $uploaded = $this->upload($file->tmp_name, $filename);
 
             if ($uploaded) {
-                $updated = $this->CasasModel->updateDocumentRow($id_documento, $filename);
+                $updated = $this->CasasModel->updateDocumentRow($id_documento, $filename, $idCliente);
 
                 if ($updated) {
                     $motivo = "Se subió archivo: $name_documento";
@@ -3096,6 +3096,8 @@ class Casas extends BaseController
                     "creadoPor" => $this->session->userdata('id_usuario'),
                     "fechaModificacion" => date("Y-m-d H:i:s"),
                     "modificadoPor" => $this->session->userdata('id_usuario'),
+                    "idCliente" => $idCliente,
+                    "estatus" => 1
                 );
 
                 $add = $this->General_model->addRecord('documentos_proceso_casas', $insertData);

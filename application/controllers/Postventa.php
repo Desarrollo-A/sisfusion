@@ -3746,9 +3746,14 @@ public $controller = 'Postventa';
         $idCliente = $this->form('idCliente');
         $accion = $this->form('accion');
         $marcaEscrituracion = $this->form('marcaEscrituracion');
-        $idProceso = $this->form('idProceso') ?? null;
+        $idProceso = $this->form('idProcesoCasas') ?? null;
         $banderaSuccess = true;
         $idLote = $this->form('idLote');
+        
+        if(!isset($idProceso) || !isset($marcaEscrituracion)) {
+            http_response_code(400);
+            $this->json([]);
+        }
 
         $this->db->trans_begin();
         if($accion == 1) {
@@ -3767,7 +3772,9 @@ public $controller = 'Postventa';
                     "archivo" => null,
                     "tipo" => 11,
                     "fechaCreacion" => date('Y-m-d H:i:s'),
-                    "creadoPor" => $this->session->userdata('id_usuario')
+                    "creadoPor" => $this->session->userdata('id_usuario'),
+                    "estatus" =>1,
+                    "idCliente" => $idCliente
                 );
                 
                 $insertDocumento = $this->General_model->addRecord('documentos_proceso_casas', $insertArray);
