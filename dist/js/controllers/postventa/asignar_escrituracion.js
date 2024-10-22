@@ -70,6 +70,7 @@ let buttons = [
 ]
 
 btn_assign = function (data) {
+    console.log("data: ", data);
     let form = new Form({
         title : 'Marca de escrituración',
         text: `¿Deseas agregar la marca de escrituración para el lote <b>${data.nombreLote}</b>?`,
@@ -107,7 +108,8 @@ btn_assign = function (data) {
             new SelectField({ id: 'marcaEscrituracion', label: 'Marca de escrituración', placeholder: 'Selecciona una opción', width: '12', data: optionsEscrituracion, required: true, value: data.escrituraFinalizada}),
             new HiddenField({ id: 'idCliente', value: data.idCliente}),
             new HiddenField({ id: 'accion', value: 1}),
-            new HiddenField({ id: 'idLote', value: data.idLote})
+            new HiddenField({ id: 'idLote', value: data.idLote}),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas}),
         ]
     });
     form.show();
@@ -139,7 +141,7 @@ btn_vistoBueno = function (data) {
         fields: [
             new HiddenField({ id: 'idCliente', value: data.idCliente}),
             new HiddenField({ id: 'accion', value: 2}),
-            new HiddenField({ id: 'idProceso', value: data.idProcesoCasas}),
+            new HiddenField({ id: 'idProcesoCasas', value: data.idProcesoCasas}),
             new HiddenField({ id: 'idLote', value: data.idLote})
         ]
     });

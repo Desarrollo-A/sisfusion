@@ -490,14 +490,16 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function updateDocumentRow($idDocumento, $archivo){
+    public function updateDocumentRow($idDocumento, $archivo, $idCliente){
         $idModificacion = $this->session->userdata('id_usuario');
 
         $query = "UPDATE documentos_proceso_casas
         SET
             archivo = '$archivo',
             fechaModificacion = GETDATE(),
-            modificadoPor = $idModificacion
+            modificadoPor = $idModificacion,
+            idCliente = $idCliente,
+            estatus = 1
         WHERE
             idDocumento = $idDocumento";
 
@@ -795,20 +797,21 @@ AND vb.proyectos != 1";
 
     public function getListaDocumentosProyectoEjecutivo($idProcesoCasas){
         $query = "SELECT
-            idProcesoCasas,
-            idDocumento,
+            dpc.idProcesoCasas,
+            dpc.idDocumento,
             CASE
-                WHEN archivo IS NULL THEN 'Sin archivo'
-                ELSE archivo
+                WHEN dpc.archivo IS NULL THEN 'Sin archivo'
+                ELSE dpc.archivo
             END AS archivo,
-            documento,
-            fechaModificacion,
-            tipo
-        FROM documentos_proceso_casas
+            dpc.documento,
+            dpc.fechaModificacion,
+            dpc.tipo, pc.idCliente
+        FROM documentos_proceso_casas dpc
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = dpc.idProcesoCasas
         WHERE
-            idProcesoCasas = $idProcesoCasas
-        AND tipo IN (13,14,15)
-        AND proveedor = 0";
+            dpc.idProcesoCasas = $idProcesoCasas
+        AND dpc.tipo IN (13,14,15)
+        AND dpc.proveedor = 0";
 
         return $this->db->query($query)->result();
     }
@@ -849,20 +852,21 @@ AND vb.proyectos != 1";
 
     public function getListaDocumentosComiteEjecutivo($idProcesoCasas){
         $query = "SELECT
-            idProcesoCasas,
-            idDocumento,
+            dpc.idProcesoCasas,
+            dpc.idDocumento,
             CASE
-                WHEN archivo IS NULL THEN 'Sin archivo'
-                ELSE archivo
+                WHEN dpc.archivo IS NULL THEN 'Sin archivo'
+                ELSE dpc.archivo
             END AS archivo,
-            documento,
-            tipo,
-            fechaModificacion
-        FROM documentos_proceso_casas
+            dpc.documento,
+            dpc.tipo,
+            dpc.fechaModificacion, pc.idCliente 
+        FROM documentos_proceso_casas dpc
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas  = dpc.idProcesoCasas 
         WHERE
-            idProcesoCasas = $idProcesoCasas
-        AND tipo IN (13,14,15,16)
-        AND proveedor = 0";
+            dpc.idProcesoCasas = $idProcesoCasas
+        AND dpc.tipo IN (13,14,15,16)
+        AND dpc.proveedor = 0";
 
         return $this->db->query($query)->result();
     }
@@ -1101,7 +1105,7 @@ AND vb.proyectos != 1";
         $query = " SELECT
         pc.*,
         cli.id_cliente,
-        cli.id_cliente AS idCliente,
+        pc.idCliente,
         cli.costo_construccion,
         lo.nombreLote,
         con.nombre AS condominio,
@@ -1143,15 +1147,15 @@ AND vb.proyectos != 1";
 
     public function getListaDocumentosValidaContraloria($idProcesoCasas){
         $query = "SELECT
-            idProcesoCasas,
-            idDocumento,
-            archivo,
-            documento,
-            tipo,
-            fechaModificacion
-        FROM documentos_proceso_casas
+            dpc.idProcesoCasas,
+            dpc.idDocumento,
+            dpc.archivo,
+            dpc.documento,
+            dpc.tipo,
+            dpc.fechaModificacion, pc.idCliente 
+        FROM documentos_proceso_casas dpc
         WHERE
-            idProcesoCasas = $idProcesoCasas";
+            dpc.idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query)->result();
     }
@@ -1219,18 +1223,19 @@ AND vb.proyectos != 1";
             $tipos = "19, 20, 21, 22";
         }
 
-        $query = "SELECT
-            idProcesoCasas,
-            idDocumento,
-            archivo,
-            documento,
-            tipo,
-            fechaModificacion
-        FROM documentos_proceso_casas
+        $query = " SELECT
+            dpc.idProcesoCasas,
+            dpc.idDocumento,
+            dpc.archivo,
+            dpc.documento,
+            dpc.tipo,
+            dpc.fechaModificacion, pc.idCliente 
+        FROM documentos_proceso_casas dpc
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas = dpc.idProcesoCasas 
         WHERE
-            idProcesoCasas = $idProcesoCasas
-        AND tipo IN ($tipos)
-        AND proveedor = 0";
+            dpc.idProcesoCasas = $idProcesoCasas
+        AND dpc.tipo IN ($tipos)
+        AND dpc.proveedor = 0";
 
         return $this->db->query($query)->result();
     }
@@ -1576,7 +1581,7 @@ AND vb.proyectos != 1";
             END AS nombre,
             pcb.idCliente
         FROM cotizacion_proceso_casas cpc
-        LEFT join proceso_casas_banco pcb on pcb.idProcesoCasas = cpc.idProcesoCasas 
+        LEFT JOIN proceso_casas_banco pcb on pcb.idProcesoCasas = cpc.idProcesoCasas 
         WHERE cpc.idProcesoCasas = $idProcesoCasas
         AND cpc.idCotizacion IS NOT NULL
         AND (pcb.idProcesoCasas IS NOT NULL)
@@ -2101,19 +2106,20 @@ AND vb.proyectos != 1";
 
     public function getDocumentosProveedor($idProcesoCasas){
         $query = "SELECT
-            idProcesoCasas,
-            idDocumento,
+            dpc.idProcesoCasas,
+            dpc.idDocumento,
             CASE
-                WHEN archivo IS NULL THEN 'Sin archivo'
-                ELSE archivo
+                WHEN dpc.archivo IS NULL THEN 'Sin archivo'
+                ELSE dpc.archivo
             END AS archivo,
-            documento,
-            tipo,
-            fechaModificacion
-        FROM documentos_proceso_casas
+            dpc.documento,
+            dpc.tipo,
+            dpc.fechaModificacion, pc.idCliente 
+        FROM documentos_proceso_casas dpc
+        LEFT JOIN proceso_casas_banco pc ON pc.idProcesoCasas  = dpc.idProcesoCasas 
         WHERE
-            idProcesoCasas = $idProcesoCasas
-        AND proveedor = 1";
+            dpc.idProcesoCasas = $idProcesoCasas
+        AND dpc.proveedor = 1";
 
         return $this->db->query($query)->result();
     }

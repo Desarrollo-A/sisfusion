@@ -3746,9 +3746,14 @@ public $controller = 'Postventa';
         $idCliente = $this->form('idCliente');
         $accion = $this->form('accion');
         $marcaEscrituracion = $this->form('marcaEscrituracion');
-        $idProceso = $this->form('idProceso') ?? null;
+        $idProceso = $this->form('idProcesoCasas') ?? null;
         $banderaSuccess = true;
         $idLote = $this->form('idLote');
+        
+        if(!isset($idProceso) || !isset($marcaEscrituracion)) {
+            http_response_code(400);
+            $this->json([]);
+        }
 
         $this->db->trans_begin();
         if($accion == 1) {
