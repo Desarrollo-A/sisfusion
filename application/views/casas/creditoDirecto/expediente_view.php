@@ -72,5 +72,5 @@
     <?php $this->load->view('template/footer'); ?>
     <?php $this->load->view('template/modals'); ?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/expediente.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/creditoDirecto/expediente.js"></script>
 </body>

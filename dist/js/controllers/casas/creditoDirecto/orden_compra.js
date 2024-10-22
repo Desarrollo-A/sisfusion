@@ -22,10 +22,10 @@ let columns = [
             let view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
 
             if(data.documento == null && data.ordenCompra == 0){
-                return '<div class="d-flex justify-center">' + upload_button + return_button + '</div>'
+                return '<div class="d-flex justify-center">' + upload_button + '</div>'
             }
             else if (data.documento != null && data.ordenCompra == 0){
-                return '<div class="d-flex justify-center">' + pass_button + upload_button + view_button + return_button + '</div>'
+                return '<div class="d-flex justify-center">' + pass_button + upload_button + view_button + '</div>'
             }
             else {
                 return ''
@@ -130,6 +130,7 @@ upload_archivo = function(data){ // funcion para subir el archivo de adeudo
             new HiddenField({ id: 'tipoDocumento', value: data.archivo }),
             new HiddenField({ id: 'id_documento', value: 2 }),
             new HiddenField({ id: 'nombre_lote', value: data.nombreLote }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ],
     })
@@ -170,11 +171,11 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'procesoNuevo', value: 3 }),
             new HiddenField({ id: 'ordenCompra', value: 1 }),
             new HiddenField({ id: 'adeudoTerreno', value: data.adeudoTerreno }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
-
+    
     form.show()
 }
 

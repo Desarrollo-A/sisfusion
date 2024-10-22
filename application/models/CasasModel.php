@@ -1853,7 +1853,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query);
     }
 
-    public function lotesCreditoDirecto($proceso, $tipoDocumento){
+    public function lotesCreditoDirecto($proceso, $tipoDocumento, $nombreDocumento){
 
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
@@ -1880,7 +1880,7 @@ AND vb.proyectos != 1";
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pcd.tipoMovimiento AND id_catalogo = 108
-		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
+		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento) AND dpc.documento LIKE '%$nombreDocumento%'
         LEFT JOIN vobos_proceso_casas_directo vpc ON vpc.idProceso = pcd.idProceso
         WHERE pcd.proceso IN ($placeholders) AND pcd.estatus IN(1) AND pcd.finalizado = 0", $procesoArray, 1);
 
@@ -1895,8 +1895,18 @@ AND vb.proyectos != 1";
     }
 
     public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento){
-        
-        if($tipoDocumento === 0){
+        $existe = $this->db->query(
+            "SELECT
+                *
+            FROM
+                documentos_proceso_credito_directo
+            WHERE
+                idProceso = $idProceso
+                AND tipo = $id_documento
+                AND documento = '$name_documento'"
+        )->row();
+
+        if($tipoDocumento === 0 && ! $existe){
             $query = "INSERT INTO documentos_proceso_credito_directo
             (
                 idProceso,
@@ -1914,10 +1924,37 @@ AND vb.proyectos != 1";
         }else{
             $query = "UPDATE documentos_proceso_credito_directo 
             SET documento = '$name_documento', archivo = '$filename' 
-            WHERE idProceso = $idProceso AND tipo = $id_documento";
+            WHERE idProceso = $idProceso AND tipo = $id_documento AND documento = '$name_documento'";
         }
 
         return $this->db->query($query);
+    }
+
+    public function getTipoPersona($idCliente) {
+        $query = $this->db->query(
+            "SELECT
+                personalidad_juridica
+            FROM
+                clientes
+            WHERE
+                id_cliente = $idCliente"
+        )->row();
+
+        return $query;
+    }
+
+    public function getDocumentoPersonaFisica($idDocumento) {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats 
+        WHERE id_catalogo = 31 AND id_opcion = ?", $idDocumento)->row();
+
+        return $query;
+    }
+
+    public function getDocumentoPersonaMoral($idDocumento) {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats 
+        WHERE id_catalogo = 32 AND id_opcion = ?", $idDocumento)->row();
+
+        return $query;
     }
 
     public function getReporteProcesoCredito($proceso, $finalizado){
@@ -2546,10 +2583,10 @@ AND vb.proyectos != 1";
 
         $query = "SELECT
         idProceso, 
-        idDocumento
-        CASE WHEN archivo IS NULL THEN 'Sin archivo' ELSE archivo, END AS archivo, documento,
+        idDocumento,
+        CASE WHEN archivo IS NULL THEN 'Sin archivo' ELSE archivo END AS archivo, documento,
         tipo, fechaModificacion
-        FROM documentos_proceso_casas_directo
+        FROM documentos_proceso_credito_directo
         WHERE idProceso = $idProceso
         AND tipo IN ($in)
         ";
