@@ -9,6 +9,7 @@ let vobosOptions = [
 
 let columns = [
     {data: 'idLote'},
+    {data: 'idProcesoCasas'},
     {
         data: function(d) 
         {
@@ -70,7 +71,6 @@ let buttons = [
 ]
 
 btn_assign = function (data) {
-    console.log("data: ", data);
     let form = new Form({
         title : 'Marca de escrituración',
         text: `¿Deseas agregar la marca de escrituración para el lote <b>${data.nombreLote}</b>?`,

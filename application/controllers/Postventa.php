@@ -3772,7 +3772,9 @@ public $controller = 'Postventa';
                     "archivo" => null,
                     "tipo" => 11,
                     "fechaCreacion" => date('Y-m-d H:i:s'),
-                    "creadoPor" => $this->session->userdata('id_usuario')
+                    "creadoPor" => $this->session->userdata('id_usuario'),
+                    "estatus" =>1,
+                    "idCliente" => $idCliente
                 );
                 
                 $insertDocumento = $this->General_model->addRecord('documentos_proceso_casas', $insertArray);

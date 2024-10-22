@@ -1722,7 +1722,7 @@ function checkBudgetInfo($idSolicitud){
         LEFT JOIN solicitudes_escrituracion se ON se.id_lote  = lo.idLote  
         WHERE lo.status = 1 AND lo.idStatusLote = 2 --AND (cl.revisionEscrituracion = 0 OR  cl.revisionEscrituracion IS NULL)
         AND (se.id_estatus IS NULL OR se.id_estatus != 49)
-        AND (cl.escrituraFinalizada = 0 OR cl.revisionEscrituracion = 0)
+        AND (cl.revisionEscrituracion = 0)
         AND pc.idProcesoCasas IS NOT NULL
         ORDER BY lo.idLote
         ")->result_array();
