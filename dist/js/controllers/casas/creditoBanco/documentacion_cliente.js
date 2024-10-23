@@ -121,7 +121,7 @@ let columns = [
 
         if(data.archivo != 'Sin archivo'){
 
-            if(extension == 'xlsx'){
+            if(extension == 'xlsx' && data.tipo != 11){
                 view_button = new RowButton({icon: 'file_download', label: `Descargar documento`, onClick: download_file, data})
             }else{
                 view_button = new RowButton({icon: 'visibility', label: `Visualizar documento`, onClick: show_preview, data})

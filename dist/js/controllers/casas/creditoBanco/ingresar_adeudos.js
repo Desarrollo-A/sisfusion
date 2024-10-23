@@ -334,7 +334,7 @@ let columns = [
             //FINISHED
             return `<span class="label lbl-green">ESCRITURADO</span>`;
         }
-        if(data.escrituraFinalizada == 2 && data.revisionEscrituracion != 0 || data.revisionEscrituracion != null) {
+        if(data.escrituraFinalizada == 2 && ( data.revisionEscrituracion != 0 && data.revisionEscrituracion != null)) {
             return `<span class="label lbl-warning">NO ESCRITURADO</span>`;
         }
         if(data.revisionEscrituracion == 0 || data.revisionEscrituracion == null || data.escrituraFinalizada == 0) {
