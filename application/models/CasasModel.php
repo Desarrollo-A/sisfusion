@@ -1873,10 +1873,9 @@ AND vb.proyectos != 1";
             dpc.documento,
             dpc2.documentos as documentosMoral,
             dpc3.documentos as documentosFisica,
-            vpc.ordenCompra,
-            vpc.adeudoTerreno,
-            vpc.valEnganche,
-            vpc.contrato
+            vpc.adm,
+            vpc.proyectos,
+            vpc.asiGerencia
         FROM proceso_casas_directo pcd
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio

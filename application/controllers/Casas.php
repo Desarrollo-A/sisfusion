@@ -2766,8 +2766,8 @@ class Casas extends BaseController
         $proceso = $form->proceso;
         $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
-        $voBoOrdenCompra = $form->ordenCompra;
-        $voBoAdeudoTerreno = $form->adeudoTerreno;
+        $voBoOrdenCompra = $form->proyectos;
+        $voBoAdeudoTerreno = $form->adm;
         $idCliente = $form->idCliente;
         $banderaSuccess = true;
 
@@ -2793,7 +2793,7 @@ class Casas extends BaseController
         );
 
         $updateVobo = array(
-            "ordenCompra" => 1,
+            "proyectos" => 1,
             "paso" => ($voBoAdeudoTerreno == 1) ? $procesoNuevo : $proceso
         );
 
@@ -2856,8 +2856,8 @@ class Casas extends BaseController
         $proceso = $form->proceso;
         $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
-        $voBoOrdenCompra = $form->ordenCompra;
-        $voBoAdeudoTerreno = $form->adeudoTerreno;
+        $voBoOrdenCompra = $form->proyectos;
+        $voBoAdeudoTerreno = $form->adm;
         $idCliente = $form->idCliente;
         $tipoDocumento = $form->tipoMovimiento;
         $banderaSuccess = true;
@@ -2884,7 +2884,7 @@ class Casas extends BaseController
         );
 
         $updateVobo = array(
-            "adeudoTerreno" => 1,
+            "adm" => 1,
             "paso" => ($voBoOrdenCompra == 1) ? $procesoNuevo : $proceso
         );
 
@@ -2915,14 +2915,14 @@ class Casas extends BaseController
                 $documentos = [10,11,12,7,8,17,29,30,22,23,24,25];
                 foreach($documentos as $documento) {
                     $name_documento = $this->CasasModel->getDocumentoPersonaMoral($documento)->nombre;
-                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, 'NULL', $documento, 0);
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0);
                 }
             } else if ($persona == '2') {
                 # Persona fisica
                 $documentos = [2,3,4,7,8,20,26,27,28,29,30];
                 foreach($documentos as $documento) {
                     $name_documento = $this->CasasModel->getDocumentoPersonaFisica($documento)->nombre;
-                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, 'NULL', $documento, 0);
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0);
                 }
             }
         }
