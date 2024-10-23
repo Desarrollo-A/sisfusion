@@ -144,6 +144,21 @@ class CasasModel extends CI_Model
         return $query;
     }
 
+    public function insertVoboDirecto($idProceso, $paso) {
+        $query = $this->db->query(
+            "BEGIN
+                IF NOT EXISTS (SELECT * FROM  vobos_proceso_casas_directo WHERE idProceso = ? AND paso = ?)
+                BEGIN
+                    INSERT INTO vobos_proceso_casas_directo (idProceso, paso, ordenCompra, adeudoTerreno, valEnganche, contrato)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                END
+            END",
+            array($idProceso, $paso, $idProceso, $paso, 0, 0, 0, 0)
+        );
+
+        return $query;
+    }
+
 
     public function getDocumentos($docs){
         $documents = implode(",", $docs);
@@ -253,42 +268,42 @@ class CasasModel extends CI_Model
 
     public function getListaAsignacionEsquema(){
         $query = $this->db->query("SELECT 
-        cli.id_cliente,
+            cli.id_cliente,
         pc.idProcesoCasas,
         pcd.idProceso AS idProcesoDirecto,
         --CASE WHEN pc.idProcesoCasas IS NULL THEN 1
         CASE WHEN pc.tipoMovimiento IS NULL THEN 1 ELSE 4 END AS tipoMovimiento,
         CASE WHEN cli.idPropuestaCasa IS NULL THEN '0' ELSE cli.idPropuestaCasa END AS idPropuestaCasa ,
         pcd.idProceso,
-        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-        UPPER(REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
-        FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
-        CASE WHEN cli.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono1 END telefono1,
-        CASE WHEN cli.telefono2 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono2 END telefono2,
-        CASE WHEN cli.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono3 END telefono3,
-        CASE WHEN cli.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.correo END correo,
-        CASE 
-            WHEN cli.id_asesor_c = 0 THEN 'SIN ASESOR' ELSE CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
-        END AS nombreAsesor,
-        usA.id_usuario AS idAsesor,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            UPPER(REPLACE(ISNULL(oxc.nombre, 'SIN ESPECIFICAR'), ' (especificar)', '')) AS lugar_prospeccion,
+            FORMAT(ISNULL(lo.totalNeto2, '0.00'), 'C') precioTotalLote,
+            CASE WHEN cli.telefono1 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono1 END telefono1,
+            CASE WHEN cli.telefono2 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono2 END telefono2,
+            CASE WHEN cli.telefono3 IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.telefono3 END telefono3,
+            CASE WHEN cli.correo IS NULL THEN 'SIN ESPECIFICAR' ELSE cli.correo END correo,
+            CASE 
+                WHEN cli.id_asesor_c = 0 THEN 'SIN ASESOR' ELSE CONCAT(usA.nombre, ' ', usA.apellido_paterno, ' ', usA.apellido_materno)
+            END AS nombreAsesor,
+            usA.id_usuario AS idAsesor,
         cli.id_gerente_c AS idGerente,
-        lo.idLote,
-        lo.nombreLote,
-        lo.sup,
-        co.nombre AS condominio,
-        re.descripcion AS proyecto,
-        CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente,
+            lo.idLote,
+            lo.nombreLote,
+            lo.sup,
+            co.nombre AS condominio,
+            re.descripcion AS proyecto,
+            CONCAT(usG.nombre, ' ', usG.apellido_paterno, ' ', usG.apellido_materno) AS gerente,
         cli.id_subdirector_c, cli.id_gerente_c, cli.esquemaCreditoCasas,
         CASE WHEN oxc2.nombre IS NULL THEN 'Nuevo' ELSE oxc2.nombre END AS nombreMovimiento
-        FROM clientes cli
-        INNER JOIN lotes lo ON lo.idLote = cli.idLote
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
+            FROM clientes cli
+            INNER JOIN lotes lo ON lo.idLote = cli.idLote
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN usuarios usG ON usG.id_usuario = cli.id_gerente_c
         LEFT JOIN proceso_casas_banco pc ON pc.idLote = lo.idLote AND pc.idCliente = cli.id_cliente
         LEFT JOIN proceso_casas_directo pcd ON pcd.idLote = lo.idLote
-        LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
+            LEFT JOIN usuarios usA ON usA.id_usuario = cli.id_asesor_c
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cli.lugar_prospeccion AND oxc.id_catalogo = 9 
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion  = pc.tipoMovimiento  AND oxc2.id_catalogo = 136
         WHERE cli.id_asesor_c = ?
         AND cli.esquemaCreditoCasas IN (0,1,2) 
@@ -527,6 +542,23 @@ class CasasModel extends CI_Model
             $data['paso'] = $paso;
 
             $is_ok = $this->db->insert('vobos_proceso_casas', $data);
+        }
+
+        return $this->db->query($query)->row();
+    }
+
+    public function updateVobosDirecto($idProceso, $paso, $data){
+        $query = "SELECT * FROM vobos_proceso_casas_directo WHERE idProceso = $idProceso";
+
+        $vobo = $this->db->query($query)->row();
+
+        if($vobo){
+            $is_ok = $this->db->update('vobos_proceso_casas_directo', $data, "idVobo = $vobo->idVobo");
+        } else{
+            $data['idProceso'] = $idProceso;
+            $data['paso'] = $paso;
+
+            $is_ok = $this->db->insert('vobos_proceso_casas_directo', $data);
         }
 
         return $this->db->query($query)->row();
@@ -980,7 +1012,7 @@ AND vb.proyectos != 1";
             cli.id_cliente AS idCliente
             FROM proceso_casas_banco pc
             LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-            LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1 
+            LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
             LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.id_cliente = pc.idCliente
             LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
             INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
@@ -1577,8 +1609,8 @@ AND vb.proyectos != 1";
             cpc.idProcesoCasas,
             cpc.archivo,
             CASE
-                WHEN cpc.nombre IS NULL THEN 'COTIZACIÓN NO SUBIDA'
-                ELSE cpc.nombre
+                 WHEN cpc.nombre IS NULL THEN 'COTIZACIÓN NO SUBIDA'
+                 ELSE cpc.nombre
             END AS nombre,
             pcb.idCliente
         FROM cotizacion_proceso_casas cpc
@@ -1738,7 +1770,7 @@ AND vb.proyectos != 1";
         CASE WHEN pc.tipoMovimiento IS NULL THEN 0 ELSE pc.tipoMovimiento END AS tipoMovimiento,
         pp.idProcesoPagos
         FROM HistorialCte hct
-        FULL OUTER JOIN proceso_casas_banco pc ON pc.idLote = hct.idLote 
+        FULL OUTER JOIN proceso_casas_banco pc ON pc.idLote = hct.idLote
         LEFT JOIN lotes lo ON lo.idLote = COALESCE(pc.idLote, hct.idLote)
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.id_cliente = pc.idCliente
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente_c
@@ -1827,7 +1859,7 @@ AND vb.proyectos != 1";
         return $this->db->query($query);
     }
 
-    public function lotesCreditoDirecto($proceso, $tipoDocumento){
+    public function lotesCreditoDirecto($proceso, $tipoDocumento, $nombreDocumento){
 
         $procesoArray = explode(',', $proceso);
         $placeholders = implode(',', array_fill(0, count($procesoArray), '?'));
@@ -1844,13 +1876,22 @@ AND vb.proyectos != 1";
             co.nombre AS condominio,
             re.descripcion AS proyecto,
 			dpc.archivo,
-            dpc.documento
+            dpc.documento,
+            dpc2.documentos as documentosMoral,
+            dpc3.documentos as documentosFisica,
+            vpc.ordenCompra,
+            vpc.adeudoTerreno,
+            vpc.valEnganche,
+            vpc.contrato
         FROM proceso_casas_directo pcd
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pcd.tipoMovimiento AND id_catalogo = 108
-		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento)
+        LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento) AND dpc.documento LIKE '%$nombreDocumento%'
+		LEFT JOIN (SELECT COUNT(*) AS documentos, idProceso FROM documentos_proceso_credito_directo WHERE tipo IN (10,11,12,7,8,30,22,23,24,25) AND archivo IS NOT NULL GROUP BY idProceso) AS dpc2 ON dpc2.idProceso = pcd.idProceso
+		LEFT JOIN (SELECT COUNT(*) AS documentos, idProceso FROM documentos_proceso_credito_directo WHERE tipo IN (2,3,4,7,8,30) AND archivo IS NOT NULL GROUP BY idProceso) AS dpc3 ON dpc3.idProceso = pcd.idProceso
+        LEFT JOIN vobos_proceso_casas_directo vpc ON vpc.idProceso = pcd.idProceso
         WHERE pcd.proceso IN ($placeholders) AND pcd.estatus IN(1) AND pcd.finalizado = 0", $procesoArray, 1);
 
         return $query;
@@ -1864,8 +1905,19 @@ AND vb.proyectos != 1";
     }
 
     public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento){
-        
-        if($tipoDocumento === 0){
+        $existe = $this->db->query(
+            "SELECT
+                *
+            FROM
+                documentos_proceso_credito_directo
+            WHERE
+                idProceso = $idProceso
+                AND tipo = $id_documento
+                AND documento = '$name_documento'"
+        )->row();
+
+        if($tipoDocumento === 0 && ! $existe){
+            $name = isset($filename) ? "'$filename'" : 'NULL';
             $query = "INSERT INTO documentos_proceso_credito_directo
             (
                 idProceso,
@@ -1877,16 +1929,43 @@ AND vb.proyectos != 1";
             (
                 $idProceso,
                 '$name_documento',
-                '$filename',
+                $name,
                 $id_documento
             )";
         }else{
             $query = "UPDATE documentos_proceso_credito_directo 
             SET documento = '$name_documento', archivo = '$filename' 
-            WHERE idProceso = $idProceso AND tipo = $id_documento";
+            WHERE idProceso = $idProceso AND tipo = $id_documento AND documento = '$name_documento'";
         }
 
         return $this->db->query($query);
+    }
+
+    public function getTipoPersona($idCliente) {
+        $query = $this->db->query(
+            "SELECT
+                personalidad_juridica
+            FROM
+                clientes
+            WHERE
+                id_cliente = $idCliente"
+        )->row();
+
+        return $query;
+    }
+
+    public function getDocumentoPersonaFisica($idDocumento) {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats 
+        WHERE id_catalogo = 31 AND id_opcion = ?", $idDocumento)->row();
+
+        return $query;
+    }
+
+    public function getDocumentoPersonaMoral($idDocumento) {
+        $query = $this->db->query("SELECT * FROM opcs_x_cats 
+        WHERE id_catalogo = 32 AND id_opcion = ?", $idDocumento)->row();
+
+        return $query;
     }
 
     public function getReporteProcesoCredito($proceso, $finalizado){
@@ -2515,17 +2594,18 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->result();
     }
 
-    public function getListaDocumentosClienteDirecto($idProceso, $docs) {
+    public function getListaDocumentosClienteDirecto($idProceso, $docs, $catalogoPersona) {
         $in = implode(',', $docs);
 
         $query = "SELECT
-        idProceso, 
-        idDocumento
-        CASE WHEN archivo IS NULL THEN 'Sin archivo' ELSE archivo, END AS archivo, documento,
-        tipo, fechaModificacion
-        FROM documentos_proceso_casas_directo
-        WHERE idProceso = $idProceso
-        AND tipo IN ($in)
+        dpc.idProceso, 
+        dpc.idDocumento,
+        CASE WHEN dpc.archivo IS NULL THEN 'Sin archivo' ELSE archivo END AS archivo, dpc.documento,
+        dpc.tipo, dpc.fechaModificacion
+        FROM documentos_proceso_credito_directo dpc
+        INNER JOIN opcs_x_cats AS opc ON opc.nombre = dpc.documento AND opc.id_catalogo = $catalogoPersona
+        WHERE dpc.idProceso = $idProceso
+        AND dpc.tipo IN ($in)
         ";
 
         return $this->db->query($query)->result();
@@ -2669,7 +2749,7 @@ AND vb.proyectos != 1";
                         LEFT JOIN usuarios asesor ON asesor.id_usuario = cli.id_asesor_c
                         WHERE pcb.idLote = $idLote
                         AND cpc.status = 1
-                        AND cpc.archivo IS NOT NULL      
+                        AND cpc.archivo IS NOT NULL                
                     )
                     SELECT idDocumento, idProcesoCasas, archivo, proyecto, condominio, nombreLote, idLote, gerente,asesor, descargar, documento
                     FROM fullData

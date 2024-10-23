@@ -19,10 +19,10 @@ let columns = [
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance a paso 18', onClick: select_lote, data})
             let edit_button = new RowButton({icon: 'edit', color: '', label: 'Capturar adeudo', onClick: update_adeudo, data})
 
-            if(data.adeudo != 0 && data.voBoAdeudoTerreno == 0){
+            if(data.adeudo != 0 && data.adeudoTerreno == 0){
                 return '<div class="d-flex justify-center">' + pass_button + edit_button + '</div>'
             }
-            else if(data.adeudo == 0 && data.voBoAdeudoTerreno == 0){
+            else if(data.adeudo == 0 && data.adeudoTerreno == 0){
                 return '<div class="d-flex justify-center">' + edit_button + '</div>'
             }
             else{
@@ -35,7 +35,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
-    params: { proceso: 17, tipoDocumento: 2 },
+    params: { proceso: 2, tipoDocumento: 2, nombreDocumento: 'Orden de compra' },
     columns,
     // button: buttons
 });
@@ -70,7 +70,7 @@ return_process = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 16 }),
+            new HiddenField({ id: 'procesoNuevo', value: 1 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
@@ -146,14 +146,17 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 18 }),
-            new HiddenField({ id: 'voBoOrdenCompra', value: data.voBoOrdenCompra }),
-            new HiddenField({ id: 'voBoAdeudoTerreno', value: data.voBoAdeudoTerreno }),
+            new HiddenField({ id: 'procesoNuevo', value: 3 }),
+            new HiddenField({ id: 'ordenCompra', value: data.ordenCompra }),
+            new HiddenField({ id: 'adeudoTerreno', value: data.adeudoTerreno }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+            new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
+    console.log(data);
+    
     form.show()
 }
 

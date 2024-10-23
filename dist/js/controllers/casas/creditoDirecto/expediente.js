@@ -20,8 +20,13 @@ let columns = [
             let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Cargar archivo', onClick: upload_archivo, data})
             let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: return_process, data})
             let view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
+            let docu_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data})
 
-            return '<div class="d-flex justify-center">' + pass_button + return_button + '</div>'
+            if (data.documentosFisica >= 7 || data.documentosMoral >= 10) {
+                return '<div class="d-flex justify-center">' + docu_button + pass_button + return_button + '</div>'
+            } else {
+                return '<div class="d-flex justify-center">' + docu_button + return_button + '</div>'
+            }
         } 
     },
 ];
@@ -29,7 +34,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
-    params: { proceso: 18, tipoDocumento: 2 },
+    params: { proceso: 3, tipoDocumento: 2, nombreDocumento: 'Orden de compra' },
     columns,
     // button: buttons
 });
@@ -48,7 +53,7 @@ return_process = function(data){ // funcion para el avance del lote
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido avanzdo en su proceso.", "success");
+                    alerts.showNotification("top", "right", "Se ha rechazado el lote correctamente.", "success");
         
                     table.reload();
                     form.hide();
@@ -64,7 +69,7 @@ return_process = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 17 }),
+            new HiddenField({ id: 'procesoNuevo', value: 2 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
@@ -126,7 +131,7 @@ select_lote = function(data){ // funcion para el avance del lote
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido avanzdo en su proceso.", "success");
+                    alerts.showNotification("top", "right", "El lote ha sido avanzado en su proceso.", "success");
         
                     table.reload();
                     form.hide();
@@ -142,7 +147,7 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 19 }),
+            new HiddenField({ id: 'procesoNuevo', value: 4 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
@@ -164,4 +169,8 @@ function show_preview(data) {
         width: 985,
         height: 660
     });
+}
+
+go_to_documentos = function(data) {
+    window.location.href = `documentacionDirecto/${data.idProceso}`;
 }
