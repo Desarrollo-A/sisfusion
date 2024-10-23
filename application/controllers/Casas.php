@@ -2467,6 +2467,7 @@ class Casas extends BaseController
         $tipoMovimiento = $form->tipoMovimiento;
         $banderaSuccess = true;
         $idCliente = $this->form('idCliente');
+        $id_usuario = $this->session->userdata('id_usuario');
 
         $dataHistorial = array(
             "idProcesoCasas"  => $idProceso,
@@ -2476,7 +2477,8 @@ class Casas extends BaseController
             "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2,
-            'idCliente' => $idCliente
+            'idCliente' => $idCliente,
+            "idMovimiento" => $id_usuario
         );
 
         $this->db->trans_begin();
@@ -2788,7 +2790,8 @@ class Casas extends BaseController
             "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2,
-            "idCliente" => $idCliente
+            "idCliente" => $idCliente,
+            "idMovimiento" => $id_usuario
         );
 
         $updateData = array(
@@ -2882,7 +2885,8 @@ class Casas extends BaseController
             "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
             "esquemaCreditoProceso" => 2,
-            "idCliente" => $idCliente
+            "idCliente" => $idCliente,
+            "idMovimiento" => $id_usuario
         );
 
         $updateData = array(
@@ -3128,6 +3132,7 @@ class Casas extends BaseController
     {
         $proceso = $this->input->post("proceso");
         $idProceso = $this->input->post("idProceso");
+        $id_usuario = $this->session->userdata('id_usuario');
 
         $updateProceso = array(
             "adeudo"            => 0,
@@ -3135,8 +3140,10 @@ class Casas extends BaseController
         );
 
         $updateVobo = array(
-            "ordenCompra" => 0,
-            "adeudoTerreno" => 0
+            "adm" => 0,
+            "proyectos" => 0,
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "modificadoPor" => $id_usuario
         );
 
         $this->db->trans_begin();
