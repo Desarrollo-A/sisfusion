@@ -2528,6 +2528,7 @@ class Casas extends BaseController
         $id_documento = $this->form('id_documento');
         $idCliente = $this->form('idCliente');
         $file = $this->file('file_uploaded');
+        $id_usuario = $this->session->userdata('id_usuario');
 
         if (!isset($proceso) || !isset($nombre_lote) || !isset($id_documento)) {
             http_response_code(400);
@@ -2551,7 +2552,7 @@ class Casas extends BaseController
 
             if ($uploaded) {
 
-                $created = $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento);
+                $created = $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario);
 
                 if ($created) {
                     $motivo = "Se subió archivo: $name_documento";
@@ -2572,6 +2573,7 @@ class Casas extends BaseController
         $nombreDocumento = $this->form('nombreDocumento');
         $file = $this->file('file_uploaded');
         $nombreLote = $this->form('nombreLote');
+        $id_usuario = $this->session->userdata('id_usuario');
         
         if (!isset($idProceso) || !isset($idDocumento) || !isset($nombreDocumento) || !isset($nombreLote) || ! $file) {
             http_response_code(400);
@@ -2588,7 +2590,7 @@ class Casas extends BaseController
         $uploaded = $this->upload($file->tmp_name, $filename);
 
         if ($uploaded) {
-            $created = $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $nombreDocumento, $filename, $idDocumento, 1);
+            $created = $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $nombreDocumento, $filename, $idDocumento, 1, $id_usuario);
 
             if ($created) {
                 $motivo = "Se subió archivo: $nombreDocumento";
@@ -2770,6 +2772,7 @@ class Casas extends BaseController
         $voBoAdeudoTerreno = $form->adm;
         $idCliente = $form->idCliente;
         $banderaSuccess = true;
+        $id_usuario = $this->session->userdata('id_usuario');
 
         if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno)) {
             http_response_code(400);
@@ -2784,7 +2787,8 @@ class Casas extends BaseController
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 2
+            "esquemaCreditoProceso" => 2,
+            "idCliente" => $idCliente
         );
 
         $updateData = array(
@@ -2794,6 +2798,8 @@ class Casas extends BaseController
 
         $updateVobo = array(
             "proyectos" => 1,
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "modificadoPor" => $id_usuario
         );
 
         $this->db->trans_begin();
@@ -2823,14 +2829,14 @@ class Casas extends BaseController
                 $documentos = [10,11,12,7,8,17,29,30,22,23,24,25];
                 foreach($documentos as $documento) {
                     $name_documento = $this->CasasModel->getDocumentoPersonaMoral($documento)->nombre;
-                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0);
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0, $id_usuario);
                 }
             } else if ($persona == '2') {
                 # Persona fisica 2,3,4,7,8,20,26,27,28,29,30
                 $documentos = [2,3,4,7,8,20,26,27,28,29,30];
                 foreach($documentos as $documento) {
                     $name_documento = $this->CasasModel->getDocumentoPersonaFisica($documento)->nombre;
-                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0);
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0, $id_usuario);
                 }
             }
         }
@@ -2860,6 +2866,7 @@ class Casas extends BaseController
         $idCliente = $form->idCliente;
         $tipoDocumento = $form->tipoMovimiento;
         $banderaSuccess = true;
+        $id_usuario = $this->session->userdata('id_usuario');
 
         if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno)) {
             http_response_code(400);
@@ -2874,7 +2881,8 @@ class Casas extends BaseController
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->session->userdata('id_usuario'),
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 2
+            "esquemaCreditoProceso" => 2,
+            "idCliente" => $idCliente
         );
 
         $updateData = array(
@@ -2884,6 +2892,8 @@ class Casas extends BaseController
 
         $updateVobo = array(
             "adm" => 1,
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "modificadoPor" => $id_usuario
         );
 
         $this->db->trans_begin();
@@ -2913,14 +2923,14 @@ class Casas extends BaseController
                 $documentos = [10,11,12,7,8,17,29,30,22,23,24,25];
                 foreach($documentos as $documento) {
                     $name_documento = $this->CasasModel->getDocumentoPersonaMoral($documento)->nombre;
-                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0);
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0, $id_usuario);
                 }
             } else if ($persona == '2') {
                 # Persona fisica
                 $documentos = [2,3,4,7,8,20,26,27,28,29,30];
                 foreach($documentos as $documento) {
                     $name_documento = $this->CasasModel->getDocumentoPersonaFisica($documento)->nombre;
-                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0);
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0, $id_usuario);
                 }
             }
         }

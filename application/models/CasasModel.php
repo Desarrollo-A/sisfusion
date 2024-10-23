@@ -149,7 +149,7 @@ class CasasModel extends CI_Model
             "BEGIN
                 IF NOT EXISTS (SELECT * FROM  vobos_proceso_casas_directo WHERE idProceso = ? AND paso = ?)
                 BEGIN
-                    INSERT INTO vobos_proceso_casas_directo (idProceso, paso, ordenCompra, adeudoTerreno, valEnganche, contrato)
+                    INSERT INTO vobos_proceso_casas_directo (idProceso, paso, adm, proyectos, asiGerencia)
                     VALUES (?, ?, ?, ?, ?, ?)
                 END
             END",
@@ -1897,7 +1897,7 @@ AND vb.proyectos != 1";
         return $query;
     }
 
-    public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento){
+    public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario){
         $existe = $this->db->query(
             "SELECT
                 *
@@ -1916,19 +1916,27 @@ AND vb.proyectos != 1";
                 idProceso,
                 documento,
                 archivo,
-                tipo
+                tipo,
+                fechaCreacion,
+                idCreacion, 
+                fechaModificacion,
+                idModificacion
             )
             VALUES
             (
                 $idProceso,
                 '$name_documento',
                 $name,
-                $id_documento
+                $id_documento,
+                GETDATE(),
+                '$id_usuario',
+                GETDATE(),
+                '$id_usuario'
             )";
         }else{
             $name = isset($filename) ? "'$filename'" : 'NULL';
             $query = "UPDATE documentos_proceso_credito_directo 
-            SET documento = '$name_documento', archivo = $name 
+            SET documento = '$name_documento', archivo = $name, fechaModificacion = GETDATE(), idModificacion = '$id_usuario'
             WHERE idProceso = $idProceso AND tipo = $id_documento AND documento = '$name_documento'";
         }
 
