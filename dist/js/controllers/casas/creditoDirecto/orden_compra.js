@@ -34,13 +34,19 @@ let columns = [
     },
 ];
 
+function filter (data) {
+    arrayData = JSON.parse(data)
+    return JSON.stringify(arrayData.filter(row => row.proyectos == 0))
+}
+
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
     params: { proceso: 2, tipoDocumento: 2, nombreDocumento: 'Orden de compra' },
     columns,
+    filter: filter
     // button: buttons
-});
+})
 
 return_process = function(data){ // funcion para el avance del lote
     let form = new Form({
