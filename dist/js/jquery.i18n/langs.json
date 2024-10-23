@@ -313,7 +313,7 @@
 		"emisor": "issuer:",
 		"empleo": "Employment",
 		"empresa": "Company",
-		"empresa-en-la-que-trabaja": "Company in which it works",
+		"empresa-en-la-que-trabaja": "COMPANY WHERE THEY WORK",
 		"en-dc": "In DC",
 		"en-el-cluster": "IN THE CLUSTER",
 		"en-el-municipio-de": "In the town of",
@@ -428,7 +428,7 @@
 		"general": "% GENERAL",
 		"generar": "GENERATE",
 		"generar-token": "Generate token",
-		"genero": "GENRE",
+		"genero": "GENDER",
 		"gerente": "Manager",
 		"gran-total": "Grand total",
 		"grupo": "Group",
@@ -586,7 +586,7 @@
 		"nombre_usuario": "User name",
 		"nombre-2": "Name",
 		"nombre-contrato": "CONTRACT NAME",
-		"nombre-conyuge": "Spouse's name",
+		"nombre-conyuge": "SPOUSE'S NAME",
 		"nombre-denominacion": "Name, denomination, or business name; address.",
 		"nombre-documento": "DOCUMENT NAME",
 		"nombre-razon-social": "Name / Company name",
@@ -1511,7 +1511,8 @@
 		"status-14-rechazo-contraloria": "STATUS 14 REJECTED (CONTRALORÍA)",
 		"el-status-ya-fue-registrado": "The status has already been entered",
 		"este-listado-todos-descuentos-aplicados":"This is a list of all the discounts that have been applied to you.",
-		"detalle-total-comisiones":"Total detail of commissions"
+		"detalle-total-comisiones":"Total detail of commissions",
+		"idioma-2": "LANGUAGE"
 	},
 	"es": {
 		"1-origen": "1% de origen",
@@ -1898,8 +1899,8 @@
 		"febrero": "Febrero",
 		"fecha": "FECHA",
 		"fecha_creacion": "Fecha de creación",
-		"fecha-1-aportacion": "DATE OF 1ST CONTRIBUTION",
-		"fecha-2-aportacion": "DATE 2ND CONTRIBUTION ",
+		"fecha-1-aportacion": "FECHA 1RA APORTACIÓN",
+		"fecha-2-aportacion": "FECHA 2DA APORTACIÓN ",
 		"fecha-2da-liquidación": "Fecha 2da liquidación",
 		"fecha-apartado": "FECHA DE APARTADO",
 		"fecha-apertura": "Fecha de apertura",
@@ -1920,7 +1921,7 @@
 		"fecha-inicio-mensualidad": "Fecha inicio de mensualidad",
 		"fecha-liberacion": "Fecha de liberación",
 		"fecha-limite": "Fecha límite",
-		"fecha-liquidacion": "DEPOSIT SETTLEMENT DATE",
+		"fecha-liquidacion": "FECHA LIQUIDACIÓN",
 		"fecha-modificacion": "FECHA DE MODIFICACIÓN",
 		"fecha-nacimiento": "Fecha de nacimiento",
 		"fecha-personalizada-dia": "Fecha personalizada (sólo el día)",
@@ -2892,6 +2893,7 @@
 		"con-cita-2": "Con cita",
 		"pausado-2": "Pausado",
 		"preventa-2": "Preventa",
-		"lote-origen": "Lote origen"
+		"lote-origen": "Lote origen",
+		"idioma-2": "IDIOMA"
 	}
 }

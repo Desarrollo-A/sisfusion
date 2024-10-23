@@ -233,7 +233,7 @@
                 <div class="row pt-1">
                     <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
                         <div class="pb-1">
-                            <h4 class="label-on-left m-0">ESCUADRON RESCATE</h4>
+                            <h4 class="label-on-left m-0"><span data-i18n="escuadron-rescate">ESCUADRÓN RESCATE</span> </h4>
                             <input type="checkbox" name="escuadronRescate" id="escuadronRescate" <?php echo $statsInput; ?>  <?php if ($cliente[0]->especialistaEscuadron != '' && $cliente[0]->especialistaEscuadron != null) {echo "checked value='1'";}?>>
                             <label class="switch" for="escuadronRescate"></label>
                         </div>
@@ -258,7 +258,7 @@
                     </div>
 
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-                        <h4 class="label-on-left mb-0">IDIOMA</h4>
+                        <h4 class="label-on-left mb-0"><span data-i18n="idioma-2">IDIOMA</span></h4>
                         <div class="radio_container">
                             <input type="radio" name="idiomaValor"  id="idiomaValor1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 1) { echo "checked=true"; } ?>>
                             <label for="idiomaValor1">ESPAÑOL</label>
@@ -347,7 +347,7 @@
 
 
                     <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-                        <h4 class="label-on-left mb-0">IDIOMA</h4>
+                        <h4 class="label-on-left mb-0"><span data-i18n="idioma-2">IDIOMA</span></h4>
                         <div class="radio_container">
                             <input type="radio" name="idiomaValor"  id="idiomaValor1" value="1" <?php echo $statsInput; ?> <?php if ($cliente[0]->idioma == 1) { echo "checked=true"; } ?>>
                             <label for="idiomaValor1">ESPAÑOL</label>
@@ -1113,7 +1113,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0" data-i18n="superficie">SUPERFICIE</label>
+                            <label class="label-on-left m-0" data-i18n="superficie-2">SUPERFICIE</label>
                             <input class="form-control input-gral" name="sup" id="sup" type="text" required="true" <?php echo $readOnly; ?> value="<?=$cliente[0]->sup?>" readonly="readonly"/>
                         </div>
                     </div>
@@ -1141,7 +1141,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
-                            <label class="label-on-left m-0"><span data-i18n="costo-por">COSTO POR</span>M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
+                            <label class="label-on-left m-0"><span data-i18n="costo-por">COSTO POR</span> M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="costom2f" id="costom2f" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
                             <input type="hidden" name="tipo_venta" id="tipo_venta" value="<?php echo $tipo_venta;?>">
                         </div>
@@ -1149,7 +1149,7 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">
-                                <span data-i18n="data-i18n="autorizado-proyecto">UNA VEZ QUE SEA AUTORIZADO EL PROYECTO</span>
+                                <span data-i18n="autorizado-proyecto">UNA VEZ QUE SEA AUTORIZADO EL PROYECTO</span>
                                 (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral espaciosOff" name="proyecto" id="proyecto" type="text" <?php echo $readOnly; ?> step="any" required="true"  value="<?=$cliente[0]->nombreResidencial?>"/>
                         </div>
