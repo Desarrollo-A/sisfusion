@@ -2591,7 +2591,6 @@ AND vb.proyectos != 1";
         CASE WHEN dpc.archivo IS NULL THEN 'Sin archivo' ELSE archivo END AS archivo, dpc.documento,
         dpc.tipo, dpc.fechaModificacion
         FROM documentos_proceso_credito_directo dpc
-        INNER JOIN opcs_x_cats AS opc ON opc.nombre = dpc.documento AND opc.id_catalogo = $catalogoPersona
         WHERE dpc.idProceso = $idProceso
         AND dpc.tipo IN ($in)
         ";

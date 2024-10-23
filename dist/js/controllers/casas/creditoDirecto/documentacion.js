@@ -97,7 +97,13 @@ let buttons = [
 
 let columns = [
     { data: 'idDocumento' },
-    { data: 'documento' },
+    { data: function(data){
+        if ([2,3,4,10,11,12,7,8,30,22,23,24,25].includes(data.tipo)) {
+            return `<span>${data.documento}</span><span class="text-danger">*</span>`
+        } else {
+            return `<span>${data.documento}</span>`
+        }
+    }},
     { data: 'archivo' },
     { data: function(data){
         if(data.fechaModificacion){
@@ -109,6 +115,7 @@ let columns = [
         let view_button = '';
         let parts = data.archivo.split('.');
         let extension = parts.pop();
+        let upload_button = '';
 
         if(data.archivo != 'Sin archivo'){
 
@@ -120,7 +127,9 @@ let columns = [
 
         }
 
-        let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
+        if (data.documento != 'Orden de compra') {
+            upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Cargar documento`, onClick: show_upload, data})
+        }
         
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },
