@@ -3316,7 +3316,7 @@ class Casas extends BaseController
                 $uploaded = $this->upload($file->tmp_name, $filename);
 
                 if ($uploaded) {
-                    $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario);
+                    $created = $this->CasasModel->insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario, $idCliente);
 
                     if ($created) {
                         $motivo = "Se subió archivo: $name_documento";

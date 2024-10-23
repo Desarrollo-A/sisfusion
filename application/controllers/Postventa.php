@@ -3745,12 +3745,12 @@ public $controller = 'Postventa';
     public function asignarMarca() {
         $idCliente = $this->form('idCliente');
         $accion = $this->form('accion');
-        $marcaEscrituracion = $this->form('marcaEscrituracion');
+        $marcaEscrituracion = $this->form('marcaEscrituracion') ?? null;
         $idProceso = $this->form('idProcesoCasas') ?? null;
         $banderaSuccess = true;
         $idLote = $this->form('idLote');
         
-        if(!isset($idProceso) || !isset($marcaEscrituracion)) {
+        if(!isset($idProceso)) {
             http_response_code(400);
             $this->json([]);
         }

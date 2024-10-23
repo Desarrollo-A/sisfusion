@@ -1154,6 +1154,7 @@ AND vb.proyectos != 1";
             dpc.tipo,
             dpc.fechaModificacion, pc.idCliente 
         FROM documentos_proceso_casas dpc
+        LEFT JOIN proceso_casas_banco pc ON pc.idCliente = dpc.idCliente
         WHERE
             dpc.idProcesoCasas = $idProcesoCasas";
 
@@ -2065,7 +2066,7 @@ AND vb.proyectos != 1";
         return $query;
     }
 
-    public function insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario){
+    public function insertDocProcesoCreditoBanco($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario, $idCliente){
         if($tipoDocumento === 0){
             $query = "INSERT INTO documentos_proceso_casas
             (
@@ -2076,7 +2077,9 @@ AND vb.proyectos != 1";
                 fechaCreacion,
                 creadoPor,
                 fechaModificacion,
-                modificadoPor
+                modificadoPor, 
+                estatus,
+                idCliente
             )
             VALUES
             (
@@ -2087,7 +2090,9 @@ AND vb.proyectos != 1";
                 GETDATE(),
                 $id_usuario,
                 GETDATE(),
-                $id_usuario
+                $id_usuario, 
+                1, 
+                $idCliente
             )";
         }else{
             $query = "UPDATE documentos_proceso_casas
