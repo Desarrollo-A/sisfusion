@@ -2794,7 +2794,6 @@ class Casas extends BaseController
 
         $updateVobo = array(
             "proyectos" => 1,
-            "paso" => ($voBoAdeudoTerreno == 1) ? $procesoNuevo : $proceso
         );
 
         $this->db->trans_begin();
@@ -2885,7 +2884,6 @@ class Casas extends BaseController
 
         $updateVobo = array(
             "adm" => 1,
-            "paso" => ($voBoOrdenCompra == 1) ? $procesoNuevo : $proceso
         );
 
         $this->db->trans_begin();
@@ -2992,9 +2990,8 @@ class Casas extends BaseController
         );
 
         $updateVobo = array(
-            "ordenCompra" => 0,
-            "adeudoTerreno" => 0,
-            "paso" => 17
+            "adm" => 0,
+            "proyectos" => 0,
         );
 
         // paso 1: hacer update del proceso
@@ -3010,7 +3007,7 @@ class Casas extends BaseController
         }
 
         // actualizar vobo
-        $vobo = $this->CasasModel->updateVobosDirecto($idProceso, $proceso, $updateVobo);
+        $vobo = $this->CasasModel->updateVobosDirecto($idProceso, $procesoNuevo, $updateVobo);
         if (!$vobo) {
             $banderaSuccess = false;
         }
