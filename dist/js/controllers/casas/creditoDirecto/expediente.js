@@ -22,7 +22,11 @@ let columns = [
             let view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
             let docu_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data})
 
-            return '<div class="d-flex justify-center">' + docu_button + pass_button + return_button + '</div>'
+            if (data.documentosFisica >= 7 || data.documentosMoral >= 10) {
+                return '<div class="d-flex justify-center">' + docu_button + pass_button + return_button + '</div>'
+            } else {
+                return '<div class="d-flex justify-center">' + docu_button + return_button + '</div>'
+            }
         } 
     },
 ];

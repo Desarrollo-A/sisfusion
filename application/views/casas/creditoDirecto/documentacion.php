@@ -42,7 +42,8 @@
     <?php $this->load->view('template/modals'); ?>
 
     <script type="text/javascript">
-        let idProceso = <?php echo $lote->idProceso; ?>
+        let idProceso = <?php echo $lote->idProceso; ?>;
+        let nombreLote = '<?php echo $lote->nombreLote; ?>';
     </script>
     <script src="<?= base_url() ?>dist/js/controllers/casas/creditoDirecto/documentacion.js?v=2"></script>
 </body>

@@ -28,7 +28,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/upload_documento`,
+                url: `${general_base_url}casas/uploadDocumentoPersona`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -48,8 +48,10 @@ function show_upload(data) {
         },
         fields: [
             new HiddenField({ id: 'idProceso',     value: data.idProceso }),
-            new HiddenField({ id: 'idDocumento',   value: data.idDocumento }),
+            new HiddenField({ id: 'idDocumento',   value: data.tipo }),
             new HiddenField({ id: 'nombreDocumento', value: data.documento }),
+            new HiddenField({ id: 'archivo', value: data.archivo }),
+            new HiddenField({ id: 'nombreLote', value: nombreLote }),
             new FileField({   id: 'file_uploaded',  label: 'Archivo', placeholder: 'Selecciona un archivo', accept, required: true }),
         ],
     })
