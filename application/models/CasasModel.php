@@ -1926,8 +1926,9 @@ AND vb.proyectos != 1";
                 $id_documento
             )";
         }else{
+            $name = isset($filename) ? "'$filename'" : 'NULL';
             $query = "UPDATE documentos_proceso_credito_directo 
-            SET documento = '$name_documento', archivo = '$filename' 
+            SET documento = '$name_documento', archivo = $name 
             WHERE idProceso = $idProceso AND tipo = $id_documento AND documento = '$name_documento'";
         }
 
