@@ -11,39 +11,34 @@ switch(idRol){
     case 81: 
     case 55: // portventa 
     case 11: // portventa 
-        if(idUsuario == 5107 || idRol == 11){ // yolanda 
+    case 33: 
+        if((idRol == 33  && idUsuario == 2896)){
             tipoSaldo = 1;
-            campo = "saldoAdmon";
+            campo = "saldoAdmon"; 
         }
-        else if(idUsuario == 4512){
-            tipoSaldo = 3;
-            campo = "saldoGPH";
-        }
-        else{
-            tipoSaldo = 4;
-            campo = "saldoPV";
-        }
+        else {
+            tipoSaldo = 1;
+            campo = "saldoAdmon"; 
+        }    
         break;
     
     case 99: // OOAM
         tipoSaldo = 2;
         campo = "saldoOOAM";
         break;
-
-    case 33:
-        tipoSaldo = 3;
-        campo = "saldoGPH";
-        break;
-    
     case 101: // gph
-        tipoSaldo = 3;
-        campo = "saldoGPH";
-        break;
-
+    case 33: // gph
+        if((idRol == 33 && idUsuario == 4512) || idRol == 101) {
+            tipoSaldo = 3;
+            campo = "saldoGPH";
+            break;
+        }
     case 11: // ADM
-        tipoSaldo = 1;
-        campo = "saldoAdmon";
-        break;
+        if(idUsuario == 5107 || idRol == 11){ // yolanda 
+            tipoSaldo = 1;
+            campo = "saldoAdmon";
+            break;
+        }
 }
 
 let columns = [
