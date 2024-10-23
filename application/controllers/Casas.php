@@ -2978,6 +2978,7 @@ class Casas extends BaseController
         $comentario = $form->comentario;
         $banderaSuccess = true;
         $idCliente = $this->form('idCliente');
+        $id_usuario = $this->session->userdata('id_usuario');
 
         $dataHistorial = array(
             "idProcesoCasas"  => $idProceso,
@@ -3002,6 +3003,8 @@ class Casas extends BaseController
         $updateVobo = array(
             "adm" => 0,
             "proyectos" => 0,
+            "fechaModificacion" => date("Y-m-d H:i:s"),
+            "modificadoPor" => $id_usuario
         );
 
         // paso 1: hacer update del proceso
