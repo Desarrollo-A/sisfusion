@@ -55,6 +55,7 @@
                                             <th>CONDOMINIO</th>
                                             <th>PROYECTO</th>
                                             <th>TIEMPO EN PROCESO</th>
+                                            <th>ADEUDO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
