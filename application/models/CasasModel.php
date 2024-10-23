@@ -149,7 +149,7 @@ class CasasModel extends CI_Model
             "BEGIN
                 IF NOT EXISTS (SELECT * FROM  vobos_proceso_casas_directo WHERE idProceso = ? AND paso = ?)
                 BEGIN
-                    INSERT INTO vobos_proceso_casas_directo (idProceso, paso, ordenCompra, adeudoTerreno, valEnganche, contrato)
+                    INSERT INTO vobos_proceso_casas_directo (idProceso, paso, adm, proyectos, asiGerencia)
                     VALUES (?, ?, ?, ?, ?, ?)
                 END
             END",
@@ -1879,10 +1879,9 @@ AND vb.proyectos != 1";
             dpc.documento,
             dpc2.documentos as documentosMoral,
             dpc3.documentos as documentosFisica,
-            vpc.ordenCompra,
-            vpc.adeudoTerreno,
-            vpc.valEnganche,
-            vpc.contrato
+            vpc.adm,
+            vpc.proyectos,
+            vpc.asiGerencia
         FROM proceso_casas_directo pcd
         INNER JOIN lotes lo ON lo.idLote = pcd.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -1904,7 +1903,7 @@ AND vb.proyectos != 1";
         return $query;
     }
 
-    public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento){
+    public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario){
         $existe = $this->db->query(
             "SELECT
                 *
@@ -1923,18 +1922,27 @@ AND vb.proyectos != 1";
                 idProceso,
                 documento,
                 archivo,
-                tipo
+                tipo,
+                fechaCreacion,
+                idCreacion, 
+                fechaModificacion,
+                idModificacion
             )
             VALUES
             (
                 $idProceso,
                 '$name_documento',
                 $name,
-                $id_documento
+                $id_documento,
+                GETDATE(),
+                '$id_usuario',
+                GETDATE(),
+                '$id_usuario'
             )";
         }else{
+            $name = isset($filename) ? "'$filename'" : 'NULL';
             $query = "UPDATE documentos_proceso_credito_directo 
-            SET documento = '$name_documento', archivo = '$filename' 
+            SET documento = '$name_documento', archivo = $name, fechaModificacion = GETDATE(), idModificacion = '$id_usuario'
             WHERE idProceso = $idProceso AND tipo = $id_documento AND documento = '$name_documento'";
         }
 
@@ -2603,7 +2611,6 @@ AND vb.proyectos != 1";
         CASE WHEN dpc.archivo IS NULL THEN 'Sin archivo' ELSE archivo END AS archivo, dpc.documento,
         dpc.tipo, dpc.fechaModificacion
         FROM documentos_proceso_credito_directo dpc
-        INNER JOIN opcs_x_cats AS opc ON opc.nombre = dpc.documento AND opc.id_catalogo = $catalogoPersona
         WHERE dpc.idProceso = $idProceso
         AND dpc.tipo IN ($in)
         ";

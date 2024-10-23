@@ -18,13 +18,13 @@ let columns = [
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
             let upload_button = new RowButton({icon: 'file_upload', color: '', label: 'Cargar archivo', onClick: upload_archivo, data})
-            let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: return_process, data})
+            // let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: return_process, data})
             let view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
 
-            if(data.documento == null && data.ordenCompra == 0){
+            if(data.documento == null && data.proyectos == 0){
                 return '<div class="d-flex justify-center">' + upload_button + '</div>'
             }
-            else if (data.documento != null && data.ordenCompra == 0){
+            else if (data.documento != null && data.proyectos == 0){
                 return '<div class="d-flex justify-center">' + pass_button + upload_button + view_button + '</div>'
             }
             else {
@@ -34,13 +34,19 @@ let columns = [
     },
 ];
 
+function filter (data) {
+    arrayData = JSON.parse(data)
+    return JSON.stringify(arrayData.filter(row => row.proyectos == 0))
+}
+
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
     params: { proceso: 2, tipoDocumento: 2, nombreDocumento: 'Orden de compra' },
     columns,
+    filter: filter
     // button: buttons
-});
+})
 
 return_process = function(data){ // funcion para el avance del lote
     let form = new Form({
@@ -169,8 +175,8 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new HiddenField({ id: 'procesoNuevo', value: 3 }),
-            new HiddenField({ id: 'ordenCompra', value: 1 }),
-            new HiddenField({ id: 'adeudoTerreno', value: data.adeudoTerreno }),
+            new HiddenField({ id: 'proyectos', value: 1 }),
+            new HiddenField({ id: 'adm', value: data.adm }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],

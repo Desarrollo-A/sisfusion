@@ -1,5 +1,5 @@
 class Table{
-    constructor({id, url, params={}, buttons=[], columns=[]}) {
+    constructor({id, url, params={}, buttons=[], columns=[], filter=((data) => data)}) {
         this.url = url
         this.params = new URLSearchParams(params).toString();
 
@@ -20,7 +20,8 @@ class Table{
             destroy: true,
             ajax: {
                 url: `${general_base_url}${this.url}?${this.params}`,
-                dataSrc: ""
+                dataSrc: "",
+                dataFilter: filter
             },
             deferLoading: true,
             dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
