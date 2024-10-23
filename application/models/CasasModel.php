@@ -1871,6 +1871,8 @@ AND vb.proyectos != 1";
             re.descripcion AS proyecto,
 			dpc.archivo,
             dpc.documento,
+            dpc2.documentos as documentosMoral,
+            dpc3.documentos as documentosFisica,
             vpc.ordenCompra,
             vpc.adeudoTerreno,
             vpc.valEnganche,
@@ -1880,7 +1882,9 @@ AND vb.proyectos != 1";
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pcd.tipoMovimiento AND id_catalogo = 108
-		LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento) AND dpc.documento LIKE '%$nombreDocumento%'
+        LEFT JOIN documentos_proceso_credito_directo dpc ON dpc.idProceso = pcd.idProceso AND dpc.tipo IN($tipoDocumento) AND dpc.documento LIKE '%$nombreDocumento%'
+		LEFT JOIN (SELECT COUNT(*) AS documentos, idProceso FROM documentos_proceso_credito_directo WHERE tipo IN (10,11,12,7,8,30,22,23,24,25) AND archivo IS NOT NULL GROUP BY idProceso) AS dpc2 ON dpc2.idProceso = pcd.idProceso
+		LEFT JOIN (SELECT COUNT(*) AS documentos, idProceso FROM documentos_proceso_credito_directo WHERE tipo IN (2,3,4,7,8,30) AND archivo IS NOT NULL GROUP BY idProceso) AS dpc3 ON dpc3.idProceso = pcd.idProceso
         LEFT JOIN vobos_proceso_casas_directo vpc ON vpc.idProceso = pcd.idProceso
         WHERE pcd.proceso IN ($placeholders) AND pcd.estatus IN(1) AND pcd.finalizado = 0", $procesoArray, 1);
 
@@ -1907,6 +1911,7 @@ AND vb.proyectos != 1";
         )->row();
 
         if($tipoDocumento === 0 && ! $existe){
+            $name = isset($filename) ? "'$filename'" : 'NULL';
             $query = "INSERT INTO documentos_proceso_credito_directo
             (
                 idProceso,
@@ -1918,7 +1923,7 @@ AND vb.proyectos != 1";
             (
                 $idProceso,
                 '$name_documento',
-                '$filename',
+                $name,
                 $id_documento
             )";
         }else{
@@ -2578,17 +2583,18 @@ AND vb.proyectos != 1";
         return $this->db->query($query)->result();
     }
 
-    public function getListaDocumentosClienteDirecto($idProceso, $docs) {
+    public function getListaDocumentosClienteDirecto($idProceso, $docs, $catalogoPersona) {
         $in = implode(',', $docs);
 
         $query = "SELECT
-        idProceso, 
-        idDocumento,
-        CASE WHEN archivo IS NULL THEN 'Sin archivo' ELSE archivo END AS archivo, documento,
-        tipo, fechaModificacion
-        FROM documentos_proceso_credito_directo
-        WHERE idProceso = $idProceso
-        AND tipo IN ($in)
+        dpc.idProceso, 
+        dpc.idDocumento,
+        CASE WHEN dpc.archivo IS NULL THEN 'Sin archivo' ELSE archivo END AS archivo, dpc.documento,
+        dpc.tipo, dpc.fechaModificacion
+        FROM documentos_proceso_credito_directo dpc
+        INNER JOIN opcs_x_cats AS opc ON opc.nombre = dpc.documento AND opc.id_catalogo = $catalogoPersona
+        WHERE dpc.idProceso = $idProceso
+        AND dpc.tipo IN ($in)
         ";
 
         return $this->db->query($query)->result();

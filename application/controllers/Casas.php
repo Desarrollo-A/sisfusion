@@ -2565,25 +2565,38 @@ class Casas extends BaseController
         http_response_code(404);
     }
 
-    public function uploadDocumentoPersonaFisica() {
+    public function uploadDocumentoPersona() {
 
         $idProceso = $this->form('idProceso');
         $idDocumento = $this->form('idDocumento');
         $nombreDocumento = $this->form('nombreDocumento');
         $file = $this->file('file_uploaded');
-
-        if (!isset($idProceso) || !isset($idDocumento) || !isset($nameDocumento) || ! $file) {
+        $nombreLote = $this->form('nombreLote');
+        
+        if (!isset($idProceso) || !isset($idDocumento) || !isset($nombreDocumento) || !isset($nombreLote) || ! $file) {
             http_response_code(400);
             $this->json([]);
         }
 
+        $proceso = $this->CasasModel->getProcesoDirecto($idProceso);
+        $idCliente = $proceso->idCliente;
+        
         //  Nombre del archivo          
-        $filename = $this->generateFileName($nombreDocumento, $nombre_lote, $idProceso, $file->name);
+        $filename = $this->generateFileName($nombreDocumento, $nombreLote, $idProceso, $file->name);
 
         // Se sube archivo al buket
         $uploaded = $this->upload($file->tmp_name, $filename);
 
-        if ($uploaded) {}
+        if ($uploaded) {
+            $created = $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $nombreDocumento, $filename, $idDocumento, 1);
+
+            if ($created) {
+                $motivo = "Se subió archivo: $nombreDocumento";
+                $this->CasasModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, $motivo, 2, $idCliente);
+
+                $this->json([]);
+            }
+        }
     }
 
     public function ordenCompra()
@@ -2811,14 +2824,14 @@ class Casas extends BaseController
                 $documentos = [10,11,12,7,8,17,29,30,22,23,24,25];
                 foreach($documentos as $documento) {
                     $name_documento = $this->CasasModel->getDocumentoPersonaMoral($documento)->nombre;
-                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, 'NULL', $documento, 0);
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0);
                 }
             } else if ($persona == '2') {
                 # Persona fisica 2,3,4,7,8,20,26,27,28,29,30
                 $documentos = [2,3,4,7,8,20,26,27,28,29,30];
                 foreach($documentos as $documento) {
                     $name_documento = $this->CasasModel->getDocumentoPersonaFisica($documento)->nombre;
-                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, 'NULL', $documento, 0);
+                    $this->CasasModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0);
                 }
             }
         }
@@ -2980,7 +2993,7 @@ class Casas extends BaseController
 
         $updateVobo = array(
             "ordenCompra" => 0,
-            "adedudoTerreno" => 0,
+            "adeudoTerreno" => 0,
             "paso" => 17
         );
 
@@ -5777,18 +5790,21 @@ class Casas extends BaseController
         $documentos = [];
         $persona = $this->CasasModel->getTipoPersona($idCliente)->personalidad_juridica ;
         $tipos = [];
+        $catalogoPersona = '';
 
         if ($persona == 1) {
             # Persona moral 10,11,12,7,8,17,29,30,22,23,24,25
             $tipos = [10,11,12,7,8,17,29,30,22,23,24,25];
+            $catalogoPersona = 32;
         } else if ($persona == 2) {
             # Persona fisica 2,3,4,7,8,20,26,27,28,29,30
             $tipos = [2,3,4,7,8,20,26,27,28,29,30];
+            $catalogoPersona = 31;
         }
 
         // switch ($this->idRol) {
             // case '12':
-                $documentos = $this->CasasModel->getListaDocumentosClienteDirecto($proceso, $tipos);
+                $documentos = $this->CasasModel->getListaDocumentosClienteDirecto($proceso, $tipos, $catalogoPersona);
                 // break;
         // }
         $this->json($documentos);

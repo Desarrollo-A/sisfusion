@@ -35,7 +35,7 @@ let columns = [
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
-    params: { proceso: 2, tipoDocumento: 2 },
+    params: { proceso: 2, tipoDocumento: 2, nombreDocumento: 'Orden de compra' },
     columns,
     // button: buttons
 });
