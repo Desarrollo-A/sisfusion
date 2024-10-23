@@ -132,7 +132,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- radios 1 -->                
+                <!-- radios 1 -->                 
                 <div class="row pt-1 persona-fisica-div" id="checkDS">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <h4 class="label-on-left m-0" data-i18n="persona-fisica">PERSONA FÍSICA</h4>
@@ -1257,7 +1257,7 @@
                                <span>Cláusulas</span>
                                 (<small style="color: red;">*</small>)
                             </label>
-                            <select data-i18n-label="selecciona-una-opcion" name="clausula" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" multiple>
+                            <select data-i18n-label="selecciona-una-opcion" name="clausula[]" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" multiple>
                                 <?php if(!empty($clausulas)): ?>
                                 <?php
                                     foreach($clausulas as $clausula){
@@ -1267,6 +1267,7 @@
                                 <?php endif;?>
                             </select>                        
                         </div>
+                        <input type="hidden" name="idLote" value="<?=$cliente[0]->idLote?>">
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">

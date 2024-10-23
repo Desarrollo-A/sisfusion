@@ -1834,4 +1834,11 @@ class Asesor_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+    function insertar_clausulas_terrenos($data){                 
+        if ($this->db->insert('clausulas_terrenos', $data)) {
+            return true; 
+        } else {
+            return false; 
+        }
+    }
 }

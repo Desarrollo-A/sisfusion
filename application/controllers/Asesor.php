@@ -1975,9 +1975,18 @@ class Asesor extends CI_Controller {
         $namePDF = $pdf->Output(utf8_decode('DEPÓSITO_DE_SERIEDAD.pdf'), 'I');
         $attachment = $pdf->Output(utf8_decode($namePDF), 'S');
     }
+    // public function insertClausulasTerrenos($idCliente,$tipoContrato){
+    //     $data=array(
+    //         'id_cliente'=>$idCliente,
+    //         'creado_por'=>$this->session->userdata('id_usuario'),
+    //         'tipo_contrato'=>$tipoContrato,
+    //         'estatus'=> 1,
 
+    //     );
+    //     echo json_encode($this->Asesor_model->insertar_clausulas_terrenos($data));
+    // }
     public function editar_ds()
-    {
+    {        
 
         setlocale(LC_MONETARY, 'en_US');
         $emailCopArray = $this->input->post("email_cop[]");
@@ -2041,6 +2050,29 @@ class Asesor extends CI_Controller {
 
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
         $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
+
+//VALORES SELECT CLAUSULAS ESPECIALES
+    // $clausulasSeleccionadas = $this->input->post('clausula');
+    $tipoContrato=$this->input->post('tipo-contrato');
+    $clausulaSeleccionadas=$this->input->post('clausula');
+    if(!empty($tipoContrato) && !empty($clausulaSeleccionadas)){
+        $clausulas = implode(',', $clausulaSeleccionadas);
+        $fecha_creacion = date('Y-m-d H:i:s');
+        $data=array(
+            'id_cliente'=>$id_cliente,
+            'creado_por'=>$this->session->userdata('id_usuario'),
+            'tipo_contrato'=>$tipoContrato,
+            'estatus'=> 1,
+            //'fecha_creacion'=> date('Y-m-d H:i:s', strtotime($fecha_creacion) - 3600),
+            'id_lote'=>$this->input->post('idLote'),
+            'opcs_clausulas'=>$clausulas,
+        );
+        $result=$this->Asesor_model->insertar_clausulas_terrenos($data);
+    }
+    
+
+                 
+//FINAL VALORES SELECT CLAUSULAS ESPECIALES
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
@@ -2177,6 +2209,8 @@ class Asesor extends CI_Controller {
                 }
             }
         }
+
+
 
 
         $proyecto = $this->input->post('proyecto');
