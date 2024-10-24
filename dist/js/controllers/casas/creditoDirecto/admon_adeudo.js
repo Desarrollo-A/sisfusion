@@ -14,7 +14,10 @@ let columns = [
     { data: 'condominio' },
     { data: 'proyecto' },
     { data: 'tiempoProceso' },
-    { data: 'adeudo' },
+    { data: function(data) {
+            return `<span>$${data.adeudo}</span>`
+        }
+    },
     { data: function(data)
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avance', onClick: select_lote, data})
@@ -40,52 +43,52 @@ function filter (data) {
 
 let table = new Table({
     id: '#tableAdeudo',
-    url: 'casas/lotesCreditoDirecto',
+    url: 'casasDirecto/lotesCreditoDirecto',
     params: { proceso: 2, tipoDocumento: 2, nombreDocumento: 'Orden de compra' },
     columns,
     filter: filter
     // button: buttons
 });
 
-return_process = function(data){ // funcion para el avance del lote
-    let form = new Form({
-        title: '¿Rechazar lote?', 
-        text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
-        onSubmit: function(data){
-            form.loading(true)
+// return_process = function(data){ // funcion para el avance del lote
+//     let form = new Form({
+//         title: '¿Rechazar lote?', 
+//         text: `¿Seguro que quiere rechazar el lote - <b>${data.nombreLote}</b>?`,
+//         onSubmit: function(data){
+//             form.loading(true)
 
-            $.ajax({
-                type: 'POST',
-                url: `${general_base_url}casas/creditoDirectoAvance`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido avanzdo en su proceso.", "success");
+//             $.ajax({
+//                 type: 'POST',
+//                 url: `${general_base_url}casasDirecto/creditoDirectoAvance`,
+//                 data: data,
+//                 contentType: false,
+//                 processData: false,
+//                 success: function (response) {
+//                     alerts.showNotification("top", "right", "El lote ha sido avanzdo en su proceso.", "success");
         
-                    table.reload();
-                    form.hide();
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+//                     table.reload();
+//                     form.hide();
+//                 },
+//                 error: function () {
+//                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
 
-                    form.loading(false)
-                }
-            })
-        },
-        fields: [
-            new HiddenField({ id: 'idLote', value: data.idLote }),
-            new HiddenField({ id: 'idProceso', value: data.idProceso }),
-            new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 1 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
-            new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
-            new HiddenField({ id: 'idCliente', value: data.idCliente }),
-        ],
-    })
+//                     form.loading(false)
+//                 }
+//             })
+//         },
+//         fields: [
+//             new HiddenField({ id: 'idLote', value: data.idLote }),
+//             new HiddenField({ id: 'idProceso', value: data.idProceso }),
+//             new HiddenField({ id: 'proceso', value: data.proceso }),
+//             new HiddenField({ id: 'procesoNuevo', value: 1 }),
+//             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
+//             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
+//             new HiddenField({ id: 'idCliente', value: data.idCliente }),
+//         ],
+//     })
 
-    form.show()
-}
+//     form.show()
+// }
 
 update_adeudo = function(data){ // funcion para subir el archivo de adeudo
     let form = new Form({
@@ -95,7 +98,7 @@ update_adeudo = function(data){ // funcion para subir el archivo de adeudo
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/setAdeudo`,
+                url: `${general_base_url}casasDirecto/setAdeudo`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -132,12 +135,12 @@ select_lote = function(data){ // funcion para el avance del lote
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/avanceAdeudo`,
+                url: `${general_base_url}casasDirecto/avanceAdeudo`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido avanzdo en su proceso.", "success");
+                    alerts.showNotification("top", "right", "Se ha avanzado el proceso correctamente.", "success");
         
                     table.reload();
                     form.hide();
@@ -153,10 +156,8 @@ select_lote = function(data){ // funcion para el avance del lote
             new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 3 }),
             new HiddenField({ id: 'proyectos', value: data.proyectos }),
             new HiddenField({ id: 'adm', value: data.adm }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
