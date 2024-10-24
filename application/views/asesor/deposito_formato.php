@@ -1257,7 +1257,7 @@
                                <span>Cláusulas</span>
                                 (<small style="color: red;">*</small>)
                             </label>
-                            <select data-i18n-label="selecciona-una-opcion" name="clausula[]" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" multiple>
+                            <select name="clausula[]" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" multiple>
                                 <?php if(!empty($clausulas)): ?>
                                 <?php
                                     // foreach($clausulas as $clausula){
@@ -1299,7 +1299,7 @@
                                 <span>Tipo contrato</span>
                                 (<small style="color: red;">*</small>)
                             </label>
-                            <select data-i18n-label="selecciona-una-opcion" name="tipo-contrato" required="true" title="SELECCIONA UNA OPCIÓN" id="tipo-contrato" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
+                            <select name="tipo-contrato" required="true" title="SELECCIONA UNA OPCIÓN" id="tipo-contrato" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
                                 <?php if(!empty($tipoContrato)): ?>
                                 <?php                                     
                                     // foreach($tipoContrato as $contrato){
