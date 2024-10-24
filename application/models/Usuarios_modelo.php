@@ -474,6 +474,8 @@ class Usuarios_modelo extends CI_Model
                     $sede = " OR id_sede LIKE '%$headquarter%'";
                 if (in_array($this->session->userdata('id_rol'), array(5, 6)) && $this->session->userdata('tipo') == 3) // SON DE CASAS, LES VAMOS A MOSTRAR JORGE DE LA CRUZ
                     $validacionSubdirector = "OR id_usuario = 11650";
+                if ($this->session->userdata('tipo') == 2) // SON DE UPGRADE
+                    $validacionSubdirector = "OR (id_rol = 2 AND estatus = 1 AND tipo = 2)";
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
                                         (id_rol = 2 AND (id_sede LIKE '%$headquarter%' $sede) $lider AND estatus = 1) $validacionSubdirector ORDER BY nombre");
                 break;
