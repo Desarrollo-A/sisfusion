@@ -2374,7 +2374,7 @@ class Casas extends BaseController
     public function lista_reporte_casas()
     {
         $opcion = $this->input->get('opcion');
-        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 ";
+        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20";
         $finalizado = "0, 1";
         $extraFields = "";
         $extraValidation = "";
@@ -2395,15 +2395,15 @@ class Casas extends BaseController
         if ($opcion != -1 && $opcion != -2 && isset($opcion)) {
             $proceso = $opcion;
             $finalizado = "0";
-            $extraFields = "AND (pc.proceso IN ($proceso))";
+            $extraFields = "AND (pc.proceso IN ($proceso)) AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)";
         }
         if ($opcion == -2) {
             $finalizado = "1";
-            $extraFields = "AND (pc.proceso IN ($proceso))";
+            $extraFields = "AND (pc.proceso IN ($proceso)) AND (pc.finalizado IN ($finalizado) AND pc.finalizado IS NOT NULL)";
         }
         if($opcion == -3) {
             $finalizado = "0";
-            $extraFields = "AND (pc.idProcesoCasas IS NULL)";
+            $extraFields = "AND (pc.idProcesoCasas IS NULL) AND (pc.finalizado IS NULL)";
 
         }
 

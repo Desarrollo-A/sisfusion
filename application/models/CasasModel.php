@@ -1750,9 +1750,7 @@ AND vb.proyectos != 1";
         LEFT JOIN proceso_pagos pp ON pp.idProcesoCasas = pc.idProcesoCasas
         WHERE (pc.status = 1 OR pc.status IS NULL)
         AND (cli.status = 1 OR cli.status IS NULL)
-        --AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
         $extraFields
-        AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
         GROUP BY hct.idLote ,lo.nombreLote, pc.idLote, con.nombre, CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno),
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno), us.nombre, cli.id_gerente_c,
         CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno), oxc.nombre, oxc2.nombre, 
