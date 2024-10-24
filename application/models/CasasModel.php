@@ -41,7 +41,7 @@ class CasasModel extends CI_Model
 
         $query = "SELECT TOP 1 fj.pasoActual, fj.ultimoPaso, fj.avance, oxc.id_opcion AS tipoMovimiento 
         FROM proceso_casas_banco pc
-        INNER JOIN historial_proceso_casas hpc ON hpc.idProcesoCasas = pc.idProcesoCasas
+        INNER JOIN historial_proceso_casas hpc ON hpc.idProcesoCasas = pc.idProcesoCasas AND hpc.esquemaCreditoProceso = 0
         INNER JOIN flujo_proceso_casas_banco fj ON fj.pasoActual = hpc.procesoNuevo AND fj.ultimoPaso = hpc.procesoAnterior AND fj.tipoPaso = $bandera
         INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = fj.tipoMovimiento 
         WHERE pc.idProcesoCasas = $idProceso AND hpc.procesoAnterior != hpc.procesoNuevo 
