@@ -135,7 +135,6 @@ select_lote = function(data){ // funcion para el avance del lote
             })
         },
         fields: [
-            new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),

@@ -219,7 +219,7 @@ class CasasDirectoModel extends CI_Model
         FROM proceso_casas_directo pc
         INNER JOIN historial_proceso_casas hpc ON hpc.idProcesoCasas = pc.idProceso AND hpc.esquemaCreditoProceso = 1
         INNER JOIN flujo_proceso_casas_directo fj ON fj.pasoActual = hpc.procesoNuevo AND fj.ultimoPaso = hpc.procesoAnterior AND fj.tipoPaso = $bandera
-        INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = fj.tipoMovimiento 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 108 AND oxc.id_opcion = fj.tipoMovimiento 
         WHERE pc.idProceso = $idProceso AND hpc.procesoAnterior != hpc.procesoNuevo 
         ORDER BY hpc.idHistorial DESC;
         ";

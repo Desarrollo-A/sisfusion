@@ -225,6 +225,12 @@ class CasasDirecto extends BaseController
         $comentario = $form->comentario;
         $idCliente = $form->idCliente;
 
+        if (!isset($idProceso) || !isset($proceso) || !isset($comentario) || !isset($idCliente)) {
+            http_response_code(400);
+
+            $this->json([]);
+        }
+
         $this->db->trans_begin();
 
         $pasos = $this->CasasDirectoModel->getPasos($idProceso, 1);
@@ -282,10 +288,8 @@ class CasasDirecto extends BaseController
         $voBoOrdenCompra = $form->proyectos;
         $voBoAdeudoTerreno = $form->adm;
         $idCliente = $form->idCliente;
-        $banderaSuccess = true;
-        // $id_usuario = $this->session->userdata('id_usuario');
 
-        if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno)) {
+        if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno) || !isset($idCliente)) {
             http_response_code(400);
 
             $this->json([]);
