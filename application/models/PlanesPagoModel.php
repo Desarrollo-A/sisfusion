@@ -35,6 +35,23 @@ class PlanesPagoModel extends CI_Model {
 
         return $this->db->query($query);
     }
+
+    public function insertDeposito($deposito){
+        $query = "INSERT INTO depositos_planes_pago
+        (
+            idLote,
+            fechaDeposito,
+            montoDeposito,
+            folioNeodata
+        ) VALUES (
+            $deposito->idLote,
+            '$deposito->fechaDeposito',
+            $deposito->montoDeposito,
+            $deposito->folioNeodata
+        )";
+
+        return $this->db->query($query);
+    }
 }
 
 ?>

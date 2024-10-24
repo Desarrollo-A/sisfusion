@@ -240,8 +240,8 @@ class PlanesPago extends CI_Controller {
         return $pagos;
     }
 
-    public function registrar_pago($lote){
-        $data = json_decode(file_get_contents("php://input"));
+    private function registrar_pago($lote, $data){
+        //$data = json_decode(file_get_contents("php://input"));
 
         if(!isset($data->fecha)){
             echo json_encode([
@@ -293,22 +293,77 @@ class PlanesPago extends CI_Controller {
             if($monto <= 0){
                 print_r($planes[$num_plan]->dumpPlan);
 
+                exit;
+
                 break;
             }
 
         }
     }
 
-    public function registrarEnganche()
-    {
+    public function registrarEnganche(){
         // Leemos lo que envia maricruz
+        $data = json_decode(file_get_contents("php://input"));
 
+        foreach ($data->depositos as $key => $deposito) {
+            $payload = (object)[
+                'idLote' => $data->idLote,
+                'fechaDeposito' => $data->fecha,
+                'montoDeposito' => $deposito->monto,
+                'folioNeodata' => $deposito->folio_neodata,
+            ];
 
+            // Insertar el deposito que ella mande
+            $this->PlanesPagoModel->insertDeposito($payload);
+
+            $plan_pago = $this->PlanesPagoModel->getPlanesPago($data->idLote);
+
+            if($plan_pago){
+                $pago = (object)[
+                    'fecha' => $data->fecha,
+                    'monto' => $deposito->monto,
+                    'capital' => 0,
+                ];
+
+                $this->registrar_pago($data->idLote, $pago);
+            }
+        }
+
+        echo json_encode([
+            "status" => "ok"
+        ]);
     }
 
-    public function registrarMensualidad()
-    {
-        // code...
+    public function registrarMensualidad(){
+        // Leemos lo que envia maricruz
+        $data = json_decode(file_get_contents("php://input"));
+
+        $deposito = [
+
+        ];
+
+        // Insertar el deposito que ella mande
+        $this->PlanesPagoModel->insertDeposito($deposito);
+
+        if($data->lote){
+            $plan_pago = $this->PlanesPagoModel->getPlanPagoByLote();
+
+            if($plan_pago){
+                $this->registrar_pago($lote, $pago);
+            }
+
+            // Verificar si ya se puede enviar el plan pago
+            if($si_ya_se_puede){
+                // Enviar a Neo data
+                $depositos = $this->PlanesPagoModel->getDepositos($lote);
+
+                // Enviar a NEO data
+                foreach ($depositos as $key => $deposito) {
+                    // Enviar a neodata
+                    $this->PlanesPagoModel->aplicarDeposito($deposito);
+                }
+            }
+        }
     }
 }
 
