@@ -42,7 +42,7 @@ function filter (data) {
 let table = new Table({
     id: '#tableAdeudo',
     url: 'casas/lotesCreditoDirecto',
-    params: { proceso: 2, tipoDocumento: 2, nombreDocumento: 'Orden de compra' },
+    params: { proceso: 2, tipoDocumento: 2, nombreDocumento: 'Ordén de compra' },
     columns,
     filter: filter
     // button: buttons
