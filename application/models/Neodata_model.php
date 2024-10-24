@@ -13,7 +13,7 @@ class Neodata_model extends CI_Model {
         $Cliente = "'" . $data['Cliente'] . "'";
         $response = $this->programacion2->query("EXEC [programacion].[dbo].[CDM300ClientesNeoD]
         @accion = '" . $data['accion'] . "',
-        @Cliente = " . ($data['Cliente'] == '' ? 'NULL' : $data['Cliente']) . ",
+        @Cliente = " . ($data['Cliente'] == '' ? 'NULL' : $Cliente) . ",
         @IdProyecto = " . $data['IdProyecto'] . ",
         @IdVivienda = " . $data['IdVivienda'] . ",
         @IdCredito = " . $data['IdCredito'] . ",

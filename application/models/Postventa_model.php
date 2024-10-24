@@ -1559,7 +1559,7 @@ function checkBudgetInfo($idSolicitud){
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                 INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-                INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 
+                LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 
                 LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor 
                 LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
                 LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
