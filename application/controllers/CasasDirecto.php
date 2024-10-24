@@ -90,11 +90,10 @@ class CasasDirecto extends BaseController
         $idProceso = $this->form('idProceso');
         $proceso = $this->form('proceso');
         $nombre_lote = $this->form('nombre_lote');
-        $tipoDocumento = $this->form('tipoDocumento') ? $this->form('tipoDocumento') : 0;
+        $tipoDocumento = $this->form('tipoDocumento') ? $this->form('tipoDocumento') : 1;
         $id_documento = $this->form('id_documento');
         $idCliente = $this->form('idCliente');
         $file = $this->file('file_uploaded');
-        // $id_usuario = $this->session->userdata('id_usuario');
 
         if (!isset($proceso) || !isset($nombre_lote) || !isset($id_documento)) {
             http_response_code(400);
@@ -122,7 +121,7 @@ class CasasDirecto extends BaseController
 
                 if ($created) {
                     $motivo = "Se subió archivo: $name_documento";
-                    $this->CasasDirectoModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2, $idCliente);
+                    $this->CasasDirectoModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 1, $idCliente);
 
                     $this->json([]);
                 }
@@ -139,7 +138,6 @@ class CasasDirecto extends BaseController
         $nombreDocumento = $this->form('nombreDocumento');
         $file = $this->file('file_uploaded');
         $nombreLote = $this->form('nombreLote');
-        // $id_usuario = $this->session->userdata('id_usuario');
         
         if (!isset($idProceso) || !isset($idDocumento) || !isset($nombreDocumento) || !isset($nombreLote) || ! $file) {
             http_response_code(400);
@@ -156,14 +154,60 @@ class CasasDirecto extends BaseController
         $uploaded = $this->upload($file->tmp_name, $filename);
 
         if ($uploaded) {
-            $created = $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $nombreDocumento, $filename, $idDocumento, 1, $this->idUsuario);
+            $created = $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $nombreDocumento, $filename, $idDocumento, 2, $this->idUsuario);
 
             if ($created) {
                 $motivo = "Se subió archivo: $nombreDocumento";
-                $this->CasasDirectoModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, $motivo, 2, $idCliente);
+                $this->CasasDirectoModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, $motivo, 1, $idCliente);
 
                 $this->json([]);
             }
+        }
+    }
+
+    public function archivo($name)
+    {
+        $object = $this->bucket->object(urldecode($name));
+
+        if ($object->exists()) {
+            $contentType = $object->info()['contentType'];
+
+            $file = $object->downloadAsString();
+
+            header("Content-type: $contentType");
+
+            print($file);
+        } else {
+            header("HTTP/1.1 404 Not Found");
+
+            http_response_code(404);
+        }
+    }
+
+    public function setAdeudo()
+    {
+        $form = $this->form();
+
+        $idProceso = $form->idProceso;
+        $adeudo = $form->adeudo;
+
+        $this->db->trans_begin();
+
+        $updateData = array(
+            "adeudo"            => $adeudo,
+            "fechaModificacion" => date("Y-m-d H:i:s")
+        );
+
+        $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
+
+        if ($update) {
+            $this->db->trans_commit();
+            $this->json([]);
+        } else {
+            $this->db->trans_rollback();
+            http_response_code(400);
+
+            $this->json([]);
         }
     }
 
@@ -179,11 +223,11 @@ class CasasDirecto extends BaseController
         $catalogoPersona = '';
 
         if ($persona == 1) {
-            # Persona moral 10,11,12,7,8,17,29,30,22,23,24,25
+            # Persona moral
             $tipos = [10,11,12,7,8,17,29,30,22,23,24,25];
             $catalogoPersona = 32;
         } else if ($persona == 2) {
-            # Persona fisica 2,3,4,7,8,20,26,27,28,29,30
+            # Persona fisica
             $tipos = [2,3,4,7,8,20,26,27,28,29,30];
             $catalogoPersona = 31;
         }
@@ -232,6 +276,7 @@ class CasasDirecto extends BaseController
         }
 
         $this->db->trans_begin();
+
 
         $pasos = $this->CasasDirectoModel->getPasos($idProceso, 1);
 
@@ -283,33 +328,38 @@ class CasasDirecto extends BaseController
         $idProceso = $form->idProceso;
         $idLote = $form->idLote;
         $proceso = $form->proceso;
-        $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
         $voBoOrdenCompra = $form->proyectos;
         $voBoAdeudoTerreno = $form->adm;
         $idCliente = $form->idCliente;
+        $banderaDocumentos = true;
 
-        if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno) || !isset($idCliente)) {
+        if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno) || !isset($idCliente)) {
             http_response_code(400);
 
             $this->json([]);
         }
 
+        $this->db->trans_begin();
+
+        $pasos = $this->CasasDirectoModel->getPasos($idProceso, 1);
+
         $dataHistorial = array(
             "idProcesoCasas"  => $idProceso,
             "procesoAnterior" => $proceso,
-            "procesoNuevo"    => $voBoAdeudoTerreno == 1 ? $procesoNuevo : $proceso,
+            "procesoNuevo"    => $voBoAdeudoTerreno == 1 ? $pasos->avance : $proceso,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 2,
+            "esquemaCreditoProceso" => 1,
             "idCliente" => $idCliente,
             "idMovimiento" => $this->idUsuario
         );
 
         $updateData = array(
             "comentario" => $comentario,
-            "proceso" => $voBoAdeudoTerreno == 1 ? $procesoNuevo : $proceso,
+            "proceso" => $voBoAdeudoTerreno == 1 ? $pasos->avance : $proceso,
+            "tipoMovimiento"    => $pasos->tipoMovimiento
         );
 
         $updateVobo = array(
@@ -318,46 +368,39 @@ class CasasDirecto extends BaseController
             "modificadoPor" => $this->idUsuario
         );
 
-        $this->db->trans_begin();
-
         // actualizar el registro de la tabla
         $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
-        if (!$update) {
-            $banderaSuccess = false;
-        }
 
         // insert en historial
         $add = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
-        if (!$add) {
-            $banderaSuccess = false;
-        }
 
         // actualizar vobo
         $vobo = $this->CasasDirectoModel->updateVobosDirecto($idProceso, $proceso, $updateVobo);
-        if (!$vobo) {
-            $banderaSuccess = false;
-        }
 
-        if ($voBoAdeudoTerreno == 1) {
-            $persona = $this->CasasDirectoModel->getTipoPersona($idCliente)->personalidad_juridica ;
-            if ($persona == '1') {
-                # Persona moral 10,11,12,7,8,17,29,30,22,23,24,25
-                $documentos = [10,11,12,7,8,17,29,30,22,23,24,25];
-                foreach($documentos as $documento) {
-                    $name_documento = $this->CasasDirectoModel->getDocumentoPersonaMoral($documento)->nombre;
-                    $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0, $this->idUsuario);
+        $persona = $this->CasasDirectoModel->getTipoPersona($idCliente)->personalidad_juridica ;
+        if ($voBoAdeudoTerreno == 1 && $persona == 1) {
+            # Persona moral
+            $tipos = [10,11,12,7,8,17,29,30,22,23,24,25];
+            foreach($tipos as $tipo) {
+                $name_documento = $this->CasasDirectoModel->getDocumentoPersonaMoral($tipo)->nombre;
+                $documentos = $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $tipo, $pasos->tipoMovimiento, $this->idUsuario);
+                if (!$documentos) {
+                    $banderaDocumentos = false;
                 }
-            } else if ($persona == '2') {
-                # Persona fisica 2,3,4,7,8,20,26,27,28,29,30
-                $documentos = [2,3,4,7,8,20,26,27,28,29,30];
-                foreach($documentos as $documento) {
-                    $name_documento = $this->CasasDirectoModel->getDocumentoPersonaFisica($documento)->nombre;
-                    $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0, $this->idUsuario);
+            }
+        } else if ($voBoAdeudoTerreno == 1 && $persona == 2) {
+            # Persona fisica
+            $tipos = [2,3,4,7,8,20,26,27,28,29,30];
+            foreach($tipos as $tipo) {
+                $name_documento = $this->CasasDirectoModel->getDocumentoPersonaFisica($tipo)->nombre;
+                $documentos = $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $tipo, $pasos->tipoMovimiento, $this->idUsuario);
+                if (!$documentos) {
+                    $banderaDocumentos = false;
                 }
             }
         }
 
-        if ($banderaSuccess) {
+        if ($update && $add && $vobo && $banderaDocumentos) {
             $this->db->trans_commit();
             $this->json([]);
         } else {
@@ -375,35 +418,38 @@ class CasasDirecto extends BaseController
         $idProceso = $form->idProceso;
         $idLote = $form->idLote;
         $proceso = $form->proceso;
-        $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
         $voBoOrdenCompra = $form->proyectos;
         $voBoAdeudoTerreno = $form->adm;
         $idCliente = $form->idCliente;
-        $banderaSuccess = true;
-        // $id_usuario = $this->session->userdata('id_usuario');
+        $banderaDocumentos = true;
 
-        if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($procesoNuevo) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno)) {
+        if (!isset($idProceso) || !isset($idLote) || !isset($proceso) || !isset($comentario) || !isset($voBoOrdenCompra) || !isset($voBoAdeudoTerreno) || !isset($idCliente)) {
             http_response_code(400);
 
             $this->json([]);
         }
 
+        $this->db->trans_begin();
+
+        $pasos = $this->CasasDirectoModel->getPasos($idProceso, 1);
+
         $dataHistorial = array(
             "idProcesoCasas"  => $idProceso,
             "procesoAnterior" => $proceso,
-            "procesoNuevo"    => $voBoOrdenCompra == 1 ? $procesoNuevo : $proceso,
+            "procesoNuevo"    => $voBoOrdenCompra == 1 ? $pasos->avance : $proceso,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 2,
+            "esquemaCreditoProceso" => 1,
             "idCliente" => $idCliente,
             "idMovimiento" => $this->idUsuario
         );
 
         $updateData = array(
             "comentario" => $comentario,
-            "proceso" => $voBoOrdenCompra == 1 ? $procesoNuevo : $proceso,
+            "proceso" => $voBoOrdenCompra == 1 ? $pasos->avance : $proceso,
+            "tipoMovimiento"    => $pasos->tipoMovimiento
         );
 
         $updateVobo = array(
@@ -412,46 +458,39 @@ class CasasDirecto extends BaseController
             "modificadoPor" => $this->idUsuario
         );
 
-        $this->db->trans_begin();
-
         // actualizar el registro de la tabla
         $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
-        if (!$update) {
-            $banderaSuccess = false;
-        }
 
         // insert en historial
         $add = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
-        if (!$add) {
-            $banderaSuccess = false;
-        }
 
         // actualizar vobo
         $vobo = $this->CasasDirectoModel->updateVobosDirecto($idProceso, $proceso, $updateVobo);
-        if (!$vobo) {
-            $banderaSuccess = false;
-        }
 
-        if ($voBoOrdenCompra == 1) {
-            $persona = $this->CasasDirectoModel->getTipoPersona($idCliente)->personalidad_juridica ;
-            if ($persona == '1') {
-                # Persona moral
-                $documentos = [10,11,12,7,8,17,29,30,22,23,24,25];
-                foreach($documentos as $documento) {
-                    $name_documento = $this->CasasDirectoModel->getDocumentoPersonaMoral($documento)->nombre;
-                    $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0, $this->idUsuario);
+        $persona = $this->CasasDirectoModel->getTipoPersona($idCliente)->personalidad_juridica ;
+        if ($voBoOrdenCompra == 1 && $persona == 1) {
+            # Persona moral
+            $tipos = [10,11,12,7,8,17,29,30,22,23,24,25];
+            foreach($tipos as $tipo) {
+                $name_documento = $this->CasasDirectoModel->getDocumentoPersonaMoral($tipo)->nombre;
+                $documentos = $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $tipo, $pasos->tipoMovimiento, $this->idUsuario);
+                if (!$documentos) {
+                    $banderaDocumentos = false;
                 }
-            } else if ($persona == '2') {
-                # Persona fisica
-                $documentos = [2,3,4,7,8,20,26,27,28,29,30];
-                foreach($documentos as $documento) {
-                    $name_documento = $this->CasasDirectoModel->getDocumentoPersonaFisica($documento)->nombre;
-                    $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $documento, 0, $this->idUsuario);
+            }
+        } else if ( $voBoOrdenCompra == 1 && $persona == 2) {
+            # Persona fisica
+            $tipos = [2,3,4,7,8,20,26,27,28,29,30];
+            foreach($tipos as $tipo) {
+                $name_documento = $this->CasasDirectoModel->getDocumentoPersonaFisica($tipo)->nombre;
+                $documentos = $this->CasasDirectoModel->insertDocProcesoCreditoDirecto($idProceso, $name_documento, NULL, $tipo, $pasos->tipoMovimiento, $this->idUsuario);
+                if (!$documentos) {
+                    $banderaDocumentos = false;
                 }
             }
         }
 
-        if ($banderaSuccess) {
+        if ($update && $add && $vobo && $banderaDocumentos) {
             $this->db->trans_commit();
             $this->json([]);
         } else {
@@ -465,36 +504,36 @@ class CasasDirecto extends BaseController
     /*
     ****************** Rechazos ****************** 
     */
-    public function retrocesoAPaso2()
+    public function rechazoAPaso2()
     {
         $form = $this->form();
 
         $idProceso = $form->idProceso;
         $proceso = $form->proceso;
-        $procesoNuevo = $form->procesoNuevo;
         $comentario = $form->comentario;
         $idCliente = $form->idCliente;
-        $banderaSuccess = true;
-        // $id_usuario = $this->session->userdata('id_usuario');
+
+        $this->db->trans_begin();
+
+        $pasos = $this->CasasDirectoModel->getPasos($idProceso, 2);
 
         $dataHistorial = array(
             "idProcesoCasas"  => $idProceso,
             "procesoAnterior" => $proceso,
-            "procesoNuevo"    => $procesoNuevo,
+            "procesoNuevo"    => $pasos->avance,
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 2,
-            "idCliente" => $idCliente
+            "esquemaCreditoProceso" => 1,
+            "idCliente" => $idCliente,
+            "idMovimiento" => $this->idUsuario
         );
-
-        $this->db->trans_begin();
 
         $updateData = array(
             "comentario"         => $comentario,
-            "proceso"            => $procesoNuevo,
+            "proceso"            => $pasos->avance,
             "fechaModificacion"  => date("Y-m-d H:i:s"),
-            "tipoMovimiento"     => 2
+            "tipoMovimiento"     => $pasos->tipoMovimiento
         );
 
         $updateVobo = array(
@@ -506,23 +545,14 @@ class CasasDirecto extends BaseController
 
         // paso 1: hacer update del proceso
         $update = $this->General_model->updateRecord("proceso_casas_directo", $updateData, "idProceso", $idProceso);
-        if (!$update) {
-            $banderaSuccess = false;
-        }
 
         // paso 2: guardar registro del movimiento
         $addHistorial = $this->General_model->addRecord("historial_proceso_casas", $dataHistorial);
-        if (!$addHistorial) {
-            $banderaSuccess = false;
-        }
 
         // actualizar vobo
-        $vobo = $this->CasasDirectoModel->updateVobosDirecto($idProceso, $procesoNuevo, $updateVobo);
-        if (!$vobo) {
-            $banderaSuccess = false;
-        }
+        $vobo = $this->CasasDirectoModel->updateVobosDirecto($idProceso, $pasos->avance, $updateVobo);
 
-        if ($banderaSuccess) {
+        if ($update && $addHistorial && $vobo) {
             $this->db->trans_commit();
             $this->json([]);
         } else {

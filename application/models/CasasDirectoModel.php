@@ -16,18 +16,7 @@ class CasasDirectoModel extends CI_Model
     }
 
     public function insertDocProcesoCreditoDirecto($idProceso, $name_documento, $filename, $id_documento, $tipoDocumento, $id_usuario){
-        $existe = $this->db->query(
-            "SELECT
-                *
-            FROM
-                documentos_proceso_credito_directo
-            WHERE
-                idProceso = $idProceso
-                AND tipo = $id_documento
-                AND documento = '$name_documento'"
-        )->row();
-
-        if($tipoDocumento === 0 && ! $existe){
+        if($tipoDocumento === 1){
             $name = isset($filename) ? "'$filename'" : 'NULL';
             $query = "INSERT INTO documentos_proceso_credito_directo
             (
@@ -52,9 +41,9 @@ class CasasDirectoModel extends CI_Model
                 '$id_usuario'
             )";
         }else{
-            $name = isset($filename) ? "'$filename'" : 'NULL';
+            $name = isset($filename) ? "archivo = '$filename'," : '';
             $query = "UPDATE documentos_proceso_credito_directo 
-            SET documento = '$name_documento', archivo = $name, fechaModificacion = GETDATE(), idModificacion = '$id_usuario'
+            SET documento = '$name_documento', $name fechaModificacion = GETDATE(), idModificacion = '$id_usuario'
             WHERE idProceso = $idProceso AND tipo = $id_documento AND documento = '$name_documento'";
         }
 
