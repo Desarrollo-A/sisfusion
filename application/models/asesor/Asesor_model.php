@@ -1833,7 +1833,19 @@ class Asesor_model extends CI_Model {
         $this->db->where('estatus', 1);
         $query = $this->db->get();
         return $query->result_array();
+    }    
+    function getTipoContratoxLote($idLote,$idCliente){
+        $this->db->select('ct.tipo_contrato,ct.opcs_clausulas,op.nombre');
+        $this->db->from('clausulas_terrenos ct');
+        $this->db->join('opcs_x_cats op', 'ct.tipo_contrato = op.id_opcion');
+        $this->db->where('id_lote', $idLote);
+        $this->db->where('id_cliente', $idCliente);
+        $this->db->where('id_catalogo', 160);        
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return $result;
     }
+
     function insertar_clausulas_terrenos($data){                 
         if ($this->db->insert('clausulas_terrenos', $data)) {
             return true; 

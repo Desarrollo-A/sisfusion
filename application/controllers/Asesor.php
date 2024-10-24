@@ -1072,7 +1072,9 @@ class Asesor extends CI_Controller {
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
         $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
         $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
-        $datos['lideresRescateLista'] = $this->Asesor_model->getLideresRescates();
+        $datos['lideresRescateLista'] = $this->Asesor_model->getLideresRescates(); 
+
+        $datos['clausulasxlote']=$this->Asesor_model->getTipoContratoxLote($datos['cliente'][0]->idLote,$id_cliente);       
         $datos['clausulas']=$this->Asesor_model->getClausulas();
         $datos['tipoContrato']=$this->Asesor_model->getTipoContrato();
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
@@ -1975,16 +1977,6 @@ class Asesor extends CI_Controller {
         $namePDF = $pdf->Output(utf8_decode('DEPÓSITO_DE_SERIEDAD.pdf'), 'I');
         $attachment = $pdf->Output(utf8_decode($namePDF), 'S');
     }
-    // public function insertClausulasTerrenos($idCliente,$tipoContrato){
-    //     $data=array(
-    //         'id_cliente'=>$idCliente,
-    //         'creado_por'=>$this->session->userdata('id_usuario'),
-    //         'tipo_contrato'=>$tipoContrato,
-    //         'estatus'=> 1,
-
-    //     );
-    //     echo json_encode($this->Asesor_model->insertar_clausulas_terrenos($data));
-    // }
     public function editar_ds()
     {        
 
@@ -2051,19 +2043,16 @@ class Asesor extends CI_Controller {
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
         $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
 
-//VALORES SELECT CLAUSULAS ESPECIALES
-    // $clausulasSeleccionadas = $this->input->post('clausula');
+//VALORES SELECT CLAUSULAS ESPECIALES    
     $tipoContrato=$this->input->post('tipo-contrato');
     $clausulaSeleccionadas=$this->input->post('clausula');
     if(!empty($tipoContrato) && !empty($clausulaSeleccionadas)){
-        $clausulas = implode(',', $clausulaSeleccionadas);
-        $fecha_creacion = date('Y-m-d H:i:s');
+        $clausulas = implode(',', $clausulaSeleccionadas);        
         $data=array(
             'id_cliente'=>$id_cliente,
             'creado_por'=>$this->session->userdata('id_usuario'),
             'tipo_contrato'=>$tipoContrato,
-            'estatus'=> 1,
-            //'fecha_creacion'=> date('Y-m-d H:i:s', strtotime($fecha_creacion) - 3600),
+            'estatus'=> 1,            
             'id_lote'=>$this->input->post('idLote'),
             'opcs_clausulas'=>$clausulas,
         );

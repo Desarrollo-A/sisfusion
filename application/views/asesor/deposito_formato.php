@@ -1260,15 +1260,39 @@
                             <select data-i18n-label="selecciona-una-opcion" name="clausula[]" required="true" title="SELECCIONA UNA OPCIÓN" id="clausula" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" multiple>
                                 <?php if(!empty($clausulas)): ?>
                                 <?php
-                                    foreach($clausulas as $clausula){
-                                        echo '<option value="'.$clausula['id_opcion'].'">'.$clausula['nombre'].'</option>';                                      
-                                    }
+                                    // foreach($clausulas as $clausula){
+                                    //     echo '<option value="'.$clausula['id_opcion'].'">'.$clausula['nombre'].'</option>';                                      
+                                    // }   
+
+                                    // Convertir la cadena opcs_clausulas a un array
+                                    $clausulasSeleccionadas = explode(',', $clausulasxlote[0]['opcs_clausulas']);
+
+                                    for ($n = 0; $n < count($clausulas); $n++) {
+                                        // Verificar si el id_opcion está en el array de cláusulas seleccionadas
+                                        if (in_array($clausulas[$n]['id_opcion'], $clausulasSeleccionadas)) {
+                                            // Si coincide, marcar la opción como "selected"
+                                            echo '<option value="'.$clausulas[$n]['id_opcion'].'" selected>'.$clausulas[$n]['nombre'].'</option>';
+                                        } else {
+                                            // Si no coincide, imprimir la opción normal
+                                            echo '<option value="'.$clausulas[$n]['id_opcion'].'">'.$clausulas[$n]['nombre'].'</option>';
+                                        }
+                                    }                                      
                                 ?>
                                 <?php endif;?>
                             </select>                        
                         </div>
                         <input type="hidden" name="idLote" value="<?=$cliente[0]->idLote?>">
                     </div>
+
+                    <div>
+                    <?php
+                    // var_dump($clausulasxlote);
+                    // var_dump($clausulasxlote[0]['tipo_contrato']);
+                    // var_dump($tipoContrato);
+                    // var_dump($cliente[0]->idLote);
+                    ?>
+                    </div> 
+
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">
                             <label class="label-on-left m-0">
@@ -1277,15 +1301,34 @@
                             </label>
                             <select data-i18n-label="selecciona-una-opcion" name="tipo-contrato" required="true" title="SELECCIONA UNA OPCIÓN" id="tipo-contrato" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
                                 <?php if(!empty($tipoContrato)): ?>
-                                <?php 
-                                    foreach($tipoContrato as $contrato){
-                                        echo '<option value="'.$contrato['id_opcion'].'">'.$contrato['nombre'].'</option>';
-                                    }
+                                <?php                                     
+                                    // foreach($tipoContrato as $contrato){
+                                    //     echo '<option value="'.$contrato['id_opcion'].'">'.$contrato['nombre'].'</option>';
+                                    // }    
+                                    // $clausulasxlote = isset($clausulasxlote) ? $clausulasxlote : [];
+                                    
+                                    for($n = 0; $n < count($tipoContrato); $n++) {
+                                        if($tipoContrato[$n]['id_opcion'] == $clausulasxlote[0]['tipo_contrato']) {
+                                            // Si coincide el id_opcion con el tipo de contrato actual, se marca como seleccionado
+                                            echo '<option value="'.$tipoContrato[$n]['id_opcion'].'" selected>'.$tipoContrato[$n]['nombre'].'</option>';
+                                        } else {
+                                            // Si no coincide, se muestra sin seleccionarse
+                                            echo '<option value="'.$tipoContrato[$n]['id_opcion'].'">'.$tipoContrato[$n]['nombre'].'</option>';
+                                        }
+                                    }                                    
                                 ?>
                                 <?php endif;?>
                             </select>                        
                         </div>
                     </div>                               
+                </div>
+
+                <div>
+                    <?php
+                        // var_dump($clausulasxlote);
+                        // var_dump($tipoContrato);
+                        // echo count($clausulasxlote);
+                    ?>
                 </div>
                 <!-- FIN DE CLAUSULAS ESPECIALES -->
                 <div class="row pt-3">
@@ -1368,8 +1411,7 @@
                             <div class="form-group label-floating overflow-hidden">
                                 <label class="label-on-left m-0" data-i18n="parentesco">PARENTESCO</label>
                                 <select data-i18n-label="selecciona-una-opcion" name="parentesco1" title="SELECCIONA UNA OPCIÓN" data-live-search="true" data-container="body" id="parentesco1" <?php echo $readOnly; ?> class="selectpicker select-gral m-0" <?php echo $statsInput; ?>>
-                                    <?php
-                                    
+                                    <?php                                    
                                     for($p=0; $p < count($parentescos) ; $p++)
                                     {
                                         if($parentescos[$p]['id_opcion'] == $referencias[0]->parentesco)
