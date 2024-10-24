@@ -1845,7 +1845,11 @@ class Asesor_model extends CI_Model {
         $result = $query->result_array();
         return $result;
     }
-
+    function actualizar_clausulas_terrenos($idLote,$id_cliente,$data){
+        $this->db->where('id_lote', $idLote);
+        $this->db->where('id_cliente', $id_cliente);
+        return $this->db->update('clausulas_terrenos', $data);
+    }
     function insertar_clausulas_terrenos($data){                 
         if ($this->db->insert('clausulas_terrenos', $data)) {
             return true; 

@@ -2056,7 +2056,24 @@ class Asesor extends CI_Controller {
             'id_lote'=>$this->input->post('idLote'),
             'opcs_clausulas'=>$clausulas,
         );
-        $result=$this->Asesor_model->insertar_clausulas_terrenos($data);
+
+        // $datos=array(                                
+        //     'tipo_contrato'=>$data['tipo_contrato'],                                            
+        //     'opcs_clausulas'=>$data['opcs_clausulas'],
+        // );
+        // $this->Asesor_model->actualizar_clausulas_terrenos(101902,165872,$datos);
+
+        // $result=$this->Asesor_model->insertar_clausulas_terrenos($data);
+        $exists=$this->Asesor_model->getTipoContratoxLote($data['id_lote'],$data['id_cliente']);
+        if(!empty($exists) && count($exists) > 0){
+            $datos=array(                                
+                'tipo_contrato'=>$tipoContrato,                                            
+                'opcs_clausulas'=>$clausulas,
+            );
+            $this->Asesor_model->actualizar_clausulas_terrenos($data['id_lote'],$data['id_cliente'],$datos);
+        }else{
+            $result=$this->Asesor_model->insertar_clausulas_terrenos($data);
+        }        
     }
     
 
