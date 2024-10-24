@@ -24,6 +24,7 @@
                                         <option value="1">Continuar Proceso</option>
                                         <option value="0">Rechazar Proceso</option>
                                     </select>
+                                    <input type="hidden" id="montoReal" name="montoReal" value="">
                                     <input type="hidden" id="id_usuario" name="id_usuario" value="">
                                     <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
                                     <input type="hidden" id="proceso" name="proceso" value="">
@@ -61,6 +62,9 @@
                                         <option value="1">Pagar</option>
                                         <option value="0">Rechazar</option>
                                     </select>
+                                    <input type="hidden" id="montoReal1" name="montoReal1" value="">
+
+
                                     <input type="hidden" id="id_usuario" name="id_usuario" value="">
                                     <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
                                     <input type="hidden" id="proceso" name="proceso" value="">
@@ -101,16 +105,22 @@
                                                         <th>PROCESO</th>
                                                         <th>COMENTARIO</th>
                                                         <th>PRIORIDAD</th>
+                                                        
                                                         <th>IMPUESTO</th>
+                                                        <th>IMPUESTO</th>
+
+
                                                         <th>SEDE</th>
                                                         <th>ESQUEMA</th>
-                                                        <th>MONTO</th>
+                                                        <th>EMPRESA</th>
+                                                        <th>MONTO$$</th>
+                                                        
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
                                         </div>
-                                    </div>
+                                    </div> 
                                 </div>
                             </div>
                         </div>

@@ -41,6 +41,9 @@
     <!--     Fonts and icons     -->
     <link href="<?=base_url()?>dist/css/font-awesome.css" rel="stylesheet" />
     <link href="<?=base_url()?>dist/css/google-roboto-300-700.css" rel="stylesheet" />
+
+    <script src="https://accounts.google.com/gsi/client" async></script>
+
     <style>
         .md-form
         {
@@ -111,8 +114,27 @@
                                             <h4 class="card-title"><img src="<?=base_url()?>static/images/ciudadmaderas_white_2.png"
         																style="width: 70%;margin: 0px;"></h4>
                                         </div>
+                                        <p class="category text-center" style="margin: 15px;">
+                                            Inicia sesión con cuenta de google
+                                        </p>
+
+                                        <div style="margin: 15px;">
+                                            <div id="g_id_onload"
+                                                data-client_id="474884879866-404nd37vojdrc4csaa84rvs66p9h9bbb.apps.googleusercontent.com"
+                                                data-login_uri="<?=base_url()?>login/google_login"
+                                                data-auto_prompt="false">
+                                            </div>
+                                            <div class="g_id_signin"
+                                                data-type="standard"
+                                                data-size="large"
+                                                data-theme="outline"
+                                                data-text="sign_in_with"
+                                                data-shape="rectangular"
+                                                data-logo_alignment="left">
+                                            </div>
+                                        </div>
                                         <p class="category text-center">
-                                            Ingresa tus datos para poder continuar
+                                            o ingresa tus datos de usuario para poder continuar
                                         </p>
                                         <div class="card-content">
         									<div id="msg" style="text-align: center"></div>

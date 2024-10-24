@@ -52,7 +52,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
                 titleAttr: 'REPORTE ESTATUS 9',
                 title: 'Reporte estatus 9',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx] + ' ';
@@ -111,6 +111,14 @@ function fillTable(typeTransaction, beginDate, endDate) {
                 }
             },
             { data: 'nombreSedeRecepcion' },
+            {
+                data: function (n) {
+                    if (n.tipoEnganche == 0 || n.tipoEnganche == null) {
+                        return `SIN ESPECIFICAR`;  
+                    }
+                    return `<center>${n.nombre}<center>`;
+                }
+            },
         ],
         columnDefs: [{
             visible: false,

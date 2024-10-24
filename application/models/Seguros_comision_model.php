@@ -294,7 +294,7 @@ class Seguros_comision_model extends CI_Model {
     }
     
     public function registroComisionAsimilados($id_pago){
-        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones_seguros c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
+        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones_seguro c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
         $query = $this->db->query($cmd);
         return  $query->result_array();
     }
@@ -352,7 +352,7 @@ class Seguros_comision_model extends CI_Model {
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
         FROM pago_seguro_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
         GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
-        INNER JOIN comisiones_seguros com ON pci1.id_comision = com.id_comision and com.estatus = 1
+        INNER JOIN comisiones_seguro com ON pci1.id_comision = com.id_comision and com.estatus = 1
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial

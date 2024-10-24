@@ -41,7 +41,7 @@ const  datosTablas = [
         estatus: 0,
         idSelect:'proyecto_sp',
         idSelectCond:'condominio_sp',
-        idTitle : ''
+        idTitle : 'total_sin_pago'
     }
 ];
 let titulos = [];
@@ -93,24 +93,33 @@ function llenarSumas(){
 }
 
 function getPagosComisiones(idProyecto,idCondominio,estatus){
+    console.log(estatus);
+
     var datosRespuesta = [];
     $.ajax({
         type: 'POST',
         url: general_base_url + "Comisiones/getDatosComisionesRigel",
         data: {idProyecto:idProyecto,idCondominio:idCondominio,estatus:estatus},
+        
         success: function(result) {
+
             datosRespuesta = JSON.parse(result);
         },
         async:   false
         });
         return datosRespuesta;
 }
+
 function getPagosEstatus(idTabla,idProyecto,idCondominio,estatus){
+    // console.log(idProyecto);
+    // console.log(idCondominio);
+    // console.log(estatus);
     $('#spiner-loader').removeClass('hide');
     const data = getPagosComisiones(idProyecto,idCondominio,estatus);
     crearTabla(idTabla,data,estatus);
     $('#spiner-loader').addClass('hide');
 }
+
 for (let m = 0; m < datosTablas.length; m++) {
     if(datosTablas[m].estatus != 0)
     $(`#${datosTablas[m].id} thead tr:eq(0) th`).each( function (i) {
@@ -127,7 +136,7 @@ for (let m = 0; m < datosTablas.length; m++) {
                         var data = $(`#${datosTablas[m].id}`).DataTable().rows(index).data();
 
                     $.each(data, function(i, v) {
-                        console.log(v)
+                        // console.log(v)
                         total += parseFloat(v.impuesto);
                     });
                     var to1 = formatMoney(total);
@@ -143,14 +152,16 @@ for (let m = 0; m < datosTablas.length; m++) {
 }
 
 
+
 async function crearTabla(idTabla,data2,estatus){
     console.log(idTabla)
-    console.log(data2)
+    console.log(data2);
     console.log(estatus)
     let datosTbActual = datosTablas.filter(datos => datos.estatus == estatus);
-    console.log(datosTbActual[0].id)
+    console.log(datosTbActual);
+    // console.log(datosTbActual[0].id)
     let idProyecto = $(`#${datosTbActual[0].idSelect}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelect}`).val() ,idCondominio = $(`#${datosTbActual[0].idSelectCond}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelectCond}`).val();  
-
+    // console.log(idSelect);
     $(`#${idTabla}`).prop("hidden", false);
 
    $(`#${idTabla}`).DataTable({
@@ -164,7 +175,7 @@ async function crearTabla(idTabla,data2,estatus){
                     var dia = hoy.getDate();
                     var mes = hoy.getMonth()+1;
                     var hora = hoy.getHours();
-                    if([1,2].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                    if([1,2,3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                                 ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0])) //VALIDACION VENTAS NORMAL
                         || (id_usuario_general == 7689)
                         ){
@@ -224,7 +235,7 @@ async function crearTabla(idTabla,data2,estatus){
                 var mes = hoy.getMonth()+1;
                 var hora = hoy.getHours();
                 //PARA RESGUARDO SIEMPRE SON LOS DOS DIAS SIGUIENTES AL CORTE NORMAL DE COMISIONES
-                if([3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
+                if([0,1,3].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
                          ||  (mes == fechaFinCorteGlobal[1] && dia == fechaFinCorteGlobal[2] && hora <= horaFinCorteGlobal[0]))
                 )
                 {
@@ -301,7 +312,8 @@ async function crearTabla(idTabla,data2,estatus){
         },
         destroy: true,
         ordering: false,
-        "data":data2,
+        data:data2,
+        info: false,
         columns: [{
         },
         {
@@ -354,16 +366,16 @@ async function crearTabla(idTabla,data2,estatus){
                 var lblPenalizacion = '';
 
                 if (d.penalizacion == 1){
-                    lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 días"><span class="label lbl-orangeYellow">PENALIZACIÓN + 90 días</span></p>';
+                    lblPenalizacion =`<p class="m-0" title="PENALIZACIÓN + 90 días"><span class="label lbl-orangeYellow">PENALIZACIÓN + 90 días</span></p>`;
                 }
                 if(d.bonificacion >= 1){
-                    p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-pink">Bon. '+formatMoney(d.bonificacion)+'</span></p>';
+                    p1 = `<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-pink">Bon. '+formatMoney(d.bonificacion)+'</span></p>`;
                 }
                 else{
                     p1 = '';
                 }
                 if(d.lugar_prospeccion == 0){
-                    p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
+                    p2 = `<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">Recisión</span></p>`;
                 }
                 else{
                     p2 = '';
@@ -373,8 +385,10 @@ async function crearTabla(idTabla,data2,estatus){
         },
         {
             "data": function(d) {
-                        let td = d.estatus == 1 ? `<br><span class="label ${d.forma_pago.split('/')[2]}">${d.forma_pago.split('/')[3]}  ${d.estatus_actual}</span></p>` : ``;
-                        return `<p class="m-0"><span class="label ${d.forma_pago.split('/')[0]}">${d.forma_pago.split('/')[1]}</span>` + td;
+                let valores = d.texto.split('/');
+                var color = valores[0];
+                var texto = valores[1];
+             return `<p class="m-0"><span class="label lbl-${d.color}">${d.pj_name}</span><br><span class="label lbl-${color}">${texto}  ${d.estatus_actual}</span></p>`;
             }
         },
         {
@@ -459,10 +473,11 @@ async function crearTabla(idTabla,data2,estatus){
             $('#spiner-loader').addClass('hide');
         });
     });  
+
     $(`#${idTabla}`).on('click', 'input', function () { //PAGOS SELECCIONADOS
         tr = $(this).closest('tr');
         var row = tabla_nuevas.row(tr).data();
-        console.log(row)
+        // console.log(row)
             if($(`#${row.id_pago_i}`).is(':checked')){
                 tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
                 totalPen += parseFloat(row.impuesto);
@@ -502,6 +517,7 @@ function modalHistorial(){
     </div>`);
     showModal();
 }
+
 $(document).on("click", ".individualCheck", function() {
     var totaPen = 0;
     tabla_nuevas.$('input[type="checkbox"]').each(function () {

@@ -1,4 +1,4 @@
-pass_to_validacion = function(data) {
+pass_to_next = function(data) {
     let form = new Form({
         title: 'Enviar a validación', 
         text: `¿Enviar documentación del lote <b>${data.nombreLote}</b> a validación por contraloría?`,
@@ -7,7 +7,7 @@ pass_to_validacion = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_validacion`,
+                url: `to_validacion_contraloria`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -32,6 +32,7 @@ pass_to_validacion = function(data) {
     form.show()
 }
 
+/*
 function edit_montos(data) {
     let form = new Form({
         title: 'Editar montos',
@@ -68,6 +69,7 @@ function edit_montos(data) {
 
     form.show()
 }
+*/
 
 go_to_documentos = function(data) {
     window.location.href = `subir_documentacion/${data.idProcesoPagos}`;
@@ -112,14 +114,14 @@ let columns = [
     } },
     { data: function(data){
         let docu_button = new RowButton({icon: 'toc', label: 'Subir documentos', onClick: go_to_documentos, data})
-        let montos_button = new RowButton({icon: 'edit', label: 'Editar montos', onClick: edit_montos, data})
+        // let montos_button = new RowButton({icon: 'edit', label: 'Editar montos', onClick: edit_montos, data})
 
         let pass_button = ''
-        if(data.montoDepositado && data.costoConstruccion && data.documentos >= 6){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a validar documentos', onClick: pass_to_validacion, data})
+        if(data.documentos >= 6){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a validar documentos', onClick: pass_to_next, data})
         }
 
-        return `<div class="d-flex justify-center">${docu_button}${montos_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${docu_button}</div>`
     } },
 ]
 

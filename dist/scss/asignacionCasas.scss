@@ -1,0 +1,59 @@
+@import "_base";
+$background-color_1: #000000;
+$background-color_2: #00C896;
+
+.cont {
+	display: flex;
+	align-items: center;
+	transform: scale(1);
+}
+input[type="checkbox"] {
+	height: 2.5rem;
+	width: 2.5rem;
+	margin: 1px;
+	display: inline-block;
+	appearance: none;
+	position: relative;
+	background-color: $background-color_1;
+	border-radius: 15%;
+	cursor: pointer;
+	overflow: hidden;
+	&::after {
+		content: '';
+		display: block;
+		height: 1.5rem;
+		width: .6rem;
+		border-bottom: .31rem solid #a0ffe7;
+		border-right: .31rem solid #a0ffe7;
+		opacity: 0;
+		transform: rotate(45deg) translate(-50%, -50%);
+		position: absolute;
+		top: 45%;
+		left: 21%;
+		transition: .25s ease;
+	}
+	&::before {
+		content: '';
+		display: block;
+		height: 0;
+		width: 0;
+		background-color: $background-color_2;
+		border-radius: 50%;
+		opacity: .5;
+		transform: translate(-50%, -50%);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transition: .3s ease;
+	}
+	&:checked {
+		&::before {
+			height: 130%;
+			width: 130%;
+			opacity: 100%;
+		}
+		&::after {
+			opacity: 100%;
+		}
+	}
+}

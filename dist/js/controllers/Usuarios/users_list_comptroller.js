@@ -1,4 +1,4 @@
-const usuariosContraloria = [2767, 5957, 11947, 2754, 14481, 11815];
+const usuariosContraloria = [2767, 5957, 11947, 2754, 14481, 11815, 14342, 2749];
 
 $(document).ready(function() {
     $.post(`${general_base_url}Usuarios/getPaymentMethod`, function(data) {

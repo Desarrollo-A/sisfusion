@@ -26,7 +26,7 @@
                                             <th>ID DOC</th>
                                             <th>DOCUMENTO</th>
                                             <th>ARCHIVO</th>
-                                            <th>FECHA SUBIDO</th>
+                                            <th>FECHA DE CARGA</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

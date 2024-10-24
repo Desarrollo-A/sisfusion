@@ -368,7 +368,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
 
     Modalbody_subir.append(`
         <input type="hidden" value="${ID}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-        <h4 class=" center-align">¿Ésta seguro que desea aceptar el Descuento de ${ID}?</h4>
+        <h4 class=" center-align">¿Está seguro que desea aceptar el Descuento de ${ID}?</h4>
         <br>
         <p class=" card-title text-muted pl-1 col-md-6  center-align"> Monto autorizado :    ${formatMoney(monto)}     </p>
         <p class=" card-title text-muted pl-1 col-md-6 center-align"> Prioridad :    ${ prioridad_nombre}     </p>
@@ -383,7 +383,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
         <h2 class="card_title">Detalles</h2>
             <p class="center-align"> 
                 Monto solicitado : ${formatMoney(monto)} .<br>
-                Mendiante la modalidad : ${modalidad}
+                Mediante la modalidad : ${modalidad}
 
                 
             </p>
@@ -461,7 +461,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
-                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '        <a> Proceso : <b> ' +v.nombre+ '</b></a><br>\n' +
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
                 '        <a> Comentario : ' +v.comentario + '</a>\n' +

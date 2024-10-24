@@ -1204,7 +1204,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         //token autorizado para esta operación
         //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4MTAzNTgsImV4cCI6MTcwNDg5Njc1OCwiZGF0YSI6eyJ1c2VybmFtZSI6IjAwNE1fQ09NNTAyIiwicGFzc3dvcmQiOiIyMjM1JjgzMlNEVlcifX0.bqVjnDZeaHVvFQdDoTN8zxhvNOt5owMOYqdG1jCf6k4
 
-        if (!isset(apache_request_headersxxx()["Authorization"])) //solicitud de autorización
+        if (!isset(apache_request_headers()["Authorization"])) //solicitud de autorización
             echo json_encode(array("status" => 360, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         else {
             if (apache_request_headers()["Authorization"] == "") // validar headers autorización
@@ -1242,10 +1242,13 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                 $table = 'autorizaciones_msi';
                                 $key = 'id_autorizacion';
                                 $table_historial = 'historial_autorizacionesPMSI';
-                                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
-                                $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+                                //$actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+                                //$insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
                                 $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                                echo 'Modo 1:<br><br>';
+                                print_r($array_update_lotes);
+                                exit;
                                 $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
                             }
                             else if($autorizacion['modoActualizacion'] == 2){
@@ -1272,14 +1275,18 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                 $table = 'autorizaciones_msi';
                                 $key = 'id_autorizacion';
                                 $table_historial = 'historial_autorizacionesPMSI';
-                                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
-                                $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+                                //$actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+                                //$insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
 
                                 //este proceso se debe dejar para que lo ejecute el servidor
                                 /**/
 
                                 $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                                echo 'Modo 2:<br><br>';
+
+                                print_r($array_update_lotes);
+                                exit;
                                 $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
 
 
@@ -1322,18 +1329,35 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 foreach($lotes_diferentes as $item2){
                     if($item['idLote'] == $item2['ID']){
                         $flag = 1;//flag para que no se inserte doble vez la posicion de ambos arrays
-                        $arrayManejo = array(
-                            'idLote'       =>  (int) $item2['ID'], //id del lote en el arreglo que son difernetes
-                            'msi'          =>   (int) $item2['MSNI'],
-                        );
+                        if($item['idStatusLote'] == 3 || $item['idStatusLote'] == 2){
+                            $arrayManejo = array(
+                                'idLote'       =>  (int) $item2['ID'], //id del lote en el arreglo que son difernetes
+                                'msi_respaldo' =>   (int) $item2['MSNI'],
+                            );
+                        }else if($item['idStatusLote'] == 1 || $item['idStatusLote'] == 8){
+                            $arrayManejo = array(
+                                'idLote'       =>  (int) $item2['ID'], //id del lote en el arreglo que son difernetes
+                                'msi'          =>   (int) $item2['MSNI'],
+                                'msi_respaldo' =>   (int) $item2['MSNI'],
+                            );
+                        }
                         array_push($arrayVista, $arrayManejo );
                     }
                 }
                 if($flag==0){
-                    $arrayManejo = array(
-                        'idLote' =>   $item['idLote'], //id del lote en el arreglo que son difernetes
-                        'msi'    =>   $data_autorizacion[0]['msi']//los demás se actualizan con los MSI que se definieron al principio
-                    );
+                    if($item['idStatusLote'] == 3 || $item['idStatusLote'] == 2){
+                        $arrayManejo = array(
+                            'idLote' =>   $item['idLote'], //id del lote en el arreglo que son difernetes
+                            'msi_respaldo' =>  $data_autorizacion[0]['msi'],//los demás se actualizan con los MSI que se definieron al principio
+                        );
+                    }else if($item['idStatusLote'] == 1 || $item['idStatusLote'] == 8){
+                        $arrayManejo = array(
+                            'idLote' =>   $item['idLote'], //id del lote en el arreglo que son difernetes
+                            'msi'    =>   $data_autorizacion[0]['msi'],//los demás se actualizan con los MSI que se definieron al principio
+                            'msi_respaldo' =>  $data_autorizacion[0]['msi'],
+                        );
+                    }
+
                     array_push($arrayVista, $arrayManejo);
                 }
             }
@@ -1346,14 +1370,88 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio);
             $arrayVista = array(); //el array que armaremos par amandarlo a la vista
             foreach ($lotes_general as $item) {
-                $arrayManejo['idLote'] = $item['idLote'];
-                $arrayManejo['msi'] = $data_autorizacion[0]['msi'];
+                if($item['idStatusLote'] == 3 || $item['idStatusLote'] == 2){
+                    $arrayManejo['idLote'] = $item['idLote'];
+                    $arrayManejo['msi_respaldo'] = $data_autorizacion[0]['msi'];
+                }else if($item['idStatusLote'] == 1 || $item['idStatusLote'] == 8){
+                    $arrayManejo['idLote'] = $item['idLote'];
+                    $arrayManejo['msi'] = $data_autorizacion[0]['msi'];
+                    $arrayManejo['msi_respaldo'] = $data_autorizacion[0]['msi'];
+                }
+
                 array_push($arrayVista, $arrayManejo);
             }
             $updateData = $arrayVista;
             return $updateData;
         }
     }
+
+    public function getLotesAsignados() {
+      set_time_limit(6000);
+      
+      $encabezados[] = array();
+      $informacionContraloria = $this->scheduleTasks_model->getInformacionRetrasos(1)->result();
+      $informacionContratacionTitulacion = $this->scheduleTasks_model->getInformacionRetrasos(2)->result();
+      $correosContraloria = ['mariela.sanchez@ciudadmaderas.com', 'coord.contraloria1@ciudadmaderas.com', 'silvia.ramirez@ciudadmaderas.com', 'irene.vallejo@ciudadmaderas.com', 'alejandro.gonzalez@ooam.com.mx', 'asael.fernandez@ciudadmaderas.com'];
+      $correosContratacionYTitulacion =['mariela.sanchez@ciudadmaderas.com', 'coord.contraloria1@ciudadmaderas.com', 'silvia.ramirez@ciudadmaderas.com', 'irene.vallejo@ciudadmaderas.com', 'cinthya.lopez@ciudadmaderas.com', 'coord.titulacion@ciudadmaderas.com', 'alejandro.gonzalez@ooam.com.mx', 'asael.fernandez@ciudadmaderas.com'];
+      $correosPruebas = ['mariadejesus.garduno@ciudadmaderas.com', 'coordinador1.desarrollo@ciudadmaderas.com'];
+
+      $encabezados = [
+        'estatusModificacion' => 'MOVIMIENTO',
+        'nombreResidencial'  => 'PROYECTO',
+        'nombreCondominio' => 'CONDOMINIO',
+        'nombreLote' => 'LOTE',
+        'nombreCliente' => 'CLIENTE',
+        'referencia' => 'REFERENCIA',
+        'nombreGerente' => 'GERENTE',
+        'fechaUltimoEstatus' => 'FECHA DE ÚLTIMO ESTATUS',
+        'fechaVencimiento' => 'FECHA DE VENCIMIENTO',
+        'diasVencimiento' => 'DÍAS DE VENCIMIENTO'
+    ];
+
+      // CORREO A CONTRALORÍA
+      if (count($informacionContraloria) > 0)
+        $this->enviarCorreoConRetrasos(1, $informacionContraloria, $correosContraloria, $encabezados);
+      else
+        $this->enviarCorreoSinRetrasos(1, $correosContraloria);
+
+      // CORREO A CONTRATACIÓN Y TITULACIÓN
+      if (count($informacionContratacionTitulacion) > 0)
+        $this->enviarCorreoConRetrasos(2, $informacionContratacionTitulacion, $correosContratacionYTitulacion, $encabezados);
+      else
+        $this->enviarCorreoSinRetrasos(2, $correosContratacionYTitulacion);
+  }
+
+  public function enviarCorreoConRetrasos ($tipo, $arregloDatos, $correos, $encabezados) {
+    $contenido[] = array();
+    foreach ($arregloDatos as $key => $valor) {
+      $contenido[$key] = array(
+        'estatusModificacion' => $valor->estatusModificacion,
+        'nombreResidencial'  => $valor->nombreResidencial,
+        'nombreCondominio' => $valor->nombreCondominio,
+        'nombreLote' => $valor->nombreLote,
+        'nombreCliente' => $valor->nombreCliente,
+        'referencia' => $valor->referencia,
+        'nombreGerente' => $valor->nombreGerente,
+        'fechaUltimoEstatus' => $valor->fechaUltimoEstatus,
+        'fechaVencimiento' => $valor->fechaVencimiento,
+        'diasVencimiento' => $valor->diasVencimiento
+      );
+    }
+    $subjectComplemento = $tipo == 1 ? "CONTRALORÍA" : "CONTRATACIÓN Y TITULACIÓN";
+    $this->email->initialize()->from('Ciudad Maderas')->to($correos)
+    ->subject("Trámites vencidos proceso de reestructura $subjectComplemento - " . date('d-m-Y'))
+    ->view($this->load->view('mail/reestructura/mailPendientesContraloria_ContratacionTitulacion.php', ['encabezados' => $encabezados, 'contenido' => $contenido], true));
+    $this->email->send();
+  }
+
+  public function enviarCorreoSinRetrasos ($tipo, $correos) {
+    $subjectComplemento = $tipo == 1 ? "CONTRALORÍA" : "CONTRATACIÓN Y TITULACIÓN";
+    $this->email->initialize()->from('Ciudad Maderas')->to($correos)
+    ->subject("Trámites vencidos proceso de reestructura $subjectComplemento - " . date('d-m-Y'))
+    ->view($this->load->view('mail/reestructura/mailSinRetrasos.php', [], true));
+    $this->email->send();
+  }
 
 }
 ?>

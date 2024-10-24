@@ -110,7 +110,7 @@ function fillTable(index_proyecto) {
                 titleAttr: 'Reestructuración',
                 title: 'Reestructuración',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -156,6 +156,7 @@ function fillTable(index_proyecto) {
                     return `<span class='label ${d.estatusCancelacion == 'CANCELADA' ? 'lbl-orange' : 'lbl-green'}'>${d.estatusCancelacion}</span>`;
                 }
             },
+            { data: 'usuarioLiberacion' },
             {
                 data: function (d) {
                     if (d.consulta == 1) {

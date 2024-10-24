@@ -120,12 +120,13 @@ $("#estatusSeguro").change(function() {
                     return formatMoney(d.Comisiones_pendientes);
                 }},
                 { data: function (d) {
-                        return `<span class="label lbl-azure">${moment(d.fecha_modificacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</span>`;
+                        let nuevoSaldo = d.numero_dispersion > 1 ? `<span class="label lbl-azure">Nuevo saldo</span>`  : '';
+                        return `<span class="label lbl-azure">${moment(d.fecha_modificacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</span> ${nuevoSaldo}`;
                     
                 }},
                 { data: function (d) {
                             let botonView = `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" class="btn-data btn-green verify_neodata" title="VERIFICAR COMISIONES"><span class="material-icons">verified_user</span></button>`,
-                                botonAutorizar = [0,1,3].indexOf(parseInt(d.idestatusSeguro)) >= 0 ?  `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" data-tipoAut="2" class="btn-data btn-violetDeep aut" title="Autorizar comisiones"><span class="material-icons">thumb_up</span></button>` : '',
+                                botonAutorizar = [0,1,3,4].indexOf(parseInt(d.idestatusSeguro)) >= 0 ?  `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" data-tipoAut="2" class="btn-data btn-violetDeep aut" title="Autorizar comisiones"><span class="material-icons">thumb_up</span></button>` : '',
                                 botonRechazar = d.idestatusSeguro == 1 ? `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" data-tipoAut="3" class="btn-data btn-warning aut" title="Rechazar comisiones"><span class="material-icons">thumb_down</span></button>` : '',
                                 botonHistorial = `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" class="btn-data btn-gray historial" title="Historial movimientos"><span class="material-icons">info</span></button>`;
                     return `<div class="d-flex justify-center">`+botonView + botonAutorizar + botonRechazar + botonHistorial+`</div>`;

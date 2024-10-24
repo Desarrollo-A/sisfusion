@@ -77,9 +77,9 @@ class General_model extends CI_Model
             return false;
     }
 
-    public function updateRecord($table, $data, $key, $value) { // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+    public function updateRecord($table, $data, $key, $value, $extra = '') { // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
         if ($data != '' && $data != null) {
-            $response = $this->db->update($table, $data, "$key = '$value'");
+            $response = $this->db->update($table, $data, "$key = '$value' $extra");
             if ($response)
                 return true;
             else

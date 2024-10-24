@@ -369,5 +369,17 @@ function modalInformation(bandera, mensaje){
   showModal();
 }
 
+function emptyLog() {
+    $("#historialLine").append(`<li>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <a><b>  No Hay historial de preproceso sobre este lote  </b></a><br>
+                </div>
+            </div>
+        </div>
+    </li>`);
+}
+
 
 

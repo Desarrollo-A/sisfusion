@@ -8,7 +8,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Reestructura extends CI_Controller{
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model', 'Administracion_model'));
+        $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model', 'Administracion_model', 'ComisionesNeo_model'));
         $this->load->library(array('session','form_validation', 'get_menu', 'permisos_sidebar', 'Formatter'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
@@ -19,6 +19,7 @@ class Reestructura extends CI_Controller{
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
 		//$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
         //$this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+        $this->programacion = $this->load->database('programacion', TRUE);
     }
 
     public function validateSession() {
@@ -195,6 +196,7 @@ class Reestructura extends CI_Controller{
         $idAsesor = $this->session->userdata('id_usuario');
         $nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
         $idLider = $this->session->userdata('id_lider');
+        $idRol = $this->session->userdata('id_rol');
 		$clienteAnterior = $this->General_model->getClienteNLote($idCliente)->row();
         $idClienteAnterior = $clienteAnterior->id_cliente;
         $loteAOcupar = $clienteAnterior->idLote;
@@ -204,6 +206,7 @@ class Reestructura extends CI_Controller{
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
         if( $fechaUltimoEstatus2 >= $fechaCambio){
+            $idLider = $idRol == 3 ? $this->session->userdata('id_usuario') : $idLider;
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
         else{
@@ -226,7 +229,7 @@ class Reestructura extends CI_Controller{
         $proceso = 3;
 
         $qry = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
-        if ( $qry['result'] = false ) {
+        if ( $qry['result'] == false ) {
             $this->db->trans_rollback();
             echo json_encode(array(
                 'titulo' => 'ERROR',
@@ -470,7 +473,7 @@ class Reestructura extends CI_Controller{
             $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote, $idProyecto);
 
             if (count($dataDisponible) > 0) {
-                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1 || $dataDisponible[0]['idStatusLote'] == 2 || $varibaleCiertoFalso)) {//se checa que el devuelto si este en 15 y sea el que s emandó
+                if ($dataDisponible[0]['idLote'] == $elementoLote && (in_array($dataDisponible[0]['idStatusLote'], array(15, 1, 21, 2)))) {//se checa que el devuelto si este en 15 y sea el que s emandó
                     $flagConteo = $flagConteo + 1;
                     $arrayNoDisponible .= '- ID LOTE: ' . $dataDisponible[0]['idLote'] . ' (' . $dataDisponible[0]['nombreLote'] . '),';
                 }
@@ -695,6 +698,8 @@ class Reestructura extends CI_Controller{
 
     public function setReubicacion(){
         $this->db->trans_begin();
+        $bandera = '';
+        $check = false;
         $idLote = $this->input->post('idLote');
         if(!isset($idLote)){
             echo json_encode(array(
@@ -715,7 +720,6 @@ class Reestructura extends CI_Controller{
 
         $checkApartado02 = $this->Reestructura_model->checkFechaApartado02($idLoteOriginal);
         $fechaCambio = "2024-03-09";
-
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
         if( $fechaUltimoEstatus2 >= $fechaCambio){
@@ -733,7 +737,7 @@ class Reestructura extends CI_Controller{
                 echo json_encode(array(
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
-                    'message' => 'No se encontro el Gerente correspondiente, reportarlo con SISTEMAS',
+                    'message' => 'No se encontró el Gerente correspondiente, reportarlo con SISTEMAS',
                     'color' => 'danger'
                 ));
                 exit; 
@@ -958,8 +962,16 @@ class Reestructura extends CI_Controller{
                         return;
                     }
 
-                    if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'],
-                        $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion)) {
+                    $moverExpediente = $this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'], $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion);
+                    $checkRescision = $this->Reestructura_model->checkRescision($dataLote['idLote'])->result();
+                    
+                    
+                    if(!empty($checkRescision)){
+                        $bandera = $dataLote['idLote'];
+                        $check = true;
+                    }
+
+                    if (!$moverExpediente){
                         $this->db->trans_rollback();
             
                         echo json_encode(array(
@@ -970,6 +982,24 @@ class Reestructura extends CI_Controller{
                         ));
                         return;
                     }
+
+                    if (!$check){
+                        $this->db->trans_rollback();
+
+                        var_dump($check);
+                        var_dump($dataLote['idLote']);
+                        echo '<pre>';var_dump($checkRescision);echo '</pre>';
+                        echo '<pre>';var_dump($moverExpediente);echo '</pre>';
+            
+                        echo json_encode(array(
+                            'titulo' => 'ERROR',
+                            'resultado' => FALSE,
+                            'message' => 'Error al dar de alta la rescisión de contrato',
+                            'color' => 'danger'
+                        ));
+                        return;
+                    }
+
                     $banderaInsertResicion = $banderaInsertResicion + 1;
                 }
             }
@@ -1289,7 +1319,8 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave => 0], $dataCliente);
                 continue;
             } else if ($clave == 'id_gerente') {
-                $dataCliente = array_merge([$clave => $idLider], $dataCliente);
+                    $idLider = $idAsesor == $idLider ? 0 : $idLider;
+                    $dataCliente = array_merge([$clave => $idLider], $dataCliente);
                 continue;
             } else if ($clave == 'idLote' && $proceso != 3) {
                 $dataCliente = array_merge([$clave => $loteSelected], $dataCliente);
@@ -1855,30 +1886,36 @@ class Reestructura extends CI_Controller{
 
 	public function getregistrosLotes() {
         $id_proyecto = $this->input->post('index_proyecto');
-
-        if ($this->session->userdata('id_usuario') == 13546 || $this->session->userdata('id_usuario') == 15625 || $this->session->userdata('id_usuario') == 13547  ) {
-            $union = "
-                AND re.idResidencial IN ($id_proyecto)
-            UNION ALL
-                SELECT re.idResidencial, re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.estatus_preproceso, lo.idCliente, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
-                    CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
-                    lo.observacionLiberacion AS observacion, CASE WHEN lo.liberaBandera = 1 THEN 'LIBERADO' ELSE 'SIN LIBERAR' END estatusLiberacion,
-                    lo.liberaBandera, lo.idStatusLote, '1' as consulta, ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion, lo.solicitudCancelacion,
-                    'SIN CANCELAR' AS estatusCancelacion,
-                    lo.solicitudCancelacion, lo.comentarioReubicacion, lo.comentarioLiberacion
-                FROM lotes lo 
-                    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-                    INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-                    LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
-                    LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
-                WHERE 
-                    lo.status = 1  AND re.idResidencial IN ($id_proyecto)
-                AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3, 17) )";
-        }else {
-            $union = "AND re.idResidencial IN ($id_proyecto)";
+        $tipoTransaccion = $this->input->post('tipoTransaccion');
+        if (in_array($this->session->userdata('id_usuario'), [9897, 13655]))
+            $dato = $this->Reestructura_model->getLotes2($id_proyecto);
+        else {
+            if (in_array($this->session->userdata('id_usuario'), array(13546, 15625, 13547, 12113, 12668, 12115, 12112, 2896)) && $tipoTransaccion == 1) {
+                $union = "
+                    
+                UNION ALL
+                    SELECT re.idResidencial, re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.estatus_preproceso, lo.idCliente, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
+                        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
+                        lo.observacionLiberacion AS observacion, CASE WHEN lo.liberaBandera = 1 THEN 'LIBERADO' ELSE 'SIN LIBERAR' END estatusLiberacion,
+                        lo.liberaBandera, lo.idStatusLote, '1' as consulta, ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion, lo.solicitudCancelacion,
+                        'SIN CANCELAR' AS estatusCancelacion,
+                        lo.solicitudCancelacion, lo.comentarioReubicacion, lo.comentarioLiberacion, 'SIN ESPECIFICAR' usuarioLiberacion
+                    FROM lotes lo 
+                        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
+                        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
+                    WHERE 
+                        lo.status = 1  AND re.idResidencial IN ($id_proyecto)
+                    AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3, 17) )";
+            } else {
+                if ($id_proyecto == 0)
+                    $union = "";
+                else
+                    $union = "AND re.idResidencial IN ($id_proyecto)";
+            }        
+        $dato = $this->Reestructura_model->getLotes($union, $id_proyecto);
         }
-        
-        $dato = $this->Reestructura_model->getLotes($union);
         if ($dato != null)
             echo json_encode($dato);
         else
@@ -2241,6 +2278,20 @@ class Reestructura extends CI_Controller{
         $idUsuario = $this->session->userdata('id_usuario');
         $idRol = $this->session->userdata('id_rol');
         $flagProcesoContraloriaJuridico = 0;
+
+        $check = $this->Reestructura_model->copiarDatosXCliente($idLote);
+        if(empty($check)){
+            $this->db->trans_rollback();
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error en la información del cliente',
+                'color' => 'danger'
+            ));
+            return;
+            exit;
+        }
 
         if ($idPreproceso == 2)
             $flagProcesoContraloriaJuridico = $this->Reestructura_model->validarEstatusContraloriaJuridico($idLote);
@@ -3566,7 +3617,6 @@ class Reestructura extends CI_Controller{
                 'flagProcesoJuridico' => 0
             );
         }
-        
 
         $update = $this->General_model->updateRecord('datos_x_cliente', $updateData, 'idLote', $idLotePv);
 
@@ -4241,21 +4291,7 @@ class Reestructura extends CI_Controller{
                     }
                 }
             }
-        }else{// SI NO, SOLO SE HACE EL UPDATE DE LA COMISIÓN TOTAL DE LAS COMISIONES
-            for ($i=0; $i < count($dataNuevosCalculos) ; $i++) { 
-                $this->Reestructura_model->actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
-            }
         }
-        // MJ: NO HAY UN IF PRINCIPAL AL QUE ESTE ELSE HAGA REFERENCIA
-        /*else{
-            $response["result"] = false;
-            $response["message"] = "No hay historial preproceso para este lote";
-            $response["idLote"] = 0;
-            $response["proceso"] = 0;
-        }*/
-
-        $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($response));
     }
 
     function getDocumentos(){
@@ -4544,5 +4580,100 @@ class Reestructura extends CI_Controller{
     public function getOpcionesCatalogo() {
         $result = $this->db->query("SELECT *, CASE WHEN estatus = 1 THEN 'ACTIVO' ELSE 'INACTIVO' END statusOpcion FROM opcs_x_cats WHERE id_catalogo IN (100)")->result_array();
         echo json_encode($result);
+    }
+
+    public function getMensualidadAbonoNeo(){
+        $datos = $this->ComisionesNeo_model->getMensualidadAbonoNeo()->result_array();
+        echo json_encode($datos);
+    }
+
+    public function getLotesAsignados(){
+        set_time_limit(600);
+        // para tener los datos de todos
+        $getLotesTodo = $this->Reestructura_model->getLotesAsignadosTodos()->result();
+        $getProceso6 = $this->Reestructura_model->getLotesAsignados6()->result();
+        $getProcesoContraloria = $this->Reestructura_model->getLotesAsignadosContraloria()->result();
+        $getProcesoJuridico = $this->Reestructura_model->getLotesAsignadosJuridico()->result();
+
+        $sentFlag = true;
+        
+        // envio de correos a gerentes
+        foreach($getLotesTodo as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com')
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientes', [
+                'nombreGerente' => $lote->nombreGerente,
+                'cantidadProceso0' => $lote->cantidadProceso0,
+                'cantidadProceso1' => $lote->cantidadProceso1,
+                'cantidadProceso3' => $lote->cantidadProceso3,
+                'cantidadProceso6' => $lote->cantidadProceso6,
+            ], true));
+            $this->email->send();
+        }
+
+        // sleep(10);
+        // envios de correos a asesores
+        foreach($getProceso6 as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com')
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesAsesor', [
+                'nombreAsesor' => $lote->nombreAsesor,
+                'cantidadProceso6' => $lote->cantidadProceso6,
+            ], true));
+            $this->email->send();
+        }
+
+        // sleep(10);
+        // envios de correos a contraloria
+        foreach($getProcesoContraloria as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Mariela Sanchez 
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Alejandro Santiago
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesContraloria', [
+                'nombre1' => "Mariela Sanchez Sanchez",
+                'nombre2' => "Alejando Santiago Gamez",
+                'cantidadProceso2' => $lote->cantidadProceso2,
+            ], true));
+            $this->email->send();            
+        }
+
+        // sleep(10);
+        // envios de correos a juridico
+        foreach($getProcesoJuridico as $lote){
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('coordinador1.desarrollo@ciudadmaderas.com') // Cinthya López
+            // ->to('programador.analista34@ciudadmaderas.com') // ?
+            ->subject('Notificación de estatus de lotes')
+            ->view($this->load->view('mail/reestructura/mailPendientesJuridico', [
+                'nombre1' => "Cinthya López",
+                'cantidadProceso2' => $lote->cantidadProceso2,
+            ], true));
+
+            $this->email->send();
+        }
+
+        
+        if($sentFlag){
+            $response["result"] = true;
+            $response["message"] = "Se han enviado los correos exitosamente";
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "Ha ocurrido un error al enviar los correos";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response)); 
     }
 }

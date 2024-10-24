@@ -52,6 +52,7 @@
 						<input type="hidden" name="idCondominio" id="idCondominioenvARevCE" >
 						<input type="hidden" name="fechaVenc" id="fechaVencenvARevCE" >
 						<input type="hidden" name="nombreLote" id="nombreLoteenvARevCE"  >
+						<input type="hidden" id="envARevCEdata"></input>
 					</div>
 				</div>
 				<div class="modal-footer"></div>

@@ -377,46 +377,34 @@ class Descuentos extends CI_Controller
                 }
             }else{
                 
-              $formatear = explode(",",$datos[$i]);
-              $id=$formatear[0];
-              $monto = $formatear[1]; 
-              $pago_neodata = $formatear[2];
-              
-              if($comentario == 0 && floatval($valor) == 3){
-              $nameLote = $formatear[3];
-              
+            $formatear = explode(",",$datos[$i]);
+            $id=$formatear[0];
+            $monto = $formatear[1]; 
+            $pago_neodata = $formatear[2];
+            
+            if($comentario == 0 && floatval($valor) == 3){
+            $nameLote = $formatear[3];
+            
                 $num = $i +1;
                 $comentario = "DESCUENTO UNIVERSIDAD MADERAS LOTES INVOLUCRADOS:  $LotesInvolucrados ( TOTAL DESCUENTO $desc ), ".$num."° LOTE A DESCONTAR $nameLote, MONTO DISPONIBLE: $".number_format(floatval($monto), 2, '.', ',').", DESCUENTO DE: $".number_format(floatval($monto), 2, '.', ',').", RESTANTE: $".number_format(floatval(0), 2, '.', ',')." ";
-              }else{
+            }else{
                 $comentario = $this->input->post("comentario");
-              }
+            }
             $dat = $this->Descuentos_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario, $pagos_apli,$this->input->post("motivo"),$this->input->post("prestamos"),$this->input->post("descuento"),$expediente,$descuento,$bandera);
             $sumaMontos = $sumaMontos + $monto;
-            
             }
-  
-      
-          }
-    
-  
+            }
         }else{
-            
             // Viene por un solo pago
             $bandera = -1;
-            
             $formatear = explode(",",$datos[0]);
             $id = $formatear[0];
             $monto = $formatear[1];
             $pago_neodata = $formatear[2];
             $montoAinsertar = $monto - $descuento;
             $Restante = $monto - $montoAinsertar;
-  
             $comision = $this->Descuentos_model->obtenerID($id)->result_array();
-  
             if($valor == 2){
-
-                
-  
               $dat =  $this->Descuentos_model->update_descuentoEsp($id,$montoAinsertar,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
               $dat =  $this->Descuentos_model->insertar_descuentoEsp($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
             }else{
@@ -847,6 +835,7 @@ class Descuentos extends CI_Controller
             $monto =  $this->input->post('monto');
             $id_anticipo =  $this->input->post('idAnticipo_Aceptar');
             $bandera= 0;
+            $banderaEvidencia = 0;
             $usuarioid = $this->session->userdata('id_usuario');
             if($this->input->post('proceso') != 0 ){
                 // viene por un por un un proceso diferente a cancelado
@@ -911,8 +900,14 @@ class Descuentos extends CI_Controller
                         );
                     // LLAVE FIN DE PROCESO 6
                 }else if($this->input->post('proceso') ==4){
-                    // INICIO PROCES 4                
-                    if( $this->input->post('num_mensualidades') != null )
+                    // INICIO PROCES 4  
+                                
+                    if( $this->input->post('num_mensualidades') != null  
+                    ||  $this->input->post('num_mensualidades') != ''  
+                    ||  empty($this->input->post('num_mensualidades'))
+                    ||  $this->input->post('estatus') != null
+                    ||  $this->input->post('estatus') != ''
+                    )
                     {
                         $array_parcialidad_relacion_anticipo = array (
                             'mensualidades'         => intval($this->input->post('num_mensualidades')),
@@ -925,7 +920,7 @@ class Descuentos extends CI_Controller
                         $insertArray = array(
                             'monto'         =>  $monto,
                             'prioridad'     => $this->input->post('seleccion'),
-                            'estatus'       => $this->input->post('estatus'),
+                            // 'estatus'       => $this->input->post('estatus'),
                             'proceso'       => $this->input->post('proceso')
                         );
                         // vine por prestamo 
@@ -1182,9 +1177,9 @@ class Descuentos extends CI_Controller
 
             public function descargar_XML(){
                 if( $this->session->userdata('id_rol') == 31 ){
-                    $filtro = " ant.proceso IN (8) ";
+                    $filtro = " ant.proceso IN (7) ";
                 } else{
-                    $filtro = " ant.proceso  IN (7) ";
+                    $filtro = " ant.proceso  IN (6) ";
                 }
 
                 $facturas_disponibles = array();

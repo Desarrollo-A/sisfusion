@@ -24,6 +24,16 @@
         </div>
     </div>
 
+    <div class="modal fade modal-alertas" id="modal_nuevas_casas" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" id="form_interes_casas">
+                    <div class="modal-body"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -57,6 +67,17 @@
             </div>
         </div>
     </div>
+    <div class="modal fade modal-alertas" id="modal_multiples_intmexA_casas" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header"></div>
+                <form method="post" id="form_multiples_casas">
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
         <div class="modal-dialog" style= "margin-top:20px;"></div>
@@ -70,6 +91,7 @@
                     <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
                     <!-- <li><a href="#proceso-1" role="tab" data-toggle="tab">Pagos ooam</a></li> -->
                     <li><a href="#intmex_seguros" role="tab" data-toggle="tab">Pagos lotes seguros</a></li>
+                    <li><a href="#intmex_casas" role="tab" data-toggle="tab">Pagos Casas</a></li>
                 </ul>
                 <div class="card no-shadow m-0 border-conntent__tabs">
                     <div class="card-content p-0">
@@ -157,6 +179,8 @@
                                 </div>
                                 <?php $this->load->view('pagos/seguros_internomex/revision_asimilados_intmex_ooam_view'); ?>
                                 <?php $this->load->view('pagos/seguros_internomex/revision_asimilados_intmex_seguros_view'); ?>
+                                <?php $this->load->view('pagos/casas_internomex/revision_asimilados_intmex_casas_view'); ?>
+                                
                             </div>
                         </div>
                     </div>
@@ -170,4 +194,5 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros_internomex/revision_asimilados_intmex_seguros.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/casas_internomex/revision_asimilados_intmex_casas.js"></script>
 </body>

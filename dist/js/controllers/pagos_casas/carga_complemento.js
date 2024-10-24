@@ -57,7 +57,7 @@ show_upload = function(data) {
     form.show()
 }
 
-pass_to_validar_pago = function(data) {
+pass_to_next = function(data) {
     let form = new Form({
         title: 'Enviar a validar pago', 
         text: `¿Enviar el lote <b>${data.nombreLote}</b> para validar pago?`,
@@ -144,10 +144,10 @@ let columns = [
 
         let pass_button = ''
         if(data.complementoPDF && data.complementoXML){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar pago', onClick: pass_to_validar_pago, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar pago', onClick: pass_to_next, data})
         }
 
-        return `<div class="d-flex justify-center">${view_button}${download_button}${docu_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${view_button}${download_button}${docu_button}</div>`
     } },
 ]
 

@@ -21,7 +21,7 @@ $(document).ready(function() {
     personaFisicaMoralOnChange();
 
 
-    let idPermitidos = [2752, 2826, 2810, 2855, 2815, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 11655, 16679];
+    let idPermitidos = [2752, 2826, 2810, 2855, 2815, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 11655, 16679, 17043];
     if(!idPermitidos.includes(id_usuario_general)){//si el id usuario no está aqui va a hacer la validación de M2 final
         $('#costoM2, #costom2f').on('change', function() {
             const tipoMensaje = validarCostos();
@@ -346,6 +346,7 @@ if(id_rol_general == 7 || usuariosContraloria.includes(id_usuario_general) || on
     const campo5 = document.getElementById("codigol");
     const campo6 = document.getElementById("cp_fac");
     checkbox.addEventListener("change", function() {
+        console.log('checkLider:', checkLider);
         if (checkbox.checked) {
             $('#regimenFiscal').prop('required',true);
             $('#rfc').prop('required',true);
@@ -370,6 +371,38 @@ if(id_rol_general == 7 || usuariosContraloria.includes(id_usuario_general) || on
         const nav = document.querySelector('#sectionBtns');
         if(this.scrollY <= 10) nav.className = ''; else nav.className = 'scroll';
     };
+
+    //LIDER ESCUADRON
+    const checkLider = document.getElementById("escuadronRescate");
+    const selectLiderDiv = document.getElementById("liderEscuadronDiv");
+    let selectLider = document.getElementById("liderEscuadronSelect");
+    let idCoordinadorEscuadron = document.getElementById("idCoordinadorEscuadron");
+    checkLider.addEventListener("change", function() {
+        console.log('checkLider:', checkLider);
+        if (checkLider.checked) {
+            $('#liderEscuadronSelect').prop('required', true);
+            selectLiderDiv.classList.remove('d-none');
+            checkLider.value = 1;
+            $("#liderEscuadronSelect").selectpicker("refresh");
+        } else {
+            $('#liderEscuadronSelect').prop('required', false);
+            selectLiderDiv.classList.add("d-none");
+            checkLider.value = 0;
+            selectLider.value = 0;
+            idCoordinadorEscuadron.value=0;
+        }
+
+    });
+
+    selectLider.addEventListener("change", function()
+    {
+       console.log('cambio el select', selectLider);
+        var selected = $(this).find('option:selected');
+        var idcoordinadorRescate = selected.data('coodrescate');
+        idCoordinadorEscuadron.value=idcoordinadorRescate;
+    });
+
+
 }
 
 $(document).on('click', '#copropietario-collapse', function () {
@@ -482,7 +515,8 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
             if (res.code === 500) {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
-        }, error: function () {
+        },
+        error: function () {
             $('#depositoSeriedadGuardar').attr('disabled', false);
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }

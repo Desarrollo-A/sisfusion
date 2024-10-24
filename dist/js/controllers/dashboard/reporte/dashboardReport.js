@@ -1416,10 +1416,10 @@ function fillTableReport(dataObject) {
                                         return 'ESTATUS DE CONTRATACIÓN';
                                         break;
                                     case 17:
-                                        return 'FECHA DE ESTATUS 9';
+                                        return 'FECHA REGISTRO ESTATUS 9';
                                         break;
                                     case 18:
-                                        return 'DÍAS EN ESTATUS 9';
+                                        return '# DÍAS DESDE APARTADO HASTA REGISTRO ESTATUS 9';
                                         break;
                                     case 19:
                                         return 'ESTATUS DEL LOTE';
@@ -1606,10 +1606,10 @@ function fillTableReport(dataObject) {
                                         return 'ESTATUS DE CONTRATACIÓN';
                                         break;
                                     case 16:
-                                        return 'FECHA DE ESTATUS 9';
+                                        return 'FECHA REGISTRO ESTATUS 9';
                                         break;
                                     case 17:
-                                        return 'DÍAS EN ESTATUS 9';
+                                        return '# DÍAS DESDE APARTADO HASTA REGISTRO ESTATUS 9';
                                         break;
                                     case 18:
                                         return 'ESTATUS DEL LOTE';

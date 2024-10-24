@@ -24,6 +24,16 @@
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" id="modalPausarFacturaCasas" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="formPausarFacturaCasas">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modalPausarFacturaOOAM" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -58,6 +68,7 @@
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#facturaComercializacion" role="tab" data-toggle="tab">Facturas lotes</a></li>
                         <li><a href="#facturaSeguros" role="tab" data-toggle="tab">Facturas seguros</a></li>
+                        <li><a href="#facturaCasas" role="tab" data-toggle="tab">Facturas Casas</a></li>
                     </ul>
             
                     <div class="card no-shadow m-0 border-conntent__tabs">
@@ -154,8 +165,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php $this->load->view('pagos/seguros/revision_factura_ooam_view'); ?>
                                     <?php $this->load->view('pagos/seguros/revision_factura_seguros_view'); ?>
+                                    <?php $this->load->view('pagos/casas/revision_facturas_casas_view'); ?>
                                 </div>
                             </div>
                         </div>
@@ -169,5 +180,5 @@
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_factura.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros/revision_factura_seguros.js"></script>
-
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/casas/revision_factura_casas.js"></script>
 </body>

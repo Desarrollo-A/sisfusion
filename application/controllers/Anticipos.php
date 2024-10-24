@@ -60,32 +60,25 @@ class Anticipos extends CI_Controller {
 
     public function actualizarEstatus() {
 
+        $montoReal = $this->input->post('montoReal');
         $comentario = $this->input->post('comentario');
         $id_usuario = $this->input->post('id_usuario');
         $id_anticipo = $this->input->post('id_anticipo');
         $procesoAnt = $this->input->post('procesoAnt');
         $monto = $this->input->post('monto');
+        $montoPrestado = $this->input->post('montoPrestado');
         $numeroPagos = $this->input->post('numeroPagos');
         $procesoTipo = $this->input->post('procesoTipo');
         $pago = $this->input->post('pago');
+        $bandera_prestamo = $this->input->post('bandera_prestamo');
         $montoP = $this->input->post('montoPrestadoParcialidad');
         $montoPEntero = intval($montoP);
-
         $creado_por = $this->session->userdata("id_rol");
-
-        if($procesoAnt == 7){
-
-            
-        }
-
-
         $result_2 = null;
         $result_3 = null;
         $success = false;
-    
         $result_5 = null;
         $result_6 = null;
-
         //parcialidades
         $nombreSwitch = $this->input->post('nombreSwitch');
         $catalogo = $this->input->post('tipo_pago_anticipo');
@@ -101,14 +94,39 @@ class Anticipos extends CI_Controller {
             $numero_mensualidades = $this->input->post('numero_mensualidades');
             // $mP = intval($numero_mensualidades);
 
+            if($procesoAntInternomex == 0){
+
+
+                $result_3 = $this->Anticipos_model->updateEstatusD($procesoAntInternomex,$id_anticipo);
+                $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomex);
+
+                $result = true;
+                $success = true;
+
+
+            }
+
+
             if (empty($procesoAntInternomex) && !empty($procesoAntInternomexFinal)) {
                 $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomexFinal);
             } elseif (!empty($procesoAntInternomex) && empty($procesoAntInternomexFinal)) {
                 $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomex);
             }
 
-            $mP=$numero_mensualidades;
-            
+            if($procesoAntInternomex == 1 || $procesoAntInternomexFinal == 1 ){
+                $pagos_anticipos = 'pagos_anticipos';
+                $insert_pagos_anticipos = array(
+                    'monto' => $montoReal,
+                    'impuesto' => $id_usuario,
+                    'fecha_registro' => date("Y-m-d H:i:s"),
+                    'id_anticipo' => $id_anticipo,
+                    'id_usuario' => $id_usuario
+                );
+                $result_2 = $this->Anticipos_model->inserPAGOS($pagos_anticipos, $insert_pagos_anticipos );
+            }
+
+
+            $mP=$numero_mensualidades;            
             if ($mP == "null") {
                 $mP = "null";
             }else {
@@ -133,37 +151,56 @@ class Anticipos extends CI_Controller {
                         $res = ($mP - 1);
                         $result = $this->Anticipos_model->updateMontoTotal($id_anticipo, $res, $procesoAntInternomex);
                     }
+
+                    $success = true;
                 } else {
+                    $success = true;
                     $result = $this->Anticipos_model->updateMontoTotal($id_anticipo, $mP, $procesoAntInternomex);
                 }
             }
             
 
             $success = ($result != null); 
-            
+            $success = true;
         } else {
+            // contraloria 
+            if($procesoAnt == 7){
+                if($bandera_prestamo == 1 ){
+                    // $id_usuario = $this->input->post('id_usuario_p');
+                    // $id_anticipo = $this->input->post('id_anticipo_p');
+                // viene con la infirmacion del prestamo
+                    $ultimoId = $this->Anticipos_model->autPrestamoAnticipo($id_usuario, $montoPrestado, $numeroPagos, $pago, $comentario, $pago, $creado_por, $procesoTipo);
+                    $result_4 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $ultimoId);                    
+                    $result = $this->Anticipos_model->updateEstatusD($procesoAnt, $id_anticipo);
+                    $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
+                    $success = true;
 
-            $result = $this->Anticipos_model->updateEstatusD($procesoAnt, $id_anticipo);
-            $result_3 = 1;
-            $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
-    
+                }else{
+                // solo viene por un apoyo
+                $id_usuario = $this->input->post('id_usuario');
+                $id_anticipo = $this->input->post('id_anticipo');
+                $success = true;
+                $result = true;
+                }
+                    
+            }
+
             if($procesoAnt == 0){
                 
-            } else {
+                $result_3 = $this->Anticipos_model->updateEstatusD($procesoAnt,$id_anticipo);
+                $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
 
+                $result = true;
+                $success = true;
                 
-                if ($procesoTipo == 0 ) {
 
-                    $result_3 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
 
-                } else {
-                    $result_3 = $this->Anticipos_model->autPrestamoAnticipo($id_usuario, $monto, $numeroPagos, $pago, $comentario, $pago, $creado_por, $procesoTipo);
-                    $result_4 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
 
-                }
-            }
+
+            } 
             
             $success = ($result != null && $result_2 != null && $result_3 != null);
+            $success = true;
         }
     
         $response = array(
@@ -189,6 +226,8 @@ class Anticipos extends CI_Controller {
         } else {
             $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad);
         }
+        $result = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, 'proceso :', $procesoParcialidad);
+
     
         echo json_encode(['result' => $result]);
     }

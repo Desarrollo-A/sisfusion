@@ -402,15 +402,18 @@ class Usuarios extends CI_Controller
                 $simbolicoPropiedad = NULL;
             }
 
-            if($_POST['leader'] != 0){
+            /*
+                1	NORMAL
+                2	MADERAS UPGRADE
+                3	CASAS
+                4	SEGUROS
+            */
+            if ($_POST['leader'] != 0) {
                 $dataLiderAAsignar = $this->Services_model->getInfoLider($_POST['leader']);
-                if($dataLiderAAsignar->tipo==2){
+                if (in_array($dataLiderAAsignar->tipo, array(2, 3, 4)))
                     $tipoUsuario =  $dataLiderAAsignar->tipo;
-                }else{
+                else
                     $tipoUsuario = 1;//tipo de usuario 1: comercializacion, 2:oaam
-                }
-            }else{
-                $tipoUsuario = 1;//tipo de usuario 1: comercializacion, 2:oaam
             }
 
             $data = array( 

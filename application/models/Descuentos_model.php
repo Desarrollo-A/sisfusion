@@ -30,7 +30,7 @@ class Descuentos_model extends CI_Model {
     function busqueda_true($id_opcion){
 
         return $this->db->query("SELECT evidencia FROM motivosRelacionPrestamos WHERE id_opcion = $id_opcion")->row()->evidencia;
-
+ 
     }
 
     function getUsuariosRol($rol,$opc = ''){
@@ -637,7 +637,15 @@ class Descuentos_model extends CI_Model {
 
 
             public function solicitudes_por_aticipo ($bandera = ''){
+
+
                 $idUsu = intval($this->session->userdata('id_usuario')); 
+                $rol   = intval($this->session->userdata('id_rol')); 
+                if($rol == 4 and $rol == 5 ){
+                    $idUsu = intval($this->session->userdata('id_lider'));
+                }
+                
+                
                 $cmd = "DECLARE @user INT 
                 SELECT @user = $idUsu 
                 SELECT u.id_usuario, u.id_rol,
@@ -655,14 +663,15 @@ class Descuentos_model extends CI_Model {
                 INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
                 INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
                 INNER JOIN usuarios us ON us.id_usuario= u.id_lider
-                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
                 INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
                 LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo
                 where u.id_rol in(1,2,3,7,9) 
                 AND ant.proceso in (1,2,3,4)
                 AND (u.id_lider = @user  
                 OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
-                OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
+                OR (u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user ))) and u.id_rol = 7 )
+				OR (u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (@user )) and u.id_rol = 9 )
                 ORDER BY u.id_rol"; 
                 $query = $this->db->query($cmd );   
                 return $query->result_array();
@@ -733,7 +742,7 @@ class Descuentos_model extends CI_Model {
 
     function getComments($id){
         $cmd = "SELECT DISTINCT(hc.comentario) as comentario_general , hc.id_ha,hc.proceso ,
-		opcx.nombre, pci.comentario as comentario_anticipo,
+		opcx.nombre, pci.comentario as comentario_anticipo,hc.fecha_movimiento as  fechaAnticipo,
 		hc.id_anticipo, hc.id_usuario
         FROM historial_anticipo hc 
         INNER JOIN anticipo pci ON pci.id_anticipo = hc.id_anticipo

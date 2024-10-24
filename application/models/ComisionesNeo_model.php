@@ -10,9 +10,6 @@ class ComisionesNeo_model extends CI_Model {
 
     public function getStatusNeodata($lote){
         $pre_validate = $this->db->query("SELECT l.id_estado FROM lotes l WHERE l.status = 1 AND l.idLote = $lote");
-
-        
-        
         if( !isset($pre_validate->row()->id_estado) )
         {
             $var = 2;
@@ -324,7 +321,7 @@ class ComisionesNeo_model extends CI_Model {
             INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
             INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
             LEFT JOIN prospectos ps ON ps.id_prospecto = cl.id_prospecto AND cl.lugar_prospeccion = 6
-            $whereRes AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' AND cl.id_sede NOT IN (0) AND (cl.plan_comision IS NULL OR cl.plan_comision IN (0)) )");
+            $whereRes AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7,9) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' AND cl.id_sede NOT IN (0) AND (cl.plan_comision IS NULL OR cl.plan_comision IN (0)) )");
     }
 
     public function getFlag(){
@@ -368,9 +365,4 @@ class ComisionesNeo_model extends CI_Model {
     public function updateFlagPendienteDistintos(){
         $this->db->query("UPDATE pago_comision SET pendiente = total_comision - abonado WHERE total_comision NOT IN (0) AND bandera NOT IN (100, 150, 110, 170) ");
     }
-    public function getMensualidadAbonoNeo($empresa = '', $nombreLote = ''){
-        return $this->programacion->query("EXEC [programacion].[dbo].[CDM058PagosSaldosXLote] @empresa = 'FRO', @vivienda = 'CDMSLP-AGAH-008'");
-        
-    }
-
 }
