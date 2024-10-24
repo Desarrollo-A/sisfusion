@@ -2958,7 +2958,11 @@ class Casas extends BaseController
 
         $this->load->view("casas/creditoDirecto/expediente_view");
     }
-
+    public function depositoSeriedadCasas($idCliente){
+        $this->load->view("template/header");
+        $this->load->view("casas/creditoDirecto/deposito_seriedad_casas_view");
+        
+    }
     public function retrocesoAPaso17()
     {
         $form = $this->form();
