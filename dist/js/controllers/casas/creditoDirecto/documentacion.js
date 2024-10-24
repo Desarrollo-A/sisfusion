@@ -1,5 +1,5 @@
 function show_preview(data) {
-    let url = `${general_base_url}casas/archivo/${data.archivo}`
+    let url = `${general_base_url}casasDirecto/archivo/${data.archivo}`
 
     Shadowbox.init();
 
@@ -14,7 +14,7 @@ function show_preview(data) {
 
 function download_file(data) {
     alerts.showNotification("top", "right", "Descargando archivo...", "info");
-    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+    window.location.href = `${general_base_url}casasDirecto/archivo/${data.archivo}`
 }
 
 function show_upload(data) {
@@ -28,7 +28,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/uploadDocumentoPersona`,
+                url: `${general_base_url}casasDirecto/uploadDocumentoPersona`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -137,7 +137,7 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: `casas/lista_documentos_cliente_directo/${idProceso}`,
+    url: `casasDirecto/lista_documentos_cliente_directo/${idProceso}`,
     buttons: buttons,
     columns,
 })

@@ -17,9 +17,9 @@ let columns = [
     { data: function(data)
         {
             let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Avanzar', onClick: select_lote, data})
-            let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Cargar archivo', onClick: upload_archivo, data})
+            // let upload_button = new RowButton({icon: 'cloud_upload', color: '', label: 'Cargar archivo', onClick: upload_archivo, data})
             let return_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Rechazar', onClick: return_process, data})
-            let view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
+            // let view_button = new RowButton({icon: 'visibility', label: `Visualizar archivo`, onClick: show_preview, data})
             let docu_button = new RowButton({icon: 'toc', label: 'Cargar documentos', onClick: go_to_documentos, data})
 
             if (data.documentosFisica >= 7 || data.documentosMoral >= 10) {
@@ -33,7 +33,7 @@ let columns = [
 
 let table = new Table({
     id: '#tableAdeudo',
-    url: 'casas/lotesCreditoDirecto',
+    url: 'casasDirecto/lotesCreditoDirecto',
     params: { proceso: 3, tipoDocumento: 2, nombreDocumento: 'Orden de compra' },
     columns,
     // button: buttons
@@ -48,7 +48,7 @@ return_process = function(data){ // funcion para el avance del lote
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/retrocesoAPaso17`,
+                url: `${general_base_url}casasDirecto/rechazoAPaso2`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -66,10 +66,8 @@ return_process = function(data){ // funcion para el avance del lote
             })
         },
         fields: [
-            new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 2 }),
             new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
@@ -87,7 +85,7 @@ upload_archivo = function(data){ // funcion para subir el archivo de adeudo
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/UploadDocumentoCreditoDirecto`,
+                url: `${general_base_url}casasDirecto/UploadDocumentoCreditoDirecto`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -126,7 +124,7 @@ select_lote = function(data){ // funcion para el avance del lote
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/creditoDirectoAvance`,
+                url: `${general_base_url}casasDirecto/creditoDirectoAvance`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -144,11 +142,8 @@ select_lote = function(data){ // funcion para el avance del lote
             })
         },
         fields: [
-            new HiddenField({ id: 'idLote', value: data.idLote }),
             new HiddenField({ id: 'idProceso', value: data.idProceso }),
             new HiddenField({ id: 'proceso', value: data.proceso }),
-            new HiddenField({ id: 'procesoNuevo', value: 4 }),
-            new HiddenField({ id: 'tipoMovimiento', value: data.tipoMovimiento }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
             new HiddenField({ id: 'idCliente', value: data.idCliente }),
         ],
