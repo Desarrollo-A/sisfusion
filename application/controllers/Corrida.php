@@ -5,15 +5,14 @@
     // require '../../vendor/autoload.php'; //linea debe descomentarse en local
     require 'vendor/autoload.php';
 
-    require_once(APPPATH . "libraries/http/IClient.php");
-    require_once(APPPATH . "libraries/http/IRequest.php");
-    require_once(APPPATH . "libraries/http/Request.php");
-    require_once(APPPATH . "libraries/http/IResponse.php");
-    require_once(APPPATH . "libraries/http/Response.php");
-    require_once(APPPATH . "libraries/http/Client.php");
+require_once(APPPATH . "libraries/http/IClient.php");
+require_once(APPPATH . "libraries/http/IRequest.php");
+require_once(APPPATH . "libraries/http/Request.php");
+require_once(APPPATH . "libraries/http/IResponse.php");
+require_once(APPPATH . "libraries/http/Response.php");
+require_once(APPPATH . "libraries/http/Client.php");
 
-    use RestClient\Client;
-
+use RestClient\Client;
 
 class Corrida extends CI_Controller
 {
@@ -4110,7 +4109,7 @@ legend {
         $cantidadIvaPP = isset($cantidadIvaPP) ? $cantidadIvaPP : '';
         $tipoPlanTxtPP = $this->input->post("tipoPlanTxtPP");//nombre del tipo de plan
         $dumpPlanPago = $this->input->post("dumpPlanPago");
-        $prioridadCalculo = $this->input->post("tipoNc_valor");
+        $prioridadCalculo = $this->input->post("tipoNc_valor") || 1;
 
         $nombrePlan = ($tipoPlanTxtPP=='Enganche')  ? $tipoPlanTxtPP : $tipoPlanTxtPP.' '.($planPago);
         $fecha_actual = date('Y-m-d H:i:s');
@@ -4413,6 +4412,9 @@ legend {
                 }
             }
             $arrayFinal['planesPago'] = $arrayDump;
+
+            
+
             $response = array(
                 "planesPagoIds" => $arrayIdPagos,
                 "respuesta" => (($arrayDump) > 0) ? 1 : 0,
@@ -4429,12 +4431,28 @@ legend {
                 "respuesta" => -1,
                 "planServicio" => array()
             );
+
         }
 
         print_r(json_encode($response));
         exit;
     }
 
+    public function regPlanPagoCompleto(){
+        $data = json_decode(file_get_contents("php://input"));
+
+        $url = "http://192.168.16.20/neodata_reps/back/index.php/ServiciosNeo/regPlanPagoCompleto";
+
+        $client = new Client();
+
+        $request = $client->newRequest($url, 'POST', json_encode($data));
+
+        $response = $request->getResponse();
+
+        print_r(json_encode(json_decode($response->getParsedResponse())));
+
+        exit;
+    }
 
     private function calculatePlan($pagos, $saldoInicialPlan){
         $montoInicial = $saldoInicialPlan;
@@ -4640,24 +4658,5 @@ legend {
         } else {
             echo json_encode(array());
         }
-    }
-
-
-    public function regPlanPagoCompleto()
-    {
-        $data = json_decode(file_get_contents("php://input"));
-
-        #http://192.168.16.20/neodata_reps/back/index.php
-        $url = "https://bi-maderas.gphsis.com/reps/back/index.php/ServiciosNeo/regPlanPagoCompleto";
-
-        $client = new Client();
-
-        $request = $client->newRequest($url, 'POST', json_encode($data));
-
-        $response = $request->getResponse();
-
-        print_r(json_encode(json_decode($response->getParsedResponse())));
-
-        exit;
     }
 }
