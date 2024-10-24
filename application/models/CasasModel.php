@@ -1749,7 +1749,7 @@ AND vb.proyectos != 1";
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_catalogo = 136 AND oxc2.id_opcion = pc.tipoMovimiento
         LEFT JOIN proceso_pagos pp ON pp.idProcesoCasas = pc.idProcesoCasas
         WHERE (pc.status = 1 OR pc.status IS NULL)
-        AND (cli.status = 1)
+        AND (cli.status = 1 OR cli.status IS NULL)
         --AND (pc.proceso IN ($proceso) OR hct.idLote IS NOT NULL)
         $extraFields
         AND (pc.finalizado IN ($finalizado) OR pc.finalizado IS NULL)
