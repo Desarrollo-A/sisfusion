@@ -385,6 +385,7 @@
 																			<th>COMENTARIO</th>
 																			<th>ESTATUS AUTORIZACIÓN</th>
 																			<th>ÚLTIMA MODIFICACIÓN</th>
+																			<th>RANGO DE FECHA</th>
 																			<th>ACCIONES</th>
 																		</tr>
                                                                     </thead>

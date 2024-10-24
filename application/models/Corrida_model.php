@@ -692,7 +692,7 @@
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
         INNER JOIN opcs_x_cats planPagoCatalogo ON planPagoCatalogo.id_opcion =  pp.tipoPlanPago AND planPagoCatalogo.id_catalogo = 137
-        WHERE pp.estatus = 1 AND pp.estatusPlan = 1 AND pp.idLote = ".$idLote." ORDER BY pp.idPlanPago ASC");
+        WHERE pp.estatus = 1 AND pp.estatusPlan IN( 1, 3) AND pp.idLote = ".$idLote." ORDER BY pp.idPlanPago ASC");
         return $query->result_array();
     }
 

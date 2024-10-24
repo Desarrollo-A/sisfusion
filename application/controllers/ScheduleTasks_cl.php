@@ -1246,9 +1246,6 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                 //$insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
                                 $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
-                                echo 'Modo 1:<br><br>';
-                                print_r($array_update_lotes);
-                                exit;
                                 $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
                             }
                             else if($autorizacion['modoActualizacion'] == 2){
@@ -1256,7 +1253,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
                                 $data_actualizar = array(
                                     "estatus_autorizacion" => 3,
-                                    "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                                    "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR SIS',
                                     "fecha_modificacion" => $fecha_insercion,
                                     "modificado_por" => 1,//accion realizada por sistemas
                                     "modoActualizacion" => $autorizacion['modoActualizacion']
@@ -1267,7 +1264,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                     "id_usuario"            => 1,//accion realizada por sistemas
                                     "fecha_movimiento"      => $fecha_insercion,
                                     "estatus"               => 1,
-                                    "comentario"            => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                                    "comentario"            => 'APROBADO Y EJECUTADO POR SERVIDOR SIS',
                                     "estatus_autorizacion"  => 3,
                                     "modoActualizacion" => $autorizacion['modoActualizacion']
                                 );
@@ -1275,18 +1272,18 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                                 $table = 'autorizaciones_msi';
                                 $key = 'id_autorizacion';
                                 $table_historial = 'historial_autorizacionesPMSI';
-                                //$actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
-                                //$insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+                                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+                                $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
 
                                 //este proceso se debe dejar para que lo ejecute el servidor
                                 /**/
 
                                 $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
-                                echo 'Modo 2:<br><br>';
+                                /*echo 'Modo 2:<br><br>';
 
-                                print_r($array_update_lotes);
-                                exit;
+                               print_r($array_update_lotes);
+                                exit; */
                                 $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
 
 
@@ -1313,14 +1310,18 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
     }
 
-
     function actualizaMSI($id_autorizacion, $modo) {//esta funcion obtiene los lotes con msi diferentes y los que no para -
+
         //mandarlos a actualizar definitivamente
         if($modo == 1){
             $data_autorizacion = $this->Contraloria_model->getAutVis($id_autorizacion);
             $lotes_diferentes = json_decode($data_autorizacion[0]['lote'], JSON_NUMERIC_CHECK);
             $idCondominio    = $data_autorizacion[0]['idCondominio'];
-            $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio);
+
+            $fechaInicioAplicacion = $data_autorizacion[0]['fechaIncioAplica'];
+            $fechaFinAplicacion = $data_autorizacion[0]['fechaFinAplica'];
+
+            $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio, $fechaInicioAplicacion, $fechaFinAplicacion);
             $arrayVista = array(); //el array que armaremos par amandarlo a la vista
             foreach ($lotes_general as $item){
                 $arrayManejo['idLote'] = $item['idLote'];
@@ -1365,6 +1366,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             return $updateData;
         }
         else if($modo == 2){
+            echo 'modo 2';
+            exit;
             $data_autorizacion = $this->Contraloria_model->getAutVis($id_autorizacion);
             $idCondominio    = $data_autorizacion[0]['idCondominio'];
             $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio);

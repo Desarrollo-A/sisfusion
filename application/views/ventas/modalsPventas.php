@@ -101,6 +101,13 @@
                 <center><h3 class="modal-title" id="myModalLabel"><span class="lote"></span></h3></center>
             </div>
             <div class="modal-body">
+                <div class="col-md-12 p-r">
+                    <label>Elige a que rango de fechas se aplicarán los MSI</label>
+                    <div class="form-group d-flex">
+                        <input type="text" class="form-control datepicker beginDate" id="beginDate"/>
+                        <input type="text" class="form-control datepicker endDate" id="endDate"/>
+                    </div>
+                </div>
                 <div class="input-group">
                     <label class="input-group-btn">
 								<span class="btn btn-primary btn-file">

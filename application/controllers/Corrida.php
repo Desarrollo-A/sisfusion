@@ -151,6 +151,7 @@ class Corrida extends CI_Controller
         $id_gerente = (int)$objDatos->gerente;
         $id_coordinador = (int)$objDatos->coordinador;
         $cantidad_enganche = (int)$objDatos->cantidad_enganche;
+        $apartado = (int)$objDatos->apartado;
         $paquete = (int)$objDatos->paquete;
 
 //		echo 'Asesor';
@@ -175,6 +176,7 @@ class Corrida extends CI_Controller
         $arreglo["dias_pagar_enganche"] = $objDatos->dias_pagar_enganche;
         $arreglo["porcentaje_enganche"] = $objDatos->porcentaje_enganche;
         $arreglo["cantidad_enganche"] = $cantidad_enganche;
+        $arreglo["apartado"] = $apartado;
         $arreglo["meses_diferir"] = $objDatos->meses_diferir;
         $arreglo["paquete"] = $paquete;
         $arreglo["opcion_paquete"] = $objDatos->opcion_paquete;
@@ -2983,7 +2985,7 @@ legend {
             $sheet->getStyle("F9:G9")->getFont()->setSize(12);
             $sheet->getStyle('G9:H9')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('C6E0B4');
             $sheet->setCellValue('G9', $data_corrida->pago_enganche);
-            $sheet->setCellValue('H9', 'ENGANCHE ' . $data_corrida->porcentaje_enganche . '%');
+            $sheet->setCellValue('H9', 'ENGANCHE FINAL (ENG MENOS APARTADO)');
 
             $sheet->setCellValue('E11', 'Saldo');
             $sheet->getStyle('E11')->getFont()->setName('Arial');
@@ -4603,7 +4605,7 @@ legend {
 
     }
 
-        public function cancelaPlanPagoNeo(){
+    public function cancelaPlanPagoNeo(){
         $data = $this->input->post();
         $response = $this->Neodata_model->cancelaPlanPagoNeo($data);
         print_r( json_encode($response, JSON_NUMERIC_CHECK));

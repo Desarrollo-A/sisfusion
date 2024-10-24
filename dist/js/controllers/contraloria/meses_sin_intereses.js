@@ -6,6 +6,8 @@ var flagTipoUploadMeses;
 let titulos_intxt = [];
 
 $(document).ready (function() {
+
+    setInitialValues();
     flagTipoUploadMeses = 1; 
     let button_excel = '';
 
@@ -121,6 +123,21 @@ $(document).ready (function() {
                 data: 'fecha_modificacion'
             },
             {
+                data: function(d){
+                    let fechaInicio = new Date(d.fechaIncioAplica);
+                    let fechaTermino = new Date(d.fechaFinAplica);
+                    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+                    let leyendaCampo = '';
+                    if(d.fechaIncioAplica != undefined && d.fechaFinAplica!=undefined){
+                        leyendaCampo = 'Del '+ fechaInicio.toLocaleString("es-ES", options) +" al "+fechaTermino.toLocaleString("es-ES", options);
+                    }else{
+                        leyendaCampo = 'Sin lapso especificado'
+                    }
+                    return leyendaCampo;
+                }
+            },
+            {
                 data:function(d){
                     $('[data-toggle="tooltip"]').tooltip();
                     let botones = '';
@@ -189,7 +206,27 @@ $(document).ready (function() {
             $('.anclaClass').attr('placeholder', 'ID LOTE');
         }
     });
+
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
 });
+
+function setInitialValues() {
+    // BEGIN DATE
+    const fechaInicio = new Date();
+    // Iniciar en este año, este mes, en el día 1
+    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
+    // END DATE
+    const fechaFin = new Date();
+    // Iniciar en este año, el siguiente mes, en el día 0 (así que así nos regresamos un día)
+    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
+    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
+    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
+    // console.log('Fecha inicio: ', finalBeginDate);
+    // console.log('Fecha final: ', finalEndDate);
+    $("#beginDate").val(convertDate(beginDate));
+    $("#endDate").val(convertDate(endDate));
+}
 
 $(document).on('click', '.subir-msi', function(){
     $('#subirMeses').modal('show');
@@ -346,6 +383,9 @@ $(document).on('click', '#sendFile', function(e) {
     var idResidencial = getInfo3[0];
     var idCondominio = getInfo3[1];
     var file_msni = $("#file_msni")[0].files[0];
+    var fechaInicio = $('#beginDate').val();
+    var fechaFin = $('#endDate').val();
+
     fileElm = document.getElementById("file_msni");
     file = fileElm.value;
 
@@ -367,6 +407,8 @@ $(document).on('click', '#sendFile', function(e) {
             processFile(fileElm.files[0]).then(jsonInfo => {
                 dataFile.append("idResidencial", idResidencial);
                 dataFile.append("idCondominio", idCondominio);
+                dataFile.append("fechaInicio", fechaInicio);
+                dataFile.append("fechaFin", fechaFin);
                 dataFile.append("file_msni", jsonInfo);
                 dataFile.append("typeTransaction", $('#typeTransaction').val());
                 $('#sendFile').prop('disabled', true);

@@ -2455,6 +2455,15 @@ class Contraloria extends CI_Controller {
     }
 
     public function update_msni(){
+
+
+        $fi = explode("/", $this->input->post('fechaInicio'));
+        $ff = explode("/",$this->input->post('fechaFin'));
+
+        $fechaIncio = $fi[2]."-".$fi[1]."-".$fi[0]." 00:00:00.000";
+        $fechaFin = $ff[2]."-".$ff[1]."-".$ff[0]." 23:59:59.000";
+
+
         $typeTranscation = $this->input->post('typeTransaction');
         $arrayMsi = json_decode($this->input->post('file_msni'));
         $idResidencial = $this->input->post('idResidencial');
@@ -2485,7 +2494,9 @@ class Contraloria extends CI_Controller {
                         "fecha_creacion" => $fecha_insercion,
                         "creado_por" => $this->session->userdata('id_usuario'),
                         "fecha_modificacion" => $fecha_insercion,
-                        "modificado_por" => $this->session->userdata('id_usuario')
+                        "modificado_por" => $this->session->userdata('id_usuario'),
+                        "fechaIncioAplica" => $fechaIncio,
+                        "fechaFinAplica" => $fechaFin
                     );
                     $resultado = $this->General_model->addRecord('autorizaciones_msi', $insert_aut);
                     //se inserta en el historial
@@ -2497,7 +2508,9 @@ class Contraloria extends CI_Controller {
                         'fecha_movimiento' => $fecha_insercion,
                         'estatus' => 1,
                         'comentario' => 'SE SUBE AUTORIZACIÓN',
-                        'estatus_autorizacion' => 1
+                        'estatus_autorizacion' => 1,
+                        "fechaIncioAplica" => $fechaIncio,
+                        "fechaFinAplica" => $fechaFin
                     );
                     $resultado_historial = $this->General_model->addRecord('historial_autorizacionesPMSI', $insert_ha);
                     $flag++;
@@ -2543,7 +2556,9 @@ class Contraloria extends CI_Controller {
                     "fecha_creacion" => $fecha_insercion,
                     "creado_por" => $this->session->userdata('id_usuario'),
                     "fecha_modificacion" => $fecha_insercion,
-                    "modificado_por" => $this->session->userdata('id_usuario')
+                    "modificado_por" => $this->session->userdata('id_usuario'),
+                    "fechaIncioAplica" => $fechaIncio,
+                    "fechaFinAplica" => $fechaFin
                 );
                 $resultado = $this->General_model->addRecord('autorizaciones_msi', $insert_aut);
 
@@ -2556,7 +2571,9 @@ class Contraloria extends CI_Controller {
                     'fecha_movimiento' => $fecha_insercion,
                     'estatus' => 1,
                     'comentario' => 'SE SUBE AUTORIZACIÓN',
-                    'estatus_autorizacion' => 1
+                    'estatus_autorizacion' => 1,
+                    "fechaIncioAplica" => $fechaIncio,
+                    "fechaFinAplica" => $fechaFin
                 );
                 $resultado_historial = $this->General_model->addRecord('historial_autorizacionesPMSI', $insert_ha);
 

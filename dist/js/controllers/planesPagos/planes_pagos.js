@@ -185,7 +185,6 @@ $('#idLote').change(function () {
                             etiqueta = `<label class="label lbl-warning">Plan de pago cancelado en NeoData</label>`;
                             break;
                     }
-
                     return etiqueta;
                 }
             },

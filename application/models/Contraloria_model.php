@@ -632,12 +632,12 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     public function getMsni($typeTransaction, $key) {
         if($typeTransaction == 1) {
             $query = $this->db-> query("SELECT co.idCondominio ID, co.nombre, lo.msi msni FROM condominios co 
-			INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.status = 1 AND lo.idStatusLote IN (1, 3, 8)  --lo.idStatusLote = 1
+			INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.status = 1 AND lo.idStatusLote IN (1, 2, 3, 8) --lo.idStatusLote = 1
 			WHERE co.status = 1 AND co.idResidencial = $key
 			GROUP BY co.idCondominio, co.nombre, lo.msi ORDER BY co.idCondominio");
         } else if($typeTransaction == 2) {
             $query = $this->db-> query("SELECT *, idLote as ID, nombreLote as nombre, msi as msni FROM lotes 
-                                        WHERE status = 1 AND lotes.status = 1  AND lotes.idStatusLote IN (1, 3, 8)  AND idCondominio =".$key);
+                                        WHERE status = 1 AND lotes.status = 1  AND lotes.idStatusLote IN (1, 2, 3, 8)  AND idCondominio =".$key);
         }
         return $query->result_array();
     }
@@ -1260,13 +1260,13 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         CAST(au.comentario AS VARCHAR(MAX)) comentario, op.nombre as estatus_autorizacion,  
         au.estatus, au.fecha_creacion, au.creado_por, au.fecha_modificacion, au.modificado_por,
         op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por,--, op.color
-        au.estatus_autorizacion as estatus_id
+        au.estatus_autorizacion as estatus_id, au.fechaIncioAplica, au.fechaFinAplica
         FROM autorizaciones_msi au 
         INNER JOIN opcs_x_cats op ON op.id_opcion = au.estatus_autorizacion 
         WHERE op.id_catalogo=90 AND au.estatus_autorizacion IN (".$estatus_permitido.")
         GROUP BY au.idResidencial, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0'), CAST(au.comentario AS VARCHAR(MAX)), au.estatus_autorizacion, 
         au.estatus, au.fecha_creacion, au.creado_por, au.fecha_modificacion, au.modificado_por,
-        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0') ORDER BY au.fecha_creacion DESC");
+        op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0') , au.fechaIncioAplica, au.fechaFinAplica ORDER BY au.fecha_creacion DESC");
 
 
         return $query->result_array();
@@ -1286,8 +1286,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         WHERE idAutorizacion=".$id_autorizacion);
         return $query->result_array();
     }
-    function getLotesByResCond($idCondominio){
-        $query = $this->db->query("SELECT * FROM lotes WHERE idCondominio=$idCondominio "); //sólo trae los lotes que estén en status Disponible o Bloqueado
+    function getLotesByResCond($idCondominio, $fechaInicio, $fechaFin){
+        $query = $this->db->query("SELECT cl.fechaApartado, lo.* FROM lotes lo 
+        INNER JOIN clientes cl ON lo.idLote = cl.idLote
+        WHERE lo.idCondominio=$idCondominio AND cl.fechaApartado BETWEEN '$fechaInicio' AND '$fechaFin' AND cl.status=1; "); //DEBE DE LIMITAR LOS LOTES POR FECHA DE APARTADO
         return $query->result_array();
     }
 
@@ -1887,6 +1889,14 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     
     public function autsAceptadasMSI(){
         $query = $this->db->query("SELECT * FROM autorizaciones_msi WHERE estatus_autorizacion=5");
+        return $query->result_array();
+    }
+
+    public function autsAceptadasMSIProvicional(){
+        $fechaInicio = '2024-06-25 00:00:00.000';
+        $fechaFin = '2024-06-30 23:59:59.000';
+        $query = $this->db->query("SELECT * FROM autorizaciones_msi WHERE estatus_autorizacion = 3
+        AND fecha_creacion BETWEEN $fechaInicio AND $fechaFin;");
         return $query->result_array();
     }
 

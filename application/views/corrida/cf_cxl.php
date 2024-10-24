@@ -1958,6 +1958,12 @@
                             msiExtra: item.msi_descuento
                         });
                         $scope.decFin =arreglo;
+
+
+                        let pea = document.getElementById("porcentajeEnganche").value / 100 ; //porcentaje de enganche actual
+
+                        $scope.cantidad = b * pea;
+                        $scope.engancheFinal = b * pea;
                         // console.log($scope.decFin);
 
                         ///////////////////////DESCIPCION DE DESCUENTOS////////////////////////////////////////
@@ -1994,7 +2000,6 @@
                     }
 
 
-                    console.log('Enganche original:', $scope.cantidad);
                 }
                 else if(porcentajeDeEnganche != 0  && orderTotal.length > 0){
                     console.log('>C');
@@ -2658,7 +2663,7 @@
                     console.log('saldoFinal -> ', $scope.saldoFinal);
 
 
-                    saldoDif =  ($scope.mesesdiferir == 0 || $scope.mesesdiferir==undefined) ?  saldoDif: $scope.precioFinal - $scope.apartado ;//debe de descontar también al precio final para inicio de cf SOLO PARA ENG DIFERIDOS -- SE DEBE DESCONTAR AL ENGANCHE NO A LA CANTIDAD FINAL SE PASA AL SIG DE DIF
+                    saldoDif =  ($scope.mesesdiferir == 0 || $scope.mesesdiferir==undefined) ?  saldoDif - $scope.apartado: $scope.precioFinal - $scope.apartado ;//debe de descontar también al precio final para inicio de cf SOLO PARA ENG DIFERIDOS -- SE DEBE DESCONTAR AL ENGANCHE NO A LA CANTIDAD FINAL SE PASA AL SIG DE DIF
                     console.log('PRIMO:', saldoDif);
                     var rangEd=[];
                     for (var e = 0; e < $scope.mesesdiferir; e++) {
@@ -2816,7 +2821,7 @@
                 console.log('$scope.day', $scope.day.day);
                 console.log('$scope.mesesdiferir', $scope.mesesdiferir);
                 console.log('document.getElementById(\'porcentajeEnganche\').value', document.getElementById('porcentajeEnganche').value);
-                if($scope.day.day ==='Diferido' && document.getElementById('porcentajeEnganche').value=='10') {
+                if($scope.day.day ==='Diferido') {
                     console.log('voy a modificar aqui el enganche FINAL:', document.getElementById('porcentajeEnganche').value);
                     $scope.engancheFinal = engancheSum - apartadoSum;
 
@@ -7364,6 +7369,11 @@
                         var mesesdiferidos = angular.element( document.querySelector( '#msdif' ) );
                         var checkPack = angular.element( document.querySelector('#checkPack') );
                         var cehboxInterno = angular.element( document.querySelector('#paquete.id_paquete') );
+                        var engancheView = angular.element( document.querySelector('#porcentajeEnganche') );
+                        var engancheCantidadView = angular.element( document.querySelector('#cantidadEnganche') );
+
+                        engancheView.val(0);
+                        engancheCantidadView.val(0);
 
                         // $('#condominioS').select2('destroy');
                         $scope.condominios = response.data;
@@ -7400,12 +7410,17 @@
                         $scope.finalMesesp1 = "";
                         $scope.finalMesesp2 = "";
                         $scope.finalMesesp3 = "";
+                        $scope.finalMesesp4 = "";
                         $scope.banco = "";
                         $scope.rsocial = "";
                         $scope.cuenta = "";
                         $scope.clabe = "";
                         $scope.referencia = "";
                         $scope.totalTercerPlan ="";
+                        $scope.totalCuartoPlan = "";
+                        $scope.porcentaje = "";
+                        $scope.cantidad = "";
+                        $scope.mesesSinInteres = "";
 
 
                         if(checkPack){
