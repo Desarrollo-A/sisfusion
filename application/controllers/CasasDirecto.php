@@ -121,7 +121,7 @@ class CasasDirecto extends BaseController
 
                 if ($created) {
                     $motivo = "Se subió archivo: $name_documento";
-                    $this->CasasDirectoModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 1, $idCliente);
+                    $this->CasasDirectoModel->addHistorial($idProceso, $proceso, $proceso, $motivo, 2, $idCliente);
 
                     $this->json([]);
                 }
@@ -158,7 +158,7 @@ class CasasDirecto extends BaseController
 
             if ($created) {
                 $motivo = "Se subió archivo: $nombreDocumento";
-                $this->CasasDirectoModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, $motivo, 1, $idCliente);
+                $this->CasasDirectoModel->addHistorial($idProceso, $proceso->proceso, $proceso->proceso, $motivo, 2, $idCliente);
 
                 $this->json([]);
             }
@@ -287,7 +287,7 @@ class CasasDirecto extends BaseController
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 1,
+            "esquemaCreditoProceso" => 2,
             'idCliente' => $idCliente,
             "idMovimiento" => $this->idUsuario
         );
@@ -351,7 +351,7 @@ class CasasDirecto extends BaseController
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 1,
+            "esquemaCreditoProceso" => 2,
             "idCliente" => $idCliente,
             "idMovimiento" => $this->idUsuario
         );
@@ -441,7 +441,7 @@ class CasasDirecto extends BaseController
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 1,
+            "esquemaCreditoProceso" => 2,
             "idCliente" => $idCliente,
             "idMovimiento" => $this->idUsuario
         );
@@ -524,7 +524,7 @@ class CasasDirecto extends BaseController
             "fechaMovimiento" => date("Y-m-d H:i:s"),
             "creadoPor"       => $this->idUsuario,
             "descripcion"     => $comentario,
-            "esquemaCreditoProceso" => 1,
+            "esquemaCreditoProceso" => 2,
             "idCliente" => $idCliente,
             "idMovimiento" => $this->idUsuario
         );
