@@ -1835,14 +1835,13 @@ class Asesor_model extends CI_Model {
         return $query->result_array();
     }    
     function getTipoContratoxLote($idLote,$idCliente){
-        $this->db->select('ct.tipo_contrato,ct.opcs_clausulas,op.nombre');
-        $this->db->from('clausulas_terrenos ct');
-        $this->db->join('opcs_x_cats op', 'ct.tipo_contrato = op.id_opcion');
+        $this->db->select('tipo_contrato, opcs_clausulas');
+        $this->db->from('clausulas_terrenos');
         $this->db->where('id_lote', $idLote);
         $this->db->where('id_cliente', $idCliente);
-        $this->db->where('id_catalogo', 160);        
         $query = $this->db->get();
-        $result = $query->result_array();
+
+        $result = $query->result_array(); 
         return $result;
     }
     function actualizar_clausulas_terrenos($idLote,$id_cliente,$data){

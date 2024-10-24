@@ -2069,6 +2069,7 @@ class Asesor extends CI_Controller {
             $datos=array(                                
                 'tipo_contrato'=>$tipoContrato,                                            
                 'opcs_clausulas'=>$clausulas,
+                'fecha_modificacion' => date('Y-m-d H:i:s', strtotime('-1 hour'))
             );
             $this->Asesor_model->actualizar_clausulas_terrenos($data['id_lote'],$data['id_cliente'],$datos);
         }else{
