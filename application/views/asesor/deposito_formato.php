@@ -318,7 +318,7 @@
                 </div>
 
                 <!-- row especialista escuadron -->
-                <div class="row pt-3" >
+                <!-- <div class="row pt-3" >
                     <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
                         <div class="pb-1">
                             <h4 class="label-on-left m-0" data-i18n="escuadron-rescate">ESCUADRÓN RESCATE</h4>
@@ -357,9 +357,34 @@
 
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- fin especialista escuadron -->
-                
+
+                <!-- INICIO DE TIPO DE CONTRATO -->
+                 <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <div class="form-group m-0">
+                            <label class="label-on-left m-0">
+                                <span>Tipo contrato</span>
+                                (<small style="color: red;">*</small>)
+                            </label>
+                            <select name="tipo-contrato" required="true" title="SELECCIONA UNA OPCIÓN" id="tipo-contrato" class="selectpicker select-gral m-0" data-live-search="true" data-container="body">
+                                <?php if(!empty($tipoContrato)): ?>
+                                <?php                                                                         
+                                    for($n = 0; $n < count($tipoContrato); $n++) {
+                                        if($tipoContrato[$n]['id_opcion'] == $clausulasxlote[0]['tipo_contrato']) {                                            
+                                            echo '<option value="'.$tipoContrato[$n]['id_opcion'].'" selected>'.$tipoContrato[$n]['nombre'].'</option>';
+                                        } else {                                            
+                                            echo '<option value="'.$tipoContrato[$n]['id_opcion'].'">'.$tipoContrato[$n]['nombre'].'</option>';
+                                        }
+                                    }                                    
+                                ?>
+                                <?php endif;?>
+                            </select>                        
+                        </div>
+                    </div>          
+                 </div>
+                <!-- FIN DE TIPO DE CONTRATO -->
                 <h4 class="text-center pt-3" data-i18n="datos-titular">DATOS DEL TITULAR</h4>
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -1250,8 +1275,8 @@
                 </div>
                 <!-- APARTADO CLAUSULAS ESPECIALES -->
                 <h4 class="text-center m-0 pt-3">Cláusulas especiales</h4>
-                <div class="row pt-2">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">                        
+                <div class="row">                    
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">                        
                         <div class="form-group m-0">
                             <label class="label-on-left m-0">
                                <span>Cláusulas</span>
@@ -1276,16 +1301,8 @@
                         <input type="hidden" name="idLote" value="<?=$cliente[0]->idLote?>">
                     </div>
 
-                    <div>
-                    <?php
-                    // var_dump($clausulasxlote);
-                    // var_dump($clausulasxlote[0]['tipo_contrato']);
-                    // var_dump($tipoContrato);
-                    // var_dump($cliente[0]->idLote);
-                    ?>
-                    </div> 
 
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">
                             <label class="label-on-left m-0">
                                 <span>Tipo contrato</span>
@@ -1305,16 +1322,9 @@
                                 <?php endif;?>
                             </select>                        
                         </div>
-                    </div>                               
+                    </div>                                -->
                 </div>
 
-                <div>
-                    <?php
-                        // var_dump($clausulasxlote);
-                        // var_dump($tipoContrato);
-                        // echo count($clausulasxlote);
-                    ?>
-                </div>
                 <!-- FIN DE CLAUSULAS ESPECIALES -->
                 <div class="row pt-3">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" align="justify">

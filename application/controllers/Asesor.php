@@ -2043,44 +2043,33 @@ class Asesor extends CI_Controller {
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
         $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
 
-//VALORES SELECT CLAUSULAS ESPECIALES    
-    $tipoContrato=$this->input->post('tipo-contrato');
-    $clausulaSeleccionadas=$this->input->post('clausula');
-    if(!empty($tipoContrato) && !empty($clausulaSeleccionadas)){
-        $clausulas = implode(',', $clausulaSeleccionadas);        
-        $data=array(
-            'id_cliente'=>$id_cliente,
-            'creado_por'=>$this->session->userdata('id_usuario'),
-            'tipo_contrato'=>$tipoContrato,
-            'estatus'=> 1,            
-            'id_lote'=>$this->input->post('idLote'),
-            'opcs_clausulas'=>$clausulas,
-        );
-
-        // $datos=array(                                
-        //     'tipo_contrato'=>$data['tipo_contrato'],                                            
-        //     'opcs_clausulas'=>$data['opcs_clausulas'],
-        // );
-        // $this->Asesor_model->actualizar_clausulas_terrenos(101902,165872,$datos);
-
-        // $result=$this->Asesor_model->insertar_clausulas_terrenos($data);
-        $exists=$this->Asesor_model->getTipoContratoxLote($data['id_lote'],$data['id_cliente']);
-        if(!empty($exists) && count($exists) > 0){
-            $datos=array(                                
-                'tipo_contrato'=>$tipoContrato,                                            
+        //VALORES SELECT CLAUSULAS ESPECIALES    
+        $tipoContrato=$this->input->post('tipo-contrato');
+        $clausulaSeleccionadas=$this->input->post('clausula');
+        if(!empty($tipoContrato) && !empty($clausulaSeleccionadas)){
+            $clausulas = implode(',', $clausulaSeleccionadas);        
+            $data=array(
+                'id_cliente'=>$id_cliente,
+                'creado_por'=>$this->session->userdata('id_usuario'),
+                'tipo_contrato'=>$tipoContrato,
+                'estatus'=> 1,            
+                'id_lote'=>$this->input->post('idLote'),
                 'opcs_clausulas'=>$clausulas,
-                'fecha_modificacion' => date('Y-m-d H:i:s', strtotime('-1 hour'))
             );
-            $this->Asesor_model->actualizar_clausulas_terrenos($data['id_lote'],$data['id_cliente'],$datos);
-        }else{
-            $result=$this->Asesor_model->insertar_clausulas_terrenos($data);
-        }        
-    }
-    
 
-                 
-//FINAL VALORES SELECT CLAUSULAS ESPECIALES
-
+            $exists=$this->Asesor_model->getTipoContratoxLote($data['id_lote'],$data['id_cliente']);
+            if(!empty($exists) && count($exists) > 0){
+                $datos=array(                                
+                    'tipo_contrato'=>$tipoContrato,                                            
+                    'opcs_clausulas'=>$clausulas,
+                    'fecha_modificacion' => date('Y-m-d H:i:s', strtotime('-1 hour')),                
+                );
+                $this->Asesor_model->actualizar_clausulas_terrenos($data['id_lote'],$data['id_cliente'],$datos);            
+            }else{
+                $result=$this->Asesor_model->insertar_clausulas_terrenos($data);
+            }        
+        }
+                    
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
             return $item['id_catalogo'] == 11;
