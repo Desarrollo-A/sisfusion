@@ -1,18 +1,4 @@
 <?php
-//    require_once 'static/autoload.php';//linea debe descomentarse en PROD
-    use PhpOffice\PhpSpreadsheet\Spreadsheet;
-    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-    require '../../vendor/autoload.php'; //linea debe descomentarse en local
-
-    require_once(APPPATH . "libraries/http/IClient.php");
-    require_once(APPPATH . "libraries/http/IRequest.php");
-    require_once(APPPATH . "libraries/http/Request.php");
-    require_once(APPPATH . "libraries/http/IResponse.php");
-    require_once(APPPATH . "libraries/http/Response.php");
-    require_once(APPPATH . "libraries/http/Client.php");
-
-    use RestClient\Client;
-
 
 require_once(APPPATH . "libraries/http/IClient.php");
 require_once(APPPATH . "libraries/http/IRequest.php");
@@ -4667,24 +4653,5 @@ legend {
         } else {
             echo json_encode(array());
         }
-    }
-
-
-    public function regPlanPagoCompleto()
-    {
-        $data = json_decode(file_get_contents("php://input"));
-
-        #http://192.168.16.20/neodata_reps/back/index.php
-        $url = "https://bi-maderas.gphsis.com/reps/back/index.php/ServiciosNeo/regPlanPagoCompleto";
-
-        $client = new Client();
-
-        $request = $client->newRequest($url, 'POST', json_encode($data));
-
-        $response = $request->getResponse();
-
-        print_r(json_encode(json_decode($response->getParsedResponse())));
-
-        exit;
     }
 }

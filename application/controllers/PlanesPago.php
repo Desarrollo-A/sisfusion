@@ -288,14 +288,17 @@ class PlanesPago extends CI_Controller {
 
             #Guardar plan de pagos
             $planes[$num_plan]->dumpPlan = json_encode($this->recalcularSaldoPlan($planes[$num_plan]->monto, $pagos));
-            # $this->PlanesPagoModel->savePlanPago($planes[$num_plan]->idPlanPago, $planes[$num_plan]->dumpPlan);
+            $this->PlanesPagoModel->savePlanPago($planes[$num_plan]->idPlanPago, $planes[$num_plan]->dumpPlan);
 
             if($monto <= 0){
-                print_r($planes[$num_plan]->dumpPlan);
+                // print_r($planes[$num_plan]->dumpPlan);
 
-                exit;
+                // exit;
 
-                break;
+                return [
+                    "status" => 1,
+                    "message" => "Depósito de $$data->monto procesado correctamente",
+                ];
             }
 
         }
@@ -304,6 +307,8 @@ class PlanesPago extends CI_Controller {
     public function registrarEnganche(){
         // Leemos lo que envia maricruz
         $data = json_decode(file_get_contents("php://input"));
+
+        $result = [];
 
         foreach ($data->depositos as $key => $deposito) {
             $payload = (object)[
@@ -325,12 +330,15 @@ class PlanesPago extends CI_Controller {
                     'capital' => 0,
                 ];
 
-                $this->registrar_pago($data->idLote, $pago);
+                $lote_result = $this->registrar_pago($data->idLote, $pago);
+
+                array_push($result, $lote_result);
             }
         }
 
         echo json_encode([
-            "status" => "ok"
+            "idLote" => $data->idLote,
+            "result" => $result,
         ]);
     }
 
